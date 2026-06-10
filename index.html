@@ -181,12 +181,12 @@ ul{list-style:none}
 .hero{
   background:var(--purple);
   padding-top:calc(var(--nav-h) + 120px);
-  padding-bottom:100px;
+  padding-bottom:0;
   overflow:hidden;
 }
 @media(max-width:899px){.hero{padding-top:calc(var(--nav-h) + 16px);padding-bottom:56px}}
 .hero__inner{
-  display:flex;align-items:center;gap:80px;flex-wrap:wrap;
+  display:flex;align-items:flex-end;gap:60px;flex-wrap:wrap;
 }
 .hero__copy{flex:1 1 320px}
 .hero__copy .t-display{margin-bottom:1.5rem}
@@ -530,8 +530,13 @@ ul{list-style:none}
         </div>
       </div>
 
-      <figure class="hero__image fade-up">
-        <img src="/images/hero-illustration.png" alt="" style="width:100%;max-width:600px;display:block;object-fit:contain;mix-blend-mode:screen;transform:scale(1.15);transform-origin:bottom center;" />
+      <!-- name tag -->
+      <figure class="hero__image" style="flex:1 1 400px;display:flex;justify-content:flex-end;align-items:flex-end;margin-right:-30px;margin-bottom:0;overflow:visible;position:relative;">
+        <img src="/images/hero-illustration.png" alt="Indrodip Ghosh - Founder of The5th" style="width:100%;max-width:560px;display:block;object-fit:cover;object-position:top center;mix-blend-mode:screen;filter:grayscale(20%) contrast(1.1);" />
+        <div style="position:absolute;bottom:24px;right:40px;text-align:right;">
+          <p style="font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;color:#fff;margin:0;">Indrodip Ghosh</p>
+          <p style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.65);margin:0;">Founder, The5th Consulting</p>
+        </div>
       </figure>
 
     </div>

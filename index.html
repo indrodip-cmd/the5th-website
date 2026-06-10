@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The5th Consulting — Build a Wisdom-Based Business™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Lora:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET
+============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'DM Sans',Helvetica Neue,Helvetica,Arial,sans-serif;color:#1a1a2e;background:#fff;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%;height:auto}
+ul{list-style:none}
+
+/* ============================================================
+   TOKENS
+============================================================ */
+:root{
+  --purple:#8c80cf;
+  --purple-dark:#6a5fb8;
+  --purple-light:rgba(140,128,207,0.10);
+  --green:#274f40;
+  --green-dark:#1d3b2f;
+  --cream:#faf9f7;
+  --cream-mid:#f4f0ea;
+  --placeholder:#ede9e3;
+  --white:#ffffff;
+  --dark:#1a1a2e;
+  --mid:#403b3b;
+  --muted:#727070;
+  --border:#dbd9d2;
+  --nav-h:72px;
+}
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+.layout{max-width:1200px;margin:0 auto;padding:0 30px}
+@media(max-width:599px){.layout{padding:0 20px}}
+
+/* section vertical spacing */
+.sec{padding:96px 0}
+.sec--sm{padding:64px 0}
+.sec--lg{padding:120px 0}
+@media(max-width:899px){.sec{padding:72px 0}.sec--sm{padding:48px 0}.sec--lg{padding:80px 0}}
+@media(max-width:599px){.sec{padding:56px 0}.sec--sm{padding:36px 0}.sec--lg{padding:64px 0}}
+
+/* ============================================================
+   TYPOGRAPHY
+============================================================ */
+.t-display{font-family:'Lora',Georgia,serif;font-weight:300;line-height:1;letter-spacing:-0.04em;font-size:clamp(2.8rem,6vw,5rem);color:#fff}
+.t-h1{font-family:'Lora',Georgia,serif;font-weight:300;line-height:1;letter-spacing:-0.04em;font-size:clamp(2.5rem,5vw,4.625rem);color:var(--dark)}
+.t-h2{font-family:'Lora',Georgia,serif;font-weight:300;line-height:1.05;letter-spacing:-0.02em;font-size:clamp(2rem,4vw,3.375rem);color:var(--dark)}
+.t-h3{font-family:'Lora',Georgia,serif;font-weight:300;line-height:1.1;letter-spacing:0;font-size:clamp(1.5rem,3vw,2rem);color:var(--dark)}
+.t-h4{font-family:'Lora',Georgia,serif;font-weight:300;line-height:1.15;letter-spacing:0;font-size:clamp(1.25rem,2.5vw,1.75rem);color:var(--dark)}
+.t-body{font-size:1rem;line-height:1.65;color:var(--mid)}
+.t-body--lg{font-size:clamp(1.1rem,2vw,1.375rem);line-height:1.5;font-weight:300;color:var(--mid)}
+.t-eyebrow{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.t-caption{font-size:0.8125rem;color:var(--muted)}
+.t-stat{font-family:'Lora',Georgia,serif;font-weight:300;font-size:3rem;line-height:1;color:var(--dark);display:block}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn-primary{
+  display:inline-block;
+  background:var(--green);color:#fff;
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
+  padding:1rem 2rem;
+  border:none;cursor:pointer;
+  transition:background 0.15s ease;
+}
+.btn-primary:hover{background:var(--green-dark);color:#fff}
+
+.btn-secondary{
+  display:inline-block;
+  background:transparent;color:var(--green);
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
+  padding:1rem 2rem;
+  box-shadow:inset 0 0 0 1.5px rgba(39,79,64,0.35);
+  transition:box-shadow 0.15s ease,color 0.15s ease;
+}
+.btn-secondary:hover{box-shadow:inset 0 0 0 1.5px var(--green);color:var(--green-dark)}
+
+.btn-ghost{
+  display:inline-block;
+  background:transparent;color:#fff;
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
+  padding:1rem 2rem;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.5);
+  transition:box-shadow 0.15s ease;
+}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px #fff}
+
+.link-arrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  color:var(--purple);font-weight:500;font-size:0.9375rem;
+  transition:color 0.15s ease;
+}
+.link-arrow::after{content:'→';transition:transform 0.15s ease}
+.link-arrow:hover{color:var(--purple-dark)}
+.link-arrow:hover::after{transform:translateX(4px)}
+
+/* ============================================================
+   IMAGE PLACEHOLDERS
+============================================================ */
+.img-ph{
+  background:var(--placeholder);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:0.6875rem;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  width:100%;
+}
+.img-ph--hero{aspect-ratio:1/1;max-width:520px;background:rgba(255,255,255,0.14);color:rgba(255,255,255,0.45);border-radius:4px}
+.img-ph--feature{aspect-ratio:16/10}
+.img-ph--highlight{aspect-ratio:4/5;max-width:480px}
+.img-ph--quote{aspect-ratio:3/2}
+.img-ph--square{aspect-ratio:1/1;width:112px;height:112px;border-radius:50%;flex-shrink:0}
+.img-ph--tile{aspect-ratio:4/3}
+.img-ph--video{aspect-ratio:16/9;background:var(--dark);color:rgba(255,255,255,0.35);border-radius:6px}
+
+/* ============================================================
+   FADE-IN ANIMATION
+============================================================ */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease}
+.fade-up.in{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.fade-up{opacity:1!important;transform:none!important;transition:none!important}}
+
+/* ============================================================
+   NAV
+============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  transition:background 0.3s ease,box-shadow 0.3s ease;
+}
+.nav.scrolled{background:rgba(255,255,255,0.97);box-shadow:0 1px 0 var(--border)}
+.nav__inner{
+  max-width:1200px;margin:0 auto;padding:0 30px;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;gap:2rem;
+}
+.nav__logo{
+  font-family:'Lora',serif;font-size:1.375rem;font-weight:400;
+  color:var(--dark);letter-spacing:-0.02em;flex-shrink:0;
+}
+.nav__logo em{color:var(--purple);font-style:normal}
+.nav__links{display:none;align-items:center;gap:1.75rem}
+@media(min-width:900px){.nav__links{display:flex}}
+.nav__links a{font-size:0.9rem;font-weight:500;color:var(--dark);transition:color 0.15s}
+.nav__links a:hover{color:var(--purple)}
+.nav__actions{display:flex;align-items:center;gap:0.75rem}
+.nav__btn{
+  font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:500;
+  padding:0.6rem 1.1rem;
+  border:1px solid rgba(26,26,46,0.25);
+  color:var(--dark);transition:border-color 0.15s,color 0.15s;
+  background:transparent;
+}
+.nav__btn:hover{border-color:var(--dark)}
+.nav__btn--fill{background:var(--green);color:#fff;border-color:var(--green)}
+.nav__btn--fill:hover{background:var(--green-dark);border-color:var(--green-dark);color:#fff}
+
+/* Mobile hamburger */
+.nav__hamburger{
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  width:28px;height:28px;cursor:pointer;border:none;background:none;padding:0;
+}
+@media(min-width:900px){.nav__hamburger{display:none}}
+.nav__hamburger span{display:block;height:2px;background:var(--dark);border-radius:2px;transition:all 0.3s ease}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero{
+  background:var(--purple);
+  padding-top:calc(var(--nav-h) + 80px);
+  padding-bottom:80px;
+  overflow:hidden;
+}
+@media(max-width:899px){.hero{padding-top:calc(var(--nav-h) + 56px);padding-bottom:56px}}
+.hero__inner{
+  display:flex;align-items:center;gap:56px;flex-wrap:wrap;
+}
+.hero__copy{flex:1 1 320px}
+.hero__copy .t-display{margin-bottom:1.5rem}
+.hero__copy .t-body--lg{color:rgba(255,255,255,0.82);margin-bottom:2rem}
+.hero__copy .t-body--lg em{color:#fff;font-style:normal;font-weight:500}
+.hero__actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.hero__image{flex:1 1 300px;display:flex;justify-content:center}
+
+/* ============================================================
+   HEADLINER (centered text block)
+============================================================ */
+.headliner{text-align:center}
+.headliner__inner{max-width:760px;margin:0 auto}
+.headliner__inner .t-h2{margin-bottom:1.5rem}
+.headliner__inner .t-body{max-width:580px;margin:0 auto 2rem}
+
+/* ============================================================
+   INTENT PATH (feature row — image + text)
+============================================================ */
+.intent-row{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
+.intent-row--flip{flex-direction:row-reverse}
+@media(max-width:899px){.intent-row--flip{flex-direction:row}}
+.intent-row__image{flex:1 1 280px}
+.intent-row__copy{flex:1 1 280px}
+.intent-row__copy .t-h3{margin-bottom:1rem}
+.intent-row__copy .t-body{margin-bottom:1.5rem}
+
+/* ============================================================
+   PULL QUOTE BLOCK
+============================================================ */
+.pullquote{text-align:center}
+.pullquote__inner{max-width:820px;margin:0 auto}
+.pullquote__inner .t-h2{margin-bottom:1.5rem;font-style:italic}
+.pullquote__inner .t-body{max-width:620px;margin:0 auto 2rem}
+
+/* ============================================================
+   ZIGZAG MODULE
+============================================================ */
+.zigzag__title{margin-bottom:56px}
+.zigzag__item{
+  display:flex;align-items:center;gap:80px;flex-wrap:wrap;
+  padding:64px 0;border-top:1px solid var(--border);
+}
+.zigzag__item:first-child{border-top:none;padding-top:0}
+.zigzag__item:nth-child(even){flex-direction:row-reverse}
+@media(max-width:899px){.zigzag__item:nth-child(even){flex-direction:row}}
+.zigzag__image{flex:1 1 260px}
+.zigzag__copy{flex:1 1 260px}
+.zigzag__copy .t-h3{margin-bottom:1rem}
+.zigzag__copy .t-body{margin-bottom:1.5rem}
+
+/* ============================================================
+   3-COL GRID
+============================================================ */
+.three-grid{display:grid;grid-template-columns:1fr;gap:48px;text-align:center}
+@media(min-width:600px){.three-grid{grid-template-columns:repeat(3,1fr)}}
+.three-grid__item .img-ph--square{margin:0 auto 1.5rem}
+.three-grid__item .t-h4{margin-bottom:0.75rem}
+.three-grid__item .t-body{margin-bottom:1.25rem;font-size:0.9375rem}
+
+/* ============================================================
+   HIGHLIGHT MODULE (large alternating blocks)
+============================================================ */
+.highlight{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
+.highlight--flip{flex-direction:row-reverse}
+@media(max-width:899px){.highlight--flip{flex-direction:row}}
+.highlight__image{flex:1 1 280px}
+.highlight__copy{flex:1 1 280px}
+.highlight__copy .t-h3{margin-bottom:1.25rem}
+.highlight__copy .t-body{margin-bottom:0}
+
+/* ============================================================
+   CUSTOMER QUOTE MODULE
+============================================================ */
+.quote-module{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
+.quote-module--flip{flex-direction:row-reverse}
+@media(max-width:899px){.quote-module--flip{flex-direction:row}}
+.quote-module__image{flex:1 1 280px}
+.quote-module__copy{flex:1 1 280px}
+.quote-block__logo{
+  height:36px;width:130px;background:var(--border);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.625rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:2rem;
+}
+.quote-block__quote{
+  font-family:'Lora',serif;font-weight:300;font-style:italic;
+  font-size:clamp(1.375rem,2.5vw,2rem);line-height:1.25;
+  color:var(--dark);margin-bottom:1.25rem;
+}
+.quote-block__quote::before{content:'\201C';margin-left:-0.4em}
+.quote-block__quote::after{content:'\201D'}
+.quote-block__caption{font-size:0.875rem;color:var(--muted);margin-bottom:2.5rem}
+.quote-block__stats{display:flex;gap:3rem;flex-wrap:wrap}
+.quote-block__stat .t-stat{margin-bottom:0.25rem}
+.quote-block__stat .t-caption{color:var(--mid)}
+
+/* ============================================================
+   RESOURCE TILE GRID
+============================================================ */
+.resource-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  border:1px solid var(--border);
+}
+@media(min-width:900px){
+  .resource-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+}
+
+/* Tile 1 — featured */
+.rtile-1{
+  background:var(--purple-light);
+  padding:52px 44px;
+  display:flex;flex-direction:column;justify-content:center;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+}
+@media(min-width:900px){.rtile-1{border-bottom:none;border-right:1px solid var(--border)}}
+.rtile-1 .t-eyebrow{margin-bottom:1rem}
+.rtile-1 .t-h2{font-size:clamp(1.5rem,3vw,2.125rem);margin-bottom:1rem}
+.rtile-1 .t-body{margin-bottom:2rem;max-width:380px;margin-left:auto;margin-right:auto}
+
+/* Tile 2 — image card */
+.rtile-2{
+  border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;
+}
+.rtile-2__image{width:100%}
+.rtile-2__copy{padding:24px 28px}
+.rtile-2__logo{
+  height:22px;width:110px;background:var(--border);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:0.875rem;
+}
+.rtile-2__copy .t-eyebrow{margin-bottom:0.5rem}
+.rtile-2__copy .t-h4{margin-bottom:0.5rem;font-size:1.25rem}
+.rtile-2__copy .t-body{font-size:0.9rem}
+
+/* Tile 3 — bg story */
+.rtile-3{
+  background:var(--cream-mid);
+  padding:40px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:260px;
+  position:relative;
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+@media(min-width:900px){.rtile-3{border-bottom:none}}
+.rtile-3__bg{
+  position:absolute;inset:0;
+  background:var(--placeholder);
+  opacity:0.6;
+}
+.rtile-3__copy{position:relative;z-index:1}
+.rtile-3__copy .t-eyebrow{margin-bottom:0.75rem}
+.rtile-3__copy .t-h4{margin-bottom:1rem;font-size:1.25rem}
+
+/* Tile 4 — checklist */
+.rtile-4{display:flex;flex-direction:column;background:var(--cream)}
+.rtile-4__image{width:100%}
+.rtile-4__copy{padding:24px 28px}
+.rtile-4__copy .t-eyebrow{margin-bottom:0.5rem}
+.rtile-4__copy .t-h4{margin-bottom:0.5rem;font-size:1.25rem}
+.rtile-4__copy .t-body{font-size:0.9rem;margin-bottom:1rem}
+
+/* ============================================================
+   FINAL CTA
+============================================================ */
+.final-cta{text-align:center}
+.final-cta .t-h1{margin-bottom:1.5rem}
+.final-cta .t-body--lg{max-width:440px;margin:0 auto 2.5rem}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.footer{background:var(--cream-mid);border-top:1px solid var(--border);padding:64px 0 40px}
+.footer__grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:48px;
+}
+@media(min-width:900px){.footer__grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+.footer__brand .nav__logo{display:block;margin-bottom:1rem}
+.footer__brand .t-body{font-size:0.875rem;max-width:220px}
+.footer__col h5{
+  font-size:0.6875rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--dark);margin-bottom:1.25rem;
+}
+.footer__col li{margin-bottom:0.625rem}
+.footer__col li a{font-size:0.875rem;color:var(--mid);transition:color 0.15s}
+.footer__col li a:hover{color:var(--purple)}
+.footer__bottom{
+  border-top:1px solid var(--border);padding-top:28px;
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;
+  font-size:0.8125rem;color:var(--muted);
+}
+
+/* ============================================================
+   SECTION BACKGROUNDS
+============================================================ */
+.bg-white{background:#fff}
+.bg-cream{background:var(--cream)}
+.bg-cream-mid{background:var(--cream-mid)}
+.bg-purple-tint{background:rgba(140,128,207,0.07)}
+
+/* ============================================================
+   UTILITY
+============================================================ */
+.mt-sm{margin-top:1rem}
+.mt-md{margin-top:1.5rem}
+.mt-lg{margin-top:2.5rem}
+.mb-sm{margin-top:1rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+
+<!-- ======================================================
+     NAV
+====================================================== -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo">The<em>5th</em></a>
+    <ul class="nav__links" role="list">
+      <li><a href="#">Programs</a></li>
+      <li><a href="#">Community</a></li>
+      <li><a href="#">The5th AI</a></li>
+      <li><a href="#">Resources</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="#" class="nav__btn">Log In</a>
+      <a href="#" class="nav__btn nav__btn--fill">Get Started</a>
+    </div>
+    <button class="nav__hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="content">
+
+<!-- ======================================================
+     HERO
+====================================================== -->
+<section class="hero">
+  <div class="layout">
+    <div class="hero__inner">
+
+      <div class="hero__copy">
+        <h1 class="t-display">We help experienced women build a Wisdom-Based Business™ — and finally get paid what they're worth</h1>
+        <p class="t-body--lg">The5th gives you the frameworks, coaching, and AI tools to turn your professional expertise into <em>consistent $10K+ months.</em></p>
+        <div class="hero__actions">
+          <a href="#" class="btn-primary">Take the Free Quiz</a>
+          <a href="#" class="btn-ghost">Watch the Story</a>
+        </div>
+      </div>
+
+      <figure class="hero__image fade-up">
+        <div class="img-ph img-ph--hero">Hero Image</div>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     HEADLINER — Do it all
+====================================================== -->
+<section class="sec bg-white">
+  <div class="layout">
+    <div class="headliner">
+      <div class="headliner__inner">
+        <h2 class="t-h2">Do it all with The5th</h2>
+        <p class="t-body">Bring your audience, your offer, and your marketing together so you can hit your income goals faster — all from one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     INTENT PATH — Row 1 (image left, text right)
+====================================================== -->
+<section class="sec--sm bg-white" style="padding-top:0">
+  <div class="layout">
+    <div class="intent-row">
+      <div class="intent-row__image fade-up">
+        <div class="img-ph img-ph--feature">Feature Image — Offers</div>
+      </div>
+      <div class="intent-row__copy">
+        <h2 class="t-h3">Get your expertise online</h2>
+        <p class="t-body">Give your brand a home and launch an offer built for coaches and consultants — with all the tools you need to attract the right clients.</p>
+        <a href="#" class="link-arrow">Offers and landing pages</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     INTENT PATH — Row 2 (image right, text left)
+====================================================== -->
+<section class="sec bg-cream">
+  <div class="layout">
+    <div class="intent-row intent-row--flip">
+      <div class="intent-row__image fade-up">
+        <div class="img-ph img-ph--feature">Feature Image — Marketing</div>
+      </div>
+      <div class="intent-row__copy">
+        <h2 class="t-h3">Market your business</h2>
+        <p class="t-body">Send the right message to the right woman at the right time. Build email sequences, social content, and lead campaigns — all from one place.</p>
+        <a href="#" class="link-arrow">Marketing tools</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     PULL QUOTE
+====================================================== -->
+<section class="sec bg-cream">
+  <div class="layout">
+    <div class="pullquote">
+      <div class="pullquote__inner">
+        <h2 class="t-h2">"We built The5th for the woman who has already done the hard work — she just needs the right system to get paid for it."</h2>
+        <p class="t-body">New coaching programmes, AI tools, and marketing systems are here. Take advantage of The5th AI, the Client-To-Cash Method™, and everything you need to generate consistent income from your expertise.</p>
+        <a href="#" class="btn-primary">See what's inside</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     VIDEO
+====================================================== -->
+<section class="sec--sm bg-cream" style="padding-top:0">
+  <div class="layout">
+    <div class="img-ph img-ph--video">Your Story — VSL Video</div>
+  </div>
+</section>
+
+<!-- ======================================================
+     ZIGZAG — We'll help you
+====================================================== -->
+<section class="sec bg-white">
+  <div class="layout">
+    <h2 class="t-h2 zigzag__title">We'll help you—</h2>
+    <div class="zigzag">
+
+      <div class="zigzag__item">
+        <div class="zigzag__image fade-up">
+          <div class="img-ph img-ph--feature">Image — Reach Women</div>
+        </div>
+        <div class="zigzag__copy">
+          <h3 class="t-h3">Reach the right women</h3>
+          <p class="t-body">Put your ideal client at the heart of your marketing with tools that show you exactly who to talk to — and how to speak directly to her.</p>
+          <a href="#" class="link-arrow">Audience tools</a>
+        </div>
+      </div>
+
+      <div class="zigzag__item">
+        <div class="zigzag__image fade-up">
+          <div class="img-ph img-ph--feature">Image — Create Content</div>
+        </div>
+        <div class="zigzag__copy">
+          <h3 class="t-h3">Create content that converts</h3>
+          <p class="t-body">Let your expertise shine through with done-for-you templates, The5th AI, and a content system that keeps working even when you're not.</p>
+          <a href="#" class="link-arrow">Explore The5th AI</a>
+        </div>
+      </div>
+
+      <div class="zigzag__item">
+        <div class="zigzag__image fade-up">
+          <div class="img-ph img-ph--feature">Image — Automate</div>
+        </div>
+        <div class="zigzag__copy">
+          <h3 class="t-h3">Automate your client journey</h3>
+          <p class="t-body">Send personalised messages that reach your prospects at exactly the right moment — without you doing it manually every time.</p>
+          <a href="#" class="link-arrow">Learn about automations</a>
+        </div>
+      </div>
+
+      <div class="zigzag__item">
+        <div class="zigzag__image fade-up">
+          <div class="img-ph img-ph--feature">Image — Insights</div>
+        </div>
+        <div class="zigzag__copy">
+          <h3 class="t-h3">Make decisions with real data</h3>
+          <p class="t-body">With all your numbers in one place, you can clearly see what's working — and get smart recommendations on exactly what to do more of.</p>
+          <a href="#" class="link-arrow">Insights and analytics</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     HEADLINER — Keep moving
+====================================================== -->
+<section class="sec bg-cream-mid">
+  <div class="layout">
+    <div class="headliner">
+      <div class="headliner__inner" style="max-width:560px">
+        <h2 class="t-h2">Keep moving forward. We've got you.</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     3-COL GRID — Support features
+====================================================== -->
+<section class="sec--sm bg-cream-mid" style="padding-top:0">
+  <div class="layout">
+    <div class="three-grid">
+
+      <div class="three-grid__item fade-up">
+        <div class="img-ph img-ph--square">Icon</div>
+        <h3 class="t-h4">Private 1:1 coaching</h3>
+        <p class="t-body">High-touch guidance from someone who has built this business and knows exactly what it takes to get you there.</p>
+        <a href="#" class="link-arrow" style="justify-content:center">Learn more</a>
+      </div>
+
+      <div class="three-grid__item fade-up" style="transition-delay:0.1s">
+        <div class="img-ph img-ph--square">Icon</div>
+        <h3 class="t-h4">Proven frameworks</h3>
+        <p class="t-body">The Client-To-Cash Method™ and the 4-Pillar Offer Framework — every system you need to build, market, and sell.</p>
+        <a href="#" class="link-arrow" style="justify-content:center">Learn more</a>
+      </div>
+
+      <div class="three-grid__item fade-up" style="transition-delay:0.2s">
+        <div class="img-ph img-ph--square">Icon</div>
+        <h3 class="t-h4">A community of experts</h3>
+        <p class="t-body">Surround yourself with ambitious, experienced women who are building the same thing — and lifting each other up.</p>
+        <a href="#" class="link-arrow" style="justify-content:center">Join the community</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     HEADLINER — See how it comes together
+====================================================== -->
+<section class="sec bg-cream-mid" style="padding-top:0">
+  <div class="layout">
+    <div class="headliner">
+      <div class="headliner__inner">
+        <h2 class="t-h2">See how it all comes together</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     HIGHLIGHT MODULES x3
+====================================================== -->
+<section class="sec--sm bg-cream-mid" style="padding-top:0">
+  <div class="layout">
+
+    <!-- Module 1 — image left -->
+    <div class="highlight" style="padding-bottom:80px;border-bottom:1px solid var(--border)">
+      <div class="highlight__image fade-up">
+        <div class="img-ph img-ph--highlight">Highlight Image — Content to Clients</div>
+      </div>
+      <div class="highlight__copy">
+        <h2 class="t-h3">Turn your content into clients</h2>
+        <p class="t-body">Connect your offer to your content and get pre-built client segments based on behaviour — so every piece of content you create is doing conversion work for you.</p>
+      </div>
+    </div>
+
+    <!-- Module 2 — image right -->
+    <div class="highlight highlight--flip" style="padding:80px 0;border-bottom:1px solid var(--border)">
+      <div class="highlight__image fade-up">
+        <div class="img-ph img-ph--highlight">Highlight Image — Discovery Call</div>
+      </div>
+      <div class="highlight__copy">
+        <h2 class="t-h3">Pave the path to the discovery call</h2>
+        <p class="t-body">Put your prospects on a personalised journey that leads them directly to booking a call with you — without you chasing anyone or sending a single cold message.</p>
+      </div>
+    </div>
+
+    <!-- Module 3 — image left -->
+    <div class="highlight" style="padding-top:80px">
+      <div class="highlight__image fade-up">
+        <div class="img-ph img-ph--highlight">Highlight Image — Results</div>
+      </div>
+      <div class="highlight__copy">
+        <h2 class="t-h3">Watch the results come in</h2>
+        <p class="t-body">Track every client from first click to paid invoice. See exactly who signed on, what they invested, and how much your programme has earned — in real time.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================================================
+     STATS HEADLINER
+====================================================== -->
+<section class="sec bg-white">
+  <div class="layout">
+    <div class="headliner">
+      <div class="headliner__inner">
+        <h2 class="t-h2">Up to 6x more clients with a proven system</h2>
+        <p class="t-body">A structured sales and marketing system generates up to 6 times more clients than ad-hoc outreach alone. We built that system specifically for you — and it's ready to use from day one.</p>
+        <a href="#" class="btn-primary">See the 10K Roadmap</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     CUSTOMER QUOTE
+====================================================== -->
+<section class="sec bg-white" style="padding-top:0">
+  <div class="layout">
+    <div class="quote-module quote-module--flip">
+
+      <div class="quote-module__image fade-up">
+        <div class="img-ph img-ph--quote">Client Story Image</div>
+      </div>
+
+      <div class="quote-module__copy">
+        <div class="quote-block__logo">Client Logo</div>
+        <blockquote class="quote-block__quote">Since working with The5th, I finally feel confident selling. Like — I've actually got this.</blockquote>
+        <p class="quote-block__caption">— Client Name, Former [Title], now earning $X/month</p>
+        <div class="quote-block__stats">
+          <div class="quote-block__stat">
+            <span class="t-stat">3x</span>
+            <span class="t-caption">revenue increase in 90 days</span>
+          </div>
+          <div class="quote-block__stat">
+            <span class="t-stat">$10K</span>
+            <span class="t-caption">first month in business</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     RECOGNITION
+====================================================== -->
+<section class="sec bg-purple-tint">
+  <div class="layout">
+    <div class="headliner">
+      <div class="headliner__inner" style="max-width:600px">
+        <h2 class="t-h2">The5th was recognised as one of the top coaching platforms for women building digital businesses.</h2>
+        <a href="#" class="btn-secondary" target="_blank" rel="noopener noreferrer">See how we compare</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     RESOURCE TILE GRID
+====================================================== -->
+<section class="sec bg-white">
+  <div class="layout">
+
+    <div class="headliner" style="margin-bottom:48px">
+      <div class="headliner__inner">
+        <h2 class="t-h2">Resources to give you the inside track</h2>
+        <p class="t-body">Expert guidance, timely resources, and real stories from experienced women who built something remarkable — and the inside track on how they did it.</p>
+      </div>
+    </div>
+
+    <div class="resource-grid">
+
+      <!-- Tile 1 — featured -->
+      <div class="rtile-1">
+        <p class="t-eyebrow">Live Workshop</p>
+        <h2 class="t-h2">Build Your First Digital Offer in 5 Days</h2>
+        <p class="t-body">A free live workshop walking you through the 4-Pillar Offer Framework — step by step, with live Q&amp;A.</p>
+        <div><a href="#" class="btn-primary">Register Free</a></div>
+      </div>
+
+      <!-- Tile 2 — podcast -->
+      <div class="rtile-2">
+        <div class="img-ph img-ph--tile rtile-2__image">Podcast Image</div>
+        <div class="rtile-2__copy">
+          <div class="rtile-2__logo">The5th Presents</div>
+          <p class="t-eyebrow">Podcast</p>
+          <h3 class="t-h4">The Expertise Economy</h3>
+          <p class="t-body">Real conversations with women who turned their knowledge into income — and exactly how they did it.</p>
+        </div>
+      </div>
+
+      <!-- Tile 3 — case study -->
+      <div class="rtile-3">
+        <div class="rtile-3__bg"></div>
+        <div class="rtile-3__copy">
+          <p class="t-eyebrow">Case Study</p>
+          <h3 class="t-h4">The HR consultant who turned 20 years of experience into $25K a month</h3>
+          <a href="#" class="link-arrow">Read the story</a>
+        </div>
+      </div>
+
+      <!-- Tile 4 — checklist -->
+      <div class="rtile-4">
+        <div class="img-ph img-ph--tile rtile-4__image">Resource Image</div>
+        <div class="rtile-4__copy">
+          <p class="t-eyebrow">Free Resource</p>
+          <h3 class="t-h4">Is Your Expertise Ready to Become an Offer?</h3>
+          <p class="t-body">Our checklist helps you find out in under 10 minutes — and shows you exactly what to do next.</p>
+          <a href="#" class="link-arrow">Get the checklist</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     FINAL CTA
+====================================================== -->
+<section class="sec bg-cream">
+  <div class="layout">
+    <div class="final-cta">
+      <h2 class="t-h1">Let's do this</h2>
+      <p class="t-body--lg">Every Wisdom-Based Business™ starts with one decision.</p>
+      <a href="#" class="btn-primary">Take the Free Quiz</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+<footer class="footer">
+  <div class="layout">
+    <div class="footer__grid">
+
+      <div class="footer__brand">
+        <a href="/" class="nav__logo">The<em>5th</em></a>
+        <p class="t-body">Helping experienced women build a Wisdom-Based Business™ and finally get paid what they're worth.</p>
+      </div>
+
+      <div class="footer__col">
+        <h5>Programs</h5>
+        <ul>
+          <li><a href="#">10K Roadmap Accelerator</a></li>
+          <li><a href="#">Community Membership</a></li>
+          <li><a href="#">The5th AI</a></li>
+          <li><a href="#">Take the Quiz</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Podcast</a></li>
+          <li><a href="#">Free Workshop</a></li>
+          <li><a href="#">Case Studies</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 The5th Consulting. All rights reserved.</span>
+      <span>the5th.consulting</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll state
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// Fade-up on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Stagger zigzag images
+document.querySelectorAll('.zigzag__item').forEach((item, i) => {
+  const img = item.querySelector('.fade-up');
+  if (img) img.style.transitionDelay = `${i * 0.05}s`;
+});
+</script>
+
+</body>
+</html>

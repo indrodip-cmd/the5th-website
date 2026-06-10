@@ -183,10 +183,11 @@ ul{list-style:none}
   padding-top:calc(var(--nav-h) + 120px);
   padding-bottom:0;
   overflow:hidden;
+  position:relative;min-height:680px;
 }
 @media(max-width:899px){.hero{padding-top:calc(var(--nav-h) + 16px);padding-bottom:56px}}
 .hero__inner{
-  display:flex;align-items:flex-end;gap:60px;flex-wrap:wrap;
+  display:flex;align-items:flex-end;gap:60px;flex-wrap:wrap;position:relative;z-index:1;
 }
 .hero__copy{flex:1 1 320px}
 .hero__copy .t-display{margin-bottom:1.5rem}
@@ -451,7 +452,7 @@ ul{list-style:none}
   <div class="layout">
     <div class="hero__inner">
 
-      <div class="hero__copy">
+      <div class="hero__copy" style="max-width:560px;position:relative;z-index:2;">
         <h1 class="t-display">Turn Your Experience Into a Profitable Coaching Business</h1>
         <p class="t-body--lg">We help women 45+ transform decades of knowledge, skills, and life experience into a coaching or consulting business that generates income, without complicated technology, paid ads, or pushy sales tactics.</p>
         <div class="hero__actions" style="flex-direction:column;align-items:flex-start;text-align:left;gap:16px;width:100%;">
@@ -493,9 +494,11 @@ ul{list-style:none}
       </div>
 
       <!-- name tag -->
-      <figure class="hero__image" style="flex:1 1 400px;display:flex;justify-content:flex-end;align-items:flex-end;margin-right:-30px;position:relative;">
-        <img src="/images/hero-illustration.png" alt="Indrodip Ghosh" style="width:100%;max-width:720px;display:block;object-fit:cover;object-position:top center;" />
-        <div style="position:absolute;bottom:24px;right:40px;text-align:right;">
+      <figure style="position:absolute;right:0;top:0;bottom:0;width:55%;max-width:720px;margin:0;padding:0;overflow:hidden;z-index:0;">
+        <img src="/images/hero-illustration.png" alt="Indrodip Ghosh" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;" />
+        <div style="position:absolute;inset:0;background:linear-gradient(to right, var(--purple) 0%, transparent 35%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top, var(--purple) 0%, transparent 100%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:32px;right:40px;text-align:right;z-index:2;">
           <p style="font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;color:#fff;margin:0;">Indrodip Ghosh</p>
           <p style="font-family:'DM Sans',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.65);margin:0;">Founder, The5th Consulting</p>
         </div>

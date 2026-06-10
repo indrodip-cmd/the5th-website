@@ -401,6 +401,18 @@ ul{list-style:none}
 .mt-lg{margin-top:2.5rem}
 .mb-sm{margin-top:1rem}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ============================================================
+   HERO QUIZ CTA + LOGO TICKER
+============================================================ */
+.btn-quiz-gold{display:inline-flex;align-items:center;justify-content:center;background:#1c4a32;color:#fff;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;padding:18px 48px;border-radius:50px;border:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 8px 28px rgba(28,74,50,0.4);transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;}
+.btn-quiz-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(28,74,50,0.5);color:#fff;}
+
+@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.logo-ticker{overflow:hidden;width:100%;}
+.logo-ticker__inner{display:flex;width:max-content;animation:marqueeScroll 30s linear infinite;align-items:center;gap:0;}
+.logo-ticker__item{font-size:clamp(14px,3vw,22px);font-weight:700;color:rgba(255,255,255,0.6);padding:0 32px;white-space:nowrap;font-family:Georgia,serif;}
+.logo-ticker__dot{color:rgba(255,255,255,0.25);font-size:14px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -440,9 +452,41 @@ ul{list-style:none}
       <div class="hero__copy">
         <h1 class="t-display">Your $10K/month coaching business starts here</h1>
         <p class="t-body--lg">The5th gives you the frameworks, coaching, and AI tools to turn your professional expertise into <em>consistent $10K+ months.</em></p>
-        <div class="hero__actions">
-          <a href="#" class="btn-primary">Take the Free Quiz</a>
-          <a href="#" class="btn-ghost">Watch the Story</a>
+        <div class="hero__actions" style="flex-direction:column;align-items:center;text-align:center;gap:16px;width:100%;">
+
+          <a href="https://quiz.the5th.consulting" class="btn-quiz-gold">
+            DISCOVER MY ARCHETYPE &amp; ROADMAP →
+          </a>
+
+          <p style="font-size:15px;color:rgba(255,255,255,0.75);font-weight:500;letter-spacing:0.02em;margin:0;">
+            Takes 5 Minutes &nbsp;•&nbsp; 20 Questions &nbsp;•&nbsp; Instant Results
+          </p>
+
+          <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#c9a84c;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:100px;padding:5px 16px;">
+            + FREE 7-DAY AI COACHING INCLUDED
+          </span>
+
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:8px;">
+            <div style="display:flex;align-items:center;">
+              <img src="/clients/c1.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:0;">
+              <img src="/clients/c2.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c3.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c4.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c5.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c6.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c7.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c8.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c9.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c10.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c11.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+              <img src="/clients/c12.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#c9a84c;font-size:18px;letter-spacing:2px;">★★★★</span><span style="color:#c9a84c;font-size:18px;opacity:0.5;">★</span>
+              <span style="font-size:14px;color:rgba(255,255,255,0.85);font-weight:500;"><strong style="color:#fff;">4.8 stars</strong> from 76 coaches across 12 nations</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -453,6 +497,44 @@ ul{list-style:none}
     </div>
   </div>
 </section>
+
+<div style="overflow:hidden;background:var(--purple);padding:20px 0;border-top:1px solid rgba(255,255,255,0.1);">
+  <p style="text-align:center;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:14px;">OUR CLIENTS HAVE BEEN FEATURED IN</p>
+  <div style="overflow:hidden;width:100%;mask-image:linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%);">
+    <div class="logo-ticker">
+      <div class="logo-ticker__inner">
+        <span class="logo-ticker__item">Forbes</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">HuffPost</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">TEDx</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">The Guardian</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">Yahoo Finance</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">The New York Times</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">Wall Street Journal</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">Forbes</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">HuffPost</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">TEDx</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">The Guardian</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">Yahoo Finance</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">The New York Times</span>
+        <span class="logo-ticker__dot">•</span>
+        <span class="logo-ticker__item">Wall Street Journal</span>
+        <span class="logo-ticker__dot">•</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ======================================================
      2 WAYS WE HELP

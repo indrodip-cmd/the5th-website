@@ -498,12 +498,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 .intentPath__container a{color:var(--gold)}
 .intentPath__image{
   width:calc(100% + 6rem);margin:-3rem -3rem 2rem;
+  overflow:hidden;
 }
 @media(min-width:1100px){
   .intentPath__image{
     width:42%;order:2;margin:0;
     position:relative;overflow:hidden;flex-shrink:0;
-    min-height:400px;
+    min-height:420px;
+    max-height:480px;
   }
 }
 .intentPath__image>div{
@@ -1103,7 +1105,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <div class="intentPath__image">
       <img src="/public/images/coaching-session.png"
            alt="1:1 Coaching session with Indrodip"
-           style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+           style="width:100%;height:100%;object-fit:cover;object-position:right center;display:block;">
     </div>
     <div class="intentPath__copy-container">
       <p class="eyebrow margin--bottom-2">10K Roadmap Accelerator - Private Coaching</p>

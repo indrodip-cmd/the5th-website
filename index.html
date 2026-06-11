@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════
    THE5TH CONSULTING — PREMIUM REDESIGN
@@ -741,6 +743,114 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 [data-animate].is-visible{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){[data-animate]{opacity:1!important;transform:none!important}}
 
+/* ── FOUNDER SECTION ── */
+.founder-section{
+  padding:8rem 0;
+  background:var(--parchment);
+  overflow:hidden;
+}
+.founder__inner{
+  display:flex;
+  align-items:center;
+  gap:6rem;
+  flex-wrap:wrap;
+}
+.founder__image-col{
+  flex:1 1 320px;
+  position:relative;
+}
+.founder__image-wrap{
+  position:relative;
+  display:inline-block;
+  width:100%;
+  max-width:440px;
+}
+.founder__image-ph{
+  width:100%;
+  aspect-ratio:3/4;
+  background:var(--plum);
+  overflow:hidden;
+  position:relative;
+}
+.founder__image-card{
+  position:absolute;
+  bottom:-1.5rem;
+  right:-1.5rem;
+  background:var(--ink);
+  color:var(--white);
+  padding:1.5rem 2rem;
+  min-width:140px;
+}
+.founder__image-card-num{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:2.75rem;font-weight:600;
+  color:var(--white);line-height:1;
+  letter-spacing:-0.03em;display:block;
+}
+.founder__image-card-num sup{
+  font-size:0.45em;vertical-align:super;color:var(--gold);
+}
+.founder__image-card-label{
+  font-size:0.75rem;font-weight:500;
+  color:rgba(255,255,255,0.5);
+  text-transform:uppercase;letter-spacing:0.08em;
+  display:block;margin-top:0.375rem;
+}
+.founder__copy-col{
+  flex:1 1 380px;
+}
+.founder__copy-col .eyebrow{
+  display:block;margin-bottom:1.5rem;
+}
+.founder__headline{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:600;line-height:1.08;
+  letter-spacing:-0.03em;color:var(--ink);
+  margin-bottom:2.5rem;
+}
+.founder__headline em{
+  font-style:italic;font-weight:300;color:var(--plum);
+}
+.founder__quote{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.25rem,2vw,1.625rem);
+  font-weight:300;font-style:italic;
+  line-height:1.5;color:var(--plum);
+  border-left:2px solid var(--gold);
+  padding-left:1.75rem;
+  margin-bottom:2rem;
+}
+.founder__body{
+  font-family:'DM Sans',sans-serif;
+  font-size:1.0625rem;font-weight:400;
+  line-height:1.75;color:var(--ink-mid);
+  margin-bottom:1.25rem;
+}
+.founder__sig{
+  display:flex;align-items:center;
+  gap:1.25rem;margin-top:2.5rem;
+}
+.founder__sig-line{
+  width:40px;height:1.5px;
+  background:var(--gold);flex-shrink:0;
+}
+.founder__sig-name{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.25rem;font-weight:600;
+  color:var(--ink);display:block;
+  letter-spacing:-0.01em;
+}
+.founder__sig-title{
+  font-size:0.8125rem;color:var(--ink-muted);
+  display:block;margin-top:0.125rem;
+  letter-spacing:0.02em;
+}
+@media(max-width:900px){
+  .founder__inner{gap:3rem}
+  .founder__image-card{right:0;bottom:-1rem}
+}
+
 /* ── SCREEN READER ── */
 .screen-reader-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
@@ -908,13 +1018,73 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 </section>
 
 <!-- ======================================================
+     FOUNDER BIO
+====================================================== -->
+<section class="founder-section">
+  <div class="layout">
+    <div class="founder__inner">
+
+      <div class="founder__image-col">
+        <div class="founder__image-wrap">
+          <div class="founder__image-ph">
+            <img src="/public/images/hero-illustration.png"
+                 alt="Indrodip Ghosh, Founder of The5th Consulting"
+                 style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+          </div>
+          <div class="founder__image-card">
+            <span class="founder__image-card-num">76<sup>+</sup></span>
+            <span class="founder__image-card-label">clients coached</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder__copy-col">
+        <span class="eyebrow">The founder</span>
+        <h2 class="founder__headline">
+          Built by someone who watched<br>
+          <em>talented women go unpaid</em><br>
+          for decades.
+        </h2>
+        <div class="founder__quote">
+          "I grew up surrounded by talented women who spent years
+          helping families, communities, workplaces, and businesses,
+          yet rarely got paid for the value they created."
+        </div>
+        <p class="founder__body">
+          Later, as a marketer and funnel strategist, Indrodip saw
+          the same pattern everywhere. Women with 20, 30, even 40
+          years of experience believed they had nothing worth selling.
+          Meanwhile, people with far less expertise were building
+          successful online businesses.
+        </p>
+        <p class="founder__body">
+          That disconnect built The5th. Not as a course. Not as
+          another coaching program. As a system specifically designed
+          to help experienced women finally see what was always true:
+          their knowledge is not a hobby. It is an asset that creates
+          income, freedom, and impact.
+        </p>
+        <div class="founder__sig">
+          <div class="founder__sig-line"></div>
+          <div>
+            <span class="founder__sig-name">Indrodip Ghosh</span>
+            <span class="founder__sig-title">Founder, The5th Consulting</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
      HEADLINER, Tried everything
 ====================================================== -->
 <section class="headliner">
   <div class="layout" style="padding-bottom:4rem">
     <div class="content--10of16-large align--center" data-animate>
       <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
-      <h2 class="h2 margin--bottom-3">Most women don't come to The5th because they've tried nothing. They come because they've tried everything — alone.</h2>
+      <h2 class="h2 margin--bottom-3">Most women don't come to The5th because they've tried nothing. They come because they've tried everything. Alone.</h2>
       <p class="copy copy--big">You've tried the courses, the coaches, the content. Something is still missing. Not knowledge. Not capability. A proven system and someone who sees the value in what you already know.</p>
     </div>
   </div>
@@ -1335,19 +1505,195 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 </footer>
 
 <script>
-// Nav scroll state
+// ── NAV SCROLL STATE ──
 const nav = document.querySelector('.globalNav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 20);
 }, {passive: true});
 
-// Scroll-in animation
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); }
-  });
-}, { threshold: 0.12 });
-document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+// ── GSAP SCROLL ANIMATIONS ──
+gsap.registerPlugin(ScrollTrigger);
+
+// Fade up — all data-animate elements
+gsap.utils.toArray('[data-animate]').forEach(el => {
+  gsap.fromTo(el,
+    {opacity: 0, y: 40},
+    {
+      opacity: 1, y: 0,
+      duration: 0.9,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+});
+
+// Stagger headliner sections
+gsap.utils.toArray('.headliner .h2, .founder__headline, .proof-strip__number').forEach(el => {
+  gsap.fromTo(el,
+    {opacity: 0, y: 50},
+    {
+      opacity: 1, y: 0,
+      duration: 1.1,
+      ease: 'power4.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+});
+
+// Proof strip numbers count up
+gsap.utils.toArray('.proof-stat__fig').forEach(el => {
+  const text = el.innerText;
+  const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+  const prefix = text.match(/^\$/) ? '$' : '';
+  const suffix = text.match(/[^0-9.$]+$/) ? text.match(/[^0-9.$]+$/)[0] : '';
+  const hadSup = !!el.querySelector('sup');
+  if (!isNaN(num)) {
+    const counter = {val: 0};
+    gsap.to(counter,
+      {
+        val: num,
+        duration: 2,
+        ease: 'power2.out',
+        onUpdate: function() {
+          const display = prefix + Math.round(counter.val).toLocaleString();
+          if (hadSup && suffix) {
+            el.innerHTML = display + '<sup>' + suffix + '</sup>';
+          } else {
+            el.innerText = display + suffix;
+          }
+        },
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+});
+
+// $15M hero number
+const bigNum = document.querySelector('.proof-strip__number');
+if (bigNum) {
+  const target = 15000000;
+  const counter = {val: 0};
+  gsap.to(counter,
+    {
+      val: target,
+      duration: 2.5,
+      ease: 'power3.out',
+      onUpdate: function() {
+        bigNum.innerText = '$' + Math.round(counter.val).toLocaleString();
+      },
+      scrollTrigger: {
+        trigger: bigNum,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+}
+
+// Founder image slide in
+gsap.fromTo('.founder__image-col',
+  {opacity: 0, x: -60},
+  {
+    opacity: 1, x: 0,
+    duration: 1.1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: '.founder-section',
+      start: 'top 80%',
+      toggleActions: 'play none none none'
+    }
+  }
+);
+
+gsap.fromTo('.founder__copy-col',
+  {opacity: 0, x: 60},
+  {
+    opacity: 1, x: 0,
+    duration: 1.1,
+    ease: 'power3.out',
+    delay: 0.2,
+    scrollTrigger: {
+      trigger: '.founder-section',
+      start: 'top 80%',
+      toggleActions: 'play none none none'
+    }
+  }
+);
+
+// Zigzag stagger
+gsap.utils.toArray('.zigzagModule__element').forEach((el, i) => {
+  gsap.fromTo(el,
+    {opacity: 0, y: 50},
+    {
+      opacity: 1, y: 0,
+      duration: 0.9,
+      delay: i * 0.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+});
+
+// Intent path cards
+gsap.utils.toArray('.intentPath').forEach((el, i) => {
+  gsap.fromTo(el,
+    {opacity: 0, y: 60},
+    {
+      opacity: 1, y: 0,
+      duration: 1,
+      delay: i * 0.15,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+});
+
+// Hero copy on load
+gsap.fromTo('.hero__copyContainer',
+  {opacity: 0, y: 40},
+  {opacity: 1, y: 0, duration: 1.1, ease: 'power3.out', delay: 0.2}
+);
+
+gsap.fromTo('.hero__imageContainer',
+  {opacity: 0, x: 60},
+  {opacity: 1, x: 0, duration: 1.3, ease: 'power3.out', delay: 0.4}
+);
+
+// Gold rule expand
+gsap.utils.toArray('.gold-rule').forEach(el => {
+  gsap.fromTo(el,
+    {width: 0},
+    {
+      width: '48px',
+      duration: 0.8,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%'
+      }
+    }
+  );
+});
 </script>
 
 </body>

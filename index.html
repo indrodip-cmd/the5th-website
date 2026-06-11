@@ -6,418 +6,738 @@
 <title>The5th Consulting - Build a Wisdom-Based Business™</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   RESET
-============================================================ */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;scroll-behavior:smooth}
-body{font-family:'DM Sans',Helvetica Neue,Helvetica,Arial,sans-serif;color:#1a1a2e;background:#fff;-webkit-font-smoothing:antialiased}
-a{text-decoration:none;color:inherit}
-img{display:block;max-width:100%;height:auto}
-ul{list-style:none}
+/* ═══════════════════════════════════════════════
+   THE5TH CONSULTING — PREMIUM REDESIGN
+   Structure: Mailchimp 2020
+   Typography: BossBabe editorial boldness
+   Palette: Deep Plum + Gold + Forest Green
+═══════════════════════════════════════════════ */
 
-/* ============================================================
-   TOKENS
-============================================================ */
+/* ── TOKENS ── */
 :root{
-  --purple:#8c80cf;
-  --purple-dark:#6a5fb8;
-  --purple-light:rgba(140,128,207,0.10);
-  --green:#274f40;
-  --green-dark:#1d3b2f;
-  --cream:#faf9f7;
-  --cream-mid:#f4f0ea;
-  --placeholder:#ede9e3;
-  --white:#ffffff;
-  --dark:#1a1a2e;
-  --mid:#403b3b;
-  --muted:#727070;
-  --border:#dbd9d2;
-  --nav-h:72px;
+  --plum:#3D2645;
+  --plum-dark:#2E1A35;
+  --plum-mid:#4E3158;
+  --gold:#C9A84C;
+  --gold-light:rgba(201,168,76,0.12);
+  --green:#1C4A32;
+  --green-dark:#143826;
+  --parchment:#FAF6F0;
+  --parchment-mid:#F2EDE6;
+  --parchment-deep:#EAE3D8;
+  --ink:#1A1A2E;
+  --ink-mid:#403b3b;
+  --ink-muted:#8A8075;
+  --border:#DDD8CF;
+  --white:#fff;
 }
 
-/* ============================================================
-   LAYOUT
-============================================================ */
-.layout{max-width:1200px;margin:0 auto;padding:0 30px}
-@media(max-width:599px){.layout{padding:0 20px}}
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background-color:var(--parchment);
+  color:var(--ink);
+  font-family:'DM Sans',Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-size:18px;
+  font-weight:400;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none;appearance:none}
 
-/* section vertical spacing */
-.sec{padding:96px 0}
-.sec--sm{padding:64px 0}
-.sec--lg{padding:120px 0}
-@media(max-width:899px){.sec{padding:72px 0}.sec--sm{padding:48px 0}.sec--lg{padding:80px 0}}
-@media(max-width:599px){.sec{padding:56px 0}.sec--sm{padding:36px 0}.sec--lg{padding:64px 0}}
+/* ── TYPOGRAPHY ── */
+/* Display — Cormorant Garamond, BossBabe-style bold italic mixing */
+.h1,.h2{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-weight:600;
+  line-height:1.02;
+  letter-spacing:-0.03em;
+  color:var(--ink);
+}
+.h1{font-size:clamp(2.75rem,5.5vw,5rem)}
+.h2{font-size:clamp(2.25rem,4.5vw,3.75rem)}
+.h2 em,.h1 em{
+  font-style:italic;
+  font-weight:300;
+  color:var(--plum);
+}
+.h3{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-weight:600;font-size:clamp(1.5rem,3vw,2.25rem);
+  line-height:1.1;letter-spacing:-0.02em;color:var(--ink);
+}
+.h4{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-weight:600;font-size:clamp(1.25rem,2.5vw,1.875rem);
+  line-height:1.15;letter-spacing:-0.01em;color:var(--ink);
+}
+.h5{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-weight:600;font-size:1.25rem;line-height:1.2;color:var(--ink);
+}
+.h6{
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;font-size:1.25rem;line-height:1.5;color:var(--ink-mid);
+}
+.copy,.copy p,.normalize p{
+  font-family:'DM Sans',sans-serif;
+  font-size:1.125rem;font-weight:400;
+  line-height:1.7;color:var(--ink-mid);
+}
+.copy--big,.copy--big p{font-size:1.25rem;font-weight:300;line-height:1.6}
+.eyebrow{
+  font-family:'DM Sans',sans-serif;
+  font-size:0.6875rem;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold);
+}
+.quote,blockquote{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.5rem,3vw,2.5rem);
+  font-weight:300;font-style:italic;
+  line-height:1.2;letter-spacing:-0.01em;
+}
 
-/* ============================================================
-   TYPOGRAPHY
-============================================================ */
-.t-display{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.05;letter-spacing:-0.03em;font-size:clamp(2rem,4vw,3.375rem);color:#fff}
-.t-h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1;letter-spacing:-0.04em;font-size:clamp(2.5rem,5vw,4.625rem);color:var(--dark)}
-.t-h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.05;letter-spacing:-0.02em;font-size:clamp(2rem,4vw,3.375rem);color:var(--dark)}
-.t-h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.1;letter-spacing:0;font-size:clamp(1.5rem,3vw,2rem);color:var(--dark)}
-.t-h4{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.15;letter-spacing:0;font-size:clamp(1.25rem,2.5vw,1.75rem);color:var(--dark)}
-.t-body{font-family:'DM Sans',sans-serif;font-weight:400;font-size:1.25rem;line-height:1.65;color:var(--mid)}
-.t-body--lg{font-family:'DM Sans',sans-serif;font-weight:400;font-size:clamp(1.375rem,2vw,1.5rem);line-height:1.5;color:var(--mid)}
-.t-eyebrow{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
-.t-caption{font-size:0.9375rem;color:var(--muted)}
-.t-stat{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:3rem;line-height:1;color:var(--dark);display:block}
-
-/* ============================================================
-   BUTTONS
-============================================================ */
-.btn-primary{
-  display:inline-block;
-  background:var(--green);color:#fff;
+/* ── BUTTONS ── */
+.ctaPrimary{
+  display:inline-block;text-align:center;
+  color:var(--white);background-color:var(--green);
   font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
-  padding:1rem 2rem;
+  padding:1.125rem 2.5rem;
   border:none;cursor:pointer;
-  transition:background 0.15s ease;
+  letter-spacing:0.02em;
+  transition:background 0.2s ease,transform 0.2s ease;
 }
-.btn-primary:hover{background:var(--green-dark);color:#fff}
+.ctaPrimary:hover{background-color:var(--green-dark);color:var(--white);transform:translateY(-1px)}
 
-.btn-secondary{
-  display:inline-block;
-  background:transparent;color:var(--green);
+.ctaSecondary{
+  display:inline-block;text-align:center;
+  color:var(--green);background:transparent;
   font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
-  padding:1rem 2rem;
-  box-shadow:inset 0 0 0 1.5px rgba(39,79,64,0.35);
-  transition:box-shadow 0.15s ease,color 0.15s ease;
+  padding:1.125rem 2.5rem;
+  box-shadow:inset 0 0 0 1.5px rgba(28,74,50,0.4);
+  cursor:pointer;letter-spacing:0.02em;
+  transition:box-shadow 0.2s ease,color 0.2s ease;
 }
-.btn-secondary:hover{box-shadow:inset 0 0 0 1.5px var(--green);color:var(--green-dark)}
+.ctaSecondary:hover{box-shadow:inset 0 0 0 1.5px var(--green);color:var(--green-dark)}
 
-.btn-ghost{
-  display:inline-block;
-  background:transparent;color:#fff;
-  font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;
-  padding:1rem 2rem;
-  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.5);
-  transition:box-shadow 0.15s ease;
-}
-.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px #fff}
-
-.link-arrow{
+.cta{
   display:inline-flex;align-items:center;gap:0.5rem;
-  color:var(--purple);font-weight:500;font-size:0.9375rem;
+  color:var(--plum);font-weight:500;
+  font-family:'DM Sans',sans-serif;font-size:0.9375rem;
   transition:color 0.15s ease;
 }
-.link-arrow::after{content:'→';transition:transform 0.15s ease}
-.link-arrow:hover{color:var(--purple-dark)}
-.link-arrow:hover::after{transform:translateX(4px)}
+.cta:after{content:'→';transition:transform 0.2s ease}
+.cta:hover{color:var(--plum-dark)}
+.cta:hover:after{transform:translateX(4px)}
 
-/* ============================================================
-   IMAGE PLACEHOLDERS
-============================================================ */
-.img-ph{
-  background:var(--placeholder);
-  border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--muted);font-size:0.6875rem;font-weight:500;
-  letter-spacing:0.08em;text-transform:uppercase;
-  width:100%;
+.cavendishLink{
+  display:inline-flex;align-items:center;gap:0.625rem;
+  color:var(--gold);font-weight:500;
+  font-family:'DM Sans',sans-serif;font-size:1rem;
+  letter-spacing:0.01em;
+  transition:color 0.15s ease;
 }
-.img-ph--hero{max-width:680px;background:transparent;border-radius:0}
-.img-ph--feature{aspect-ratio:16/10}
-.img-ph--highlight{aspect-ratio:4/5;max-width:480px}
-.img-ph--quote{aspect-ratio:3/2}
-.img-ph--square{aspect-ratio:1/1;width:112px;height:112px;border-radius:50%;flex-shrink:0}
-.img-ph--tile{aspect-ratio:4/3}
-.img-ph--video{aspect-ratio:16/9;background:var(--dark);color:rgba(255,255,255,0.35);border-radius:6px}
+.cavendishLink:after{content:'→';transition:transform 0.2s ease}
+.cavendishLink:hover:after{transform:translateX(4px)}
 
-/* ============================================================
-   FADE-IN ANIMATION
-============================================================ */
-.fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease}
-.fade-up.in{opacity:1;transform:translateY(0)}
-@media(prefers-reduced-motion:reduce){.fade-up{opacity:1!important;transform:none!important;transition:none!important}}
+/* ── LAYOUT ── */
+.layout{
+  padding-left:1.25rem;padding-right:1.25rem;
+  box-sizing:border-box;
+}
+@media(min-width:600px){.layout{padding-left:3rem;padding-right:3rem}}
+@media(min-width:1100px){.layout{max-width:75rem;margin-left:auto;margin-right:auto;padding-left:2rem;padding-right:2rem}}
 
-/* ============================================================
-   NAV
-============================================================ */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:900;
-  transition:background 0.3s ease,box-shadow 0.3s ease;
-}
-.nav.scrolled{background:rgba(255,255,255,0.97);box-shadow:0 1px 0 var(--border)}
-.nav__inner{
-  max-width:1200px;margin:0 auto;padding:0 30px;
-  height:var(--nav-h);
-  display:flex;align-items:center;justify-content:space-between;gap:2rem;
-}
-.nav__logo{
-  font-family:'Cormorant Garamond',serif;font-size:1.375rem;font-weight:400;
-  color:#fff;letter-spacing:-0.02em;flex-shrink:0;
-}
-.nav__logo em{color:#c9a84c;font-style:normal}
-.nav.scrolled .nav__logo,.footer .nav__logo{color:var(--dark)}
-.nav.scrolled .nav__logo em,.footer .nav__logo em{color:var(--purple)}
-.nav__links{display:none;align-items:center;gap:1.75rem}
-@media(min-width:900px){.nav__links{display:flex}}
-.nav__links a{font-size:0.9rem;font-weight:500;color:var(--dark);transition:color 0.15s}
-.nav__links a:hover{color:var(--purple)}
-.nav__actions{display:flex;align-items:center;gap:0.75rem}
-.nav__btn{
-  font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:500;
-  padding:0.6rem 1.1rem;
-  border:1px solid rgba(26,26,46,0.25);
-  color:var(--dark);transition:border-color 0.15s,color 0.15s;
-  background:transparent;
-}
-.nav__btn:hover{border-color:var(--dark)}
-.nav__btn--fill{background:var(--green);color:#fff;border-color:var(--green)}
-.nav__btn--fill:hover{background:var(--green-dark);border-color:var(--green-dark);color:#fff}
+.layout--padding{padding-top:6rem;padding-bottom:6rem}
+@media(min-width:600px){.layout--padding{padding-top:7.5rem;padding-bottom:7.5rem}}
+@media(min-width:1100px){.layout--padding{padding-top:9rem;padding-bottom:9rem}}
 
-/* Mobile hamburger */
-.nav__hamburger{
-  display:flex;flex-direction:column;justify-content:center;gap:5px;
-  width:28px;height:28px;cursor:pointer;border:none;background:none;padding:0;
-}
-@media(min-width:900px){.nav__hamburger{display:none}}
-.nav__hamburger span{display:block;height:2px;background:var(--dark);border-radius:2px;transition:all 0.3s ease}
+.layout--margin{margin-top:4rem;margin-bottom:4rem}
+@media(min-width:600px){.layout--margin{margin-top:5rem;margin-bottom:5rem}}
+@media(min-width:1100px){.layout--margin{margin-top:6rem;margin-bottom:6rem}}
 
-/* ============================================================
-   HERO
-============================================================ */
+[class*=background].layout--margin,[class^=background].layout--margin{
+  margin-top:0;margin-bottom:0;
+  padding-top:5rem;padding-bottom:5rem;
+}
+@media(min-width:1100px){[class*=background].layout--margin,[class^=background].layout--margin{padding-top:7rem;padding-bottom:7rem}}
+
+.backgroundSquash+.backgroundSquash.layout--margin,
+.backgroundJasmine+.backgroundJasmine.layout--margin{padding-top:0}
+
+/* ── CONTENT WIDTHS ── */
+.content{width:100%;box-sizing:border-box}
+.content--6of8-medium{width:100%}
+@media(min-width:600px){.content--6of8-medium{width:75%}}
+.content--8of8-medium{width:100%}
+.content--8of16-large{width:100%}
+@media(min-width:1100px){.content--8of16-large{width:50%}}
+.content--6of16-large{width:100%}
+@media(min-width:1100px){.content--6of16-large{width:37.5%}}
+.content--12of16-large{width:100%}
+@media(min-width:1100px){.content--12of16-large{width:75%}}
+.content--10of16-large{width:100%}
+@media(min-width:1100px){.content--10of16-large{width:62.5%}}
+.content-12of16--large{width:100%}
+@media(min-width:1100px){.content-12of16--large{width:75%}}
+.content--4of8-medium{width:100%}
+@media(min-width:600px){.content--4of8-medium{width:50%}}
+.align--center{text-align:center}
+
+/* ── FLEX ── */
+.flex{display:flex;flex-wrap:wrap}
+.flex--middle{align-items:center}
+.flex--center{justify-content:center}
+.cell{box-sizing:border-box}
+.flex--columns-2-medium>*{width:100%}
+@media(min-width:600px){.flex--columns-2-medium>*{width:50%}}
+.flex--columns-2-large>*{width:100%}
+@media(min-width:1100px){.flex--columns-2-large>*{width:50%}}
+.flex--columns-3-medium>*{width:100%}
+@media(min-width:600px){.flex--columns-3-medium>*{width:33.33333%}}
+
+/* ── SPACING ── */
+.margin--top-3{margin-top:2rem}
+.margin--bottom-2{margin-bottom:1.25rem}
+.margin--bottom-3{margin-bottom:2rem}
+.margin--bottom-6{margin-bottom:4rem}
+.margin--right-2{margin-right:1.25rem}
+.margin--top-c9{margin-top:5.625rem}
+.margin--bottom-c2{margin-bottom:1.25rem}
+.padding--horizontal-3{padding-left:2rem;padding-right:2rem}
+.margin--vertical-3{margin-top:2rem;margin-bottom:2rem}
+
+/* ── BACKGROUND COLORS ── */
+.backgroundJasmine{background-color:var(--parchment-mid)}
+.backgroundSquash{background-color:var(--parchment-deep)}
+.backgroundYam{background-color:rgba(61,38,69,0.06)}
+.backgroundPlum{background-color:var(--plum)}
+.backgroundWhite{background-color:var(--white)}
+.backgroundCharredKale{background-color:var(--ink)}
+
+/* ── NAVIGATION ── */
+.globalNav{
+  background-color:rgba(250,246,240,0.96);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  height:4.5rem;
+  display:flex;align-items:center;
+  transition:box-shadow 0.3s ease;
+}
+.globalNav.scrolled{box-shadow:0 2px 20px rgba(61,38,69,0.08)}
+.globalNav .layout{
+  width:100%;max-width:75rem;
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:0;padding-bottom:0;
+}
+.gn__logo{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.5rem;font-weight:600;color:var(--ink);
+  letter-spacing:-0.02em;flex-shrink:0;
+}
+.gn__logo span{color:var(--gold)}
+.gn__nav{display:none;gap:0;list-style:none}
+@media(min-width:1100px){.gn__nav{display:flex}}
+.gn__nav a{
+  display:inline-block;color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;font-size:0.875rem;
+  padding:1em 1.1em;position:relative;
+  letter-spacing:0.01em;
+  transition:color 0.15s;
+}
+.gn__nav a:hover{color:var(--plum)}
+.gn__nav a:hover:before{
+  content:'';display:block;position:absolute;
+  left:1.1em;right:1.1em;bottom:0.7em;
+  height:1px;background:var(--gold);
+}
+.gn__ctas{display:flex;align-items:center;gap:0.75rem}
+.gn__login{
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.8125rem;
+  color:var(--ink);padding:0.6rem 1rem;
+  box-shadow:inset 0 0 0 1px rgba(26,26,46,0.2);
+  transition:box-shadow 0.15s,background 0.15s;
+}
+.gn__login:hover{box-shadow:inset 0 0 0 1px var(--ink);background:rgba(26,26,46,0.04)}
+.gn__start{
+  background:var(--green);color:var(--white);
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.8125rem;
+  padding:0.6rem 1.25rem;letter-spacing:0.02em;
+  transition:background 0.15s;
+}
+.gn__start:hover{background:var(--green-dark)}
+
+/* ── HERO ── */
 .hero{
-  background:var(--purple);
-  padding-top:calc(var(--nav-h) + 140px);
-  padding-bottom:0;
-  overflow:hidden;
-  position:relative;min-height:780px;
-}
-@media(max-width:899px){.hero{padding-top:calc(var(--nav-h) + 16px);padding-bottom:56px}}
-.hero__inner{
-  display:flex;align-items:flex-end;gap:60px;flex-wrap:wrap;position:relative;z-index:1;
-}
-.hero__copy{flex:1 1 320px}
-.hero__copy .t-display{margin-bottom:1.5rem}
-.hero__copy .t-body--lg{color:rgba(255,255,255,0.82);margin-bottom:2rem}
-.hero__copy .t-body--lg em{color:#fff;font-style:normal;font-weight:500}
-.hero__actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
-.hero__image{flex:1 1 300px;display:flex;justify-content:center}
-
-/* ============================================================
-   HEADLINER (centered text block)
-============================================================ */
-.headliner{text-align:center}
-.headliner__inner{max-width:760px;margin:0 auto}
-.headliner__inner .t-h2{margin-bottom:1.5rem}
-.headliner__inner .t-body{max-width:580px;margin:0 auto 2rem}
-
-/* ============================================================
-   INTENT PATH (feature row, image + text)
-============================================================ */
-.intent-row{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
-.intent-row--flip{flex-direction:row-reverse}
-@media(max-width:899px){.intent-row--flip{flex-direction:row}}
-.intent-row__image{flex:1 1 280px}
-.intent-row__copy{flex:1 1 280px}
-.intent-row__copy .t-h3{margin-bottom:1rem}
-.intent-row__copy .t-body{margin-bottom:1.5rem}
-
-/* ============================================================
-   PULL QUOTE BLOCK
-============================================================ */
-.pullquote{text-align:center}
-.pullquote__inner{max-width:820px;margin:0 auto}
-.pullquote__inner .t-h2{margin-bottom:1.5rem;font-style:italic}
-.pullquote__inner .t-body{max-width:620px;margin:0 auto 2rem}
-
-/* ============================================================
-   ZIGZAG MODULE
-============================================================ */
-.zigzag__title{margin-bottom:56px}
-.zigzag__item{
-  display:flex;align-items:center;gap:80px;flex-wrap:wrap;
-  padding:64px 0;border-top:1px solid var(--border);
-}
-.zigzag__item:first-child{border-top:none;padding-top:0}
-.zigzag__item:nth-child(even){flex-direction:row-reverse}
-@media(max-width:899px){.zigzag__item:nth-child(even){flex-direction:row}}
-.zigzag__image{flex:1 1 260px}
-.zigzag__copy{flex:1 1 260px}
-.zigzag__copy .t-h3{margin-bottom:1rem}
-.zigzag__copy .t-body{margin-bottom:1.5rem}
-
-/* ============================================================
-   3-COL GRID
-============================================================ */
-.three-grid{display:grid;grid-template-columns:1fr;gap:48px;text-align:center}
-@media(min-width:600px){.three-grid{grid-template-columns:repeat(3,1fr)}}
-.three-grid__item .img-ph--square{margin:0 auto 1.5rem}
-.three-grid__item .t-h4{margin-bottom:0.75rem}
-.three-grid__item .t-body{margin-bottom:1.25rem;font-size:1.125rem}
-
-/* ============================================================
-   HIGHLIGHT MODULE (large alternating blocks)
-============================================================ */
-.highlight{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
-.highlight--flip{flex-direction:row-reverse}
-@media(max-width:899px){.highlight--flip{flex-direction:row}}
-.highlight__image{flex:1 1 280px}
-.highlight__copy{flex:1 1 280px}
-.highlight__copy .t-h3{margin-bottom:1.25rem}
-.highlight__copy .t-body{margin-bottom:0}
-
-/* ============================================================
-   CUSTOMER QUOTE MODULE
-============================================================ */
-.quote-module{display:flex;align-items:center;gap:80px;flex-wrap:wrap}
-.quote-module--flip{flex-direction:row-reverse}
-@media(max-width:899px){.quote-module--flip{flex-direction:row}}
-.quote-module__image{flex:1 1 280px}
-.quote-module__copy{flex:1 1 280px}
-.quote-block__logo{
-  height:36px;width:130px;background:var(--border);border-radius:3px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.625rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
-  margin-bottom:2rem;
-}
-.quote-block__quote{
-  font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;
-  font-size:clamp(1.5rem,2.5vw,2.125rem);line-height:1.25;
-  color:var(--dark);margin-bottom:1.25rem;
-}
-.quote-block__quote::before{content:'\201C';margin-left:-0.4em}
-.quote-block__quote::after{content:'\201D'}
-.quote-block__caption{font-size:1rem;color:var(--muted);margin-bottom:2.5rem}
-.quote-block__stats{display:flex;gap:3rem;flex-wrap:wrap}
-.quote-block__stat .t-stat{margin-bottom:0.25rem}
-.quote-block__stat .t-caption{color:var(--mid)}
-
-/* ============================================================
-   RESOURCE TILE GRID
-============================================================ */
-.resource-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  border:1px solid var(--border);
-}
-@media(min-width:900px){
-  .resource-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
-}
-
-/* Tile 1 — featured */
-.rtile-1{
-  background:var(--purple-light);
-  padding:52px 44px;
-  display:flex;flex-direction:column;justify-content:center;
-  text-align:center;
-  border-bottom:1px solid var(--border);
-}
-@media(min-width:900px){.rtile-1{border-bottom:none;border-right:1px solid var(--border)}}
-.rtile-1 .t-eyebrow{margin-bottom:1rem}
-.rtile-1 .t-h2{font-size:clamp(1.5rem,3vw,2.125rem);margin-bottom:1rem}
-.rtile-1 .t-body{margin-bottom:2rem;max-width:380px;margin-left:auto;margin-right:auto}
-
-/* Tile 2 — image card */
-.rtile-2{
-  border-bottom:1px solid var(--border);
-  display:flex;flex-direction:column;
-}
-.rtile-2__image{width:100%}
-.rtile-2__copy{padding:24px 28px}
-.rtile-2__logo{
-  height:22px;width:110px;background:var(--border);border-radius:2px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);
-  margin-bottom:0.875rem;
-}
-.rtile-2__copy .t-eyebrow{margin-bottom:0.5rem}
-.rtile-2__copy .t-h4{margin-bottom:0.5rem;font-size:1.25rem}
-.rtile-2__copy .t-body{font-size:1.125rem}
-
-/* Tile 3 — bg story */
-.rtile-3{
-  background:var(--cream-mid);
-  padding:40px;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  min-height:260px;
+  background-color:var(--plum);
+  box-sizing:border-box;overflow:hidden;
   position:relative;
-  border-right:1px solid var(--border);
-  border-bottom:1px solid var(--border);
+}
+.hero:after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;
+  height:120px;
+  background:linear-gradient(to top, var(--parchment) 0%, transparent 100%);
+  pointer-events:none;z-index:2;
+}
+.hero .layout{padding-top:4rem;padding-bottom:0}
+@media(min-width:600px){.hero .layout{padding-top:5.5rem}}
+@media(min-width:1100px){.hero .layout{padding-top:7rem}}
+.hero__content{padding-bottom:4rem;position:relative;z-index:1}
+.hero__copyContainer.cell{width:100%}
+@media(min-width:1100px){
+  .hero__copyContainer.cell{width:52%;padding-right:2rem;padding-bottom:6rem}
+}
+.hero__title{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-weight:600;
+  font-size:clamp(2.5rem,5.5vw,4.5rem);
+  line-height:1.02;
+  letter-spacing:-0.03em;
+  color:var(--white);
+  margin-bottom:1.5rem;
+}
+.hero__title em{
+  font-style:italic;font-weight:300;
+  color:var(--gold);
+}
+.hero__copy{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(1rem,2vw,1.25rem);
+  font-weight:300;line-height:1.7;
+  color:rgba(255,255,255,0.82);
+  margin-bottom:2.5rem;
+  max-width:480px;
+}
+.hero__cta{margin-top:0}
+.hero__imageContainer.cell{
+  width:100%;position:relative;
+  margin-top:3rem;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+@media(min-width:1100px){
+  .hero__imageContainer.cell{
+    width:48%;margin-top:0;
+    position:relative;
+    align-items:flex-end;overflow:visible;
+  }
+}
+.hero__imageContainer img{
+  display:block;width:100%;max-width:480px;margin:0 auto;
+}
+@media(min-width:1100px){
+  .hero__imageContainer img{
+    position:absolute;bottom:0;right:-2rem;
+    width:auto;max-width:none;height:110%;
+    object-fit:contain;object-position:bottom right;
+  }
+}
+.hero__subtext{
+  margin-top:1.5rem;
+  font-size:0.875rem;
+  color:rgba(255,255,255,0.65);
+  display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;
+}
+
+/* Avatar strip */
+.avatarStrip{display:flex;align-items:center}
+.avatarStrip .av{
+  width:2.25rem;height:2.25rem;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.5);
+  margin-left:-0.625rem;
+  background:var(--parchment-deep);
+  font-size:0.6875rem;font-weight:600;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.avatarStrip .av:first-child{margin-left:0}
+.stars{color:var(--gold);letter-spacing:0.1em;font-size:1rem}
+
+/* ── GOLD HERO CTA BUTTON ── */
+.btn-quiz-gold{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--green);color:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;
+  padding:1.125rem 2.75rem;
+  border:none;cursor:pointer;letter-spacing:0.02em;
+  box-shadow:0 8px 32px rgba(28,74,50,0.4);
+  transition:transform 0.25s ease,box-shadow 0.25s ease,background 0.2s ease;
+  text-decoration:none;
+}
+.btn-quiz-gold:hover{
+  background:var(--green-dark);color:var(--white);
+  transform:translateY(-2px);
+  box-shadow:0 14px 48px rgba(28,74,50,0.5);
+}
+
+/* ── GOLD DIVIDER LINE ── */
+.gold-rule{
+  display:block;width:48px;height:2px;
+  background:var(--gold);margin-bottom:1.5rem;
+}
+
+/* ── MARQUEE ── */
+.marquee-section{
+  background:var(--plum);
+  padding:2rem 0 3rem;
+  border-top:1px solid rgba(255,255,255,0.08);
   overflow:hidden;
+  position:relative;z-index:1;
 }
-@media(min-width:900px){.rtile-3{border-bottom:none}}
-.rtile-3__bg{
-  position:absolute;inset:0;
-  background:var(--placeholder);
-  opacity:0.6;
+.marquee-label{
+  font-size:0.625rem;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);
+  margin-bottom:1.25rem;padding-left:1.25rem;
 }
-.rtile-3__copy{position:relative;z-index:1}
-.rtile-3__copy .t-eyebrow{margin-bottom:0.75rem}
-.rtile-3__copy .t-h4{margin-bottom:1rem;font-size:1.25rem}
-
-/* Tile 4 — checklist */
-.rtile-4{display:flex;flex-direction:column;background:var(--cream)}
-.rtile-4__image{width:100%}
-.rtile-4__copy{padding:24px 28px}
-.rtile-4__copy .t-eyebrow{margin-bottom:0.5rem}
-.rtile-4__copy .t-h4{margin-bottom:0.5rem;font-size:1.25rem}
-.rtile-4__copy .t-body{font-size:1.125rem;margin-bottom:1rem}
-
-/* ============================================================
-   FINAL CTA
-============================================================ */
-.final-cta{text-align:center}
-.final-cta .t-h1{margin-bottom:1.5rem}
-.final-cta .t-body--lg{max-width:440px;margin:0 auto 2.5rem}
-
-/* ============================================================
-   FOOTER
-============================================================ */
-.footer{background:var(--cream-mid);border-top:1px solid var(--border);padding:64px 0 40px}
-.footer__grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:48px;
+@media(min-width:600px){.marquee-label{padding-left:3rem}}
+@media(min-width:1100px){.marquee-label{max-width:75rem;margin-left:auto;margin-right:auto;padding-left:2rem}}
+.marquee-wrap{
+  overflow:hidden;
+  mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 8%,black 92%,transparent 100%);
 }
-@media(min-width:900px){.footer__grid{grid-template-columns:2fr 1fr 1fr 1fr}}
-.footer__brand .nav__logo{display:block;margin-bottom:1rem}
-.footer__brand .t-body{font-size:1rem;max-width:220px}
-.footer__col h5{
+.marquee-track{
+  display:flex;gap:0;
+  animation:marqueeScroll 28s linear infinite;
+  width:max-content;
+}
+.marquee-track:hover{animation-play-state:paused}
+.marquee-item{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.25rem;font-weight:600;
+  color:rgba(255,255,255,0.55);
+  padding:0 2rem;white-space:nowrap;
+  letter-spacing:0.01em;
+}
+.marquee-dot{color:rgba(255,255,255,0.2);font-size:0.75rem;align-self:center}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SOCIAL PROOF STRIP (BossBabe style) ── */
+.proof-strip{
+  background:var(--ink);
+  padding:4.5rem 0;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.proof-strip:before{
+  content:'"';
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:20rem;font-weight:300;
+  color:rgba(255,255,255,0.03);
+  position:absolute;top:-3rem;left:50%;transform:translateX(-50%);
+  line-height:1;pointer-events:none;
+}
+.proof-strip__number{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(4rem,10vw,8rem);
+  font-weight:300;
+  color:var(--white);
+  line-height:1;
+  letter-spacing:-0.04em;
+  display:block;
+}
+.proof-strip__label{
+  font-family:'DM Sans',sans-serif;
+  font-size:1rem;font-weight:400;
+  color:rgba(255,255,255,0.6);
+  letter-spacing:0.04em;
+  margin-top:0.5rem;
+  display:block;
+}
+.proof-strip__label em{color:var(--gold);font-style:normal;font-weight:600}
+.proof-strip__stats{
+  display:flex;justify-content:center;gap:5rem;flex-wrap:wrap;margin-top:3.5rem;
+}
+.proof-stat__fig{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:3rem;font-weight:400;color:var(--white);
+  display:block;line-height:1;letter-spacing:-0.03em;
+}
+.proof-stat__label{
+  font-size:0.8125rem;color:rgba(255,255,255,0.5);
+  margin-top:0.375rem;display:block;letter-spacing:0.04em;
+}
+
+/* ── HEADLINER ── */
+.headliner .layout{padding-top:6rem;padding-bottom:6rem}
+@media(min-width:1100px){.headliner .layout{padding-top:8rem;padding-bottom:8rem}}
+.headliner .layout>div{margin-left:auto;margin-right:auto}
+
+/* ── INTENT PATH ── */
+.intentPath__container{
+  background:var(--ink);color:var(--white);
+  box-sizing:border-box;padding:3rem;
+  position:relative;
+}
+@media(min-width:1100px){.intentPath__container{padding:0;display:flex;align-items:stretch}}
+.intentPath__container a{color:var(--gold)}
+.intentPath__image{
+  width:calc(100% + 6rem);margin:-3rem -3rem 2rem;
+}
+@media(min-width:1100px){
+  .intentPath__image{
+    width:42%;order:2;margin:0;
+    position:relative;overflow:hidden;flex-shrink:0;
+  }
+}
+.intentPath__image>div{
+  width:100%;height:100%;min-height:320px;
+  display:flex;align-items:center;justify-content:center;
+}
+@media(min-width:1100px){
+  .intentPath__copy-container{order:1;padding:4rem;box-sizing:border-box;flex:1}
+}
+.intentPath__header{
+  color:var(--white);
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.75rem,3vw,2.5rem);
+  font-weight:600;line-height:1.1;letter-spacing:-0.02em;
+  margin-bottom:1.25rem;
+}
+.intentPath__copy{
+  color:rgba(255,255,255,0.7);
+  font-size:1.0625rem;line-height:1.7;
+  margin-bottom:2.5rem;
+}
+.intentPath .cavendishLink{color:var(--gold)}
+
+/* ── ZIGZAG ── */
+.zigzagModule__element{padding:5rem 0}
+.zigzagModule__element+.zigzagModule__element{border-top:1px solid var(--border)}
+.zigzagModule__imageContainer{margin-bottom:2.5rem}
+@media(min-width:600px){.zigzagModule__imageContainer{margin-bottom:0;padding-right:1rem}}
+.zigzagModule__image img{width:100%;border-radius:2px}
+.zigzagModule__content{box-sizing:border-box}
+@media(min-width:600px){.zigzagModule__content{padding-left:3rem}}
+.zigzagModule__header{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.5rem,3vw,2.25rem);
+  font-weight:600;line-height:1.1;letter-spacing:-0.02em;
+  color:var(--ink);margin-bottom:1.25rem;
+}
+.zigzagModule__body{
+  font-size:1.0625rem;color:var(--ink-mid);
+  line-height:1.7;margin-bottom:1.75rem;
+}
+
+/* ── HORIZONTAL GRID ── */
+.horizontalGrid__grid{margin-top:3.5rem}
+.horizontalGridItem{box-sizing:border-box}
+@media(min-width:600px){
+  .horizontalGridItem{display:flex;flex-direction:column;align-items:stretch}
+  .horizontalGridItem>:first-child{flex-grow:0}
+  .horizontalGridItem__copyContainer{flex-grow:5!important;display:flex;flex-direction:column;justify-content:space-between}
+}
+.horizontalGridItem__subheader{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.375rem;font-weight:600;
+  color:var(--ink);margin-bottom:0.875rem;
+}
+.horizontalGridItem__copy p{
+  font-size:1rem;color:var(--ink-mid);line-height:1.7;
+}
+/* Replace emoji icons with styled numbers */
+.horizontalGridItem .feat-num{
+  width:56px;height:56px;
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.75rem;font-weight:600;
+  color:var(--gold);
+  border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.75rem;
+  flex-shrink:0;
+}
+
+/* ── HIGHLIGHT MODULE ── */
+.highlightModule__imageContainer{margin-bottom:3rem}
+@media(min-width:600px){.highlightModule__imageContainer{padding-left:0;margin-bottom:0}}
+@media(min-width:1100px){.highlightModule__imageContainer{padding-right:1rem}}
+.highlightModule__grid--swap{flex-direction:row-reverse}
+@media(min-width:1100px){
+  .highlightModule__grid--swap .highlightModule__imageContainer{padding-left:1rem;padding-right:0}
+  .highlightModule__grid--swap .highlightModule__body{padding-left:0;padding-right:calc(8.33333% + 2rem)}
+  .highlightModule__body{padding-left:calc(8.33333% + 2rem);padding-right:0}
+}
+.highlightModule__header{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.5rem,3vw,2.25rem);
+  font-weight:600;line-height:1.1;letter-spacing:-0.02em;
+  color:var(--ink);margin-bottom:1.25rem;
+}
+.highlightModule__bodyCopy p{
+  font-size:1.0625rem;color:var(--ink-mid);line-height:1.7;
+}
+.highlightModule__image img{width:100%}
+
+/* ── CUSTOMER QUOTE ── */
+.customerQuoteContent{text-align:left}
+.customerQuoteContent__icon{margin-bottom:2rem}
+.customerQuoteContent__icon>div{
+  height:3px;width:48px;background:var(--gold);
+}
+.customerQuoteContent__quote{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.375rem,2.5vw,2rem);
+  font-weight:300;font-style:italic;
+  line-height:1.3;color:var(--ink);
+  margin-bottom:1.25rem;
+}
+.customerQuoteContent__quote:before{content:'\201C';margin-left:-0.4em}
+.customerQuoteContent__quote:after{content:'\201D'}
+.customerQuoteContent__caption{font-size:0.9375rem;color:var(--ink-muted);margin-bottom:2.5rem}
+.customerQuoteContent__stats{display:flex;gap:3rem;flex-wrap:wrap;margin-top:2.5rem}
+.stat__figure{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:3rem;font-weight:300;color:var(--plum);
+  display:block;line-height:1;letter-spacing:-0.03em;
+}
+.stat__heading{font-size:0.875rem;font-weight:400;color:var(--ink-mid)}
+.customerQuoteContent__disclaimer{font-size:0.8125rem;color:var(--ink-muted);margin-top:1rem}
+
+/* ── SIGN UP / FINAL CTA ── */
+.signUp{background-color:var(--plum)}
+.signUp .layout--padding{text-align:center}
+.signUp .h1{color:var(--white)}
+.signUp .h1 em{color:var(--gold);font-style:italic;font-weight:300}
+.signUp .h6{color:rgba(255,255,255,0.8)}
+.signUp .ctaPrimary{
+  background:var(--white);color:var(--plum);
+  box-shadow:none;font-weight:700;
+}
+.signUp .ctaPrimary:hover{background:var(--parchment);color:var(--plum-dark)}
+
+/* ── CONTENT TILE GRID ── */
+.contentTileGrid__grid{gap:1%}
+@media(max-width:1100px){
+  .contentTileGridItem__tile-1,.contentTileGridItem__tile-2,
+  .contentTileGridItem__tile-3,.contentTileGridItem__tile-4{width:100%;margin-bottom:3rem}
+}
+@media(min-width:1100px){
+  .contentTileGridItem__tile-1{width:65%;margin-right:1%;margin-bottom:1%}
+  .contentTileGridItem__tile-2{width:34%;margin-bottom:1%}
+  .contentTileGridItem__tile-3{width:34%;margin-right:1%}
+  .contentTileGridItem__tile-4{width:65%}
+}
+.contentTileGridItem__tile-1_copyContainer{
+  padding:5rem 4rem;position:relative;min-height:380px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+@media(max-width:1100px){.contentTileGridItem__tile-1_copyContainer{padding:3rem}}
+.contentTileGridItem__tile-1_copyContainer h2{margin-bottom:1.5rem;color:var(--ink)}
+.contentTileGridItem__tile-2__imageContainer img{object-fit:cover;width:100%;height:auto;display:block}
+.contentTileGridItem__tile-2__copyContainer{
+  text-align:left;padding:1.75rem;
+  box-sizing:border-box;
+  border:1px solid var(--border);border-top:none;
+}
+.contentTileGridItem__tile-2__copyContainer .logo{padding-bottom:1.25rem}
+@media(min-width:1100px){
+  .contentTileGridItem__tile-2__imageContainer{height:50%;display:flex}
+  .contentTileGridItem__tile-2__copyContainer{height:50%}
+}
+.contentTileGridItem__with-bg-image{background-size:cover;background-repeat:no-repeat;background-position:50%}
+.contentTileGridItem__tile-3{position:relative;min-height:20rem}
+.contentTileGridItem__tile-3_copyContainer{
+  padding:2rem;min-height:20rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-sizing:border-box;
+}
+.contentTileGridItem__tile-3_copyContainerInfo a.cta{color:var(--white)}
+.contentTileGridItem__tile-3_copyContainerInfo_copy .eyebrow{margin-bottom:0.625rem;color:rgba(255,255,255,0.6)}
+.contentTileGridItem__tile-3_copyContainerInfo_copy .h4{margin-bottom:1.5rem;color:var(--white)}
+.contentTileGridItem__tile-4{position:relative;display:flex;box-sizing:border-box}
+@media(max-width:1100px){.contentTileGridItem__tile-4{padding:2rem;display:block}}
+.contentTileGridItem__tile-4 .contentTileGridItem__link{width:50%;padding:1.5rem;align-self:center}
+@media(max-width:1100px){.contentTileGridItem__tile-4 .contentTileGridItem__link{width:100%}}
+.contentTileGridItem__tile-4_copyContainer{width:50%;text-align:left;padding:5rem 2rem 2rem 1.5rem}
+@media(max-width:1100px){.contentTileGridItem__tile-4_copyContainer{width:100%;padding:1.5rem 0 0}}
+
+/* ── FOOTER ── */
+.footer{
+  background-color:var(--ink);
+  padding:5rem 1.25rem 2.5rem;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+@media(min-width:600px){.footer{padding:5rem 3rem 2.5rem}}
+.footer-inner{
+  max-width:75rem;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-bottom:4rem;
+}
+@media(min-width:1100px){.footer-inner{grid-template-columns:2.5fr 1fr 1fr 1fr 1fr}}
+.footer-logo{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.5rem;font-weight:600;color:var(--white);
+  letter-spacing:-0.02em;margin-bottom:1rem;display:block;
+}
+.footer-logo span{color:var(--gold)}
+.footer-brand p{font-size:0.9375rem;color:rgba(255,255,255,0.45);line-height:1.7;max-width:240px}
+.footer-col h4{
+  font-size:0.625rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:rgba(255,255,255,0.35);
+  margin-bottom:1.25rem;
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.75rem}
+.footer-col ul a{
+  font-size:0.9375rem;color:rgba(255,255,255,0.55);
+  transition:color 0.15s;
+}
+.footer-col ul a:hover{color:var(--gold)}
+.footer-bottom{
+  max-width:75rem;margin:2.5rem auto 0;
+  padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  font-size:0.8125rem;color:rgba(255,255,255,0.3);
+}
+
+/* ── BIGFOOT FOOTER WORDMARK (BossBabe signature) ── */
+.footer-wordmark{
+  text-align:center;
+  padding:3rem 1.25rem 0;
+  overflow:hidden;
+  border-top:1px solid rgba(255,255,255,0.06);
+  margin-top:3rem;
+}
+.footer-wordmark span{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(4rem,14vw,12rem);
+  font-weight:600;
+  color:rgba(255,255,255,0.06);
+  letter-spacing:-0.04em;
+  line-height:0.9;
+  display:block;
+  white-space:nowrap;
+}
+
+/* ── SCROLL ANIMATION ── */
+[data-animate]{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+[data-animate].is-visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){[data-animate]{opacity:1!important;transform:none!important}}
+
+/* ── SCREEN READER ── */
+.screen-reader-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ── IMAGE PLACEHOLDERS (existing content placeholders, kept) ── */
+.img-ph{
+  background:var(--parchment-deep);color:var(--ink-muted);
+  display:flex;align-items:center;justify-content:center;
   font-size:0.6875rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--dark);margin-bottom:1.25rem;
+  text-align:center;padding:1rem;width:100%;
 }
-.footer__col li{margin-bottom:0.625rem}
-.footer__col li a{font-size:1rem;color:var(--mid);transition:color 0.15s}
-.footer__col li a:hover{color:var(--purple)}
-.footer__bottom{
-  border-top:1px solid var(--border);padding-top:28px;
-  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;
-  font-size:0.8125rem;color:var(--muted);
-}
-
-/* ============================================================
-   SECTION BACKGROUNDS
-============================================================ */
-.bg-white{background:#fff}
-.bg-cream{background:var(--cream)}
-.bg-cream-mid{background:var(--cream-mid)}
-.bg-purple-tint{background:rgba(140,128,207,0.07)}
-
-/* ============================================================
-   UTILITY
-============================================================ */
-.mt-sm{margin-top:1rem}
-.mt-md{margin-top:1.5rem}
-.mt-lg{margin-top:2.5rem}
-.mb-sm{margin-top:1rem}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-
-/* ============================================================
-   HERO QUIZ CTA + LOGO TICKER
-============================================================ */
-.btn-quiz-gold{display:inline-flex;align-items:center;justify-content:center;background:#1c4a32;color:#fff;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;padding:18px 48px;border-radius:50px;border:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 8px 28px rgba(28,74,50,0.4);transition:transform 0.25s,box-shadow 0.25s;text-decoration:none;}
-.btn-quiz-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(28,74,50,0.5);color:#fff;}
-
-@keyframes marqueeScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.logo-ticker{overflow:hidden;width:100%;}
-.logo-ticker__inner{display:flex;width:max-content;animation:marqueeScroll 30s linear infinite;align-items:center;gap:0;}
-.logo-ticker__item{font-size:clamp(14px,3vw,22px);font-weight:700;color:rgba(255,255,255,0.6);padding:0 32px;white-space:nowrap;font-family:Georgia,serif;}
-.logo-ticker__dot{color:rgba(255,255,255,0.25);font-size:14px;flex-shrink:0;}
-.logo-ticker--hero .logo-ticker__item{font-size:19px;padding:0 20px;}
-.logo-ticker--hero .logo-ticker__inner{animation-duration:22s;}
+.img-ph--video{min-height:420px}
+.img-ph--feature{min-height:300px}
+.img-ph--highlight{min-height:340px}
+.img-ph--quote{min-height:420px}
+.img-ph--tile{min-height:220px}
+.img-ph--dark{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.25)}
 </style>
 </head>
 <body>
@@ -425,23 +745,20 @@ ul{list-style:none}
 <!-- ======================================================
      NAV
 ====================================================== -->
-<header class="nav" id="nav">
-  <div class="nav__inner">
-    <a href="/" class="nav__logo">The<em>5th</em></a>
-    <ul class="nav__links" role="list">
+<header class="globalNav" id="nav">
+  <div class="layout">
+    <a href="/" class="gn__logo">The<span>5th</span></a>
+    <ul class="gn__nav" role="list">
       <li><a href="#">How It Works</a></li>
       <li><a href="#">The5th AI</a></li>
       <li><a href="#">Community</a></li>
       <li><a href="#">Results</a></li>
       <li><a href="#">About</a></li>
     </ul>
-    <div class="nav__actions">
-      <a href="#" class="nav__btn">Log In</a>
-      <a href="#" class="nav__btn nav__btn--fill">Start Here</a>
+    <div class="gn__ctas">
+      <a href="#" class="gn__login">Log In</a>
+      <a href="#" class="gn__start">Start Here</a>
     </div>
-    <button class="nav__hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </header>
 
@@ -452,155 +769,176 @@ ul{list-style:none}
 ====================================================== -->
 <section class="hero">
   <div class="layout">
-    <div class="hero__inner">
+    <div class="hero__content flex">
 
-      <div class="hero__copy" style="max-width:560px;position:relative;z-index:2;">
-        <h1 class="t-display">Turn Your Experience Into a Profitable Coaching Business</h1>
-        <p class="t-body--lg">We help women 45+ transform decades of knowledge, skills, and life experience into a coaching or consulting business that generates income, without complicated technology, paid ads, or pushy sales tactics.</p>
-        <div class="hero__actions" style="flex-direction:column;align-items:flex-start;text-align:left;gap:16px;width:100%;">
+      <div class="hero__copyContainer cell">
+        <h1 class="hero__title">
+          Turn your experience into<br><em>a profitable coaching business</em>
+        </h1>
+        <p class="hero__copy">We help women 45+ transform decades of knowledge, skills, and life experience into a coaching or consulting business that generates income, without complicated technology, paid ads, or pushy sales tactics.</p>
 
+        <div class="hero__cta">
           <a href="https://quiz.the5th.consulting" class="btn-quiz-gold">
             See Why Your Coaching Business Isn't Growing →
           </a>
 
-          <p style="font-size:17px;color:rgba(255,255,255,0.75);font-weight:500;letter-spacing:0.02em;margin:0 0 0 20px;">
+          <p class="hero__subtext">
             Takes 5 Minutes &nbsp;•&nbsp; 20 Questions &nbsp;•&nbsp; Instant Results
           </p>
 
-          <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#c9a84c;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:100px;padding:5px 16px;margin-left:20px;">
+          <span style="display:inline-block;margin-top:1rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);background:var(--gold-light);border:1px solid rgba(201,168,76,0.35);border-radius:100px;padding:5px 16px;">
             + FREE 7-DAY AI COACHING INCLUDED
           </span>
 
-          <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:8px;margin-left:20px;">
-            <div style="display:flex;align-items:center;">
-              <img src="/clients/c1.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:0;">
-              <img src="/clients/c2.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c3.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c4.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c5.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c6.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c7.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c8.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c9.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c10.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c11.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
-              <img src="/clients/c12.jpg" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);object-fit:cover;object-position:top center;margin-left:-10px;">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:1.75rem;">
+            <div class="avatarStrip">
+              <img class="av" src="/clients/c1.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c2.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c3.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c4.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c5.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c6.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c7.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c8.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c9.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c10.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c11.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <img class="av" src="/clients/c12.jpg" alt="" style="object-fit:cover;object-position:top center;">
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-              <span style="color:#c9a84c;font-size:18px;letter-spacing:2px;">★★★★</span><span style="color:#c9a84c;font-size:18px;opacity:0.5;">★</span>
+              <span class="stars">★★★★</span><span class="stars" style="opacity:0.5;">★</span>
               <span style="font-size:16px;color:rgba(255,255,255,0.85);font-weight:500;"><strong style="color:#fff;">4.8 stars</strong> from 76 coaches across 12 nations</span>
             </div>
           </div>
-
         </div>
       </div>
 
-      <img src="/public/images/money-character.png" alt="" style="position:absolute;right:-20px;bottom:0;top:auto;width:52%;max-width:600px;mix-blend-mode:multiply;z-index:0;display:block;" />
+      <div class="hero__imageContainer cell">
+        <img src="/public/images/money-character.png" alt="" style="mix-blend-mode:multiply;" />
+      </div>
 
     </div>
   </div>
 </section>
 
-<div style="background:var(--purple);padding:24px 0 40px;border-top:1px solid rgba(255,255,255,0.1);">
+<!-- ======================================================
+     MARQUEE — featured in
+====================================================== -->
+<section class="marquee-section">
+  <p class="marquee-label">OUR CLIENTS HAVE BEEN FEATURED IN</p>
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Forbes</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">HuffPost</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">TEDx</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">The Guardian</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">Yahoo Finance</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">The New York Times</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">Wall Street Journal</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">Forbes</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">HuffPost</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">TEDx</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">The Guardian</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">Yahoo Finance</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">The New York Times</span>
+      <span class="marquee-dot">•</span>
+      <span class="marquee-item">Wall Street Journal</span>
+      <span class="marquee-dot">•</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     SOCIAL PROOF STRIP
+====================================================== -->
+<section class="proof-strip">
   <div class="layout">
-    <p style="text-align:left;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px;">OUR CLIENTS HAVE BEEN FEATURED IN</p>
-    <div style="overflow:hidden;width:100%;mask-image:linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 10%,black 90%,transparent 100%);">
-      <div class="logo-ticker__inner">
-        <span class="logo-ticker__item">Forbes</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">HuffPost</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">TEDx</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">The Guardian</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">Yahoo Finance</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">The New York Times</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">Wall Street Journal</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">Forbes</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">HuffPost</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">TEDx</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">The Guardian</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">Yahoo Finance</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">The New York Times</span>
-        <span class="logo-ticker__dot">•</span>
-        <span class="logo-ticker__item">Wall Street Journal</span>
-        <span class="logo-ticker__dot">•</span>
+    <span class="proof-strip__number">76<em style="font-family:'DM Sans',sans-serif;font-size:0.4em;font-style:normal;font-weight:300;vertical-align:super;color:var(--gold)">+</em></span>
+    <span class="proof-strip__label">women coaches across <em>12 nations</em> building expertise-led businesses</span>
+    <div class="proof-strip__stats">
+      <div>
+        <span class="proof-stat__fig">90</span>
+        <span class="proof-stat__label">avg. days to first paying client</span>
+      </div>
+      <div>
+        <span class="proof-stat__fig">$5,500</span>
+        <span class="proof-stat__label">avg. first client value</span>
+      </div>
+      <div>
+        <span class="proof-stat__fig">6x</span>
+        <span class="proof-stat__label">faster results with a proven system</span>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- ======================================================
      HEADLINER, Tried everything
 ====================================================== -->
-<section class="sec bg-white" style="padding-bottom:0">
-  <div class="layout">
-    <div class="headliner">
-      <div class="headliner__inner">
-        <h2 class="t-h2">Most women don't come to The5th because they've tried nothing. They come because they've tried everything — alone.</h2>
-        <p class="t-body">You've tried the courses, the coaches, the content. Something is still missing. Not knowledge. Not capability. A proven system and someone who sees the value in what you already know.</p>
-      </div>
+<section class="headliner">
+  <div class="layout" style="padding-bottom:4rem">
+    <div class="content--10of16-large align--center" data-animate>
+      <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
+      <h2 class="h2 margin--bottom-3">Most women don't come to The5th because they've tried nothing. They come because they've tried everything — alone.</h2>
+      <p class="copy copy--big">You've tried the courses, the coaches, the content. Something is still missing. Not knowledge. Not capability. A proven system and someone who sees the value in what you already know.</p>
     </div>
   </div>
 </section>
 
 <!-- ======================================================
-     2 WAYS WE HELP
+     2 WAYS WE HELP — intent paths
 ====================================================== -->
-<section class="sec bg-white" style="padding-top:0">
-  <div class="layout">
-    <div style="display:flex;flex-direction:column;gap:24px;">
+<section class="layout" style="padding-bottom:5rem">
 
-      <!-- Card 1 -->
-      <div style="background:#1a1a2e;border-radius:6px;display:flex;flex-wrap:wrap;align-items:center;overflow:hidden;min-height:280px;">
-        <div style="flex:1 1 300px;padding:52px 48px;">
-          <p style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8c80cf;margin-bottom:1.25rem;">10K Roadmap Accelerator - Private Coaching</p>
-          <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.1;color:#ffffff;margin-bottom:1.25rem;">The guaranteed path to your first $10K month</h3>
-          <p style="font-family:'DM Sans',sans-serif;font-size:1.125rem;font-weight:400;line-height:1.65;color:rgba(255,255,255,0.7);margin-bottom:2rem;">A private 5-month coaching and implementation program. You get the complete Wisdom-to-Income Method™, direct weekly coaching with Indrodip personally, offer creation, client acquisition systems, and The5th AI. Everything you need to go from idea to enrolled clients within 90 days.</p>
-          <a href="#" style="display:inline-flex;align-items:center;gap:0.5rem;color:#8c80cf;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9375rem;transition:color 0.15s;">See what's inside <span style="transition:transform 0.15s;">→</span></a>
-        </div>
-        <div style="flex:1 1 280px;align-self:stretch;min-height:280px;background:#2a2a3e;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;">
-          Feature Image
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div style="background:#1a1a2e;border-radius:6px;display:flex;flex-wrap:wrap;align-items:center;overflow:hidden;min-height:280px;">
-        <div style="flex:1 1 300px;padding:52px 48px;">
-          <p style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8c80cf;margin-bottom:1.25rem;">The5th Community - Monthly Membership</p>
-          <h3 style="font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.1;color:#ffffff;margin-bottom:1.25rem;">Weekly live coaching with a guaranteed 5x ROI</h3>
-          <p style="font-family:'DM Sans',sans-serif;font-size:1.125rem;font-weight:400;line-height:1.65;color:rgba(255,255,255,0.7);margin-bottom:2rem;">Weekly live coaching calls led personally by Indrodip. Implementation sessions, The5th AI, accountability, and a community of women building alongside you. Everything you need to keep moving, at a fraction of the cost of private coaching.</p>
-          <a href="#" style="display:inline-flex;align-items:center;gap:0.5rem;color:#8c80cf;font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.9375rem;transition:color 0.15s;">Join the community <span style="transition:transform 0.15s;">→</span></a>
-        </div>
-        <div style="flex:1 1 280px;align-self:stretch;min-height:280px;background:#2a2a3e;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;">
-          Feature Image
-        </div>
-      </div>
-
+  <!-- Card 1 -->
+  <div class="intentPath__container margin--bottom-2" data-animate>
+    <div class="intentPath__image">
+      <div class="img-ph img-ph--dark" style="background:#23233a;">Feature Image</div>
+    </div>
+    <div class="intentPath__copy-container">
+      <p class="eyebrow margin--bottom-2">10K Roadmap Accelerator - Private Coaching</p>
+      <h3 class="intentPath__header">The guaranteed path to your first $10K month</h3>
+      <p class="intentPath__copy">A private 5-month coaching and implementation program. You get the complete Wisdom-to-Income Method™, direct weekly coaching with Indrodip personally, offer creation, client acquisition systems, and The5th AI. Everything you need to go from idea to enrolled clients within 90 days.</p>
+      <a href="#" class="cavendishLink">See what's inside</a>
     </div>
   </div>
+
+  <!-- Card 2 -->
+  <div class="intentPath__container" data-animate>
+    <div class="intentPath__image">
+      <div class="img-ph img-ph--dark" style="background:#23233a;">Feature Image</div>
+    </div>
+    <div class="intentPath__copy-container">
+      <p class="eyebrow margin--bottom-2">The5th Community - Monthly Membership</p>
+      <h3 class="intentPath__header">Weekly live coaching with a guaranteed 5x ROI</h3>
+      <p class="intentPath__copy">Weekly live coaching calls led personally by Indrodip. Implementation sessions, The5th AI, accountability, and a community of women building alongside you. Everything you need to keep moving, at a fraction of the cost of private coaching.</p>
+      <a href="#" class="cavendishLink">Join the community</a>
+    </div>
+  </div>
+
 </section>
 
 <!-- ======================================================
      PULL QUOTE
 ====================================================== -->
-<section class="sec bg-cream">
+<section class="backgroundJasmine layout--margin">
   <div class="layout">
-    <div class="pullquote">
-      <div class="pullquote__inner">
-        <h2 class="t-h2">"I don't want the next 20 years to look exactly like the last 20 years."</h2>
-        <p class="t-body">If you've ever thought that at 2am, you're not alone. And you're not too late. The women who join The5th aren't lost. They're ready. They've spent decades building expertise, serving others, and creating value everywhere except in a business of their own. That changes here.</p>
-        <a href="#" class="btn-primary">See what's possible</a>
-      </div>
+    <div class="content--10of16-large align--center" style="margin:0 auto" data-animate>
+      <h2 class="h2 margin--bottom-3"><em>"I don't want the next 20 years to look exactly like the last 20 years."</em></h2>
+      <p class="copy margin--bottom-3">If you've ever thought that at 2am, you're not alone. And you're not too late. The women who join The5th aren't lost. They're ready. They've spent decades building expertise, serving others, and creating value everywhere except in a business of their own. That changes here.</p>
+      <a href="#" class="ctaPrimary">See what's possible</a>
     </div>
   </div>
 </section>
@@ -608,197 +946,184 @@ ul{list-style:none}
 <!-- ======================================================
      VIDEO
 ====================================================== -->
-<section class="sec--sm bg-cream" style="padding-top:0">
+<section class="backgroundJasmine layout--margin" style="padding-top:0">
   <div class="layout">
-    <div class="img-ph img-ph--video">Your Story - Watch Why The5th Exists</div>
+    <div class="img-ph img-ph--video" data-animate>Your Story - Watch Why The5th Exists</div>
   </div>
 </section>
 
 <!-- ======================================================
      ZIGZAG, We'll help you
 ====================================================== -->
-<section class="sec bg-white">
-  <div class="layout">
-    <h2 class="t-h2 zigzag__title">We'll help you</h2>
-    <div class="zigzag">
+<section class="layout layout--margin">
+  <h2 class="h2 align--center" data-animate>We'll help <em>you</em></h2>
+  <div class="zigzagModule">
 
-      <div class="zigzag__item">
-        <div class="zigzag__image fade-up">
-          <div class="img-ph img-ph--feature">Image - Offer Creation</div>
-        </div>
-        <div class="zigzag__copy">
-          <h3 class="t-h3">Turn your experience into an offer people actually pay for</h3>
-          <p class="t-body">Most women undervalue what they know because it feels ordinary to them. We help you see your expertise through your client's eyes, package it into a premium offer, price it with confidence, and position it so the right people immediately understand its value.</p>
-          <a href="#" class="link-arrow">How offer creation works</a>
-        </div>
+    <div class="zigzagModule__element flex flex--middle flex--columns-2-medium" data-animate>
+      <div class="zigzagModule__imageContainer cell">
+        <div class="zigzagModule__image"><div class="img-ph img-ph--feature">Image - Offer Creation</div></div>
       </div>
-
-      <div class="zigzag__item">
-        <div class="zigzag__image fade-up">
-          <div class="img-ph img-ph--feature">Image - Client Attraction</div>
-        </div>
-        <div class="zigzag__copy">
-          <h3 class="t-h3">Attract clients without complicated marketing</h3>
-          <p class="t-body">No paid ads. No complicated funnels. No posting three times a day hoping someone notices. A simple client attraction system built around your existing network, your story, and your expertise.</p>
-          <a href="#" class="link-arrow">The client attraction system</a>
-        </div>
+      <div class="zigzagModule__content cell">
+        <h3 class="zigzagModule__header">Turn your experience into an offer people actually pay for</h3>
+        <p class="zigzagModule__body">Most women undervalue what they know because it feels ordinary to them. We help you see your expertise through your client's eyes, package it into a premium offer, price it with confidence, and position it so the right people immediately understand its value.</p>
+        <a href="#" class="cta">How offer creation works</a>
       </div>
-
-      <div class="zigzag__item">
-        <div class="zigzag__image fade-up">
-          <div class="img-ph img-ph--feature">Image - Sales Framework</div>
-        </div>
-        <div class="zigzag__copy">
-          <h3 class="t-h3">Sell with confidence, not pressure</h3>
-          <p class="t-body">Most women who join us aren't afraid of sales because they're pushy. They're afraid because nobody showed them a way to sell that felt honest and natural. Our Diagnose-Prescribe-Close framework changes that completely.</p>
-          <a href="#" class="link-arrow">Learn the sales framework</a>
-        </div>
-      </div>
-
-      <div class="zigzag__item">
-        <div class="zigzag__image fade-up">
-          <div class="img-ph img-ph--feature">Image - The5th AI</div>
-        </div>
-        <div class="zigzag__copy">
-          <h3 class="t-h3">Build with AI that actually knows your business</h3>
-          <p class="t-body">The5th AI isn't ChatGPT with a different name. It's trained specifically to help experienced women build coaching and consulting businesses. It writes your offers, emails, content, and sales scripts, and coaches you through every decision, 24 hours a day.</p>
-          <a href="#" class="link-arrow">Explore The5th AI</a>
-        </div>
-      </div>
-
     </div>
+
+    <div class="zigzagModule__element flex flex--middle flex--columns-2-medium" style="flex-direction:row-reverse" data-animate>
+      <div class="zigzagModule__imageContainer cell">
+        <div class="zigzagModule__image"><div class="img-ph img-ph--feature">Image - Client Attraction</div></div>
+      </div>
+      <div class="zigzagModule__content cell">
+        <h3 class="zigzagModule__header">Attract clients without complicated marketing</h3>
+        <p class="zigzagModule__body">No paid ads. No complicated funnels. No posting three times a day hoping someone notices. A simple client attraction system built around your existing network, your story, and your expertise.</p>
+        <a href="#" class="cta">The client attraction system</a>
+      </div>
+    </div>
+
+    <div class="zigzagModule__element flex flex--middle flex--columns-2-medium" data-animate>
+      <div class="zigzagModule__imageContainer cell">
+        <div class="zigzagModule__image"><div class="img-ph img-ph--feature">Image - Sales Framework</div></div>
+      </div>
+      <div class="zigzagModule__content cell">
+        <h3 class="zigzagModule__header">Sell with confidence, not pressure</h3>
+        <p class="zigzagModule__body">Most women who join us aren't afraid of sales because they're pushy. They're afraid because nobody showed them a way to sell that felt honest and natural. Our Diagnose-Prescribe-Close framework changes that completely.</p>
+        <a href="#" class="cta">Learn the sales framework</a>
+      </div>
+    </div>
+
+    <div class="zigzagModule__element flex flex--middle flex--columns-2-medium" style="flex-direction:row-reverse" data-animate>
+      <div class="zigzagModule__imageContainer cell">
+        <div class="zigzagModule__image"><div class="img-ph img-ph--feature">Image - The5th AI</div></div>
+      </div>
+      <div class="zigzagModule__content cell">
+        <h3 class="zigzagModule__header">Build with AI that actually knows your business</h3>
+        <p class="zigzagModule__body">The5th AI isn't ChatGPT with a different name. It's trained specifically to help experienced women build coaching and consulting businesses. It writes your offers, emails, content, and sales scripts, and coaches you through every decision, 24 hours a day.</p>
+        <a href="#" class="cta">Explore The5th AI</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <!-- ======================================================
      HEADLINER, Keep moving
 ====================================================== -->
-<section class="sec bg-cream-mid">
+<section class="backgroundJasmine layout--margin">
   <div class="layout">
-    <div class="headliner">
-      <div class="headliner__inner" style="max-width:560px">
-        <h2 class="t-h2">You already have everything you need. You just need the right system.</h2>
+    <div class="content--8of16-large align--center" style="margin:0 auto" data-animate>
+      <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
+      <h2 class="h2">You already have everything you need. <em>You just need the right system.</em></h2>
+    </div>
+
+    <!-- 3-COL GRID, Support features -->
+    <div class="horizontalGrid__grid flex flex--columns-3-medium">
+
+      <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
+        <div class="feat-num">01</div>
+        <h3 class="horizontalGridItem__subheader">Private 1:1 coaching</h3>
+        <div class="horizontalGridItem__copyContainer">
+          <div class="horizontalGridItem__copy"><p>Direct weekly coaching with Indrodip personally, not a team member, not a recorded training. Real guidance, real accountability, every week.</p></div>
+          <a href="#" class="cta margin--top-3" style="justify-content:center">Learn more</a>
+        </div>
       </div>
+
+      <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
+        <div class="feat-num">02</div>
+        <h3 class="horizontalGridItem__subheader">The Wisdom-to-Income Method™</h3>
+        <div class="horizontalGridItem__copyContainer">
+          <div class="horizontalGridItem__copy"><p>A proven step-by-step framework to package your expertise, attract clients, and generate consistent income, built specifically for women 45+.</p></div>
+          <a href="#" class="cta margin--top-3" style="justify-content:center">See the framework</a>
+        </div>
+      </div>
+
+      <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
+        <div class="feat-num">03</div>
+        <h3 class="horizontalGridItem__subheader">The5th AI - 24/7</h3>
+        <div class="horizontalGridItem__copyContainer">
+          <div class="horizontalGridItem__copy"><p>Your personal business coach, copywriter, and strategist. Available the moment you need guidance, not at the next scheduled call.</p></div>
+          <a href="#" class="cta margin--top-3" style="justify-content:center">Explore The5th AI</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- ======================================================
-     3-COL GRID, Support features
+     HEADLINER, See how it comes together + HIGHLIGHT MODULES
 ====================================================== -->
-<section class="sec--sm bg-cream-mid" style="padding-top:0">
+<section class="backgroundJasmine layout--margin" style="padding-top:0">
   <div class="layout">
-    <div class="three-grid">
-
-      <div class="three-grid__item fade-up">
-        <div class="img-ph img-ph--square">Icon</div>
-        <h3 class="t-h4">Private 1:1 coaching</h3>
-        <p class="t-body">Direct weekly coaching with Indrodip personally, not a team member, not a recorded training. Real guidance, real accountability, every week.</p>
-        <a href="#" class="link-arrow" style="justify-content:center">Learn more</a>
-      </div>
-
-      <div class="three-grid__item fade-up" style="transition-delay:0.1s">
-        <div class="img-ph img-ph--square">Icon</div>
-        <h3 class="t-h4">The Wisdom-to-Income Method™</h3>
-        <p class="t-body">A proven step-by-step framework to package your expertise, attract clients, and generate consistent income, built specifically for women 45+.</p>
-        <a href="#" class="link-arrow" style="justify-content:center">See the framework</a>
-      </div>
-
-      <div class="three-grid__item fade-up" style="transition-delay:0.2s">
-        <div class="img-ph img-ph--square">Icon</div>
-        <h3 class="t-h4">The5th AI - 24/7</h3>
-        <p class="t-body">Your personal business coach, copywriter, and strategist. Available the moment you need guidance, not at the next scheduled call.</p>
-        <a href="#" class="link-arrow" style="justify-content:center">Explore The5th AI</a>
-      </div>
-
+    <div class="content--8of16-large align--center" style="margin:0 auto;padding-bottom:2rem" data-animate>
+      <h2 class="h2">See how it all <em>comes together</em></h2>
     </div>
-  </div>
-</section>
-
-<!-- ======================================================
-     HEADLINER, See how it comes together
-====================================================== -->
-<section class="sec bg-cream-mid" style="padding-top:0">
-  <div class="layout">
-    <div class="headliner">
-      <div class="headliner__inner">
-        <h2 class="t-h2">See how it all comes together</h2>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================================================
-     HIGHLIGHT MODULES x3
-====================================================== -->
-<section class="sec--sm bg-cream-mid" style="padding-top:0">
-  <div class="layout">
 
     <!-- Module 1 — image left -->
-    <div class="highlight" style="padding-bottom:80px;border-bottom:1px solid var(--border)">
-      <div class="highlight__image fade-up">
-        <div class="img-ph img-ph--highlight">Highlight Image - Content to Clients</div>
+    <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
+      <div class="highlightModule__imageContainer cell">
+        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Content to Clients</div></div>
       </div>
-      <div class="highlight__copy">
-        <h2 class="t-h3">Turn your content into clients</h2>
-        <p class="t-body">Connect your expertise to your audience with messaging that speaks directly to the woman you help most, and turns readers into booked discovery calls.</p>
+      <div class="highlightModule__body cell">
+        <h2 class="highlightModule__header">Turn your content into clients</h2>
+        <div class="highlightModule__bodyCopy"><p>Connect your expertise to your audience with messaging that speaks directly to the woman you help most, and turns readers into booked discovery calls.</p></div>
       </div>
     </div>
 
     <!-- Module 2 — image right -->
-    <div class="highlight highlight--flip" style="padding:80px 0;border-bottom:1px solid var(--border)">
-      <div class="highlight__image fade-up">
-        <div class="img-ph img-ph--highlight">Highlight Image - Discovery Call</div>
+    <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
+      <div class="highlightModule__imageContainer cell">
+        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Discovery Call</div></div>
       </div>
-      <div class="highlight__copy">
-        <h2 class="t-h3">A sales process that feels like a conversation</h2>
-        <p class="t-body">Our Diagnose-Prescribe-Close framework removes the pressure from selling. You ask the right questions, understand what your client needs, and present your offer as the natural solution.</p>
+      <div class="highlightModule__body cell">
+        <h2 class="highlightModule__header">A sales process that feels like a conversation</h2>
+        <div class="highlightModule__bodyCopy"><p>Our Diagnose-Prescribe-Close framework removes the pressure from selling. You ask the right questions, understand what your client needs, and present your offer as the natural solution.</p></div>
       </div>
     </div>
 
     <!-- The5th AI module -->
-    <div class="highlight highlight--flip" style="padding:80px 0;border-bottom:1px solid var(--border)">
-      <div class="highlight__image fade-up">
-        <div class="img-ph img-ph--highlight">The5th AI Screenshot</div>
+    <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
+      <div class="highlightModule__imageContainer cell">
+        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">The5th AI Screenshot</div></div>
       </div>
-      <div class="highlight__copy">
-        <p style="font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;">The5th AI - Available 24/7</p>
-        <h2 class="t-h3" style="margin-bottom:1.25rem;">Your personal business coach, copywriter, and strategist, available the moment you need them</h2>
-        <p class="t-body" style="margin-bottom:1.5rem;">The5th AI isn't ChatGPT with a different name. It's trained specifically on the frameworks and strategies that help experienced women build profitable coaching businesses. It knows your stage, your offer, and your goals, and it acts on them instantly.</p>
+      <div class="highlightModule__body cell">
+        <p class="eyebrow margin--bottom-2">The5th AI - Available 24/7</p>
+        <h2 class="highlightModule__header">Your personal business coach, copywriter, and strategist, available the moment you need them</h2>
+        <div class="highlightModule__bodyCopy margin--bottom-2"><p>The5th AI isn't ChatGPT with a different name. It's trained specifically on the frameworks and strategies that help experienced women build profitable coaching businesses. It knows your stage, your offer, and your goals, and it acts on them instantly.</p></div>
         <div style="display:flex;flex-direction:column;gap:0.625rem;margin-bottom:1.75rem;">
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--purple);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="t-body" style="font-size:1.125rem;">Creates your coaching offer, pricing, and positioning</span>
+            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
+            <span class="copy" style="font-size:1.0625rem;">Creates your coaching offer, pricing, and positioning</span>
           </div>
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--purple);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="t-body" style="font-size:1.125rem;">Writes your emails, social content, and sales pages</span>
+            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
+            <span class="copy" style="font-size:1.0625rem;">Writes your emails, social content, and sales pages</span>
           </div>
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--purple);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="t-body" style="font-size:1.125rem;">Builds your client outreach scripts and discovery call frameworks</span>
+            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
+            <span class="copy" style="font-size:1.0625rem;">Builds your client outreach scripts and discovery call frameworks</span>
           </div>
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--purple);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="t-body" style="font-size:1.125rem;">Coaches you through self-doubt, pricing decisions, and next steps</span>
+            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
+            <span class="copy" style="font-size:1.0625rem;">Coaches you through self-doubt, pricing decisions, and next steps</span>
           </div>
           <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--purple);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="t-body" style="font-size:1.125rem;">Available 24/7, not at the next scheduled call</span>
+            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
+            <span class="copy" style="font-size:1.0625rem;">Available 24/7, not at the next scheduled call</span>
           </div>
         </div>
-        <a href="#" class="link-arrow">See The5th AI in action</a>
+        <a href="#" class="cta">See The5th AI in action</a>
       </div>
     </div>
 
     <!-- Module 3 — image left -->
-    <div class="highlight" style="padding-top:80px">
-      <div class="highlight__image fade-up">
-        <div class="img-ph img-ph--highlight">Highlight Image - Results</div>
+    <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0 0" data-animate>
+      <div class="highlightModule__imageContainer cell">
+        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Results</div></div>
       </div>
-      <div class="highlight__copy">
-        <h2 class="t-h3">Know exactly what's working</h2>
-        <p class="t-body">Track every client from first conversation to enrolled. Understand your numbers, refine your process, and build a business that grows with intention, not guesswork.</p>
+      <div class="highlightModule__body cell">
+        <h2 class="highlightModule__header">Know exactly what's working</h2>
+        <div class="highlightModule__bodyCopy"><p>Track every client from first conversation to enrolled. Understand your numbers, refine your process, and build a business that grows with intention, not guesswork.</p></div>
       </div>
     </div>
 
@@ -808,14 +1133,13 @@ ul{list-style:none}
 <!-- ======================================================
      STATS HEADLINER
 ====================================================== -->
-<section class="sec bg-white">
+<section class="headliner">
   <div class="layout">
-    <div class="headliner">
-      <div class="headliner__inner">
-        <h2 class="t-h2">Up to 6x more clients with a proven system</h2>
-        <p class="t-body">A structured business system generates up to 6 times more clients than trying to figure it out alone. We built that system specifically for women who are done waiting and ready to build.</p>
-        <a href="#" class="btn-primary">See the 10K Roadmap</a>
-      </div>
+    <div class="content--10of16-large align--center" data-animate>
+      <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
+      <h2 class="h2 margin--bottom-3">Up to <em>6x more clients</em> with a proven system</h2>
+      <p class="copy copy--big margin--bottom-3">A structured business system generates up to 6 times more clients than trying to figure it out alone. We built that system specifically for women who are done waiting and ready to build.</p>
+      <a href="#" class="ctaPrimary">See the 10K Roadmap</a>
     </div>
   </div>
 </section>
@@ -823,30 +1147,27 @@ ul{list-style:none}
 <!-- ======================================================
      CUSTOMER QUOTE
 ====================================================== -->
-<section class="sec bg-white" style="padding-top:0">
-  <div class="layout">
-    <div class="quote-module quote-module--flip">
-
-      <div class="quote-module__image fade-up">
-        <div class="img-ph img-ph--quote">Client Story Image</div>
+<section class="layout" style="padding-bottom:6rem">
+  <div class="flex flex--middle flex--columns-2-large">
+    <div class="cell" style="padding-right:2rem" data-animate>
+      <div class="img-ph img-ph--quote">Client Story Image</div>
+    </div>
+    <div class="cell customerQuoteContent" style="padding-top:2rem" data-animate>
+      <div class="customerQuoteContent__icon">
+        <div></div>
       </div>
-
-      <div class="quote-module__copy">
-        <div class="quote-block__logo">Client Logo</div>
-        <blockquote class="quote-block__quote">For the first time, I stopped feeling like I was starting from scratch and realised I already had everything I needed. I just needed someone to show me how to turn it into a business.</blockquote>
-        <p class="quote-block__caption">Susan, former corporate professional, now coaching clients</p>
-        <div class="quote-block__stats">
-          <div class="quote-block__stat">
-            <span class="t-stat">90</span>
-            <span class="t-caption">days to first paying client on average</span>
-          </div>
-          <div class="quote-block__stat">
-            <span class="t-stat">76+</span>
-            <span class="t-caption">coaches across 12 nations</span>
-          </div>
+      <blockquote class="customerQuoteContent__quote">For the first time, I stopped feeling like I was starting from scratch and realised I already had everything I needed. I just needed someone to show me how to turn it into a business.</blockquote>
+      <p class="customerQuoteContent__caption">Susan, former corporate professional, now coaching clients</p>
+      <div class="customerQuoteContent__stats">
+        <div>
+          <span class="stat__figure">90</span>
+          <span class="stat__heading">days to first paying client on average</span>
+        </div>
+        <div>
+          <span class="stat__figure">76+</span>
+          <span class="stat__heading">coaches across 12 nations</span>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -854,13 +1175,12 @@ ul{list-style:none}
 <!-- ======================================================
      RECOGNITION
 ====================================================== -->
-<section class="sec bg-purple-tint">
+<section class="backgroundYam layout--margin">
   <div class="layout">
-    <div class="headliner">
-      <div class="headliner__inner" style="max-width:600px">
-        <h2 class="t-h2">The5th has helped clients earn recognition and features in some of the world's most respected publications.</h2>
-        <a href="#" class="btn-secondary" target="_blank" rel="noopener noreferrer">See client results</a>
-      </div>
+    <div class="content--8of16-large align--center" style="margin:0 auto" data-animate>
+      <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
+      <h2 class="h2 margin--bottom-3">The5th has helped clients earn recognition and features in some of the world's <em>most respected publications.</em></h2>
+      <a href="#" class="ctaSecondary" target="_blank" rel="noopener noreferrer">See client results</a>
     </div>
   </div>
 </section>
@@ -868,72 +1188,75 @@ ul{list-style:none}
 <!-- ======================================================
      RESOURCE TILE GRID
 ====================================================== -->
-<section class="sec bg-white">
-  <div class="layout">
+<section class="layout layout--margin">
 
-    <div class="headliner" style="margin-bottom:48px">
-      <div class="headliner__inner">
-        <h2 class="t-h2">Resources to give you the inside track</h2>
-        <p class="t-body">Expert guidance, timely resources, and real stories from experienced women who built something remarkable, and the inside track on how they did it.</p>
+  <div class="content--10of16-large align--center" style="margin:0 auto 4rem" data-animate>
+    <h2 class="h2 margin--bottom-3">Resources to give you <em>the inside track</em></h2>
+    <p class="copy">Expert guidance, timely resources, and real stories from experienced women who built something remarkable, and the inside track on how they did it.</p>
+  </div>
+
+  <div class="contentTileGrid__grid flex">
+
+    <!-- Tile 1 — featured -->
+    <div class="contentTileGridItem__tile-1 backgroundSquash" data-animate>
+      <div class="contentTileGridItem__tile-1_copyContainer">
+        <p class="eyebrow margin--bottom-2">Free Assessment</p>
+        <h2 class="h3">Discover exactly why your coaching business isn't growing</h2>
+        <p class="copy margin--bottom-3">20 questions. 5 minutes. Instant results. Find your Expert Income Archetype and get a personalised roadmap showing you exactly what to do next.</p>
+        <div><a href="https://quiz.the5th.consulting" class="ctaPrimary">Take the Free Quiz</a></div>
       </div>
     </div>
 
-    <div class="resource-grid">
-
-      <!-- Tile 1 — featured -->
-      <div class="rtile-1">
-        <p class="t-eyebrow">Free Assessment</p>
-        <h2 class="t-h2">Discover exactly why your coaching business isn't growing</h2>
-        <p class="t-body">20 questions. 5 minutes. Instant results. Find your Expert Income Archetype and get a personalised roadmap showing you exactly what to do next.</p>
-        <div><a href="https://quiz.the5th.consulting" class="btn-primary">Take the Free Quiz</a></div>
+    <!-- Tile 2 — podcast -->
+    <div class="contentTileGridItem__tile-2 backgroundWhite" data-animate>
+      <div class="contentTileGridItem__tile-2__imageContainer">
+        <div class="img-ph img-ph--tile">Podcast Image</div>
       </div>
-
-      <!-- Tile 2 — podcast -->
-      <div class="rtile-2">
-        <div class="img-ph img-ph--tile rtile-2__image">Podcast Image</div>
-        <div class="rtile-2__copy">
-          <div class="rtile-2__logo">The5th Presents</div>
-          <p class="t-eyebrow">Podcast</p>
-          <h3 class="t-h4">The Expertise Economy</h3>
-          <p class="t-body">Real conversations with women who turned decades of experience into income, and exactly how they did it.</p>
-        </div>
+      <div class="contentTileGridItem__tile-2__copyContainer">
+        <div class="logo" style="font-family:'Cormorant Garamond',Georgia,Times,serif;font-weight:600;font-size:1.125rem;color:var(--plum);">The5th Presents</div>
+        <p class="eyebrow" style="margin-bottom:0.5rem">Podcast</p>
+        <h3 class="h5" style="margin-bottom:0.625rem">The Expertise Economy</h3>
+        <p class="copy" style="font-size:1rem">Real conversations with women who turned decades of experience into income, and exactly how they did it.</p>
       </div>
-
-      <!-- Tile 3 — case study -->
-      <div class="rtile-3">
-        <div class="rtile-3__bg"></div>
-        <div class="rtile-3__copy">
-          <p class="t-eyebrow">Case Study</p>
-          <h3 class="t-h4">How Susan enrolled her first paying client within 60 days, starting from zero</h3>
-          <a href="#" class="link-arrow">Read the story</a>
-        </div>
-      </div>
-
-      <!-- Tile 4 — checklist -->
-      <div class="rtile-4">
-        <div class="img-ph img-ph--tile rtile-4__image">Resource Image</div>
-        <div class="rtile-4__copy">
-          <p class="t-eyebrow">Free Download</p>
-          <h3 class="t-h4">Is Your Expertise Ready to Become an Offer?</h3>
-          <p class="t-body">Our checklist helps you find out in under 10 minutes, and shows you exactly what to do next.</p>
-          <a href="#" class="link-arrow">Get the checklist</a>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Tile 3 — case study -->
+    <div class="contentTileGridItem__tile-3 backgroundPlum contentTileGridItem__with-bg-image" data-animate>
+      <div class="contentTileGridItem__tile-3_copyContainer">
+        <div class="contentTileGridItem__tile-3_copyContainerInfo_copy">
+          <p class="eyebrow">Case Study</p>
+          <h3 class="h4">How Susan enrolled her first paying client within 60 days, starting from zero</h3>
+        </div>
+        <div class="contentTileGridItem__tile-3_copyContainerInfo">
+          <a href="#" class="cta">Read the story</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tile 4 — checklist -->
+    <div class="contentTileGridItem__tile-4 backgroundJasmine" data-animate>
+      <div class="contentTileGridItem__link">
+        <div class="img-ph img-ph--tile">Resource Image</div>
+      </div>
+      <div class="contentTileGridItem__tile-4_copyContainer">
+        <p class="eyebrow margin--bottom-2">Free Download</p>
+        <h3 class="h4" style="margin-bottom:0.875rem">Is Your Expertise Ready to Become an Offer?</h3>
+        <p class="copy" style="font-size:1rem;margin-bottom:1.25rem">Our checklist helps you find out in under 10 minutes, and shows you exactly what to do next.</p>
+        <a href="#" class="cta">Get the checklist</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <!-- ======================================================
      FINAL CTA
 ====================================================== -->
-<section class="sec bg-cream">
-  <div class="layout">
-    <div class="final-cta">
-      <h2 class="t-h1">You've spent decades building expertise. It's time to get paid for it.</h2>
-      <p class="t-body--lg">Every woman who joins The5th starts with one decision: to stop waiting and start building. The roadmap is ready. The support is here. The only question is whether this is your season.</p>
-      <a href="https://quiz.the5th.consulting" class="btn-primary">Start Here - Take the Free Quiz →</a>
-    </div>
+<section class="signUp">
+  <div class="layout layout--padding">
+    <h2 class="h1 margin--bottom-3" data-animate>You've spent decades building expertise.<br><em>It's time to get paid for it.</em></h2>
+    <p class="h6 margin--bottom-6" style="max-width:540px;margin-left:auto;margin-right:auto" data-animate>Every woman who joins The5th starts with one decision: to stop waiting and start building. The roadmap is ready. The support is here. The only question is whether this is your season.</p>
+    <a href="https://quiz.the5th.consulting" class="ctaPrimary" data-animate>Start Here - Take the Free Quiz →</a>
   </div>
 </section>
 
@@ -943,72 +1266,65 @@ ul{list-style:none}
      FOOTER
 ====================================================== -->
 <footer class="footer">
-  <div class="layout">
-    <div class="footer__grid">
+  <div class="footer-inner">
 
-      <div class="footer__brand">
-        <a href="/" class="nav__logo">The<em>5th</em></a>
-        <p class="t-body">Helping women 45+ turn decades of wisdom and experience into a profitable coaching business. Finally, on their own terms.</p>
-      </div>
-
-      <div class="footer__col">
-        <h5>Programs</h5>
-        <ul>
-          <li><a href="#">10K Roadmap Accelerator</a></li>
-          <li><a href="#">The5th Community</a></li>
-          <li><a href="#">The5th AI</a></li>
-          <li><a href="#">Take the Quiz</a></li>
-        </ul>
-      </div>
-
-      <div class="footer__col">
-        <h5>Resources</h5>
-        <ul>
-          <li><a href="#">Podcast</a></li>
-          <li><a href="#">Free Workshop</a></li>
-          <li><a href="#">Case Studies</a></li>
-          <li><a href="#">The Checklist</a></li>
-        </ul>
-      </div>
-
-      <div class="footer__col">
-        <h5>Company</h5>
-        <ul>
-          <li><a href="#">About Indrodip</a></li>
-          <li><a href="#">Contact</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-        </ul>
-      </div>
-
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">The<span>5th</span></a>
+      <p>Helping women 45+ turn decades of wisdom and experience into a profitable coaching business. Finally, on their own terms.</p>
     </div>
-    <div class="footer__bottom">
-      <span>© 2025 The5th Consulting. All rights reserved.</span>
-      <span>the5th.consulting</span>
+
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#">10K Roadmap Accelerator</a></li>
+        <li><a href="#">The5th Community</a></li>
+        <li><a href="#">The5th AI</a></li>
+        <li><a href="#">Take the Quiz</a></li>
+      </ul>
     </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Podcast</a></li>
+        <li><a href="#">Free Workshop</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">The Checklist</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Indrodip</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+
   </div>
+  <div class="footer-bottom">
+    <span>© 2025 The5th Consulting. All rights reserved.</span>
+    <span>the5th.consulting</span>
+  </div>
+  <div class="footer-wordmark"><span>the5th.</span></div>
 </footer>
 
 <script>
 // Nav scroll state
-const nav = document.getElementById('nav');
+const nav = document.querySelector('.globalNav');
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 10);
-}, { passive: true });
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, {passive: true});
 
-// Fade-up on scroll
+// Scroll-in animation
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); }
+    if (e.isIntersecting) { e.target.classList.add('is-visible'); observer.unobserve(e.target); }
   });
 }, { threshold: 0.12 });
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-// Stagger zigzag images
-document.querySelectorAll('.zigzag__item').forEach((item, i) => {
-  const img = item.querySelector('.fade-up');
-  if (img) img.style.transitionDelay = `${i * 0.05}s`;
-});
+document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
 </script>
 
 </body>

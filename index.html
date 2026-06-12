@@ -1040,6 +1040,67 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   0%,100%{transform:scaleY(0.4);opacity:0.5}
   50%{transform:scaleY(1);opacity:1}
 }
+.gold-underline{
+  position:relative;
+  display:inline;
+}
+.gold-underline::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;
+  left:0;
+  width:0;
+  height:2px;
+  background:var(--gold);
+  transition:none;
+}
+.gold-underline.drawn::after{
+  width:100%;
+  transition:width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── TEXT MARQUEE STRIP ── */
+.text-marquee-strip{
+  background:var(--ink);
+  padding:1.75rem 0;
+  overflow:hidden;
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.text-marquee-track{
+  display:flex;
+  align-items:center;
+  gap:2.5rem;
+  width:max-content;
+  animation:textMarquee 35s linear infinite;
+}
+.text-marquee-track:hover{
+  animation-play-state:paused;
+  cursor:default;
+}
+.text-marquee-track span{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:clamp(1.5rem,3vw,2.5rem);
+  font-weight:600;
+  color:rgba(255,255,255,0.9);
+  white-space:nowrap;
+  letter-spacing:-0.02em;
+  line-height:1;
+}
+.text-marquee-track span em{
+  font-style:italic;
+  font-weight:300;
+  color:var(--gold);
+}
+.text-marquee-dot{
+  color:var(--gold) !important;
+  font-size:0.75rem !important;
+  opacity:0.6;
+}
+@keyframes textMarquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
 </style>
 </head>
 <body>
@@ -1190,6 +1251,39 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   </div>
 </section>
 
+<div class="text-marquee-strip">
+  <div class="text-marquee-track">
+    <span>Wisdom</span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Experience</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Income</em></span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Expertise</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Freedom</em></span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Legacy</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Impact</em></span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Wisdom</span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Experience</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Income</em></span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Expertise</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Freedom</em></span>
+    <span class="text-marquee-dot">✦</span>
+    <span>Legacy</span>
+    <span class="text-marquee-dot">✦</span>
+    <span><em>Impact</em></span>
+    <span class="text-marquee-dot">✦</span>
+  </div>
+</div>
+
 <!-- ======================================================
      FOUNDER BIO
 ====================================================== -->
@@ -1215,7 +1309,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
         <span class="eyebrow">The founder</span>
         <h2 class="founder__headline">
           Built by someone who watched<br>
-          <em>talented women go unpaid</em><br>
+          <span class="gold-underline"><em>talented women go unpaid</em></span><br>
           for decades.
         </h2>
         <div class="founder__quote">
@@ -1306,7 +1400,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 <section class="backgroundJasmine layout--margin">
   <div class="layout">
     <div class="content--10of16-large align--center" style="margin:0 auto" data-animate>
-      <h2 class="h2 margin--bottom-3"><em>"I don't want the next 20 years to look exactly like the last 20 years."</em></h2>
+      <h2 class="h2 margin--bottom-3"><em>"I don't want the <span class="gold-underline">next 20 years</span> to look exactly like the last 20 years."</em></h2>
       <p class="copy margin--bottom-3">You've spent decades becoming extraordinary at what you do. Download <em>What's Possible</em> — our free ebook featuring real women over 45 who turned their expertise into income. Their stories. Their numbers. Exactly how they did it.</p>
       <a href="#ebook" class="ctaPrimary" style="display:inline-flex;align-items:center;gap:0.75rem;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1959,6 +2053,39 @@ gsap.fromTo('.hero__imageContainer',
   {opacity: 0, x: 60},
   {opacity: 1, x: 0, duration: 1.3, ease: 'power3.out', delay: 0.4}
 );
+
+// Hero parallax — illustration moves slower than scroll
+gsap.to('.hero__imageContainer', {
+  yPercent: 25,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true
+  }
+});
+
+// Hero copy subtle upward drift on scroll
+gsap.to('.hero__copyContainer', {
+  yPercent: 12,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true
+  }
+});
+
+// Gold underline draw on scroll
+gsap.utils.toArray('.gold-underline').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 80%',
+    onEnter: () => el.classList.add('drawn')
+  });
+});
 
 // Gold rule expand
 gsap.utils.toArray('.gold-rule').forEach(el => {

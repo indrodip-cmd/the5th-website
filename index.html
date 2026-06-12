@@ -230,7 +230,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   -webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;
-  height:4.5rem;
+  height:5.5rem;
   display:flex;align-items:center;
   transition:box-shadow 0.3s ease;
 }
@@ -239,6 +239,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   width:100%;max-width:75rem;
   display:flex;align-items:center;justify-content:space-between;
   padding-top:0;padding-bottom:0;
+  height:100%;
 }
 .gn__logo{
   font-family:'Cormorant Garamond',Georgia,Times,serif;
@@ -252,7 +253,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   display:inline-block;color:var(--ink);
   font-family:'DM Sans',sans-serif;
   font-weight:500;font-size:0.875rem;
-  padding:1em 1.1em;position:relative;
+  padding:0 1.1em;position:relative;
   letter-spacing:0.01em;
   transition:color 0.15s;
 }
@@ -262,10 +263,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   left:1.1em;right:1.1em;bottom:0.7em;
   height:1px;background:var(--gold);
 }
-.gn__ctas{display:flex;align-items:center;gap:0.75rem}
+.gn__ctas{display:flex;align-items:center;gap:1rem}
 .gn__login{
   font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.8125rem;
-  color:var(--ink);padding:0.6rem 1rem;
+  color:var(--ink);padding:0.7rem 1.25rem;
   box-shadow:inset 0 0 0 1px rgba(26,26,46,0.2);
   transition:box-shadow 0.15s,background 0.15s;
 }
@@ -273,7 +274,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 .gn__start{
   background:var(--green);color:var(--white);
   font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.8125rem;
-  padding:0.6rem 1.25rem;letter-spacing:0.02em;
+  padding:0.7rem 1.5rem;letter-spacing:0.02em;
   transition:background 0.15s;
 }
 .gn__start:hover{background:var(--green-dark)}
@@ -1117,19 +1118,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:4px 8px;
+  padding:0;
   background:transparent;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
   border:none;
   box-shadow:none;
+  border-radius:0;
 }
 .gn__logo-img{
-  height:38px;
+  height:52px;
   width:auto;
   display:block;
   object-fit:contain;
   filter:none;
+  mix-blend-mode:multiply;
 }
 </style>
 </head>

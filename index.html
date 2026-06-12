@@ -636,12 +636,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
 /* ── CONTENT TILE GRID ── */
 .contentTileGrid__grid{
-  gap:1%;
-  max-width:100%;
-  margin-left:auto;
-  margin-right:auto;
   display:flex;
   flex-wrap:wrap;
+  gap:1%;
+  max-width:1100px;
+  margin-left:auto;
+  margin-right:auto;
+  justify-content:center;
 }
 @media(max-width:1100px){
   .contentTileGridItem__tile-1,.contentTileGridItem__tile-2,
@@ -1764,12 +1765,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 ====================================================== -->
 <section class="layout layout--margin">
 
-  <div class="content--10of16-large align--center" style="text-align:center;max-width:640px;margin:0 auto 3.5rem;" data-animate>
+  <div class="content--10of16-large align--center" style="text-align:center;max-width:700px;margin-left:auto;margin-right:auto;margin-bottom:3.5rem;" data-animate>
     <h2 class="h2 margin--bottom-3">Resources to give you <em>the inside track</em></h2>
     <p class="copy">Expert guidance, timely resources, and real stories from experienced women who built something remarkable, and the inside track on how they did it.</p>
   </div>
 
-  <div class="contentTileGrid__grid flex" style="max-width:75rem;margin-left:auto;margin-right:auto;">
+  <div class="contentTileGrid__grid flex">
 
     <!-- Tile 1 — featured -->
     <div class="contentTileGridItem__tile-1 backgroundSquash" data-animate>

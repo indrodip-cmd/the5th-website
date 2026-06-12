@@ -1133,6 +1133,87 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   object-fit:contain;
   filter:none;
 }
+/* ── TESTIMONIAL TICKER ── */
+.testimonial-strip{
+  background:var(--parchment);
+  padding:5rem 0;
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.testimonial-track{
+  display:flex;
+  gap:1.5rem;
+  width:max-content;
+  animation:testimonialScroll 60s linear infinite;
+}
+.testimonial-track:hover{
+  animation-play-state:paused;
+}
+@keyframes testimonialScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+.t-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  padding:2rem;
+  width:340px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  position:relative;
+}
+.t-card:before{
+  content:'\201C';
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:4rem;
+  color:var(--gold);
+  opacity:0.3;
+  position:absolute;
+  top:1rem;
+  right:1.5rem;
+  line-height:1;
+}
+.t-card__avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  overflow:hidden;
+  flex-shrink:0;
+  border:2px solid var(--gold);
+}
+.t-card__avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:top center;
+}
+.t-card__result{
+  font-family:'Cormorant Garamond',Georgia,Times,serif;
+  font-size:1.375rem;
+  font-weight:600;
+  color:var(--plum);
+  line-height:1.2;
+  letter-spacing:-0.01em;
+}
+.t-card__quote{
+  font-size:0.9375rem;
+  color:var(--ink-mid);
+  line-height:1.7;
+  font-style:italic;
+}
+.t-card__name{
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--ink-muted);
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-top:auto;
+  padding-top:1rem;
+  border-top:1px solid var(--border);
+}
 </style>
 </head>
 <body>
@@ -1193,18 +1274,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
           <div style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:1.75rem;">
             <div class="avatarStrip">
-              <img class="av" src="/clients/c1.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c2.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c3.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c4.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c5.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c6.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c7.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c8.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c9.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c10.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c11.jpg" alt="" style="object-fit:cover;object-position:top center;">
-              <img class="av" src="/clients/c12.jpg" alt="" style="object-fit:cover;object-position:top center;">
+              <div class="av"><img src="/public/clients/jeanne.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/seth.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/hayley.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/gabe.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/laurie.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/angela.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
+              <div class="av"><img src="/public/clients/toril.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;"></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="stars">★★★★</span><span class="stars" style="opacity:0.5;">★</span>
@@ -1286,6 +1362,134 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
         <span class="proof-stat__label">faster with a proven system</span>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="testimonial-strip">
+  <div class="testimonial-track">
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/jeanne.jpg" alt="Jeanne">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$8,000 in 8 weeks</p>
+        <p class="t-card__quote">"Joined the program not knowing where to start. Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible."</p>
+        <p class="t-card__name">Jeanne — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/seth.jpg" alt="Seth">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">2 high-ticket clients in 6 weeks</p>
+        <p class="t-card__quote">"After revamping my offer with Indrodip's framework, I sold two high-ticket packages within weeks. The clarity alone was worth the investment."</p>
+        <p class="t-card__name">Seth — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/hayley.jpg" alt="Hayley">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$2,200 in 3 weeks</p>
+        <p class="t-card__quote">"Three weeks into the program I had already made my investment back. I finally stopped undercharging and started owning the value I bring."</p>
+        <p class="t-card__name">Hayley — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/gabe.jpg" alt="Gabe">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">First paying clients after years of trying</p>
+        <p class="t-card__quote">"I had been trying to launch my offer for years with nothing to show for it. The5th gave me the system and the accountability I had been missing the whole time."</p>
+        <p class="t-card__name">Gabe — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/laurie.jpg" alt="Laurie">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$8,900 in 5 weeks</p>
+        <p class="t-card__quote">"I came in sceptical. I left with nearly nine thousand dollars in new revenue and a business model that actually makes sense for my life."</p>
+        <p class="t-card__name">Laurie — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/angela.jpg" alt="Angela">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$12,000 in 9 weeks</p>
+        <p class="t-card__quote">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you work it."</p>
+        <p class="t-card__name">Angela — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/toril.jpg" alt="Toril">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">Corporate programme launched after 15 years</p>
+        <p class="t-card__quote">"Fifteen years of corporate expertise sitting dormant. The5th helped me package it into a premium programme and take it back to market with confidence."</p>
+        <p class="t-card__name">Toril — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <!-- Duplicate for seamless loop -->
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/jeanne.jpg" alt="Jeanne">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$8,000 in 8 weeks</p>
+        <p class="t-card__quote">"Joined the program not knowing where to start. Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible."</p>
+        <p class="t-card__name">Jeanne — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/seth.jpg" alt="Seth">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">2 high-ticket clients in 6 weeks</p>
+        <p class="t-card__quote">"After revamping my offer with Indrodip's framework, I sold two high-ticket packages within weeks. The clarity alone was worth the investment."</p>
+        <p class="t-card__name">Seth — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/angela.jpg" alt="Angela">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">$12,000 in 9 weeks</p>
+        <p class="t-card__quote">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you work it."</p>
+        <p class="t-card__name">Angela — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
+    <div class="t-card">
+      <div class="t-card__avatar">
+        <img src="/public/clients/toril.jpg" alt="Toril">
+      </div>
+      <div class="t-card__body">
+        <p class="t-card__result">Corporate programme launched after 15 years</p>
+        <p class="t-card__quote">"Fifteen years of corporate expertise sitting dormant. The5th helped me package it into a premium programme and take it back to market with confidence."</p>
+        <p class="t-card__name">Toril — 10K Roadmap Accelerator</p>
+      </div>
+    </div>
+
   </div>
 </section>
 

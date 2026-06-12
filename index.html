@@ -727,20 +727,26 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 /* ── BIGFOOT FOOTER WORDMARK (BossBabe signature) ── */
 .footer-wordmark{
   text-align:center;
-  padding:3rem 1.25rem 0;
+  padding:2rem 0 0;
   overflow:hidden;
   border-top:1px solid rgba(255,255,255,0.06);
   margin-top:3rem;
+  line-height:0.85;
 }
 .footer-wordmark span{
   font-family:'Cormorant Garamond',Georgia,Times,serif;
-  font-size:clamp(4rem,14vw,12rem);
+  font-size:clamp(6rem,20vw,18rem);
   font-weight:600;
-  color:rgba(255,255,255,0.06);
-  letter-spacing:-0.04em;
-  line-height:0.9;
+  color:rgba(255,255,255,0.07);
+  letter-spacing:-0.05em;
   display:block;
   white-space:nowrap;
+  line-height:0.85;
+  user-select:none;
+}
+.footer-wordmark span em{
+  font-style:normal;
+  color:rgba(201,168,76,0.12);
 }
 
 /* ── SCROLL ANIMATION ── */
@@ -1876,7 +1882,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <span>© 2025 The5th Consulting. All rights reserved.</span>
     <span>the5th.consulting</span>
   </div>
-  <div class="footer-wordmark"><span>the5th.</span></div>
+  <div class="footer-wordmark">
+    <span>the<em>5</em>th.</span>
+  </div>
 </footer>
 
 <script>

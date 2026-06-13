@@ -583,6 +583,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
 /* ── HORIZONTAL GRID ── */
 .horizontalGrid__grid{margin-top:3.5rem}
+.three-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:4rem;
+  text-align:center;
+}
+@media(min-width:600px){
+  .three-grid{grid-template-columns:repeat(3,1fr);gap:3rem;}
+}
 .horizontalGridItem{box-sizing:border-box}
 @media(min-width:600px){
   .horizontalGridItem{display:flex;flex-direction:column;align-items:stretch}
@@ -591,11 +600,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 }
 .horizontalGridItem__subheader{
   font-family:'Cormorant Garamond',Georgia,Times,serif;
-  font-size:1.375rem;font-weight:600;
-  color:var(--ink);margin-bottom:0.875rem;
+  font-size:1.625rem;
+  font-weight:600;
+  color:var(--ink);
+  margin-bottom:0.875rem;
+  letter-spacing:-0.01em;
 }
 .horizontalGridItem__copy p{
-  font-size:1rem;color:var(--ink-mid);line-height:1.7;
+  font-size:1.0625rem;
+  color:var(--ink-mid);
+  line-height:1.7;
 }
 /* Replace emoji icons with styled numbers */
 .horizontalGridItem .feat-num{
@@ -1702,7 +1716,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 <!-- ======================================================
      HEADLINER, Keep moving
 ====================================================== -->
-<section class="backgroundJasmine layout--margin">
+<section class="backgroundJasmine layout--margin" style="padding-top:5rem;padding-bottom:6rem;">
   <div class="layout">
     <div class="content--8of16-large align--center" style="margin:0 auto" data-animate>
       <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
@@ -1710,10 +1724,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     </div>
 
     <!-- 3-COL GRID, Support features -->
-    <div class="horizontalGrid__grid flex flex--columns-3-medium">
+    <div class="horizontalGrid__grid three-grid">
 
       <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
-        <figure style="margin:0 auto 1.75rem;width:160px;height:160px;display:flex;align-items:center;justify-content:center;">
+        <figure style="margin:0 auto 1.75rem;width:220px;height:220px;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-01.png" alt="Private 1:1 coaching" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
         <h3 class="horizontalGridItem__subheader">Private 1:1 coaching</h3>
@@ -1724,7 +1738,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
       </div>
 
       <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
-        <figure style="margin:0 auto 1.75rem;width:160px;height:160px;display:flex;align-items:center;justify-content:center;">
+        <figure style="margin:0 auto 1.75rem;width:220px;height:220px;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-02.png" alt="Wisdom-to-Income Method" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
         <h3 class="horizontalGridItem__subheader">The Wisdom-to-Income Method™</h3>
@@ -1735,7 +1749,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
       </div>
 
       <div class="horizontalGridItem cell align--center padding--horizontal-3 margin--bottom-3" data-animate>
-        <figure style="margin:0 auto 1.75rem;width:160px;height:160px;display:flex;align-items:center;justify-content:center;">
+        <figure style="margin:0 auto 1.75rem;width:220px;height:220px;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-03.png" alt="The5th AI 24/7" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
         <h3 class="horizontalGridItem__subheader">The5th AI - 24/7</h3>

@@ -1775,7 +1775,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <!-- Module 1 — image left -->
     <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
       <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Content to Clients</div></div>
+        <div class="highlightModule__image"><img src="/public/images/highlight-content.png" alt="Turn your content into clients" style="width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,0.1);"></div>
       </div>
       <div class="highlightModule__body cell">
         <h2 class="highlightModule__header">Turn your content into clients</h2>
@@ -1786,7 +1786,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <!-- Module 2 — image right -->
     <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
       <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Discovery Call</div></div>
+        <div class="highlightModule__image"><img src="/public/images/highlight-sales.png" alt="A sales process that feels like a conversation" style="width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,0.1);"></div>
       </div>
       <div class="highlightModule__body cell">
         <h2 class="highlightModule__header">A sales process that feels like a conversation</h2>
@@ -1797,7 +1797,222 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <!-- The5th AI module -->
     <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
       <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">The5th AI Screenshot</div></div>
+        <div class="highlightModule__image">
+<style>
+  .ai-mock-browser-wrap, .ai-mock-browser-wrap * { margin: 0; padding: 0; box-sizing: border-box; }
+  .ai-mock-browser-wrap {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .ai-mock-chrome { background: #2b2b2b; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .ai-mock-dots { display: flex; gap: 6px; }
+  .ai-mock-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .ai-mock-dot-r { background: #ff5f57; }
+  .ai-mock-dot-y { background: #febc2e; }
+  .ai-mock-dot-g { background: #28c840; }
+  .ai-mock-address-bar { flex: 1; background: #3a3a3a; border-radius: 6px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; max-width: 340px; margin: 0 auto; }
+  .ai-mock-ssl-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+  .ai-mock-address-text { font-size: 12px; color: #b0b0b0; font-family: monospace; }
+  .ai-mock-content { background: #ffffff; display: grid; grid-template-columns: 1fr 1fr; }
+  .ai-mock-left-col { padding: 20px; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; gap: 14px; }
+  .ai-mock-right-col { padding: 20px; background: #fafafa; display: flex; flex-direction: column; gap: 14px; }
+  .ai-mock-chat-panel { background: #1a1a2e; border-radius: 10px; padding: 16px; color: white; }
+  .ai-mock-chat-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ai-mock-avatar { width: 28px; height: 28px; border-radius: 50%; background: #3D2645; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+  .ai-mock-avatar-green { background: #0f6e56; }
+  .ai-mock-avatar-label { font-size: 11px; font-weight: 600; color: #C9A84C; }
+  .ai-mock-avatar-sub { font-size: 9px; color: #8b7fcf; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ai-mock-bubble-user { background: #3D2645; border-radius: 8px 8px 2px 8px; padding: 8px 10px; margin-bottom: 8px; font-size: 11px; color: white; max-width: 85%; margin-left: auto; line-height: 1.5; }
+  .ai-mock-bubble-ai { background: #241c15; border-radius: 2px 8px 8px 8px; padding: 8px 10px; margin-bottom: 8px; font-size: 11px; color: #e2e8f0; line-height: 1.6; }
+  .ai-mock-highlight-green { color: #4ade80; font-weight: 700; }
+  .ai-mock-highlight-purple { color: #C9A84C; }
+  .ai-mock-credit-bar { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .ai-mock-credit-label { font-size: 9px; color: #8b7fcf; }
+  .ai-mock-bar-track { width: 80px; height: 3px; background: #2E1A35; border-radius: 2px; overflow: hidden; }
+  .ai-mock-bar-fill { height: 100%; background: #3D2645; border-radius: 2px; }
+  .ai-mock-feature-card { border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; background: white; }
+  .ai-mock-tag { font-size: 9px; font-weight: 700; color: #3D2645; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .ai-mock-card-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; }
+  .ai-mock-card-body { font-size: 11px; color: #555; line-height: 1.6; }
+  .ai-mock-journey-card { background: #1a1a2e; border-radius: 10px; padding: 16px; color: white; }
+  .ai-mock-journey-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ai-mock-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .ai-mock-stat { text-align: center; }
+  .ai-mock-stat-value { font-size: 15px; font-weight: 700; }
+  .ai-mock-stat-label { font-size: 8px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ai-mock-month-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .ai-mock-tab-active { background: #3D2645; border-radius: 5px; padding: 4px 10px; font-size: 10px; color: white; font-weight: 600; }
+  .ai-mock-tab-locked { background: #241c15; border-radius: 5px; padding: 4px 10px; font-size: 10px; color: #64748b; }
+  .ai-mock-week-label { font-size: 10px; font-weight: 600; color: #C9A84C; margin-bottom: 8px; }
+  .ai-mock-task-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .ai-mock-checkbox-done { width: 14px; height: 14px; border-radius: 3px; background: #3D2645; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .ai-mock-checkbox-done::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 1px; }
+  .ai-mock-checkbox-empty { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #2E1A35; flex-shrink: 0; }
+  .ai-mock-task-text { font-size: 10px; flex: 1; }
+  .ai-mock-task-done { color: #e2e8f0; }
+  .ai-mock-task-pending { color: #64748b; }
+  .ai-mock-pts-green { font-size: 9px; color: #4ade80; }
+  .ai-mock-pts-gray { font-size: 9px; color: #64748b; }
+  .ai-mock-quiz-card { background: white; border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; }
+  .ai-mock-quiz-header { font-size: 11px; font-weight: 600; color: #111; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; }
+  .ai-mock-quiz-meta { font-size: 10px; color: #888; font-weight: 400; }
+  .ai-mock-quiz-section-label { font-size: 9px; font-weight: 700; color: #3D2645; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .ai-mock-quiz-q { font-size: 12px; font-weight: 600; color: #111; margin-bottom: 10px; }
+  .ai-mock-option { border-radius: 7px; padding: 8px 10px; font-size: 11px; margin-bottom: 6px; }
+  .ai-mock-option-selected { border: 1.5px solid #3D2645; background: rgba(61,38,69,0.1); color: #3D2645; }
+  .ai-mock-option-plain { border: 1px solid #e8e8e8; color: #555; }
+  .ai-mock-lm-result { background: #241c15; border-radius: 2px 8px 8px 8px; padding: 12px; }
+  .ai-mock-lm-tag { font-size: 9px; color: #8b7fcf; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .ai-mock-lm-title { font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 5px; }
+  .ai-mock-lm-desc { font-size: 10px; color: #94a3b8; margin-bottom: 8px; line-height: 1.5; }
+  .ai-mock-lm-day { font-size: 10px; color: #C9A84C; margin-bottom: 3px; }
+  .ai-mock-lm-day span { color: #3D2645; font-weight: 700; margin-right: 4px; }
+</style>
+<div style="width:100%;overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);">
+  <div class="ai-mock-browser-wrap">
+    <div class="ai-mock-chrome">
+      <div class="ai-mock-dots">
+        <div class="ai-mock-dot ai-mock-dot-r"></div>
+        <div class="ai-mock-dot ai-mock-dot-y"></div>
+        <div class="ai-mock-dot ai-mock-dot-g"></div>
+      </div>
+      <div class="ai-mock-address-bar">
+        <div class="ai-mock-ssl-dot"></div>
+        <span class="ai-mock-address-text">platform.the5th.consulting</span>
+      </div>
+    </div>
+
+    <div class="ai-mock-content">
+      <div class="ai-mock-left-col">
+
+        <div class="ai-mock-chat-panel">
+          <div class="ai-mock-chat-header">
+            <div class="ai-mock-avatar">5</div>
+            <div>
+              <div class="ai-mock-avatar-label">The5th AI</div>
+              <div class="ai-mock-avatar-sub">Your Personal CMO</div>
+            </div>
+          </div>
+          <div class="ai-mock-bubble-user">I've been posting for 3 months and getting zero traction. I don't know what's wrong.</div>
+          <div class="ai-mock-bubble-ai">Before I tell you what to fix let me properly diagnose first.<br><br><span class="ai-mock-highlight-purple">1.</span> What does your content mostly talk about — process, results, or story?<br><span class="ai-mock-highlight-purple">2.</span> What's your current offer and price point?<br><br>Traction problems are almost always positioning problems, not consistency problems.</div>
+          <div class="ai-mock-bubble-user">I mostly talk about my process. I charge $2,400 for 3 months.</div>
+          <div class="ai-mock-bubble-ai"><span class="ai-mock-highlight-green">Found it.</span> You're selling the how when they need the who and the what. Women 40–60 don't buy a process — they buy proof that someone like them made it work. Here's what to post this week...</div>
+          <div class="ai-mock-credit-bar">
+            <span class="ai-mock-credit-label">Credits 45 / 100</span>
+            <div class="ai-mock-bar-track"><div class="ai-mock-bar-fill" style="width:45%"></div></div>
+          </div>
+        </div>
+
+        <div class="ai-mock-feature-card">
+          <div class="ai-mock-tag">Sales Coaching</div>
+          <div class="ai-mock-card-title">Diagnoses your real problem in seconds</div>
+          <div class="ai-mock-card-body">No generic advice. The5th AI asks the right questions, finds the actual problem, and gives you a specific plan. Just like a real CMO on speed dial.</div>
+        </div>
+
+        <div class="ai-mock-chat-panel">
+          <div class="ai-mock-chat-header">
+            <div class="ai-mock-avatar">5</div>
+            <div>
+              <div class="ai-mock-avatar-label" style="font-size:10px;">The5th AI</div>
+              <div class="ai-mock-avatar-sub">Building Your Lead Magnet...</div>
+            </div>
+          </div>
+          <div class="ai-mock-bubble-user">Build me a lead magnet for women 45–60 who want to start a coaching business from their corporate experience</div>
+          <div class="ai-mock-lm-result">
+            <div class="ai-mock-lm-tag">● Lead Magnet Ready To Use</div>
+            <div class="ai-mock-lm-title">"The 5-Day Clarity Challenge: From Corporate Expert to Confident Coach"</div>
+            <div class="ai-mock-lm-desc">A free 5-day email challenge for women 40+ to package their expertise into a profitable coaching offer without the overwhelm.</div>
+            <div class="ai-mock-lm-day"><span>1</span>Day 1: Define your transformation story</div>
+            <div class="ai-mock-lm-day"><span>2</span>Day 2: Identify your dream client in 10 questions</div>
+            <div class="ai-mock-lm-day"><span>3</span>Day 3: Build your first offer in 30 minutes</div>
+            <div class="ai-mock-lm-day"><span>4</span>Day 4: Set your price with confidence</div>
+            <div class="ai-mock-lm-day"><span>5</span>Day 5: Your first outreach — the exact DM to send today</div>
+          </div>
+          <div class="ai-mock-credit-bar" style="margin-top:10px;">
+            <span class="ai-mock-credit-label">Credits 100 / 100</span>
+            <div class="ai-mock-bar-track"><div class="ai-mock-bar-fill" style="width:100%"></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ai-mock-right-col">
+
+        <div class="ai-mock-journey-card">
+          <div class="ai-mock-journey-header">
+            <div class="ai-mock-avatar ai-mock-avatar-green">J</div>
+            <div>
+              <div style="font-size:11px; font-weight:600; color:white;">Jane's 90-Day Journey</div>
+              <div style="font-size:9px; color:#6ee7b7;">Month 1 · Building Your Foundation</div>
+            </div>
+          </div>
+          <div class="ai-mock-stats-grid">
+            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:white;">$0</div><div class="ai-mock-stat-label">Now</div></div>
+            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:#4ade80;">$5K</div><div class="ai-mock-stat-label">Target</div></div>
+            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:white;">24%</div><div class="ai-mock-stat-label">Done</div></div>
+            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:#fbbf24;">185</div><div class="ai-mock-stat-label">Points</div></div>
+          </div>
+          <div class="ai-mock-month-tabs">
+            <div class="ai-mock-tab-active">Month 1</div>
+            <div class="ai-mock-tab-locked">Month 2 🔒</div>
+            <div class="ai-mock-tab-locked">Month 3 🔒</div>
+          </div>
+          <div class="ai-mock-week-label">Week 2 · Your Offer and Positioning</div>
+          <div class="ai-mock-task-row">
+            <div class="ai-mock-checkbox-done"></div>
+            <span class="ai-mock-task-text ai-mock-task-done">Write your FROM → TO transformation statement</span>
+            <span class="ai-mock-pts-green">+75</span>
+          </div>
+          <div class="ai-mock-task-row">
+            <div class="ai-mock-checkbox-done"></div>
+            <span class="ai-mock-task-text ai-mock-task-done">Identify your ideal client avatar in detail</span>
+            <span class="ai-mock-pts-green">+50</span>
+          </div>
+          <div class="ai-mock-task-row">
+            <div class="ai-mock-checkbox-empty"></div>
+            <span class="ai-mock-task-text ai-mock-task-pending">Build your high-ticket offer using the DPC framework</span>
+            <span class="ai-mock-pts-gray">+100</span>
+          </div>
+          <div class="ai-mock-task-row">
+            <div class="ai-mock-checkbox-empty"></div>
+            <span class="ai-mock-task-text ai-mock-task-pending">Set your price with confidence post it publicly today</span>
+            <span class="ai-mock-pts-gray">+150</span>
+          </div>
+        </div>
+
+        <div class="ai-mock-quiz-card">
+          <div class="ai-mock-quiz-header">
+            Your Onboarding Journey
+            <span class="ai-mock-quiz-meta">Q10 of 22</span>
+          </div>
+          <div class="ai-mock-quiz-section-label">● Your Sales Reality</div>
+          <div class="ai-mock-quiz-q">Where in your sales process do you lose the most people?</div>
+          <div class="ai-mock-option ai-mock-option-selected">They get on the call but say they need to think about it</div>
+          <div class="ai-mock-option ai-mock-option-plain">They never respond to my first outreach message</div>
+          <div class="ai-mock-option ai-mock-option-plain">They say yes but ghost when I send the payment link</div>
+          <div class="ai-mock-option ai-mock-option-plain">I never actually ask for the sale directly</div>
+        </div>
+
+        <div class="ai-mock-feature-card">
+          <div class="ai-mock-tag">My Journey</div>
+          <div class="ai-mock-card-title">Personalised 90-Day Roadmap AI Generated For You</div>
+          <div class="ai-mock-card-body">After your onboarding quiz, The5th AI builds a week-by-week plan around your stage and revenue goal. Month 2 unlocks once Month 1 hits 50% completion.</div>
+        </div>
+
+        <div class="ai-mock-feature-card">
+          <div class="ai-mock-tag">Train Your CMO · 22 Deep Questions</div>
+          <div class="ai-mock-card-title">The5th AI Learns to Think Like You</div>
+          <div class="ai-mock-card-body">Your onboarding quiz teaches The5th AI your exact niche, offer, pricing, sales process, and 90-day goal. Every response is built around your specific situation.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
       </div>
       <div class="highlightModule__body cell">
         <p class="eyebrow margin--bottom-2">The5th AI - Available 24/7</p>
@@ -1832,7 +2047,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <!-- Module 3 — image left -->
     <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0 0" data-animate>
       <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div class="img-ph img-ph--highlight">Highlight Image - Results</div></div>
+        <div class="highlightModule__image"><img src="/public/images/highlight-results.png" alt="Know exactly what is working" style="width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,0.1);"></div>
       </div>
       <div class="highlightModule__body cell">
         <h2 class="highlightModule__header">Know exactly what's working</h2>

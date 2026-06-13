@@ -531,11 +531,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 .intentPath .cavendishLink{color:var(--gold)}
 
 /* ── ZIGZAG ── */
-.zigzagModule__element{padding:5rem 0}
+.zigzagModule__element{padding:6rem 0}
 .zigzagModule__element+.zigzagModule__element{border-top:1px solid var(--border)}
-.zigzagModule__imageContainer{margin-bottom:2.5rem}
+.zigzagModule__imageContainer{margin-bottom:2.5rem;width:100%}
 @media(min-width:600px){.zigzagModule__imageContainer{margin-bottom:0;padding-right:1rem}}
-.zigzagModule__image img{width:100%;border-radius:2px}
+.zigzagModule__image{width:100%;overflow:hidden}
+.zigzagModule__image img{width:100%;height:auto;display:block;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,0.12)}
 .zigzagModule__content{box-sizing:border-box}
 @media(min-width:600px){.zigzagModule__content{padding-left:3rem}}
 .zigzagModule__header{

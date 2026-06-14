@@ -1414,6 +1414,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
 /* ── Case-studies tile copy padding ── */
 .rtile-3__copy{padding:2rem;position:relative;z-index:1}
+
+/* ── Assessment tile (rtile-4) stacks on mobile ── */
+@media(max-width:899px){
+  .contentTileGridItem__tile-4{
+    flex-direction:column!important;
+  }
+  .contentTileGridItem__tile-4 > div{
+    width:100%!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -2635,85 +2645,65 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     </article>
 
     <!-- Tile 4 — expertise assessment -->
-    <article class="rtile-4 contentTileGridItem__tile-4">
-      <div class="contentTileGridItem__link" style="padding:0;overflow:hidden;">
-        <div style="width:100%;height:100%;min-height:200px;
-        background:linear-gradient(135deg,#3D2645 0%,#2E1A35 100%);
-        padding:2rem;display:flex;flex-direction:column;
-        justify-content:space-between;position:relative;overflow:hidden;">
+    <article class="rtile-4 contentTileGridItem__tile-4" style="display:flex;flex-direction:row;align-items:stretch;background:#fff;border:1px solid var(--border);">
 
-          <div style="position:absolute;top:-20px;right:-20px;
-          width:140px;height:140px;border-radius:50%;
-          background:rgba(201,168,76,0.08);"></div>
-          <div style="position:absolute;bottom:-40px;right:20px;
-          width:100px;height:100px;border-radius:50%;
-          background:rgba(201,168,76,0.05);"></div>
+      <!-- Left visual panel -->
+      <div style="flex:1;min-width:0;background:linear-gradient(160deg,#3D2645 0%,#2E1A35 60%,#1C4A32 100%);padding:2rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:280px;">
 
-          <div style="position:relative;z-index:1;">
-            <span style="font-size:0.625rem;font-weight:700;
-            letter-spacing:0.12em;text-transform:uppercase;
-            color:#C9A84C;display:block;margin-bottom:0.875rem;">
-              FREE ASSESSMENT
-            </span>
-            <div style="display:flex;flex-direction:column;gap:0.5rem;
-            margin-bottom:1.25rem;">
-              <div style="display:flex;align-items:center;gap:0.625rem;">
-                <span style="width:6px;height:6px;border-radius:50%;
-                background:#C9A84C;flex-shrink:0;"></span>
-                <span style="font-size:0.8125rem;color:rgba(255,255,255,0.75);">
-                  Do you have a sellable expertise?
-                </span>
+        <!-- Decorative circles -->
+        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(201,168,76,0.08);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;"></div>
+
+        <div style="position:relative;z-index:1;">
+          <span style="font-size:0.5625rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.25rem;">Free Assessment</span>
+
+          <div style="display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1.75rem;">
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">01</span>
               </div>
-              <div style="display:flex;align-items:center;gap:0.625rem;">
-                <span style="width:6px;height:6px;border-radius:50%;
-                background:#C9A84C;flex-shrink:0;"></span>
-                <span style="font-size:0.8125rem;color:rgba(255,255,255,0.75);">
-                  Are you undercharging for your skills?
-                </span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.625rem;">
-                <span style="width:6px;height:6px;border-radius:50%;
-                background:#C9A84C;flex-shrink:0;"></span>
-                <span style="font-size:0.8125rem;color:rgba(255,255,255,0.75);">
-                  What is your fastest path to income?
-                </span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.625rem;">
-                <span style="width:6px;height:6px;border-radius:50%;
-                background:#C9A84C;flex-shrink:0;"></span>
-                <span style="font-size:0.8125rem;color:rgba(255,255,255,0.75);">
-                  Which offer type fits your lifestyle?
-                </span>
-              </div>
+              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Do you have a sellable expertise?</span>
             </div>
-            <div style="background:rgba(255,255,255,0.06);
-            border:1px solid rgba(255,255,255,0.1);
-            border-radius:4px;padding:0.75rem 1rem;
-            display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:0.8125rem;color:rgba(255,255,255,0.4);">
-                10 questions · 3 minutes
-              </span>
-              <span style="font-size:0.75rem;color:#C9A84C;font-weight:600;">
-                FREE →
-              </span>
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">02</span>
+              </div>
+              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Are you undercharging for your skills?</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">03</span>
+              </div>
+              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">What is your fastest path to income?</span>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">04</span>
+              </div>
+              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Which offer type fits your lifestyle?</span>
             </div>
           </div>
         </div>
-      </div>
-      <div class="contentTileGridItem__tile-4_copyContainer">
-        <div class="contentTileGridItem__tile-4_copyContainer_info">
-          <p class="eyebrow">Free Assessment</p>
-          <h4 class="h4">Is Your Expertise Ready to Become an Offer?</h4>
-          <p class="copy" style="text-align:left;margin-bottom:0.8125rem;">
-            10 questions. 3 minutes. Find out exactly what you should be selling,
-            what to charge, and what is holding you back from your first paying client.
-          </p>
-          <a href="https://quiz.the5th.consulting" class="cta"
-             aria-label="Take the free assessment">
-            Take the assessment
-          </a>
+
+        <!-- Bottom badge -->
+        <div style="position:relative;z-index:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:0.8125rem;color:rgba(255,255,255,0.5);">10 questions · 3 minutes</span>
+          <span style="font-size:0.75rem;color:#C9A84C;font-weight:700;letter-spacing:0.04em;">FREE</span>
         </div>
       </div>
+
+      <!-- Right copy panel -->
+      <div style="flex:1;min-width:0;padding:2rem;display:flex;flex-direction:column;justify-content:center;background:#fff;">
+        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.875rem;">Free Assessment</p>
+        <h4 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.25rem,2vw,1.625rem);font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem;">Is Your Expertise Ready to Become an Offer?</h4>
+        <p style="font-size:1rem;color:var(--ink-mid);line-height:1.7;margin-bottom:1.5rem;">10 questions. 3 minutes. Find out exactly what you should be selling, what to charge, and what is holding you back from your first paying client.</p>
+        <a href="https://quiz.the5th.consulting"
+           style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--green);font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;transition:color 0.15s;">
+          Take the assessment
+          <span style="transition:transform 0.2s;">→</span>
+        </a>
+      </div>
+
     </article>
 
   </div>

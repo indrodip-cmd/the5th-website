@@ -686,23 +686,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
 /* ── CONTENT TILE GRID ── */
 .contentTileGrid__grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:1%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:start;
+  gap:1.5rem;
   max-width:1100px;
   margin-left:auto;
   margin-right:auto;
-  justify-content:center;
 }
-@media(max-width:1100px){
-  .contentTileGridItem__tile-1,.contentTileGridItem__tile-2,
-  .contentTileGridItem__tile-3,.contentTileGridItem__tile-4{width:100%;margin-bottom:3rem}
-}
-@media(min-width:1100px){
-  .contentTileGridItem__tile-1{width:65%;margin-right:1%;margin-bottom:1%}
-  .contentTileGridItem__tile-2{width:34%;margin-bottom:1%}
-  .contentTileGridItem__tile-3{width:34%;margin-right:1%}
-  .contentTileGridItem__tile-4{width:65%}
+/* Featured ebook + assessment span the full width; podcast + case
+   studies share the middle 1fr/1fr row and top-align (align-items:start). */
+.contentTileGridItem__tile-1,
+.contentTileGridItem__tile-4{grid-column:1 / -1;}
+@media(max-width:768px){
+  .contentTileGrid__grid{grid-template-columns:1fr;}
 }
 .contentTileGridItem__tile-1_copyContainer{
   padding:5rem 4rem;position:relative;min-height:380px;
@@ -1415,13 +1412,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 /* ── Case-studies tile copy padding ── */
 .rtile-3__copy{padding:2rem;position:relative;z-index:1}
 
-/* ── Assessment tile (rtile-4) stacks on mobile ── */
-@media(max-width:899px){
+/* ── Assessment tile (rtile-4) stacks its two panels on mobile ── */
+@media(max-width:768px){
   .contentTileGridItem__tile-4{
-    flex-direction:column!important;
-  }
-  .contentTileGridItem__tile-4 > div{
-    width:100%!important;
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -2479,7 +2473,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 <!-- ======================================================
      RESOURCE TILE GRID
 ====================================================== -->
-<section class="layout layout--margin">
+<section class="layout" style="padding:80px 48px;">
 
   <div class="content--10of16-large align--center" style="text-align:center;max-width:700px;margin-left:auto;margin-right:auto;margin-bottom:3.5rem;" data-animate>
     <h2 class="h2 margin--bottom-3">Resources to give you <em>the inside track</em></h2>
@@ -2645,7 +2639,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     </article>
 
     <!-- Tile 4 — expertise assessment -->
-    <article class="rtile-4 contentTileGridItem__tile-4" style="display:flex;flex-direction:row;align-items:stretch;background:#fff;border:1px solid var(--border);">
+    <article class="rtile-4 contentTileGridItem__tile-4" style="display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;padding:0;background:#fff;border:1px solid var(--border);">
 
       <!-- Left visual panel -->
       <div style="flex:1;min-width:0;background:linear-gradient(160deg,#3D2645 0%,#2E1A35 60%,#1C4A32 100%);padding:2rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:280px;">

@@ -774,27 +774,34 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 
 /* ── BIGFOOT FOOTER WORDMARK (BossBabe signature) ── */
 .footer-wordmark{
-  text-align:center;
-  padding:2rem 0 0;
+  width:100vw;
+  position:relative;
+  left:50%;
+  right:50%;
+  margin-left:-50vw;
+  margin-right:-50vw;
   overflow:hidden;
-  border-top:1px solid rgba(255,255,255,0.06);
+  padding:0;
   margin-top:3rem;
+  border-top:1px solid rgba(255,255,255,0.06);
   line-height:0.85;
 }
 .footer-wordmark span{
   font-family:'Cormorant Garamond',Georgia,Times,serif;
-  font-size:clamp(6rem,20vw,18rem);
+  font-size:clamp(8rem,22vw,22rem);
   font-weight:600;
-  color:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.06);
   letter-spacing:-0.05em;
   display:block;
   white-space:nowrap;
   line-height:0.85;
   user-select:none;
+  width:100%;
+  text-align:center;
 }
 .footer-wordmark span em{
   font-style:normal;
-  color:rgba(201,168,76,0.12);
+  color:rgba(201,168,76,0.1);
 }
 
 /* ── SCROLL ANIMATION ── */

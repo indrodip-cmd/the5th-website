@@ -1218,6 +1218,31 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   padding-top:1rem;
   border-top:1px solid var(--border);
 }
+.podcast-section-v2{padding:8rem 0;background:var(--parchment-mid);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.pod-header{text-align:center;max-width:640px;margin:0 auto 5rem;}
+.pod-header .eyebrow{display:block;margin-bottom:1rem;}
+.pod-title{font-family:'Cormorant Garamond',Georgia,Times,serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:600;line-height:1;letter-spacing:-0.03em;color:var(--ink);margin-bottom:1.25rem;}
+.pod-title em{font-style:italic;font-weight:300;color:var(--plum);display:block;}
+.pod-desc{font-size:1.0625rem;color:var(--ink-mid);line-height:1.7;}
+.pod-grid{display:grid;grid-template-columns:1fr;gap:4rem;align-items:start;}
+@media(min-width:900px){.pod-grid{grid-template-columns:340px 1fr;gap:5rem;}}
+.pod-cover-col{display:flex;flex-direction:column;gap:1.5rem;}
+.pod-cover-wrap{position:relative;}
+.pod-cover-badge{margin-top:1rem;text-align:center;font-size:0.6875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);}
+.pod-spotify-btn{display:flex;align-items:center;justify-content:center;gap:0.75rem;background:#1DB954;color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9375rem;padding:1rem 2rem;letter-spacing:0.02em;transition:background 0.2s ease,transform 0.2s ease;text-decoration:none;}
+.pod-spotify-btn:hover{background:#17a349;color:#fff;transform:translateY(-1px);}
+.pod-episodes-col{display:flex;flex-direction:column;gap:0;}
+.pod-ep-label{font-size:0.6875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:1.25rem;}
+.pod-ep-embed{margin-bottom:1.5rem;}
+.pod-ep-list{display:flex;flex-direction:column;}
+.pod-ep-item{display:flex;align-items:center;gap:1.25rem;padding:1rem 0;border-bottom:1px solid var(--border);}
+.pod-ep-item:first-child{border-top:1px solid var(--border);}
+.pod-ep-num{font-family:'Cormorant Garamond',Georgia,Times,serif;font-size:1.25rem;font-weight:600;color:var(--gold);flex-shrink:0;width:28px;letter-spacing:-0.02em;}
+.pod-ep-body{flex:1;}
+.pod-ep-title{font-size:0.9375rem;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:0.25rem;}
+.pod-ep-meta{font-size:0.75rem;color:var(--ink-muted);}
+.pod-ep-play{width:32px;height:32px;border-radius:50%;background:var(--plum);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.625rem;flex-shrink:0;padding-left:2px;text-decoration:none;transition:background 0.15s,transform 0.15s;}
+.pod-ep-play:hover{background:var(--plum-dark);transform:scale(1.1);}
 </style>
 </head>
 <body>
@@ -2190,95 +2215,69 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 <!-- ======================================================
      PODCAST
 ====================================================== -->
-<section class="podcast-section">
+<section class="podcast-section-v2">
   <div class="layout">
-    <div class="podcast__inner">
-
-      <div class="podcast__left">
-        <span class="eyebrow">Podcast</span>
-        <h2 class="podcast__title">
-          the The5th<br><em>podcast</em>
-        </h2>
-        <p class="podcast__desc">
-          Real conversations with women who turned decades
-          of experience into income. No fluff. No theory.
-          Just honest stories, proven strategies, and the
-          exact moments that changed everything.
-        </p>
-        <p class="podcast__sub">Every week you'll get the strategies,
-        frameworks, and unfiltered conversations to help you
-        build a business from what you already know.</p>
-
-        <div class="podcast__episodes">
-          <p class="podcast__ep-label">Top episodes</p>
-          <ul class="podcast__ep-list">
-            <li class="podcast__ep-item">
-              <span class="podcast__ep-play">▶</span>
-              <span>Why your experience is worth more than you think</span>
-            </li>
-            <li class="podcast__ep-item">
-              <span class="podcast__ep-play">▶</span>
-              <span>The $5,000 client she almost turned down</span>
-            </li>
-            <li class="podcast__ep-item">
-              <span class="podcast__ep-play">▶</span>
-              <span>How to sell without feeling like a salesperson</span>
-            </li>
-            <li class="podcast__ep-item">
-              <span class="podcast__ep-play">▶</span>
-              <span>From 30 years of HR to $8K a month coaching</span>
-            </li>
-            <li class="podcast__ep-item">
-              <span class="podcast__ep-play">▶</span>
-              <span>The moment she stopped waiting to feel ready</span>
-            </li>
-          </ul>
+    <div class="pod-header">
+      <span class="eyebrow">Podcast</span>
+      <h2 class="pod-title">the The5th<br><em>podcast</em></h2>
+      <p class="pod-desc">Real conversations with women who turned decades of experience into income. No fluff. No theory. Just honest stories, proven strategies, and the exact moments that changed everything.</p>
+    </div>
+    <div class="pod-grid">
+      <div class="pod-cover-col">
+        <div class="pod-cover-wrap">
+          <img src="/public/images/podcast-cover.png" alt="The5th Podcast" style="width:100%;height:auto;display:block;border-radius:8px;box-shadow:0 24px 64px rgba(61,38,69,0.25);">
+          <div class="pod-cover-badge">NEW EPISODES EVERY WEEK</div>
         </div>
-
-        <a href="#" class="podcast__spotify" target="_blank" rel="noopener">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-          </svg>
-          Listen on Spotify
-        </a>
+        <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" rel="noopener" class="pod-spotify-btn">Listen on Spotify</a>
       </div>
-
-      <div class="podcast__center">
-        <div class="podcast__host-wrap">
-          <div class="podcast__host-img">
-            <img src="/public/images/founder.png"
-                 alt="Indrodip Ghosh - The5th Podcast Host"
-                 style="width:100%;height:100%;object-fit:cover;object-position:center top;">
-          </div>
-          <div class="podcast__host-tag">
-            <span class="podcast__host-name">Indrodip Ghosh</span>
-            <span class="podcast__host-role">Host</span>
-          </div>
+      <div class="pod-episodes-col">
+        <p class="pod-ep-label">Latest Episodes</p>
+        <div class="pod-ep-embed">
+          <iframe style="border-radius:8px" src="https://open.spotify.com/embed/episode/5Ju6yE2XZfrpwNDzerCpbC?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
-      </div>
-
-      <div class="podcast__right">
-        <div class="podcast__mic-wrap">
-          <div class="podcast__mic-ph">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color:var(--gold);opacity:0.4">
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-              <line x1="12" y1="19" x2="12" y2="23"/>
-              <line x1="8" y1="23" x2="16" y2="23"/>
-            </svg>
-          </div>
-          <div class="podcast__right-copy">
-            <p class="podcast__right-label">New episodes</p>
-            <p class="podcast__right-freq">Every week</p>
-            <div class="podcast__soundwave">
-              <span></span><span></span><span></span>
-              <span></span><span></span><span></span>
-              <span></span><span></span><span></span>
+        <div class="pod-ep-list">
+          <div class="pod-ep-item">
+            <div class="pod-ep-num">02</div>
+            <div class="pod-ep-body">
+              <p class="pod-ep-title">Why your experience is worth more than you think</p>
+              <p class="pod-ep-meta">The5th Podcast</p>
             </div>
+            <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" class="pod-ep-play">&#9654;</a>
+          </div>
+          <div class="pod-ep-item">
+            <div class="pod-ep-num">03</div>
+            <div class="pod-ep-body">
+              <p class="pod-ep-title">The $5,000 client she almost turned down</p>
+              <p class="pod-ep-meta">The5th Podcast</p>
+            </div>
+            <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" class="pod-ep-play">&#9654;</a>
+          </div>
+          <div class="pod-ep-item">
+            <div class="pod-ep-num">04</div>
+            <div class="pod-ep-body">
+              <p class="pod-ep-title">How to sell without feeling like a salesperson</p>
+              <p class="pod-ep-meta">The5th Podcast</p>
+            </div>
+            <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" class="pod-ep-play">&#9654;</a>
+          </div>
+          <div class="pod-ep-item">
+            <div class="pod-ep-num">05</div>
+            <div class="pod-ep-body">
+              <p class="pod-ep-title">From 30 years of HR to $8K a month coaching</p>
+              <p class="pod-ep-meta">The5th Podcast</p>
+            </div>
+            <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" class="pod-ep-play">&#9654;</a>
+          </div>
+          <div class="pod-ep-item">
+            <div class="pod-ep-num">06</div>
+            <div class="pod-ep-body">
+              <p class="pod-ep-title">The moment she stopped waiting to feel ready</p>
+              <p class="pod-ep-meta">The5th Podcast</p>
+            </div>
+            <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc" target="_blank" class="pod-ep-play">&#9654;</a>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>

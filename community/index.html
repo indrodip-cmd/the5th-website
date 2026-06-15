@@ -16,339 +16,360 @@ a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%;height:auto}
 ul{list-style:none}
 
-/* MAILCHIMP EXACT CLASS NAMES — swapped to The5th brand colors */
-/* Mailchimp: #241C15 dark, #007c89 teal → we use #0f1117 dark, #274f40 green, #8b7fcf lavender */
-
-.layout{max-width:1200px;margin:0 auto;padding:0 30px}
-.layout--padding{padding-top:80px;padding-bottom:80px}
-.layout--margin{margin-top:70px;margin-bottom:70px}
-.content{width:100%}
+.layout{max-width:1180px;margin:0 auto;padding:0 32px}
 .align--center{text-align:center}
 .flex{display:flex;flex-wrap:wrap}
 .flex--middle{align-items:center}
-.flex--center{justify-content:center}
-.cell{flex:1 1 0%;min-width:0}
 
-/* MAILCHIMP TYPE SCALE — exact sizes, Cormorant replaces MeansWeb */
-.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.8rem,5vw,5rem);font-weight:300;line-height:1.0;letter-spacing:-0.04em;color:#0f1117}
-.h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.2rem,4vw,3.75rem);font-weight:400;line-height:1.05;letter-spacing:-0.025em;color:#0f1117}
+.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.8rem,5.5vw,5.25rem);font-weight:300;line-height:1.0;letter-spacing:-0.04em;color:#0f1117}
+.h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.75rem);font-weight:400;line-height:1.05;letter-spacing:-0.025em;color:#0f1117}
 .h2 em{font-style:italic}
-.h4{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.6rem,2.5vw,2.25rem);font-weight:400;line-height:1.15;color:#0f1117}
-.h5{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.2rem,1.8vw,1.625rem);font-weight:400;line-height:1.25;color:#0f1117}
-.h6{font-family:'DM Sans',sans-serif;font-size:clamp(1rem,1.3vw,1.375rem);font-weight:300;line-height:1.55;color:#0f1117}
-.copy{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:400;line-height:1.65;color:#4a4540}
-.copy--large{font-size:1.125rem;font-weight:300;line-height:1.75}
-.copy-block-quote{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.7rem,3vw,2.75rem);font-weight:300;line-height:1.15;letter-spacing:-0.01em;color:#0f1117}
-.eyebrow{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;line-height:1;letter-spacing:0.14em;text-transform:uppercase;color:#8b7fcf;display:block;margin-bottom:16px}
+.copy{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:400;line-height:1.7;color:#4a4540}
+.copy--lg{font-size:1.125rem;font-weight:300;line-height:1.8}
+.eyebrow{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#8b7fcf;display:block;margin-bottom:14px}
 
-/* MAILCHIMP ctaPrimary / ctaSecondary — exact shape, our colors */
-.ctaPrimary{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:#274f40;padding:14px 28px;box-shadow:inset 0 0 0 1px #274f40;transition:background 0.15s,box-shadow 0.15s;white-space:nowrap;letter-spacing:0.01em;line-height:1.3}
-.ctaPrimary:hover{background:#1e3d30;box-shadow:inset 0 0 0 1px #1e3d30}
-.ctaSecondary{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#274f40;background:transparent;padding:14px 28px;box-shadow:inset 0 0 0 1.5px #274f40;transition:box-shadow 0.15s;white-space:nowrap;letter-spacing:0.01em;line-height:1.3}
+/* BUTTONS */
+.ctaPrimary{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:#274f40;padding:14px 28px;box-shadow:inset 0 0 0 1px #274f40;transition:background .15s;white-space:nowrap;letter-spacing:.01em}
+.ctaPrimary:hover{background:#1e3d30}
+.ctaSecondary{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#274f40;background:transparent;padding:14px 28px;box-shadow:inset 0 0 0 1.5px #274f40;transition:box-shadow .15s;white-space:nowrap;letter-spacing:.01em}
 .ctaSecondary:hover{box-shadow:inset 0 0 0 2px #274f40}
-.ctaWhite{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#274f40;background:#fff;padding:14px 28px;transition:background 0.15s;white-space:nowrap;letter-spacing:0.01em;line-height:1.3}
+.ctaWhite{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#274f40;background:#fff;padding:14px 28px;transition:background .15s;white-space:nowrap;letter-spacing:.01em}
 .ctaWhite:hover{background:#f0ede8}
-.ctaWhiteOutline{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:transparent;padding:14px 28px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,0.55);transition:box-shadow 0.15s;white-space:nowrap;letter-spacing:0.01em;line-height:1.3}
+.ctaWhiteOutline{display:inline-block;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:transparent;padding:14px 28px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55);transition:box-shadow .15s;white-space:nowrap;letter-spacing:.01em}
 .ctaWhiteOutline:hover{box-shadow:inset 0 0 0 2px #fff}
 
-/* MARGIN UTILITIES — Mailchimp margin scale */
-.margin--top-3{margin-top:16px}
-.margin--top-5{margin-top:32px}
-.margin--bottom-2{margin-bottom:12px}
-.margin--bottom-3{margin-bottom:16px}
-.margin--right-2{margin-right:12px}
-
-/* GLOBAL NAV */
+/* NAV */
 .globalNav{position:sticky;top:0;z-index:200;background:#faf9f7;border-bottom:1px solid #e0dbd2}
 .globalNav .layout{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brandLogo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:500;color:#0f1117;letter-spacing:-0.02em}
+.brandLogo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:500;color:#0f1117;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.brandLogo img{height:28px;width:auto}
 .brandLogo em{font-style:normal;color:#8b7fcf}
-.globalNav__links{display:flex;align-items:center;gap:28px}
-.globalNav__links a{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:500;color:#8a8480;letter-spacing:0.01em;transition:color 0.15s}
-.globalNav__links a:hover,.globalNav__links a.active{color:#0f1117}
-.globalNav__actions{display:flex;align-items:center;gap:10px}
-.globalNav__login{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:500;color:#0f1117;padding:7px 14px;box-shadow:inset 0 0 0 1px rgba(15,17,23,0.2);transition:box-shadow 0.15s}
-.globalNav__login:hover{box-shadow:inset 0 0 0 1px #0f1117}
-.globalNav__signup{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:600;color:#fff;background:#274f40;padding:8px 18px;transition:background 0.15s}
-.globalNav__signup:hover{background:#1e3d30}
-.globalNav__ham{display:none;flex-direction:column;gap:5px;padding:4px;cursor:pointer;border:none;background:none}
-.globalNav__ham span{width:22px;height:1.5px;background:#0f1117;display:block}
-@media(max-width:860px){.globalNav__links{display:none}.globalNav__ham{display:flex}}
-@media(max-width:560px){.globalNav__login{display:none}}
+.gnLinks{display:flex;align-items:center;gap:28px}
+.gnLinks a{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:500;color:#8a8480;letter-spacing:.01em;transition:color .15s}
+.gnLinks a:hover,.gnLinks a.active{color:#0f1117}
+.gnActions{display:flex;align-items:center;gap:10px}
+.gnLogin{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:500;color:#0f1117;padding:7px 14px;box-shadow:inset 0 0 0 1px rgba(15,17,23,.2);transition:box-shadow .15s}
+.gnLogin:hover{box-shadow:inset 0 0 0 1px #0f1117}
+.gnSignup{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:600;color:#fff;background:#274f40;padding:8px 18px;transition:background .15s}
+.gnSignup:hover{background:#1e3d30}
+.gnHam{display:none;flex-direction:column;gap:5px;padding:4px;cursor:pointer;border:none;background:none}
+.gnHam span{width:22px;height:1.5px;background:#0f1117;display:block}
+@media(max-width:860px){.gnLinks{display:none}.gnHam{display:flex}}
+@media(max-width:560px){.gnLogin{display:none}}
 
-/* HERO — Mailchimp hero hero--withImage */
-.hero{background:#faf5ef;overflow:hidden;padding:90px 0 0}
-.hero .layout{display:flex;align-items:center;gap:60px;flex-wrap:wrap}
-.hero__copyContainer{flex:1 1 440px;max-width:560px;padding-bottom:60px}
-.hero__eyebrow{margin-bottom:22px}
-.hero__title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,5.2vw,5.25rem);font-weight:300;line-height:1.0;letter-spacing:-0.035em;color:#0f1117;margin-bottom:26px}
-.hero__title em{font-style:italic}
-.hero__copy{font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:300;line-height:1.65;color:#5a5550;max-width:500px;margin-bottom:40px}
+/* HERO — purple matching homepage */
+.hero{background:#3d2b6b;overflow:hidden;padding:96px 0 0;position:relative}
+.hero .layout{display:flex;align-items:flex-end;gap:48px;flex-wrap:wrap;position:relative;z-index:1}
+.hero__copy{flex:1 1 480px;max-width:600px;padding-bottom:80px}
+.hero__eyebrow{color:rgba(255,255,255,.55);margin-bottom:22px}
+.hero__title{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.5rem,5.5vw,5.5rem);font-weight:300;line-height:1.0;letter-spacing:-.04em;color:#fff;margin-bottom:28px}
+.hero__title em{font-style:italic;color:#c9a84c}
+.hero__sub{font-family:'DM Sans',sans-serif;font-size:1.25rem;font-weight:300;line-height:1.65;color:rgba(255,255,255,.72);max-width:500px;margin-bottom:44px}
 .hero__ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
-.hero__trust{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#a09890;letter-spacing:0.02em;line-height:1.7}
-.hero__imageContainer{flex:1 1 400px;max-width:520px;align-self:flex-end}
-.hero__placeholder{width:100%;min-height:520px;background:#ddd8cf;display:flex;align-items:center;justify-content:center;color:#b5ada5;font-size:0.8125rem;font-family:'DM Sans',sans-serif}
+.hero__trust{font-family:'DM Sans',sans-serif;font-size:.75rem;color:rgba(255,255,255,.38);letter-spacing:.03em;line-height:1.7}
+.hero__visual{flex:1 1 360px;max-width:480px;align-self:flex-end;position:relative;z-index:1}
+.hero__money-img{width:100%;display:block}
+.hero__proof{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.hero__avatars{display:flex;align-items:center}
+.hero__av{width:38px;height:38px;border-radius:50%;border:2.5px solid #3d2b6b;overflow:hidden;margin-left:-10px;flex-shrink:0;background:#5a4080}
+.hero__av:first-child{margin-left:0}
+.hero__av img{width:100%;height:100%;object-fit:cover}
+.hero__stars{color:#c9a84c;font-size:.9rem;letter-spacing:.08em}
+.hero__proof-text{font-family:'DM Sans',sans-serif;font-size:.8125rem;color:rgba(255,255,255,.6)}
+.hero__proof-text strong{color:#fff;font-weight:600}
 @media(max-width:820px){
-  .hero{padding:60px 0 0}
-  .hero__imageContainer{flex:1 1 100%;max-width:100%}
-  .hero__placeholder{min-height:260px}
-  .hero__copyContainer{padding-bottom:0;max-width:100%;flex:1 1 100%}
+  .hero{padding:72px 0 0}
+  .hero .layout{flex-direction:column;gap:0}
+  .hero__copy{max-width:100%;padding-bottom:40px;flex:none}
+  .hero__visual{flex:none;max-width:100%;width:100%}
+  .hero__money-img{max-height:280px;width:auto;margin:0 auto;object-fit:contain}
 }
 
 /* STATS BAR */
-.statsBar{background:#0f1117;padding:30px 0}
+.statsBar{background:#0f1117;padding:28px 0}
 .statsBar .layout{display:flex;justify-content:center;flex-wrap:wrap}
-.statsBar__cell{text-align:center;padding:12px 52px;border-right:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;gap:6px}
-.statsBar__cell:last-child{border-right:none}
-.statsBar__number{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.375rem;font-weight:300;color:#c9a84c;line-height:1}
-.statsBar__label{font-family:'DM Sans',sans-serif;font-size:0.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:0.12em;color:#4a4540}
+.sCell{text-align:center;padding:10px 48px;border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:5px}
+.sCell:last-child{border-right:none}
+.sCell__num{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.25rem;font-weight:300;color:#c9a84c;line-height:1}
+.sCell__label{font-family:'DM Sans',sans-serif;font-size:.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:.12em;color:#4a4540}
 @media(max-width:680px){
   .statsBar .layout{display:grid;grid-template-columns:1fr 1fr}
-  .statsBar__cell{border-right:none;border-bottom:1px solid rgba(255,255,255,0.07)}
-  .statsBar__cell:nth-child(odd){border-right:1px solid rgba(255,255,255,0.07)}
-  .statsBar__cell:nth-last-child(-n+2){border-bottom:none}
+  .sCell{border-right:none;border-bottom:1px solid rgba(255,255,255,.07)}
+  .sCell:nth-child(odd){border-right:1px solid rgba(255,255,255,.07)}
+  .sCell:nth-last-child(-n+2){border-bottom:none}
 }
 
-/* TICKER — Mailchimp marquee */
+/* TICKER */
 .ticker{overflow:hidden;padding:13px 0}
 .ticker--light{background:#faf9f7;border-top:1px solid #e0dbd2;border-bottom:1px solid #e0dbd2}
 .ticker--green{background:#274f40}
-.ticker__inner{display:flex;white-space:nowrap;animation:mc-tick 35s linear infinite}
+.ticker__inner{display:flex;white-space:nowrap;animation:tick 34s linear infinite}
 .ticker__inner:hover{animation-play-state:paused}
 .ticker--green .ticker__inner{animation-duration:28s}
-.ticker__item{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.13em;color:#0f1117}
-.ticker--green .ticker__item{color:rgba(250,249,247,0.8)}
+.ticker__item{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.13em;color:#0f1117}
+.ticker--green .ticker__item{color:rgba(250,249,247,.8)}
 .ticker__sep{color:#8b7fcf;margin:0 18px}
 .ticker--green .ticker__sep{color:#c9a84c}
-@keyframes mc-tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* HEADLINER — Mailchimp .headliner section */
-.headliner{padding:80px 0}
-.headliner .layout{text-align:center}
-.headliner__inner{max-width:760px;margin:0 auto}
-.headliner__heading{margin-top:14px;margin-bottom:24px}
-.headliner__copy{color:#5a5550;max-width:660px;margin:0 auto;font-size:1.2rem;font-weight:300;line-height:1.75}
-@media(max-width:768px){.headliner{padding:60px 0}}
+/* HEADLINER */
+.headliner{padding:88px 0;background:#fff}
+.headliner__inner{max-width:760px;margin:0 auto;text-align:center}
+.headliner__copy{color:#5a5550;font-size:1.2rem;font-weight:300;line-height:1.75;max-width:660px;margin:20px auto 0}
+@media(max-width:768px){.headliner{padding:64px 0}}
 
-/* HORIZONTAL GRID — Mailchimp .horizontalGrid .horizontalGridItem */
-/* THIS IS THE SIGNATURE SECTION — 01 02 03 04 giant numbers */
-.horizontalGrid{padding:80px 0;background:#faf9f7}
-.horizontalGrid__header{text-align:center;margin-bottom:60px}
-.horizontalGrid__header .eyebrow{margin-bottom:14px}
-.horizontalGrid__header .h2{margin-top:0}
-.horizontalGrid__grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #e0dbd2}
-.horizontalGridItem{padding:44px 32px;border-right:1px solid #e0dbd2;background:#fff}
-.horizontalGridItem:last-child{border-right:none}
-.horizontalGridItem__number{font-family:'Cormorant Garamond',Georgia,serif;font-size:6rem;font-weight:300;color:#c9a84c;line-height:1;display:block;margin-bottom:24px;letter-spacing:-0.04em}
-.horizontalGridItem__subheader{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:#0f1117;margin-bottom:14px}
-.horizontalGridItem__copy{font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:300;line-height:1.75;color:#5a5550}
+/* HORIZONTAL GRID */
+.hGrid{padding:88px 0;background:#faf9f7}
+.hGrid__header{text-align:center;margin-bottom:60px}
+.hGrid__grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #e0dbd2}
+.hGridItem{padding:44px 32px;border-right:1px solid #e0dbd2;background:#fff}
+.hGridItem:last-child{border-right:none}
+.hGridItem__num{font-family:'Cormorant Garamond',Georgia,serif;font-size:6rem;font-weight:300;color:#c9a84c;line-height:1;display:block;margin-bottom:24px;letter-spacing:-.04em}
+.hGridItem__title{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#0f1117;margin-bottom:14px}
+.hGridItem__copy{font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:300;line-height:1.75;color:#5a5550}
 @media(max-width:900px){
-  .horizontalGrid__grid{grid-template-columns:repeat(2,1fr)}
-  .horizontalGridItem{border-bottom:1px solid #e0dbd2}
-  .horizontalGridItem:nth-child(even){border-right:none}
-  .horizontalGridItem:nth-last-child(-n+2){border-bottom:none}
+  .hGrid__grid{grid-template-columns:repeat(2,1fr)}
+  .hGridItem{border-bottom:1px solid #e0dbd2}
+  .hGridItem:nth-child(even){border-right:none}
+  .hGridItem:nth-last-child(-n+2){border-bottom:none}
 }
 @media(max-width:540px){
-  .horizontalGrid__grid{grid-template-columns:1fr}
-  .horizontalGridItem{border-right:none;border-bottom:1px solid #e0dbd2}
-  .horizontalGridItem:last-child{border-bottom:none}
+  .hGrid__grid{grid-template-columns:1fr}
+  .hGridItem{border-right:none;border-bottom:1px solid #e0dbd2}
+  .hGridItem:last-child{border-bottom:none}
 }
-@media(max-width:768px){.horizontalGrid{padding:60px 0}}
+@media(max-width:768px){.hGrid{padding:64px 0}}
 
-/* HIGHLIGHT MODULE — Mailchimp .highlightModule .highlightModule--largeText */
-/* The zigzag alternating sections — this is the backbone */
-.highlightModule{padding:80px 0;border-top:1px solid #e0dbd2}
-.highlightModule--alt{background:#faf5ef}
-.highlightModule .layout>.flex{display:flex;align-items:center;gap:9%;flex-wrap:wrap}
-.highlightModule__grid--swap{flex-direction:row-reverse}
-.highlightModule__imageContainer{flex:1 1 44%}
-.highlightModule__placeholder{width:100%;min-height:380px;background:#e0dbd2;display:flex;align-items:center;justify-content:center;color:#b5ada5;font-family:'DM Sans',sans-serif;font-size:0.8125rem}
-.highlightModule__body{flex:1 1 44%;padding:24px 0}
-.highlightModule__header{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.9rem,3.2vw,3rem);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#0f1117;margin-top:16px;margin-bottom:22px}
-.highlightModule__header em{font-style:italic}
-.highlightModule__bodyCopy{font-family:'DM Sans',sans-serif;font-size:1.0625rem;font-weight:300;line-height:1.8;color:#5a5550;margin-bottom:32px}
-.highlightModule__cta{margin-top:6px}
+/* HIGHLIGHT MODULE */
+.hlMod{padding:88px 0;border-top:1px solid #e0dbd2}
+.hlMod--alt{background:#faf5ef}
+.hlMod .layout>.flex{align-items:center;gap:9%;flex-wrap:wrap}
+.hlMod__swap{flex-direction:row-reverse}
+.hlMod__img-side{flex:1 1 44%}
+.hlMod__ph{width:100%;min-height:380px;background:#e0dbd2;display:flex;align-items:center;justify-content:center;color:#b5ada5;font-family:'DM Sans',sans-serif;font-size:.8125rem}
+.hlMod__ri{width:100%;min-height:380px;object-fit:cover;display:block}
+.hlMod__body{flex:1 1 44%;padding:20px 0}
+.hlMod__badge{font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#c9a84c;margin-bottom:8px;display:block}
+.hlMod__h{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.9rem,3.2vw,3rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:#0f1117;margin-top:14px;margin-bottom:22px}
+.hlMod__h em{font-style:italic}
+.hlMod__p{font-family:'DM Sans',sans-serif;font-size:1.0625rem;font-weight:300;line-height:1.8;color:#5a5550;margin-bottom:32px}
 @media(max-width:768px){
-  .highlightModule{padding:60px 0}
-  .highlightModule .layout>.flex,.highlightModule__grid--swap{flex-direction:column;gap:32px}
-  .highlightModule__imageContainer,.highlightModule__body{flex:1 1 100%}
-  .highlightModule__placeholder{min-height:240px}
+  .hlMod{padding:64px 0}
+  .hlMod .layout>.flex,.hlMod__swap{flex-direction:column;gap:32px}
+  .hlMod__img-side,.hlMod__body{flex:1 1 100%}
+  .hlMod__ph,.hlMod__ri{min-height:240px}
 }
 
-/* BENEFITS — Mailchimp vertical benefits with small icon left, long copy right */
-.benefits{padding:80px 0;background:#fff;border-top:1px solid #e0dbd2}
-.benefits__inner{max-width:880px;margin:0 auto}
-.benefits__header{text-align:center;margin-bottom:60px}
-.benefit{display:flex;gap:40px;align-items:flex-start;padding:52px 0;border-bottom:1px solid #e0dbd2}
+/* MAILCHIMP BENEFITS LIST — Image 2 exact pattern */
+.benefits{padding:88px 0;background:#fff;border-top:1px solid #e0dbd2}
+.benefits__inner{max-width:920px;margin:0 auto}
+.benefits__header{text-align:center;margin-bottom:64px}
+.benefit{display:flex;gap:56px;align-items:flex-start;padding:56px 0}
+.benefit+.benefit{border-top:1px solid #e0dbd2}
 .benefit:first-child{padding-top:0}
-.benefit:last-child{border-bottom:none;padding-bottom:0}
-.benefits__icon{flex:0 0 100px;width:100px;height:100px;background:#e8e4dc;display:flex;align-items:center;justify-content:center;color:#b5ada5;font-size:0.75rem;text-align:center}
-.benefits__content{flex:1}
-.benefits__content .h5{margin-bottom:14px;font-size:1.25rem}
-.benefits__copy{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:300;line-height:1.78;color:#5a5550}
-@media(max-width:600px){.benefit{flex-direction:column;gap:20px}.benefits__icon{width:72px;height:72px;flex:0 0 72px}}
-@media(max-width:768px){.benefits{padding:60px 0}}
+.benefit:last-child{padding-bottom:0}
+.benefit__icon{flex:0 0 160px;width:160px;height:160px;overflow:hidden;background:#f2ede8;display:flex;align-items:center;justify-content:center}
+.benefit__icon img{width:100%;height:100%;object-fit:cover}
+.benefit__icon-ph{font-family:'Cormorant Garamond',Georgia,serif;font-size:3.5rem;font-weight:300;color:#c9a84c}
+.benefit__content{flex:1}
+.benefit__title{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:500;color:#0f1117;margin-bottom:16px;line-height:1.2}
+.benefit__copy{font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:300;line-height:1.82;color:#5a5550}
+@media(max-width:640px){
+  .benefit{flex-direction:column;gap:24px;padding:40px 0}
+  .benefit__icon{width:80px;height:80px;flex:0 0 80px}
+  .benefits{padding:64px 0}
+}
 
-/* VIDEO QUOTE — large blockquote centered */
-.videoQuote{padding:100px 0;border-top:1px solid #e0dbd2}
-.videoQuote--dark{background:#0f1117}
-.videoQuote--warm{background:#faf5ef}
-.videoQuote__inner{max-width:820px;margin:0 auto;text-align:center}
-.videoQuote__quote{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.25rem);font-weight:300;line-height:1.15;letter-spacing:-0.02em;color:#0f1117;margin-bottom:28px}
-.videoQuote__quote em{font-style:italic;color:#8b7fcf}
-.videoQuote__sub{font-family:'DM Sans',sans-serif;font-size:1.125rem;font-weight:300;line-height:1.75;color:#5a5550;max-width:680px;margin:0 auto 24px}
-.videoQuote__box{background:#0f1117;padding:60px 80px;max-width:760px;margin:0 auto}
-.videoQuote__box p{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.4rem,2.2vw,2rem);font-weight:300;line-height:1.6;color:#faf9f7}
-@media(max-width:600px){.videoQuote{padding:60px 0}.videoQuote__box{padding:36px 24px}}
-
-/* SIGN UP BAND — Mailchimp .signUp (yellow band) → our lavender */
-.signUp{padding:90px 0;text-align:center}
-.signUp--lavender{background:#8b7fcf}
-.signUp--dark{background:#0f1117}
-.signUp--green{background:#274f40}
-.signUp .h1{font-size:clamp(2.4rem,5.5vw,4.75rem);font-weight:300;margin-bottom:18px}
-.signUp--lavender .h1{color:#fff}
-.signUp--dark .h1{color:#faf9f7}
-.signUp .h6{color:rgba(255,255,255,0.72);font-size:1.125rem;max-width:500px;margin:0 auto 36px}
-.signUp__italic{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.6rem,3.2vw,2.875rem);font-weight:300;color:rgba(255,255,255,0.78);margin-bottom:24px;display:block}
-.signUp__ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
-.signUp__sub{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em}
-@media(max-width:768px){.signUp{padding:60px 0}}
-
-/* SUPPORT LINKS — Mailchimp .supportLinks (the arrow links at bottom) */
-.supportLinks{padding:80px 0;border-top:1px solid #e0dbd2}
-.supportLinks .flex{gap:60px;flex-wrap:wrap;align-items:flex-start}
-.supportLinks__header{flex:1 1 360px}
-.supportLinks__list{flex:1 1 360px}
-.supportLink{display:flex;align-items:center;justify-content:space-between;font-family:'Cormorant Garamond',Georgia,serif;font-size:1.5rem;font-weight:300;color:#0f1117;padding:20px 0;border-bottom:1px solid #e0dbd2;transition:color 0.15s;width:100%}
-.supportLink:last-child{border-bottom:none}
-.supportLink:hover{color:#8b7fcf}
-.supportLink::after{content:"→";font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:transform 0.15s}
-.supportLink:hover::after{transform:translateX(4px)}
+/* EMOTIONAL QUOTE */
+.vQuote{padding:100px 0;border-top:1px solid #e0dbd2}
+.vQuote--warm{background:#faf5ef}
+.vQuote--purple{background:#3d2b6b;border-top:none}
+.vQuote__inner{max-width:840px;margin:0 auto;text-align:center}
+.vQuote__big{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:300;line-height:1.12;letter-spacing:-.025em;color:#0f1117;margin-bottom:28px}
+.vQuote__big em{font-style:italic;color:#8b7fcf}
+.vQuote--purple .vQuote__big{color:#fff}
+.vQuote--purple .vQuote__big em{color:#c9a84c}
+.vQuote__body{font-family:'DM Sans',sans-serif;font-size:1.125rem;font-weight:300;line-height:1.8;color:#5a5550;max-width:700px;margin:0 auto 28px}
+.vQuote--purple .vQuote__body{color:rgba(255,255,255,.65)}
+.vQuote__box{background:#0f1117;padding:56px 72px;max-width:760px;margin:0 auto}
+.vQuote--purple .vQuote__box{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
+.vQuote__box p{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.35rem,2.2vw,2rem);font-weight:300;line-height:1.6;color:#faf9f7}
+@media(max-width:600px){.vQuote{padding:64px 0}.vQuote__box{padding:36px 24px}}
 
 /* WHO IT'S FOR */
-.whoSection{padding:80px 0;background:#faf9f7;border-top:1px solid #e0dbd2}
+.whoSection{padding:88px 0;background:#faf9f7;border-top:1px solid #e0dbd2}
 .whoSection__header{text-align:center;margin-bottom:64px}
 .who__grid{display:grid;grid-template-columns:1fr 1fr;gap:5%;max-width:960px;margin:0 auto}
-.who__colTitle{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:28px;padding-bottom:14px;border-bottom:2px solid}
-.who__colTitle.yes{color:#274f40;border-color:#274f40}
-.who__colTitle.no{color:#c0bab4;border-color:#e0dbd2}
+.who__col-title{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:28px;padding-bottom:14px;border-bottom:2px solid}
+.who__col-title.yes{color:#274f40;border-color:#274f40}
+.who__col-title.no{color:#c0bab4;border-color:#e0dbd2}
 .who__list li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid #ede9e2}
 .who__list li:last-child{border-bottom:none}
 .who__icon{flex-shrink:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:2px}
 .who__icon.yes{background:#274f40;color:#fff}
 .who__icon.no{border:1.5px solid #d4cfc9;color:#c0bab4}
-.who__text{font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:300;line-height:1.6;color:#403b3b}
+.who__text{font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:300;line-height:1.6;color:#403b3b}
 .who__text.dim{color:#b8b0a6}
-@media(max-width:680px){.whoSection{padding:60px 0}.who__grid{grid-template-columns:1fr;gap:40px}}
+@media(max-width:680px){.whoSection{padding:64px 0}.who__grid{grid-template-columns:1fr;gap:40px}}
+
+/* COMPARISON */
+.compare{padding:88px 0;background:#fff;border-top:1px solid #e0dbd2}
+.compare__inner{max-width:820px;margin:0 auto}
+.compare__header{text-align:center;margin-bottom:56px}
+.compare__table{width:100%;border-collapse:collapse}
+.compare__table th{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:16px 20px;border-bottom:2px solid #e0dbd2;text-align:center}
+.compare__table th:first-child{text-align:left;color:#a09890;font-size:.7rem}
+.compare__table th.ours{color:#274f40;background:#f4faf7}
+.compare__table td{font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:300;color:#5a5550;padding:14px 20px;border-bottom:1px solid #f0ede8;text-align:center}
+.compare__table td:first-child{text-align:left;font-weight:400;color:#0f1117;font-size:.9375rem}
+.compare__table td.ours{background:#f4faf7;font-weight:600;color:#274f40}
+.c-tick{color:#274f40;font-size:1rem}
+.c-cross{color:#d4cfc9;font-size:1rem}
+@media(max-width:600px){.compare{padding:64px 0}.compare__table td,.compare__table th{padding:10px 12px;font-size:.8125rem}}
 
 /* TESTIMONIALS */
-.testimonials{padding:80px 0;border-top:1px solid #e0dbd2;overflow:hidden}
-.testimonials__header{text-align:center;margin-bottom:48px}
-.testimonials__track{display:flex;gap:24px;overflow-x:auto;padding:0 30px 24px;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
-.testimonials__track::-webkit-scrollbar{display:none}
+.tSection{padding:88px 0;border-top:1px solid #e0dbd2;overflow:hidden}
+.tSection__header{text-align:center;margin-bottom:48px}
+.tTrack{display:flex;gap:24px;overflow-x:auto;padding:0 32px 24px;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+.tTrack::-webkit-scrollbar{display:none}
 .tCard{min-width:380px;max-width:380px;background:#faf9f7;border:1px solid #e0dbd2;padding:44px 40px;scroll-snap-align:start;display:flex;flex-direction:column;flex-shrink:0}
-.tCard__badge{display:inline-block;background:#274f40;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:5px 14px;margin-bottom:24px;width:fit-content}
+.tCard__badge{display:inline-block;background:#274f40;color:#fff;font-family:'DM Sans',sans-serif;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 14px;margin-bottom:24px;width:fit-content}
 .tCard__quote{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.375rem;line-height:1.6;color:#0f1117;flex:1;margin-bottom:24px}
-.tCard__footer{border-top:1px solid #e0dbd2;padding-top:18px;margin-top:auto}
-.tCard__name{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:600;color:#0f1117}
-.tCard__role{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#a09890;margin-top:3px}
-.testimonials__dots{display:flex;justify-content:center;gap:8px;margin-top:20px}
-.testimonials__dot{width:8px;height:8px;border-radius:50%;background:#dbd9d2;border:none;cursor:pointer;padding:0;transition:background 0.2s}
-.testimonials__dot.active{background:#274f40}
-@media(max-width:600px){.tCard{min-width:300px;max-width:300px;padding:32px 28px}.testimonials{padding:60px 0}}
+.tCard__footer{border-top:1px solid #e0dbd2;padding-top:18px;margin-top:auto;display:flex;align-items:center;gap:12px}
+.tCard__av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#e0dbd2}
+.tCard__av img{width:100%;height:100%;object-fit:cover}
+.tCard__name{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:600;color:#0f1117}
+.tCard__role{font-family:'DM Sans',sans-serif;font-size:.75rem;color:#a09890;margin-top:2px}
+.tDots{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.tDot{width:8px;height:8px;border-radius:50%;background:#dbd9d2;border:none;cursor:pointer;padding:0;transition:background .2s}
+.tDot.active{background:#274f40}
+@media(max-width:600px){.tCard{min-width:300px;max-width:300px;padding:32px 28px}.tSection{padding:64px 0}}
 
 /* PRICING */
-.pricing{padding:80px 0;background:#fff;border-top:1px solid #e0dbd2}
+.pricing{padding:88px 0;background:#faf9f7;border-top:1px solid #e0dbd2}
 .pricing__header{text-align:center;margin-bottom:60px}
 .pricing__cards{display:flex;justify-content:center;gap:0;flex-wrap:wrap;border:1px solid #e0dbd2;max-width:900px;margin:0 auto}
 .pCard{flex:1 1 380px;padding:52px 44px;border-right:1px solid #e0dbd2;background:#fff}
 .pCard:last-child{border-right:none}
 .pCard--featured{background:#faf5ef;border:2px solid #274f40;margin:-1px}
-.pCard__badge{font-family:'DM Sans',sans-serif;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;display:inline-block;padding:4px 12px;margin-bottom:28px}
+.pCard__badge{font-family:'DM Sans',sans-serif;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;display:inline-block;padding:4px 12px;margin-bottom:28px}
 .pCard__badge--std{background:#eee9e2;color:#8a8480}
 .pCard__badge--best{background:#274f40;color:#fff}
-.pCard__price{font-family:'Cormorant Garamond',Georgia,serif;font-size:5.5rem;font-weight:300;color:#0f1117;line-height:1;letter-spacing:-0.04em;display:inline}
+.pCard__price{font-family:'Cormorant Garamond',Georgia,serif;font-size:5.5rem;font-weight:300;color:#0f1117;line-height:1;letter-spacing:-.04em;display:inline}
 .pCard__period{font-family:'DM Sans',sans-serif;font-size:1rem;color:#a09890;margin-left:4px}
-.pCard__note{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#a09890;margin-top:8px;margin-bottom:32px}
+.pCard__note{font-family:'DM Sans',sans-serif;font-size:.75rem;color:#a09890;margin-top:8px;margin-bottom:32px}
 .pCard__note--savings{color:#274f40;font-weight:600}
 .pCard__divider{height:1px;background:#e0dbd2;margin-bottom:28px}
 .pCard__features{padding:0;margin-bottom:0}
-.pCard__features li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f2ede8;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:300;color:#5a5550;line-height:1.5}
+.pCard__features li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f2ede8;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:300;color:#5a5550;line-height:1.5}
 .pCard__features li:last-child{border-bottom:none}
-.pCard__check{color:#274f40;font-weight:700;font-size:0.8rem;flex-shrink:0;margin-top:1px}
-.pCard__btn{display:block;width:100%;text-align:center;font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:600;color:#fff;background:#274f40;padding:16px;border:none;cursor:pointer;margin-top:32px;letter-spacing:0.03em;transition:background 0.15s}
+.pCard__check{color:#274f40;font-weight:700;font-size:.8rem;flex-shrink:0;margin-top:1px}
+.pCard__btn{display:block;width:100%;text-align:center;font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:600;color:#fff;background:#274f40;padding:16px;border:none;cursor:pointer;margin-top:32px;letter-spacing:.03em;transition:background .15s}
 .pCard__btn:hover{background:#1e3d30}
-.pricing__note{text-align:center;margin-top:28px;font-family:'DM Sans',sans-serif;font-size:0.8125rem;color:#a09890}
+.pricing__note{text-align:center;margin-top:28px;font-family:'DM Sans',sans-serif;font-size:.8125rem;color:#a09890}
 .pricing__note a{color:#8b7fcf;border-bottom:1px solid #8b7fcf}
-@media(max-width:768px){.pricing{padding:60px 0}.pricing__cards{flex-direction:column;border:none}.pCard{border-right:none;border:1px solid #e0dbd2;margin-bottom:2px}.pCard--featured{margin:0;border:2px solid #274f40}}
+@media(max-width:768px){.pricing{padding:64px 0}.pricing__cards{flex-direction:column;border:none}.pCard{border-right:none;border:1px solid #e0dbd2;margin-bottom:2px}.pCard--featured{margin:0;border:2px solid #274f40}}
+
+/* PUB STRIP */
+.pubStrip{padding:48px 0;background:#fff;border-top:1px solid #e0dbd2;border-bottom:1px solid #e0dbd2}
+.pubStrip__label{font-family:'DM Sans',sans-serif;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#a09890;text-align:center;margin-bottom:28px}
+.pubStrip__logos{display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+.pubStrip__logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.25rem;font-weight:400;color:#c0bab4;letter-spacing:-.01em}
 
 /* FAQ */
-.faq{padding:80px 0;border-top:1px solid #e0dbd2}
+.faq{padding:88px 0;border-top:1px solid #e0dbd2}
 .faq__header{text-align:center;margin-bottom:56px}
 .faq__inner{max-width:740px;margin:0 auto}
-.faq-item{border-bottom:1px solid #e0dbd2}
-.faq-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:22px 0;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;color:#0f1117;background:none;border:none;text-align:left;cursor:pointer;gap:16px}
-.faq-icon{font-size:1.5rem;color:#8b7fcf;transition:transform 0.25s ease;flex-shrink:0;font-weight:300;line-height:1}
-.faq-btn[data-open="true"] .faq-icon{transform:rotate(45deg)}
-.faq-answer{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
-.faq-answer p{font-family:'DM Sans',sans-serif;font-size:0.9375rem;font-weight:300;line-height:1.8;color:#5a5550;padding-bottom:22px}
-@media(max-width:768px){.faq{padding:60px 0}}
+.faqItem{border-bottom:1px solid #e0dbd2}
+.faqBtn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:22px 0;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;color:#0f1117;background:none;border:none;text-align:left;cursor:pointer;gap:16px}
+.faqIcon{font-size:1.5rem;color:#8b7fcf;transition:transform .25s ease;flex-shrink:0;font-weight:300;line-height:1}
+.faqBtn[data-open="true"] .faqIcon{transform:rotate(45deg)}
+.faqAns{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faqAns p{font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:300;line-height:1.8;color:#5a5550;padding-bottom:22px}
+@media(max-width:768px){.faq{padding:64px 0}}
 
-/* GLOBAL FOOTER — Mailchimp .globalFooter__storefront .backgroundParsnip */
+/* SIGN UP BAND */
+.signUp{padding:96px 0;text-align:center}
+.signUp--purple{background:#3d2b6b}
+.signUp--lavender{background:#8b7fcf}
+.signUp--green{background:#274f40}
+.signUp__h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.4rem,5.5vw,4.75rem);font-weight:300;line-height:1;letter-spacing:-.04em;color:#fff;margin-bottom:16px}
+.signUp__italic{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.6rem,3.2vw,2.875rem);font-weight:300;color:rgba(255,255,255,.78);margin-bottom:28px;display:block}
+.signUp__sub{font-family:'DM Sans',sans-serif;font-size:1.125rem;font-weight:300;color:rgba(255,255,255,.7);max-width:520px;margin:0 auto 40px;line-height:1.7}
+.signUp__ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.signUp__fine{font-family:'DM Sans',sans-serif;font-size:.75rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em}
+@media(max-width:768px){.signUp{padding:64px 0}}
+
+/* FOOTER */
 .globalFooter{background:#faf9f7;border-top:1px solid #e0dbd2;padding:64px 0 40px}
 .footer__grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px}
-.footer__brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:500;color:#0f1117;letter-spacing:-0.02em;margin-bottom:14px}
+.footer__brand{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;font-weight:500;color:#0f1117;letter-spacing:-.02em;margin-bottom:14px}
 .footer__brand em{font-style:normal;color:#8b7fcf}
-.footer__tagline{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:300;color:#8a8480;line-height:1.65;max-width:240px}
-.footerItemColumn__heading{font-family:'DM Sans',sans-serif;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.13em;color:#8a8480;margin-bottom:18px}
-.footerItem{margin-bottom:10px}
-.footerItem a{font-family:'DM Sans',sans-serif;font-size:0.8125rem;font-weight:400;color:#6b6560;transition:color 0.15s}
-.footerItem a:hover{color:#0f1117}
+.footer__tagline{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:300;color:#8a8480;line-height:1.65;max-width:240px}
+.footerCol__h{font-family:'DM Sans',sans-serif;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.13em;color:#8a8480;margin-bottom:18px}
+.fItem{margin-bottom:10px}
+.fItem a{font-family:'DM Sans',sans-serif;font-size:.8125rem;font-weight:400;color:#6b6560;transition:color .15s}
+.fItem a:hover{color:#0f1117}
 .footer__bottom{border-top:1px solid #e0dbd2;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.footer__copy{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:#8a8480}
-.footer__watermark{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.2rem;font-weight:300;color:#e0dbd2;letter-spacing:-0.03em}
-.footer__watermark em{font-style:normal;color:#e8e4dc}
+.footer__copy{font-family:'DM Sans',sans-serif;font-size:.75rem;color:#8a8480}
+.footer__wm{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.2rem;font-weight:300;color:#e0dbd2;letter-spacing:-.03em}
+.footer__wm em{font-style:normal;color:#e8e4dc}
 @media(max-width:860px){.footer__grid{grid-template-columns:1fr 1fr;gap:32px}}
 @media(max-width:500px){.footer__grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- GLOBAL NAV -->
+<!-- NAV -->
 <header class="globalNav">
   <div class="layout">
-    <a href="/" class="brandLogo">the<em>5</em>th.</a>
-    <nav class="globalNav__links">
+    <a href="/" class="brandLogo">
+      <img src="/public/images/logo.png" alt="The5th" onerror="this.style.display='none'">
+      <span>the<em>5</em>th.</span>
+    </a>
+    <nav class="gnLinks">
       <a href="/#how-it-works">How It Works</a>
       <a href="/#ai">The5th AI</a>
       <a href="/community" class="active">Community</a>
       <a href="/#results">Results</a>
       <a href="/#about">About</a>
     </nav>
-    <div class="globalNav__actions">
-      <a href="https://platform.the5th.consulting" class="globalNav__login">Log In</a>
-      <a href="https://quiz.the5th.consulting" class="globalNav__signup">Start Here</a>
+    <div class="gnActions">
+      <a href="https://platform.the5th.consulting" class="gnLogin">Log In</a>
+      <a href="https://quiz.the5th.consulting" class="gnSignup">Start Here</a>
     </div>
-    <button class="globalNav__ham" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <button class="gnHam" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
 
-<!-- HERO — hero hero--withImage -->
+<!-- HERO — purple matching homepage exactly -->
 <section class="hero">
   <div class="layout">
-    <div class="hero__copyContainer">
+    <div class="hero__copy">
       <span class="eyebrow hero__eyebrow">The5th Community</span>
       <h1 class="hero__title">The only community built for women who are <em>done waiting</em> to get paid for what they know.</h1>
-      <p class="hero__copy">Weekly live coaching. The5th AI. A room full of women who get it. Everything you need to go from stuck to selling — without starting from scratch.</p>
+      <p class="hero__sub">Weekly live coaching. The5th AI. A room full of women who get it. Everything you need to go from stuck to selling — without starting from scratch.</p>
       <div class="hero__ctas">
-        <a href="https://whop.com/the5th-community/" target="_blank" class="ctaPrimary">Join Monthly — $197/mo</a>
-        <a href="https://whop.com/the5th-community/" target="_blank" class="ctaSecondary">Join Annual — $1,970/yr</a>
+        <a href="https://whop.com/the5th-community/" target="_blank" class="ctaWhite">Join Monthly — $197/mo</a>
+        <a href="https://whop.com/the5th-community/" target="_blank" class="ctaWhiteOutline">Join Annual — $1,970/yr</a>
       </div>
       <p class="hero__trust">Minimum 3-month commitment &nbsp;·&nbsp; Instant platform access &nbsp;·&nbsp; Cancel anytime after 3 months</p>
     </div>
-    <div class="hero__imageContainer">
-      <div class="hero__placeholder">Community Preview</div>
+    <div class="hero__visual">
+      <div class="hero__proof">
+        <div class="hero__avatars">
+          <div class="hero__av"><img src="/public/clients/jeanne.jpg" alt="Jeanne"></div>
+          <div class="hero__av"><img src="/public/clients/angela.jpg" alt="Angela"></div>
+          <div class="hero__av"><img src="/public/clients/hayley.jpg" alt="Hayley"></div>
+          <div class="hero__av"><img src="/public/clients/seth.jpg" alt="Seth"></div>
+          <div class="hero__av"><img src="/public/clients/toril.jpg" alt="Toril"></div>
+        </div>
+        <div>
+          <div class="hero__stars">★★★★★</div>
+          <div class="hero__proof-text"><strong>76+ members</strong> across 12 nations</div>
+        </div>
+      </div>
+      <img src="/public/images/money-character.png" alt="The5th Community" class="hero__money-img" onerror="this.style.display='none'">
     </div>
   </div>
 </section>
@@ -356,151 +377,226 @@ ul{list-style:none}
 <!-- STATS BAR -->
 <div class="statsBar">
   <div class="layout">
-    <div class="statsBar__cell"><span class="statsBar__number">76+</span><span class="statsBar__label">Members</span></div>
-    <div class="statsBar__cell"><span class="statsBar__number">$15M+</span><span class="statsBar__label">Generated</span></div>
-    <div class="statsBar__cell"><span class="statsBar__number">90 days</span><span class="statsBar__label">Avg. to first client</span></div>
-    <div class="statsBar__cell"><span class="statsBar__number">12</span><span class="statsBar__label">Nations</span></div>
+    <div class="sCell"><span class="sCell__num">$15M+</span><span class="sCell__label">Generated by members</span></div>
+    <div class="sCell"><span class="sCell__num">76+</span><span class="sCell__label">Women coached</span></div>
+    <div class="sCell"><span class="sCell__num">90 days</span><span class="sCell__label">Avg. to first client</span></div>
+    <div class="sCell"><span class="sCell__num">12</span><span class="sCell__label">Nations represented</span></div>
   </div>
 </div>
 
 <!-- TICKER 1 -->
 <div class="ticker ticker--light" aria-hidden="true">
   <div class="ticker__inner">
-    <span class="ticker__item">76+ members across 12 nations<span class="ticker__sep">✦</span></span><span class="ticker__item">$15M+ generated<span class="ticker__sep">✦</span></span><span class="ticker__item">90 avg. days to first client<span class="ticker__sep">✦</span></span><span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span><span class="ticker__item">76+ members across 12 nations<span class="ticker__sep">✦</span></span><span class="ticker__item">$15M+ generated<span class="ticker__sep">✦</span></span><span class="ticker__item">90 avg. days to first client<span class="ticker__sep">✦</span></span><span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span>
+    <span class="ticker__item">$15M+ generated by members<span class="ticker__sep">✦</span></span><span class="ticker__item">76+ women coached<span class="ticker__sep">✦</span></span><span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span><span class="ticker__item">90 avg. days to first client<span class="ticker__sep">✦</span></span><span class="ticker__item">$15M+ generated by members<span class="ticker__sep">✦</span></span><span class="ticker__item">76+ women coached<span class="ticker__sep">✦</span></span><span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span><span class="ticker__item">90 avg. days to first client<span class="ticker__sep">✦</span></span>
   </div>
 </div>
 
-<!-- HEADLINER — Mailchimp .headliner -->
-<section class="headliner layout--margin">
+<!-- HEADLINER -->
+<section class="headliner">
   <div class="layout">
     <div class="headliner__inner">
       <span class="eyebrow">The Room</span>
-      <h2 class="h2 headliner__heading">This is not <em>another Facebook group.</em></h2>
-      <p class="headliner__copy">The5th Community is a living, working business engine. You get direct access to Indrodip every week, a proven system to follow, and AI trained specifically on the 10K Roadmap framework — available the moment you need it.</p>
+      <h2 class="h2" style="margin-top:14px">This is not <em>another Facebook group.</em></h2>
+      <p class="headliner__copy">The5th Community is a living, working business engine. You get direct access to Indrodip every week, a proven system to follow, and AI trained specifically on the 10K Roadmap framework — available the moment you need it. This is where expertise finally becomes income.</p>
     </div>
   </div>
 </section>
 
-<!-- HORIZONTAL GRID — Mailchimp .horizontalGrid — THE SIGNATURE 01 02 03 04 -->
-<section class="horizontalGrid">
+<!-- HORIZONTAL GRID 01 02 03 04 -->
+<section class="hGrid">
   <div class="layout">
-    <div class="horizontalGrid__header">
+    <div class="hGrid__header">
       <span class="eyebrow">What You Get</span>
-      <h2 class="h2">Everything you need to go from stuck to selling.</h2>
+      <h2 class="h2" style="margin-top:14px">Everything you need to go from stuck to selling.</h2>
     </div>
-    <div class="horizontalGrid__grid">
-      <div class="horizontalGridItem">
-        <span class="horizontalGridItem__number">01</span>
-        <h3 class="horizontalGridItem__subheader">Weekly Live Coaching</h3>
-        <p class="horizontalGridItem__copy">Direct access to Indrodip every week. Real answers to your real situation. Not a recording. Not a junior coach. A live session where you leave with a specific action plan — and members regularly close clients the same week.</p>
+    <div class="hGrid__grid">
+      <div class="hGridItem">
+        <span class="hGridItem__num">01</span>
+        <h3 class="hGridItem__title">Weekly Live Coaching</h3>
+        <p class="hGridItem__copy">Direct access to Indrodip every week. Real answers to your real situation. Not a recording. Not a junior coach. A live session where you leave with a specific action plan — and members regularly close clients the same week.</p>
       </div>
-      <div class="horizontalGridItem">
-        <span class="horizontalGridItem__number">02</span>
-        <h3 class="horizontalGridItem__subheader">The5th AI — 24/7</h3>
-        <p class="horizontalGridItem__copy">Your personal CMO trained on the 10K Roadmap frameworks and hundreds of real coaching transcripts. Writes your emails, scripts, and content. Coaches you through decisions. Available at 3am when you need it most.</p>
+      <div class="hGridItem">
+        <span class="hGridItem__num">02</span>
+        <h3 class="hGridItem__title">The5th AI — 24/7</h3>
+        <p class="hGridItem__copy">Your personal CMO trained on the 10K Roadmap frameworks and hundreds of real coaching transcripts. Writes your offers, emails, and scripts. Coaches you through decisions. Available at 3am when you need it most.</p>
       </div>
-      <div class="horizontalGridItem">
-        <span class="horizontalGridItem__number">03</span>
-        <h3 class="horizontalGridItem__subheader">Client-To-Cash Method™</h3>
-        <p class="horizontalGridItem__copy">The complete system. Offer creation, client attraction, and the Diagnose-Prescribe-Close sales framework — step by step. No figuring it out alone. No starting from scratch. Just follow the roadmap.</p>
+      <div class="hGridItem">
+        <span class="hGridItem__num">03</span>
+        <h3 class="hGridItem__title">Client-To-Cash Method™</h3>
+        <p class="hGridItem__copy">The complete system. Offer creation, client attraction, and the Diagnose-Prescribe-Close sales framework — step by step. No figuring it out alone. No starting from scratch. The roadmap is already built.</p>
       </div>
-      <div class="horizontalGridItem">
-        <span class="horizontalGridItem__number">04</span>
-        <h3 class="horizontalGridItem__subheader">A Community That Ships</h3>
-        <p class="horizontalGridItem__copy">Women who show up, do the work, and celebrate each other's real wins. No cheerleading without action. Real accountability that moves the needle — because you finally have a room full of people who get it.</p>
+      <div class="hGridItem">
+        <span class="hGridItem__num">04</span>
+        <h3 class="hGridItem__title">A Community That Ships</h3>
+        <p class="hGridItem__copy">Women who show up, do the work, and celebrate each other's real wins. Not a cheerleading group. A working room. Real accountability that moves the needle because you have people who genuinely get it.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HIGHLIGHT MODULE 1 — image right (default), copy left -->
-<section class="highlightModule highlightModule--largeText">
+<!-- HIGHLIGHT MODULE 1 -->
+<section class="hlMod hlMod--alt">
   <div class="layout">
     <div class="flex flex--middle">
-      <div class="highlightModule__imageContainer">
-        <div class="highlightModule__placeholder">Live Coaching Session</div>
+      <div class="hlMod__img-side">
+        <img src="/public/images/live-coaching.png" alt="Live Coaching" class="hlMod__ri" onerror="this.outerHTML='<div class=&quot;hlMod__ph&quot;>Live Coaching Session</div>'">
       </div>
-      <div class="highlightModule__body">
+      <div class="hlMod__body">
+        <span class="hlMod__badge">✦ Live every week — no recordings</span>
         <span class="eyebrow">Live Coaching</span>
-        <h2 class="highlightModule__header">Every week, you get direct access to Indrodip.</h2>
-        <p class="highlightModule__bodyCopy">Not a pre-recorded module. Not a junior coach. Every week Indrodip runs a live session where you bring your real business problems and leave with a specific action plan. Members regularly close clients the same week they apply what they learn on the call. This is not a community where you post a question and wait three days for an answer.</p>
-        <div class="highlightModule__cta">
-          <a href="#" class="ctaSecondary">See what a session looks like</a>
-        </div>
+        <h2 class="hlMod__h">Every week, you get direct access to Indrodip.</h2>
+        <p class="hlMod__p">Not a pre-recorded module. Not a team member. Not a chatbot. Every week Indrodip runs a live session where you bring your real business problems and leave with a specific action plan. Members regularly close clients the same week they apply what they learn on the call. This is the room where things actually move.</p>
+        <a href="#pricing" class="ctaSecondary">Join the community</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HIGHLIGHT MODULE 2 — image left (swap), copy right -->
-<section class="highlightModule highlightModule--largeText highlightModule--alt">
+<!-- HIGHLIGHT MODULE 2 -->
+<section class="hlMod">
   <div class="layout">
-    <div class="flex flex--middle highlightModule__grid--swap">
-      <div class="highlightModule__imageContainer">
-        <div class="highlightModule__placeholder">The5th AI Platform</div>
+    <div class="flex flex--middle hlMod__swap">
+      <div class="hlMod__img-side">
+        <img src="/public/images/zigzag-ai.png" alt="The5th AI" class="hlMod__ri" onerror="this.outerHTML='<div class=&quot;hlMod__ph&quot;>The5th AI Platform</div>'">
       </div>
-      <div class="highlightModule__body">
+      <div class="hlMod__body">
+        <span class="hlMod__badge">✦ Your personal CMO — trained on 10K Roadmap</span>
         <span class="eyebrow">The5th AI</span>
-        <h2 class="highlightModule__header">An AI that actually <em>knows</em> your business.</h2>
-        <p class="highlightModule__bodyCopy">The5th AI is trained on the 10K Roadmap frameworks, real coaching call transcripts, and the Client-To-Cash Method™. It writes your offers, emails, and outreach scripts. It coaches you through pricing resistance, imposter syndrome, and what to post next. It's not a generic chatbot — it knows your stage, your offer, your goals. Available at 3am when you need it most.</p>
-        <div class="highlightModule__cta">
-          <a href="#" class="ctaSecondary">Explore The5th AI</a>
-        </div>
+        <h2 class="hlMod__h">An AI that actually <em>knows</em> your business.</h2>
+        <p class="hlMod__p">The5th AI is trained on the 10K Roadmap frameworks, real coaching call transcripts, and the Client-To-Cash Method™. It writes your offers, emails, and outreach scripts. It coaches you through pricing resistance, imposter syndrome, and what to post next. It's not a generic chatbot — it knows your stage, your offer, your goals. Available at 3am when you need it most.</p>
+        <a href="#pricing" class="ctaSecondary">See The5th AI in action</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HIGHLIGHT MODULE 3 — image right, copy left -->
-<section class="highlightModule highlightModule--largeText">
+<!-- HIGHLIGHT MODULE 3 -->
+<section class="hlMod hlMod--alt">
   <div class="layout">
     <div class="flex flex--middle">
-      <div class="highlightModule__imageContainer">
-        <div class="highlightModule__placeholder">The 10K Roadmap System</div>
+      <div class="hlMod__img-side">
+        <img src="/public/images/zigzag-offer.png" alt="Client-To-Cash Method" class="hlMod__ri" onerror="this.outerHTML='<div class=&quot;hlMod__ph&quot;>The 10K Roadmap System</div>'">
       </div>
-      <div class="highlightModule__body">
+      <div class="hlMod__body">
+        <span class="hlMod__badge">✦ Diagnose-Prescribe-Close framework</span>
         <span class="eyebrow">The System</span>
-        <h2 class="highlightModule__header">A proven path, not a pile of content.</h2>
-        <p class="highlightModule__bodyCopy">The Client-To-Cash Method™ gives you a step-by-step system: build your offer, price it with confidence, attract the right clients, and close without pressure. No figuring it out alone. No starting from scratch. No more buying another course that gives you 47 modules and zero clarity. Just follow the roadmap.</p>
-        <div class="highlightModule__cta">
-          <a href="#" class="ctaSecondary">See the full method</a>
-        </div>
+        <h2 class="hlMod__h">A proven path, not a pile of content.</h2>
+        <p class="hlMod__p">The Client-To-Cash Method™ gives you a step-by-step system: build your offer, price it with confidence, attract the right clients, and close without pressure. No figuring it out alone. No starting from scratch. No more buying another course that gives you 47 modules and zero clarity. The roadmap exists. You follow it.</p>
+        <a href="#pricing" class="ctaSecondary">See the full method</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VIDEO QUOTE — big emotional section -->
-<section class="videoQuote videoQuote--warm">
+<!-- EMOTIONAL SECTION — cold audience -->
+<section class="vQuote vQuote--warm">
   <div class="layout">
-    <div class="videoQuote__inner">
+    <div class="vQuote__inner">
       <span class="eyebrow">Sound Familiar?</span>
-      <h2 class="videoQuote__quote" style="margin-top:16px">You've spent years becoming <em>extraordinary</em> at what you do.</h2>
-      <p class="videoQuote__sub">You've helped companies. Led teams. Raised families. Built things that mattered — for everyone else. And somewhere along the way you started wondering: where is mine?</p>
-      <p class="videoQuote__sub">You've bought the courses. You've followed the advice. You've posted consistently for months and watched people with half your experience sign their fourth client this week.</p>
-      <div class="videoQuote__box">
+      <h2 class="vQuote__big" style="margin-top:14px">You've spent years becoming <em>extraordinary</em> at what you do.</h2>
+      <p class="vQuote__body">You've helped companies. Led teams. Raised families. Built things that mattered — for everyone else. And somewhere along the way you started wondering: where is mine?</p>
+      <p class="vQuote__body">You've bought the courses. You've followed the advice. You've posted consistently for months and watched people with half your experience sign their fourth client this week. That's not because they're smarter. It's because they had a system. And a room.</p>
+      <div class="vQuote__box">
         <p>"You don't have an expertise problem. You don't have a confidence problem. You have a system problem — and you've been trying to solve it alone. That ends here."</p>
       </div>
-      <p style="font-family:'DM Sans',sans-serif;font-size:0.875rem;font-weight:700;color:#274f40;text-transform:uppercase;letter-spacing:0.1em;margin-top:36px;text-align:center">That's what The5th Community changes.</p>
+      <p style="font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:700;color:#274f40;text-transform:uppercase;letter-spacing:.1em;margin-top:36px;text-align:center">That's what The5th Community changes.</p>
     </div>
   </div>
 </section>
 
-<!-- BENEFITS — Mailchimp vertical list with icon -->
-<section class="benefits" style="background:#0f1117;border-top:none">
+<!-- MAILCHIMP BENEFITS LIST — exact Image 2 pattern -->
+<section class="benefits">
   <div class="layout">
     <div class="benefits__inner">
       <div class="benefits__header">
-        <span class="eyebrow">From The Founder</span>
-        <h2 class="h2" style="color:#faf9f7;margin-top:14px">I built this because <em style="font-style:italic;color:#c9a84c">talented</em> women kept going unpaid.</h2>
+        <span class="eyebrow">Inside The Community</span>
+        <h2 class="h2" style="margin-top:14px">Everything that is <em>actually included.</em></h2>
+        <p class="copy copy--lg" style="color:#5a5550;max-width:600px;margin:20px auto 0">For women who are tired of vague promises and want to know exactly what they're getting.</p>
       </div>
-      <div class="benefit" style="border-color:rgba(255,255,255,0.08)">
-        <div class="benefits__icon" style="background:#1a2030;color:#3a4050">Photo</div>
-        <div class="benefits__content">
-          <h3 class="h5" style="color:#faf9f7;margin-bottom:16px">Indrodip Ghosh, Founder</h3>
-          <p class="benefits__copy" style="margin-bottom:20px">I grew up surrounded by women who spent decades helping others — families, workplaces, communities, entire industries — and rarely got paid what they were actually worth.</p>
-          <p class="benefits__copy" style="margin-bottom:20px">Later, as a marketer and funnel strategist, I kept seeing the exact same pattern. Women with 20, 30, even 40 years of expertise who genuinely believed they had nothing worth selling. Meanwhile, people with a fraction of their experience were building profitable online businesses.</p>
-          <p class="benefits__copy">That disconnect built The5th. Not as a course. Not as another coaching program with a Slack group. As a real system with real coaching and a real community — designed specifically so that the next woman who feels like she's starting from zero realises she's actually starting from everything.</p>
+
+      <div class="benefit">
+        <div class="benefit__icon">
+          <img src="/public/images/grid-01.png" alt="" onerror="this.parentElement.innerHTML='<div class=\'benefit__icon-ph\'>🎯</div>'">
+        </div>
+        <div class="benefit__content">
+          <h3 class="benefit__title">Weekly live coaching calls with Indrodip, personally</h3>
+          <p class="benefit__copy">Every week, Indrodip runs a live group coaching session. You bring your real situation — your offer, your client conversations, your pricing questions, your blocks — and you get a specific answer and an action plan. Not a framework. Not a template. A real answer to your real problem. Members consistently close clients the same week they apply what they learn on these calls. This is not pre-recorded. This is not a team member. This is direct access, every week, for as long as you're a member.</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit__icon">
+          <img src="/public/images/grid-03.png" alt="" onerror="this.parentElement.innerHTML='<div class=\'benefit__icon-ph\'>🤖</div>'">
+        </div>
+        <div class="benefit__content">
+          <h3 class="benefit__title">The5th AI — your personal CMO, trained on the 10K Roadmap</h3>
+          <p class="benefit__copy">The5th AI is not ChatGPT. It is not a generic writing tool. It is trained specifically on the 10K Roadmap frameworks, the Client-To-Cash Method™, and hundreds of real coaching call transcripts from members exactly like you. It writes your coaching offers, your outreach emails, your social content, and your sales page copy. It coaches you through pricing resistance, imposter syndrome, what to post next, and how to handle the prospect who said they need to think about it. Available 24 hours a day, seven days a week, inside the platform. Included in both plans.</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit__icon">
+          <img src="/public/images/grid-02.png" alt="" onerror="this.parentElement.innerHTML='<div class=\'benefit__icon-ph\'>📋</div>'">
+        </div>
+        <div class="benefit__content">
+          <h3 class="benefit__title">The complete Client-To-Cash Method™ curriculum</h3>
+          <p class="benefit__copy">The full step-by-step system inside the platform. Offer creation: how to take what you know and turn it into a premium coaching or consulting offer that people will pay for. Positioning: how to communicate your value so the right clients immediately understand why they need you. Client attraction: how to find clients in your existing network without paid ads, complicated funnels, or posting three times a day. The Diagnose-Prescribe-Close sales framework: how to have discovery calls that feel like real conversations and close naturally without pressure. Every module is built specifically for experienced women — not beginners starting from zero.</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit__icon">
+          <img src="/public/images/zigzag-sell.png" alt="" onerror="this.parentElement.innerHTML='<div class=\'benefit__icon-ph\'>💬</div>'">
+        </div>
+        <div class="benefit__content">
+          <h3 class="benefit__title">Implementation sessions and real accountability</h3>
+          <p class="benefit__copy">Knowing what to do is not the same as doing it. Inside The5th Community, implementation sessions are built in. You show up, you build, and the room holds you accountable. Not with pressure — with genuine accountability from women who are on the same path and understand exactly how much is at stake. The difference between knowing the system and earning from it is always implementation. This community is built specifically to close that gap.</p>
+        </div>
+      </div>
+
+      <div class="benefit">
+        <div class="benefit__icon">
+          <div class="benefit__icon-ph">🏆</div>
+        </div>
+        <div class="benefit__content">
+          <h3 class="benefit__title">A community of women who actually do the work</h3>
+          <p class="benefit__copy">This is not a Facebook group where posts go unanswered for three days. This is a working room. Women who show up, ask real questions, share real wins, and genuinely celebrate each other's progress. The quality of your environment determines the quality of your outcomes. Surrounding yourself with women who are building, closing clients, and moving forward every week is not a nice-to-have. It is part of what makes The5th Community work. The room is as important as the system.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PUB STRIP -->
+<div class="pubStrip">
+  <p class="pubStrip__label">Our clients have been featured in</p>
+  <div class="pubStrip__logos">
+    <span class="pubStrip__logo">Forbes</span>
+    <span class="pubStrip__logo">HuffPost</span>
+    <span class="pubStrip__logo">TEDx</span>
+    <span class="pubStrip__logo">The Guardian</span>
+    <span class="pubStrip__logo">Yahoo Finance</span>
+    <span class="pubStrip__logo">The New York Times</span>
+  </div>
+</div>
+
+<!-- FOUNDER SECTION -->
+<section style="background:#0f1117;padding:88px 0;border-top:none">
+  <div class="layout">
+    <div class="flex flex--middle hlMod__swap" style="gap:9%;flex-wrap:wrap">
+      <div style="flex:1 1 44%">
+        <img src="/public/images/founder.png" alt="Indrodip Ghosh" style="max-height:520px;width:auto;margin:0 auto;object-fit:contain;display:block" onerror="this.style.display='none'">
+      </div>
+      <div style="flex:1 1 44%;padding:20px 0">
+        <span class="eyebrow">From The Founder</span>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.9rem,3.2vw,3rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:#faf9f7;margin-top:14px;margin-bottom:24px">I built this because <em style="font-style:italic;color:#c9a84c">talented women</em> kept going unpaid.</h2>
+        <p style="font-family:'DM Sans',sans-serif;font-size:1.0625rem;font-weight:300;line-height:1.82;color:rgba(250,249,247,.62);margin-bottom:20px">I grew up surrounded by women who spent decades helping others — families, workplaces, communities, entire industries — and rarely got paid what they were actually worth.</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:1.0625rem;font-weight:300;line-height:1.82;color:rgba(250,249,247,.62);margin-bottom:20px">Later, as a marketer and funnel strategist, I kept seeing the exact same pattern. Women with 20, 30, even 40 years of expertise who genuinely believed they had nothing worth selling. Meanwhile, people with a fraction of their experience were building profitable online businesses.</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:1.0625rem;font-weight:300;line-height:1.82;color:rgba(250,249,247,.62);margin-bottom:36px">That disconnect built The5th. Not as a course. Not as another coaching program with a Slack group. As a real system, real coaching, and a real community — so the next woman who feels like she's starting from zero realises she's actually starting from everything.</p>
+        <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:22px">
+          <span style="font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:600;color:#faf9f7;display:block">Indrodip Ghosh</span>
+          <span style="font-family:'DM Sans',sans-serif;font-size:.8125rem;color:#666;display:block;margin-top:4px">Founder, The5th Consulting</span>
         </div>
       </div>
     </div>
@@ -508,7 +604,7 @@ ul{list-style:none}
 </section>
 
 <!-- WHO IT'S FOR -->
-<section class="whoSection">
+<section class="whoSection" id="who">
   <div class="layout">
     <div class="whoSection__header">
       <span class="eyebrow">Is This For You</span>
@@ -516,57 +612,89 @@ ul{list-style:none}
     </div>
     <div class="who__grid">
       <div>
-        <p class="who__colTitle yes">This IS for you</p>
+        <p class="who__col-title yes">This IS for you</p>
         <ul class="who__list">
           <li><span class="who__icon yes">✓</span><span class="who__text">You have real expertise and zero idea how to package it into something people will pay for</span></li>
-          <li><span class="who__icon yes">✓</span><span class="who__text">You've tried courses and coaching and still don't have consistent clients</span></li>
+          <li><span class="who__icon yes">✓</span><span class="who__text">You've tried courses and coaching programs and still don't have consistent clients</span></li>
           <li><span class="who__icon yes">✓</span><span class="who__text">You know what you want to build — you just don't know how to make people say yes to it</span></li>
           <li><span class="who__icon yes">✓</span><span class="who__text">You want serious coaching and a proven system without a $10,000 price tag</span></li>
           <li><span class="who__icon yes">✓</span><span class="who__text">You're ready to stop consuming content and start actually building</span></li>
           <li><span class="who__icon yes">✓</span><span class="who__text">You want a room full of women who are doing the work, not just talking about it</span></li>
+          <li><span class="who__icon yes">✓</span><span class="who__text">You believe your knowledge and experience deserve to generate real income</span></li>
         </ul>
       </div>
       <div>
-        <p class="who__colTitle no">This is NOT for you</p>
+        <p class="who__col-title no">This is NOT for you</p>
         <ul class="who__list">
           <li><span class="who__icon no">✕</span><span class="who__text dim">You're looking for a passive content library you can consume without acting on it</span></li>
           <li><span class="who__icon no">✕</span><span class="who__text dim">You want someone to do the work for you</span></li>
           <li><span class="who__icon no">✕</span><span class="who__text dim">You expect results without showing up consistently</span></li>
           <li><span class="who__icon no">✕</span><span class="who__text dim">You're not yet committed to actually building a business</span></li>
           <li><span class="who__icon no">✕</span><span class="who__text dim">You want motivation without implementation</span></li>
+          <li><span class="who__icon no">✕</span><span class="who__text dim">You're looking for a quick fix that requires no real effort</span></li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
+<!-- COMPARISON TABLE -->
+<section class="compare">
+  <div class="layout">
+    <div class="compare__inner">
+      <div class="compare__header">
+        <span class="eyebrow">Why The5th Community</span>
+        <h2 class="h2" style="margin-top:14px">What you actually get <em>vs everything else.</em></h2>
+      </div>
+      <table class="compare__table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="ours">The5th Community</th>
+            <th>Online Courses</th>
+            <th>Private Coaching</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Weekly live coaching with the founder</td><td class="ours"><span class="c-tick">✓</span></td><td><span class="c-cross">✕</span></td><td><span class="c-tick">✓</span></td></tr>
+          <tr><td>AI trained on your specific framework</td><td class="ours"><span class="c-tick">✓</span></td><td><span class="c-cross">✕</span></td><td><span class="c-cross">✕</span></td></tr>
+          <tr><td>Step-by-step system to follow</td><td class="ours"><span class="c-tick">✓</span></td><td><span class="c-tick">✓</span></td><td>Sometimes</td></tr>
+          <tr><td>Real accountability community</td><td class="ours"><span class="c-tick">✓</span></td><td><span class="c-cross">✕</span></td><td><span class="c-cross">✕</span></td></tr>
+          <tr><td>Available 24/7 when you need guidance</td><td class="ours"><span class="c-tick">✓</span></td><td>Modules only</td><td><span class="c-cross">✕</span></td></tr>
+          <tr><td>Monthly investment</td><td class="ours" style="font-weight:700;color:#274f40">$197/mo</td><td>$297–$2,000</td><td>$2,000–$5,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
-<section class="testimonials">
-  <div class="testimonials__header layout">
+<section class="tSection">
+  <div class="tSection__header layout">
     <span class="eyebrow">Member Results</span>
     <h2 class="h2" style="margin-top:14px;margin-bottom:10px">They were <em>exactly</em> where you are.</h2>
     <p class="copy" style="color:#8a8480;margin-top:8px">Real results from real members of the 10K Roadmap program.</p>
   </div>
-  <div class="testimonials__track" id="testiTrack">
-    <div class="tCard"><span class="tCard__badge">$8,000 in 8 weeks</span><blockquote class="tCard__quote">"Joined not knowing where to start. Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible."</blockquote><div class="tCard__footer"><div class="tCard__name">Jeanne</div><div class="tCard__role">10K Roadmap Member</div></div></div>
-    <div class="tCard"><span class="tCard__badge">$12,000 in 9 weeks</span><blockquote class="tCard__quote">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you actually work it."</blockquote><div class="tCard__footer"><div class="tCard__name">Angela</div><div class="tCard__role">10K Roadmap Member</div></div></div>
-    <div class="tCard"><span class="tCard__badge">$2,200 in 3 weeks</span><blockquote class="tCard__quote">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started owning the real value I bring."</blockquote><div class="tCard__footer"><div class="tCard__name">Hayley</div><div class="tCard__role">10K Roadmap Member</div></div></div>
-    <div class="tCard"><span class="tCard__badge">2 clients in 6 weeks</span><blockquote class="tCard__quote">"After revamping my offer with the framework, I sold two high-ticket packages within weeks. The clarity alone was worth more than I paid."</blockquote><div class="tCard__footer"><div class="tCard__name">Seth</div><div class="tCard__role">10K Roadmap Member</div></div></div>
-    <div class="tCard"><span class="tCard__badge">$8,900 in 5 weeks</span><blockquote class="tCard__quote">"I came in deeply sceptical. I left with nearly nine thousand dollars in new revenue and a business model that finally makes sense for my life."</blockquote><div class="tCard__footer"><div class="tCard__name">Laurie</div><div class="tCard__role">10K Roadmap Member</div></div></div>
-    <div class="tCard"><span class="tCard__badge">Programme Launched</span><blockquote class="tCard__quote">"Fifteen years of corporate expertise sitting completely dormant. The5th helped me package it into a premium programme and take it back to market with confidence."</blockquote><div class="tCard__footer"><div class="tCard__name">Toril</div><div class="tCard__role">10K Roadmap Member</div></div></div>
+  <div class="tTrack" id="testiTrack">
+    <div class="tCard"><span class="tCard__badge">$8,000 in 8 weeks</span><blockquote class="tCard__quote">"Joined not knowing where to start. Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/jeanne.jpg" alt="Jeanne"></div><div><div class="tCard__name">Jeanne</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
+    <div class="tCard"><span class="tCard__badge">$12,000 in 9 weeks</span><blockquote class="tCard__quote">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you actually work it."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/angela.jpg" alt="Angela"></div><div><div class="tCard__name">Angela</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
+    <div class="tCard"><span class="tCard__badge">$2,200 in 3 weeks</span><blockquote class="tCard__quote">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started owning the real value I bring."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/hayley.jpg" alt="Hayley"></div><div><div class="tCard__name">Hayley</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
+    <div class="tCard"><span class="tCard__badge">2 clients in 6 weeks</span><blockquote class="tCard__quote">"After revamping my offer with the framework, I sold two high-ticket packages within weeks. The clarity alone was worth more than I paid."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/seth.jpg" alt="Seth"></div><div><div class="tCard__name">Seth</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
+    <div class="tCard"><span class="tCard__badge">$8,900 in 5 weeks</span><blockquote class="tCard__quote">"I came in deeply sceptical. I left with nearly nine thousand dollars in new revenue and a business model that finally makes sense for my life."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/laurie.jpg" alt="Laurie"></div><div><div class="tCard__name">Laurie</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
+    <div class="tCard"><span class="tCard__badge">Programme Launched</span><blockquote class="tCard__quote">"Fifteen years of corporate expertise sitting completely dormant. The5th helped me package it into a premium programme and take it back to market with confidence."</blockquote><div class="tCard__footer"><div class="tCard__av"><img src="/public/clients/toril.jpg" alt="Toril"></div><div><div class="tCard__name">Toril</div><div class="tCard__role">10K Roadmap Member</div></div></div></div>
   </div>
-  <div class="testimonials__dots" id="testiDots">
-    <button class="testimonials__dot active"></button><button class="testimonials__dot"></button><button class="testimonials__dot"></button><button class="testimonials__dot"></button><button class="testimonials__dot"></button><button class="testimonials__dot"></button>
+  <div class="tDots" id="tDots">
+    <button class="tDot active"></button><button class="tDot"></button><button class="tDot"></button><button class="tDot"></button><button class="tDot"></button><button class="tDot"></button>
   </div>
 </section>
 
 <!-- PRICING -->
-<section class="pricing">
+<section class="pricing" id="pricing">
   <div class="layout">
     <div class="pricing__header">
       <span class="eyebrow">Join The Community</span>
       <h2 class="h2" style="margin-top:14px;margin-bottom:16px">Choose your membership.</h2>
-      <p class="copy copy--large" style="color:#5a5550;max-width:600px;margin:0 auto">Both plans include full platform access, The5th AI, weekly live coaching, and the complete Client-To-Cash Method™ curriculum.</p>
+      <p class="copy copy--lg" style="color:#5a5550;max-width:600px;margin:0 auto">Both plans include full platform access, The5th AI, weekly live coaching, and the complete Client-To-Cash Method™ curriculum.</p>
     </div>
     <div class="pricing__cards">
       <div class="pCard">
@@ -606,14 +734,14 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- TICKER 2 — GREEN -->
+<!-- TICKER 2 -->
 <div class="ticker ticker--green" aria-hidden="true">
   <div class="ticker__inner">
     <span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span><span class="ticker__item">10K Roadmap system<span class="ticker__sep">✦</span></span><span class="ticker__item">Women who actually ship<span class="ticker__sep">✦</span></span><span class="ticker__item">Weekly live coaching<span class="ticker__sep">✦</span></span><span class="ticker__item">The5th AI included<span class="ticker__sep">✦</span></span><span class="ticker__item">Client-To-Cash Method™<span class="ticker__sep">✦</span></span><span class="ticker__item">Diagnose-Prescribe-Close<span class="ticker__sep">✦</span></span><span class="ticker__item">10K Roadmap system<span class="ticker__sep">✦</span></span><span class="ticker__item">Women who actually ship<span class="ticker__sep">✦</span></span>
   </div>
 </div>
 
-<!-- SUPPORT LINKS — FAQ as Mailchimp supportLink pattern -->
+<!-- FAQ -->
 <section class="faq">
   <div class="layout">
     <div class="faq__header">
@@ -621,32 +749,34 @@ ul{list-style:none}
       <h2 class="h2" style="margin-top:14px">Everything you need to know.</h2>
     </div>
     <div class="faq__inner">
-      <div class="faq-item"><button class="faq-btn" data-open="false">Is this a content library or do I get real coaching?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Real coaching. Every week Indrodip runs a live session where you bring your actual situation and get a specific answer and action plan. The platform also contains curriculum, resources, and The5th AI — but the weekly call is live, direct, and with Indrodip personally. Not a team member. Not a pre-recording.</p></div></div>
-      <div class="faq-item"><button class="faq-btn" data-open="false">What exactly is The5th AI?<span class="faq-icon">+</span></button><div class="faq-answer"><p>The5th AI is trained specifically on the 10K Roadmap frameworks and real coaching call transcripts. It writes your offers, emails, outreach scripts, and social content — and it coaches you through specific decisions like pricing resistance, what to post next, and how to handle objections. Available 24/7 inside the platform.</p></div></div>
-      <div class="faq-item"><button class="faq-btn" data-open="false">What is the minimum commitment?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Monthly members commit to 3 months minimum. After your first 3 months you can cancel any time. Annual members pay once and receive 12 full months of access with no further billing required.</p></div></div>
-      <div class="faq-item"><button class="faq-btn" data-open="false">What if I've never sold a coaching package before?<span class="faq-icon">+</span></button><div class="faq-answer"><p>That is exactly who this is built for. The Client-To-Cash Method™ starts from zero. It walks you through building your offer, setting your price, attracting the right clients, and closing conversations without pressure. The majority of members had never sold a coaching or consulting package before they joined.</p></div></div>
-      <div class="faq-item"><button class="faq-btn" data-open="false">Can I upgrade from monthly to annual later?<span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes. If you start monthly and decide you want to switch to the annual plan, email <a href="mailto:support@10kroadmap.org" style="color:#8b7fcf">support@10kroadmap.org</a> and we will sort it with a prorated credit toward your upgrade.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">Is this a content library or do I get real coaching?<span class="faqIcon">+</span></button><div class="faqAns"><p>Real coaching. Every week Indrodip runs a live session where you bring your actual situation and get a specific answer and action plan. The platform also contains curriculum, resources, and The5th AI — but the weekly call is live, direct, and with Indrodip personally. Not a team member. Not a pre-recording. If you have a question between calls, The5th AI handles it immediately.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">What exactly is The5th AI?<span class="faqIcon">+</span></button><div class="faqAns"><p>The5th AI is trained specifically on the 10K Roadmap frameworks and real coaching call transcripts from members. It writes your offers, emails, outreach scripts, and social content. It coaches you through pricing resistance, what to post next, and how to handle specific objections. It's not a generic AI tool — it knows the system, it knows the stages, and it responds to your actual situation. Available 24/7 inside the platform. Included in both plans.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">What is the minimum commitment?<span class="faqIcon">+</span></button><div class="faqAns"><p>Monthly members commit to 3 months minimum. This is because the system takes 60–90 days to produce consistent results when implemented properly. After your first 3 months you can cancel any time. Annual members pay once and receive 12 full months of access with no further billing required.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">What if I've never sold a coaching package before?<span class="faqIcon">+</span></button><div class="faqAns"><p>That is exactly who this is built for. The Client-To-Cash Method™ starts from zero. It walks you through building your offer, setting your price, attracting the right clients, and closing conversations without pressure. The majority of members had never sold a coaching or consulting package before they joined. Several closed their first client within the first three weeks.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">How is this different from a regular coaching program?<span class="faqIcon">+</span></button><div class="faqAns"><p>Three things. First, you get direct weekly access to Indrodip personally — not a team member or a recorded training. Second, The5th AI is available 24/7 in between calls. Third, the community is built specifically for experienced women over 40, which means the conversations, the system, and the support are all tailored to where you actually are.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">Can I upgrade from monthly to annual later?<span class="faqIcon">+</span></button><div class="faqAns"><p>Yes. If you start monthly and want to switch to annual, email <a href="mailto:support@10kroadmap.org" style="color:#8b7fcf">support@10kroadmap.org</a> and we will sort it with a prorated credit toward your upgrade.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- SIGN UP — Mailchimp .signUp yellow band → lavender -->
-<section class="signUp signUp--lavender">
-  <div class="layout layout--padding">
-    <div style="max-width:760px;margin:0 auto;text-align:center">
-      <h2 class="h1 signUp__h1" style="color:#fff;margin-bottom:14px">You already have everything you need.</h2>
+<!-- FINAL CTA — purple matching homepage -->
+<section class="signUp signUp--purple">
+  <div class="layout" style="padding-top:96px;padding-bottom:96px">
+    <div style="max-width:780px;margin:0 auto;text-align:center">
+      <span class="eyebrow" style="color:rgba(255,255,255,.45);margin-bottom:20px">You're ready. The room is waiting.</span>
+      <h2 class="signUp__h1">You already have everything you need.</h2>
       <span class="signUp__italic">You just need the right room.</span>
-      <p class="h6 signUp__h6" style="color:rgba(255,255,255,0.7);margin-bottom:40px">Join The5th Community and start building the business your expertise has always deserved.</p>
+      <p class="signUp__sub">Join The5th Community and start building the business your expertise has always deserved. Weekly coaching. The5th AI. A proven system. Women who get it.</p>
       <div class="signUp__ctas">
         <a href="https://whop.com/the5th-community/" target="_blank" class="ctaWhite">Join Monthly — $197/mo</a>
         <a href="https://whop.com/the5th-community/" target="_blank" class="ctaWhiteOutline">Join Annual — $1,970/yr</a>
       </div>
-      <p class="signUp__sub">No risk. Real coaching. Real results.</p>
+      <p class="signUp__fine">No risk. Real coaching. Real results. Cancel after 3 months if it's not working.</p>
     </div>
   </div>
 </section>
 
-<!-- GLOBAL FOOTER — Mailchimp .globalFooter__storefront .backgroundParsnip -->
+<!-- FOOTER -->
 <footer class="globalFooter">
   <div class="layout">
     <div class="footer__grid">
@@ -655,50 +785,50 @@ ul{list-style:none}
         <p class="footer__tagline">Helping women 45+ turn decades of wisdom and experience into a profitable coaching business. Finally, on their own terms.</p>
       </div>
       <div>
-        <h3 class="footerItemColumn__heading">Programs</h3>
+        <h3 class="footerCol__h">Programs</h3>
         <ul>
-          <li class="footerItem"><a href="#">10K Roadmap Accelerator</a></li>
-          <li class="footerItem"><a href="/community">The5th Community</a></li>
-          <li class="footerItem"><a href="#">The5th AI</a></li>
-          <li class="footerItem"><a href="https://quiz.the5th.consulting">Take the Quiz</a></li>
+          <li class="fItem"><a href="#">10K Roadmap Accelerator</a></li>
+          <li class="fItem"><a href="/community">The5th Community</a></li>
+          <li class="fItem"><a href="#">The5th AI</a></li>
+          <li class="fItem"><a href="https://quiz.the5th.consulting">Take the Quiz</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="footerItemColumn__heading">Resources</h3>
+        <h3 class="footerCol__h">Resources</h3>
         <ul>
-          <li class="footerItem"><a href="#">Podcast</a></li>
-          <li class="footerItem"><a href="#">Free Workshop</a></li>
-          <li class="footerItem"><a href="#">Case Studies</a></li>
-          <li class="footerItem"><a href="#">The Checklist</a></li>
+          <li class="fItem"><a href="#">Podcast</a></li>
+          <li class="fItem"><a href="#">Free Workshop</a></li>
+          <li class="fItem"><a href="#">Case Studies</a></li>
+          <li class="fItem"><a href="#">The Checklist</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="footerItemColumn__heading">Company</h3>
+        <h3 class="footerCol__h">Company</h3>
         <ul>
-          <li class="footerItem"><a href="#">About Indrodip</a></li>
-          <li class="footerItem"><a href="mailto:support@10kroadmap.org">Contact</a></li>
-          <li class="footerItem"><a href="#">Privacy Policy</a></li>
-          <li class="footerItem"><a href="#">Terms of Service</a></li>
+          <li class="fItem"><a href="#">About Indrodip</a></li>
+          <li class="fItem"><a href="mailto:support@10kroadmap.org">Contact</a></li>
+          <li class="fItem"><a href="#">Privacy Policy</a></li>
+          <li class="fItem"><a href="#">Terms of Service</a></li>
         </ul>
       </div>
     </div>
     <div class="footer__bottom">
       <span class="footer__copy">© 2025 The5th Consulting. All rights reserved. the5th.consulting</span>
-      <div class="footer__watermark">the<em>5</em>th.</div>
+      <div class="footer__wm">the<em>5</em>th.</div>
     </div>
   </div>
 </footer>
 
 <script>
-document.querySelectorAll('.faq-btn').forEach(btn=>{
+document.querySelectorAll('.faqBtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const open=btn.getAttribute('data-open')==='true';
-    document.querySelectorAll('.faq-btn').forEach(b=>{b.setAttribute('data-open','false');b.querySelector('.faq-icon').textContent='+';b.nextElementSibling.style.maxHeight='0'});
-    if(!open){btn.setAttribute('data-open','true');btn.querySelector('.faq-icon').textContent='×';btn.nextElementSibling.style.maxHeight=btn.nextElementSibling.scrollHeight+'px'}
+    document.querySelectorAll('.faqBtn').forEach(b=>{b.setAttribute('data-open','false');b.querySelector('.faqIcon').textContent='+';b.nextElementSibling.style.maxHeight='0'});
+    if(!open){btn.setAttribute('data-open','true');btn.querySelector('.faqIcon').textContent='×';btn.nextElementSibling.style.maxHeight=btn.nextElementSibling.scrollHeight+'px'}
   });
 });
 const tr=document.getElementById('testiTrack');
-const dots=document.querySelectorAll('.testimonials__dot');
+const dots=document.querySelectorAll('.tDot');
 if(tr&&dots.length){
   tr.addEventListener('scroll',()=>{const i=Math.round(tr.scrollLeft/404);dots.forEach((d,j)=>d.classList.toggle('active',j===i))},{passive:true});
   dots.forEach((d,i)=>d.addEventListener('click',()=>tr.scrollTo({left:i*404,behavior:'smooth'})));

@@ -40,6 +40,15 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 *,*::before,*::after{max-width:100%}
 html{scroll-behavior:smooth}
+.tf-embed,
+.tf-embed div,
+.tf-embed iframe,
+.tf-embed [data-tf-live]{
+  box-shadow:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+}
 body{
   background-color:var(--parchment);
   color:var(--ink);
@@ -1874,7 +1883,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     </div>
 
     <!-- Typeform embed -->
-    <div style="max-width:760px;margin:3rem auto 0;" data-animate>
+    <div class="tf-embed" style="max-width:760px;margin:3rem auto 0;" data-animate>
       <div data-tf-live="01KVF94BFKB4SF5WBTJ2V5NYTS"></div>
     </div>
   </div>

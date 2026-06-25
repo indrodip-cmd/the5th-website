@@ -650,6 +650,17 @@ h2.H.lime-em em{color:var(--lime);}
 .bub-u,.lm-user-bub{color:#2E1A35 !important;}
 .play-btn svg{color:#2E1A35 !important;}
 
+
+/* ── premium global footer enhancements ── */
+@media(min-width:1100px){.footer-inner{grid-template-columns:2.2fr 1fr 1fr 1fr 1fr!important}}
+.footer-brand .f-contact{margin-top:1.1rem;font-size:.8125rem;color:rgba(255,255,255,.5)}
+.footer-brand .f-contact a{color:#C9A84C;transition:color .15s}
+.footer-brand .f-contact a:hover{color:#E4C879}
+.footer-legal{display:flex;gap:1.1rem;flex-wrap:wrap;justify-content:center}
+.footer-legal a{font-size:.75rem;color:rgba(255,255,255,.42);transition:color .15s}
+.footer-legal a:hover{color:#C9A84C}
+@media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
+
 </style>
 </head>
 <body>
@@ -1461,45 +1472,42 @@ h2.H.lime-em em{color:var(--lime);}
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <a href="/" class="footer-logo">
-        <img src="/public/images/logo-white.png" alt="The5th Consulting" style="height:38px;width:auto;opacity:0.85;">
-      </a>
-      <p>Helping women 45+ turn decades of wisdom and experience into a profitable coaching business. Finally, on their own terms.</p>
+      <a href="/" class="footer-logo"><img src="/public/images/logo-white.png" alt="The5th Consulting" style="height:38px;width:auto;opacity:.85"></a>
+      <p>Helping women 40+ turn decades of wisdom and experience into a profitable digital business. Finally, on their own terms.</p>
+      <p class="f-contact">Questions? <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a></p>
     </div>
-    <div class="footer-col">
-      <h4>Programs</h4>
-      <ul>
-        <li><a href="/fast-forward">Fast Forward</a></li>
-        <li><a href="/community/">The Collective</a></li>
-        <li><a href="/ai">The5th AI</a></li>
-        <li><a href="https://quiz.the5th.consulting">Take the Quiz</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Resources</h4>
-      <ul>
-        <li><a href="https://10kroadmap.org">10K Roadmap</a></li>
-        <li><a href="mailto:support@10kroadmap.org">Support</a></li>
-        <li><a href="https://platform.the5th.consulting">Member Login</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <ul>
-        <li><a href="/">About</a></li>
-        <li><a href="mailto:support@10kroadmap.org">Contact</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-      </ul>
-    </div>
+    <div class="footer-col"><h4>Programs</h4><ul>
+      <li><a href="/fast-forward">Fast Forward</a></li>
+      <li><a href="/community">The Collective</a></li>
+      <li><a href="/ai">The5th AI</a></li>
+      <li><a href="https://quiz.the5th.consulting">Take the Quiz</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Resources</h4><ul>
+      <li><a href="https://10kroadmap.org">10K Roadmap</a></li>
+      <li><a href="https://book.10kroadmap.org">Book a Call</a></li>
+      <li><a href="mailto:indrodip@10kroadmap.org">Support</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Company</h4><ul>
+      <li><a href="/">About</a></li>
+      <li><a href="mailto:indrodip@10kroadmap.org">Contact</a></li>
+      <li><a href="https://10kroadmap.org">10K Roadmap</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Legal</h4><ul>
+      <li><a href="/privacy">Privacy Policy</a></li>
+      <li><a href="/terms">Terms of Use</a></li>
+      <li><a href="/refund">Refund Policy</a></li>
+      <li><a href="/data">Data &amp; Cookies</a></li>
+      <li><a href="/disclaimer">Earnings Disclaimer</a></li>
+    </ul></div>
   </div>
   <div class="footer-bottom">
     <span>&copy; 2026 The5th Consulting. All rights reserved.</span>
+    <nav class="footer-legal" aria-label="Legal">
+      <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund">Refunds</a><a href="/data">Cookies</a><a href="/disclaimer">Disclaimer</a>
+    </nav>
     <span>the5th.consulting</span>
   </div>
-  <div class="footer-wordmark">
-    <span>the<em>5</em>th.</span>
-  </div>
+  <div class="footer-wordmark"><span>the<em>5</em>th.</span></div>
 </footer>
 
 <!-- CHECKOUT MODAL Whop inline embed -->

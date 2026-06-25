@@ -7,7 +7,7 @@
 <meta name="description" content="Fast Forward is a 6-month private group coaching program for women over 40. We do the inner work and the strategy — and guarantee you reach $10,000/month or we work with you free until you do. Backed by a signed agreement. Only 5 seats per cohort.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
   --plum:#3D2645;--plum-dark:#2E1A35;--plum-deep:#231029;--plum-mid:#4E3158;
@@ -244,7 +244,7 @@ ul{list-style:none}
 @media(max-width:600px){.fmt{grid-template-columns:1fr}}
 
 /* results */
-.res{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1120px;margin:0 auto}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:880px;margin:0 auto}
 .resCard{background:linear-gradient(170deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--gold-line);border-radius:6px;padding:34px 30px;text-align:center;transition:transform .25s,border-color .25s}
 .resCard:hover{transform:translateY(-5px);border-color:rgba(201,168,76,.55)}
 .resAv{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;overflow:hidden;border:2px solid var(--gold);background:var(--plum-mid);display:flex;align-items:center;justify-content:center}
@@ -323,6 +323,30 @@ ul{list-style:none}
 .footer-wordmark{width:100%;overflow:hidden;margin-top:3rem;border-top:1px solid rgba(255,255,255,.06)}
 .footer-wordmark span{font-family:'Cormorant Garamond',serif;font-size:20vw;font-weight:600;color:rgba(255,255,255,.15);letter-spacing:-.04em;display:block;white-space:nowrap;line-height:.9;text-align:center;width:100%;user-select:none}
 .footer-wordmark span em{font-style:normal;color:rgba(201,168,76,.2)}
+
+/* ── LETTER OF AGREEMENT ── */
+.agree__lead{text-align:center;max-width:760px;margin:0 auto 14px;font-size:1.18rem;font-weight:300;line-height:1.8;color:var(--ink-soft)}
+.agree__lead b{color:var(--ink);font-weight:600}
+.doc{position:relative;background:linear-gradient(180deg,#FDFBF6,#F5ECDB);border:1px solid rgba(201,168,76,.45);box-shadow:0 44px 100px rgba(61,38,69,.16),inset 0 0 0 1px rgba(255,255,255,.55);padding:66px 66px 56px;max-width:780px;margin:54px auto 0}
+.doc::before{content:'';position:absolute;inset:14px;border:1px solid rgba(201,168,76,.3);pointer-events:none}
+.doc__seal{position:absolute;top:-28px;right:50px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#EFD89A,#C9A84C 58%,#A8852E);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2E1A35;box-shadow:0 12px 30px rgba(201,168,76,.5);text-align:center}
+.doc__seal b{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;line-height:1}
+.doc__seal span{font-size:.42rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.doc__head{text-align:center;border-bottom:1px solid rgba(201,168,76,.4);padding-bottom:24px;margin-bottom:26px}
+.doc__brand{font-size:.64rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:12px}
+.doc__title{font-family:'Cormorant Garamond',serif;font-size:1.95rem;font-weight:500;color:var(--ink);line-height:1.1}
+.doc__intro{font-size:1rem;font-weight:300;line-height:1.8;color:var(--ink-soft);margin-bottom:26px;font-style:italic}
+.doc__clauses{counter-reset:c;display:flex;flex-direction:column;gap:18px;margin-bottom:38px}
+.doc__clauses li{position:relative;padding-left:46px;font-size:1rem;font-weight:300;line-height:1.78;color:var(--ink-mid);list-style:none}
+.doc__clauses li::before{counter-increment:c;content:counter(c);position:absolute;left:0;top:-2px;width:30px;height:30px;border-radius:50%;border:1px solid var(--gold);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.05rem}
+.doc__clauses li b{color:var(--ink);font-weight:600}
+.doc__sign{display:grid;grid-template-columns:1fr 1fr;gap:44px;border-top:1px solid rgba(201,168,76,.4);padding-top:30px}
+.sig{font-family:'Great Vibes',cursive;font-size:2.7rem;color:var(--ink);line-height:1;height:48px;white-space:nowrap}
+.sig--blank{border-bottom:1px solid rgba(26,26,46,.28);height:48px}
+.doc__sigline{font-size:.7rem;letter-spacing:.05em;color:var(--muted);border-top:1px solid rgba(26,26,46,.14);padding-top:9px;margin-top:8px}
+.agree__note{text-align:center;font-size:.8rem;color:var(--muted);margin-top:28px;font-style:italic}
+@media(max-width:600px){.doc{padding:44px 26px 36px}.doc__sign{grid-template-columns:1fr;gap:28px}.doc__seal{right:24px}}
+
 </style>
 </head>
 <body>
@@ -334,7 +358,7 @@ ul{list-style:none}
       <div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img"></div>
     </a>
     <ul class="gn__nav" role="list">
-      <li><a href="/10k-coaching" class="active">Fast Forward</a></li>
+      <li><a href="/fast-forward" class="active">Fast Forward</a></li>
       <li><a href="/ai">The5th AI</a></li>
       <li><a href="/community">The Collective</a></li>
       <li><a href="/">Results</a></li>
@@ -349,7 +373,7 @@ ul{list-style:none}
 </header>
 <div class="mobileMenu" id="mobileMenu" aria-hidden="true">
   <nav class="mobileMenu__nav" role="list">
-    <a href="/10k-coaching" class="active">Fast Forward</a>
+    <a href="/fast-forward" class="active">Fast Forward</a>
     <a href="/ai">The5th AI</a>
     <a href="/community">The Collective</a>
     <a href="/">Results</a>
@@ -394,10 +418,10 @@ ul{list-style:none}
 <!-- PROOF STRIP -->
 <div class="proof">
   <div class="layout">
-    <div class="proofCell"><b data-count="180000" data-prefix="$" data-suffix="K" data-div="1000">$180K</b><span>In 5 months — Shayma</span></div>
-    <div class="proofCell"><b data-count="12000" data-prefix="$">$12,000</b><span>In 9 weeks — Angela</span></div>
-    <div class="proofCell"><b data-count="8900" data-prefix="$">$8,900</b><span>In 5 weeks — Laurie</span></div>
-    <div class="proofCell"><b>60–90<span style="font-size:1rem;color:rgba(255,255,255,.5)">d</span></b><span>To first revenue</span></div>
+        <div class="proofCell"><b data-count="2200" data-prefix="$">$2,200</b><span>In her first 3 weeks &mdash; Hayley</span></div>
+    <div class="proofCell"><b data-count="8900" data-prefix="$">$8,900</b><span>In 5 weeks &mdash; Laurie</span></div>
+    <div class="proofCell"><b data-count="12000" data-prefix="$">$12,000</b><span>In 9 weeks &mdash; Angela</span></div>
+    <div class="proofCell"><b>60&ndash;90</b><span>Days to first revenue</span></div>
   </div>
 </div>
 
@@ -444,7 +468,7 @@ ul{list-style:none}
       </div>
     </div>
     <div class="layersBoth" data-reveal>
-      <p>Clients who had the strategy but not the identity kept undercharging. Clients who had the mindset but not the system stayed busy without income. <b>The combination is what produces $12,000 in 9 weeks, $8,900 in 5 weeks, and $180,000 in 5 months.</b></p>
+      <p>Clients who had the strategy but not the identity kept undercharging. Clients who had the mindset but not the system stayed busy without income. <b>The combination is what produces $2,200 in three weeks, $8,900 in five, and $12,000 in nine.</b></p>
     </div>
   </div>
 </section>
@@ -465,6 +489,43 @@ ul{list-style:none}
   </div>
 </section>
 
+<!-- LETTER OF AGREEMENT -->
+<section class="sec sec--warm">
+  <div class="layout layout--narrow">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">In Writing</span>
+      <h2 class="h2">The agreement you sign <em>before we begin.</em></h2>
+    </div>
+    <p class="agree__lead" data-reveal>No other program in this space will put their promise in writing. <b>We hand you this — signed and dated — before your first session.</b> Read every word.</p>
+    <div class="doc" data-reveal>
+      <div class="doc__seal"><b>10K</b><span>Roadmap</span></div>
+      <div class="doc__head">
+        <div class="doc__brand">10K Roadmap &nbsp;·&nbsp; Fast Forward</div>
+        <div class="doc__title">Client Enrollment &amp; Guarantee Agreement</div>
+      </div>
+      <p class="doc__intro">This agreement is entered into between 10K Roadmap (&ldquo;we&rdquo;) and you, the Client, upon enrolment in the Fast Forward program. It sets out, in plain language, exactly what we guarantee &mdash; and exactly what is asked of you.</p>
+      <ol class="doc__clauses">
+        <li><b>The Result We Guarantee.</b> We will work with you to reach <b>$10,000 per month</b> in revenue within the six (6) month program term, provided you attend the weekly coaching calls, complete the assigned work, and follow the system as taught.</li>
+        <li><b>Continued Support at No Cost.</b> If you have not reached $10,000 per month by the end of the six months, we will continue working with you &mdash; at no additional cost &mdash; for up to twelve (12) months from your start date, until you do.</li>
+        <li><b>The Full Refund.</b> If, after twelve (12) months of full participation, you have not generated at least two times (2&times;) your investment, we will refund one hundred percent (100%) of your investment.</li>
+        <li><b>Your Commitment.</b> You agree to attend the weekly group calls, implement the system, and communicate openly with your coach. The guarantee is contingent only upon you doing the work.</li>
+        <li><b>No Fine Print.</b> There are no hidden conditions, no time-limited claim windows, and no exclusions beyond the commitments stated above. What is written here is what we honour.</li>
+      </ol>
+      <div class="doc__sign">
+        <div class="doc__sigblock">
+          <div class="sig">Indradip Ghosh</div>
+          <div class="doc__sigline">Indradip Ghosh &nbsp;&middot;&nbsp; Founder, 10K Roadmap</div>
+        </div>
+        <div class="doc__sigblock">
+          <div class="sig sig--blank"></div>
+          <div class="doc__sigline">Client Signature &nbsp;&middot;&nbsp; Date</div>
+        </div>
+      </div>
+    </div>
+    <p class="agree__note" data-reveal>A representation of the agreement terms. The binding document is provided and counter-signed at enrolment.</p>
+  </div>
+</section>
+
 <!-- MONEY TIMELINE -->
 <section class="sec sec--parch">
   <div class="layout layout--narrow">
@@ -478,7 +539,7 @@ ul{list-style:none}
       <div class="tlRow" data-reveal><div class="tlDot"></div><div class="tlRow__m">Month 2</div><h3 class="tlRow__h">Your offer goes live &amp; conversations begin</h3><p class="tlRow__p">Your signature offer is built, priced, and named. You start warm conversations using the daily attraction system — the first dollars often land here.</p><span class="tlRow__tag">⚡ Hayley: $2,200 in her first 3 weeks</span></div>
       <div class="tlRow tlRow--money" data-reveal><div class="tlDot"></div><div class="tlRow__m">Month 2–3 &nbsp;·&nbsp; 60–90 days</div><h3 class="tlRow__h">First real revenue</h3><p class="tlRow__p">This is where most clients enroll their first paying clients. The sales framework turns conversations into signed clients — payment links sent live on the call.</p><span class="tlRow__tag">💰 Laurie: $8,900 in 5 weeks &nbsp;·&nbsp; Angela: $12,000 in 9 weeks</span></div>
       <div class="tlRow" data-reveal><div class="tlDot"></div><div class="tlRow__m">Month 4–5</div><h3 class="tlRow__h">Revenue becomes repeatable</h3><p class="tlRow__p">You're closing at 30%+ on discovery calls and building a consistent rhythm. One-off wins turn into reliable $5K–$10K months.</p></div>
-      <div class="tlRow tlRow--money" data-reveal><div class="tlDot"></div><div class="tlRow__m">Month 6</div><h3 class="tlRow__h">$10K/month — locked in</h3><p class="tlRow__p">Double what works, cut what doesn't, add simple automation. You hit and hold $10K/month — or your guarantee extension activates and we keep going, free.</p><span class="tlRow__tag">🏆 Shayma: $180,000 in 5 months</span></div>
+      <div class="tlRow tlRow--money" data-reveal><div class="tlDot"></div><div class="tlRow__m">Month 6</div><h3 class="tlRow__h">$10K/month — locked in</h3><p class="tlRow__p">Double what works, cut what doesn't, add simple automation. You hit and hold $10K/month — or your guarantee extension activates and we keep going, free.</p><span class="tlRow__tag">🎯 Consistent $10K months &mdash; the result we guarantee</span></div>
     </div>
   </div>
 </section>
@@ -610,7 +671,7 @@ ul{list-style:none}
       <div class="resCard" data-reveal><div class="resAv"><img src="/public/clients/angela.jpg" alt="Angela"></div><div class="resCard__num" data-count="12000" data-prefix="$">$12,000</div><div class="resCard__when">In 9 weeks</div><div class="resCard__nm">Angela</div><div class="resCard__ro">From experience to income</div></div>
       <div class="resCard" data-reveal><div class="resAv"><img src="/public/clients/laurie.jpg" alt="Laurie"></div><div class="resCard__num" data-count="8900" data-prefix="$">$8,900</div><div class="resCard__when">In 5 weeks</div><div class="resCard__nm">Laurie</div><div class="resCard__ro">First paying clients</div></div>
       <div class="resCard" data-reveal><div class="resAv"><img src="/public/clients/hayley.jpg" alt="Hayley"></div><div class="resCard__num" data-count="2200" data-prefix="$">$2,200</div><div class="resCard__when">First 3 weeks</div><div class="resCard__nm">Hayley</div><div class="resCard__ro">Out of the gate</div></div>
-      <div class="resCard" data-reveal><div class="resAv"><span>S</span></div><div class="resCard__num" data-count="180" data-prefix="$" data-suffix="K">$180K</div><div class="resCard__when">In 5 months</div><div class="resCard__nm">Shayma</div><div class="resCard__ro">Former Fortune 500 CEO</div></div>
+      
     </div>
     <p class="resNote" data-reveal>These are not outliers. <em>These are women who showed up, did the work, and followed the system</em> — exactly what you'll do inside Fast Forward.</p>
   </div>
@@ -713,7 +774,7 @@ ul{list-style:none}
       <p>Helping women 40+ turn decades of wisdom and experience into a profitable digital business. Finally, on their own terms.</p>
     </div>
     <div class="footer-col"><h4>Programs</h4><ul>
-      <li><a href="/10k-coaching">Fast Forward</a></li>
+      <li><a href="/fast-forward">Fast Forward</a></li>
       <li><a href="/community">The Collective</a></li>
       <li><a href="/ai">The5th AI</a></li>
       <li><a href="https://quiz.the5th.consulting">Take the Quiz</a></li>

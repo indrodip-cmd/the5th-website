@@ -1278,6 +1278,61 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   .globalNav .layout{padding-left:1.25rem;padding-right:1.25rem}
 }
 
+/* ── HAMBURGER + MOBILE MENU ── */
+.gn__toggle{
+  display:none;flex-direction:column;justify-content:center;gap:5px;
+  width:44px;height:44px;padding:9px;margin-left:0.5rem;
+  background:transparent;border:0;cursor:pointer;flex-shrink:0;
+}
+.gn__toggle span{
+  display:block;height:2px;width:100%;border-radius:2px;background:var(--ink);
+  transition:transform 0.3s ease,opacity 0.2s ease;
+}
+.gn__toggle.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.gn__toggle.is-open span:nth-child(2){opacity:0}
+.gn__toggle.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.mobileMenu{
+  position:fixed;top:5.5rem;left:0;right:0;z-index:99;
+  background:rgba(250,246,240,0.98);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 18px 44px rgba(61,38,69,0.14);
+  padding:1rem 1.5rem 1.75rem;
+  display:flex;flex-direction:column;
+  transform:translateY(-14px);opacity:0;visibility:hidden;
+  transition:transform 0.28s ease,opacity 0.24s ease,visibility 0.28s;
+}
+.mobileMenu.is-open{transform:translateY(0);opacity:1;visibility:visible}
+.mobileMenu__nav{display:flex;flex-direction:column}
+.mobileMenu__nav a{
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:1.0625rem;
+  color:var(--ink);padding:0.95rem 0.25rem;
+  border-bottom:1px solid var(--border);transition:color 0.15s;
+}
+.mobileMenu__nav a:hover{color:var(--plum)}
+.mobileMenu__ctas{display:flex;flex-direction:column;gap:0.75rem;margin-top:1.5rem}
+.mobileMenu__ctas a{text-align:center;padding:0.95rem 1.25rem;font-size:0.9375rem}
+.mobileMenu__login{display:block!important;box-shadow:inset 0 0 0 1px rgba(26,26,46,0.2)}
+.mobileMenu__backdrop{
+  position:fixed;inset:0;top:5.5rem;z-index:98;
+  background:rgba(26,26,46,0.35);
+  opacity:0;visibility:hidden;transition:opacity 0.28s ease,visibility 0.28s;
+}
+.mobileMenu__backdrop.is-open{opacity:1;visibility:visible}
+
+@media(max-width:1099px){
+  .gn__toggle{display:flex}
+  .gn__ctas .gn__login{display:none}
+}
+@media(min-width:1100px){
+  .mobileMenu,.mobileMenu__backdrop{display:none}
+}
+@media(max-width:380px){
+  .gn__start{padding:0.65rem 1rem;font-size:0.75rem}
+  .gn__toggle{margin-left:0.25rem}
+}
+
 /* ── HERO ── */
 @media(max-width:1099px){
   .hero__imageContainer img{
@@ -1421,11 +1476,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 /* ── Case-studies tile copy padding ── */
 .rtile-3__copy{padding:2rem;position:relative;z-index:1}
 
-/* ── Assessment tile (rtile-4) stacks its two panels on mobile ── */
+/* ── Assessment tile (rtile-4): two panels on desktop, stacked on mobile ── */
+.rtile-4{display:grid;grid-template-columns:1fr 1fr;}
 @media(max-width:768px){
-  .contentTileGridItem__tile-4{
-    grid-template-columns:1fr;
-  }
+  .rtile-4{grid-template-columns:1fr;}
+  .rtile-4 > a{width:100%;}
+  /* override inline padding/min-height on the inner panels so the stacked
+     card breathes correctly on phones */
+  .rtile-4 > a > div{min-height:auto !important;padding:1.75rem 1.5rem !important;}
+  .rtile-4 > div:last-child{padding:1.75rem 1.5rem !important;}
 }
 </style>
 </head>
@@ -1454,8 +1513,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
       <a href="#" class="gn__login">Log In</a>
       <a href="#" class="gn__start">Start Here</a>
     </div>
+    <button class="gn__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<!-- Mobile menu (toggled below 1100px) -->
+<div class="mobileMenu" id="mobileMenu" aria-hidden="true">
+  <nav class="mobileMenu__nav" role="list">
+    <a href="#">How It Works</a>
+    <a href="#">The5th AI</a>
+    <a href="/community/">Community</a>
+    <a href="#">Results</a>
+    <a href="#">About</a>
+  </nav>
+  <div class="mobileMenu__ctas">
+    <a href="#" class="gn__login mobileMenu__login">Log In</a>
+    <a href="https://quiz.the5th.consulting" class="gn__start mobileMenu__start">Start Here</a>
+  </div>
+</div>
+<div class="mobileMenu__backdrop" id="menuBackdrop"></div>
 
 <main id="content">
 
@@ -2607,7 +2685,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     </article>
 
     <!-- Tile 4 — expertise assessment -->
-    <article class="rtile-4 contentTileGridItem__tile-4" style="display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;padding:0;background:#fff;border:1px solid var(--border);">
+    <article class="rtile-4 contentTileGridItem__tile-4" style="gap:0;align-items:stretch;padding:0;background:#fff;border:1px solid var(--border);">
 
       <!-- Left visual panel -->
       <a href="https://quiz.the5th.consulting/" target="_blank" style="display:flex;text-decoration:none;color:inherit;">
@@ -2747,6 +2825,32 @@ const nav = document.querySelector('.globalNav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 20);
 }, {passive: true});
+
+// ── MOBILE MENU ──
+const navToggle = document.getElementById('navToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuBackdrop = document.getElementById('menuBackdrop');
+if (navToggle && mobileMenu && menuBackdrop) {
+  const closeMenu = () => {
+    navToggle.classList.remove('is-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('is-open');
+    menuBackdrop.classList.remove('is-open');
+    document.body.style.overflow = '';
+  };
+  navToggle.addEventListener('click', () => {
+    const open = navToggle.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    mobileMenu.classList.toggle('is-open', open);
+    menuBackdrop.classList.toggle('is-open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menuBackdrop.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1100) closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+}
 
 // ── GSAP SCROLL ANIMATIONS ──
 gsap.registerPlugin(ScrollTrigger);

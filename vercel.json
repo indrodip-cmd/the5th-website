@@ -2,6 +2,8 @@
   "buildCommand": null,
   "outputDirectory": ".",
   "redirects": [
-    { "source": "/10k-coaching", "destination": "/fast-forward", "permanent": true }
+    { "source": "/10k-coaching", "destination": "/fast-forward", "permanent": true },
+    { "source": "/community", "destination": "/collective", "permanent": true },
+    { "source": "/community/:path*", "destination": "/collective/:path*", "permanent": true }
   ]
 }

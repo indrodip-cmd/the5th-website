@@ -291,6 +291,82 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 }
 .gn__start:hover{background:var(--green-dark)}
 
+/* ════════════════════════════════════════════════════════
+   ROYAL DESKTOP HEADER (≥1100px)
+   Deep aubergine bar · ivory logo plaque · gold accents
+   (mobile header/menu below 1100px is intentionally untouched)
+════════════════════════════════════════════════════════ */
+@media(min-width:1100px){
+  .globalNav{
+    height:6rem;
+    background:linear-gradient(180deg,#2E1A35 0%,#241229 100%);
+    border-bottom:1px solid rgba(201,168,76,0.30);
+  }
+  .globalNav::after{
+    content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(201,168,76,0.55),transparent);
+    pointer-events:none;
+  }
+  .globalNav.scrolled{
+    box-shadow:0 10px 34px rgba(20,8,24,0.38);
+    border-bottom-color:rgba(201,168,76,0.45);
+  }
+  .globalNav .layout{position:relative;}
+  /* equal-width side groups keep the nav perfectly centered */
+  .globalNav .gn__logo{flex:1 1 0;}
+
+  /* Logo — engraved ivory plaque (.globalNav prefix beats later base rules) */
+  .globalNav .gn__logo-glass{
+    background:linear-gradient(180deg,#FBF8F2,#F1E9DC);
+    border:1px solid rgba(201,168,76,0.55);
+    border-radius:10px;
+    padding:0.55rem 1rem;
+    box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 1px 0 rgba(255,255,255,0.7);
+  }
+  .globalNav .gn__logo-img{height:32px;mix-blend-mode:multiply;}
+
+  /* Nav links — centered, refined uppercase with gold underline reveal */
+  .gn__nav{flex:0 0 auto;gap:0;}
+  .gn__nav a{
+    color:rgba(255,255,255,0.80);
+    font-size:0.75rem;font-weight:500;
+    letter-spacing:0.15em;text-transform:uppercase;
+    white-space:nowrap;
+    padding:0 1.25em;
+  }
+  .gn__nav a:hover{color:var(--gold);}
+  .gn__nav a:hover:before{
+    left:1.35em;right:1.35em;bottom:-0.5em;
+    height:1px;background:var(--gold);
+  }
+
+  /* Log In — gold-on-hover ghost link */
+  .gn__ctas{gap:1.5rem;flex:1 1 0;justify-content:flex-end;}
+  .gn__login{
+    color:rgba(255,255,255,0.78);
+    font-size:0.72rem;font-weight:500;
+    letter-spacing:0.14em;text-transform:uppercase;
+    padding:0.7rem 0.25rem;box-shadow:none;
+  }
+  .gn__login:hover{color:var(--gold);background:transparent;box-shadow:none;}
+
+  /* Start Here — royal gold button */
+  .gn__start{
+    background:linear-gradient(180deg,#E4C879 0%,#C9A84C 55%,#B8983F 100%);
+    color:#2E1A35;
+    font-size:0.74rem;font-weight:700;
+    letter-spacing:0.12em;text-transform:uppercase;
+    padding:0.85rem 1.7rem;border-radius:4px;
+    box-shadow:0 6px 18px rgba(201,168,76,0.28),inset 0 1px 0 rgba(255,255,255,0.45);
+    transition:transform 0.18s ease,box-shadow 0.18s ease,background 0.18s ease;
+  }
+  .gn__start:hover{
+    background:linear-gradient(180deg,#EFD89A 0%,#D4B45A 55%,#C2A446 100%);
+    transform:translateY(-2px);
+    box-shadow:0 10px 26px rgba(201,168,76,0.40),inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+}
+
 /* ── HERO ── */
 .hero{
   background-color:var(--plum);

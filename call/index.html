@@ -265,6 +265,18 @@ ul{list-style:none}
 .callQuote__by{font-size:.8rem;color:var(--muted);margin-top:6px;font-family:'DM Sans',sans-serif;font-style:normal}
 .callQuote__by b{color:var(--ink);font-weight:600}
 
+/* BONUS gift card */
+.bonus{display:grid;grid-template-columns:.8fr 1.2fr;gap:0;max-width:940px;margin:42px auto 0;border:1px solid var(--gold-line);border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#fff,#FBF6EA);box-shadow:0 26px 60px -42px rgba(176,144,47,.55)}
+@media(max-width:720px){.bonus{grid-template-columns:1fr}}
+.bonus__media{position:relative;overflow:hidden;background:var(--cream-deep);border-right:1px solid var(--gold-line);min-height:180px}
+@media(max-width:720px){.bonus__media{border-right:none;border-bottom:1px solid var(--gold-line);max-height:200px}}
+.bonus__media img{width:100%;height:100%;object-fit:cover;object-position:left top}
+.bonus__body{padding:34px 36px}
+.bonus__badge{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);background:rgba(201,168,76,.12);border:1px solid var(--gold-line);border-radius:100px;padding:7px 15px;margin-bottom:16px}
+.bonus__h{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.6vw,2rem);font-weight:600;line-height:1.12;color:var(--ink);margin-bottom:12px}
+.bonus__p{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft)}
+.bonus__p b{color:var(--ink);font-weight:600}
+
 /* DIFFERENT */
 .diff{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:940px;margin:0 auto}
 @media(max-width:720px){.diff{grid-template-columns:1fr}}
@@ -635,33 +647,43 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- ════════ WHY DIFFERENT ════════ -->
+<!-- ════════ WHY THIS CALL IS DIFFERENT ════════ -->
 <section class="sec sec--ivory">
   <div class="wrap">
     <div class="secHead" data-up>
-      <span class="eyebrow eyebrow--c">Why This Is Different</span>
-      <h2 class="h2">Not another course. <em>Not a generic AI tool.</em></h2>
+      <span class="eyebrow eyebrow--c">Why This Call Is Different</span>
+      <h2 class="h2">Most "discovery calls" are sales calls in disguise. <em>Ours isn't.</em></h2>
     </div>
     <div class="diff">
       <div class="diffCol diffCol--them" data-up>
-        <span class="diffCol__lab">Other coaches &amp; programs</span>
+        <span class="diffCol__lab">A typical call with other coaches</span>
         <ul>
-          <li><span class="diffCol__m">✕</span> Built for 25-year-olds chasing followers</li>
-          <li><span class="diffCol__m">✕</span> Hand you templates, then leave you alone</li>
-          <li><span class="diffCol__m">✕</span> Paid ads, funnels, and pressure tactics</li>
-          <li><span class="diffCol__m">✕</span> Generic advice that ignores your offer</li>
-          <li><span class="diffCol__m">✕</span> Lots of information, no real accountability</li>
+          <li><span class="diffCol__m">✕</span> They give you almost nothing, then push you to buy</li>
+          <li><span class="diffCol__m">✕</span> A scripted closer reading from a sheet</li>
+          <li><span class="diffCol__m">✕</span> Pressure, urgency, "you have to decide today"</li>
+          <li><span class="diffCol__m">✕</span> It's about hitting their quota, not your business</li>
+          <li><span class="diffCol__m">✕</span> You leave more confused than when you arrived</li>
         </ul>
       </div>
       <div class="diffCol diffCol--us" data-up>
-        <span class="diffCol__lab">The5th</span>
+        <span class="diffCol__lab">Your call with us</span>
         <ul>
-          <li><span class="diffCol__m">✓</span> Designed for experienced women over 45</li>
-          <li><span class="diffCol__m">✓</span> A proven system plus real human guidance</li>
-          <li><span class="diffCol__m">✓</span> Premium clients from your own network</li>
-          <li><span class="diffCol__m">✓</span> Strategy tailored to your exact expertise</li>
-          <li><span class="diffCol__m">✓</span> Coaching, AI, and a community behind you</li>
+          <li><span class="diffCol__m">✓</span> You leave with real strategy, whether or not you join</li>
+          <li><span class="diffCol__m">✓</span> A genuine conversation with Indrodip himself</li>
+          <li><span class="diffCol__m">✓</span> No pushing, the right women join us naturally</li>
+          <li><span class="diffCol__m">✓</span> We're here to guide you and show you your blind spots</li>
+          <li><span class="diffCol__m">✓</span> A conversation that can genuinely change your business</li>
         </ul>
+      </div>
+    </div>
+
+    <!-- bonus / reciprocity gift -->
+    <div class="bonus" data-up>
+      <div class="bonus__media"><img src="/public/images/zigzag-ai.png" alt="The5th AI, your personal CMO" loading="lazy"></div>
+      <div class="bonus__body">
+        <div class="bonus__badge">✦ A Gift For Your Time</div>
+        <h3 class="bonus__h">After your call, 3 days inside our most premium AI, on us.</h3>
+        <p class="bonus__p">As a token of gratitude for your time, you'll get <b>3 days of free access to The5th AI</b>, the same personal-CMO software our members pay for. Use it to write your offer, your emails, your outreach, and your next steps. Yours to use for those three days, whether or not we ever work together.</p>
       </div>
     </div>
   </div>

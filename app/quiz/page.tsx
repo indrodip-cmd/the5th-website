@@ -351,6 +351,20 @@ function sectionOf(id: string): SectionKey {
   return 'vision'
 }
 
+/* ─── Conditional branching ───
+   Tailor the question set to their stage so it feels intelligent, not static.
+   Stage (q1) is answered before any branchable question, so the set is stable. */
+function isVisible(q: Question, answers: QuizAnswers): boolean {
+  const stage = (answers.q1 as string) || ''
+  const beginner = stage === 'idea' || stage === 'starting'
+  const advanced = stage === 'scaling' || stage === 'established'
+  // Beginners have no offer or sales motion yet: skip offer-length + selling-relationship.
+  if (beginner && (q.id === 'q9' || q.id === 'q15')) return false
+  // Advanced coaches already have the foundations: skip transformation-story + content-blocks.
+  if (advanced && (q.id === 'q6' || q.id === 'q14')) return false
+  return true
+}
+
 /* ─── useCountUp ─── */
 function useCountUp(target: number, duration = 1200) {
   const [val, setVal] = useState(0)
@@ -2156,17 +2170,21 @@ export default function Page() {
     setError('')
     setSlideDir('sir')
     setCardKey(k => k + 1)
-    if (currentQ < questions.length - 1) setCurrentQ(q => q + 1)
+    let next = currentQ + 1
+    while (next < questions.length && !isVisible(questions[next], answers)) next++
+    if (next < questions.length) setCurrentQ(next)
     else setScreen('email')
-  }, [currentQ])
+  }, [currentQ, answers])
 
   const goBack = useCallback(() => {
     setError('')
     setSlideDir('sil')
     setCardKey(k => k + 1)
-    if (currentQ > 0) setCurrentQ(q => q - 1)
+    let prev = currentQ - 1
+    while (prev >= 0 && !isVisible(questions[prev], answers)) prev--
+    if (prev >= 0) setCurrentQ(prev)
     else setScreen('start')
-  }, [currentQ])
+  }, [currentQ, answers])
 
   const handleSelectAnswer = (qId: string, value: string) => {
     if (advancingRef.current) return
@@ -2448,6 +2466,9 @@ export default function Page() {
   if (screen === 'quiz') {
     const q = questions[currentQ]
     const hasAnswer = q.type === 'select' ? !!answers[q.id] : q.type === 'scale' ? !!answers[q.id] : true
+    // Branched (visible) question set for progress + chapter logic.
+    const visibleQs = questions.filter(qq => isVisible(qq, answers))
+    const curVisIdx = visibleQs.findIndex(qq => qq.id === q.id)
 
     const GRAIN_URI = "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
     const StarSVG = ({ size = 28, style = {} }: { size?: number; style?: React.CSSProperties }) => (
@@ -2458,7 +2479,7 @@ export default function Page() {
 
     /* ── Chapter intro (shown once when entering a new section) ── */
     const sec = sectionOf(q.id)
-    const firstOfSection = currentQ === 0 || sectionOf(questions[currentQ - 1].id) !== sec
+    const firstOfSection = curVisIdx <= 0 || sectionOf(visibleQs[curVisIdx - 1].id) !== sec
     const showIntro = firstOfSection && !introsSeen.has(sec)
     const beginSection = () => {
       setSlideDir('sir'); setCardKey(k => k + 1)
@@ -2508,9 +2529,9 @@ export default function Page() {
             style={{ background:'none', border:'none', fontSize:22, color:'rgba(26,26,46,.45)',
               cursor:'pointer', lineHeight:1, padding:0, flexShrink:0 }}>←</button>
           <div style={{ flex:1, display:'flex', justifyContent:'center', gap:6 }}>
-            {questions.map((_, i) => (
-              <div key={i} style={{ width: i === currentQ ? 22 : 8, height:8, borderRadius:50,
-                background: i < currentQ ? '#1C4A32' : i === currentQ ? '#3D2645' : 'rgba(61,38,69,.16)',
+            {visibleQs.map((_, i) => (
+              <div key={i} style={{ width: i === curVisIdx ? 22 : 8, height:8, borderRadius:50,
+                background: i < curVisIdx ? '#1C4A32' : i === curVisIdx ? '#3D2645' : 'rgba(61,38,69,.16)',
                 transition:'all .35s cubic-bezier(.2,.7,.2,1)' }} />
             ))}
           </div>

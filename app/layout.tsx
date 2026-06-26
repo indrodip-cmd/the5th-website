@@ -35,6 +35,10 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script
+          src="https://t.contentsquare.net/uxa/9af567d0424d8.js"
+          strategy="afterInteractive"
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-QFT4216XJD"
           strategy="afterInteractive"
         />

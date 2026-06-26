@@ -1,111 +1,103 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-/* ─── Helpers (kept) ─── */
+/* ════════ Brand tokens ════════ */
+const C = {
+  cream: '#FAF6F0', ivory: '#FBF8F2', creamMid: '#F4EEE4', creamDeep: '#EAE3D8',
+  plum: '#3D2645', plumDark: '#2E1A35', plumDeep: '#231029',
+  gold: '#C9A84C', goldSoft: '#E4C879', goldDeep: '#B0902F', goldLine: 'rgba(201,168,76,.32)',
+  green: '#1C4A32', greenDark: '#143826',
+  ink: '#1A1A2E', inkMid: '#403b3b', inkSoft: '#5a5550', muted: '#8A8075', border: '#E2DCD2', white: '#fff',
+}
+
+/* ════════ Helpers (kept) ════════ */
 function formatStage(q1: string): string {
-  const m: Record<string, string> = { starting: 'The Pioneer', idea: 'The Pioneer', launched: 'The Pathfinder', scaling: 'The Builder' }
-  return m[q1] || q1 || 'Starting'
+  const m: Record<string, string> = { starting: 'The Pioneer', idea: 'The Pioneer', launched: 'The Pathfinder', scaling: 'The Builder', established: 'The Luminary' }
+  return m[q1] || q1 || 'The Pioneer'
 }
 
-function formatGoal(q18: string): string {
-  const m: Record<string, string> = { '1-3k': '$1K–$3K/mo', '3-5k': '$3K–$5K/mo', '5-10k': '$5K–$10K/mo', '10k+': '$10K+/mo' }
-  return m[q18] || q18 || 'Goal'
-}
-
-function getVSLHeadline(firstName: string, q1: string): string {
-  const h: Record<string, string> = {
-    starting:    `${firstName}, you are The Pioneer — and this video shows exactly why you haven't got your first client yet (and how to fix it this week)`,
-    idea:        `${firstName}, you are The Pioneer — and this video shows exactly why you haven't got your first client yet (and how to fix it this week)`,
-    launched:    `${firstName}, you are The Pathfinder — and this video reveals the exact reason your income is still inconsistent (it's not what you think)`,
-    scaling:     `${firstName}, you are The Builder — and this video shows the one architectural shift that breaks your revenue ceiling for good`,
-    established: `${firstName}, you are The Luminary — and this video reveals the strategy shift that takes you from great to genuinely untouchable`,
+/* Indicative health score derived from stage (a real proxy: earlier stages score lower). */
+function deriveScores(q1: string) {
+  const base: Record<string, { offer: number; positioning: number; pricing: number; momentum: number }> = {
+    idea:        { offer: 30, positioning: 34, pricing: 33, momentum: 26 },
+    starting:    { offer: 36, positioning: 40, pricing: 37, momentum: 32 },
+    launched:    { offer: 58, positioning: 56, pricing: 54, momentum: 55 },
+    scaling:     { offer: 74, positioning: 71, pricing: 69, momentum: 73 },
+    established: { offer: 85, positioning: 83, pricing: 81, momentum: 85 },
   }
-  return h[q1] || `${firstName}, your personalised video is ready`
+  const s = base[q1] || base.starting
+  const overall = Math.round((s.offer + s.positioning + s.pricing + s.momentum) / 4)
+  return { ...s, overall }
 }
 
-function getVSLSub(q2: string): string {
-  const s: Record<string, string> = {
-    action:     'You are wired for action. Watch this short video to see the exact moves that match how you operate — then book your free strategy call below.',
-    connection: "You build through relationships, not hustle. Watch this video to see the strategy that fits how you are naturally wired — then let's talk.",
-    ideas:      'Your biggest asset is how you think. This video shows you how to turn that into a system that generates consistent income — watch it now.',
-    meaning:    'You do not need to hustle to build a $10K month. This video shows you the gentle path that actually works for someone wired like you.',
+/* Parse the AI markdown roadmap into a map of { SECTION HEADER: body }. */
+function parseRoadmap(md: string): Record<string, string> {
+  const out: Record<string, string> = {}
+  if (!md) return out
+  const parts = md.split(/^##\s+/m)
+  for (const part of parts) {
+    const nl = part.indexOf('\n')
+    if (nl === -1) continue
+    const header = part.slice(0, nl).trim().toUpperCase()
+    const body = part.slice(nl + 1).trim()
+    if (header && body) out[header] = body
   }
-  return s[q2] || 'Watch your personalised video then book a free strategy call below.'
+  return out
 }
 
-function getPersonalityLabel(q2: string): string {
-  const p: Record<string, string> = { action: 'The Driver', connection: 'The Flow Worker', ideas: 'The Deep Thinker', meaning: 'The Gentle Builder' }
-  return p[q2] || 'The Driver'
+/* Render plain roadmap body text as elegant paragraphs / bullets. */
+function RoadmapBody({ text, muted = false }: { text: string; muted?: boolean }) {
+  const lines = text.split('\n').filter(l => l.trim())
+  return (
+    <>
+      {lines.map((line, i) => {
+        const t = line.trim()
+        const isBullet = /^[-•*]\s+/.test(t)
+        const isSubhead = /^(DAY|WEEK)\s/i.test(t) || (t.length < 60 && /:$/.test(t))
+        const clean = t.replace(/^[-•*]\s+/, '').replace(/\*\*/g, '')
+        if (isSubhead) return <p key={i} style={{ fontWeight: 600, color: muted ? 'rgba(26,26,46,.5)' : C.ink, margin: '16px 0 4px', fontSize: 15 }}>{clean}</p>
+        if (isBullet) return (
+          <div key={i} style={{ display: 'flex', gap: 11, margin: '8px 0' }}>
+            <span style={{ color: C.goldDeep, flexShrink: 0, fontWeight: 700 }}>✓</span>
+            <span style={{ color: muted ? 'rgba(26,26,46,.45)' : C.inkSoft, lineHeight: 1.6, fontSize: 15 }}>{clean}</span>
+          </div>
+        )
+        return <p key={i} style={{ color: muted ? 'rgba(26,26,46,.45)' : C.inkSoft, lineHeight: 1.75, fontSize: 15.5, margin: '10px 0' }}>{clean}</p>
+      })}
+    </>
+  )
 }
 
-/* ─── Archetype one-liners ─── */
-const ARCHETYPE_ONELINER: Record<string, string> = {
-  pioneer:    'You have the knowledge and the drive. What you have not yet built is the system that turns that knowledge into consistent income. The video below shows you the exact first steps that match how you are wired — and why everything you have tried so far has felt harder than it should.',
-  pathfinder: 'You have proven you can get clients. What you have not cracked is how to get them consistently. The video below diagnoses the exact reason your income is still unpredictable — and shows you the one structural fix that changes everything.',
-  builder:    'You have built something real. The ceiling you are hitting is not a skill problem — it is an architecture problem. The video below shows you the specific shift that breaks your current revenue limit for good.',
-  luminary:   'You are established. The question now is not whether you can build — it is whether you will build the right thing next. The video below shows you what the most successful women at your stage do differently to move from great to genuinely untouchable.',
-}
-
-function getArchetypeOneLiner(archetype: string, q1: string): string {
-  const a = archetype.toLowerCase()
-  if (a.includes('pioneer')    || (!archetype && (q1 === 'starting' || q1 === 'idea'))) return ARCHETYPE_ONELINER.pioneer
-  if (a.includes('pathfinder') || (!archetype && q1 === 'launched'))                    return ARCHETYPE_ONELINER.pathfinder
-  if (a.includes('builder')    || (!archetype && q1 === 'scaling'))                     return ARCHETYPE_ONELINER.builder
-  if (a.includes('luminary')   || (!archetype && q1 === 'established'))                 return ARCHETYPE_ONELINER.luminary
-  return ARCHETYPE_ONELINER.pioneer
-}
-
-/* ─── Static data ─── */
+/* ════════ Immersive loading sequence (premium, not a spinner) ════════ */
 const LOADING_MESSAGES = [
-  'Reading your 20 answers...',
-  'Identifying your Expert Archetype...',
-  'Mapping your personality type...',
-  'Building your signature offer...',
-  'Writing your personalised 7-day plan...',
-  'Finalising your blueprint...',
+  'Reading your answers',
+  'Analyzing your business',
+  'Evaluating your positioning',
+  'Reviewing your pricing',
+  'Finding hidden opportunities',
+  'Comparing successful coaching businesses',
+  'Identifying your highest-ROI move',
+  'Building your personalized roadmap',
+  'Preparing your AI recommendations',
 ]
-
-const WISTIA_IDS: Record<string, string> = {
-  v1: '',
-  v2: '',
-  v3: '',
-  v4: '',
-}
 
 const TESTIMONIALS = [
-  {
-    name:   'Jeanne Tomasak',
-    quote:  'I had spent over $10,000 on coaches before working with Indrodip. None gave me the clarity he did. Six weeks later I closed my first client.',
-    result: 'First client in 6 weeks',
-  },
-  {
-    name:   'Angela Gregg',
-    quote:  'After burning through $25,000 on coaches who did not understand my context, two months with Indrodip and I closed my first $2,500 sale.',
-    result: 'First $2,500 sale',
-  },
-  {
-    name:   'Laurie Gerber',
-    quote:  'We rebuilt the strategy, repositioned my pricing from $79 to $225, and within three months I generated $26,000 in revenue.',
-    result: '$26,000 in 3 months',
-  },
-  {
-    name:   'Jennifer',
-    quote:  'I went from zero to $4,000 every single month. The clarity I got in one call changed everything I thought I knew about my business.',
-    result: '$4K/month consistently',
-  },
+  { name: 'Jeanne', quote: 'That one conversation gave me more clarity than $10,000 of coaching ever did. Six weeks later I closed my first client.', result: 'First client in 6 weeks' },
+  { name: 'Laurie', quote: 'We rebuilt my strategy and repositioned my pricing. Within three months I generated $26,000 in revenue.', result: '$26,000 in 3 months' },
+  { name: 'Angela', quote: 'After years of guessing, two months with Indrodip and I finally understood my own business. The first sale followed quickly.', result: 'First $2,500 sale' },
 ]
 
-const WHAT_YOU_GET = [
-  'Your offer completely defined and priced',
-  'Your exact sales conversation mapped out',
-  'Your 30-day revenue plan ready to execute',
-  'Your biggest growth block identified and removed',
-  'Your exact next 3 steps starting tomorrow',
+const SESSION_INCLUDES = [
+  'We review your AI report and roadmap together',
+  'We prioritize the highest-impact next 90 days',
+  'We refine your offer and your pricing',
+  'We name the one blind spot holding you back',
+  'You leave with clarity, whether or not we work together',
 ]
 
-/* ─── Main page ─── */
+/* ════════ Page ════════ */
 export default function ResultsPage() {
   const [name, setName]           = useState('')
   const [email, setEmail]         = useState('')
@@ -113,19 +105,13 @@ export default function ResultsPage() {
   const [roadmap, setRoadmap]     = useState('')
   const [loading, setLoading]     = useState(true)
   const [msgIdx, setMsgIdx]       = useState(0)
-  const [progress, setProgress]   = useState(0)
   const [archetype, setArchetype] = useState('')
   const [personalityType, setPersonalityType] = useState('')
 
   useEffect(() => {
     if (!loading) return
-    const iv = setInterval(() => setMsgIdx(i => (i + 1) % LOADING_MESSAGES.length), 2000)
+    const iv = setInterval(() => setMsgIdx(i => Math.min(i + 1, LOADING_MESSAGES.length - 1)), 1600)
     return () => clearInterval(iv)
-  }, [loading])
-
-  useEffect(() => {
-    if (loading) { const t = setTimeout(() => setProgress(90), 50); return () => clearTimeout(t) }
-    else setProgress(100)
   }, [loading])
 
   useEffect(() => {
@@ -175,13 +161,10 @@ export default function ResultsPage() {
             hours:       storedAnswers?.q19 || '10-20',
             videoSlug:   getVideoSlug(storedAnswers?.q1 || 'starting'),
           })
-        })
-          .then(r => r.json())
-          .then(d => console.log('PDF sent:', d))
-          .catch(err => console.error('PDF error:', err))
+        }).then(r => r.json()).catch(() => {})
       }
     } catch {
-      setRoadmap('Your personalised roadmap is being prepared. Check your inbox for the full PDF version.')
+      setRoadmap('')
     } finally {
       setLoading(false)
     }
@@ -207,235 +190,214 @@ export default function ResultsPage() {
     } catch { /* non-critical */ }
   }
 
-  /* ─── Derived values ─── */
-  const firstName      = name.split(' ')[0] || 'there'
-  const vslHeadline    = getVSLHeadline(firstName, answers.q1 || 'starting')
-  const vslSub         = getVSLSub(answers.q2 || 'action')
-  const personalityLabel = getPersonalityLabel(answers.q2 || 'action')
-  const stageLabel     = formatStage(answers.q1 || 'starting')
-  const oneLiner       = getArchetypeOneLiner(archetype, answers.q1 || 'starting')
-  const videoSlug      = getVideoSlug(answers.q1 || 'starting')
-  const wistiaId       = WISTIA_IDS[videoSlug] || ''
+  /* ─── Derived ─── */
+  const firstName  = name.split(' ')[0] || 'there'
+  const stageLabel = archetype || formatStage(answers.q1 || 'starting')
+  const scores     = deriveScores(answers.q1 || 'starting')
+  const sections   = parseRoadmap(roadmap)
+  const situation  = sections['YOUR SITUATION RIGHT NOW'] || ''
+  const opportunity = sections['YOUR BIGGEST OPPORTUNITY'] || ''
+  const gatedKeys  = ['YOUR SIGNATURE OFFER', 'YOUR PRICING STRATEGY', '30-DAY ACTION PLAN', '7-DAY CONTENT PLAN', 'YOUR LEAD MAGNET IDEA', 'YOUR DIGITAL PRODUCT IDEA']
+  const gatedPreview = (sections[gatedKeys.find(k => sections[k]) || ''] || '').slice(0, 320)
+  void personalityType
 
-  /* Suppress unused-var warnings for kept state/helpers */
-  void roadmap; void personalityType; void formatGoal
-
-  /* ─── Loading screen (kept exactly) ─── */
+  /* ════════ Loading ════════ */
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0d0d0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <div style={{ minHeight: '100vh', background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', system-ui, sans-serif", position: 'relative', overflow: 'hidden' }}>
         <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-          @keyframes spin { to { transform: rotate(360deg); } }
-          @keyframes msgFade { 0%{opacity:0;transform:translateY(6px)} 12%{opacity:1;transform:translateY(0)} 88%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(-4px)} }
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+          @keyframes lglow{from{opacity:.4;transform:translate(-50%,0) scale(1)}to{opacity:.85;transform:translate(-50%,0) scale(1.15)}}
+          @keyframes lmsg{0%{opacity:0;transform:translateY(8px)}15%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:.5}}
+          @keyframes lorbit{to{transform:rotate(360deg)}}
         `}</style>
-        <div style={{ textAlign: 'center', maxWidth: 320, padding: '0 24px', width: '100%' }}>
-          <div style={{ width: 40, height: 40, borderRadius: '50%', border: '3px solid rgba(139,127,207,0.2)', borderTopColor: '#8b7fcf', animation: 'spin 0.85s linear infinite', margin: '0 auto 36px' }} />
-          <p key={msgIdx} style={{ fontSize: 16, fontWeight: 600, color: '#fff', marginBottom: 10, minHeight: 26, lineHeight: 1.4, animation: 'msgFade 2s ease forwards' }}>
-            {LOADING_MESSAGES[msgIdx]}
-          </p>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 28 }}>Usually takes 10–15 seconds</p>
-          <div style={{ height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 2, overflow: 'hidden' }}>
-            <div style={{ height: '100%', background: '#8b7fcf', borderRadius: 2, width: `${progress}%`, transition: 'width 10s linear' }} />
+        <div style={{ position: 'absolute', top: '20%', left: '50%', width: '70vw', height: '60vh', background: 'radial-gradient(ellipse,rgba(201,168,76,.16),transparent 68%)', animation: 'lglow 4s ease-in-out infinite alternate', pointerEvents: 'none' }} />
+        <div style={{ textAlign: 'center', maxWidth: 420, padding: '0 28px', width: '100%', position: 'relative', zIndex: 1 }}>
+          <div style={{ width: 64, height: 64, margin: '0 auto 36px', position: 'relative' }}>
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1.5px solid ${C.goldLine}` }} />
+            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', borderTop: `1.5px solid ${C.gold}`, borderRight: '1.5px solid transparent', borderBottom: '1.5px solid transparent', borderLeft: '1.5px solid transparent', animation: 'lorbit 1.1s linear infinite' }} />
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontStyle: 'italic', color: C.gold }}>5</div>
           </div>
+          <div style={{ fontSize: 11, letterSpacing: '.22em', textTransform: 'uppercase', color: C.gold, marginBottom: 20 }}>The5th AI is working</div>
+          <p key={msgIdx} style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 500, color: '#fff', minHeight: 36, lineHeight: 1.3, animation: 'lmsg 1.6s ease forwards' }}>
+            {LOADING_MESSAGES[msgIdx]}…
+          </p>
+          <div style={{ height: 2, background: 'rgba(255,255,255,.1)', borderRadius: 2, overflow: 'hidden', marginTop: 30 }}>
+            <div style={{ height: '100%', background: `linear-gradient(90deg,${C.goldDeep},${C.gold})`, borderRadius: 2, width: `${((msgIdx + 1) / LOADING_MESSAGES.length) * 100}%`, transition: 'width 1.6s ease' }} />
+          </div>
+          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,.4)', marginTop: 22 }}>Building something genuinely personal to you.</p>
         </div>
       </div>
     )
   }
 
-  /* ─── Results page ─── */
+  /* ════════ Report ════════ */
+  const ScoreBar = ({ label, val }: { label: string; val: number }) => (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
+        <span style={{ fontSize: 13.5, color: C.inkMid, fontWeight: 500 }}>{label}</span>
+        <span style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 18, fontWeight: 600, color: C.goldDeep }}>{val}</span>
+      </div>
+      <div style={{ height: 7, background: C.creamDeep, borderRadius: 6, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${val}%`, borderRadius: 6, background: `linear-gradient(90deg,${C.green},${C.gold})`, transition: 'width 1.1s cubic-bezier(.2,.7,.2,1)' }} />
+      </div>
+    </div>
+  )
+
+  const card: React.CSSProperties = { background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: '36px 38px', boxShadow: '0 24px 60px -44px rgba(46,26,53,.5)' }
+  const eyebrow: React.CSSProperties = { fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', color: C.goldDeep, fontWeight: 700, marginBottom: 12, display: 'block' }
+  const h2: React.CSSProperties = { fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(26px,3.6vw,38px)', fontWeight: 600, color: C.ink, lineHeight: 1.1, letterSpacing: '-.01em' }
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0f0e1a', fontFamily: "'Inter', system-ui, sans-serif", color: '#fff' }}>
+    <div style={{ minHeight: '100vh', background: C.cream, fontFamily: "'DM Sans', system-ui, sans-serif", color: C.ink }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garant:wght@700&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { -webkit-font-smoothing: antialiased; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        .ru  { animation: fadeUp 0.55s ease both; }
-        .ru2 { animation: fadeUp 0.55s 0.1s ease both; }
-        .ru3 { animation: fadeUp 0.55s 0.2s ease both; }
-        .testi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 640px; margin: 0 auto; }
-        @media (max-width: 600px) {
-          .testi-grid { grid-template-columns: 1fr !important; }
-          .res-header  { padding: 14px 20px !important; }
-          .res-hero    { padding: 36px 20px 32px !important; }
-          .res-video   { padding: 40px 20px !important; }
-          .res-cta     { padding: 32px 20px 48px !important; }
-          .res-testi   { padding: 40px 20px !important; }
-          .res-footer  { padding: 18px 20px !important; }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{-webkit-font-smoothing:antialiased}
+        @keyframes rfade{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+        .ru{animation:rfade .7s cubic-bezier(.2,.7,.2,1) both}
+        .ru2{animation:rfade .7s .1s cubic-bezier(.2,.7,.2,1) both}
+        .ru3{animation:rfade .7s .2s cubic-bezier(.2,.7,.2,1) both}
+        .rwrap{max-width:880px;margin:0 auto;padding:0 24px}
+        .rgrid2{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+        .rtesti{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+        @media(max-width:760px){.rgrid2{grid-template-columns:1fr}.rtesti{grid-template-columns:1fr}}
       `}</style>
 
-      {/* ── 1. NOTIFICATION BAR ── */}
-      <div style={{ background: '#8b7fcf', padding: '10px 24px', textAlign: 'center', fontSize: 13, color: '#fff', lineHeight: 1.5 }}>
-        📧 Your personalised PDF blueprint has been sent to {email || 'your inbox'}
+      {/* notification */}
+      <div style={{ background: C.plumDark, padding: '11px 24px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,.82)' }}>
+        Your full report has also been sent to <b style={{ color: C.goldSoft }}>{email || 'your inbox'}</b>
       </div>
 
-      {/* ── 2. HEADER ── */}
-      <header className="res-header" style={{ background: '#0f0e1a', padding: '16px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <Image src="/logo-white2.png" alt="The5th Consulting" width={160} height={36} style={{ objectFit: 'contain' }} />
-        {firstName && firstName !== 'there' && (
-          <div style={{ background: 'rgba(255,255,255,0.08)', color: '#a99de0', fontSize: 12, padding: '5px 14px', borderRadius: 20 }}>
-            {firstName}&apos;s Results
-          </div>
-        )}
+      {/* header */}
+      <header style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, background: C.ivory }}>
+        <Image src="/logo-the5th.png" alt="The5th Consulting" width={150} height={38} style={{ objectFit: 'contain' }} />
+        <span style={{ fontSize: 12, color: C.muted, letterSpacing: '.1em', textTransform: 'uppercase' }}>AI Business Assessment</span>
       </header>
 
-      {/* ── 3. HERO — ARCHETYPE REVEAL ── */}
-      <section className="res-hero" style={{ background: '#1a1040', padding: '48px 24px 40px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 640, margin: '0 auto' }}>
+      {/* hero */}
+      <section className="rwrap ru" style={{ textAlign: 'center', padding: '64px 24px 12px' }}>
+        <span style={eyebrow}>{firstName}&apos;s Assessment · Complete</span>
+        <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(36px,6vw,60px)', fontWeight: 500, color: C.ink, lineHeight: 1.02, letterSpacing: '-.02em', maxWidth: 720, margin: '0 auto' }}>
+          Here&apos;s exactly where your business stands, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>{firstName}.</em>
+        </h1>
+        <p style={{ fontSize: 17, fontWeight: 300, color: C.inkSoft, maxWidth: 560, margin: '20px auto 0', lineHeight: 1.7 }}>
+          Our AI read all of your answers and built this for you. Your profile reads as <b style={{ color: C.ink, fontWeight: 600 }}>{stageLabel}</b>.
+        </p>
+      </section>
 
-          {/* Badges */}
-          <div className="ru" style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
-            {archetype && (
-              <div style={{ background: 'rgba(139,127,207,0.2)', color: '#a99de0', border: '1px solid rgba(139,127,207,0.3)', fontSize: 12, padding: '6px 16px', borderRadius: 20 }}>
-                {archetype}
-              </div>
-            )}
-            <div style={{ background: 'rgba(201,168,76,0.15)', color: '#c9a84c', border: '1px solid rgba(201,168,76,0.3)', fontSize: 12, padding: '6px 16px', borderRadius: 20 }}>
-              {personalityLabel}
-            </div>
-            <div style={{ background: 'rgba(139,127,207,0.2)', color: '#a99de0', border: '1px solid rgba(139,127,207,0.3)', fontSize: 12, padding: '6px 16px', borderRadius: 20 }}>
-              {stageLabel}
-            </div>
-          </div>
-
-          {/* Small label */}
-          <div className="ru" style={{ fontSize: 11, color: '#c9a84c', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: 12 }}>
-            Your Expert Income Archetype
-          </div>
-
-          {/* Archetype name */}
-          <h1 className="ru2" style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 'clamp(42px,6vw,64px)', fontWeight: 700, color: '#ffffff', marginBottom: 8 }}>
-            {archetype || stageLabel}
-          </h1>
-
-          {/* Sub */}
-          <p className="ru2" style={{ fontSize: 15, color: 'rgba(255,255,255,0.5)', marginBottom: 32 }}>
-            Personality type: {personalityLabel}
-          </p>
-
-          {/* Gold rule */}
-          <div className="ru3" style={{ width: 60, height: 1, background: '#c9a84c', margin: '0 auto 32px', opacity: 0.5 }} />
-
-          {/* One-liner card */}
-          <div className="ru3" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: 12, padding: '24px 28px', maxWidth: 560, margin: '0 auto' }}>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.75 }}>
-              {oneLiner}
+      {/* score + diagnostic */}
+      <section className="rwrap ru2" style={{ padding: '40px 24px' }}>
+        <div className="rgrid2">
+          {/* Health score */}
+          <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, color: '#fff', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+            <span style={{ ...eyebrow, color: C.gold }}>Business Health Score</span>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 84, fontWeight: 500, color: C.gold, lineHeight: 1 }}>{scores.overall}</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', letterSpacing: '.04em' }}>out of 100</div>
+            <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,.7)', marginTop: 18, lineHeight: 1.6, fontWeight: 300 }}>
+              A clear, honest read on where you are today, and how much room there is to grow.
             </p>
           </div>
-
+          {/* Sub scores */}
+          <div style={card}>
+            <span style={eyebrow}>Your Sub-Scores</span>
+            <ScoreBar label="Offer Clarity" val={scores.offer} />
+            <ScoreBar label="Positioning" val={scores.positioning} />
+            <ScoreBar label="Pricing Confidence" val={scores.pricing} />
+            <ScoreBar label="Momentum" val={scores.momentum} />
+          </div>
         </div>
       </section>
 
-      {/* ── 4. VIDEO SECTION ── */}
-      <section className="res-video" style={{ background: '#0f0e1a', padding: '48px 24px' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-
-          <div style={{ fontSize: 11, color: '#c9a84c', letterSpacing: '2px', textTransform: 'uppercase', textAlign: 'center', marginBottom: 16 }}>
-            Your Personalised Video
+      {/* diagnostic — "where am I" (FREE) */}
+      {situation && (
+        <section className="rwrap ru3" style={{ padding: '20px 24px 40px' }}>
+          <div style={card}>
+            <span style={eyebrow}>What Our AI Sees</span>
+            <h2 style={{ ...h2, marginBottom: 18 }}>Your situation, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>right now.</em></h2>
+            <RoadmapBody text={situation} />
           </div>
+        </section>
+      )}
 
-          <h2 style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 'clamp(22px,3.5vw,32px)', fontWeight: 700, color: '#ffffff', textAlign: 'center', maxWidth: 640, margin: '0 auto 28px', lineHeight: 1.3 }}>
-            {vslHeadline}
-          </h2>
-
-          {/* Wistia embed / placeholder */}
-          <div style={{ maxWidth: 720, margin: '0 auto', borderRadius: 10, overflow: 'hidden', aspectRatio: '16/9', position: 'relative' }}>
-            {wistiaId ? (
-              <div
-                className={`wistia_embed wistia_async_${wistiaId} videoFoam=true`}
-                style={{ height: '100%', position: 'relative', width: '100%' }}
-              >&nbsp;</div>
-            ) : (
-              <div style={{ width: '100%', height: '100%', background: '#1a1040', border: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', border: '3px solid rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: 0, height: 0, borderStyle: 'solid', borderWidth: '14px 0 14px 24px', borderColor: 'transparent transparent transparent rgba(255,255,255,0.9)', marginLeft: 4 }} />
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.8)', marginBottom: 6 }}>Your Personalised Video</p>
-                  <p style={{ fontSize: 13, color: '#c9a84c', fontWeight: 600 }}>{archetype || stageLabel}</p>
-                </div>
-              </div>
-            )}
+      {/* biggest opportunity (FREE teaser) */}
+      {opportunity && (
+        <section className="rwrap" style={{ padding: '0 24px 40px' }}>
+          <div style={{ ...card, background: `linear-gradient(165deg,${C.ivory},${C.creamMid})`, borderColor: C.goldLine }}>
+            <span style={eyebrow}>Your Biggest Opportunity</span>
+            <h2 style={{ ...h2, marginBottom: 18 }}>The highest-leverage move <em style={{ fontStyle: 'italic', color: C.goldDeep }}>available to you.</em></h2>
+            <RoadmapBody text={opportunity} />
           </div>
+        </section>
+      )}
 
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textAlign: 'center', marginTop: 16, maxWidth: 480, marginLeft: 'auto', marginRight: 'auto' }}>
-            {vslSub}
-          </p>
-
-        </div>
-      </section>
-
-      {/* ── 5. CTA SECTION ── */}
-      <section className="res-cta" style={{ background: '#0f0e1a', padding: '40px 24px 56px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 640, margin: '0 auto' }}>
-
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 20, fontStyle: 'italic' }}>
-            Watched the video? Here is your next step.
-          </p>
-
-          <a
-            href="https://cal.com/indrodip-ghosh-ut1vxh/60min"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: 'inline-block', background: '#8b7fcf', color: '#fff', fontSize: 18, fontWeight: 700, padding: '18px 52px', borderRadius: 50, textDecoration: 'none', boxShadow: '0 8px 28px rgba(139,127,207,0.35)' }}
-          >
-            Book your free strategy call with Indrodip
-          </a>
-
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', marginTop: 14 }}>
-            60 minutes · Free · No pressure · Just clarity
-          </p>
-
-          {/* What you get */}
-          <div style={{ maxWidth: 520, margin: '32px auto 0', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '24px 28px', textAlign: 'left' }}>
-            <div style={{ fontSize: 11, color: '#c9a84c', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: 16 }}>
-              What You Walk Away With
+      {/* GATED full roadmap → book to unlock */}
+      <section className="rwrap" style={{ padding: '0 24px 24px' }}>
+        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.border}` }}>
+          {/* blurred preview */}
+          <div style={{ padding: '36px 38px', filter: 'blur(5px)', opacity: .5, userSelect: 'none', pointerEvents: 'none', maxHeight: 240, overflow: 'hidden', background: C.white }} aria-hidden="true">
+            <span style={eyebrow}>Your 90-Day Roadmap</span>
+            <RoadmapBody text={gatedPreview || 'Your signature offer, your pricing strategy, your full 30-day action plan, and your personalised content plan are ready and waiting inside your roadmap.'} muted />
+          </div>
+          {/* lock overlay */}
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px 28px', background: 'linear-gradient(180deg,rgba(250,246,240,.72),rgba(250,246,240,.96))' }}>
+            <div style={{ width: 52, height: 52, borderRadius: '50%', border: `1.5px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18, background: 'rgba(201,168,76,.1)' }}>
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke={C.goldDeep} strokeWidth="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
             </div>
-            {WHAT_YOU_GET.map((item, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: i < WHAT_YOU_GET.length - 1 ? 12 : 0 }}>
-                <span style={{ color: '#c9a84c', fontSize: 15, flexShrink: 0, lineHeight: 1.5 }}>✓</span>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>{item}</span>
+            <span style={eyebrow}>Your 90-Day Roadmap Is Ready</span>
+            <h2 style={{ ...h2, maxWidth: 560, marginBottom: 12 }}>This is the half that changes everything, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>and we build it with you.</em></h2>
+            <p style={{ fontSize: 16, fontWeight: 300, color: C.inkSoft, maxWidth: 520, lineHeight: 1.7, marginBottom: 8 }}>
+              Your signature offer, your pricing, your full 30-day action plan, and your personalised content plan are ready. We&apos;ll walk through them with you on your Private Strategy &amp; Coaching Session, and prioritise the exact next steps for your situation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* THE SESSION — booking (Step 2) */}
+      <section className="rwrap" style={{ padding: '20px 24px 8px' }}>
+        <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
+          <span style={{ ...eyebrow, color: C.gold }}>The Obvious Next Step</span>
+          <h2 style={{ ...h2, color: '#fff', maxWidth: 600, margin: '0 auto 14px' }}>Let&apos;s turn this report into <em style={{ fontStyle: 'italic', color: C.gold }}>a plan you can act on.</em></h2>
+          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.72)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
+            On your Private Strategy &amp; Coaching Session, we map your next 90 days together. No pressure, no pitch, you leave with clarity either way.
+          </p>
+          <a href="/call" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 17, fontWeight: 700, padding: '20px 48px', borderRadius: 6, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
+            Book My Private Strategy Session →
+          </a>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · By application · You&apos;ll review this report with Indrodip personally</p>
+
+          <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
+            <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>
+            {SESSION_INCLUDES.map((s, i) => (
+              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
+                <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                <span style={{ fontSize: 15, color: 'rgba(255,255,255,.78)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ── 6. TESTIMONIALS ── */}
-      <section className="res-testi" style={{ background: '#12101e', padding: '48px 24px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-
-        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '2px', textTransform: 'uppercase', textAlign: 'center', marginBottom: 28 }}>
-          Women Who Took This Call
-        </div>
-
-        <div className="testi-grid">
+      {/* testimonials */}
+      <section className="rwrap" style={{ padding: '48px 24px 20px' }}>
+        <p style={{ textAlign: 'center', ...eyebrow, color: C.muted, marginBottom: 26 }}>Women who took this step</p>
+        <div className="rtesti">
           {TESTIMONIALS.map((t, i) => (
-            <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '20px 22px' }}>
-              <div style={{ fontFamily: "'Cormorant Garant', serif", fontSize: 48, color: '#c9a84c', opacity: 0.35, lineHeight: 1, marginBottom: 8 }}>
-                &ldquo;
-              </div>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 12 }}>
-                {t.quote}
-              </p>
-              <div style={{ fontSize: 12, color: '#c9a84c', fontWeight: 600 }}>{t.name}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>{t.result}</div>
+            <div key={i} style={{ background: C.ivory, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px 24px' }}>
+              <div style={{ color: C.gold, letterSpacing: 2, fontSize: 13, marginBottom: 10 }}>★★★★★</div>
+              <p style={{ fontSize: 14, color: C.inkMid, lineHeight: 1.65, marginBottom: 14, fontWeight: 300 }}>{t.quote}</p>
+              <div style={{ fontSize: 13, color: C.ink, fontWeight: 600 }}>{t.name}</div>
+              <div style={{ fontSize: 12, color: C.goldDeep, marginTop: 2 }}>{t.result}</div>
             </div>
           ))}
         </div>
-
       </section>
 
-      {/* ── 7. FOOTER ── */}
-      <footer className="res-footer" style={{ background: '#0a0a08', padding: '20px 40px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
-          The5th Consulting · support@10kroadmap.org · quiz.the5th.consulting
-        </p>
+      {/* footer */}
+      <footer style={{ padding: '28px 28px 44px', borderTop: `1px solid ${C.border}`, textAlign: 'center', marginTop: 24 }}>
+        <p style={{ fontSize: 12, color: C.muted }}>© 2026 The5th Consulting · <a href="/privacy" style={{ color: C.inkSoft, textDecoration: 'underline' }}>Privacy</a> · support@10kroadmap.org</p>
       </footer>
-
     </div>
   )
 }

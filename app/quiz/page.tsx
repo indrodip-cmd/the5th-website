@@ -2153,6 +2153,7 @@ export default function Page() {
   const [otpError, setOtpError] = useState('')
   const [turnstileToken, setTurnstileToken] = useState('')
   const [resendIn, setResendIn] = useState(0)
+  const [verified, setVerified] = useState(false)
   const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
   // Feature flag: when '1', the email gate runs the OTP verification flow.
   // Off by default so deploying this code never changes the live flow until activated.
@@ -2423,11 +2424,12 @@ export default function Page() {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || data.error) { setOtpError(data.error || 'That code did not work. Please try again.'); setOtpDigits(['', '', '', '', '', '']); setTimeout(() => otpRefs.current[0]?.focus(), 40); setSubmitting(false); return }
-      // Verified — the signed session cookie is now set. Continue to the report.
+      // Verified — the signed session cookie is now set. Show a brief success beat, then continue.
       sessionStorage.setItem('quiz_name', name)
       sessionStorage.setItem('quiz_email', email.trim().toLowerCase())
       sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
-      window.location.href = '/quiz/results'
+      setVerified(true)
+      setTimeout(() => { window.location.href = '/quiz/results' }, 1100)
     } catch { setOtpError('Something went wrong. Please try again.'); setSubmitting(false) }
   }
   const handleOtpDigit = (i: number, val: string) => {
@@ -2811,7 +2813,11 @@ export default function Page() {
             <button className="gbtn" onClick={handleEmailSubmit} disabled={submitting}>
               {submitting ? 'Sending your code…' : 'Show Me My Report →'}
             </button>
-            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 14 }}>🔒 We&apos;ll email you a quick code to confirm it&apos;s you. Your information is private, and we never spam.</p>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 14, lineHeight: 1.6 }}>
+              {REQUIRE_OTP
+                ? '🔒 Your report is private. To protect it, we’ll email you a quick 6-digit code, no password needed, takes seconds.'
+                : '🔒 Your information is private. We never spam, ever.'}
+            </p>
           </div>
         </div>
       </div>
@@ -2824,44 +2830,71 @@ export default function Page() {
       <style>{CSS}</style>
       <SiteHeader screen="email" currentQ={questions.length} />
       <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '110px 24px 64px' }}>
-        <div className="afu-1" style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(201,168,76,.12)', border: '1px solid var(--gold-line, rgba(201,168,76,.32))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px', fontSize: 24 }}>✉️</div>
-          <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 16 }}>Almost There</div>
-          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(28px, 4.5vw, 42px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 12, lineHeight: 1.06, letterSpacing: '-.02em' }}>
-            Check your inbox for your <em style={{ fontStyle: 'italic', color: '#B0902F' }}>6-digit code</em>
-          </h2>
-          <p style={{ fontSize: 16, fontWeight: 300, color: '#5a5550', marginBottom: 30, lineHeight: 1.65 }}>
-            We sent it to <b style={{ color: '#1A1A2E', fontWeight: 600 }}>{email}</b>. Enter it below and your report opens automatically.
-          </p>
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
-            {otpDigits.map((d, i) => (
-              <input
-                key={i}
-                ref={el => { otpRefs.current[i] = el }}
-                className={`otp-box${d ? ' filled' : ''}${otpError ? ' otp-err' : ''}`}
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                maxLength={1}
-                value={d}
-                aria-label={`Digit ${i + 1}`}
-                onChange={e => handleOtpDigit(i, e.target.value.replace(/\D/g, ''))}
-                onKeyDown={e => handleOtpKey(i, e)}
-              />
-            ))}
+        {verified ? (
+          /* ── Success ── */
+          <div className="popup-in" style={{ maxWidth: 420, width: '100%', textAlign: 'center' }}>
+            <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'rgba(28,74,50,.1)', border: '1.5px solid #1C4A32', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', color: '#1C4A32', fontSize: 36, fontWeight: 700 }}>✓</div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px, 5vw, 44px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 12, lineHeight: 1.05, letterSpacing: '-.02em' }}>
+              You&apos;re <em style={{ fontStyle: 'italic', color: '#1C4A32' }}>verified.</em>
+            </h2>
+            <p style={{ fontSize: 16.5, fontWeight: 300, color: '#5a5550', lineHeight: 1.7 }}>Unlocking your private AI Business Assessment…</p>
+            <div style={{ height: 3, maxWidth: 220, margin: '26px auto 0', background: '#EAE3D8', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ height: '100%', background: 'linear-gradient(90deg,#1C4A32,#C9A84C)', borderRadius: 3, width: '100%', animation: 'otpFill 1s ease forwards' }} />
+            </div>
+            <style>{`@keyframes otpFill{from{width:0}to{width:100%}}`}</style>
           </div>
-          {otpError && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14 }}>{otpError}</p>}
-          <button className="gbtn" onClick={handleOtpSubmit} disabled={submitting} style={{ maxWidth: 320, margin: '6px auto 0' }}>
-            {submitting ? 'Verifying…' : 'Verify & See My Report →'}
-          </button>
-          <p style={{ fontSize: 13, color: '#8A8075', marginTop: 18 }}>
-            Didn&apos;t get it?{' '}
-            {resendIn > 0
-              ? <span style={{ color: '#8A8075' }}>Resend in {resendIn}s</span>
-              : <button onClick={handleResend} style={{ background: 'none', border: 'none', color: '#1C4A32', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', fontSize: 13, padding: 0 }}>Resend code</button>}
-            {'  ·  '}
-            <button onClick={() => { setScreen('email'); setOtpError('') }} style={{ background: 'none', border: 'none', color: '#5a5550', cursor: 'pointer', fontSize: 13, padding: 0, textDecoration: 'underline' }}>Change email</button>
-          </p>
-        </div>
+        ) : (
+          /* ── Code entry ── */
+          <div className="afu-1" style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(201,168,76,.12)', border: '1px solid rgba(201,168,76,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px', fontSize: 24 }}>🔒</div>
+            <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 16 }}>Secure Access</div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(27px, 4.4vw, 40px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 12, lineHeight: 1.08, letterSpacing: '-.02em' }}>
+              Protecting your private <em style={{ fontStyle: 'italic', color: '#B0902F' }}>AI report</em>
+            </h2>
+            <p style={{ fontSize: 16, fontWeight: 300, color: '#5a5550', marginBottom: 28, lineHeight: 1.7, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+              Your assessment contains personal business insights only you should see. We&apos;ve sent a secure 6-digit code to <b style={{ color: '#1A1A2E', fontWeight: 600 }}>{email}</b>, no password needed.
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
+              {otpDigits.map((d, i) => (
+                <input
+                  key={i}
+                  ref={el => { otpRefs.current[i] = el }}
+                  className={`otp-box${d ? ' filled' : ''}${otpError ? ' otp-err' : ''}`}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={1}
+                  value={d}
+                  aria-label={`Verification code digit ${i + 1}`}
+                  onChange={e => handleOtpDigit(i, e.target.value.replace(/\D/g, ''))}
+                  onKeyDown={e => handleOtpKey(i, e)}
+                />
+              ))}
+            </div>
+            {otpError && <p role="alert" style={{ fontSize: 13, color: '#ef4444', marginBottom: 14 }}>{otpError}</p>}
+            <button className="gbtn" onClick={handleOtpSubmit} disabled={submitting} style={{ maxWidth: 320, margin: '6px auto 0' }}>
+              {submitting ? 'Unlocking…' : 'Unlock My Report →'}
+            </button>
+            <p style={{ fontSize: 13, color: '#8A8075', marginTop: 18 }}>
+              Didn&apos;t get it?{' '}
+              {resendIn > 0
+                ? <span style={{ color: '#8A8075' }}>Resend in {resendIn}s</span>
+                : <button onClick={handleResend} style={{ background: 'none', border: 'none', color: '#1C4A32', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', fontSize: 13, padding: 0 }}>Resend code</button>}
+              {'  ·  '}
+              <button onClick={() => { setScreen('email'); setOtpError('') }} style={{ background: 'none', border: 'none', color: '#5a5550', cursor: 'pointer', fontSize: 13, padding: 0, textDecoration: 'underline' }}>Change email</button>
+            </p>
+            {/* Trust indicators */}
+            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '8px 18px', margin: '28px auto 0', maxWidth: 440, paddingTop: 22, borderTop: '1px solid #E2DCD2' }}>
+              {[['🔒', 'Private to you'], ['🛡️', 'Only you can access it'], ['📧', 'No password needed'], ['⚡', 'Under 10 seconds']].map(([icon, label]) => (
+                <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: '#5a5550' }}>
+                  <span aria-hidden="true">{icon}</span>{label}
+                </span>
+              ))}
+            </div>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 16, lineHeight: 1.6, maxWidth: 380, marginLeft: 'auto', marginRight: 'auto' }}>
+              Your roadmap is saved securely, so you can return any time and pick up right where you left off.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -16,7 +16,7 @@ const CAL_LINK = 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
 // ═══════════════════════════════════════════════════
 function ctaButton(text: string, url: string): string {
   return `<div style="text-align:center;margin:28px 0;">
-    <a href="${url}" style="display:inline-block;background:#1d5c3a;color:#ffffff;
+    <a href="${url}" style="display:inline-block;background:#1C4A32;color:#ffffff;
       text-decoration:none;padding:14px 36px;font-weight:700;font-size:14px;
       border-radius:4px;font-family:sans-serif;letter-spacing:0.5px;">
       ${text} &#8594;
@@ -26,7 +26,7 @@ function ctaButton(text: string, url: string): string {
 
 function ctaSecondary(text: string, url: string): string {
   return `<div style="text-align:center;margin:12px 0 28px;">
-    <a href="${url}" style="display:inline-block;color:#1d5c3a;
+    <a href="${url}" style="display:inline-block;color:#1C4A32;
       text-decoration:underline;font-size:13px;font-family:sans-serif;">
       ${text}
     </a>
@@ -41,19 +41,19 @@ function buildEmail(name: string, content: string): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
-<body style="margin:0;padding:0;background:#f6f4f0;font-family:Georgia,serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4f0;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#FAF6F0;font-family:Georgia,serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F0;padding:32px 16px;">
 <tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-  <tr><td style="background:#060a07;padding:20px 40px;border-radius:12px 12px 0 0;">
+  <tr><td style="background:#2E1A35;padding:20px 40px;border-radius:12px 12px 0 0;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td style="color:#ffffff;font-weight:700;font-size:12px;
           letter-spacing:2px;font-family:sans-serif;">
           THE5TH CONSULTING
         </td>
-        <td align="right" style="color:#3a9a64;font-size:10px;
+        <td align="right" style="color:#C9A84C;font-size:10px;
           font-weight:700;letter-spacing:1px;font-family:sans-serif;">
           AI COACHING SERIES
         </td>
@@ -62,7 +62,7 @@ function buildEmail(name: string, content: string): string {
   </td></tr>
 
   <tr><td style="background:#ffffff;padding:40px 40px 32px;
-    border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;">
+    border-left:1px solid #E2DCD2;border-right:1px solid #E2DCD2;">
     <p style="font-size:14px;color:#888;font-family:sans-serif;
       margin:0 0 24px;">Hey ${firstName},</p>
     <div style="font-size:15px;color:#2d2d2d;line-height:1.85;">
@@ -74,8 +74,8 @@ function buildEmail(name: string, content: string): string {
     </p>
   </td></tr>
 
-  <tr><td style="background:#f6f4f0;padding:20px 40px;
-    border:1px solid #e8e8e8;border-top:none;border-radius:0 0 12px 12px;">
+  <tr><td style="background:#FAF6F0;padding:20px 40px;
+    border:1px solid #E2DCD2;border-top:none;border-radius:0 0 12px 12px;">
     <p style="margin:0;font-size:11px;color:#aaa;font-family:sans-serif;text-align:center;">
       The5th Consulting &nbsp;|&nbsp; support@10kroadmap.org
       &nbsp;|&nbsp; quiz.the5th.consulting
@@ -90,8 +90,8 @@ function buildEmail(name: string, content: string): string {
 }
 
 function taskBox(title: string, content: string): string {
-  return `<div style="background:#eaf4ee;border-left:3px solid #1d5c3a;padding:20px 24px;margin:24px 0;border-radius:0 8px 8px 0;">
-    <p style="margin:0 0 8px;font-weight:700;color:#1d5c3a;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Today's Task</p>
+  return `<div style="background:#eaf4ee;border-left:3px solid #1C4A32;padding:20px 24px;margin:24px 0;border-radius:0 8px 8px 0;">
+    <p style="margin:0 0 8px;font-weight:700;color:#1C4A32;font-size:13px;letter-spacing:1px;text-transform:uppercase;">Today's Task</p>
     <p style="margin:0 0 8px;color:#0a0a0a;"><strong>${title}</strong></p>
     ${content}
   </div>`
@@ -162,8 +162,8 @@ function makeDay0(sequence: string): { subject: string; html: (name: string, _vi
       <p><strong>The blueprint doesn't change your income. What you do with it does.</strong></p>
       <p>Here's how I want you to use what you just received: read the whole thing once without highlighting or taking notes. Read it like a story about your business — because that's exactly what it is. Every word in that PDF came from your 20 answers.</p>
       <p>Then read it again. Circle the one section that makes you think "I already know this is the problem." That one section is your starting point. Everything else can wait.</p>
-      <div style="background:#f6f9f7;border-left:3px solid #1d5c3a;padding:20px 24px;margin:24px 0;border-radius:0 8px 8px 0;">
-        <p style="margin:0 0 10px;font-weight:700;color:#1d5c3a;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-family:sans-serif;">Your Free 7-Day Coaching — What's Coming</p>
+      <div style="background:#f6f9f7;border-left:3px solid #1C4A32;padding:20px 24px;margin:24px 0;border-radius:0 8px 8px 0;">
+        <p style="margin:0 0 10px;font-weight:700;color:#1C4A32;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-family:sans-serif;">Your Free 7-Day Coaching — What's Coming</p>
         <p style="margin:0 0 14px;font-size:13px;color:#555;font-family:sans-serif;">One email. One task. No fluff. Built for ${archetypeLabel}.</p>
         <ul style="margin:0;padding:0;list-style:none;">
           ${previewHtml}
@@ -171,7 +171,7 @@ function makeDay0(sequence: string): { subject: string; html: (name: string, _vi
       </div>
       <p>This is not a newsletter. This is a coaching sequence. Treat it like one.</p>
       ${ctaButton("Book a Free Strategy Call with Indrodip", CAL_LINK)}
-      <p style="color:#888;font-size:13px;margin-top:24px;">P.S. If you already know you don't want to wait 7 days — book a free 60-minute strategy call now: <a href="${CAL_LINK}" style="color:#1d5c3a;">${CAL_LINK}</a>. I open a limited number of spots each month. They go fast.</p>
+      <p style="color:#888;font-size:13px;margin-top:24px;">P.S. If you already know you don't want to wait 7 days — book a free 60-minute strategy call now: <a href="${CAL_LINK}" style="color:#1C4A32;">${CAL_LINK}</a>. I open a limited number of spots each month. They go fast.</p>
     `)
   }
 }

@@ -1033,7 +1033,7 @@ const LP_BENEFITS = [
   { num:'01', title:'Your $10K Personalised Blueprint',
     body:'20 answers analysed against 2,400 real coaching profiles. Your niche, your offer, your pricing, your 30-day plan. Not a template. Not recycled advice. Yours.' },
   { num:'02', title:'7 Days of AI Coaching Emails',
-    body:'For a week after your quiz, The5th AI sends you one coaching email a day written from your exact answers. Real homework. Real strategies. It reads like someone who actually knows your situation — because it does.' },
+    body:'For a week after your assessment, The5th AI sends you one coaching email a day written from your exact answers. Real homework. Real strategies. It reads like someone who actually knows your situation — because it does.' },
   { num:'03', title:'Your Personalised Video',
     body:'Based on where you are in your business journey, we created a short video speaking directly to your stage. Not a webinar replay. Just the one thing you probably need to hear right now.' },
 ]
@@ -1050,7 +1050,7 @@ const LP_TESTIMONIALS = [
 ]
 
 const LP_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Caveat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@400;600;700&display=swap');
 
 @keyframes redpulse {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1064,17 +1064,17 @@ const LP_CSS = `
 /* ─── nav ─── */
 .qp-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
   justify-content:center;padding:20px 60px;
-  background:rgba(139,127,207,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+  background:rgba(61,38,69,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
 .qp-logo{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;
   color:#fff;letter-spacing:.04em;}
-.qp-nav-btn{background:#1c4a32;color:#fff;font-family:'DM Sans',sans-serif;
+.qp-nav-btn{background:linear-gradient(180deg,#E4C879,#C9A84C 60%,#B0902F);color:#2E1A35;font-family:'DM Sans',sans-serif;
   font-size:13px;font-weight:700;padding:10px 24px;border-radius:50px;
   border:none;cursor:pointer;letter-spacing:.03em;transition:transform .2s,box-shadow .2s;
-  box-shadow:0 4px 14px rgba(28,74,50,.4);}
-.qp-nav-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(28,74,50,.5);}
+  box-shadow:0 4px 14px rgba(201,168,76,.4);}
+.qp-nav-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.5);}
 
 /* ─── hero ─── */
-.qp-hero{background:#8b7fcf;position:relative;overflow:visible;
+.qp-hero{background:#3D2645;position:relative;overflow:visible;
   padding:120px 40px 0;text-align:center;}
 .qp-hero-grain{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.055;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
@@ -1087,16 +1087,16 @@ const LP_CSS = `
 .qp-hero-sub{font-size:18px;line-height:1.75;color:rgba(255,255,255,.75);
   max-width:520px;margin:0 auto 40px;}
 .qp-btn-gold{display:inline-flex;align-items:center;justify-content:center;
-  background:#1c4a32;color:#fff;font-family:'DM Sans',sans-serif;font-size:16px;
+  background:linear-gradient(180deg,#E4C879,#C9A84C 60%,#B0902F);color:#2E1A35;font-family:'DM Sans',sans-serif;font-size:16px;
   font-weight:700;padding:18px 48px;border-radius:50px;border:none;cursor:pointer;
-  letter-spacing:.02em;box-shadow:0 8px 28px rgba(28,74,50,.4);
+  letter-spacing:.02em;box-shadow:0 8px 28px rgba(201,168,76,.4);
   transition:transform .25s,box-shadow .25s;}
-.qp-btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(28,74,50,.5);}
+.qp-btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(201,168,76,.5);}
 .qp-btn-ghost{display:inline-flex;align-items:center;justify-content:center;
-  background:transparent;color:#111;font-family:'DM Sans',sans-serif;font-size:16px;
-  font-weight:700;padding:16px 48px;border-radius:50px;border:2px solid #111;
+  background:transparent;color:#fff;font-family:'DM Sans',sans-serif;font-size:16px;
+  font-weight:700;padding:16px 48px;border-radius:50px;border:1.5px solid rgba(255,255,255,.5);
   cursor:pointer;letter-spacing:.02em;transition:all .25s;}
-.qp-btn-ghost:hover{background:#111;color:#fff;transform:translateY(-2px);}
+.qp-btn-ghost:hover{background:#fff;color:#2E1A35;border-color:#fff;transform:translateY(-2px);}
 .qp-hero-graphic{display:block;width:100%;max-width:none;
   position:absolute;bottom:0;left:0;z-index:0;pointer-events:none;}
 
@@ -1120,7 +1120,7 @@ const LP_CSS = `
 .qp-arch-btn{text-align:center;}
 
 /* ─── about section ─── */
-.qp-about-section{background:#8b7fcf;position:relative;overflow:hidden;padding:100px 60px;}
+.qp-about-section{background:#3D2645;position:relative;overflow:hidden;padding:100px 60px;}
 .qp-about-grain{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.055;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 .qp-about-inner{max-width:1000px;margin:0 auto;position:relative;z-index:1;}
@@ -1132,10 +1132,10 @@ const LP_CSS = `
   color:#111;margin-bottom:24px;line-height:1.3;}
 .qp-bullet-list{list-style:none;padding:0;margin:0;}
 .qp-bullet-li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
-.qp-bullet-star{color:#e8b84b;font-size:20px;flex-shrink:0;margin-top:1px;line-height:1;}
+.qp-bullet-star{color:#C9A84C;font-size:20px;flex-shrink:0;margin-top:1px;line-height:1;}
 .qp-bullet-content{font-size:15px;color:#222;line-height:1.65;}
 .qp-bullet-title{font-weight:700;display:block;margin-bottom:2px;}
-.qp-step-num{width:26px;height:26px;border-radius:50%;background:#8b7fcf;
+.qp-step-num{width:26px;height:26px;border-radius:50%;background:#3D2645;
   color:#fff;font-size:13px;font-weight:700;display:inline-flex;
   align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .qp-card-closing{font-size:14px;color:#555;line-height:1.7;
@@ -1143,7 +1143,7 @@ const LP_CSS = `
 .qp-about-btn{text-align:center;}
 
 /* ─── transition section ─── */
-.qp-transition{background:#8b7fcf;padding:80px 40px;text-align:center;
+.qp-transition{background:#3D2645;padding:80px 40px;text-align:center;
   position:relative;overflow:hidden;}
 .qp-transition-inner{max-width:900px;margin:0 auto;position:relative;}
 .qp-transition-img{width:100%;max-width:700px;display:block;margin:0 auto;}
@@ -1160,7 +1160,7 @@ const LP_CSS = `
 .qp-dark-cta{background:#1c4a32;padding:80px 60px;text-align:center;}
 .qp-dark-inner{max-width:680px;margin:0 auto;}
 .qp-btn-dark-gold{display:inline-flex;align-items:center;justify-content:center;
-  background:#e8b84b;color:#111;font-family:'DM Sans',sans-serif;font-size:16px;
+  background:#C9A84C;color:#111;font-family:'DM Sans',sans-serif;font-size:16px;
   font-weight:700;padding:18px 48px;border-radius:50px;border:none;cursor:pointer;
   letter-spacing:.02em;box-shadow:0 8px 28px rgba(232,184,75,.45);
   transition:transform .25s,box-shadow .25s;}
@@ -1442,7 +1442,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               animate={{
                 boxShadow: [
                   '0 8px 32px rgba(15,17,23,0.4), 0 0 0px rgba(15,17,23,0)',
-                  '0 12px 48px rgba(15,17,23,0.7), 0 0 40px rgba(139,127,207,0.4)',
+                  '0 12px 48px rgba(15,17,23,0.7), 0 0 40px rgba(61,38,69,0.4)',
                   '0 8px 32px rgba(15,17,23,0.4), 0 0 0px rgba(15,17,23,0)',
                 ],
                 opacity: [1, 0.88, 1],
@@ -1672,7 +1672,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               'I took the assessment, watched the personalised training, and immediately realised where I was overcomplicating my sales process. Within days, I closed two new clients.',
               'The framework Indrodip shared completely transformed my content. People are responding differently, engaging more deeply, and I finally feel confident in my messaging.',
               'My biggest breakthrough was realising that pricing — not my offer — was the real bottleneck. I finally feel comfortable charging $3,000 for my coaching.',
-              "I've taken dozens of business quizzes over the years. This was the first one that actually felt personalised and gave me practical next steps.",
+              "I've taken dozens of business assessments over the years. This was the first one that actually felt personalised and gave me practical next steps.",
               'The roadmap felt like having a business strategist analyse my entire business and tell me exactly what to focus on next.',
             ].map((quote, i) => (
               <motion.div key={i} className="qp-proof-card" variants={cardFadeUp}>
@@ -1694,10 +1694,10 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             transition={tr(0)}
           >
             <div className="qp-arch-top-left">
-              <div style={{ fontFamily:"'Caveat',cursive", fontSize:22, fontWeight:600, color:'#8b7fcf', marginBottom:6 }}>find out which one you are</div>
+              <div style={{ fontFamily:"'Caveat',cursive", fontSize:22, fontWeight:600, color:'#3D2645', marginBottom:6 }}>find out which one you are</div>
               <svg width="28" height="30" viewBox="0 0 28 30" fill="none" style={{ display:'block', margin:'0 auto 16px' }}>
-                <path d="M14 2 C14 2 20 10 18 20 C17 26 10 28 10 28" stroke="#8b7fcf" strokeWidth="1.8" strokeLinecap="round"/>
-                <path d="M6 24 L10 29 L15 25" stroke="#8b7fcf" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M14 2 C14 2 20 10 18 20 C17 26 10 28 10 28" stroke="#3D2645" strokeWidth="1.8" strokeLinecap="round"/>
+                <path d="M6 24 L10 29 L15 25" stroke="#3D2645" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <h2 className="qp-sect-h"><em style={{ fontStyle:'italic', color:'#1c4a32' }}>Four</em> archetypes. Four different ways to build a successful coaching business.</h2>
               <p className="qp-sect-sub">
@@ -1868,7 +1868,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               {
                 name: 'Michelle Roberts',
                 result: '2 members upgraded in 24 hours',
-                text: 'Within 24 hours of making a few simple adjustments, two members upgraded into higher-level support and became paying clients. The quiz gave me clarity and confidence.',
+                text: 'Within 24 hours of making a few simple adjustments, two members upgraded into higher-level support and became paying clients. The assessment gave me clarity and confidence.',
               },
               {
                 name: 'Amanda Pierce',
@@ -1888,7 +1888,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               {
                 name: 'Melissa Hartman',
                 result: 'Months of confusion cleared instantly',
-                text: 'The quiz gave me something I had been searching for months: clarity. I now know exactly what to focus on. My confidence has grown and my content is stronger.',
+                text: 'The assessment gave me something I had been searching for months: clarity. I now know exactly what to focus on. My confidence has grown and my content is stronger.',
               },
             ].map((t, i) => (
               <motion.div
@@ -1993,7 +1993,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
           <div className="qp-footer-links">
             <div className="qp-footer-col">
               <h4>Product</h4>
-              <a href="#">Quiz</a>
+              <a href="#">Assessment</a>
               <a href="#">Platform</a>
               <a href="#">Coaching</a>
             </div>
@@ -2562,7 +2562,7 @@ export default function Page() {
 
           {/* Benefits */}
           <div style={{ marginBottom: 32, display: 'inline-block', textAlign: 'left' }}>
-            {['Your full AI-generated 15-day roadmap', 'Daily tasks built from your quiz answers', 'AI business coach available 24/7', 'Revenue tracker toward your $5K goal', '7-day personalized email coaching series'].map(item => (
+            {['Your full AI-generated 15-day roadmap', 'Daily tasks built from your assessment answers', 'AI business coach available 24/7', 'Revenue tracker toward your $5K goal', '7-day personalized email coaching series'].map(item => (
               <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
                 <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#e8f0eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#225840', fontWeight: 700, flexShrink: 0 }}>✓</span>
                 <span style={{ fontSize: 15, color: '#374151' }}>{item}</span>

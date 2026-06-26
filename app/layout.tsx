@@ -3,15 +3,15 @@ import { Analytics } from "@vercel/analytics/next";
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: "Discover Your Expert Income Archetype™ | The5th Consulting",
-  description: "Find out exactly why you're stuck and get a personalised growth blueprint in 5 minutes. Built for coaches and experts over 40.",
+  title: "The5th AI Business Assessment | The5th Consulting",
+  description: "A premium AI assessment that reads your coaching or consulting business, gives you a Business Health Score, names your biggest opportunity, and builds your personalised 90-day roadmap. Built for women over 40.",
   openGraph: {
-    title: "Discover Your Expert Income Archetype™ | The5th Consulting",
-    description: "Find out exactly why you're stuck and get a personalised growth blueprint in 5 minutes. Built for coaches and experts over 40.",
+    title: "The5th AI Business Assessment | The5th Consulting",
+    description: "Get a Business Health Score, your biggest opportunity, and a personalised 90-day roadmap, built by AI for women turning expertise into income.",
   },
   twitter: {
-    title: "Discover Your Expert Income Archetype™ | The5th Consulting",
-    description: "Find out exactly why you're stuck and get a personalised growth blueprint in 5 minutes. Built for coaches and experts over 40.",
+    title: "The5th AI Business Assessment | The5th Consulting",
+    description: "Get a Business Health Score, your biggest opportunity, and a personalised 90-day roadmap, built by AI for women turning expertise into income.",
   },
   icons: {
     icon: '/favicon.svg',
@@ -47,7 +47,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body style={{ margin: 0, padding: 0, background: '#0a0f0a' }}>{children}<Analytics /></body>
+      <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<Analytics /></body>
     </html>
   );
 }

@@ -166,17 +166,6 @@ ul{list-style:none}
 .stepCard__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:8px}
 .stepCard__p{font-size:.95rem;font-weight:300;line-height:1.6;color:var(--ink-soft)}
 
-/* GLIMPSE INSIDE (screenshots) */
-.glimpse{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1040px;margin:0 auto}
-@media(max-width:820px){.glimpse{grid-template-columns:1fr;max-width:520px}}
-.shotCard{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 22px 56px -38px rgba(46,26,53,.5);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
-.shotCard:hover{transform:translateY(-6px);box-shadow:0 30px 64px -36px rgba(46,26,53,.55)}
-.shotCard__img{aspect-ratio:4/3;overflow:hidden;background:var(--cream-deep);border-bottom:1px solid var(--border)}
-.shotCard__img img{width:100%;height:100%;object-fit:cover;object-position:top}
-.shotCard__body{padding:22px 24px 26px}
-.shotCard__tag{font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:8px}
-.shotCard__h{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:6px}
-.shotCard__p{font-size:.9rem;font-weight:300;line-height:1.55;color:var(--ink-soft)}
 
 /* CASE STUDIES */
 .cases{display:grid;gap:26px;max-width:980px;margin:0 auto}
@@ -257,6 +246,25 @@ ul{list-style:none}
 .founder__sig-nm{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff}
 .founder__sig-ro{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:4px}
 
+/* THE CALL (real coaching session) */
+.theCall{display:grid;grid-template-columns:1fr 1.05fr;gap:54px;align-items:center;max-width:1040px;margin:0 auto}
+@media(max-width:860px){.theCall{grid-template-columns:1fr;gap:34px}.theCall__media{max-width:520px;margin:0 auto}}
+.theCall__media{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:0 34px 78px -42px rgba(46,26,53,.5);background:var(--cream-deep)}
+.theCall__intro{font-size:1.12rem;font-weight:300;line-height:1.7;color:var(--ink-mid);margin-bottom:24px}
+.theCall__intro b{font-weight:600;color:var(--ink)}
+.vList{display:grid;gap:0;margin-bottom:24px}
+.vList li{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);font-size:1.02rem;font-weight:300;line-height:1.55;color:var(--ink-mid)}
+.vList li:last-child{border-bottom:none}
+.vList li b{font-weight:600;color:var(--ink)}
+.vList__i{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(28,74,50,.09);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;margin-top:2px}
+.theCall__safe{font-size:1rem;font-weight:300;line-height:1.65;color:var(--ink-soft);padding:16px 0 4px 18px;border-left:2px solid var(--gold);margin-bottom:26px}
+.theCall__safe b{color:var(--gold-deep);font-weight:600}
+.callQuote{background:var(--ivory);border:1px solid var(--gold-line);border-radius:12px;padding:24px 26px;display:flex;gap:16px;align-items:center;margin-bottom:28px}
+.callQuote img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--gold-line)}
+.callQuote__q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;line-height:1.35;color:var(--ink)}
+.callQuote__by{font-size:.8rem;color:var(--muted);margin-top:6px;font-family:'DM Sans',sans-serif;font-style:normal}
+.callQuote__by b{color:var(--ink);font-weight:600}
+
 /* DIFFERENT */
 .diff{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:940px;margin:0 auto}
 @media(max-width:720px){.diff{grid-template-columns:1fr}}
@@ -281,6 +289,7 @@ ul{list-style:none}
 
 /* WHAT NEXT */
 .whatNext{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;max-width:1020px;margin:0 auto}
+.whatNext--solo{display:block;max-width:740px}
 @media(max-width:860px){.whatNext{grid-template-columns:1fr;gap:36px}.whatNext__media{order:-1;max-width:480px;margin:0 auto}}
 .whatNext__media{border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 30px 70px -40px rgba(46,26,53,.5);background:var(--cream-deep)}
 .nstep{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border)}
@@ -458,29 +467,34 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- ════════ A GLIMPSE INSIDE (screenshots) ════════ -->
+<!-- ════════ THIS IS A REAL COACHING CALL ════════ -->
 <section class="sec">
   <div class="wrap">
     <div class="secHead" data-up>
-      <span class="eyebrow eyebrow--c">A Glimpse Inside</span>
-      <h2 class="h2">You'll never be left to <em>figure it out alone.</em></h2>
-      <p class="lead">Real coaching, real tools, a real room of women, the moment you need them.</p>
+      <span class="eyebrow eyebrow--c">This Is Not a Sales Call</span>
+      <h2 class="h2">It's a real coaching session. <em>You'll leave with a plan.</em></h2>
     </div>
-    <div class="glimpse">
-      <div class="shotCard" data-up>
-        <div class="shotCard__img"><img src="/public/images/coaching-session.png" alt="A 1:1 coaching session with Indrodip" loading="lazy"></div>
-        <div class="shotCard__body"><div class="shotCard__tag">Live Coaching</div><h3 class="shotCard__h">Direct access, every week</h3><p class="shotCard__p">Bring your real situation and leave with a specific answer, not a recording.</p></div>
-      </div>
-      <div class="shotCard" data-up>
-        <div class="shotCard__img"><img src="/public/images/zigzag-ai.png" alt="The5th AI, your personal CMO" loading="lazy"></div>
-        <div class="shotCard__body"><div class="shotCard__tag">The5th AI</div><h3 class="shotCard__h">Your personal CMO, 24/7</h3><p class="shotCard__p">Trained on our exact frameworks. Writes your offers, emails, and scripts on demand.</p></div>
-      </div>
-      <div class="shotCard" data-up>
-        <div class="shotCard__img"><img src="/public/images/highlight-content.png" alt="A post inside the private community" loading="lazy"></div>
-        <div class="shotCard__body"><div class="shotCard__tag">The Community</div><h3 class="shotCard__h">A private room of women</h3><p class="shotCard__p">Accomplished women who are building, not bystanding, cheering each other on.</p></div>
+    <div class="theCall">
+      <div class="theCall__media" data-up><img src="/public/images/coaching-session.png" alt="A 1:1 coaching call with Indrodip" loading="lazy"></div>
+      <div class="theCall__copy" data-up>
+        <p class="theCall__intro">In this call, Indrodip will map your <b>exact roadmap to $10K a month within 120 days</b>. Most women tell us they've never had a conversation quite like it.</p>
+        <ul class="vList">
+          <li><span class="vList__i">✓</span><span>We'll understand your real <b>psychology with money and business</b>, the quiet beliefs shaping your decisions.</span></li>
+          <li><span class="vList__i">✓</span><span>We'll look closely at <b>your offer</b>, what you sell, to whom, and for how much.</span></li>
+          <li><span class="vList__i">✓</span><span>We'll pinpoint the <b>one bottleneck</b> truly holding you back right now.</span></li>
+          <li><span class="vList__i">✓</span><span>You'll leave with <b>specific things to do in the next 30 days</b> to start making money.</span></li>
+        </ul>
+        <p class="theCall__safe">And if we decide we're <b>not the right fit</b> for each other? You'll still walk away with insight worth far more than the hour you spent.</p>
+        <div class="callQuote">
+          <img src="/public/clients/jeanne.jpg" alt="Jeanne" width="52" height="52" loading="lazy" onerror="this.style.display='none'">
+          <div>
+            <div class="callQuote__q">"That one call was worth more than a $10,000 mastermind."</div>
+            <div class="callQuote__by"><b>Jeanne</b> · after her conversation with Indrodip</div>
+          </div>
+        </div>
+        <a href="#apply" class="btnGold">Book My Coaching Call →</a>
       </div>
     </div>
-    <p class="bridge" style="margin-top:60px" data-up>It's a system, a guide, and a room, working together. <b>Here's what it produces.</b></p>
   </div>
 </section>
 
@@ -695,15 +709,13 @@ ul{list-style:none}
       <span class="eyebrow eyebrow--c">What Happens After You Apply</span>
       <h2 class="h2">No surprises. <em>Just a calm, clear path.</em></h2>
     </div>
-    <div class="whatNext">
-      <div>
-        <div class="nstep" data-up><span class="nstep__n">1</span><div><div class="nstep__h">You apply in about 2 minutes</div><p class="nstep__p">A few thoughtful questions, no payment, no pressure. Just enough for us to understand where you are.</p></div></div>
-        <div class="nstep" data-up><span class="nstep__n">2</span><div><div class="nstep__h">We personally review it</div><p class="nstep__p">We read every application and prepare for your specific situation, so the call is about you from the first minute.</p></div></div>
-        <div class="nstep" data-up><span class="nstep__n">3</span><div><div class="nstep__h">You choose a time that suits you</div><p class="nstep__p">Instant confirmation and a calendar invite, in your time zone. Nothing to prepare.</p></div></div>
-        <div class="nstep" data-up><span class="nstep__n">4</span><div><div class="nstep__h">We map your plan together</div><p class="nstep__p">A calm, honest conversation. You leave with a clear next step, whether or not we ever work together.</p></div></div>
-      </div>
-      <div class="whatNext__media" data-up><img src="/public/images/coaching-session.png" alt="A 1:1 coaching call with Indrodip and the booking screen" loading="lazy"></div>
+    <div class="whatNext whatNext--solo">
+      <div class="nstep" data-up><span class="nstep__n">1</span><div><div class="nstep__h">You apply in about 2 minutes</div><p class="nstep__p">A few thoughtful questions, no payment, no pressure. Just enough for us to understand where you are.</p></div></div>
+      <div class="nstep" data-up><span class="nstep__n">2</span><div><div class="nstep__h">We personally review it</div><p class="nstep__p">We read every application and prepare for your specific situation, so the call is about you from the first minute.</p></div></div>
+      <div class="nstep" data-up><span class="nstep__n">3</span><div><div class="nstep__h">You choose a time that suits you</div><p class="nstep__p">Instant confirmation and a calendar invite, in your time zone. Nothing to prepare.</p></div></div>
+      <div class="nstep" data-up><span class="nstep__n">4</span><div><div class="nstep__h">We map your plan together</div><p class="nstep__p">A calm, honest conversation. You leave with a clear next step, whether or not we ever work together.</p></div></div>
     </div>
+    <div class="cta-wrap" style="margin-top:46px" data-up><a href="#apply" class="btnGold">Apply for Your Call →</a></div>
   </div>
 </section>
 

@@ -3,6 +3,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { otpEmail, email1, email2, email3, email4, email5, email6, email7 } from '@/lib/email-templates'
+import { rateLimit, clientIp } from '@/lib/rateLimit'
+import { isValidEmail, sanitizeName } from '@/lib/validation'
 
 function getAnthropicClient() {
   const key = process.env.ANTHROPIC_API_KEY
@@ -28,8 +30,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Server configuration error: database credentials missing' }, { status: 500 })
     }
 
-    const { email, name, answers } = await req.json()
-    if (!email || !name) return NextResponse.json({ error: 'Email and name are required' }, { status: 400 })
+    const ip = clientIp(req)
+    const ipLimit = rateLimit(`otp:ip:${ip}`, 10, 10 * 60_000)
+    if (!ipLimit.ok) return NextResponse.json({ error: 'Too many requests. Please wait a few minutes.' }, { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfter) } })
+
+    const { email: rawEmail, name: rawName, answers } = await req.json()
+    const email = typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : ''
+    const name = sanitizeName(rawName)
+    if (!isValidEmail(email) || !name) return NextResponse.json({ error: 'A valid email and name are required' }, { status: 400 })
+
+    // Cap OTP sends per email to prevent inbox bombing.
+    const emailLimit = rateLimit(`otp:email:${email}`, 5, 30 * 60_000)
+    if (!emailLimit.ok) return NextResponse.json({ error: 'Please check your inbox, an email is already on its way.' }, { status: 429 })
 
     const firstName = name.split(' ')[0]
 

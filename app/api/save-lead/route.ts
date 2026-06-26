@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { rateLimit, clientIp } from '@/lib/rateLimit'
+import { isValidEmail } from '@/lib/validation'
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,13 +28,17 @@ const BLOCKED_DOMAINS = [
 ]
 
 export async function POST(req: NextRequest) {
+  const ip = clientIp(req)
+  const ipLimit = rateLimit(`lead:ip:${ip}`, 15, 10 * 60_000)
+  if (!ipLimit.ok) return NextResponse.json({ error: 'Too many submissions. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfter) } })
+
   const supabase = getSupabase()
   try {
     const body = await req.json()
     const { name, email, quiz_answers, video_assigned, video_requested, no_video } = body
 
-    const emailDomain = email?.split('@')[1]?.toLowerCase()
-    if (!emailDomain || BLOCKED_DOMAINS.includes(emailDomain)) {
+    const emailDomain = typeof email === 'string' ? email.split('@')[1]?.toLowerCase() : ''
+    if (!isValidEmail(email) || !emailDomain || BLOCKED_DOMAINS.includes(emailDomain)) {
       return NextResponse.json({ error: 'Please use a real email address.' }, { status: 400 })
     }
 

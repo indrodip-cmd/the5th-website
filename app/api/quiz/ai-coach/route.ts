@@ -1,13 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { rateLimit, clientIp } from '@/lib/rateLimit'
+import { isValidEmail, sanitizeText } from '@/lib/validation'
 
 function getAnthropicClient() { return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! }) }
 
+export const maxDuration = 30
+
 export async function POST(req: NextRequest) {
   try {
-    const { email, message } = await req.json()
-    if (!email || !message) return NextResponse.json({ error: 'Email and message required' }, { status: 400 })
+    const ip = clientIp(req)
+    const ipLimit = rateLimit(`coach:ip:${ip}`, 30, 10 * 60_000)
+    if (!ipLimit.ok) return NextResponse.json({ error: 'Too many messages. Please slow down.' }, { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfter) } })
+
+    const body = await req.json().catch(() => null)
+    const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
+    const message = sanitizeText(body?.message, 2000)
+    if (!isValidEmail(email) || !message) return NextResponse.json({ error: 'Valid email and message required' }, { status: 400 })
+
+    const emailLimit = rateLimit(`coach:email:${email}`, 40, 60 * 60_000)
+    if (!emailLimit.ok) return NextResponse.json({ error: 'Message limit reached, please try later.' }, { status: 429 })
 
     const { data: lead } = await getSupabaseAdmin()
       .from('quiz_leads')

@@ -159,7 +159,7 @@ export default function ResultsPage() {
       const res  = await fetch('/api/generate-roadmap', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: a, name: n })
+        body: JSON.stringify({ answers: a, name: n, email: sessionStorage.getItem('quiz_email') || '' })
       })
       const data = await res.json()
       setRoadmap(data.roadmap || '')

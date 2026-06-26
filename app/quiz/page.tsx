@@ -474,14 +474,15 @@ body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1
 .scale-btn.sel { background: #1c4a32; border-color: #1c4a32; color: #fff; }
 
 .otp-box {
-  width: 52px; height: 60px; border: 2px solid #e0e0e0;
-  border-radius: 6px; text-align: center; font-size: 24px;
-  font-weight: 700; color: #0a0a0a; background: #fff;
-  font-family: inherit; outline: none; transition: all 0.2s ease;
+  width: 52px; height: 62px; border: 1.5px solid #E2DCD2;
+  border-radius: 12px; text-align: center; font-size: 26px;
+  font-weight: 600; color: #1A1A2E; background: #fff;
+  font-family: 'Cormorant Garamond', serif; outline: none; transition: all 0.2s ease;
 }
-.otp-box:focus { border-color: #225840; }
-.otp-box.filled { border-color: #225840; }
+.otp-box:focus { border-color: #1C4A32; box-shadow: 0 0 0 3px rgba(28,74,50,.08); }
+.otp-box.filled { border-color: #B0902F; }
 .otp-box.otp-err { border-color: #ef4444; background: #fef2f2; }
+@media (max-width: 420px) { .otp-box { width: 44px; height: 56px; font-size: 22px; } }
 
 .timeline-day:hover { border-color: rgba(45,106,79,0.6) !important; }
 ::-webkit-scrollbar { width: 5px; }
@@ -2134,7 +2135,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
 
 /* ─── Page ─── */
 export default function Page() {
-  const [screen, setScreen] = useState<'start' | 'quiz' | 'email' | 'dashboard'>('start')
+  const [screen, setScreen] = useState<'start' | 'quiz' | 'email' | 'otp' | 'dashboard'>('start')
   const [currentQ, setCurrentQ] = useState(0)
   const [introsSeen, setIntrosSeen] = useState<Set<string>>(new Set())
   const [cardKey, setCardKey] = useState(0)
@@ -2150,6 +2151,12 @@ export default function Page() {
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', ''])
   const [submitting, setSubmitting] = useState(false)
   const [otpError, setOtpError] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const [resendIn, setResendIn] = useState(0)
+  const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
+  // Feature flag: when '1', the email gate runs the OTP verification flow.
+  // Off by default so deploying this code never changes the live flow until activated.
+  const REQUIRE_OTP = process.env.NEXT_PUBLIC_REQUIRE_OTP === '1'
 
   const [lead, setLead] = useState<Lead | null>(null)
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null)
@@ -2164,6 +2171,39 @@ export default function Page() {
   const otpRefs = useRef<(HTMLInputElement | null)[]>([])
   const chatEndRef = useRef<HTMLDivElement>(null)
   const advancingRef = useRef(false)
+
+  /* ── Resend countdown ── */
+  useEffect(() => {
+    if (resendIn <= 0) return
+    const t = setTimeout(() => setResendIn(s => s - 1), 1000)
+    return () => clearTimeout(t)
+  }, [resendIn])
+
+  /* ── Cloudflare Turnstile widget (only when configured + on the email screen) ── */
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || screen !== 'email') return
+    const SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+    type TS = { render: (el: Element, opts: Record<string, unknown>) => void }
+    const getTS = (): TS | undefined => (window as unknown as { turnstile?: TS }).turnstile
+    const render = () => {
+      const el = document.getElementById('cf-turnstile-box')
+      const ts = getTS()
+      if (el && ts && !el.hasChildNodes()) {
+        ts.render(el, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (t: string) => setTurnstileToken(t),
+          'expired-callback': () => setTurnstileToken(''),
+          'error-callback': () => setTurnstileToken(''),
+        })
+      }
+    }
+    if (getTS()) { render(); return }
+    if (!document.querySelector(`script[src="${SRC}"]`)) {
+      const s = document.createElement('script'); s.src = SRC; s.async = true; s.defer = true; document.head.appendChild(s)
+    }
+    const iv = setInterval(() => { if (getTS()) { clearInterval(iv); render() } }, 200)
+    return () => clearInterval(iv)
+  }, [screen, TURNSTILE_SITE_KEY])
 
   /* ── Navigation ── */
   const goForward = useCallback(() => {
@@ -2339,59 +2379,83 @@ export default function Page() {
     'zxcvbnm.com','zzz.com',
   ]
 
-  const handleEmailSubmit = () => {
+  const startResend = () => { setResendIn(45) }
+  const sendOtp = async (emailValue: string, silent = false): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/quiz/send-otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailValue, name: name.trim(), answers, turnstileToken })
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) { (silent ? setOtpError : setError)(data.error || 'Something went wrong. Please try again.'); return false }
+      return true
+    } catch { (silent ? setOtpError : setError)('Network error. Please check your connection.'); return false }
+  }
+
+  const handleEmailSubmit = async () => {
     if (!name.trim()) { setError('Please enter your name'); return }
     const emailValue = email.trim().toLowerCase()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
-      setError('Please enter a valid email address')
-      return
-    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) { setError('Please enter a valid email address'); return }
     const emailDomain = emailValue.split('@')[1]?.toLowerCase()
-    if (!emailDomain) {
-      setError('Please enter a valid email address')
-      return
-    }
-    if (BLOCKED_DOMAINS.includes(emailDomain)) {
-      setError('Please use your real email address. Temporary emails are not accepted.')
-      return
-    }
+    if (!emailDomain) { setError('Please enter a valid email address'); return }
+    if (BLOCKED_DOMAINS.includes(emailDomain)) { setError('Please use your real email address. Temporary emails are not accepted.'); return }
+    if (REQUIRE_OTP && TURNSTILE_SITE_KEY && !turnstileToken) { setError('Please complete the verification just below.'); return }
     setSubmitting(true); setError('')
     sessionStorage.setItem('quiz_name', name)
     sessionStorage.setItem('quiz_email', emailValue)
     sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
-    window.location.href = '/quiz/results'
+    // Legacy path (flag off): straight to the report, unchanged.
+    if (!REQUIRE_OTP) { window.location.href = '/quiz/results'; return }
+    // Secure path (flag on): verify ownership via emailed OTP, then continue.
+    const ok = await sendOtp(emailValue)
+    setSubmitting(false)
+    if (ok) { setOtpDigits(['', '', '', '', '', '']); setOtpError(''); setScreen('otp'); startResend(); setTimeout(() => otpRefs.current[0]?.focus(), 60) }
   }
 
   /* ── OTP ── */
-  const handleOtpDigit = (i: number, val: string) => {
-    if (!/^\d?$/.test(val)) return
-    const next = [...otpDigits]; next[i] = val; setOtpDigits(next)
-    if (val && i < 5) otpRefs.current[i + 1]?.focus()
-  }
-  const handleOtpKey = (i: number, e: React.KeyboardEvent) => {
-    if (e.key === 'Backspace' && !otpDigits[i] && i > 0) otpRefs.current[i - 1]?.focus()
-  }
-  const handleOtpSubmit = async () => {
-    const code = otpDigits.join('')
+  const submitCode = async (code: string) => {
     if (code.length !== 6) { setOtpError('Please enter the full 6-digit code'); return }
     setSubmitting(true); setOtpError('')
     try {
       const res = await fetch('/api/quiz/verify-otp', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp: code })
+        body: JSON.stringify({ email: email.trim().toLowerCase(), otp: code, turnstileToken })
       })
-      const data = await res.json()
-      if (data.error) { setOtpError(data.error); return }
-      setLead(data.lead); setRoadmap(data.roadmap)
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) { setOtpError(data.error || 'That code did not work. Please try again.'); setOtpDigits(['', '', '', '', '', '']); setTimeout(() => otpRefs.current[0]?.focus(), 40); setSubmitting(false); return }
+      // Verified — the signed session cookie is now set. Continue to the report.
       sessionStorage.setItem('quiz_name', name)
-      sessionStorage.setItem('quiz_email', email)
+      sessionStorage.setItem('quiz_email', email.trim().toLowerCase())
       sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
       window.location.href = '/quiz/results'
-      return
-      setActiveDay(data.lead?.current_day || 1)
-      setScreen('dashboard')
-    } catch { setOtpError('Something went wrong.') }
-    finally { setSubmitting(false) }
+    } catch { setOtpError('Something went wrong. Please try again.'); setSubmitting(false) }
+  }
+  const handleOtpDigit = (i: number, val: string) => {
+    if (!/^\d?$/.test(val)) return
+    const next = [...otpDigits]; next[i] = val; setOtpDigits(next)
+    setOtpError('')
+    if (val && i < 5) otpRefs.current[i + 1]?.focus()
+    const joined = next.join('')
+    if (joined.length === 6 && next.every(d => d !== '')) submitCode(joined)
+  }
+  const handleOtpKey = (i: number, e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace' && !otpDigits[i] && i > 0) otpRefs.current[i - 1]?.focus()
+  }
+  const handleOtpPaste = (e: React.ClipboardEvent) => {
+    const digits = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6)
+    if (!digits) return
+    e.preventDefault()
+    const next = ['', '', '', '', '', '']
+    for (let i = 0; i < digits.length; i++) next[i] = digits[i]
+    setOtpDigits(next)
+    if (digits.length === 6) submitCode(digits)
+    else otpRefs.current[digits.length]?.focus()
+  }
+  const handleOtpSubmit = () => submitCode(otpDigits.join(''))
+  const handleResend = async () => {
+    if (resendIn > 0) return
+    setOtpError(''); startResend()
+    await sendOtp(email.trim().toLowerCase(), true)
   }
 
   /* ── Dashboard handlers ── */
@@ -2742,12 +2806,61 @@ export default function Page() {
           <div style={{ maxWidth: 480, margin: '0 auto' }}>
             <input className="qinput" style={{ marginBottom: 12 }} type="text" placeholder="Your first name" value={name} onChange={e => setName(e.target.value)} />
             <input className="qinput" style={{ marginBottom: 20 }} type="email" placeholder="Your best email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleEmailSubmit()} />
+            {TURNSTILE_SITE_KEY && <div id="cf-turnstile-box" style={{ display: 'flex', justifyContent: 'center', marginBottom: 16, minHeight: 1 }} />}
             {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14, textAlign: 'left' }}>{error}</p>}
             <button className="gbtn" onClick={handleEmailSubmit} disabled={submitting}>
-              {submitting ? 'Unlocking your report…' : 'Show Me My Report →'}
+              {submitting ? 'Sending your code…' : 'Show Me My Report →'}
             </button>
-            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 14 }}>🔒 Your information is private. We never spam, ever.</p>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 14 }}>🔒 We&apos;ll email you a quick code to confirm it&apos;s you. Your information is private, and we never spam.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  /* ══════════════ OTP ══════════════ */
+  if (screen === 'otp') return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', display: 'flex', flexDirection: 'column' }}>
+      <style>{CSS}</style>
+      <SiteHeader screen="email" currentQ={questions.length} />
+      <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '110px 24px 64px' }}>
+        <div className="afu-1" style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(201,168,76,.12)', border: '1px solid var(--gold-line, rgba(201,168,76,.32))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px', fontSize: 24 }}>✉️</div>
+          <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 16 }}>Almost There</div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(28px, 4.5vw, 42px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 12, lineHeight: 1.06, letterSpacing: '-.02em' }}>
+            Check your inbox for your <em style={{ fontStyle: 'italic', color: '#B0902F' }}>6-digit code</em>
+          </h2>
+          <p style={{ fontSize: 16, fontWeight: 300, color: '#5a5550', marginBottom: 30, lineHeight: 1.65 }}>
+            We sent it to <b style={{ color: '#1A1A2E', fontWeight: 600 }}>{email}</b>. Enter it below and your report opens automatically.
+          </p>
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
+            {otpDigits.map((d, i) => (
+              <input
+                key={i}
+                ref={el => { otpRefs.current[i] = el }}
+                className={`otp-box${d ? ' filled' : ''}${otpError ? ' otp-err' : ''}`}
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={1}
+                value={d}
+                aria-label={`Digit ${i + 1}`}
+                onChange={e => handleOtpDigit(i, e.target.value.replace(/\D/g, ''))}
+                onKeyDown={e => handleOtpKey(i, e)}
+              />
+            ))}
+          </div>
+          {otpError && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14 }}>{otpError}</p>}
+          <button className="gbtn" onClick={handleOtpSubmit} disabled={submitting} style={{ maxWidth: 320, margin: '6px auto 0' }}>
+            {submitting ? 'Verifying…' : 'Verify & See My Report →'}
+          </button>
+          <p style={{ fontSize: 13, color: '#8A8075', marginTop: 18 }}>
+            Didn&apos;t get it?{' '}
+            {resendIn > 0
+              ? <span style={{ color: '#8A8075' }}>Resend in {resendIn}s</span>
+              : <button onClick={handleResend} style={{ background: 'none', border: 'none', color: '#1C4A32', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', fontSize: 13, padding: 0 }}>Resend code</button>}
+            {'  ·  '}
+            <button onClick={() => { setScreen('email'); setOtpError('') }} style={{ background: 'none', border: 'none', color: '#5a5550', cursor: 'pointer', fontSize: 13, padding: 0, textDecoration: 'underline' }}>Change email</button>
+          </p>
         </div>
       </div>
     </div>

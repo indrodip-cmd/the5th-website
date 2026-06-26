@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
+const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
@@ -26,6 +26,7 @@ const BLOCKED_DOMAINS = [
 ]
 
 export async function POST(req: NextRequest) {
+  const supabase = getSupabase()
   try {
     const body = await req.json()
     const { name, email, quiz_answers, video_assigned, video_requested, no_video } = body

@@ -278,11 +278,10 @@ function StatCard({ label, value, unit, color }: { label: string; value: number;
 
 /* ─── CSS ─── */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cormorant+Garant:wght@300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: #f5f2ee; }
-body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0a; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+html { background: #FAF6F0; }
+body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1A2E; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
@@ -448,7 +447,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
   display:flex;align-items:center;justify-content:space-between;
   padding:20px 48px;background:rgba(250,246,241,0.88);
   backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.lp-nav-logo{font-family:'Playfair Display',serif;font-size:15px;
+.lp-nav-logo{font-family:'Cormorant Garamond',serif;font-size:15px;
   font-weight:700;color:var(--forest);letter-spacing:0.04em;}
 .lp-nav-pill{background:var(--forest);color:#fff;font-size:11px;
   font-weight:600;padding:6px 16px;border-radius:50px;
@@ -463,11 +462,11 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
   text-transform:uppercase;color:var(--sage);margin-bottom:28px;
   opacity:0;animation:reveal-left 0.7s 0.2s ease forwards;}
 .lp-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
-.lp-headline{font-family:'Playfair Display',serif;
+.lp-headline{font-family:'Cormorant Garamond',serif;
   font-size:clamp(42px,4.5vw,68px);font-weight:900;line-height:1.06;
   color:var(--ink);margin-bottom:8px;
   opacity:0;animation:reveal-up 0.8s 0.35s ease forwards;}
-.lp-headline-accent{font-family:'Playfair Display',serif;
+.lp-headline-accent{font-family:'Cormorant Garamond',serif;
   font-size:clamp(42px,4.5vw,68px);font-weight:900;line-height:1.06;
   font-style:italic;color:var(--forest);display:block;margin-bottom:24px;
   opacity:0;animation:reveal-up 0.8s 0.45s ease forwards;}
@@ -507,7 +506,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
   box-shadow:0 24px 64px rgba(0,0,0,0.06);position:relative;}
 .lp-stat-card-label{font-size:11px;font-weight:700;letter-spacing:0.12em;
   text-transform:uppercase;color:var(--warm-grey);margin-bottom:24px;}
-.lp-big-stat{font-family:'Playfair Display',serif;
+.lp-big-stat{font-family:'Cormorant Garamond',serif;
   font-size:72px;font-weight:900;line-height:1;color:var(--forest);margin-bottom:4px;}
 .lp-big-stat-label{font-size:12px;color:var(--warm-grey);
   margin-bottom:24px;letter-spacing:0.06em;text-transform:uppercase;}
@@ -518,7 +517,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
   border-radius:3px;width:0%;transition:width 1.8s 0.5s ease;}
 .lp-mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
 .lp-mini-stat{background:var(--cream);border-radius:10px;padding:16px;}
-.lp-mini-stat-num{font-family:'Playfair Display',serif;
+.lp-mini-stat-num{font-family:'Cormorant Garamond',serif;
   font-size:26px;font-weight:700;color:var(--ink);}
 .lp-mini-stat-label{font-size:11px;color:var(--warm-grey);margin-top:2px;line-height:1.4;}
 .lp-blob{position:absolute;width:420px;height:420px;
@@ -535,7 +534,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
 .lp-benefits{padding:100px 48px;max-width:1280px;margin:0 auto;}
 .lp-section-eyebrow{font-size:11px;font-weight:700;letter-spacing:0.14em;
   text-transform:uppercase;color:var(--sage);text-align:center;margin-bottom:16px;}
-.lp-section-title{font-family:'Playfair Display',serif;
+.lp-section-title{font-family:'Cormorant Garamond',serif;
   font-size:clamp(36px,3.5vw,52px);font-weight:900;line-height:1.1;
   text-align:center;color:var(--ink);margin-bottom:8px;}
 .lp-section-title em{font-style:italic;color:var(--forest);}
@@ -550,14 +549,14 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
   background:linear-gradient(90deg,var(--forest),var(--sage));
   transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
 .lp-benefit-card:hover::before{transform:scaleX(1);}
-.lp-benefit-num{font-family:'Playfair Display',serif;font-size:52px;
+.lp-benefit-num{font-family:'Cormorant Garamond',serif;font-size:52px;
   font-weight:900;color:rgba(0,0,0,0.05);line-height:1;margin-bottom:16px;}
 .lp-benefit-title{font-size:18px;font-weight:700;color:var(--ink);
   margin-bottom:10px;font-family:'DM Sans',sans-serif;}
 .lp-benefit-body{font-size:14px;color:var(--warm-grey);line-height:1.75;}
 .lp-testimonials{background:var(--ink);padding:100px 48px;}
 .lp-testimonials-inner{max-width:1280px;margin:0 auto;}
-.lp-testimonials-title{font-family:'Playfair Display',serif;
+.lp-testimonials-title{font-family:'Cormorant Garamond',serif;
   font-size:clamp(32px,3vw,48px);font-weight:900;color:#fff;
   text-align:center;margin-bottom:60px;line-height:1.15;}
 .lp-testimonials-title em{color:#e8c84a;font-style:italic;}
@@ -580,7 +579,7 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #0a0a0
 .lp-final-cta{padding:120px 48px;text-align:center;
   background:var(--cream);position:relative;overflow:hidden;}
 .lp-final-cta-inner{max-width:640px;margin:0 auto;position:relative;z-index:1;}
-.lp-final-headline{font-family:'Playfair Display',serif;
+.lp-final-headline{font-family:'Cormorant Garamond',serif;
   font-size:clamp(36px,4vw,56px);font-weight:900;
   line-height:1.1;color:var(--ink);margin-bottom:12px;}
 .lp-final-headline em{font-style:italic;color:var(--forest);}
@@ -720,8 +719,8 @@ function SiteHeader({ screen, currentQ }: { screen: string; currentQ: number }) 
                   className={cur ? 'dot-cur' : ''}
                   style={{
                     width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
-                    background: done ? '#225840' : cur ? '#b8960c' : '#fff',
-                    border: `2px solid ${done ? '#225840' : cur ? '#b8960c' : '#e0e0e0'}`,
+                    background: done ? '#225840' : cur ? '#B0902F' : '#fff',
+                    border: `2px solid ${done ? '#225840' : cur ? '#B0902F' : '#e0e0e0'}`,
                     transition: 'background 0.3s ease, border-color 0.3s ease',
                   }}
                 />
@@ -818,9 +817,9 @@ function TabletMockup() {
             </div>
           ))}
           <div style={{ padding: '12px 20px', background: '#fef9ec', display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ fontSize: 10, color: '#b8960c', fontWeight: 700, whiteSpace: 'nowrap' }}>Day 1 of 15</div>
+            <div style={{ fontSize: 10, color: '#B0902F', fontWeight: 700, whiteSpace: 'nowrap' }}>Day 1 of 15</div>
             <div style={{ height: 4, background: '#f0e0a0', borderRadius: 2, flex: 1 }}>
-              <div style={{ height: '100%', background: '#b8960c', borderRadius: 2, width: '7%' }} />
+              <div style={{ height: '100%', background: '#B0902F', borderRadius: 2, width: '7%' }} />
             </div>
           </div>
         </div>
@@ -877,9 +876,9 @@ function PhoneMockup() {
           ))}
           <div style={{ padding: '6px 10px', background: '#fef9ec' }}>
             <div style={{ height: 3, background: '#f0e0a0', borderRadius: 2, marginBottom: 4 }}>
-              <div style={{ width: '7%', height: '100%', background: '#b8960c', borderRadius: 2 }} />
+              <div style={{ width: '7%', height: '100%', background: '#B0902F', borderRadius: 2 }} />
             </div>
-            <div style={{ fontSize: 7, color: '#b8960c', fontWeight: 600 }}>Day 1 of 15</div>
+            <div style={{ fontSize: 7, color: '#B0902F', fontWeight: 600 }}>Day 1 of 15</div>
           </div>
           <div style={{ padding: '8px 10px' }}>
             <div style={{ background: 'linear-gradient(135deg,#225840,#2d6a4f)', borderRadius: 6, padding: '7px 10px', textAlign: 'center' }}>
@@ -977,7 +976,7 @@ function LandingTabletMockup() {
               <span style={{ fontSize: 12, fontWeight: 700, color: '#225840' }}>The5th</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, background: '#fef9ec', color: '#b8960c', padding: '3px 8px', borderRadius: 10 }}>Day 3 of 15</span>
+              <span style={{ fontSize: 10, fontWeight: 600, background: '#fef9ec', color: '#B0902F', padding: '3px 8px', borderRadius: 10 }}>Day 3 of 15</span>
               <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#e8d5b7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700 }}>A</div>
             </div>
           </div>
@@ -987,9 +986,9 @@ function LandingTabletMockup() {
             <div style={{ background: 'white', borderRadius: 12, padding: 16 }}>
               <div style={{ fontSize: 9, fontWeight: 700, color: '#aaa', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 10 }}>15-DAY ROADMAP</div>
               {sidebarDays.map(({ day, label, done, current, locked }) => (
-                <div key={day} style={{ display: 'flex', alignItems: 'center', gap: 6, height: 28, borderRadius: 6, padding: '0 6px', marginBottom: 2, background: done ? '#e8f5ee' : 'transparent', border: current ? '1.5px solid #b8960c' : 'none' }}>
-                  <span style={{ fontSize: 9, color: done ? '#225840' : current ? '#b8960c' : '#aaa', fontWeight: 700, flexShrink: 0 }}>{done ? '✓' : locked ? '🔒' : '→'}</span>
-                  <span style={{ fontSize: 9, color: done ? '#225840' : current ? '#b8960c' : '#bbb', fontWeight: current ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
+                <div key={day} style={{ display: 'flex', alignItems: 'center', gap: 6, height: 28, borderRadius: 6, padding: '0 6px', marginBottom: 2, background: done ? '#e8f5ee' : 'transparent', border: current ? '1.5px solid #B0902F' : 'none' }}>
+                  <span style={{ fontSize: 9, color: done ? '#225840' : current ? '#B0902F' : '#aaa', fontWeight: 700, flexShrink: 0 }}>{done ? '✓' : locked ? '🔒' : '→'}</span>
+                  <span style={{ fontSize: 9, color: done ? '#225840' : current ? '#B0902F' : '#bbb', fontWeight: current ? 700 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</span>
                 </div>
               ))}
               <div style={{ marginTop: 10, fontSize: 9, color: '#888' }}>3 of 15 complete</div>
@@ -999,8 +998,8 @@ function LandingTabletMockup() {
             </div>
             {/* Main panel */}
             <div>
-              <div style={{ fontSize: 9, fontWeight: 700, color: '#b8960c', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 10 }}>TODAY&apos;S MISSION</div>
-              <div style={{ background: 'white', borderRadius: 12, padding: 16, borderLeft: '4px solid #b8960c', marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: '#B0902F', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 10 }}>TODAY&apos;S MISSION</div>
+              <div style={{ background: 'white', borderRadius: 12, padding: 16, borderLeft: '4px solid #B0902F', marginBottom: 12 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Day 4: Build Your Outreach System</div>
                 {taskItems.map(({ task, done }, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -1010,7 +1009,7 @@ function LandingTabletMockup() {
                     <span style={{ fontSize: 10, color: done ? '#aaa' : '#333', textDecoration: done ? 'line-through' : 'none' }}>{task}</span>
                   </div>
                 ))}
-                <div style={{ marginTop: 10, background: '#b8960c', color: 'white', borderRadius: 6, padding: '6px 12px', fontSize: 10, fontWeight: 600, textAlign: 'center' }}>Complete Today</div>
+                <div style={{ marginTop: 10, background: '#B0902F', color: 'white', borderRadius: 6, padding: '6px 12px', fontSize: 10, fontWeight: 600, textAlign: 'center' }}>Complete Today</div>
               </div>
               <div style={{ background: 'white', borderRadius: 12, padding: 16 }}>
                 <div style={{ fontSize: 10, fontWeight: 600, color: '#333', marginBottom: 8 }}>$0 of $10,000</div>
@@ -1066,7 +1065,7 @@ const LP_CSS = `
 .qp-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
   justify-content:center;padding:20px 60px;
   background:rgba(139,127,207,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
-.qp-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+.qp-logo{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;
   color:#fff;letter-spacing:.04em;}
 .qp-nav-btn{background:#1c4a32;color:#fff;font-family:'DM Sans',sans-serif;
   font-size:13px;font-weight:700;padding:10px 24px;border-radius:50px;
@@ -1083,7 +1082,7 @@ const LP_CSS = `
 .qp-annotation{font-family:'Caveat',cursive;font-size:22px;font-weight:600;
   color:rgba(255,255,255,.82);display:flex;align-items:center;
   justify-content:center;gap:8px;margin-bottom:6px;}
-.qp-h1{font-family:'Playfair Display',serif;font-size:clamp(52px,8vw,96px);
+.qp-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,8vw,96px);
   font-weight:900;line-height:1.0;color:#fff;letter-spacing:-2px;margin-bottom:24px;}
 .qp-hero-sub{font-size:18px;line-height:1.75;color:rgba(255,255,255,.75);
   max-width:520px;margin:0 auto 40px;}
@@ -1107,7 +1106,7 @@ const LP_CSS = `
 .qp-arch-top{text-align:center;margin-bottom:16px;}
 .qp-arch-top-left{max-width:640px;margin:0 auto;}
 .qp-arch-top-right{display:none;}
-.qp-sect-h{font-family:'Playfair Display',serif;font-size:clamp(36px,4.5vw,60px);
+.qp-sect-h{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4.5vw,60px);
   font-weight:900;line-height:1.08;color:#111;margin-bottom:16px;}
 .qp-sect-sub{font-size:16px;color:#555;line-height:1.8;max-width:560px;margin:0 auto 56px;text-align:center;}
 .qp-arch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-bottom:60px;}
@@ -1115,7 +1114,7 @@ const LP_CSS = `
 .qp-arch-img-wrap{height:200px;display:flex;align-items:flex-end;
   justify-content:center;margin-bottom:20px;}
 .qp-arch-img{height:100%;width:auto;max-width:180px;object-fit:contain;display:block;}
-.qp-arch-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;
+.qp-arch-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;
   color:#111;margin-bottom:8px;}
 .qp-arch-desc{font-size:14px;color:#666;line-height:1.72;font-style:italic;}
 .qp-arch-btn{text-align:center;}
@@ -1125,11 +1124,11 @@ const LP_CSS = `
 .qp-about-grain{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.055;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 .qp-about-inner{max-width:1000px;margin:0 auto;position:relative;z-index:1;}
-.qp-about-h{font-family:'Playfair Display',serif;font-size:clamp(36px,4vw,56px);
+.qp-about-h{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,56px);
   font-weight:900;color:#fff;text-align:center;margin-bottom:56px;line-height:1.1;}
 .qp-about-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:56px;}
 .qp-white-card{background:#fff;border-radius:20px;padding:40px 36px;}
-.qp-card-h{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;
+.qp-card-h{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;
   color:#111;margin-bottom:24px;line-height:1.3;}
 .qp-bullet-list{list-style:none;padding:0;margin:0;}
 .qp-bullet-li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
@@ -1169,14 +1168,14 @@ const LP_CSS = `
 .qp-dark-annotation{font-family:'Caveat',cursive;font-size:22px;font-weight:600;
   color:rgba(255,255,255,.6);display:flex;align-items:center;
   justify-content:center;gap:8px;margin-bottom:8px;}
-.qp-dark-h{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,58px);
+.qp-dark-h{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4.5vw,58px);
   font-weight:900;line-height:1.1;color:#fff;margin-bottom:44px;}
 
 /* ─── footer ─── */
 .qp-footer{background:#111;padding:60px 60px 40px;}
 .qp-footer-top{display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:32px;margin-bottom:48px;}
-.qp-footer-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+.qp-footer-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;
   color:#fff;letter-spacing:.04em;}
 .qp-footer-avs{display:flex;align-items:center;}
 .qp-footer-av{width:44px;height:44px;border-radius:50%;overflow:hidden;
@@ -2347,23 +2346,24 @@ export default function Page() {
       </svg>
     )
     return (
-      <div style={{ minHeight: '100vh', background: '#8b7fcf', position: 'relative' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', position: 'relative' }}>
         {/* Grain overlay */}
-        <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:0, opacity:.058,
+        <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:0, opacity:.04,
           backgroundImage: GRAIN_URI }} />
         <style>{CSS}</style>
 
         {/* Minimal top bar: just back arrow + progress dots */}
         <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:100,
-          padding:'16px 24px', display:'flex', alignItems:'center', gap:16 }}>
+          padding:'18px 24px', display:'flex', alignItems:'center', gap:16,
+          background:'linear-gradient(180deg,rgba(251,248,242,.9),rgba(251,248,242,0))', backdropFilter:'blur(2px)' }}>
           <button onClick={goBack} aria-label="Go back"
-            style={{ background:'none', border:'none', fontSize:22, color:'rgba(255,255,255,.7)',
+            style={{ background:'none', border:'none', fontSize:22, color:'rgba(26,26,46,.45)',
               cursor:'pointer', lineHeight:1, padding:0, flexShrink:0 }}>←</button>
           <div style={{ flex:1, display:'flex', justifyContent:'center', gap:6 }}>
             {questions.map((_, i) => (
-              <div key={i} style={{ width:8, height:8, borderRadius:'50%',
-                background: i < currentQ ? '#1c4a32' : i === currentQ ? '#fff' : 'rgba(255,255,255,.28)',
-                transition:'background .3s' }} />
+              <div key={i} style={{ width: i === currentQ ? 22 : 8, height:8, borderRadius:50,
+                background: i < currentQ ? '#1C4A32' : i === currentQ ? '#3D2645' : 'rgba(61,38,69,.16)',
+                transition:'all .35s cubic-bezier(.2,.7,.2,1)' }} />
             ))}
           </div>
           <div style={{ width:22, flexShrink:0 }} />
@@ -2385,7 +2385,7 @@ export default function Page() {
           {/* Animated question wrapper */}
           <div key={cardKey} className={slideDir}>
             {/* Question title */}
-            <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 400, fontFamily: "'Playfair Display',serif", color: '#0d0d0b', textAlign: 'center', margin: '40px auto 12px', lineHeight: 1.22, maxWidth: 640 }}>
+            <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 400, fontFamily: "'Cormorant Garamond',serif", color: '#0d0d0b', textAlign: 'center', margin: '40px auto 12px', lineHeight: 1.22, maxWidth: 640 }}>
               {q.title}
             </h2>
             {q.sub && (
@@ -2447,7 +2447,7 @@ export default function Page() {
                 <>
                   {(['from', 'to'] as const).map(key => (
                     <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-                      <span style={{ width: 46, fontSize: 11, fontWeight: 700, letterSpacing: '.1em', color: '#b8960c', flexShrink: 0, textTransform: 'uppercase' }}>
+                      <span style={{ width: 46, fontSize: 11, fontWeight: 700, letterSpacing: '.1em', color: '#B0902F', flexShrink: 0, textTransform: 'uppercase' }}>
                         {key}
                       </span>
                       <input
@@ -2549,7 +2549,7 @@ export default function Page() {
       <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 24px 60px' }}>
         <div className="afu-1" style={{ maxWidth: 520, width: '100%', textAlign: 'center' }}>
           {/* Gold label */}
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#b8960c', marginBottom: 20 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 20 }}>
             YOUR ROADMAP IS READY ✨
           </div>
 

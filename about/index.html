@@ -252,6 +252,68 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
 @media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
 @media(max-width:860px){.footer-inner{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.footer-inner{grid-template-columns:1fr}}
+
+/* ── CONVERSION STACK (testimonials · how · fit · next · faq) ── */
+.ab2-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+@media(max-width:880px){.ab2-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.ab2-grid{grid-template-columns:1fr}}
+.ab2-tcard{background:#fff;border:1px solid var(--border);border-radius:8px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:0 14px 40px -28px rgba(46,26,53,.4)}
+.ab2-tcard__top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.ab2-tcard__av{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-line);flex-shrink:0}
+.ab2-tcard__nm{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.1}
+.ab2-tcard__rl{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.ab2-tcard__res{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.32rem;color:var(--gold-deep);margin-bottom:12px;line-height:1.2}
+.ab2-tcard__q{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft)}
+.ab2-tcard__stars{color:var(--gold);font-size:.85rem;letter-spacing:2px;margin-bottom:14px}
+
+.ab2-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:1100px;margin:0 auto}
+@media(max-width:880px){.ab2-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.ab2-steps{grid-template-columns:1fr}}
+.ab2-step{padding:32px 26px;background:var(--ivory);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:6px}
+.ab2-step__n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.4rem;font-weight:400;color:var(--gold);line-height:1;display:block;margin-bottom:14px}
+.ab2-step__h{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--ink);margin-bottom:10px}
+.ab2-step__p{font-size:.96rem;font-weight:300;line-height:1.65;color:var(--ink-soft)}
+
+.ab2-fit{display:grid;grid-template-columns:1fr 1fr;gap:26px;max-width:1000px;margin:0 auto}
+@media(max-width:760px){.ab2-fit{grid-template-columns:1fr}}
+.ab2-fit__col{background:#fff;border:1px solid var(--border);border-radius:8px;padding:40px 34px}
+.ab2-fit__col--yes{border-top:3px solid var(--green)}
+.ab2-fit__col--no{border-top:3px solid #b07a7a}
+.ab2-fit__h{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--ink);margin-bottom:22px}
+.ab2-fit li{display:flex;gap:13px;align-items:flex-start;padding:13px 0;font-size:1.02rem;font-weight:300;line-height:1.55;color:var(--ink-soft);border-bottom:1px solid var(--border)}
+.ab2-fit li:last-child{border-bottom:none}
+.ab2-fit__ico{flex-shrink:0;font-weight:700}
+.ab2-fit__col--yes .ab2-fit__ico{color:var(--green)}
+.ab2-fit__col--no .ab2-fit__ico{color:#b07a7a}
+
+.ab2-next{max-width:760px;margin:0 auto}
+.ab2-next__row{display:flex;gap:26px;padding:26px 0;border-bottom:1px solid var(--gold-line)}
+.ab2-next__row:last-child{border-bottom:none}
+.ab2-next__n{flex-shrink:0;width:48px;height:48px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500}
+.ab2-next__h{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:#fff;margin-bottom:6px}
+.ab2-next__p{font-size:1rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.66)}
+
+.ab2-faq{max-width:780px;margin:0 auto}
+.ab2-faq__item{border-bottom:1px solid var(--border)}
+.ab2-faq__q{display:flex;justify-content:space-between;align-items:center;gap:20px;width:100%;padding:26px 0;background:none;border:none;text-align:left;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--ink);transition:color .2s}
+.ab2-faq__q:hover{color:var(--gold-deep)}
+.ab2-faq__ico{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.4rem;line-height:1;transition:transform .25s,background .25s,color .25s}
+.ab2-faq__item.open .ab2-faq__ico{transform:rotate(45deg);background:var(--gold);color:#2E1A35}
+.ab2-faq__a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.ab2-faq__a p{font-size:1rem;font-weight:300;line-height:1.85;color:var(--ink-soft);padding-bottom:26px}
+.ab2-faq__a a{color:var(--gold-deep);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.ab2-trustline{margin-top:18px;font-size:.82rem;color:var(--muted)}
+.ab2-trustline b{color:var(--gold-deep)}
+.ab2-ctarow{text-align:center;margin-top:54px}
+
+/* ── HEADER LOGO: dark on light (mobile) nav, white on dark (desktop) nav, no plaque ── */
+.gn__logo-img--white{display:none}
+.gn__logo-img--dark{display:block}
+@media(min-width:1100px){
+  .globalNav .gn__logo-glass{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  .globalNav .gn__logo-img--dark{display:none}
+  .globalNav .gn__logo-img--white{display:block;height:46px;width:auto;mix-blend-mode:normal!important}
+}
 </style>
 </head>
 <body>
@@ -259,7 +321,7 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
 <!-- NAV -->
 <header class="globalNav" id="nav">
   <div class="layout">
-    <a href="/" class="gn__logo gn__logo--img"><div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img"></div></a>
+    <a href="/" class="gn__logo gn__logo--img"><div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--dark"><img src="/public/images/logo-header-white.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--white"></div></a>
     <ul class="gn__nav" role="list">
       <li><a href="/fast-forward">Fast Forward</a></li>
       <li><a href="/ai">The5th AI</a></li>
@@ -414,6 +476,149 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
   </div>
 </section>
 
+<!-- TRANSFORMATIONS / TESTIMONIALS -->
+<section class="sec sec--parch">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Real Women, Real Results</span>
+      <h2 class="h2">Transformations we're <em>proud of.</em></h2>
+      <p class="lead">These are women who started exactly where you might be now — decades of expertise, no idea how to package it. Here's what happened next.</p>
+    </div>
+    <div class="ab2-grid">
+      <div class="ab2-tcard" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/angela.jpg" alt="Angela" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Angela</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">$12,000 in 9 weeks</div>
+        <p class="ab2-tcard__q">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you work it."</p>
+      </div>
+      <div class="ab2-tcard d1" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/laurie.jpg" alt="Laurie" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Laurie</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">$8,900 in 5 weeks</div>
+        <p class="ab2-tcard__q">"I came in sceptical. I left with nearly nine thousand dollars in new revenue and a business model that actually makes sense for my life."</p>
+      </div>
+      <div class="ab2-tcard d2" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/toril.jpg" alt="Toril" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Toril</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">Launched after 15 years</div>
+        <p class="ab2-tcard__q">"Fifteen years of corporate expertise sitting dormant. The5th helped me package it into a premium programme and take it back to market with confidence."</p>
+      </div>
+      <div class="ab2-tcard" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/jeanne.jpg" alt="Jeanne" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Jeanne</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">$8,000 in 8 weeks</div>
+        <p class="ab2-tcard__q">"Joined not knowing where to start. Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible."</p>
+      </div>
+      <div class="ab2-tcard d1" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/hayley.jpg" alt="Hayley" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Hayley</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">$2,200 in 3 weeks</div>
+        <p class="ab2-tcard__q">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started owning the value I bring."</p>
+      </div>
+      <div class="ab2-tcard d2" data-reveal>
+        <div class="ab2-tcard__top"><img class="ab2-tcard__av" src="/public/clients/abbas.jpg" alt="Abbas" onerror="this.style.visibility='hidden'"><div><div class="ab2-tcard__nm">Abbas</div><div class="ab2-tcard__rl">10K Roadmap</div></div></div>
+        <div class="ab2-tcard__stars">★★★★★</div>
+        <div class="ab2-tcard__res">Bestseller in 5 weeks</div>
+        <p class="ab2-tcard__q">"I never thought I'd become a published author, let alone an Amazon bestseller. Five weeks after joining The5th, that's exactly what happened."</p>
+      </div>
+    </div>
+    <div class="ab2-ctarow" data-reveal><a href="/#results" class="btnGold">See More Client Results →</a></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec sec--white">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">How We Help</span>
+      <h2 class="h2">The Client-To-Cash Method™</h2>
+      <p class="lead">However you work with us, the path is the same proven system — the one behind every result above.</p>
+    </div>
+    <div class="ab2-steps">
+      <div class="ab2-step" data-reveal><span class="ab2-step__n">01</span><h3 class="ab2-step__h">Package</h3><p class="ab2-step__p">We turn what you already know into one premium offer people understand and pay for.</p></div>
+      <div class="ab2-step d1" data-reveal><span class="ab2-step__n">02</span><h3 class="ab2-step__h">Position</h3><p class="ab2-step__p">We price it correctly and communicate your value so the right clients see why they need you.</p></div>
+      <div class="ab2-step d2" data-reveal><span class="ab2-step__n">03</span><h3 class="ab2-step__h">Attract</h3><p class="ab2-step__p">We find clients inside your existing network — no ads, no funnels, no posting daily.</p></div>
+      <div class="ab2-step d3" data-reveal><span class="ab2-step__n">04</span><h3 class="ab2-step__h">Close</h3><p class="ab2-step__p">The Diagnose · Prescribe · Close framework turns conversations into signed clients.</p></div>
+    </div>
+    <div class="ab2-ctarow" data-reveal><a href="/fast-forward" class="btnGold">See the Full Program →</a></div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR / NOT FOR -->
+<section class="sec sec--parch">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Honest Fit</span>
+      <h2 class="h2">Who we're <em>for</em> — and who we're not.</h2>
+      <p class="lead">We're selective on purpose. We do our best work with the right women, so here's the honest truth.</p>
+    </div>
+    <div class="ab2-fit">
+      <div class="ab2-fit__col ab2-fit__col--yes" data-reveal>
+        <h3 class="ab2-fit__h">This is for you if…</h3>
+        <ul>
+          <li><span class="ab2-fit__ico">✓</span> You're a woman 45+ with decades of professional or life expertise</li>
+          <li><span class="ab2-fit__ico">✓</span> You want income that creates freedom — not another job</li>
+          <li><span class="ab2-fit__ico">✓</span> You're ready to follow a proven system instead of guessing</li>
+          <li><span class="ab2-fit__ico">✓</span> You'd rather have premium clients than a huge following</li>
+          <li><span class="ab2-fit__ico">✓</span> You're coachable, committed, and ready to start now</li>
+        </ul>
+      </div>
+      <div class="ab2-fit__col ab2-fit__col--no d1" data-reveal>
+        <h3 class="ab2-fit__h">This is NOT for you if…</h3>
+        <ul>
+          <li><span class="ab2-fit__ico">✕</span> You want a get-rich-quick scheme with no effort</li>
+          <li><span class="ab2-fit__ico">✕</span> You have no real expertise to build on yet</li>
+          <li><span class="ab2-fit__ico">✕</span> You'd rather argue with the system than apply it</li>
+          <li><span class="ab2-fit__ico">✕</span> You're unwilling to have real conversations with clients</li>
+          <li><span class="ab2-fit__ico">✕</span> You expect results without showing up for the work</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT HAPPENS NEXT -->
+<section class="sec sec--dark grain">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c" style="color:var(--gold)">What Happens Next</span>
+      <h2 class="h2">From here, it's simple.</h2>
+      <p class="lead">No pressure, no obligation. Here's exactly what to expect when you reach out.</p>
+    </div>
+    <div class="ab2-next">
+      <div class="ab2-next__row" data-reveal><span class="ab2-next__n">1</span><div><h3 class="ab2-next__h">Take the free 2-minute quiz</h3><p class="ab2-next__p">Tell us about your experience and goals. You'll get an instant read on your fastest path to first revenue.</p></div></div>
+      <div class="ab2-next__row" data-reveal><span class="ab2-next__n">2</span><div><h3 class="ab2-next__h">Book a no-pressure conversation</h3><p class="ab2-next__p">If it looks like a fit, we'll talk it through honestly — your offer, your questions, what's possible. Never a hard pitch.</p></div></div>
+      <div class="ab2-next__row" data-reveal><span class="ab2-next__n">3</span><div><h3 class="ab2-next__h">Leave with a clear next step</h3><p class="ab2-next__p">You get clarity either way — a real plan for turning expertise into income, whether or not you join us.</p></div></div>
+      <div class="ab2-next__row" data-reveal><span class="ab2-next__n">4</span><div><h3 class="ab2-next__h">Build, backed by a guarantee</h3><p class="ab2-next__p">If you join, you start immediately with live coaching, AI, and a written guarantee behind your results.</p></div></div>
+    </div>
+    <div class="ab2-ctarow" data-reveal><a href="https://quiz.the5th.consulting" class="btnGold">Start Step 1 — Take the Quiz →</a><p class="ab2-trustline">2 minutes · No credit card · <b>We'll never spam you</b></p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec sec--white">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Questions &amp; Answers</span>
+      <h2 class="h2">You might be <em>wondering…</em></h2>
+    </div>
+    <div class="ab2-faq">
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">What does The5th actually do?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>We help women turn a lifetime of expertise into a business that creates freedom — through a proven system, live weekly coaching with Indrodip, and AI trained on our exact frameworks.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">Who do you work with?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Primarily women 45+ with deep professional or life experience — teachers, therapists, coaches, consultants, executives — who want to be paid like the expert they already are.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">What if I've never sold anything online before?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>That's most of our clients. Your experience <em>is</em> the asset — we package, price, and position it for you. You don't need tech skills or an audience to start.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">How is this different from other coaches or AI tools?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Courses hand you templates and vanish. Generic AI ignores your stage and offer. We combine a proven system, real human coaching every week, and AI trained specifically on our frameworks and real call transcripts.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">How quickly do people see results?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>It varies, but many generate first revenue around 60–90 days once their offer is live. Some move faster — Hayley made $2,200 in three weeks.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">Do I need a big social following?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>No. Our clients land premium clients from their existing networks — no ads, no funnels, no posting three times a day.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">Who is Indrodip Ghosh?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Our founder. He's advised Fortune 500 executives, billion-dollar companies, and entrepreneurs worldwide — and built The5th to help experienced women do what those clients pay him for. <a href="#story">Read his story →</a></p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">What programs do you offer?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Our flagship is <a href="/fast-forward">Fast Forward</a>, an intensive guaranteed program. <a href="/collective">The Collective</a> is our ongoing membership with live coaching and AI. The quiz helps you find the right fit.</p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">Is there a guarantee?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Yes — Fast Forward is backed by a written guarantee: $10K/month within 6 months or we keep working with you free until you get there. <a href="/fast-forward#guarantee">See the details →</a></p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">Is my information safe?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Always. We never sell or share your data and we'll never spam you. <a href="/privacy">Read our privacy policy →</a></p></div></div>
+      <div class="ab2-faq__item" data-reveal><button class="ab2-faq__q">How do I get started?<span class="ab2-faq__ico">+</span></button><div class="ab2-faq__a"><p>Take the free 2-minute quiz. You'll get an instant read on your fastest path to income and, if it's a fit, an invitation to a no-pressure conversation. <a href="https://quiz.the5th.consulting">Start the quiz →</a></p></div></div>
+    </div>
+    <div class="ab2-ctarow" data-reveal><a href="https://quiz.the5th.consulting" class="btnGold">Take the Free Quiz →</a><p class="ab2-trustline">2 minutes · No credit card · <b>We'll never spam you</b></p></div>
+  </div>
+</section>
+
 <!-- JOIN BAND -->
 <section class="sec join grain">
   <div class="layout">
@@ -490,6 +695,15 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
   var cset=new WeakSet();
   if('IntersectionObserver' in window){var co=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting&&!cset.has(e.target)){cset.add(e.target);ac(e.target);co.unobserve(e.target);}});},{threshold:.6});
     document.querySelectorAll('[data-count]').forEach(function(el){co.observe(el);});}
+  document.querySelectorAll('.ab2-faq__item').forEach(function(item){
+    var btn=item.querySelector('.ab2-faq__q'),ans=item.querySelector('.ab2-faq__a');
+    btn.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.ab2-faq__item.open').forEach(function(o){if(o!==item){o.classList.remove('open');o.querySelector('.ab2-faq__a').style.maxHeight=null;}});
+      if(open){item.classList.remove('open');ans.style.maxHeight=null;}
+      else{item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
 })();
 </script>
 <!-- Intercom -->

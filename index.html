@@ -1579,6 +1579,89 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 .footer-legal a:hover{color:#C9A84C}
 @media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
 
+/* ═══════════════════════════════════════════════
+   CONVERSION STACK — How It Works · Why Different ·
+   Who It's For · What Happens Next · FAQ
+═══════════════════════════════════════════════ */
+.cv-head{max-width:720px;margin:0 auto 3.5rem;text-align:center}
+.cv-head .eyebrow{display:block;margin-bottom:1rem}
+.cv-head .copy{margin-top:1.25rem}
+.cv-cta-row{margin-top:3.5rem;text-align:center}
+.cv-trustline{margin-top:1.1rem;font-size:.8125rem;color:var(--ink-muted);letter-spacing:.01em}
+.cv-trustline span{color:var(--gold);font-weight:600}
+
+/* How It Works — framework steps */
+.cv-how{position:relative}
+.cv-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem}
+@media(max-width:980px){.cv-steps{grid-template-columns:repeat(2,1fr);gap:1.5rem}}
+@media(max-width:560px){.cv-steps{grid-template-columns:1fr}}
+.cv-step{background:var(--white);border:1px solid var(--border);padding:2.25rem 1.75rem;position:relative;transition:transform .25s ease,box-shadow .25s ease}
+.cv-step:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(46,26,53,.4)}
+.cv-step__num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:600;font-style:italic;color:var(--gold);line-height:1;display:block;margin-bottom:1rem}
+.cv-step__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--ink);margin-bottom:.6rem;line-height:1.15}
+.cv-step__p{font-size:.95rem;line-height:1.65;color:var(--ink-mid)}
+.cv-step__tag{display:inline-block;margin-top:1rem;font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--green)}
+
+/* Why Different — comparison */
+.cv-diff{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:980px;margin:0 auto}
+@media(max-width:760px){.cv-diff{grid-template-columns:1fr}}
+.cv-diff__col{padding:2.5rem 2rem;border:1px solid var(--border)}
+.cv-diff__col--them{background:var(--parchment-mid)}
+.cv-diff__col--us{background:var(--plum-dark);border-color:var(--plum-dark)}
+.cv-diff__label{font-size:.6875rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem;display:block}
+.cv-diff__col--them .cv-diff__label{color:var(--ink-muted)}
+.cv-diff__col--us .cv-diff__label{color:var(--gold)}
+.cv-diff__col--us .cv-diff__title{color:var(--parchment)}
+.cv-diff__title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:1.5rem;color:var(--ink)}
+.cv-diff li{list-style:none;display:flex;gap:.75rem;align-items:flex-start;padding:.7rem 0;font-size:.95rem;line-height:1.55}
+.cv-diff__col--them li{color:var(--ink-mid);border-bottom:1px solid var(--border)}
+.cv-diff__col--us li{color:rgba(250,246,240,.85);border-bottom:1px solid rgba(201,168,76,.18)}
+.cv-diff li:last-child{border-bottom:none}
+.cv-diff__mark{flex-shrink:0;font-weight:700}
+.cv-diff__col--them .cv-diff__mark{color:#b07a7a}
+.cv-diff__col--us .cv-diff__mark{color:var(--gold)}
+
+/* Who It's For / Not For */
+.cv-fit{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:1000px;margin:0 auto}
+@media(max-width:760px){.cv-fit{grid-template-columns:1fr}}
+.cv-fit__col{background:var(--white);border:1px solid var(--border);padding:2.75rem 2.25rem}
+.cv-fit__col--yes{border-top:3px solid var(--green)}
+.cv-fit__col--no{border-top:3px solid #b07a7a}
+.cv-fit__h{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;margin-bottom:1.5rem;color:var(--ink)}
+.cv-fit li{list-style:none;display:flex;gap:.85rem;align-items:flex-start;padding:.8rem 0;font-size:1rem;line-height:1.55;color:var(--ink-mid);border-bottom:1px solid var(--border)}
+.cv-fit li:last-child{border-bottom:none}
+.cv-fit__ico{flex-shrink:0;font-weight:700;font-size:1.05rem;line-height:1.4}
+.cv-fit__col--yes .cv-fit__ico{color:var(--green)}
+.cv-fit__col--no .cv-fit__ico{color:#b07a7a}
+
+/* What Happens Next */
+.cv-next{max-width:780px;margin:0 auto}
+.cv-next__step{display:flex;gap:1.75rem;padding:1.75rem 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.cv-next__step:last-child{border-bottom:none}
+.cv-next__n{flex-shrink:0;width:2.75rem;height:2.75rem;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600}
+.cv-next__h{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--parchment);margin-bottom:.4rem}
+.cv-next__p{font-size:.97rem;line-height:1.65;color:rgba(250,246,240,.72)}
+
+/* FAQ accordion */
+.cv-faq{max-width:780px;margin:0 auto}
+.cv-faq__item{border-bottom:1px solid var(--border)}
+.cv-faq__q{display:flex;justify-content:space-between;align-items:center;gap:1.25rem;width:100%;padding:1.6rem 0;background:none;border:none;text-align:left;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--ink);transition:color .2s}
+.cv-faq__q:hover{color:var(--plum)}
+.cv-faq__ico{flex-shrink:0;width:1.85rem;height:1.85rem;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.3rem;line-height:1;transition:transform .25s,background .25s,color .25s}
+.cv-faq__item.open .cv-faq__ico{transform:rotate(45deg);background:var(--gold);color:var(--plum-dark)}
+.cv-faq__a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.cv-faq__a p{font-size:1rem;font-weight:400;line-height:1.8;color:var(--ink-mid);padding-bottom:1.6rem}
+.cv-faq__a a{color:var(--green);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+
+/* ── HEADER LOGO: dark on light (mobile) nav, white on dark (desktop) nav, no plaque ── */
+.gn__logo-img--white{display:none}
+.gn__logo-img--dark{display:block}
+@media(min-width:1100px){
+  .globalNav .gn__logo-glass{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  .globalNav .gn__logo-img--dark{display:none}
+  .globalNav .gn__logo-img--white{display:block;height:46px;width:auto;mix-blend-mode:normal!important}
+}
+
 </style>
 
 <meta name="description" content="We help women 45+ turn decades of knowledge and experience into a profitable coaching business — without complicated tech, paid ads, or pushy sales tactics. Take the free quiz.">
@@ -1606,7 +1689,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
       <div class="gn__logo-glass">
         <img src="/public/images/logo.png"
              alt="The5th Consulting"
-             class="gn__logo-img">
+             class="gn__logo-img gn__logo-img--dark">
+        <img src="/public/images/logo-header-white.png"
+             alt="The5th Consulting"
+             class="gn__logo-img gn__logo-img--white">
       </div>
     </a>
     <ul class="gn__nav" role="list">
@@ -2859,6 +2945,198 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
 </section>
 
 <!-- ======================================================
+     HOW IT WORKS — The Client-To-Cash Method
+====================================================== -->
+<section class="cv-how layout layout--padding" id="how-it-works" style="background:var(--parchment-mid)">
+  <div class="cv-head">
+    <span class="eyebrow">How It Works</span>
+    <h2 class="h2">The Client-To-Cash Method™</h2>
+    <p class="copy">A four-part framework that turns a lifetime of expertise into consistent, premium income — without paid ads, funnels, or posting three times a day.</p>
+  </div>
+  <div class="cv-steps">
+    <div class="cv-step" data-animate>
+      <span class="cv-step__num">01</span>
+      <h3 class="cv-step__h">Package</h3>
+      <p class="cv-step__p">We take what you already know and shape it into one premium offer people understand instantly — and happily pay for.</p>
+      <span class="cv-step__tag">Your expertise → an offer</span>
+    </div>
+    <div class="cv-step" data-animate>
+      <span class="cv-step__num">02</span>
+      <h3 class="cv-step__h">Position</h3>
+      <p class="cv-step__p">We price it correctly and communicate your value so the right clients immediately see why they need you.</p>
+      <span class="cv-step__tag">Priced for premium</span>
+    </div>
+    <div class="cv-step" data-animate>
+      <span class="cv-step__num">03</span>
+      <h3 class="cv-step__h">Attract</h3>
+      <p class="cv-step__p">We find clients inside your existing network — no cold outreach, no complicated funnels, no ad spend required.</p>
+      <span class="cv-step__tag">Clients, not followers</span>
+    </div>
+    <div class="cv-step" data-animate>
+      <span class="cv-step__num">04</span>
+      <h3 class="cv-step__h">Close</h3>
+      <p class="cv-step__p">The Diagnose · Prescribe · Close framework turns conversations into signed clients — service, never pressure.</p>
+      <span class="cv-step__tag">Conversations → cash</span>
+    </div>
+  </div>
+  <div class="cv-cta-row">
+    <a href="https://quiz.the5th.consulting" class="ctaPrimary" data-animate>See Where You'd Start — Take the Free Quiz →</a>
+    <p class="cv-trustline">Free 2-minute quiz · No credit card · <span>We'll never spam you</span></p>
+  </div>
+</section>
+
+<!-- ======================================================
+     WHY WE'RE DIFFERENT
+====================================================== -->
+<section class="layout layout--padding" id="why-different">
+  <div class="cv-head">
+    <span class="eyebrow">Why The5th Is Different</span>
+    <h2 class="h2">Not another course. Not a generic AI tool.</h2>
+    <p class="copy">Most programs hand you templates and disappear. Generic AI gives you advice that ignores your stage and offer. The5th gives you a proven system, real weekly coaching, and AI trained on the exact frameworks our clients use to get paid.</p>
+  </div>
+  <div class="cv-diff">
+    <div class="cv-diff__col cv-diff__col--them" data-animate>
+      <span class="cv-diff__label">Other coaches &amp; AI tools</span>
+      <h3 class="cv-diff__title">Generic, one-size-fits-all</h3>
+      <ul>
+        <li><span class="cv-diff__mark">✕</span> Built for 25-year-old beginners chasing followers</li>
+        <li><span class="cv-diff__mark">✕</span> Endless content, no system to actually get paid</li>
+        <li><span class="cv-diff__mark">✕</span> Templates handed over, then you're on your own</li>
+        <li><span class="cv-diff__mark">✕</span> Generic ChatGPT advice that ignores your offer</li>
+        <li><span class="cv-diff__mark">✕</span> Paid ads, funnels, and pressure-based sales tactics</li>
+      </ul>
+    </div>
+    <div class="cv-diff__col cv-diff__col--us" data-animate>
+      <span class="cv-diff__label">The5th</span>
+      <h3 class="cv-diff__title">Built for experienced women</h3>
+      <ul>
+        <li><span class="cv-diff__mark">✓</span> Designed for women 45+ with real-world expertise</li>
+        <li><span class="cv-diff__mark">✓</span> One proven system — Package, Position, Attract, Close</li>
+        <li><span class="cv-diff__mark">✓</span> Live weekly coaching with Indrodip — real answers</li>
+        <li><span class="cv-diff__mark">✓</span> AI trained on our frameworks &amp; real call transcripts</li>
+        <li><span class="cv-diff__mark">✓</span> Clients from your own network — no ads, no pressure</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cv-cta-row">
+    <a href="/fast-forward" class="ctaSecondary" data-animate>See How The Program Works →</a>
+  </div>
+</section>
+
+<!-- ======================================================
+     WHO IT'S FOR / NOT FOR
+====================================================== -->
+<section class="layout layout--padding" id="who-for" style="background:var(--parchment-mid)">
+  <div class="cv-head">
+    <span class="eyebrow">Is This You?</span>
+    <h2 class="h2">Who The5th is — and isn't — for</h2>
+    <p class="copy">We're selective on purpose. The guarantee only works when we work with the right women. Here's how to know if that's you.</p>
+  </div>
+  <div class="cv-fit">
+    <div class="cv-fit__col cv-fit__col--yes" data-animate>
+      <h3 class="cv-fit__h">This is for you if…</h3>
+      <ul>
+        <li><span class="cv-fit__ico">✓</span> You have decades of professional or life expertise you've never fully monetized</li>
+        <li><span class="cv-fit__ico">✓</span> You're a woman 45+ ready for income that creates freedom, not another job</li>
+        <li><span class="cv-fit__ico">✓</span> You're willing to follow a proven system instead of figuring it out alone</li>
+        <li><span class="cv-fit__ico">✓</span> You want premium clients, not a huge social following</li>
+        <li><span class="cv-fit__ico">✓</span> You're coachable, committed, and ready to start now</li>
+      </ul>
+    </div>
+    <div class="cv-fit__col cv-fit__col--no" data-animate>
+      <h3 class="cv-fit__h">This is NOT for you if…</h3>
+      <ul>
+        <li><span class="cv-fit__ico">✕</span> You're looking for a get-rich-quick scheme with zero effort</li>
+        <li><span class="cv-fit__ico">✕</span> You have no real expertise or experience to build on yet</li>
+        <li><span class="cv-fit__ico">✕</span> You want to argue with the system rather than apply it</li>
+        <li><span class="cv-fit__ico">✕</span> You're not willing to have real conversations with potential clients</li>
+        <li><span class="cv-fit__ico">✕</span> You expect results without showing up for the work</li>
+      </ul>
+    </div>
+  </div>
+  <div class="cv-cta-row">
+    <a href="https://quiz.the5th.consulting" class="ctaPrimary" data-animate>Find Out If You're a Fit →</a>
+    <p class="cv-trustline">Takes 2 minutes · Your answers stay <span>100% private</span></p>
+  </div>
+</section>
+
+<!-- ======================================================
+     WHAT HAPPENS NEXT
+====================================================== -->
+<section class="cv-next-section layout--padding" id="what-next" style="background:var(--plum-dark)">
+  <div class="layout">
+    <div class="cv-head">
+      <span class="eyebrow">What Happens Next</span>
+      <h2 class="h2" style="color:var(--parchment)">After you take the quiz</h2>
+      <p class="copy" style="color:rgba(250,246,240,.72)">No pressure, no obligation. Here's exactly what to expect the moment you raise your hand.</p>
+    </div>
+    <div class="cv-next">
+      <div class="cv-next__step" data-animate>
+        <span class="cv-next__n">1</span>
+        <div>
+          <h3 class="cv-next__h">Take the free 2-minute quiz</h3>
+          <p class="cv-next__p">Answer a few questions about your experience and goals. You'll get an instant read on where your fastest path to first revenue is.</p>
+        </div>
+      </div>
+      <div class="cv-next__step" data-animate>
+        <span class="cv-next__n">2</span>
+        <div>
+          <h3 class="cv-next__h">Book a no-pressure conversation</h3>
+          <p class="cv-next__p">If it looks like a fit, you'll be invited to a real conversation — not a sales pitch. We map your offer and answer your questions honestly.</p>
+        </div>
+      </div>
+      <div class="cv-next__step" data-animate>
+        <span class="cv-next__n">3</span>
+        <div>
+          <h3 class="cv-next__h">Get your personalized roadmap</h3>
+          <p class="cv-next__p">You leave with clarity either way — a clear next step for turning your expertise into income, whether or not you join us.</p>
+        </div>
+      </div>
+      <div class="cv-next__step" data-animate>
+        <span class="cv-next__n">4</span>
+        <div>
+          <h3 class="cv-next__h">Start building — backed by a guarantee</h3>
+          <p class="cv-next__p">If you join, you begin the system immediately with live coaching, AI, and a written guarantee standing behind your results.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cv-cta-row">
+      <a href="https://quiz.the5th.consulting" class="ctaPrimary" data-animate>Start Step 1 — Take the Quiz →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     FAQ
+====================================================== -->
+<section class="layout layout--padding" id="faq">
+  <div class="cv-head">
+    <span class="eyebrow">Questions &amp; Answers</span>
+    <h2 class="h2">Everything you might be wondering</h2>
+    <p class="copy">Still have a question? Tap the chat in the corner — a real person will answer.</p>
+  </div>
+  <div class="cv-faq">
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">What exactly is The5th? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>The5th helps women turn a lifetime of expertise into a business that creates freedom. We combine a proven system (the Client-To-Cash Method™), live weekly coaching with founder Indrodip Ghosh, and AI trained on our exact frameworks — so you never have to figure it out alone.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">Who is this for? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Primarily women 45+ with decades of professional or life experience who want to package that expertise into premium coaching or consulting income — without complicated tech, paid ads, or pushy sales tactics.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">What if I've never made money online before? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>That's exactly who we build for. Your professional and life experience <em>is</em> the asset — we simply help you package, price, and position it correctly. Most clients are starting from zero online income.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">How is this different from a course or a generic AI tool? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Courses hand you templates and disappear. Generic AI gives advice that ignores your stage and offer. The5th gives you a proven system, real human coaching every week, and AI trained specifically on our frameworks and hundreds of real coaching transcripts.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">Do I need a big social media following? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>No. Our clients land premium clients from their existing networks — no ads, no funnels, and no posting three times a day. We focus on clients, not followers.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">How quickly do people see results? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>It varies, but many women generate their first revenue around the 60–90 day mark once their offer is live. Some move faster — Hayley made $2,200 in three weeks; Laurie made $8,900 in five.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">How much time does it take each week? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Most members invest a few focused hours a week. The system is designed to fit around a full life — you follow a clear roadmap rather than guessing what to do next.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">Is there a guarantee? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Yes. Our flagship Fast Forward program comes with a written guarantee: $10K/month within 6 months or we keep working with you free until you get there, with a refund if you haven't generated at least 2× your investment. <a href="/fast-forward">See the full guarantee →</a></p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">What is The5th AI? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>It's your personal CMO trained on the 10K Roadmap frameworks and real coaching transcripts. It writes your offers, emails, and scripts, and coaches you through pricing resistance and what to post next — available 24/7 inside the platform.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">Do you offer one-on-one support? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Yes. You get direct access to Indrodip in live weekly coaching, plus the AI and the community whenever you need them. You're never left to implement alone.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">What's the difference between Fast Forward and The Collective? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Fast Forward is our intensive, guaranteed program for women who want hands-on results fast. <a href="/collective">The Collective</a> is our ongoing membership — live coaching, AI, and the full system at an accessible monthly investment. The quiz helps you find the right fit.</p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">Is my information safe? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Always. We never sell or share your data, and we'll never spam you. The quiz takes two minutes and your answers stay completely private. <a href="/privacy">Read our privacy policy →</a></p></div></div>
+    <div class="cv-faq__item" data-animate><button class="cv-faq__q">How do I get started? <span class="cv-faq__ico">+</span></button><div class="cv-faq__a"><p>Take the free 2-minute quiz. You'll get an instant read on your fastest path to first revenue and, if it's a fit, an invitation to a no-pressure conversation. <a href="https://quiz.the5th.consulting">Start the quiz →</a></p></div></div>
+  </div>
+  <div class="cv-cta-row">
+    <a href="https://quiz.the5th.consulting" class="ctaPrimary" data-animate>Take the Free Quiz →</a>
+    <p class="cv-trustline">2 minutes · No credit card · <span>We'll never spam you</span></p>
+  </div>
+</section>
+
+<!-- ======================================================
      FINAL CTA
 ====================================================== -->
 <section class="signUp">
@@ -2947,6 +3225,28 @@ if (navToggle && mobileMenu && menuBackdrop) {
   window.addEventListener('resize', () => { if (window.innerWidth >= 1100) closeMenu(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
 }
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.cv-faq__item').forEach(item => {
+  const btn = item.querySelector('.cv-faq__q');
+  const ans = item.querySelector('.cv-faq__a');
+  btn.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.cv-faq__item.open').forEach(other => {
+      if (other !== item) {
+        other.classList.remove('open');
+        other.querySelector('.cv-faq__a').style.maxHeight = null;
+      }
+    });
+    if (isOpen) {
+      item.classList.remove('open');
+      ans.style.maxHeight = null;
+    } else {
+      item.classList.add('open');
+      ans.style.maxHeight = ans.scrollHeight + 'px';
+    }
+  });
+});
 
 // ── GSAP SCROLL ANIMATIONS ──
 gsap.registerPlugin(ScrollTrigger);

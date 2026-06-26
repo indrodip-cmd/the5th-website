@@ -661,6 +661,15 @@ h2.H.lime-em em{color:var(--lime);}
 .footer-legal a:hover{color:#C9A84C}
 @media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
 
+/* ── HEADER LOGO: dark on light (mobile) nav, white on dark (desktop) nav, no plaque ── */
+.gn__logo-img--white{display:none}
+.gn__logo-img--dark{display:block}
+@media(min-width:1100px){
+  .globalNav .gn__logo-glass{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  .globalNav .gn__logo-img--dark{display:none}
+  .globalNav .gn__logo-img--white{display:block;height:46px;width:auto;mix-blend-mode:normal!important}
+}
+
 </style>
 
 <meta name="description" content="The5th AI is your personal CMO — trained on the 10K Roadmap to write your content, build your offer, and follow up with you 24/7. Start your free 3-day trial.">
@@ -684,7 +693,8 @@ h2.H.lime-em em{color:var(--lime);}
   <div class="layout">
     <a href="/" class="gn__logo gn__logo--img">
       <div class="gn__logo-glass">
-        <img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img">
+        <img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--dark">
+        <img src="/public/images/logo-header-white.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--white">
       </div>
     </a>
     <ul class="gn__nav" role="list">

@@ -456,6 +456,32 @@ ul{list-style:none}
 .footer-legal a:hover{color:#C9A84C}
 @media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
 
+/* ── what happens next ── */
+.coNext{padding:88px 0;border-top:1px solid var(--border);background:#FBF8F2}
+.coNext__header{text-align:center;max-width:680px;margin:0 auto 52px}
+.coNext__header .h2{margin-top:14px}
+.coNext__header .copy{color:#5a5550;margin-top:14px}
+.coNext__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;max-width:1080px;margin:0 auto}
+@media(max-width:880px){.coNext__grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.coNext__grid{grid-template-columns:1fr}}
+.coNext__card{background:#fff;border:1px solid var(--border);border-top:3px solid var(--green);border-radius:8px;padding:30px 26px}
+.coNext__n{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:var(--gold-light);color:#1C4A32;font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;margin-bottom:16px}
+.coNext__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--ink);margin-bottom:8px;line-height:1.15}
+.coNext__p{font-family:'DM Sans',sans-serif;font-size:.94rem;font-weight:300;line-height:1.65;color:#5a5550}
+.coNext__cta{text-align:center;margin-top:48px}
+.coNext__trust{margin-top:16px;font-size:.82rem;color:#8A8075}
+.coNext__trust b{color:#1C4A32}
+@media(max-width:768px){.coNext{padding:64px 0}}
+
+/* ── HEADER LOGO: dark on light (mobile) nav, white on dark (desktop) nav, no plaque ── */
+.gn__logo-img--white{display:none}
+.gn__logo-img--dark{display:block}
+@media(min-width:1100px){
+  .globalNav .gn__logo-glass{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  .globalNav .gn__logo-img--dark{display:none}
+  .globalNav .gn__logo-img--white{display:block;height:46px;width:auto;mix-blend-mode:normal!important}
+}
+
 </style>
 
 <meta name="description" content="The Collective is a private membership for accomplished women — weekly live coaching, The5th AI, and the Client-To-Cash Method, all on Skool. Backed by a 365-day money-back guarantee.">
@@ -478,7 +504,7 @@ ul{list-style:none}
 <header class="globalNav" id="nav">
   <div class="layout">
     <a href="/" class="gn__logo gn__logo--img">
-      <div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img"></div>
+      <div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--dark"><img src="/public/images/logo-header-white.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--white"></div>
     </a>
     <ul class="gn__nav" role="list">
       <li><a href="/fast-forward">Fast Forward</a></li>
@@ -966,6 +992,43 @@ ul{list-style:none}
   </div>
 </section>
 
+<!-- WHAT HAPPENS NEXT -->
+<section class="coNext">
+  <div class="layout">
+    <div class="coNext__header">
+      <span class="eyebrow">What Happens Next</span>
+      <h2 class="h2">The moment you join, here's <em>what happens.</em></h2>
+      <p class="copy">No waiting, no onboarding maze. You're inside and building the same day.</p>
+    </div>
+    <div class="coNext__grid">
+      <div class="coNext__card">
+        <span class="coNext__n">1</span>
+        <h3 class="coNext__h">You get instant access</h3>
+        <p class="coNext__p">The second you join, your Skool account opens — weekly coaching, The5th AI, the full curriculum, and the community, all in one place.</p>
+      </div>
+      <div class="coNext__card">
+        <span class="coNext__n">2</span>
+        <h3 class="coNext__h">You start with The5th AI</h3>
+        <p class="coNext__p">Tell the AI where you are and it helps you shape your first offer immediately — no waiting for the next call to make progress.</p>
+      </div>
+      <div class="coNext__card">
+        <span class="coNext__n">3</span>
+        <h3 class="coNext__h">You join your first live call</h3>
+        <p class="coNext__p">Bring your real situation to the next weekly session with Indrodip and leave with a specific answer and an action plan.</p>
+      </div>
+      <div class="coNext__card">
+        <span class="coNext__n">4</span>
+        <h3 class="coNext__h">You build — and get paid</h3>
+        <p class="coNext__p">Follow the Client-To-Cash Method™ with the room holding you to it. Members regularly close their first client within weeks.</p>
+      </div>
+    </div>
+    <div class="coNext__cta">
+      <a href="https://whop.com/the5th-community/" target="_blank" style="display:inline-block;font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:600;color:#fff;background:#1C4A32;padding:16px 34px;letter-spacing:.02em;transition:background .15s">Join The Collective — $1,970/year</a>
+      <p class="coNext__trust">Instant access on Skool · <b>365-day money-back guarantee</b> · We'll never spam you</p>
+    </div>
+  </div>
+</section>
+
 <!-- TICKER 2 -->
 <div class="ticker ticker--green" aria-hidden="true">
   <div class="ticker__inner">
@@ -987,6 +1050,16 @@ ul{list-style:none}
       <div class="faqItem"><button class="faqBtn" data-open="false">What if I've never sold a coaching package before?<span class="faqIcon">+</span></button><div class="faqAns"><p>That is exactly who this is built for. The Client-To-Cash Method™ starts from zero. It walks you through building your offer, setting your price, attracting the right clients, and closing conversations without pressure. The majority of members had never sold a coaching or consulting package before they joined. Several closed their first client within the first three weeks.</p></div></div>
       <div class="faqItem"><button class="faqBtn" data-open="false">How is this different from a regular coaching program?<span class="faqIcon">+</span></button><div class="faqAns"><p>Three things. First, you get direct weekly access to Indrodip personally — not a team member or a recorded training. Second, The5th AI is available 24/7 in between calls. Third, the community is built specifically for experienced women over 40, which means the conversations, the system, and the support are all tailored to where you actually are.</p></div></div>
       <div class="faqItem"><button class="faqBtn" data-open="false">Where does everything live?<span class="faqIcon">+</span></button><div class="faqAns"><p>Everything — your weekly live coaching, The5th AI, the on-demand video curriculum, and the private community — lives in one place on Skool, accessible the moment you join.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">How much time do I need each week?<span class="faqIcon">+</span></button><div class="faqAns"><p>Most members invest a few focused hours a week — the live call plus implementation. The system is built to fit around a full life, and the AI and community keep you moving in between. You follow a clear roadmap instead of guessing what to do next.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">Do I need a big audience or social following?<span class="faqIcon">+</span></button><div class="faqAns"><p>No. The method is built to attract premium clients from your existing network — no paid ads, no complicated funnels, and no posting three times a day. We focus on clients, not followers.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">When does the coaching happen — and what if I miss a call?<span class="faqIcon">+</span></button><div class="faqAns"><p>Indrodip runs a live group session every week. If you ever miss one, replays are posted inside Skool, and The5th AI is available 24/7 to answer anything in the meantime — so you're never stuck waiting.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">How is The Collective different from Fast Forward?<span class="faqIcon">+</span></button><div class="faqAns"><p>The Collective is our ongoing membership — weekly coaching, AI, and the full system at an accessible yearly investment. <a href="/fast-forward" style="color:#1C4A32;font-weight:600">Fast Forward</a> is the intensive, guaranteed, small-cohort program for women who want hands-on results fast. Not sure which fits? <a href="https://quiz.the5th.consulting" style="color:#1C4A32;font-weight:600">Take the quiz →</a></p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">Is the price really a one-time yearly payment?<span class="faqIcon">+</span></button><div class="faqAns"><p>Yes — $1,970 for a full year of weekly live coaching, The5th AI, the complete curriculum, and the community. Compare that to $15,000+ for private coaching. And it's protected by a 365-day money-back guarantee.</p></div></div>
+      <div class="faqItem"><button class="faqBtn" data-open="false">Is my information safe?<span class="faqIcon">+</span></button><div class="faqAns"><p>Always. We never sell or share your data and we'll never spam you. <a href="/privacy" style="color:#1C4A32;font-weight:600">Read our privacy policy →</a></p></div></div>
+    </div>
+    <div style="text-align:center;margin-top:48px">
+      <a href="https://whop.com/the5th-community/" target="_blank" style="display:inline-block;font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:600;color:#fff;background:#1C4A32;padding:16px 34px;letter-spacing:.02em">Join The Collective — $1,970/year</a>
+      <p style="margin-top:16px;font-size:.82rem;color:#8A8075">365-day money-back guarantee · <span style="color:#1C4A32;font-weight:600">We'll never spam you</span></p>
     </div>
   </div>
 </section>

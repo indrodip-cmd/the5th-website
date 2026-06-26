@@ -363,6 +363,41 @@ ul{list-style:none}
 .footer-legal a:hover{color:#C9A84C}
 @media(max-width:760px){.footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}.footer-legal{justify-content:flex-start}}
 
+/* ── testimonial quote cards ── */
+.ffTQ{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1040px;margin:0 auto}
+@media(max-width:880px){.ffTQ{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.ffTQ{grid-template-columns:1fr}}
+.ffTQ__card{background:rgba(255,255,255,.04);border:1px solid var(--gold-line);border-radius:8px;padding:30px 28px;display:flex;flex-direction:column}
+.ffTQ__stars{color:var(--gold);letter-spacing:2px;font-size:.85rem;margin-bottom:14px}
+.ffTQ__q{font-size:1.02rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.82);margin-bottom:22px;flex-grow:1}
+.ffTQ__q em{font-style:italic;color:var(--gold)}
+.ffTQ__by{display:flex;align-items:center;gap:13px}
+.ffTQ__av{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-line);flex-shrink:0}
+.ffTQ__nm{font-size:.95rem;font-weight:600;color:#fff}
+.ffTQ__ro{font-size:.78rem;font-weight:300;color:rgba(255,255,255,.55)}
+.ffCtaRow{text-align:center;margin-top:50px}
+.ffTrust{margin-top:16px;font-size:.82rem;color:var(--muted)}
+.ffTrust b{color:var(--gold-deep)}
+.sec--dark .ffTrust{color:rgba(255,255,255,.5)}.sec--dark .ffTrust b{color:var(--gold)}
+
+/* ── what happens next ── */
+.ffNext{max-width:780px;margin:0 auto}
+.ffNext__row{display:flex;gap:26px;padding:26px 0;border-bottom:1px solid var(--border)}
+.ffNext__row:last-child{border-bottom:none}
+.ffNext__n{flex-shrink:0;width:50px;height:50px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:500}
+.ffNext__h{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--ink);margin-bottom:6px}
+.ffNext__p{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft)}
+.ffNext__tag{display:inline-block;margin-top:8px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+
+/* ── HEADER LOGO: dark on light (mobile) nav, white on dark (desktop) nav, no plaque ── */
+.gn__logo-img--white{display:none}
+.gn__logo-img--dark{display:block}
+@media(min-width:1100px){
+  .globalNav .gn__logo-glass{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+  .globalNav .gn__logo-img--dark{display:none}
+  .globalNav .gn__logo-img--white{display:block;height:46px;width:auto;mix-blend-mode:normal!important}
+}
+
 </style>
 
 <meta name="description" content="Fast Forward is a 6-month private group coaching program for women over 40. Hit $10K/month or we keep working with you free until you do — backed by a signed agreement. Only 5 seats per cohort.">
@@ -385,7 +420,7 @@ ul{list-style:none}
 <header class="globalNav" id="nav">
   <div class="layout">
     <a href="/" class="gn__logo gn__logo--img">
-      <div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img"></div>
+      <div class="gn__logo-glass"><img src="/public/images/logo.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--dark"><img src="/public/images/logo-header-white.png" alt="The5th Consulting" class="gn__logo-img gn__logo-img--white"></div>
     </a>
     <ul class="gn__nav" role="list">
       <li><a href="/fast-forward" class="active">Fast Forward</a></li>
@@ -704,6 +739,24 @@ ul{list-style:none}
       
     </div>
     <p class="resNote" data-reveal>These are not outliers. <em>These are women who showed up, did the work, and followed the system</em> — exactly what you'll do inside Fast Forward.</p>
+    <div class="ffTQ" style="margin-top:54px">
+      <div class="ffTQ__card" data-reveal>
+        <div class="ffTQ__stars">★★★★★</div>
+        <p class="ffTQ__q">"I came in sceptical. I left with nearly <em>nine thousand dollars</em> in new revenue and a business model that actually makes sense for my life."</p>
+        <div class="ffTQ__by"><img class="ffTQ__av" src="/public/clients/laurie.jpg" alt="Laurie" onerror="this.style.visibility='hidden'"><div><div class="ffTQ__nm">Laurie</div><div class="ffTQ__ro">$8,900 in 5 weeks</div></div></div>
+      </div>
+      <div class="ffTQ__card" data-reveal>
+        <div class="ffTQ__stars">★★★★★</div>
+        <p class="ffTQ__q">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. <em>The framework works if you work it.</em>"</p>
+        <div class="ffTQ__by"><img class="ffTQ__av" src="/public/clients/angela.jpg" alt="Angela" onerror="this.style.visibility='hidden'"><div><div class="ffTQ__nm">Angela</div><div class="ffTQ__ro">$12,000 in 9 weeks</div></div></div>
+      </div>
+      <div class="ffTQ__card" data-reveal>
+        <div class="ffTQ__stars">★★★★★</div>
+        <p class="ffTQ__q">"Fifteen years of corporate expertise sitting dormant. Fast Forward helped me <em>package it into a premium programme</em> and take it back to market with confidence."</p>
+        <div class="ffTQ__by"><img class="ffTQ__av" src="/public/clients/toril.jpg" alt="Toril" onerror="this.style.visibility='hidden'"><div><div class="ffTQ__nm">Toril</div><div class="ffTQ__ro">Launched after 15 years</div></div></div>
+      </div>
+    </div>
+    <div class="ffCtaRow" data-reveal><a href="https://book.10kroadmap.org" class="btnGold">I'm Ready — Apply for a Seat →</a><p class="ffTrust">5 seats per cohort · <b>$10K/month guaranteed in writing</b></p></div>
   </div>
 </section>
 
@@ -756,6 +809,24 @@ ul{list-style:none}
   </div>
 </section>
 
+<!-- WHAT HAPPENS NEXT -->
+<section class="sec sec--warm">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">What Happens Next</span>
+      <h2 class="h2">After you apply, here's <em>exactly</em> what happens.</h2>
+      <p class="lead">No pressure, no obligation. The application is simply how we make sure Fast Forward is right for you — and you for it.</p>
+    </div>
+    <div class="ffNext">
+      <div class="ffNext__row" data-reveal><span class="ffNext__n">1</span><div><h3 class="ffNext__h">You apply in 3 minutes</h3><p class="ffNext__p">A short application tells us about your experience and goals. There's no payment and no commitment at this stage.</p><span class="ffNext__tag">Step 1 · Today</span></div></div>
+      <div class="ffNext__row" data-reveal><span class="ffNext__n">2</span><div><h3 class="ffNext__h">We have a real 45-minute call</h3><p class="ffNext__p">Not a sales pitch — a genuine conversation. We map your offer, answer every question, and decide together whether this is a fit. If it isn't, we'll tell you honestly.</p><span class="ffNext__tag">Step 2 · Within days</span></div></div>
+      <div class="ffNext__row" data-reveal><span class="ffNext__n">3</span><div><h3 class="ffNext__h">You sign the guarantee</h3><p class="ffNext__p">If you join, you sign the Client Enrollment Agreement that legally documents your guarantee — $10K/month within 6 months — before your first session. The promise is in writing.</p><span class="ffNext__tag">Step 3 · Onboarding</span></div></div>
+      <div class="ffNext__row" data-reveal><span class="ffNext__n">4</span><div><h3 class="ffNext__h">You start building with your cohort</h3><p class="ffNext__p">You join your five-woman cohort, get your digital product library, and begin the system. First revenue for most women lands around the 60–90 day mark.</p><span class="ffNext__tag">Step 4 · Week 1 onward</span></div></div>
+    </div>
+    <div class="ffCtaRow" data-reveal><a href="https://book.10kroadmap.org" class="btnGold">Start Your Application →</a><p class="ffTrust">Takes 3 minutes · No payment to apply · <b>We'll never spam you</b></p></div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="sec sec--white">
   <div class="layout">
@@ -769,7 +840,15 @@ ul{list-style:none}
       <div class="faqItem" data-reveal><button class="faqBtn">What if I already have some clients?<span class="faqIco">+</span></button><div class="faqA"><p>Even better. We'll help you raise your prices, systematize your client attraction, and build toward consistent $10K months — regardless of where you're starting.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">Is it really only 5 people?<span class="faqIco">+</span></button><div class="faqA"><p>Yes. The guarantee only works when delivery is exceptional. Five women per cohort ensures genuine accountability, personal attention, and results — which is exactly why a cohort closes the moment it fills.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">When do most people make their first money?<span class="faqIco">+</span></button><div class="faqA"><p>Most women generate their first revenue around the 60–90 day mark, once the offer is live and the attraction system is running. Some move faster — Hayley made $2,200 in her first three weeks.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">How much time will this take each week?<span class="faqIco">+</span></button><div class="faqA"><p>Plan for a few focused hours a week — a live session plus implementation. The system is built to fit around a full life, and the cohort structure keeps you moving without overwhelm.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What exactly do I get inside the program?<span class="faqIco">+</span></button><div class="faqA"><p>Live weekly coaching with Indrodip, a five-woman accountability cohort, the full digital product library of trainings and templates, the Diagnose · Prescribe · Close sales framework, The5th AI, and a written $10K/month guarantee.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What if I don't know what to sell yet?<span class="faqIco">+</span></button><div class="faqA"><p>That's one of the first things we solve. We take your experience and shape it into one premium offer people understand and pay for — you don't need to arrive with it figured out.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">Do I need to be technical or run ads?<span class="faqIco">+</span></button><div class="faqA"><p>No. There's no complicated tech and no paid ads. We attract clients from your existing network using conversations, not funnels — and the AI handles much of the writing for you.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">How is Fast Forward different from The Collective?<span class="faqIco">+</span></button><div class="faqA"><p>Fast Forward is the intensive, guaranteed, hands-on program with a small cohort and a written promise. <a href="/collective" style="color:var(--gold-deep);font-weight:600">The Collective</a> is our ongoing monthly membership. Not sure which fits? <a href="https://quiz.the5th.consulting" style="color:var(--gold-deep);font-weight:600">Take the quiz</a> and we'll point you to the right one.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What are the payment options?<span class="faqIco">+</span></button><div class="faqA"><p>The investment is $5,500, with flexible payment plans available. We'll walk through the options on your enrolment call — there's no payment required just to apply.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">Is my information safe when I apply?<span class="faqIco">+</span></button><div class="faqA"><p>Completely. We never sell or share your details and we'll never spam you. Your application is used only to prepare for your call. <a href="/privacy" style="color:var(--gold-deep);font-weight:600">Read our privacy policy →</a></p></div></div>
     </div>
+    <div class="ffCtaRow" data-reveal><a href="https://book.10kroadmap.org" class="btnGold">Apply for Your Seat →</a><p class="ffTrust">3-minute application · No payment to apply · <b>We'll never spam you</b></p></div>
   </div>
 </section>
 

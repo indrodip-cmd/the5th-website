@@ -7,12 +7,12 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#2E1A35">
-<title>Book Your Call · The5th Consulting</title>
-<meta name="description" content="Watch the short video, then book your private call with The5th. We'll map how to turn your expertise into a business that creates freedom. No pressure, no obligation.">
+<meta name="theme-color" content="#FAF6F0">
+<title>Book Your Private Call · The5th Consulting</title>
+<meta name="description" content="Watch the short video, then apply for a private call. We help women turn decades of expertise into a coaching or consulting business that creates freedom. No pressure, no obligation.">
 <meta name="robots" content="noindex, follow">
 <meta property="og:title" content="Book Your Private Call · The5th Consulting">
-<meta property="og:description" content="Watch the short video, then book your private call. We'll map how to turn your expertise into a business that creates freedom.">
+<meta property="og:description" content="Watch the short video, then apply for a private call. We help women turn decades of expertise into a business that creates freedom.">
 <meta property="og:image" content="https://the5th.consulting/public/images/founder.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,260 +23,576 @@
   --plum:#3D2645;--plum-dark:#2E1A35;--plum-deep:#231029;--plum-mid:#4E3158;
   --gold:#C9A84C;--gold-soft:#E4C879;--gold-deep:#B0902F;--gold-line:rgba(201,168,76,.32);
   --green:#1C4A32;--green-dark:#143826;
-  --parchment:#FAF6F0;--ink:#1A1A2E;--muted:#8A8075;--white:#fff;
+  --cream:#FAF6F0;--cream-mid:#F4EEE4;--cream-deep:#EAE3D8;--ivory:#FBF8F2;
+  --ink:#1A1A2E;--ink-mid:#403b3b;--ink-soft:#5a5550;--muted:#8A8075;--border:#E2DCD2;--white:#fff;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;max-width:100%}
 html{scroll-behavior:smooth}
-body{
-  font-family:'DM Sans',Helvetica,Arial,sans-serif;
-  background:#231029;color:rgba(255,255,255,.82);
-  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;
-}
+body{font-family:'DM Sans',Helvetica,Arial,sans-serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
+ul{list-style:none}
 ::selection{background:var(--gold);color:#2E1A35}
 
-/* ambient background */
-.page{position:relative;overflow:hidden;background:linear-gradient(168deg,#3D2645 0%,#2E1A35 52%,#231029 100%)}
-.page::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:120vw;height:90vh;background:radial-gradient(ellipse,rgba(201,168,76,.14),transparent 68%);pointer-events:none;animation:glow 9s ease-in-out infinite alternate}
-.grain::after{content:'';position:absolute;inset:0;opacity:.045;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;z-index:0}
-@keyframes glow{from{opacity:.5;transform:translateX(-50%) scale(1)}to{opacity:1;transform:translateX(-50%) scale(1.1)}}
-
-.wrap{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.wrap--mid{max-width:880px}
 .wrap--narrow{max-width:720px}
+.eyebrow{font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);display:inline-flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);opacity:.7}
+.eyebrow--c{justify-content:center}.eyebrow--c::after{content:'';width:24px;height:1px;background:var(--gold);opacity:.7}
+.eyebrow--light{color:var(--gold)}
+.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.5rem,5.4vw,4.4rem);font-weight:400;line-height:1.02;letter-spacing:-.028em;color:var(--ink)}
+.h1 em{font-style:italic;color:var(--gold-deep)}
+.h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;line-height:1.08;letter-spacing:-.02em;color:var(--ink)}
+.h2 em{font-style:italic;color:var(--gold-deep)}
+.h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.5rem;line-height:1.15;color:var(--ink)}
+.lead{font-size:clamp(1.08rem,2vw,1.3rem);font-weight:300;line-height:1.75;color:var(--ink-soft)}
+.secHead{text-align:center;max-width:740px;margin:0 auto 56px}
+.secHead .eyebrow{margin-bottom:18px}.secHead .lead{margin-top:18px}
 
-/* logo (not a nav) */
-.brand{text-align:center;padding:38px 0 6px}
-.brand img{height:46px;width:auto;margin:0 auto;opacity:.96}
-
-/* hero */
-.hero{text-align:center;padding:30px 0 14px}
-.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:12px;margin-bottom:22px}
-.eyebrow::before,.eyebrow::after{content:'';width:26px;height:1px;background:var(--gold);opacity:.7}
-.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.3rem,5.2vw,4rem);font-weight:400;line-height:1.04;letter-spacing:-.025em;color:#fff;max-width:14ch;margin:0 auto}
-.h1 em{font-style:italic;color:var(--gold)}
-.sub{font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:300;line-height:1.7;color:rgba(255,255,255,.72);max-width:600px;margin:24px auto 0}
-
-/* video */
-.videoSec{padding:40px 0 8px}
-.videoFrame{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 40px 100px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);background:#160a1c}
-.videoFrame::before{content:'';position:absolute;inset:0;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(201,168,76,.18);pointer-events:none;z-index:3}
-/* 16:9 placeholder — replace inner block with your Wistia embed */
-.videoPH{position:relative;aspect-ratio:16/9;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 75%);cursor:pointer}
-.videoPH__play{width:84px;height:84px;border-radius:50%;background:rgba(201,168,76,.16);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .25s,background .25s;backdrop-filter:blur(2px)}
-.videoPH:hover .videoPH__play{transform:scale(1.07);background:rgba(201,168,76,.28)}
-.videoPH__play svg{width:30px;height:30px;margin-left:5px;fill:var(--gold)}
-.videoPH__label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:rgba(255,255,255,.6)}
-.videoPH__hint{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32)}
-.videoNote{text-align:center;font-size:.8rem;letter-spacing:.04em;color:rgba(255,255,255,.4);margin-top:16px}
-.videoNote b{color:var(--gold-soft);font-weight:600}
-
-/* primary CTA */
-.ctaSec{text-align:center;padding:30px 0 10px}
-.btnGold{position:relative;display:inline-flex;align-items:center;gap:11px;font-size:1rem;font-weight:700;letter-spacing:.02em;color:#2E1A35;background:linear-gradient(180deg,#Ecd391,#C9A84C 60%,#B0902F);padding:20px 46px;border-radius:6px;box-shadow:0 16px 40px rgba(201,168,76,.34),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .25s,box-shadow .25s;overflow:hidden;border:none;cursor:pointer}
+/* buttons */
+.btnGold{position:relative;display:inline-flex;align-items:center;gap:11px;font-size:1rem;font-weight:700;letter-spacing:.02em;color:#2E1A35;background:linear-gradient(180deg,#Ecd391,#C9A84C 60%,#B0902F);padding:19px 44px;border-radius:6px;box-shadow:0 14px 36px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .25s,box-shadow .25s;overflow:hidden;border:none;cursor:pointer}
 .btnGold::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.45) 50%,transparent 80%);transform:translateX(-130%);transition:transform .7s}
 .btnGold:hover::after{transform:translateX(130%)}
-.btnGold:hover{transform:translateY(-3px);box-shadow:0 22px 52px rgba(201,168,76,.48)}
-.ctaTrust{margin-top:16px;font-size:.82rem;color:rgba(255,255,255,.5)}
-.ctaTrust b{color:var(--gold-soft);font-weight:600}
+.btnGold:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(201,168,76,.46)}
+.btnGold--lg{font-size:1.08rem;padding:22px 52px}
+.btnGhost{display:inline-flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;color:var(--ink);padding:17px 32px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(26,26,46,.22);transition:box-shadow .2s,background .2s}
+.btnGhost:hover{box-shadow:inset 0 0 0 1px var(--gold);background:rgba(201,168,76,.06)}
+.trustline{font-size:.84rem;color:var(--muted);letter-spacing:.01em}
+.trustline b{color:var(--gold-deep);font-weight:600}
+.trustline--light{color:rgba(255,255,255,.55)}.trustline--light b{color:var(--gold-soft)}
 
-/* divider */
-.rule{width:100%;max-width:560px;height:1px;margin:64px auto 0;background:linear-gradient(90deg,transparent,rgba(201,168,76,.4),transparent)}
+/* sections */
+.sec{padding:104px 0}
+@media(max-width:768px){.sec{padding:68px 0}}
+.sec--ivory{background:var(--ivory);border-top:1px solid var(--border)}
+.sec--mid{background:var(--cream-mid);border-top:1px solid var(--border)}
+.sec--dark{background:linear-gradient(168deg,#3D2645,#2E1A35 60%,#231029);color:#fff;position:relative;overflow:hidden}
+.sec--dark .h2{color:#fff}.sec--dark .lead{color:rgba(255,255,255,.66)}
+.grain::before{content:'';position:absolute;inset:0;opacity:.045;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+.rule{width:100%;max-width:520px;height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--gold-line),transparent)}
 
-/* what you'll get */
-.sec{padding:70px 0}
-.secHead{text-align:center;max-width:640px;margin:0 auto 44px}
-.secHead .h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,2.9rem);font-weight:400;line-height:1.1;letter-spacing:-.02em;color:#fff;margin-top:14px}
-.secHead .h2 em{font-style:italic;color:var(--gold)}
-.getGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:880px;margin:0 auto}
-@media(max-width:760px){.getGrid{grid-template-columns:1fr}}
-.getCard{background:rgba(255,255,255,.04);border:1px solid var(--gold-line);border-radius:10px;padding:30px 26px}
-.getCard__i{width:46px;height:46px;border-radius:10px;background:rgba(201,168,76,.14);display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:var(--gold)}
-.getCard__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.15}
-.getCard__p{font-size:.95rem;font-weight:300;line-height:1.6;color:rgba(255,255,255,.66)}
+/* brand mark */
+.brand{text-align:center;padding:34px 0 4px}
+.brand img{height:42px;width:auto;margin:0 auto}
 
-/* trust strip */
-.trust{display:flex;justify-content:center;flex-wrap:wrap;gap:0;max-width:820px;margin:0 auto;border:1px solid var(--gold-line);border-radius:12px;background:rgba(0,0,0,.18);overflow:hidden}
-.trust__cell{flex:1 1 200px;text-align:center;padding:30px 22px;border-right:1px solid rgba(255,255,255,.08)}
-.trust__cell:last-child{border-right:none}
-.trust__fig{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,2.8rem);font-weight:500;color:var(--gold);line-height:1}
-.trust__lab{font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:10px}
-@media(max-width:560px){.trust__cell{flex:1 1 50%;border-bottom:1px solid rgba(255,255,255,.08)}.trust__cell:nth-child(even){border-right:none}}
+/* HERO */
+.hero{text-align:center;padding:34px 0 0;position:relative}
+.hero__eyebrow{margin-bottom:24px}
+.hero .h1{max-width:16ch;margin:0 auto}
+.hero__sub{font-size:clamp(1.1rem,2.1vw,1.35rem);font-weight:300;line-height:1.7;color:var(--ink-soft);max-width:640px;margin:24px auto 0}
+.hero__authority{margin:22px auto 0;font-size:.82rem;letter-spacing:.04em;color:var(--muted);max-width:560px}
+.hero__authority b{color:var(--ink);font-weight:600}
 
-/* testimonial */
-.quoteSec{padding:64px 0 0}
-.quote{max-width:720px;margin:0 auto;text-align:center}
-.quote__stars{color:var(--gold);letter-spacing:3px;font-size:1rem;margin-bottom:20px}
-.quote__q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.5rem,3vw,2.1rem);font-weight:300;line-height:1.35;color:#fff}
-.quote__by{margin-top:22px;display:inline-flex;align-items:center;gap:13px}
-.quote__av{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-line)}
-.quote__nm{font-weight:600;color:#fff;font-size:.95rem;text-align:left}
-.quote__ro{font-size:.8rem;color:rgba(255,255,255,.55);text-align:left}
+/* VIDEO */
+.videoSec{padding:44px 0 0}
+.videoFrame{position:relative;max-width:920px;margin:0 auto;border-radius:14px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 50px 110px -40px rgba(46,26,53,.5),0 0 0 6px rgba(255,255,255,.6)}
+.videoPH{position:relative;aspect-ratio:16/9;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 75%);cursor:pointer}
+.videoPH__play{width:88px;height:88px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .25s,background .25s}
+.videoPH:hover .videoPH__play{transform:scale(1.07);background:rgba(201,168,76,.3)}
+.videoPH__play svg{width:32px;height:32px;margin-left:5px;fill:var(--gold)}
+.videoPH__label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:rgba(255,255,255,.62)}
+.videoPH__hint{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32)}
+.videoNote{text-align:center;font-size:.82rem;letter-spacing:.03em;color:var(--muted);margin-top:18px}
+.videoNote b{color:var(--gold-deep);font-weight:600}
+.heroCta{text-align:center;padding:34px 0 0}
+.heroCta .trustline{margin-top:15px}
 
-/* booking */
-.book{padding:80px 0 30px}
-.bookCard{max-width:760px;margin:0 auto;background:rgba(255,255,255,.04);border:1px solid var(--gold-line);border-radius:16px;padding:48px 40px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.4)}
-.bookCard .h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.8vw,2.8rem);font-weight:400;color:#fff;line-height:1.1;margin-bottom:12px}
-.bookCard .h2 em{font-style:italic;color:var(--gold)}
-.bookCard p{font-size:1.05rem;font-weight:300;color:rgba(255,255,255,.7);max-width:500px;margin:0 auto 26px}
-/* booking embed placeholder — drop your scheduler iframe here */
-.schedPH{margin:30px auto 28px;max-width:560px;border:1px dashed rgba(201,168,76,.4);border-radius:12px;padding:40px 24px;background:rgba(0,0,0,.18)}
-.schedPH__t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:rgba(255,255,255,.55);margin-bottom:6px}
-.schedPH__s{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3)}
-.bookFine{margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.45)}
-.bookFine a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px}
+/* STATS strip */
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.statCell{text-align:center;padding:8px 22px;border-right:1px solid rgba(255,255,255,.1)}
+.statCell:last-child{border-right:none}
+.statCell b{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.2rem);font-weight:500;color:var(--gold);line-height:1;display:block}
+.statCell span{font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:10px;display:block}
+@media(max-width:680px){.stats .wrap{grid-template-columns:1fr 1fr;gap:36px 0}.statCell{border-right:none}.statCell:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}}
 
-/* steps */
-.steps{max-width:640px;margin:48px auto 0;text-align:left}
-.step{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1)}
-.step:last-child{border-bottom:none}
-.step__n{flex-shrink:0;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
-.step__h{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:#fff;margin-bottom:2px}
-.step__p{font-size:.92rem;font-weight:300;line-height:1.55;color:rgba(255,255,255,.62)}
+/* IS THIS YOU */
+.fitList{max-width:760px;margin:0 auto;display:grid;gap:0}
+.fitRow{display:flex;gap:18px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--border)}
+.fitRow:last-child{border-bottom:none}
+.fitRow__i{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(28,74,50,.08);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem}
+.fitRow__t{font-size:1.08rem;font-weight:300;line-height:1.6;color:var(--ink-mid)}
+.fitRow__t b{font-weight:600;color:var(--ink)}
 
-/* micro footer (minimal, not a nav) */
-.micro{text-align:center;padding:40px 24px 46px;font-size:.76rem;color:rgba(255,255,255,.32)}
-.micro a{color:rgba(255,255,255,.5);text-decoration:underline;text-underline-offset:2px}
-.micro a:hover{color:var(--gold)}
+/* METHOD steps */
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1000px;margin:0 auto}
+@media(max-width:880px){.steps4{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps4{grid-template-columns:1fr}}
+.stepCard{background:var(--ivory);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:8px;padding:30px 26px}
+.stepCard__n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.3rem;font-weight:400;color:var(--gold-deep);line-height:1;display:block;margin-bottom:14px}
+.stepCard__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:8px}
+.stepCard__p{font-size:.95rem;font-weight:300;line-height:1.6;color:var(--ink-soft)}
 
-[data-up]{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.19,.7,.2,1),transform .9s cubic-bezier(.19,.7,.2,1)}
+/* CASE STUDIES featured */
+.cases{display:grid;gap:26px;max-width:980px;margin:0 auto}
+.caseCard{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;box-shadow:0 24px 60px -40px rgba(46,26,53,.5)}
+@media(max-width:760px){.caseCard{grid-template-columns:1fr}}
+.caseCard__body{padding:40px 38px}
+.caseCard__tag{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px}
+.caseCard__name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;line-height:1.1;margin-bottom:4px}
+.caseCard__role{font-size:.9rem;color:var(--muted);margin-bottom:20px}
+.caseCard__line{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft);margin-bottom:16px}
+.caseCard__line b{font-weight:600;color:var(--ink)}
+.caseCard__metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.metric{font-size:.82rem;font-weight:500;color:var(--green-dark);background:rgba(28,74,50,.07);border:1px solid rgba(28,74,50,.16);border-radius:100px;padding:7px 14px}
+.caseCard__side{background:linear-gradient(165deg,#3D2645,#2E1A35);color:#fff;padding:40px 36px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden}
+.caseCard__side::before{content:'';position:absolute;top:-30%;right:-20%;width:80%;height:80%;background:radial-gradient(ellipse,rgba(201,168,76,.2),transparent 70%)}
+.caseCard__big{position:relative;font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,5vw,3.6rem);font-weight:500;color:var(--gold);line-height:1}
+.caseCard__bigLab{position:relative;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:12px;max-width:200px}
+
+/* MORE RESULTS grid */
+.resGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1000px;margin:0 auto}
+@media(max-width:820px){.resGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.resGrid{grid-template-columns:1fr}}
+.resCard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px 26px;transition:transform .25s,box-shadow .25s}
+.resCard:hover{transform:translateY(-4px);box-shadow:0 18px 40px -28px rgba(46,26,53,.5)}
+.resCard__fig{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:600;color:var(--gold-deep);line-height:1}
+.resCard__when{font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 0 14px}
+.resCard__nm{font-weight:600;color:var(--ink);font-size:1rem}
+.resCard__ro{font-size:.88rem;font-weight:300;color:var(--ink-soft);margin-top:2px}
+
+/* VIDEO TESTIMONIALS */
+.vtGrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:920px;margin:0 auto}
+@media(max-width:680px){.vtGrid{grid-template-columns:1fr}}
+.vtFrame{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 30px 70px -44px rgba(0,0,0,.6)}
+.vtPH{position:relative;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 78%);cursor:pointer}
+.vtPH__play{width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.vtPH:hover .vtPH__play{transform:scale(1.08)}
+.vtPH__play svg{width:22px;height:22px;margin-left:4px;fill:var(--gold)}
+.vtPH__nm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(255,255,255,.66)}
+.vtPH__hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+
+/* WRITTEN testimonials */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
+@media(max-width:820px){.quotes{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.quotes{grid-template-columns:1fr}}
+.qCard{background:var(--ivory);border:1px solid var(--border);border-radius:10px;padding:28px 26px;display:flex;flex-direction:column}
+.qCard__stars{color:var(--gold);letter-spacing:2px;font-size:.85rem;margin-bottom:12px}
+.qCard__q{font-size:.98rem;font-weight:300;line-height:1.65;color:var(--ink-mid);flex-grow:1}
+.qCard__q em{font-style:italic;color:var(--gold-deep)}
+.qCard__by{display:flex;align-items:center;gap:12px;margin-top:20px}
+.qCard__av{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-line)}
+.qCard__nm{font-weight:600;font-size:.92rem;color:var(--ink)}
+.qCard__ro{font-size:.78rem;color:var(--muted)}
+
+/* FOUNDER */
+.founder{display:grid;grid-template-columns:.82fr 1.18fr;gap:56px;align-items:center;max-width:1000px;margin:0 auto}
+@media(max-width:820px){.founder{grid-template-columns:1fr;gap:36px}}
+.founder__media{border-radius:12px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 30px 70px rgba(0,0,0,.4);background:#231029}
+.founder__media img{width:100%;display:block}
+.founder__body .eyebrow{margin-bottom:18px}
+.founder__body .h2{margin-bottom:18px}
+.founder__body p{font-size:1.05rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.74);margin-bottom:16px}
+.founder__body p b{color:#fff;font-weight:600}
+.founder__sig{margin-top:24px}
+.founder__sig-nm{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff}
+.founder__sig-ro{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* DIFFERENT / objections */
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:940px;margin:0 auto}
+@media(max-width:720px){.diff{grid-template-columns:1fr}}
+.diffCol{padding:36px 32px;border:1px solid var(--border);border-radius:12px}
+.diffCol--them{background:var(--cream-mid)}
+.diffCol--us{background:#fff;border-color:var(--gold-line);box-shadow:0 20px 50px -36px rgba(46,26,53,.5)}
+.diffCol__lab{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;display:block}
+.diffCol--them .diffCol__lab{color:var(--muted)}.diffCol--us .diffCol__lab{color:var(--gold-deep)}
+.diffCol li{display:flex;gap:11px;align-items:flex-start;padding:11px 0;font-size:.97rem;line-height:1.55;border-bottom:1px solid var(--border)}
+.diffCol li:last-child{border-bottom:none}
+.diffCol--them li{color:var(--ink-soft)}.diffCol--us li{color:var(--ink-mid)}
+.diffCol__m{flex-shrink:0;font-weight:700}
+.diffCol--them .diffCol__m{color:#b07a7a}.diffCol--us .diffCol__m{color:var(--green)}
+
+/* FAQ */
+.faq{max-width:780px;margin:0 auto}
+.faqItem{border-bottom:1px solid var(--border)}
+.faqBtn{display:flex;justify-content:space-between;align-items:center;gap:20px;width:100%;padding:24px 0;background:none;border:none;text-align:left;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;color:var(--ink);transition:color .2s}
+.faqBtn:hover{color:var(--gold-deep)}
+.faqIco{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--gold);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;font-size:1.4rem;line-height:1;transition:transform .25s,background .25s,color .25s}
+.faqItem.open .faqIco{transform:rotate(45deg);background:var(--gold);color:#2E1A35}
+.faqA{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faqA p{font-size:1rem;font-weight:300;line-height:1.85;color:var(--ink-soft);padding-bottom:24px}
+
+/* APPLY */
+.applyCard{max-width:820px;margin:0 auto;text-align:center}
+.applyCard .h2{color:#fff;margin-bottom:14px}
+.applyCard>.lead{color:rgba(255,255,255,.72);max-width:560px;margin:0 auto 14px}
+.applySteps{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:26px 0 34px}
+.applyStep{display:flex;align-items:center;gap:10px;font-size:.9rem;color:rgba(255,255,255,.8)}
+.applyStep b{width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.95rem;flex-shrink:0}
+.applyStep span:last-child{font-weight:300}
+.applyArrow{color:rgba(201,168,76,.5)}
+@media(max-width:600px){.applyArrow{display:none}.applySteps{flex-direction:column;align-items:flex-start;text-align:left;max-width:300px;margin-left:auto;margin-right:auto}}
+.formMount{max-width:640px;margin:0 auto 22px;background:rgba(255,255,255,.04);border:1px dashed rgba(201,168,76,.45);border-radius:14px;padding:46px 28px}
+.formMount__t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:rgba(255,255,255,.6);margin-bottom:6px}
+.formMount__s{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.32)}
+.applyFine{margin-top:18px;font-size:.82rem;color:rgba(255,255,255,.5)}
+.applyFine a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px}
+.scarce{display:inline-flex;align-items:center;gap:9px;margin-bottom:26px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);background:rgba(201,168,76,.1);border:1px solid var(--gold-line);border-radius:100px;padding:8px 18px}
+.scarce .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25)}
+
+/* guarantee strip */
+.guar{max-width:780px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--gold-line);border-radius:14px;padding:44px 40px;box-shadow:0 20px 50px -36px rgba(46,26,53,.5)}
+.guar__seal{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--gold-deep);margin-bottom:10px}
+.guar .h3{font-size:1.7rem;margin-bottom:12px}
+.guar p{font-size:1.02rem;font-weight:300;line-height:1.7;color:var(--ink-soft);max-width:560px;margin:0 auto}
+
+/* sticky CTA */
+.stickyCta{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(35,16,41,.97);backdrop-filter:blur(10px);border-top:1px solid var(--gold-line);padding:13px 20px;display:flex;align-items:center;justify-content:center;gap:20px;transform:translateY(110%);transition:transform .35s ease;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+.stickyCta.show{transform:translateY(0)}
+.stickyCta__txt{color:rgba(255,255,255,.82);font-size:.92rem;font-weight:300}
+.stickyCta__txt b{color:#fff;font-weight:600}
+.stickyCta .btnGold{padding:13px 30px;font-size:.9rem}
+@media(max-width:600px){.stickyCta__txt{display:none}.stickyCta{padding:11px 16px}.stickyCta .btnGold{width:100%;justify-content:center}}
+
+/* micro footer */
+.micro{text-align:center;padding:44px 24px 96px;font-size:.76rem;color:var(--muted)}
+.micro a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
+.micro a:hover{color:var(--gold-deep)}
+
+[data-up]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.19,.7,.2,1),transform .9s cubic-bezier(.19,.7,.2,1)}
 [data-up].in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
 @media(prefers-reduced-motion:reduce){[data-up]{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<main class="page grain">
 
-  <!-- centered brand mark (not a nav) -->
-  <div class="brand"><a href="/"><img src="/public/images/logo-header-white.png" alt="The5th Consulting"></a></div>
+<!-- brand mark (not a nav) -->
+<div class="brand"><a href="/"><img src="/public/images/logo.png" alt="The5th Consulting"></a></div>
 
-  <!-- HERO -->
-  <section class="hero wrap">
-    <span class="eyebrow" data-up>Watch First · Then Book</span>
-    <h1 class="h1" data-up>Turn your expertise into a business that <em>creates freedom.</em></h1>
-    <p class="sub" data-up>Watch this short video to see exactly how we help experienced women package, price, and sell what they already know. Then book your private call below.</p>
-  </section>
+<!-- ════════ HERO + VIDEO ════════ -->
+<section class="hero wrap">
+  <span class="eyebrow eyebrow--c hero__eyebrow" data-up>Watch First · Then Apply</span>
+  <h1 class="h1" data-up>You spent a lifetime becoming an expert. <em>Let's turn it into income.</em></h1>
+  <p class="hero__sub" data-up>Watch the short video below to see exactly how women over 40 are turning decades of experience into a coaching or consulting business that pays them what they're worth, without ads, funnels, or a big following. Then apply for a private call to map yours.</p>
+  <p class="hero__authority" data-up>Guided by <b>Indrodip Ghosh</b>, who has advised Fortune 500 executives and billion-dollar companies. <b>$15M+</b> generated by clients across <b>12 countries</b>.</p>
+</section>
 
-  <!-- VIDEO -->
-  <section class="videoSec wrap">
-    <div class="videoFrame" data-up>
-      <!-- ════════════════════════════════════════════════════════
-           WISTIA VIDEO GOES HERE.
-           Replace the entire .videoPH block below with your embed, e.g.:
-
-           <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
-             <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
-               <div class="wistia_embed wistia_async_YOURVIDEOID seo=true videoFoam=true" style="height:100%;position:relative;width:100%"></div>
-             </div>
+<section class="videoSec wrap">
+  <div class="videoFrame" data-up>
+    <!-- ════════════════════════════════════════════════════════
+         MAIN VSL VIDEO: replace this .videoPH block with your Wistia embed:
+         <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
+           <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+             <div class="wistia_embed wistia_async_YOURVIDEOID seo=true videoFoam=true" style="height:100%;position:relative;width:100%"></div>
            </div>
-           <script src="https://fast.wistia.com/embed/medias/YOURVIDEOID.jsonp" async></script>
-           <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-      ════════════════════════════════════════════════════════ -->
-      <div class="videoPH" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">
-        <div class="videoPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-        <div class="videoPH__label">Your VSL video will play here</div>
-        <div class="videoPH__hint">Wistia embed · 16:9</div>
-      </div>
+         </div>
+         <script src="https://fast.wistia.com/embed/medias/YOURVIDEOID.jsonp" async></script>
+         <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+    ════════════════════════════════════════════════════════ -->
+    <div class="videoPH" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">
+      <div class="videoPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="videoPH__label">Your VSL video will play here</div>
+      <div class="videoPH__hint">Wistia · 16:9</div>
     </div>
-    <p class="videoNote" data-up>Turn your sound on. <b>Watch to the end</b>, then book your call.</p>
-  </section>
+  </div>
+  <p class="videoNote" data-up>Turn your sound on. <b>Watch to the end</b>, then apply below.</p>
+</section>
 
-  <!-- PRIMARY CTA -->
-  <section class="ctaSec wrap">
-    <a href="#book" class="btnGold" data-up>Book My Private Call →</a>
-    <p class="ctaTrust" data-up>Free · No obligation · <b>We'll never spam you</b></p>
-  </section>
+<section class="heroCta wrap">
+  <a href="#apply" class="btnGold btnGold--lg" data-up>Apply for Your Private Call →</a>
+  <p class="trustline" data-up>Free · By application only · <b>We'll never spam you</b></p>
+</section>
 
-  <div class="rule"></div>
+<div class="rule" style="margin-top:88px"></div>
 
-  <!-- WHAT YOU'LL GET -->
-  <section class="sec wrap">
+<!-- ════════ STATS ════════ -->
+<section class="sec stats sec--dark grain" style="padding:60px 0">
+  <div class="wrap">
+    <div class="statCell" data-up><b>$15M+</b><span>Generated by clients</span></div>
+    <div class="statCell" data-up><b>76+</b><span>Women coached</span></div>
+    <div class="statCell" data-up><b>12</b><span>Nations represented</span></div>
+    <div class="statCell" data-up><b>90 days</b><span>Avg. to first client</span></div>
+  </div>
+</section>
+
+<!-- ════════ IS THIS YOU (cold identification) ════════ -->
+<section class="sec">
+  <div class="wrap">
     <div class="secHead" data-up>
-      <span class="eyebrow">On This Call</span>
-      <h2 class="h2">What you'll walk away <em>with.</em></h2>
+      <span class="eyebrow eyebrow--c">Does This Sound Like You?</span>
+      <h2 class="h2">You have the expertise. <em>You were never shown how to be paid for it.</em></h2>
     </div>
-    <div class="getGrid">
-      <div class="getCard" data-up>
-        <div class="getCard__i">01</div>
-        <h3 class="getCard__h">A clear offer</h3>
-        <p class="getCard__p">We'll map the one premium offer hiding inside your experience, the thing people will happily pay you for.</p>
-      </div>
-      <div class="getCard" data-up>
-        <div class="getCard__i">02</div>
-        <h3 class="getCard__h">Your fastest path</h3>
-        <p class="getCard__p">A specific next step to your first (or next) paying client, without ads, funnels, or posting all day.</p>
-      </div>
-      <div class="getCard" data-up>
-        <div class="getCard__i">03</div>
-        <h3 class="getCard__h">An honest answer</h3>
-        <p class="getCard__p">We'll tell you straight whether we can help, and exactly what working together would look like.</p>
-      </div>
+    <div class="fitList">
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've spent <b>decades becoming brilliant</b> at what you do, as a coach, consultant, therapist, executive, or expert, and you know your experience is worth far more than your income reflects.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've tried courses, content, and "do-it-yourself" funnels, and you're <b>tired of figuring it out alone</b> with no real return to show for it.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You don't want to chase a huge following or post three times a day. You want <b>a handful of premium clients</b> and a business that fits your life.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You're ready for a proven system and real guidance, <b>not more theory</b>, so you can finally move from "one day" to a paying client.</p></div>
     </div>
-  </section>
+    <div style="text-align:center;margin-top:46px" data-up><a href="#apply" class="btnGold">This Is Me, Let's Talk →</a></div>
+  </div>
+</section>
 
-  <!-- TRUST STATS -->
-  <section class="sec wrap" style="padding-top:0">
-    <div class="trust" data-up>
-      <div class="trust__cell"><div class="trust__fig">$15M+</div><div class="trust__lab">Generated by clients</div></div>
-      <div class="trust__cell"><div class="trust__fig">76+</div><div class="trust__lab">Women coached</div></div>
-      <div class="trust__cell"><div class="trust__fig">12</div><div class="trust__lab">Nations</div></div>
-      <div class="trust__cell"><div class="trust__fig">90 days</div><div class="trust__lab">Avg. to first client</div></div>
+<!-- ════════ HOW IT WORKS ════════ -->
+<section class="sec sec--mid">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">How We Help</span>
+      <h2 class="h2">The Client-To-Cash Method™</h2>
+      <p class="lead">A simple, proven path from "a lifetime of knowledge" to consistent, premium income. It's the same system behind every result on this page.</p>
     </div>
-  </section>
+    <div class="steps4">
+      <div class="stepCard" data-up><span class="stepCard__n">01</span><h3 class="stepCard__h">Package</h3><p class="stepCard__p">We shape what you already know into one premium offer people understand instantly and happily pay for.</p></div>
+      <div class="stepCard" data-up><span class="stepCard__n">02</span><h3 class="stepCard__h">Position</h3><p class="stepCard__p">We price it correctly and communicate your value so the right clients see why they need you.</p></div>
+      <div class="stepCard" data-up><span class="stepCard__n">03</span><h3 class="stepCard__h">Attract</h3><p class="stepCard__p">We bring in clients from your existing network, no ads, no funnels, no posting all day.</p></div>
+      <div class="stepCard" data-up><span class="stepCard__n">04</span><h3 class="stepCard__h">Close</h3><p class="stepCard__p">Our Diagnose · Prescribe · Close framework turns conversations into signed clients, service, never pressure.</p></div>
+    </div>
+  </div>
+</section>
 
-  <!-- TESTIMONIAL -->
-  <section class="quoteSec wrap wrap--narrow">
-    <div class="quote" data-up>
-      <div class="quote__stars">★★★★★</div>
-      <blockquote class="quote__q">"I came in sceptical. I left with nearly nine thousand dollars in new revenue and a business model that finally makes sense for my life."</blockquote>
-      <div class="quote__by">
-        <img class="quote__av" src="/public/clients/laurie.jpg" alt="Laurie" onerror="this.style.display='none'">
-        <div><div class="quote__nm">Laurie</div><div class="quote__ro">$8,900 in 5 weeks</div></div>
+<!-- ════════ FEATURED CASE STUDIES ════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">Real Women · Real Numbers</span>
+      <h2 class="h2">They were exactly where you are. <em>Then this happened.</em></h2>
+      <p class="lead">Not influencers. Not beginners chasing hype. Experienced professionals who finally packaged what they already knew.</p>
+    </div>
+    <div class="cases">
+
+      <div class="caseCard" data-up>
+        <div class="caseCard__body">
+          <div class="caseCard__tag">Leadership Coach · Norway</div>
+          <div class="caseCard__name">Torill</div>
+          <div class="caseCard__role">Returned after a 15-year absence</div>
+          <p class="caseCard__line">A celebrity coach who once advised governments, Torill stepped away for 15 years. She came back with <b>no current audience and no platform</b>. We built her re-entry from scratch, structured a $7,000 leadership program, and created the launch system that turned her reputation into revenue.</p>
+          <div class="caseCard__metrics"><span class="metric">30 enrolled at $7,000</span><span class="metric">1 launch</span></div>
+        </div>
+        <div class="caseCard__side"><div class="caseCard__big">$210,000</div><div class="caseCard__bigLab">From a single program launch in 3 months</div></div>
+      </div>
+
+      <div class="caseCard" data-up>
+        <div class="caseCard__body">
+          <div class="caseCard__tag">Dating Coach · TEDx Speaker</div>
+          <div class="caseCard__name">Laurie Gerber</div>
+          <div class="caseCard__role">20 years' experience, helping women over 50</div>
+          <p class="caseCard__line">Despite deep credibility, Laurie's earlier course launch had underperformed at just $79. We rebuilt the launch around a webinar and a community, then <b>repositioned the price from $79 to $249</b> to reflect the true transformation she delivers.</p>
+          <div class="caseCard__metrics"><span class="metric">600 joined her community</span><span class="metric">57 buyers at $249</span></div>
+        </div>
+        <div class="caseCard__side"><div class="caseCard__big">$14,193</div><div class="caseCard__bigLab">In revenue within 60 days</div></div>
+      </div>
+
+      <div class="caseCard" data-up>
+        <div class="caseCard__body">
+          <div class="caseCard__tag">Coach · From $0</div>
+          <div class="caseCard__name">Gurpreet</div>
+          <div class="caseCard__role">Had invested $16,000 elsewhere with no return</div>
+          <p class="caseCard__line">Gurpreet arrived exhausted and close to giving up, with <b>no active income</b> after spending more than $16,000 across other programs. We stripped everything back to fundamentals: a clear offer, an ideal client, and a simple outreach system she could actually run.</p>
+          <div class="caseCard__metrics"><span class="metric">$0 → first clients in weeks</span><span class="metric">Repeatable system</span></div>
+        </div>
+        <div class="caseCard__side"><div class="caseCard__big">$18,000</div><div class="caseCard__bigLab">In 3 months, on a business that had produced nothing</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════ MORE RESULTS GRID ════════ -->
+<section class="sec sec--ivory">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">And Many More</span>
+      <h2 class="h2">A track record across <em>every kind of expertise.</em></h2>
+    </div>
+    <div class="resGrid">
+      <div class="resCard" data-up><div class="resCard__fig">$180,000</div><div class="resCard__when">In 5 months</div><div class="resCard__nm">Shyama Prasad Goswami</div><div class="resCard__ro">Former Fortune 500 CEO → high-ticket consulting</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$100,000</div><div class="resCard__when">First year public</div><div class="resCard__nm">Girish</div><div class="resCard__ro">Law of Attraction coach's first public launch</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$21,000</div><div class="resCard__when">In 2 months</div><div class="resCard__nm">Abbas Jamie</div><div class="resCard__ro">Ex-CEO → conscious-living coach &amp; author</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$18,000</div><div class="resCard__when">One challenge</div><div class="resCard__nm">Bharti Chauhan</div><div class="resCard__ro">Marriage coach &amp; TEDx speaker, retreat revival</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$16,000</div><div class="resCard__when">In 5 months</div><div class="resCard__nm">Amalia</div><div class="resCard__ro">Army veteran &amp; mom → six-figure fitness coach</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$9,000</div><div class="resCard__when">In 3.5 months</div><div class="resCard__nm">Max</div><div class="resCard__ro">Veteran turned divorce coach from lived experience</div></div>
+    </div>
+    <div style="text-align:center;margin-top:48px" data-up><a href="#apply" class="btnGold">Map My Results On a Call →</a></div>
+  </div>
+</section>
+
+<!-- ════════ VIDEO TESTIMONIALS ════════ -->
+<section class="sec sec--mid">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">In Their Own Words</span>
+      <h2 class="h2">Hear it <em>from the women themselves.</em></h2>
+      <p class="lead">Real members, real results, unscripted.</p>
+    </div>
+    <div class="vtGrid">
+      <!-- ════ VIDEO TESTIMONIAL 1: replace .vtPH with your Wistia embed ════ -->
+      <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 1</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
+      <!-- ════ VIDEO TESTIMONIAL 2 ════ -->
+      <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 2</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
+      <!-- ════ VIDEO TESTIMONIAL 3 ════ -->
+      <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 3</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
+      <!-- ════ VIDEO TESTIMONIAL 4 ════ -->
+      <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 4</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ WRITTEN TESTIMONIALS ════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">★★★★★</span>
+      <h2 class="h2">What members say.</h2>
+    </div>
+    <div class="quotes">
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"I came in sceptical. I left with nearly <em>nine thousand dollars</em> in new revenue and a business model that finally makes sense for my life."</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/laurie.jpg" alt="Laurie" onerror="this.style.display='none'"><div><div class="qCard__nm">Laurie</div><div class="qCard__ro">$8,900 in 5 weeks</div></div></div></div>
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. <em>The framework works if you work it.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/angela.jpg" alt="Angela" onerror="this.style.display='none'"><div><div class="qCard__nm">Angela</div><div class="qCard__ro">$12,000 in 9 weeks</div></div></div></div>
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started <em>owning the value I bring.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/hayley.jpg" alt="Hayley" onerror="this.style.display='none'"><div><div class="qCard__nm">Hayley</div><div class="qCard__ro">$2,200 in 3 weeks</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOUNDER AUTHORITY ════════ -->
+<section class="sec sec--dark grain">
+  <div class="wrap">
+    <div class="founder">
+      <div class="founder__media" data-up><img src="/public/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" onerror="this.parentNode.style.display='none'"></div>
+      <div class="founder__body" data-up>
+        <span class="eyebrow eyebrow--light">Who You'll Be Speaking With</span>
+        <h2 class="h2">Strategy that's advised <em>billion-dollar companies.</em></h2>
+        <p>I'm Indrodip Ghosh. I've spent my career advising <b>Fortune 500 executives, billion-dollar companies, celebrity coaches, and governments</b> on the exact things most experts are never taught: positioning, marketing, and sales.</p>
+        <p>The title I'm proudest of isn't "consultant." It's helping experienced women turn what they already know into a business that creates real freedom, the kind of wealth that changes a family for generations.</p>
+        <p>On your call, you're not getting a junior closer reading a script. You're getting <b>that same strategy</b>, applied to your story.</p>
+        <div class="founder__sig"><div class="founder__sig-nm">Indrodip Ghosh</div><div class="founder__sig-ro">Founder · The5th &amp; 10K Roadmap</div></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- BOOKING -->
-  <section class="book wrap" id="book">
-    <div class="bookCard" data-up>
-      <span class="eyebrow">Your Invitation</span>
-      <h2 class="h2">Book your <em>private call.</em></h2>
-      <p>Pick a time that works for you. It's a real conversation, never a hard pitch, and you'll leave with clarity either way.</p>
+<!-- ════════ WHY DIFFERENT / OBJECTIONS ════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">Why This Is Different</span>
+      <h2 class="h2">Not another course. <em>Not a generic AI tool.</em></h2>
+    </div>
+    <div class="diff">
+      <div class="diffCol diffCol--them" data-up>
+        <span class="diffCol__lab">Other coaches &amp; programs</span>
+        <ul>
+          <li><span class="diffCol__m">✕</span> Built for 25-year-olds chasing followers</li>
+          <li><span class="diffCol__m">✕</span> Hand you templates, then leave you alone</li>
+          <li><span class="diffCol__m">✕</span> Paid ads, funnels, and pressure tactics</li>
+          <li><span class="diffCol__m">✕</span> Generic advice that ignores your offer</li>
+          <li><span class="diffCol__m">✕</span> Lots of information, no real accountability</li>
+        </ul>
+      </div>
+      <div class="diffCol diffCol--us" data-up>
+        <span class="diffCol__lab">The5th</span>
+        <ul>
+          <li><span class="diffCol__m">✓</span> Designed for experienced women over 40</li>
+          <li><span class="diffCol__m">✓</span> A proven system plus real human guidance</li>
+          <li><span class="diffCol__m">✓</span> Premium clients from your own network</li>
+          <li><span class="diffCol__m">✓</span> Strategy tailored to your exact expertise</li>
+          <li><span class="diffCol__m">✓</span> Coaching, AI, and a community behind you</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ GUARANTEE / RISK REVERSAL ════════ -->
+<section class="sec sec--mid" style="padding-top:0;padding-bottom:104px">
+  <div class="wrap">
+    <div class="guar" data-up>
+      <div class="guar__seal">Our Promise</div>
+      <h3 class="h3">The call is genuinely risk-free.</h3>
+      <p>It's a real conversation, never a hard pitch. You'll leave with a clear next step for turning your expertise into income, whether or not we ever work together. And if we do, our programs are backed by a written results guarantee.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FAQ ════════ -->
+<section class="sec sec--ivory">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">Before You Apply</span>
+      <h2 class="h2">Questions women often ask.</h2>
+    </div>
+    <div class="faq">
+      <div class="faqItem" data-up><button class="faqBtn">Is this call really free, and is it a sales pitch?<span class="faqIco">+</span></button><div class="faqA"><p>The call is free and it's a real conversation, not a pitch. We'll look honestly at your experience and goals, and you'll leave with a clear next step either way. If it turns out we can genuinely help, we'll tell you what working together looks like, with no pressure.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">What if I've never sold anything online before?<span class="faqIco">+</span></button><div class="faqA"><p>That's most of the women we work with. Your decades of experience are the asset, we simply help you package, price, and position it. You don't need tech skills or an audience to start.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">I'm not sure I'm "ready." Should I still apply?<span class="faqIco">+</span></button><div class="faqA"><p>If you have real expertise and you're willing to follow a proven system, you're ready enough. The whole point of the call is to find your clearest next step from wherever you are right now, including from zero.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">Do I need a big social media following?<span class="faqIco">+</span></button><div class="faqA"><p>No. Our clients land premium clients from their existing networks, without ads, funnels, or posting three times a day. We focus on clients, not followers.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">How much time will this take?<span class="faqIco">+</span></button><div class="faqA"><p>The system is designed to fit around a full life, a few focused hours a week. You follow a clear roadmap instead of guessing what to do next.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">Why do I have to answer questions before booking?<span class="faqIco">+</span></button><div class="faqA"><p>So your call is genuinely useful. A few short questions let us understand your situation in advance and make sure we can actually help, which means your time on the call is spent on you, not on getting up to speed.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">Is my information safe?<span class="faqIco">+</span></button><div class="faqA"><p>Completely. We never sell or share your details and we'll never spam you. Your answers are used only to prepare for your call. <a href="/privacy" style="color:var(--gold-deep);font-weight:600">Read our privacy policy.</a></p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn">What happens after I apply?<span class="faqIco">+</span></button><div class="faqA"><p>You'll answer a few short questions, then choose a time that suits you. You'll get an instant confirmation and a calendar invite, and we'll come to the call prepared for your specific situation.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ APPLY (Typeform) ════════ -->
+<section class="sec sec--dark grain" id="apply">
+  <div class="wrap">
+    <div class="applyCard" data-up>
+      <span class="scarce"><span class="dot"></span> We open only a handful of calls each week</span>
+      <h2 class="h2">Apply for your <em>private call.</em></h2>
+      <p class="lead">Answer a few short questions so we can prepare and make sure we can genuinely help. Then choose a time that suits you.</p>
+      <div class="applySteps">
+        <div class="applyStep"><b>1</b><span>Answer a few questions</span></div>
+        <span class="applyArrow">→</span>
+        <div class="applyStep"><b>2</b><span>Pick your time</span></div>
+        <span class="applyArrow">→</span>
+        <div class="applyStep"><b>3</b><span>We map your plan together</span></div>
+      </div>
 
       <!-- ════════════════════════════════════════════════════════
-           BOOKING SCHEDULER GOES HERE.
-           Drop your Calendly / scheduler inline embed in place of the
-           .schedPH block below, e.g. a Calendly inline widget div, or:
-           <iframe src="https://book.10kroadmap.org" width="100%" height="700" frameborder="0"></iframe>
+           TYPEFORM APPLICATION: replace this .formMount block with your
+           Typeform embed, e.g. (inline):
+           <div data-tf-live="01YOURFORMID"></div>
+           <script src="//embed.typeform.com/next/embed.js"></script>
+           ...or keep the button below pointed at your Typeform URL.
       ════════════════════════════════════════════════════════ -->
-      <div class="schedPH">
-        <div class="schedPH__t">Your booking calendar will appear here</div>
-        <div class="schedPH__s">Calendly / scheduler embed</div>
+      <div class="formMount">
+        <div class="formMount__t">Your application questions will appear here</div>
+        <div class="formMount__s">Typeform embed</div>
       </div>
 
-      <a href="https://book.10kroadmap.org" class="btnGold">Choose My Time →</a>
-      <p class="bookFine">Your information is safe. We'll never spam you. <a href="/privacy">Privacy Policy</a></p>
-
-      <div class="steps">
-        <div class="step"><span class="step__n">1</span><div><div class="step__h">Pick your time</div><p class="step__p">Choose a slot above. You'll get an instant confirmation and a calendar invite.</p></div></div>
-        <div class="step"><span class="step__n">2</span><div><div class="step__h">We talk it through</div><p class="step__p">A relaxed conversation about your experience, your goals, and what's possible.</p></div></div>
-        <div class="step"><span class="step__n">3</span><div><div class="step__h">You leave with a plan</div><p class="step__p">A clear next step for turning your expertise into income, whether or not we work together.</p></div></div>
-      </div>
+      <a href="https://quiz.the5th.consulting" class="btnGold btnGold--lg" data-tf-cta>Start My Application →</a>
+      <p class="applyFine">Takes about 2 minutes · No payment to apply · We'll never spam you · <a href="/privacy">Privacy Policy</a></p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- minimal micro line (no full footer) -->
-  <div class="micro">© 2026 The5th Consulting · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/">the5th.consulting</a></div>
+<!-- minimal micro line (no full footer) -->
+<div class="micro">© 2026 The5th Consulting · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/">the5th.consulting</a></div>
 
-</main>
+<!-- sticky CTA -->
+<div class="stickyCta" id="stickyCta">
+  <span class="stickyCta__txt"><b>Ready when you are.</b> Apply for your private call.</span>
+  <a href="#apply" class="btnGold">Apply Now →</a>
+</div>
 
 <script>
 (function(){
+  // reveal
   var els=document.querySelectorAll('[data-up]');
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
     els.forEach(function(el){io.observe(el);});
   }else{els.forEach(function(el){el.classList.add('in');});}
+
+  // FAQ accordion
+  document.querySelectorAll('.faqItem').forEach(function(item){
+    var btn=item.querySelector('.faqBtn'),a=item.querySelector('.faqA');
+    btn.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faqItem.open').forEach(function(o){if(o!==item){o.classList.remove('open');o.querySelector('.faqA').style.maxHeight=null;}});
+      if(open){item.classList.remove('open');a.style.maxHeight=null;}
+      else{item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+    });
+  });
+
+  // sticky CTA appears after hero, hides over the apply section
+  var sticky=document.getElementById('stickyCta'),apply=document.getElementById('apply');
+  function onScroll(){
+    var past=window.scrollY>640;
+    var nearForm=false;
+    if(apply){var r=apply.getBoundingClientRect();nearForm=r.top< window.innerHeight*0.9;}
+    sticky.classList.toggle('show', past && !nearForm);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 })();
 </script>
 <!-- Intercom -->

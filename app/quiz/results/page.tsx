@@ -126,6 +126,7 @@ export default function ResultsPage() {
   const [loading, setLoading]     = useState(true)
   const [msgIdx, setMsgIdx]       = useState(0)
   const [slow, setSlow]           = useState(false)
+  const [genFailed, setGenFailed] = useState(false)
   const [archetype, setArchetype] = useState('')
   const [personalityType, setPersonalityType] = useState('')
 
@@ -154,21 +155,33 @@ export default function ResultsPage() {
     return 'v1'
   }
 
-  const generateRoadmap = async (n: string, a: Record<string, string>) => {
+  const generateRoadmap = async (n: string, a: Record<string, string>, attempt = 0): Promise<void> => {
     try {
       const res  = await fetch('/api/generate-roadmap', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers: a, name: n, email: sessionStorage.getItem('quiz_email') || '' })
       })
-      const data = await res.json()
-      setRoadmap(data.roadmap || '')
+      const data = await res.json().catch(() => ({}))
+
+      // Transient (concurrency lock / rate limit / 5xx): the first generation may
+      // still be completing. Wait and retry so we land on the cached report.
+      if ((!res.ok || !data.roadmap) && attempt < 3) {
+        await new Promise(r => setTimeout(r, 3500))
+        return generateRoadmap(n, a, attempt + 1)
+      }
+
+      if (!data.roadmap) { setGenFailed(true); setLoading(false); return }
+
+      setRoadmap(data.roadmap)
       if (data.archetype)   setArchetype(data.archetype)
       if (data.personality) setPersonalityType(data.personality)
+      setLoading(false)
 
+      // Email the PDF only on a FRESH generation, never on a cache hit (no duplicate PDFs).
       const storedEmail   = sessionStorage.getItem('quiz_email') || ''
       const storedAnswers = JSON.parse(sessionStorage.getItem('quiz_answers') || '{}')
-      if (storedEmail && data.roadmap) {
+      if (storedEmail && !data.cached) {
         fetch('/api/generate-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -186,19 +199,23 @@ export default function ResultsPage() {
         }).then(r => r.json()).catch(() => {})
       }
     } catch {
-      setRoadmap('')
-    } finally {
-      setLoading(false)
+      if (attempt < 3) { await new Promise(r => setTimeout(r, 3500)); return generateRoadmap(n, a, attempt + 1) }
+      setGenFailed(true); setLoading(false)
     }
   }
 
   const saveLead = async (n: string, e: string, a: Record<string, string>) => {
+    // Run lead-save + welcome sequence ONCE per email per browser, so a refresh
+    // never re-triggers the day-0 email or CRM sync (no duplicate emails/records).
+    const key = `a5_lead_done_${(e || '').toLowerCase()}`
+    try { if (localStorage.getItem(key)) return } catch { /* private mode */ }
     try {
       await fetch('/api/save-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: n, email: e, quiz_answers: a, video_assigned: getVideoSlug(a.q1), sequence_assigned: 'A' })
       })
+      try { localStorage.setItem(key, '1') } catch { /* ignore */ }
       fetch('/api/sync-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -209,7 +226,7 @@ export default function ResultsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: e, name: n, day: 0, sequence: 'A', video_slug: getVideoSlug(a.q1) })
       }).catch(() => {})
-    } catch { /* non-critical */ }
+    } catch { /* non-critical, will retry on next load */ }
   }
 
   /* ─── Derived ─── */
@@ -316,6 +333,25 @@ export default function ResultsPage() {
           Our AI read all of your answers and built this for you. Your profile reads as <b style={{ color: C.ink, fontWeight: 600 }}>{stageLabel}</b>.
         </p>
       </section>
+
+      {/* graceful AI-failure notice (after retries) */}
+      {genFailed && (
+        <section className="rwrap" style={{ padding: '8px 24px 0' }}>
+          <div style={{ background: C.ivory, border: `1px solid ${C.goldLine}`, borderRadius: 14, padding: '22px 26px', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+            <div style={{ fontSize: 20, flexShrink: 0 }}>⏳</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 15.5, color: C.ink, fontWeight: 600, marginBottom: 4 }}>Your full written report is taking a little longer.</p>
+              <p style={{ fontSize: 14.5, color: C.inkSoft, fontWeight: 300, lineHeight: 1.6 }}>
+                We&apos;re finishing it now and it will also arrive in your inbox shortly. Your scores are below, and you can book your session any time.
+              </p>
+              <button onClick={() => { setGenFailed(false); setLoading(true); generateRoadmap(name, answers) }}
+                style={{ marginTop: 12, background: 'none', border: `1px solid ${C.green}`, color: C.green, fontWeight: 600, fontSize: 13.5, padding: '8px 18px', borderRadius: 6, cursor: 'pointer' }}>
+                Try again
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* score + diagnostic */}
       <section className="rwrap ru2" style={{ padding: '40px 24px' }}>

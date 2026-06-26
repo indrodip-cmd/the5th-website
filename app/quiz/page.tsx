@@ -775,7 +775,7 @@ function SiteHeader({ screen, currentQ }: { screen: string; currentQ: number }) 
       padding: '12px 40px 10px', gap: 8,
     }}>
       {/* Logo centered */}
-      <Image src="/logo-color.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
+      <Image src="/logo-the5th.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
 
       {/* Progress dots + tag row */}
       <div style={{ width: '100%', maxWidth: 640, display: 'flex', alignItems: 'center', gap: 16 }}>

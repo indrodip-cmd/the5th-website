@@ -105,13 +105,15 @@ export default function ResultsPage() {
   const [roadmap, setRoadmap]     = useState('')
   const [loading, setLoading]     = useState(true)
   const [msgIdx, setMsgIdx]       = useState(0)
+  const [slow, setSlow]           = useState(false)
   const [archetype, setArchetype] = useState('')
   const [personalityType, setPersonalityType] = useState('')
 
   useEffect(() => {
     if (!loading) return
     const iv = setInterval(() => setMsgIdx(i => Math.min(i + 1, LOADING_MESSAGES.length - 1)), 1600)
-    return () => clearInterval(iv)
+    const slowT = setTimeout(() => setSlow(true), 16000)
+    return () => { clearInterval(iv); clearTimeout(slowT) }
   }, [loading])
 
   useEffect(() => {
@@ -227,7 +229,11 @@ export default function ResultsPage() {
           <div style={{ height: 2, background: 'rgba(255,255,255,.1)', borderRadius: 2, overflow: 'hidden', marginTop: 30 }}>
             <div style={{ height: '100%', background: `linear-gradient(90deg,${C.goldDeep},${C.gold})`, borderRadius: 2, width: `${((msgIdx + 1) / LOADING_MESSAGES.length) * 100}%`, transition: 'width 1.6s ease' }} />
           </div>
-          <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,.4)', marginTop: 22 }}>Building something genuinely personal to you.</p>
+          <p style={{ fontSize: 12.5, color: slow ? C.goldSoft : 'rgba(255,255,255,.4)', marginTop: 22, lineHeight: 1.6, transition: 'color .4s' }}>
+            {slow
+              ? "We're so sorry, we're seeing a sudden rush of women taking the assessment right now, so this is taking a little longer than usual. Please hold on, yours is worth the wait."
+              : 'Building something genuinely personal to you.'}
+          </p>
         </div>
       </div>
     )
@@ -373,15 +379,18 @@ export default function ResultsPage() {
       {/* THE SESSION — booking (Step 2) */}
       <section className="rwrap" style={{ padding: '20px 24px 8px' }}>
         <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
-          <span style={{ ...eyebrow, color: C.gold }}>The Obvious Next Step</span>
-          <h2 style={{ ...h2, color: '#fff', maxWidth: 600, margin: '0 auto 14px' }}>Let&apos;s turn this report into <em style={{ fontStyle: 'italic', color: C.gold }}>a plan you can act on.</em></h2>
-          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.72)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            On your Private Strategy &amp; Coaching Session, we map your next 90 days together. No pressure, no pitch, you leave with clarity either way.
+          <span style={{ ...eyebrow, color: C.gold }}>Your Next 14 Days</span>
+          <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want to understand your full report, and solve your biggest problem, <em style={{ fontStyle: 'italic', color: C.gold }}>within 14 days?</em></h2>
+          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 14px', lineHeight: 1.75 }}>
+            You&apos;ve seen half of it. The other half, your offer, your pricing, and your full 90-day roadmap, is the half that actually changes your income. And right now it&apos;s sitting unopened.
+          </p>
+          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 30px', lineHeight: 1.75 }}>
+            On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> The women who book leave knowing precisely what&apos;s been holding them back. The ones who don&apos;t are usually in the same place a year from now.
           </p>
           <a href="/call" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 17, fontWeight: 700, padding: '20px 48px', borderRadius: 6, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
-            Book My Private Strategy Session →
+            Yes, Unlock My Full Report &amp; Plan →
           </a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · By application · You&apos;ll review this report with Indrodip personally</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · By application · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
 
           <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
             <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>

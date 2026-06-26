@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { rateLimit, clientIp } from '@/lib/rateLimit'
+import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -29,12 +30,15 @@ const BLOCKED_DOMAINS = [
 
 export async function POST(req: NextRequest) {
   const ip = clientIp(req)
-  const ipLimit = rateLimit(`lead:ip:${ip}`, 15, 10 * 60_000)
+  const ipLimit = await limit(`lead:ip:${ip}`, 15, 600)
   if (!ipLimit.ok) return NextResponse.json({ error: 'Too many submissions. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfter) } })
 
   const supabase = getSupabase()
   try {
     const body = await req.json()
+    if (!(await verifyTurnstile(body?.turnstileToken, ip))) {
+      return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
+    }
     const { name, email, quiz_answers, video_assigned, video_requested, no_video } = body
 
     const emailDomain = typeof email === 'string' ? email.split('@')[1]?.toLowerCase() : ''

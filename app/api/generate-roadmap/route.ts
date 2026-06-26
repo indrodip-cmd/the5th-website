@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { rateLimit, clientIp } from '@/lib/rateLimit'
+import { limit, clientIp } from '@/lib/rateLimit'
 import { sanitizeAnswers, sanitizeName, isValidEmail } from '@/lib/validation'
+import { verifyTurnstile } from '@/lib/turnstile'
+import { sessionEnabled, sessionEmail } from '@/lib/session'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -11,8 +13,8 @@ export const maxDuration = 60
 export async function POST(req: NextRequest) {
   try {
     const ip = clientIp(req)
-    // Abuse guard: generating a report is expensive. Cap per IP.
-    const ipLimit = rateLimit(`roadmap:ip:${ip}`, 8, 10 * 60_000)
+    // Abuse guard: generating a report is expensive. Cap per IP (global via Upstash if set).
+    const ipLimit = await limit(`roadmap:ip:${ip}`, 8, 600)
     if (!ipLimit.ok) {
       return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfter) } })
     }
@@ -21,9 +23,21 @@ export async function POST(req: NextRequest) {
     if (!body || typeof body !== 'object') {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
+
+    // Bot protection (no-op until Turnstile is configured).
+    if (!(await verifyTurnstile(body.turnstileToken, ip))) {
+      return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
+    }
+
     const name = sanitizeName(body.name)
     const answers = sanitizeAnswers(body.answers)
-    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
+    // AUTHORIZATION: when sessions are enabled, trust only the signed cookie, never the body email.
+    const bodyEmail = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
+    const sessEmail = sessionEmail(req)
+    if (sessionEnabled() && !sessEmail) {
+      return NextResponse.json({ error: 'Please verify your email to view your report.' }, { status: 401 })
+    }
+    const email = sessionEnabled() ? (sessEmail || '') : bodyEmail
     if (Object.keys(answers).length === 0) {
       return NextResponse.json({ error: 'No answers provided' }, { status: 400 })
     }
@@ -31,7 +45,7 @@ export async function POST(req: NextRequest) {
     // ── COST PROTECTION: never regenerate. Return the saved report if it exists. ──
     const supabase = (() => { try { return getSupabaseAdmin() } catch { return null } })()
     if (email && isValidEmail(email) && supabase) {
-      const perEmail = rateLimit(`roadmap:email:${email}`, 4, 60 * 60_000)
+      const perEmail = await limit(`roadmap:email:${email}`, 4, 3600)
       if (!perEmail.ok) {
         return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429 })
       }
@@ -42,6 +56,12 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ roadmap: data.roadmap, archetype: archetypeC, personality: (answers.q2 as string) || 'action', cached: true })
         }
       } catch { /* cache miss is non-fatal; fall through to generate */ }
+
+      // ── CONCURRENCY LOCK: stop two simultaneous first-time generations (double tab / strict-mode). ──
+      const lock = await limit(`roadmap:lock:${email}`, 1, 90)
+      if (!lock.ok) {
+        return NextResponse.json({ error: 'Your report is being prepared. Please refresh in a moment.' }, { status: 429, headers: { 'Retry-After': String(lock.retryAfter) } })
+      }
     }
 
     const stageMap: Record<string, string> = {

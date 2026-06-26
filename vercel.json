@@ -1,9 +1,11 @@
 {
-  "buildCommand": null,
-  "outputDirectory": ".",
+  "framework": "nextjs",
   "redirects": [
     { "source": "/10k-coaching", "destination": "/fast-forward", "permanent": true },
     { "source": "/community", "destination": "/collective", "permanent": true },
     { "source": "/community/:path*", "destination": "/collective/:path*", "permanent": true }
+  ],
+  "crons": [
+    { "path": "/api/cron/daily-sequence", "schedule": "0 8 * * *" }
   ]
 }

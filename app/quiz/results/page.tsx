@@ -196,6 +196,7 @@ export default function ResultsPage() {
   const scores     = deriveScores(answers.q1 || 'starting')
   const sections   = parseRoadmap(roadmap)
   const situation  = sections['YOUR SITUATION RIGHT NOW'] || ''
+  const moneyPsych = sections['MONEY PSYCHOLOGY INSIGHTS'] || ''
   const opportunity = sections['YOUR BIGGEST OPPORTUNITY'] || ''
   const gatedKeys  = ['YOUR SIGNATURE OFFER', 'YOUR PRICING STRATEGY', '30-DAY ACTION PLAN', '7-DAY CONTENT PLAN', 'YOUR LEAD MAGNET IDEA', 'YOUR DIGITAL PRODUCT IDEA']
   const gatedPreview = (sections[gatedKeys.find(k => sections[k]) || ''] || '').slice(0, 320)
@@ -317,6 +318,21 @@ export default function ResultsPage() {
             <span style={eyebrow}>What Our AI Sees</span>
             <h2 style={{ ...h2, marginBottom: 18 }}>Your situation, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>right now.</em></h2>
             <RoadmapBody text={situation} />
+          </div>
+        </section>
+      )}
+
+      {/* money psychology insights (FREE) */}
+      {moneyPsych && (
+        <section className="rwrap" style={{ padding: '0 24px 40px' }}>
+          <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, border: 'none', color: '#fff' }}>
+            <span style={{ ...eyebrow, color: C.gold }}>Money Psychology Insights</span>
+            <h2 style={{ ...h2, color: '#fff', marginBottom: 18 }}>How you relate to money is <em style={{ fontStyle: 'italic', color: C.gold }}>shaping your pricing.</em></h2>
+            <div style={{ color: 'rgba(255,255,255,.82)' }}>
+              {moneyPsych.split('\n').filter(l => l.trim()).map((line, i) => (
+                <p key={i} style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.8, fontSize: 15.5, margin: '10px 0', fontWeight: 300 }}>{line.trim().replace(/\*\*/g, '')}</p>
+              ))}
+            </div>
           </div>
         </section>
       )}

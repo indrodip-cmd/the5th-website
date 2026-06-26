@@ -45,6 +45,19 @@ const questions: Question[] = [
     ]
   },
   {
+    id: 'qgoal', num: 1, title: 'What is your biggest goal over the next 12 months?',
+    sub: 'This is the north star. Everything we map for you points back to it.',
+    type: 'select',
+    options: [
+      { value: 'replace_salary', emoji: '💼', label: 'Replace my salary', sub: 'Earn enough to leave, or match, my job' },
+      { value: '5k',        emoji: '🌱', label: 'Reach $5K a month', sub: 'Consistent, reliable monthly income' },
+      { value: '10k',       emoji: '📈', label: 'Reach $10K a month', sub: 'A serious, full-time business' },
+      { value: 'premium',   emoji: '✨', label: 'Build a premium coaching business', sub: 'Higher-value clients, fewer of them' },
+      { value: 'recurring', emoji: '🔄', label: 'Create recurring income', sub: 'Predictable revenue I can count on' },
+      { value: 'legacy',    emoji: '🏛️', label: 'Build a lasting legacy', sub: 'Something meaningful that outlasts me' },
+    ]
+  },
+  {
     id: 'q2', num: 2, title: 'Who is your ideal client?',
     sub: 'Choose the description that best fits the person you most want to serve.',
     type: 'select',
@@ -219,6 +232,59 @@ const questions: Question[] = [
     ]
   },
   {
+    id: 'qmp1', num: 17, title: 'How comfortable do you feel charging premium prices?',
+    sub: "There's no right answer. This simply helps us understand your pricing confidence.",
+    type: 'scale', scaleMin: 'Very uncomfortable', scaleMax: 'Completely at ease'
+  },
+  {
+    id: 'qmp2', num: 17, title: 'When money comes up in your business, what do you most often feel?',
+    sub: 'Be honest. This shapes how we support you, never how we judge you.',
+    type: 'select',
+    options: [
+      { value: 'excited',  emoji: '✨', label: 'Excited and motivated', sub: 'Money feels like possibility' },
+      { value: 'calm',     emoji: '🌿', label: 'Calm and matter-of-fact', sub: 'It is just part of business' },
+      { value: 'anxious',  emoji: '🌧️', label: 'Anxious or uncertain', sub: 'It brings up some tension' },
+      { value: 'guilty',   emoji: '💭', label: 'Guilty or uneasy', sub: 'Charging well feels uncomfortable' },
+      { value: 'avoidant', emoji: '🙈', label: "I'd rather not think about it", sub: 'I tend to avoid the topic' },
+    ]
+  },
+  {
+    id: 'qmp3', num: 17, title: 'Which of these feels most true for you right now?',
+    sub: 'Choose the one that resonates most. There are no wrong answers here.',
+    type: 'select',
+    options: [
+      { value: 'hard',      emoji: '⛰️', label: 'Money is hard to earn', sub: 'It takes real effort and struggle' },
+      { value: 'slow',      emoji: '🐢', label: 'Wealth takes years to build', sub: 'It is a slow, gradual climb' },
+      { value: 'guilt',     emoji: '💗', label: 'I feel guilty charging high prices', sub: 'Even when the value is clearly there' },
+      { value: 'rejection', emoji: '😰', label: "I'm afraid people will reject my prices", sub: 'Pricing makes me hesitate' },
+      { value: 'freedom',   emoji: '🕊️', label: 'Money creates more freedom', sub: 'It expands what is possible for me' },
+    ]
+  },
+  {
+    id: 'qmp4', num: 17, title: "Growing up, how would you describe your family's relationship with money?",
+    sub: 'Our early experiences quietly shape how we earn and charge today.',
+    type: 'select',
+    options: [
+      { value: 'worried',     emoji: '😟', label: 'We constantly worried about money', sub: 'There never felt like enough' },
+      { value: 'unspoken',    emoji: '🤐', label: 'Money was never really discussed', sub: 'It was a quiet, private topic' },
+      { value: 'conflict',    emoji: '⚡', label: 'Money caused tension or conflict', sub: 'It was a source of stress' },
+      { value: 'comfortable', emoji: '🏡', label: 'We were financially comfortable', sub: 'Money was rarely a worry' },
+      { value: 'healthy',     emoji: '🌳', label: 'We had a healthy relationship with money', sub: 'It felt balanced and open' },
+    ]
+  },
+  {
+    id: 'qmp5', num: 17, title: 'Which of these fears affects your business the most?',
+    sub: 'Naming it gently is the first step to moving past it.',
+    type: 'select',
+    options: [
+      { value: 'rejection',    emoji: '🚪', label: 'Fear of rejection', sub: 'Hearing no, or being turned down' },
+      { value: 'overcharging', emoji: '💸', label: 'Fear of charging too much', sub: 'Asking for what I am truly worth' },
+      { value: 'success',      emoji: '🌟', label: 'Fear of success', sub: 'What growth might ask of me' },
+      { value: 'failure',      emoji: '🌫️', label: 'Fear of failure', sub: 'Trying, and it not working out' },
+      { value: 'judgement',    emoji: '👀', label: 'Fear of being judged', sub: 'What others will think of me' },
+    ]
+  },
+  {
     id: 'q18', num: 18, title: 'What is your revenue goal in the next 6 months?',
     sub: 'Your pricing strategy will align to this target.',
     type: 'select',
@@ -244,6 +310,12 @@ const questions: Question[] = [
     id: 'q20', num: 20, title: 'How urgent is this for you right now?',
     sub: '1 = When I get around to it. 5 = I need to make this happen NOW.',
     type: 'scale', scaleMin: 'No rush', scaleMax: 'Need this now'
+  },
+  {
+    id: 'qchallenge', num: 21, title: 'If we could solve just one challenge together, what would it be?',
+    sub: "Picture your Strategy Session is over and you leave thrilled. What did we solve? Your answer guides your report and our conversation.",
+    type: 'textarea',
+    placeholder: "e.g. I'd finally know exactly what to offer and how to price it with real confidence…"
   },
 ]
 
@@ -2044,6 +2116,7 @@ export default function Page() {
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([])
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const advancingRef = useRef(false)
 
   /* ── Navigation ── */
   const goForward = useCallback(() => {
@@ -2063,8 +2136,12 @@ export default function Page() {
   }, [currentQ])
 
   const handleSelectAnswer = (qId: string, value: string) => {
+    if (advancingRef.current) return
     setAnswers(a => ({ ...a, [qId]: value }))
     setError('')
+    // Auto-advance: brief highlight on the chosen option, then glide to the next question.
+    advancingRef.current = true
+    window.setTimeout(() => { goForward(); advancingRef.current = false }, 300)
   }
 
   const validateAndNext = () => {
@@ -2471,18 +2548,17 @@ export default function Page() {
                       <button
                         key={n}
                         className={`scale-btn${answers[q.id] === String(n) ? ' sel' : ''}`}
-                        onClick={() => { setAnswers(a => ({ ...a, [q.id]: String(n) })); setError('') }}>
+                        onClick={() => handleSelectAnswer(q.id, String(n))}>
                         {n}
                       </button>
                     ))}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9ca3af', marginBottom: 28 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9ca3af', marginBottom: 10 }}>
                     <span>{q.scaleMin}</span><span>{q.scaleMax}</span>
                   </div>
-                  {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 10 }}>{error}</p>}
-                  <div style={{ opacity: hasAnswer ? 1 : 0, transform: hasAnswer ? 'translateY(0)' : 'translateY(10px)', transition: 'opacity 0.2s ease, transform 0.2s ease', pointerEvents: hasAnswer ? 'auto' : 'none' }}>
-                    <button className="gbtn" onClick={validateAndNext}>Continue →</button>
-                  </div>
+                  <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12.5, letterSpacing: '.08em', textTransform: 'uppercase', color: 'rgba(26,26,46,.32)' }}>
+                    Tap a number to continue
+                  </p>
                 </>
               )}
 
@@ -2523,14 +2599,11 @@ export default function Page() {
                 </>
               )}
 
-              {/* Continue button for SELECT — fades in after selection */}
+              {/* SELECT auto-advances on choice — no button needed */}
               {q.type === 'select' && (
-                <div style={{ marginTop: 32 }}>
-                  {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 10 }}>{error}</p>}
-                  <div style={{ opacity: hasAnswer ? 1 : 0, transform: hasAnswer ? 'translateY(0)' : 'translateY(10px)', transition: 'opacity 0.2s ease, transform 0.2s ease', pointerEvents: hasAnswer ? 'auto' : 'none' }}>
-                    <button className="gbtn" onClick={validateAndNext}>Continue →</button>
-                  </div>
-                </div>
+                <p style={{ textAlign: 'center', marginTop: 26, fontSize: 12.5, letterSpacing: '.08em', textTransform: 'uppercase', color: 'rgba(26,26,46,.32)' }}>
+                  Tap your answer to continue
+                </p>
               )}
 
             </div>

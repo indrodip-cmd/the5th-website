@@ -98,6 +98,15 @@ When stuck: ${answers.q16}
 Content approach: ${answers.q12}
 Transformation story: ${answers.q17}
 Final readiness: ${answers.q20}
+Biggest 12-month goal: ${answers.qgoal}
+The ONE challenge they most want solved together: ${answers.qchallenge}
+
+MONEY PSYCHOLOGY (handle with great care, supportively, never diagnose or label):
+Comfort charging premium prices (1 low to 5 high): ${answers.qmp1}
+Emotion that comes up most around money: ${answers.qmp2}
+Belief that feels most true to them: ${answers.qmp3}
+Family relationship with money growing up: ${answers.qmp4}
+Fear that affects their business most: ${answers.qmp5}
 
 CRITICAL INSTRUCTION:
 This person is a ${personality}.
@@ -114,6 +123,7 @@ Generate a DETAILED personalised business strategy for ${name}.
 Use this EXACT structure with these EXACT section headers:
 
 ## YOUR SITUATION RIGHT NOW
+## MONEY PSYCHOLOGY INSIGHTS
 ## YOUR SIGNATURE OFFER
 ## YOUR LEAD MAGNET IDEA
 ## YOUR DIGITAL PRODUCT IDEA
@@ -127,7 +137,16 @@ CONTENT DEPTH REQUIREMENTS — this is critical:
 Each section must be substantial. Do not summarise. Do not use single sentences.
 
 ## YOUR SITUATION RIGHT NOW
-Write 3-4 paragraphs. Describe exactly where this person is right now based on their quiz answers. Be specific about their stage, niche, audience, strengths, and the single biggest vulnerability holding them back. Name real patterns you see. Make them feel deeply understood.
+Write 3-4 paragraphs. Describe exactly where this person is right now based on their answers. Be specific about their stage, niche, audience, strengths, and the single biggest vulnerability holding them back. Reference their biggest 12-month goal (${answers.qgoal}) and the one challenge they most want solved (${answers.qchallenge}). Name real patterns you see. Make them feel deeply understood.
+
+## MONEY PSYCHOLOGY INSIGHTS
+Write 2-3 short, warm paragraphs based on their money-psychology answers (pricing comfort, the emotion money brings up, the belief that feels most true, their family money background, and their biggest fear). Explain gently how these beliefs may be influencing their pricing, sales, confidence, decision-making, and growth.
+CRITICAL TONE RULES for this section:
+- Be supportive and encouraging. Never judgmental, never clinical, never diagnostic.
+- Do NOT label them (do not say "you have a scarcity mindset" or "you have money trauma").
+- Use soft, observational language like "Based on your answers, you may sometimes hesitate to charge what you're worth because rejection feels risky," or "You appear to have a genuinely healthy relationship with pricing, which can become a real competitive advantage as you grow."
+- Frame everything as workable and hopeful, something a coach can help them move through.
+- Keep it business-focused. This is about pricing and confidence, not therapy.
 
 ## YOUR SIGNATURE OFFER
 Write a complete offer breakdown:

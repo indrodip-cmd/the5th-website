@@ -87,14 +87,19 @@ ul{list-style:none}
 .topbar__trust b{color:var(--gold-deep);font-weight:700}
 
 /* avatar stack */
-.avstack{display:inline-flex;align-items:center;gap:14px}
-.avstack__imgs{display:inline-flex}
+.avstack{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap;text-align:center;max-width:100%}
+.avstack__imgs{display:inline-flex;flex-shrink:0}
 .avstack__imgs img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--cream);margin-left:-12px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
 .avstack__imgs img:first-child{margin-left:0}
 .avstack__imgs .more{width:38px;height:38px;border-radius:50%;background:var(--plum);color:#fff;font-size:.72rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--cream);margin-left:-12px}
 .avstack__t{font-size:.86rem;color:var(--ink-soft);text-align:left;line-height:1.35}
 .avstack__t b{color:var(--ink);font-weight:600}
 .avstack__t .stars{color:var(--gold);letter-spacing:1px;font-size:.78rem;display:block}
+@media(max-width:480px){
+  .avstack{gap:9px}
+  .avstack__imgs img,.avstack__imgs .more{width:33px;height:33px}
+  .avstack__t{flex-basis:100%;text-align:center}
+}
 .avstack--light .avstack__imgs img,.avstack--light .avstack__imgs .more{border-color:rgba(255,255,255,.15)}
 .avstack--light .avstack__t{color:rgba(255,255,255,.72)}.avstack--light .avstack__t b{color:#fff}
 
@@ -763,7 +768,18 @@ ul{list-style:none}
       </div>
 
       <a href="https://quiz.the5th.consulting" class="btnGold btnGold--lg" data-tf-cta>Start My Application →</a>
-      <p class="applyFine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Takes about 2 minutes · No payment to apply · 100% confidential · <a href="/privacy">Privacy</a></p>
+      <p class="applyFine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Free · By application only · No payment to apply · <b style="color:#fff;font-weight:600">We'll never spam you</b></p>
+      <div class="avstack avstack--light" style="margin-top:24px">
+        <span class="avstack__imgs">
+          <img src="/public/clients/laurie.jpg" alt="" width="38" height="38" loading="lazy">
+          <img src="/public/clients/angela.jpg" alt="" width="38" height="38" loading="lazy">
+          <img src="/public/clients/hayley.jpg" alt="" width="38" height="38" loading="lazy">
+          <img src="/public/clients/jeanne.jpg" alt="" width="38" height="38" loading="lazy">
+          <img src="/public/clients/toril.jpg" alt="" width="38" height="38" loading="lazy">
+          <span class="more">+71</span>
+        </span>
+        <span class="avstack__t"><span class="stars">★★★★★</span><b>Join 76+ women</b> who already have</span>
+      </div>
     </div>
   </div>
 </section>

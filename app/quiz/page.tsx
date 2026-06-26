@@ -440,12 +440,12 @@ body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1
 .qopt.sel { background: #1c4a32; border-color: #1c4a32; }
 
 .qinput {
-  width: 100%; padding: 16px; border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 16px; font-size: 17px; font-family: inherit;
-  transition: border-color 0.2s ease; outline: none;
-  color: #0a0a0a; background: #fff;
+  width: 100%; padding: 16px; border: 1.5px solid #E2DCD2;
+  border-radius: 14px; font-size: 17px; font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; outline: none;
+  color: #1A1A2E; background: #fff;
 }
-.qinput:focus { border-color: #1c4a32; }
+.qinput:focus { border-color: #1c4a32; box-shadow: 0 0 0 3px rgba(28,74,50,.08); }
 .qinput::placeholder { color: #9ca3af; }
 .qinput::placeholder { color: #9ca3af; }
 
@@ -2690,30 +2690,29 @@ export default function Page() {
 
   /* ══════════════ EMAIL ══════════════ */
   if (screen === 'email') return (
-    <div style={{ minHeight: '100vh', background: '#f9f9f9', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', display: 'flex', flexDirection: 'column' }}>
       <style>{CSS}</style>
       <SiteHeader screen="email" currentQ={questions.length} />
 
-      <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 24px 60px' }}>
-        <div className="afu-1" style={{ maxWidth: 520, width: '100%', textAlign: 'center' }}>
-          {/* Gold label */}
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 20 }}>
-            YOUR ROADMAP IS READY ✨
+      <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '110px 24px 64px' }}>
+        <div className="afu-1" style={{ maxWidth: 540, width: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 18 }}>
+            Your Report Is Ready
           </div>
 
-          <h2 style={{ fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, color: '#0a0a0a', marginBottom: 12, lineHeight: 1.2 }}>
-            Your personalized 15-day roadmap is ready
+          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px, 5vw, 46px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 14, lineHeight: 1.05, letterSpacing: '-.02em' }}>
+            Where should we send your <em style={{ fontStyle: 'italic', color: '#B0902F' }}>personalised report?</em>
           </h2>
-          <p style={{ fontSize: 16, color: '#555', marginBottom: 32, lineHeight: 1.7 }}>
-            Enter your details below to unlock your free AI dashboard
+          <p style={{ fontSize: 16.5, fontWeight: 300, color: '#5a5550', marginBottom: 30, lineHeight: 1.7, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto' }}>
+            Your AI has finished building it. Add your details to see your full report on the next page, and to activate your 7-day AI coaching.
           </p>
 
           {/* Benefits */}
-          <div style={{ marginBottom: 32, display: 'inline-block', textAlign: 'left' }}>
-            {['Your full AI-generated 15-day roadmap', 'Daily tasks built from your assessment answers', 'AI business coach available 24/7', 'Revenue tracker toward your $5K goal', '7-day personalized email coaching series'].map(item => (
-              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#e8f0eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#225840', fontWeight: 700, flexShrink: 0 }}>✓</span>
-                <span style={{ fontSize: 15, color: '#374151' }}>{item}</span>
+          <div style={{ marginBottom: 30, display: 'inline-block', textAlign: 'left' }}>
+            {['Your complete AI business report and health score', 'Your Money Psychology insights', 'A clear 7-day action plan you can start today', 'Day-by-day AI coaching emails, one each morning', 'Your full report PDF, yours to keep'].map(item => (
+              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 11 }}>
+                <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(28,74,50,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#1C4A32', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: 15, color: '#403b3b' }}>{item}</span>
               </div>
             ))}
           </div>
@@ -2724,9 +2723,9 @@ export default function Page() {
             <input className="qinput" style={{ marginBottom: 20 }} type="email" placeholder="Your best email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleEmailSubmit()} />
             {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14, textAlign: 'left' }}>{error}</p>}
             <button className="gbtn" onClick={handleEmailSubmit} disabled={submitting}>
-              {submitting ? 'Building your roadmap…' : 'Get My Roadmap →'}
+              {submitting ? 'Unlocking your report…' : 'Show Me My Report →'}
             </button>
-            <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 14 }}>🔒 Your info is private. We never spam.</p>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 14 }}>🔒 Your information is private. We never spam, ever.</p>
           </div>
         </div>
       </div>

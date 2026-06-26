@@ -200,6 +200,7 @@ export default function ResultsPage() {
   const situation  = sections['YOUR SITUATION RIGHT NOW'] || ''
   const moneyPsych = sections['MONEY PSYCHOLOGY INSIGHTS'] || ''
   const opportunity = sections['YOUR BIGGEST OPPORTUNITY'] || ''
+  const next7      = sections['YOUR NEXT 7 DAYS'] || ''
   const gatedKeys  = ['YOUR SIGNATURE OFFER', 'YOUR PRICING STRATEGY', '30-DAY ACTION PLAN', '7-DAY CONTENT PLAN', 'YOUR LEAD MAGNET IDEA', 'YOUR DIGITAL PRODUCT IDEA']
   const gatedPreview = (sections[gatedKeys.find(k => sections[k]) || ''] || '').slice(0, 320)
   void personalityType
@@ -353,6 +354,31 @@ export default function ResultsPage() {
           </div>
         </section>
       )}
+
+      {/* YOUR NEXT 7 DAYS — the solution (FREE) */}
+      {next7 && (
+        <section className="rwrap" style={{ padding: '0 24px 24px' }}>
+          <div style={{ ...card, borderTop: `3px solid ${C.green}` }}>
+            <span style={eyebrow}>Your Solution · Start Today</span>
+            <h2 style={{ ...h2, marginBottom: 8 }}>Your next 7 days, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>made simple.</em></h2>
+            <p style={{ fontSize: 15, color: C.inkSoft, fontWeight: 300, marginBottom: 22 }}>One small, doable step each day. This is where momentum begins.</p>
+            <RoadmapBody text={next7} />
+          </div>
+        </section>
+      )}
+
+      {/* 7-day AI coaching activated */}
+      <section className="rwrap" style={{ padding: '0 24px 24px' }}>
+        <div style={{ ...card, background: `linear-gradient(165deg,${C.ivory},${C.creamMid})`, borderColor: C.goldLine, display: 'flex', gap: 18, alignItems: 'flex-start' }}>
+          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(201,168,76,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20 }}>✉️</div>
+          <div>
+            <span style={{ ...eyebrow, marginBottom: 6 }}>Your 7-Day AI Coaching Is Now Active</span>
+            <p style={{ fontSize: 15, color: C.inkSoft, fontWeight: 300, lineHeight: 1.65 }}>
+              We&apos;ve emailed your full report and PDF to <b style={{ color: C.ink, fontWeight: 600 }}>{email || 'your inbox'}</b>. Starting tomorrow morning, you&apos;ll get one short coaching email a day for 7 days, each tailored to your answers, to keep you moving. Check your inbox (and your spam folder, just in case).
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* GATED full roadmap → book to unlock */}
       <section className="rwrap" style={{ padding: '0 24px 24px' }}>

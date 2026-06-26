@@ -131,13 +131,16 @@ Use this EXACT structure with these EXACT section headers:
 ## 30-DAY ACTION PLAN
 ## YOUR PRICING STRATEGY
 ## YOUR BIGGEST OPPORTUNITY
+## YOUR NEXT 7 DAYS
 
-CONTENT DEPTH REQUIREMENTS — this is critical:
+CONTENT REQUIREMENTS:
 
-Each section must be substantial. Do not summarise. Do not use single sentences.
+The deep build sections (signature offer, pricing strategy, 30-day plan, 7-day content plan, lead magnet, digital product) must be substantial and detailed.
+
+BUT the reader-facing summary sections (YOUR SITUATION RIGHT NOW, MONEY PSYCHOLOGY INSIGHTS, YOUR BIGGEST OPPORTUNITY, YOUR NEXT 7 DAYS) must be SCANNABLE: short paragraphs of 1-2 sentences, and bullet points for the key takeaways. People skim. Make these feel light, clear, and easy to read at a glance, never dense walls of text.
 
 ## YOUR SITUATION RIGHT NOW
-Write 3-4 paragraphs. Describe exactly where this person is right now based on their answers. Be specific about their stage, niche, audience, strengths, and the single biggest vulnerability holding them back. Reference their biggest 12-month goal (${answers.qgoal}) and the one challenge they most want solved (${answers.qchallenge}). Name real patterns you see. Make them feel deeply understood.
+Write ONE short paragraph (2-3 sentences) that makes them feel deeply understood, then 3-4 bullet points: their stage, their strength, the single biggest thing holding them back, and how it connects to their 12-month goal (${answers.qgoal}) and the one challenge they want solved (${answers.qchallenge}). Keep it warm and skimmable.
 
 ## MONEY PSYCHOLOGY INSIGHTS
 Write 2-3 short, warm paragraphs based on their money-psychology answers (pricing comfort, the emotion money brings up, the belief that feels most true, their family money background, and their biggest fear). Explain gently how these beliefs may be influencing their pricing, sales, confidence, decision-making, and growth.
@@ -200,7 +203,14 @@ Write 3 paragraphs covering:
 - How to handle the most common objection for their archetype and personality type
 
 ## YOUR BIGGEST OPPORTUNITY
-Write 2-3 paragraphs. Identify the single highest-leverage move available to this person right now. Be specific. Name exactly what they should do in the next 7 days to capture this opportunity. Be direct and honest even if it is uncomfortable.
+Write ONE short paragraph naming the single highest-leverage move available to this person right now, then 2-3 bullet points on why it matters and what it unlocks. Be specific, direct, and honest. Keep it skimmable.
+
+## YOUR NEXT 7 DAYS
+This is the part they act on immediately, so make it concrete and motivating. Give exactly 7 bullet lines, one per day, in this format:
+- Day 1: [one specific, doable action, a single sentence]
+- Day 2: [one specific, doable action]
+...through Day 7.
+Each day is ONE clear action, matched to their personality and money psychology (never suggest hustle to someone who burns out, never suggest high-volume outreach to someone who cannot do it). This is their starter plan, the exact first week that builds momentum toward their goal.
 
 RULES:
 - Speak directly to ${name} using you and your throughout

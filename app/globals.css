@@ -1,0 +1,53 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #0a0f0a; min-height: 100vh; }
+
+@media (hover: none) and (pointer: coarse) {
+  .cursor, .cursor-dot, .cursor-follower, [class*="cursor"] {
+    display: none !important;
+  }
+}
+
+@font-face {
+  font-family: 'Gelica';
+  src: url('/fonts/gelica-light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gelica';
+  src: url('/fonts/gelica-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gelica';
+  src: url('/fonts/gelica-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@media (max-width: 768px) {
+  .qp-hero-graphic {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .testimonials-grid-responsive {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 0 16px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .testimonials-grid-responsive {
+    grid-template-columns: 1fr !important;
+    padding: 0 12px !important;
+    gap: 12px !important;
+  }
+}

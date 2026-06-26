@@ -122,6 +122,7 @@ Generate a DETAILED personalised business strategy for ${name}.
 
 Use this EXACT structure with these EXACT section headers:
 
+## SCORES
 ## YOUR SITUATION RIGHT NOW
 ## MONEY PSYCHOLOGY INSIGHTS
 ## YOUR SIGNATURE OFFER
@@ -134,6 +135,18 @@ Use this EXACT structure with these EXACT section headers:
 ## YOUR NEXT 7 DAYS
 
 CONTENT REQUIREMENTS:
+
+## SCORES
+This section comes FIRST. Score this person's business on each dimension from 0 to 100, based honestly on their answers. Earlier-stage businesses and clear gaps must score lower; established strengths score higher. Be realistic and specific to them, not generous by default. Output EXACTLY these nine lines and nothing else in this section, each as "Label: number":
+Offer: [0-100]
+Positioning: [0-100]
+Pricing: [0-100]
+Sales: [0-100]
+Content: [0-100]
+Marketing: [0-100]
+Automation: [0-100]
+Confidence: [0-100]
+Use their money-psychology answers to inform the Pricing and Confidence scores especially. No commentary, no extra text in this section, just the nine lines.
 
 The deep build sections (signature offer, pricing strategy, 30-day plan, 7-day content plan, lead magnet, digital product) must be substantial and detailed.
 

@@ -32,6 +32,26 @@ function deriveScores(q1: string) {
   return { ...s, overall }
 }
 
+/* The nine report dimensions, with the real AI scores parsed from the model's
+   ## SCORES block. Falls back to stage-derived values if the AI omits any. */
+const SCORE_DIMS: [string, string][] = [
+  ['Offer', 'offer'], ['Positioning', 'positioning'], ['Pricing', 'pricing'], ['Sales', 'sales'],
+  ['Content', 'content'], ['Marketing', 'marketing'], ['Automation', 'automation'], ['Confidence', 'confidence'],
+]
+function buildSubScores(scoresText: string, q1: string): { label: string; val: number }[] {
+  const ai: Record<string, number> = {}
+  for (const line of (scoresText || '').split('\n')) {
+    const m = line.match(/^\s*\**([A-Za-z][A-Za-z ]*?)\**\s*:\s*(\d{1,3})/)
+    if (m) ai[m[1].trim().toLowerCase()] = Math.max(0, Math.min(100, parseInt(m[2], 10)))
+  }
+  const fb = deriveScores(q1)
+  const fbMap: Record<string, number> = {
+    offer: fb.offer, positioning: fb.positioning, pricing: fb.pricing, sales: fb.momentum,
+    content: fb.positioning, marketing: fb.momentum, automation: Math.max(20, fb.offer - 12), confidence: fb.pricing,
+  }
+  return SCORE_DIMS.map(([label, key]) => ({ label, val: ai[key] ?? fbMap[key] ?? fb.overall }))
+}
+
 /* Parse the AI markdown roadmap into a map of { SECTION HEADER: body }. */
 function parseRoadmap(md: string): Record<string, string> {
   const out: Record<string, string> = {}
@@ -195,8 +215,10 @@ export default function ResultsPage() {
   /* ─── Derived ─── */
   const firstName  = name.split(' ')[0] || 'there'
   const stageLabel = archetype || formatStage(answers.q1 || 'starting')
-  const scores     = deriveScores(answers.q1 || 'starting')
   const sections   = parseRoadmap(roadmap)
+  // Real AI scores (parsed from the model). Falls back to stage-derived values if absent.
+  const subScores  = buildSubScores(sections['SCORES'] || '', answers.q1 || 'starting')
+  const overall    = Math.round(subScores.reduce((s, x) => s + x.val, 0) / subScores.length)
   const situation  = sections['YOUR SITUATION RIGHT NOW'] || ''
   const moneyPsych = sections['MONEY PSYCHOLOGY INSIGHTS'] || ''
   const opportunity = sections['YOUR BIGGEST OPPORTUNITY'] || ''
@@ -301,19 +323,18 @@ export default function ResultsPage() {
           {/* Health score */}
           <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, color: '#fff', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
             <span style={{ ...eyebrow, color: C.gold }}>Business Health Score</span>
-            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 84, fontWeight: 500, color: C.gold, lineHeight: 1 }}>{scores.overall}</div>
+            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 84, fontWeight: 500, color: C.gold, lineHeight: 1 }}>{overall}</div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', letterSpacing: '.04em' }}>out of 100</div>
             <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,.7)', marginTop: 18, lineHeight: 1.6, fontWeight: 300 }}>
-              A clear, honest read on where you are today, and how much room there is to grow.
+              Scored by our AI from your answers, an honest read on where you are today, and how much room there is to grow.
             </p>
           </div>
           {/* Sub scores */}
           <div style={card}>
-            <span style={eyebrow}>Your Sub-Scores</span>
-            <ScoreBar label="Offer Clarity" val={scores.offer} />
-            <ScoreBar label="Positioning" val={scores.positioning} />
-            <ScoreBar label="Pricing Confidence" val={scores.pricing} />
-            <ScoreBar label="Momentum" val={scores.momentum} />
+            <span style={eyebrow}>Your Nine Scores</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', columnGap: 26, marginTop: 4 }}>
+              {subScores.map(s => <ScoreBar key={s.label} label={s.label} val={s.val} />)}
+            </div>
           </div>
         </div>
       </section>

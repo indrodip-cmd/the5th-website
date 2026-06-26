@@ -31,8 +31,8 @@ type FromToQ   = { id: string; num: number; title: string; sub: string; type: 'f
 type ScaleQ    = { id: string; num: number; title: string; sub: string; type: 'scale';   scaleMin: string; scaleMax: string }
 type Question  = SelectQ | MultiQ | TextareaQ | FromToQ | ScaleQ
 
-/* ─── Questions (all 20) ─── */
-const questions: Question[] = [
+/* ─── Question pool (order is defined separately, below) ─── */
+const questionPool: Question[] = [
   {
     id: 'q1', num: 1, title: 'Where are you in your coaching or consulting business right now?',
     sub: "Be honest — there's no wrong answer. This calibrates your entire blueprint.",
@@ -318,6 +318,38 @@ const questions: Question[] = [
     placeholder: "e.g. I'd finally know exactly what to offer and how to price it with real confidence…"
   },
 ]
+
+/* ─── Chaptered order: Goal → Money → Business → Sales → Vision ─── */
+const QUESTION_ORDER = [
+  'qgoal',
+  'qmp1', 'qmp2', 'qmp3', 'qmp4', 'qmp5',
+  'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9',
+  'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17',
+  'q18', 'q19', 'q20', 'qchallenge',
+]
+const questions: Question[] = QUESTION_ORDER
+  .map(id => questionPool.find(q => q.id === id))
+  .filter((q): q is Question => Boolean(q))
+
+/* ─── Sections / chapters ─── */
+type SectionKey = 'goal' | 'money' | 'business' | 'sales' | 'vision'
+const SECTION_KEYS: SectionKey[] = ['goal', 'money', 'business', 'sales', 'vision']
+const SECTIONS: Record<SectionKey, { name: string; eyebrow: string; intro: string }> = {
+  goal:     { name: 'Your Goal',            eyebrow: 'Part 1 of 5', intro: "Let's begin with where you want to be. Everything we build points back to this." },
+  money:    { name: 'Your Money Story',     eyebrow: 'Part 2 of 5', intro: "Before strategy, let's understand your relationship with money. This is where a lot of growth quietly hides, and there are no wrong answers." },
+  business: { name: 'Your Business',         eyebrow: 'Part 3 of 5', intro: "Now the practical side, who you serve and what you do. This is what our AI uses to shape your offer." },
+  sales:    { name: 'Your Sales & Mindset',  eyebrow: 'Part 4 of 5', intro: "How you sell, show up, and stay consistent. This tells us which strategies will actually fit you." },
+  vision:   { name: 'Where You’re Headed', eyebrow: 'Part 5 of 5', intro: "Almost there. A few final questions so we can build your roadmap and prepare for your session." },
+}
+function sectionOf(id: string): SectionKey {
+  if (id === 'qgoal') return 'goal'
+  if (id.startsWith('qmp')) return 'money'
+  if (id === 'qchallenge') return 'vision'
+  const n = parseInt(id.replace('q', ''), 10)
+  if (n >= 1 && n <= 9) return 'business'
+  if (n >= 10 && n <= 17) return 'sales'
+  return 'vision'
+}
 
 /* ─── useCountUp ─── */
 function useCountUp(target: number, duration = 1200) {
@@ -2090,6 +2122,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
 export default function Page() {
   const [screen, setScreen] = useState<'start' | 'quiz' | 'email' | 'dashboard'>('start')
   const [currentQ, setCurrentQ] = useState(0)
+  const [introsSeen, setIntrosSeen] = useState<Set<string>>(new Set())
   const [cardKey, setCardKey] = useState(0)
   const [slideDir, setSlideDir] = useState<'sir' | 'sil'>('sir')
   const [answers, setAnswers] = useState<QuizAnswers>({})
@@ -2422,6 +2455,44 @@ export default function Page() {
         <path d="M14 2 L15.2 10.8 L22 6 L17.2 13.4 L26 14 L17.2 14.6 L22 22 L15.2 17.2 L14 26 L12.8 17.2 L6 22 L10.8 14.6 L2 14 L10.8 13.4 L6 6 L12.8 10.8 Z" stroke="#0d0d0b" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
       </svg>
     )
+
+    /* ── Chapter intro (shown once when entering a new section) ── */
+    const sec = sectionOf(q.id)
+    const firstOfSection = currentQ === 0 || sectionOf(questions[currentQ - 1].id) !== sec
+    const showIntro = firstOfSection && !introsSeen.has(sec)
+    const beginSection = () => {
+      setSlideDir('sir'); setCardKey(k => k + 1)
+      setIntrosSeen(s => { const n = new Set(s); n.add(sec); return n })
+    }
+    if (showIntro) {
+      const meta = SECTIONS[sec]
+      return (
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:0, opacity:.04, backgroundImage: GRAIN_URI }} />
+          <style>{CSS}</style>
+          <div style={{ position:'fixed', top:0, left:0, right:0, zIndex:100, padding:'18px 24px', display:'flex', alignItems:'center', gap:16 }}>
+            <button onClick={goBack} aria-label="Go back" style={{ background:'none', border:'none', fontSize:22, color:'rgba(26,26,46,.45)', cursor:'pointer', lineHeight:1, padding:0 }}>←</button>
+            <div style={{ flex:1, display:'flex', justifyContent:'center', gap:7 }}>
+              {SECTION_KEYS.map(k => (
+                <div key={k} style={{ width: k === sec ? 26 : 8, height:8, borderRadius:50,
+                  background: SECTION_KEYS.indexOf(k) < SECTION_KEYS.indexOf(sec) ? '#1C4A32' : k === sec ? '#3D2645' : 'rgba(61,38,69,.16)',
+                  transition:'all .35s cubic-bezier(.2,.7,.2,1)' }} />
+              ))}
+            </div>
+            <div style={{ width:22 }} />
+          </div>
+          <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'90px 28px 60px', position:'relative', zIndex:1 }}>
+            <div key={cardKey} className={slideDir} style={{ maxWidth:560, textAlign:'center' }}>
+              <div style={{ fontSize:12, letterSpacing:'.24em', textTransform:'uppercase', color:'#B0902F', fontWeight:700, marginBottom:20 }}>{meta.eyebrow}</div>
+              <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(34px,6.5vw,56px)', fontWeight:500, color:'#1A1A2E', lineHeight:1.04, letterSpacing:'-.02em', marginBottom:20 }}>{meta.name}</h2>
+              <p style={{ fontSize:17, fontWeight:300, lineHeight:1.75, color:'#5a5550', marginBottom:38, maxWidth:480, marginLeft:'auto', marginRight:'auto' }}>{meta.intro}</p>
+              <button className="gbtn" style={{ maxWidth:300, margin:'0 auto' }} onClick={beginSection}>Begin →</button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', position: 'relative' }}>
         {/* Grain overlay */}
@@ -2461,8 +2532,12 @@ export default function Page() {
 
           {/* Animated question wrapper */}
           <div key={cardKey} className={slideDir}>
+            {/* Chapter label */}
+            <p style={{ textAlign: 'center', fontSize: 11.5, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', fontWeight: 700, marginTop: 24 }}>
+              {SECTIONS[sectionOf(q.id)].eyebrow} · {SECTIONS[sectionOf(q.id)].name}
+            </p>
             {/* Question title */}
-            <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 400, fontFamily: "'Cormorant Garamond',serif", color: '#0d0d0b', textAlign: 'center', margin: '40px auto 12px', lineHeight: 1.22, maxWidth: 640 }}>
+            <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 400, fontFamily: "'Cormorant Garamond',serif", color: '#0d0d0b', textAlign: 'center', margin: '14px auto 12px', lineHeight: 1.22, maxWidth: 640 }}>
               {q.title}
             </h2>
             {q.sub && (

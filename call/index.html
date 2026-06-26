@@ -9,10 +9,10 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#FAF6F0">
 <title>Book Your Private Call · The5th Consulting</title>
-<meta name="description" content="Watch the short video, then apply for a private call. We help women turn decades of expertise into a coaching or consulting business that creates freedom. No pressure, no obligation.">
+<meta name="description" content="Watch the short film, then apply for a private conversation. We help experienced women turn decades of expertise into a calm, profitable coaching or consulting business. No pressure, no obligation.">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="Book Your Private Call · The5th Consulting">
-<meta property="og:description" content="Watch the short video, then apply for a private call. We help women turn decades of expertise into a business that creates freedom.">
+<meta property="og:title" content="Apply for a Private Call · The5th Consulting">
+<meta property="og:description" content="Watch the short film, then apply for a private conversation. We help experienced women turn decades of expertise into income that lasts.">
 <meta property="og:image" content="https://the5th.consulting/public/images/founder.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +33,7 @@ img{display:block;max-width:100%;height:auto}
 a{text-decoration:none;color:inherit}
 ul{list-style:none}
 ::selection{background:var(--gold);color:#2E1A35}
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:3px}
 
 .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
 .wrap--mid{max-width:880px}
@@ -41,64 +42,105 @@ ul{list-style:none}
 .eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);opacity:.7}
 .eyebrow--c{justify-content:center}.eyebrow--c::after{content:'';width:24px;height:1px;background:var(--gold);opacity:.7}
 .eyebrow--light{color:var(--gold)}
-.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.5rem,5.4vw,4.4rem);font-weight:400;line-height:1.02;letter-spacing:-.028em;color:var(--ink)}
+.h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2.6rem,5.6vw,4.6rem);font-weight:400;line-height:1.0;letter-spacing:-.028em;color:var(--ink)}
 .h1 em{font-style:italic;color:var(--gold-deep)}
-.h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;line-height:1.08;letter-spacing:-.02em;color:var(--ink)}
+.h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(2rem,4vw,3.3rem);font-weight:400;line-height:1.07;letter-spacing:-.02em;color:var(--ink)}
 .h2 em{font-style:italic;color:var(--gold-deep)}
 .h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.5rem;line-height:1.15;color:var(--ink)}
 .lead{font-size:clamp(1.08rem,2vw,1.3rem);font-weight:300;line-height:1.75;color:var(--ink-soft)}
-.secHead{text-align:center;max-width:740px;margin:0 auto 56px}
+.secHead{text-align:center;max-width:760px;margin:0 auto 56px}
 .secHead .eyebrow{margin-bottom:18px}.secHead .lead{margin-top:18px}
 
+/* connector / transition copy */
+.bridge{text-align:center;max-width:640px;margin:0 auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.25rem,2.4vw,1.7rem);font-weight:300;line-height:1.4;color:var(--ink-mid)}
+.bridge b{font-style:normal;color:var(--gold-deep);font-weight:500}
+
 /* buttons */
-.btnGold{position:relative;display:inline-flex;align-items:center;gap:11px;font-size:1rem;font-weight:700;letter-spacing:.02em;color:#2E1A35;background:linear-gradient(180deg,#Ecd391,#C9A84C 60%,#B0902F);padding:19px 44px;border-radius:6px;box-shadow:0 14px 36px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .25s,box-shadow .25s;overflow:hidden;border:none;cursor:pointer}
+.btnGold{position:relative;display:inline-flex;align-items:center;gap:11px;font-size:1rem;font-weight:700;letter-spacing:.02em;color:#2E1A35;background:linear-gradient(180deg,#Ecd391,#C9A84C 60%,#B0902F);padding:19px 44px;border-radius:6px;box-shadow:0 14px 36px rgba(201,168,76,.32),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s;overflow:hidden;border:none;cursor:pointer}
 .btnGold::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.45) 50%,transparent 80%);transform:translateX(-130%);transition:transform .7s}
 .btnGold:hover::after{transform:translateX(130%)}
 .btnGold:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(201,168,76,.46)}
 .btnGold--lg{font-size:1.08rem;padding:22px 52px}
-.btnGhost{display:inline-flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;color:var(--ink);padding:17px 32px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(26,26,46,.22);transition:box-shadow .2s,background .2s}
-.btnGhost:hover{box-shadow:inset 0 0 0 1px var(--gold);background:rgba(201,168,76,.06)}
-.trustline{font-size:.84rem;color:var(--muted);letter-spacing:.01em}
+.cta-wrap{text-align:center}
+.cta-wrap .trustline{margin-top:15px}
+.trustline{font-size:.84rem;color:var(--muted);letter-spacing:.01em;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
 .trustline b{color:var(--gold-deep);font-weight:600}
-.trustline--light{color:rgba(255,255,255,.55)}.trustline--light b{color:var(--gold-soft)}
+.trustline svg{width:13px;height:13px;opacity:.6}
+.trustline--light{color:rgba(255,255,255,.6)}.trustline--light b{color:var(--gold-soft)}
 
 /* sections */
 .sec{padding:104px 0}
-@media(max-width:768px){.sec{padding:68px 0}}
+@media(max-width:768px){.sec{padding:70px 0}}
 .sec--ivory{background:var(--ivory);border-top:1px solid var(--border)}
 .sec--mid{background:var(--cream-mid);border-top:1px solid var(--border)}
 .sec--dark{background:linear-gradient(168deg,#3D2645,#2E1A35 60%,#231029);color:#fff;position:relative;overflow:hidden}
 .sec--dark .h2{color:#fff}.sec--dark .lead{color:rgba(255,255,255,.66)}
 .grain::before{content:'';position:absolute;inset:0;opacity:.045;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+.glow::after{content:'';position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:90vw;height:80vh;background:radial-gradient(ellipse,rgba(201,168,76,.12),transparent 66%);pointer-events:none;animation:drift 11s ease-in-out infinite alternate}
+@keyframes drift{from{opacity:.5;transform:translateX(-52%) scale(1)}to{opacity:1;transform:translateX(-48%) scale(1.08)}}
 .rule{width:100%;max-width:520px;height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--gold-line),transparent)}
 
-/* brand mark */
-.brand{text-align:center;padding:34px 0 4px}
-.brand img{height:42px;width:auto;margin:0 auto}
+/* top bar */
+.topbar{text-align:center;padding:30px 24px 0}
+.topbar img{height:42px;width:auto;margin:0 auto 14px}
+.topbar__trust{font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.topbar__trust b{color:var(--gold-deep);font-weight:700}
+
+/* avatar stack */
+.avstack{display:inline-flex;align-items:center;gap:14px}
+.avstack__imgs{display:inline-flex}
+.avstack__imgs img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--cream);margin-left:-12px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.avstack__imgs img:first-child{margin-left:0}
+.avstack__imgs .more{width:38px;height:38px;border-radius:50%;background:var(--plum);color:#fff;font-size:.72rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--cream);margin-left:-12px}
+.avstack__t{font-size:.86rem;color:var(--ink-soft);text-align:left;line-height:1.35}
+.avstack__t b{color:var(--ink);font-weight:600}
+.avstack__t .stars{color:var(--gold);letter-spacing:1px;font-size:.78rem;display:block}
+.avstack--light .avstack__imgs img,.avstack--light .avstack__imgs .more{border-color:rgba(255,255,255,.15)}
+.avstack--light .avstack__t{color:rgba(255,255,255,.72)}.avstack--light .avstack__t b{color:#fff}
 
 /* HERO */
-.hero{text-align:center;padding:34px 0 0;position:relative}
+.hero{text-align:center;padding:40px 0 0;position:relative}
 .hero__eyebrow{margin-bottom:24px}
-.hero .h1{max-width:16ch;margin:0 auto}
-.hero__sub{font-size:clamp(1.1rem,2.1vw,1.35rem);font-weight:300;line-height:1.7;color:var(--ink-soft);max-width:640px;margin:24px auto 0}
-.hero__authority{margin:22px auto 0;font-size:.82rem;letter-spacing:.04em;color:var(--muted);max-width:560px}
+.hero .h1{max-width:15ch;margin:0 auto}
+.hero__sub{font-size:clamp(1.1rem,2.1vw,1.35rem);font-weight:300;line-height:1.7;color:var(--ink-soft);max-width:660px;margin:26px auto 0}
+.hero__authority{margin:26px auto 0;font-size:.84rem;letter-spacing:.02em;color:var(--muted);max-width:580px}
 .hero__authority b{color:var(--ink);font-weight:600}
 
 /* VIDEO */
-.videoSec{padding:44px 0 0}
-.videoFrame{position:relative;max-width:920px;margin:0 auto;border-radius:14px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 50px 110px -40px rgba(46,26,53,.5),0 0 0 6px rgba(255,255,255,.6)}
-.videoPH{position:relative;aspect-ratio:16/9;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 75%);cursor:pointer}
-.videoPH__play{width:88px;height:88px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .25s,background .25s}
-.videoPH:hover .videoPH__play{transform:scale(1.07);background:rgba(201,168,76,.3)}
+.videoSec{padding:46px 0 0}
+.videoFrame{position:relative;max-width:940px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 56px 120px -44px rgba(46,26,53,.55),0 0 0 7px rgba(255,255,255,.6)}
+.videoPH{position:relative;aspect-ratio:16/9;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 75%);cursor:pointer}
+.videoPH__play{width:90px;height:90px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1),background .3s}
+.videoPH:hover .videoPH__play{transform:scale(1.08);background:rgba(201,168,76,.3)}
+.videoPH__play::before{content:'';position:absolute;width:90px;height:90px;border-radius:50%;border:1px solid var(--gold);opacity:.5;animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(1.5);opacity:0}}
 .videoPH__play svg{width:32px;height:32px;margin-left:5px;fill:var(--gold)}
 .videoPH__label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:rgba(255,255,255,.62)}
 .videoPH__hint{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.32)}
-.videoNote{text-align:center;font-size:.82rem;letter-spacing:.03em;color:var(--muted);margin-top:18px}
+.videoCap{position:absolute;left:18px;bottom:18px;display:flex;align-items:center;gap:11px;background:rgba(20,8,24,.55);backdrop-filter:blur(8px);border:1px solid rgba(201,168,76,.25);border-radius:100px;padding:7px 16px 7px 7px}
+.videoCap img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.videoCap span{font-size:.8rem;color:rgba(255,255,255,.88);font-weight:300}
+.videoCap b{color:#fff;font-weight:600}
+.videoNote{text-align:center;font-size:.82rem;letter-spacing:.03em;color:var(--muted);margin-top:20px}
 .videoNote b{color:var(--gold-deep);font-weight:600}
-.heroCta{text-align:center;padding:34px 0 0}
-.heroCta .trustline{margin-top:15px}
+.heroCta{text-align:center;padding:36px 0 0}
+.heroCta .avstack{margin-top:26px}
 
-/* STATS strip */
+/* press strip */
+.press{padding:46px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--ivory)}
+.press__lab{text-align:center;font-size:.64rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.press__row{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:16px 40px}
+.press__row span{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:#b3a99c;letter-spacing:.01em}
+
+/* belief band */
+.belief{text-align:center}
+.belief__mark{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 24px;border:2px solid var(--gold-line)}
+.belief__q{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.6rem,3.4vw,2.5rem);font-weight:300;line-height:1.32;color:var(--ink);max-width:840px;margin:0 auto}
+.belief__q em{font-style:italic;color:var(--gold-deep)}
+.belief__by{margin-top:26px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.belief__by b{color:var(--ink);font-weight:600}
+
+/* STATS */
 .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
 .statCell{text-align:center;padding:8px 22px;border-right:1px solid rgba(255,255,255,.1)}
 .statCell:last-child{border-right:none}
@@ -107,60 +149,87 @@ ul{list-style:none}
 @media(max-width:680px){.stats .wrap{grid-template-columns:1fr 1fr;gap:36px 0}.statCell{border-right:none}.statCell:nth-child(odd){border-right:1px solid rgba(255,255,255,.1)}}
 
 /* IS THIS YOU */
-.fitList{max-width:760px;margin:0 auto;display:grid;gap:0}
-.fitRow{display:flex;gap:18px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--border)}
+.fitList{max-width:780px;margin:0 auto;display:grid;gap:0}
+.fitRow{display:flex;gap:18px;align-items:flex-start;padding:24px 0;border-bottom:1px solid var(--border)}
 .fitRow:last-child{border-bottom:none}
-.fitRow__i{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(28,74,50,.08);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem}
-.fitRow__t{font-size:1.08rem;font-weight:300;line-height:1.6;color:var(--ink-mid)}
+.fitRow__i{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(28,74,50,.08);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;margin-top:2px}
+.fitRow__t{font-size:1.1rem;font-weight:300;line-height:1.6;color:var(--ink-mid)}
 .fitRow__t b{font-weight:600;color:var(--ink)}
 
 /* METHOD steps */
 .steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1000px;margin:0 auto}
 @media(max-width:880px){.steps4{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.steps4{grid-template-columns:1fr}}
-.stepCard{background:var(--ivory);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:8px;padding:30px 26px}
+.stepCard{background:var(--ivory);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:8px;padding:30px 26px;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.stepCard:hover{transform:translateY(-5px);box-shadow:0 22px 50px -34px rgba(46,26,53,.5)}
 .stepCard__n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.3rem;font-weight:400;color:var(--gold-deep);line-height:1;display:block;margin-bottom:14px}
 .stepCard__h{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;margin-bottom:8px}
 .stepCard__p{font-size:.95rem;font-weight:300;line-height:1.6;color:var(--ink-soft)}
 
-/* CASE STUDIES featured */
+/* GLIMPSE INSIDE (screenshots) */
+.glimpse{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1040px;margin:0 auto}
+@media(max-width:820px){.glimpse{grid-template-columns:1fr;max-width:520px}}
+.shotCard{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 22px 56px -38px rgba(46,26,53,.5);transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.shotCard:hover{transform:translateY(-6px);box-shadow:0 30px 64px -36px rgba(46,26,53,.55)}
+.shotCard__img{aspect-ratio:4/3;overflow:hidden;background:var(--cream-deep);border-bottom:1px solid var(--border)}
+.shotCard__img img{width:100%;height:100%;object-fit:cover;object-position:top}
+.shotCard__body{padding:22px 24px 26px}
+.shotCard__tag{font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:8px}
+.shotCard__h{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:6px}
+.shotCard__p{font-size:.9rem;font-weight:300;line-height:1.55;color:var(--ink-soft)}
+
+/* CASE STUDIES */
 .cases{display:grid;gap:26px;max-width:980px;margin:0 auto}
 .caseCard{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:1.15fr .85fr;box-shadow:0 24px 60px -40px rgba(46,26,53,.5)}
 @media(max-width:760px){.caseCard{grid-template-columns:1fr}}
 .caseCard__body{padding:40px 38px}
-.caseCard__tag{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px}
-.caseCard__name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;line-height:1.1;margin-bottom:4px}
-.caseCard__role{font-size:.9rem;color:var(--muted);margin-bottom:20px}
-.caseCard__line{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft);margin-bottom:16px}
+.caseCard__head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.caseCard__av{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-line);flex-shrink:0}
+.caseCard__avMono{width:54px;height:54px;border-radius:50%;background:linear-gradient(160deg,#4E3158,#2E1A35);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;flex-shrink:0;border:2px solid var(--gold-line)}
+.caseCard__tag{font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:5px}
+.caseCard__name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;line-height:1.05}
+.caseCard__role{font-size:.86rem;color:var(--muted);margin-top:2px}
+.caseCard__line{font-size:1rem;font-weight:300;line-height:1.7;color:var(--ink-soft);margin-bottom:18px}
 .caseCard__line b{font-weight:600;color:var(--ink)}
-.caseCard__metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.caseCard__metrics{display:flex;flex-wrap:wrap;gap:10px}
 .metric{font-size:.82rem;font-weight:500;color:var(--green-dark);background:rgba(28,74,50,.07);border:1px solid rgba(28,74,50,.16);border-radius:100px;padding:7px 14px}
 .caseCard__side{background:linear-gradient(165deg,#3D2645,#2E1A35);color:#fff;padding:40px 36px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden}
 .caseCard__side::before{content:'';position:absolute;top:-30%;right:-20%;width:80%;height:80%;background:radial-gradient(ellipse,rgba(201,168,76,.2),transparent 70%)}
 .caseCard__big{position:relative;font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,5vw,3.6rem);font-weight:500;color:var(--gold);line-height:1}
-.caseCard__bigLab{position:relative;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:12px;max-width:200px}
+.caseCard__bigLab{position:relative;font-size:.74rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:12px;max-width:200px}
 
-/* MORE RESULTS grid */
+/* MORE RESULTS */
 .resGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1000px;margin:0 auto}
 @media(max-width:820px){.resGrid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.resGrid{grid-template-columns:1fr}}
-.resCard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px 26px;transition:transform .25s,box-shadow .25s}
-.resCard:hover{transform:translateY(-4px);box-shadow:0 18px 40px -28px rgba(46,26,53,.5)}
+.resCard{background:#fff;border:1px solid var(--border);border-radius:10px;padding:28px 26px;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s}
+.resCard:hover{transform:translateY(-5px);box-shadow:0 18px 40px -28px rgba(46,26,53,.5)}
 .resCard__fig{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:600;color:var(--gold-deep);line-height:1}
 .resCard__when{font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 0 14px}
 .resCard__nm{font-weight:600;color:var(--ink);font-size:1rem}
 .resCard__ro{font-size:.88rem;font-weight:300;color:var(--ink-soft);margin-top:2px}
+
+/* social-proof screenshot (message) */
+.proofShot{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center;max-width:980px;margin:0 auto}
+@media(max-width:760px){.proofShot{grid-template-columns:1fr;gap:30px}}
+.proofShot__img{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:0 30px 70px -40px rgba(46,26,53,.5);background:var(--cream-deep)}
+.proofShot__copy .eyebrow{margin-bottom:16px}
+.proofShot__copy .h2{margin-bottom:16px}
+.proofShot__copy p{font-size:1.05rem;font-weight:300;line-height:1.75;color:var(--ink-soft)}
 
 /* VIDEO TESTIMONIALS */
 .vtGrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:920px;margin:0 auto}
 @media(max-width:680px){.vtGrid{grid-template-columns:1fr}}
 .vtFrame{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 30px 70px -44px rgba(0,0,0,.6)}
 .vtPH{position:relative;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(ellipse at center,#3a2145,#1c0e23 78%);cursor:pointer}
-.vtPH__play{width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.vtPH__play{width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,.18);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .vtPH:hover .vtPH__play{transform:scale(1.08)}
 .vtPH__play svg{width:22px;height:22px;margin-left:4px;fill:var(--gold)}
 .vtPH__nm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(255,255,255,.66)}
 .vtPH__hint{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.aggregate{text-align:center;margin-top:40px;font-size:.92rem;color:var(--ink-soft)}
+.aggregate .stars{color:var(--gold);letter-spacing:2px;margin-right:8px}
+.aggregate b{color:var(--ink);font-weight:600}
 
 /* WRITTEN testimonials */
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto}
@@ -188,7 +257,7 @@ ul{list-style:none}
 .founder__sig-nm{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#fff}
 .founder__sig-ro{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:4px}
 
-/* DIFFERENT / objections */
+/* DIFFERENT */
 .diff{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:940px;margin:0 auto}
 @media(max-width:720px){.diff{grid-template-columns:1fr}}
 .diffCol{padding:36px 32px;border:1px solid var(--border);border-radius:12px}
@@ -202,6 +271,24 @@ ul{list-style:none}
 .diffCol__m{flex-shrink:0;font-weight:700}
 .diffCol--them .diffCol__m{color:#b07a7a}.diffCol--us .diffCol__m{color:var(--green)}
 
+/* GUARANTEE */
+.guar{max-width:780px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--gold-line);border-radius:16px;padding:48px 40px;box-shadow:0 24px 56px -38px rgba(46,26,53,.5);position:relative}
+.guar__seal{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;background:rgba(201,168,76,.08)}
+.guar__seal svg{width:30px;height:30px;stroke:var(--gold-deep);fill:none;stroke-width:1.5}
+.guar .h3{font-size:1.8rem;margin-bottom:12px}
+.guar p{font-size:1.04rem;font-weight:300;line-height:1.75;color:var(--ink-soft);max-width:580px;margin:0 auto}
+.guar p b{color:var(--ink);font-weight:600}
+
+/* WHAT NEXT */
+.whatNext{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;max-width:1020px;margin:0 auto}
+@media(max-width:860px){.whatNext{grid-template-columns:1fr;gap:36px}.whatNext__media{order:-1;max-width:480px;margin:0 auto}}
+.whatNext__media{border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 30px 70px -40px rgba(46,26,53,.5);background:var(--cream-deep)}
+.nstep{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border)}
+.nstep:last-child{border-bottom:none}
+.nstep__n{flex-shrink:0;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600}
+.nstep__h{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--ink);margin-bottom:3px}
+.nstep__p{font-size:.96rem;font-weight:300;line-height:1.6;color:var(--ink-soft)}
+
 /* FAQ */
 .faq{max-width:780px;margin:0 auto}
 .faqItem{border-bottom:1px solid var(--border)}
@@ -211,33 +298,27 @@ ul{list-style:none}
 .faqItem.open .faqIco{transform:rotate(45deg);background:var(--gold);color:#2E1A35}
 .faqA{max-height:0;overflow:hidden;transition:max-height .35s ease}
 .faqA p{font-size:1rem;font-weight:300;line-height:1.85;color:var(--ink-soft);padding-bottom:24px}
+.faqA a{color:var(--gold-deep);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 
 /* APPLY */
 .applyCard{max-width:820px;margin:0 auto;text-align:center}
 .applyCard .h2{color:#fff;margin-bottom:14px}
-.applyCard>.lead{color:rgba(255,255,255,.72);max-width:560px;margin:0 auto 14px}
-.applySteps{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:26px 0 34px}
-.applyStep{display:flex;align-items:center;gap:10px;font-size:.9rem;color:rgba(255,255,255,.8)}
-.applyStep b{width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);color:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:.95rem;flex-shrink:0}
-.applyStep span:last-child{font-weight:300}
-.applyArrow{color:rgba(201,168,76,.5)}
-@media(max-width:600px){.applyArrow{display:none}.applySteps{flex-direction:column;align-items:flex-start;text-align:left;max-width:300px;margin-left:auto;margin-right:auto}}
+.applyCard>.lead{color:rgba(255,255,255,.72);max-width:580px;margin:0 auto 8px}
+.applyFounder{display:inline-flex;align-items:center;gap:13px;margin:8px auto 26px;padding:9px 20px 9px 9px;background:rgba(255,255,255,.05);border:1px solid var(--gold-line);border-radius:100px}
+.applyFounder img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.applyFounder span{font-size:.86rem;color:rgba(255,255,255,.8);font-weight:300;text-align:left}
+.applyFounder b{color:#fff;font-weight:600}
 .formMount{max-width:640px;margin:0 auto 22px;background:rgba(255,255,255,.04);border:1px dashed rgba(201,168,76,.45);border-radius:14px;padding:46px 28px}
 .formMount__t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:rgba(255,255,255,.6);margin-bottom:6px}
 .formMount__s{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.32)}
-.applyFine{margin-top:18px;font-size:.82rem;color:rgba(255,255,255,.5)}
+.applyFine{margin-top:18px;font-size:.82rem;color:rgba(255,255,255,.5);display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.applyFine svg{width:13px;height:13px;opacity:.7}
 .applyFine a{color:var(--gold-soft);text-decoration:underline;text-underline-offset:2px}
-.scarce{display:inline-flex;align-items:center;gap:9px;margin-bottom:26px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);background:rgba(201,168,76,.1);border:1px solid var(--gold-line);border-radius:100px;padding:8px 18px}
+.scarce{display:inline-flex;align-items:center;gap:9px;margin-bottom:24px;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-soft);background:rgba(201,168,76,.1);border:1px solid var(--gold-line);border-radius:100px;padding:8px 18px}
 .scarce .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25)}
 
-/* guarantee strip */
-.guar{max-width:780px;margin:0 auto;text-align:center;background:#fff;border:1px solid var(--gold-line);border-radius:14px;padding:44px 40px;box-shadow:0 20px 50px -36px rgba(46,26,53,.5)}
-.guar__seal{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--gold-deep);margin-bottom:10px}
-.guar .h3{font-size:1.7rem;margin-bottom:12px}
-.guar p{font-size:1.02rem;font-weight:300;line-height:1.7;color:var(--ink-soft);max-width:560px;margin:0 auto}
-
 /* sticky CTA */
-.stickyCta{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(35,16,41,.97);backdrop-filter:blur(10px);border-top:1px solid var(--gold-line);padding:13px 20px;display:flex;align-items:center;justify-content:center;gap:20px;transform:translateY(110%);transition:transform .35s ease;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+.stickyCta{position:fixed;left:0;right:0;bottom:0;z-index:120;background:rgba(35,16,41,.97);backdrop-filter:blur(10px);border-top:1px solid var(--gold-line);padding:13px 20px;display:flex;align-items:center;justify-content:center;gap:20px;transform:translateY(110%);transition:transform .4s cubic-bezier(.2,.7,.2,1);box-shadow:0 -10px 30px rgba(0,0,0,.25)}
 .stickyCta.show{transform:translateY(0)}
 .stickyCta__txt{color:rgba(255,255,255,.82);font-size:.92rem;font-weight:300}
 .stickyCta__txt b{color:#fff;font-weight:600}
@@ -245,27 +326,37 @@ ul{list-style:none}
 @media(max-width:600px){.stickyCta__txt{display:none}.stickyCta{padding:11px 16px}.stickyCta .btnGold{width:100%;justify-content:center}}
 
 /* micro footer */
-.micro{text-align:center;padding:44px 24px 96px;font-size:.76rem;color:var(--muted)}
+.micro{text-align:center;padding:44px 24px 100px;font-size:.76rem;color:var(--muted)}
 .micro a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
 .micro a:hover{color:var(--gold-deep)}
 
-[data-up]{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.19,.7,.2,1),transform .9s cubic-bezier(.19,.7,.2,1)}
+/* reveal + load */
+[data-up]{opacity:0;transform:translateY(30px);transition:opacity 1s cubic-bezier(.19,.7,.2,1),transform 1s cubic-bezier(.19,.7,.2,1)}
 [data-up].in{opacity:1;transform:none}
-.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
-@media(prefers-reduced-motion:reduce){[data-up]{opacity:1;transform:none}}
+.d1{transition-delay:.09s}.d2{transition-delay:.18s}.d3{transition-delay:.27s}
+.heroLoad{opacity:0;transform:translateY(16px);animation:heroIn 1.1s cubic-bezier(.19,.7,.2,1) .1s forwards}
+@keyframes heroIn{to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  [data-up],.heroLoad{opacity:1!important;transform:none!important;animation:none!important}
+  .glow::after,.videoPH__play::before{animation:none!important}
+  html{scroll-behavior:auto}
+}
 </style>
 </head>
 <body>
 
-<!-- brand mark (not a nav) -->
-<div class="brand"><a href="/"><img src="/public/images/logo.png" alt="The5th Consulting"></a></div>
+<!-- top bar: brand + instant trust -->
+<header class="topbar heroLoad">
+  <a href="/" aria-label="The5th Consulting home"><img src="/public/images/logo.png" alt="The5th Consulting" width="160" height="42"></a>
+  <p class="topbar__trust">Trusted by <b>76+ women</b> across the US, UK, Canada &amp; Australia</p>
+</header>
 
-<!-- ════════ HERO + VIDEO ════════ -->
+<!-- ════════ HERO ════════ -->
 <section class="hero wrap">
-  <span class="eyebrow eyebrow--c hero__eyebrow" data-up>Watch First · Then Apply</span>
-  <h1 class="h1" data-up>You spent a lifetime becoming an expert. <em>Let's turn it into income.</em></h1>
-  <p class="hero__sub" data-up>Watch the short video below to see exactly how women over 40 are turning decades of experience into a coaching or consulting business that pays them what they're worth, without ads, funnels, or a big following. Then apply for a private call to map yours.</p>
-  <p class="hero__authority" data-up>Guided by <b>Indrodip Ghosh</b>, who has advised Fortune 500 executives and billion-dollar companies. <b>$15M+</b> generated by clients across <b>12 countries</b>.</p>
+  <span class="eyebrow eyebrow--c hero__eyebrow heroLoad">Watch the Film · Then Apply</span>
+  <h1 class="h1 heroLoad">You've spent a lifetime becoming this good. <em>It's time to be paid like it.</em></h1>
+  <p class="hero__sub heroLoad">Watch the short film below to see how experienced women are turning decades of expertise into a calm, profitable coaching or consulting business, without ads, funnels, or chasing a following. Then, if it resonates, apply for a private conversation.</p>
+  <p class="hero__authority heroLoad">Led by <b>Indrodip Ghosh</b>, who has advised Fortune 500 leaders and billion-dollar companies. <b>$15M+</b> generated by clients across <b>12 countries</b>.</p>
 </section>
 
 <section class="videoSec wrap">
@@ -280,46 +371,73 @@ ul{list-style:none}
          <script src="https://fast.wistia.com/embed/medias/YOURVIDEOID.jsonp" async></script>
          <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
     ════════════════════════════════════════════════════════ -->
-    <div class="videoPH" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">
+    <div class="videoPH" role="button" tabindex="0" aria-label="Play the film, then apply below" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('apply').scrollIntoView({behavior:'smooth'})}">
       <div class="videoPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-      <div class="videoPH__label">Your VSL video will play here</div>
+      <div class="videoPH__label">Your VSL film will play here</div>
       <div class="videoPH__hint">Wistia · 16:9</div>
+      <div class="videoCap"><img src="/public/images/live-coaching.png" alt="Indrodip Ghosh" width="34" height="34" loading="lazy"><span><b>Indrodip Ghosh</b> · Founder</span></div>
     </div>
   </div>
-  <p class="videoNote" data-up>Turn your sound on. <b>Watch to the end</b>, then apply below.</p>
+  <p class="videoNote" data-up>Best with sound on. <b>Watch to the end</b>, then apply below.</p>
 </section>
 
 <section class="heroCta wrap">
-  <a href="#apply" class="btnGold btnGold--lg" data-up>Apply for Your Private Call →</a>
-  <p class="trustline" data-up>Free · By application only · <b>We'll never spam you</b></p>
-</section>
-
-<div class="rule" style="margin-top:88px"></div>
-
-<!-- ════════ STATS ════════ -->
-<section class="sec stats sec--dark grain" style="padding:60px 0">
-  <div class="wrap">
-    <div class="statCell" data-up><b>$15M+</b><span>Generated by clients</span></div>
-    <div class="statCell" data-up><b>76+</b><span>Women coached</span></div>
-    <div class="statCell" data-up><b>12</b><span>Nations represented</span></div>
-    <div class="statCell" data-up><b>90 days</b><span>Avg. to first client</span></div>
+  <div class="cta-wrap">
+    <a href="#apply" class="btnGold btnGold--lg" data-up>Apply for a Private Call →</a>
+    <p class="trustline" data-up><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Free · By application only · <b>We'll never spam you</b></p>
+    <div class="avstack" data-up>
+      <span class="avstack__imgs">
+        <img src="/public/clients/laurie.jpg" alt="" width="38" height="38" loading="lazy">
+        <img src="/public/clients/angela.jpg" alt="" width="38" height="38" loading="lazy">
+        <img src="/public/clients/hayley.jpg" alt="" width="38" height="38" loading="lazy">
+        <img src="/public/clients/jeanne.jpg" alt="" width="38" height="38" loading="lazy">
+        <img src="/public/clients/toril.jpg" alt="" width="38" height="38" loading="lazy">
+        <span class="more">+71</span>
+      </span>
+      <span class="avstack__t"><span class="stars">★★★★★</span><b>Join 76+ women</b> who already have</span>
+    </div>
   </div>
 </section>
 
-<!-- ════════ IS THIS YOU (cold identification) ════════ -->
+<!-- ════════ PRESS ════════ -->
+<div class="press">
+  <p class="press__lab">Our clients have been featured in</p>
+  <div class="press__row">
+    <span>Forbes</span><span>The New York Times</span><span>HuffPost</span><span>TEDx</span><span>The Guardian</span><span>Yahoo Finance</span>
+  </div>
+</div>
+
+<!-- ════════ FOUNDER BELIEF (emotion early) ════════ -->
+<section class="sec belief wrap--mid wrap">
+  <img class="belief__mark" src="/public/images/live-coaching.png" alt="Indrodip Ghosh" width="60" height="60" loading="lazy" data-up>
+  <p class="belief__q" data-up>"I've watched too many brilliant women quietly undercharge for work the world desperately needs. <em>You were never taught how to be paid like the expert you already are.</em> That's the entire reason The5th exists."</p>
+  <p class="belief__by" data-up><b>Indrodip Ghosh</b> · Founder of The5th</p>
+</section>
+
+<!-- ════════ STATS ════════ -->
+<section class="sec stats sec--dark grain" style="padding:62px 0">
+  <div class="wrap">
+    <div class="statCell" data-up><b data-count="15" data-prefix="$" data-suffix="M+">$15M+</b><span>Generated by clients</span></div>
+    <div class="statCell" data-up><b data-count="76" data-suffix="+">76+</b><span>Women coached</span></div>
+    <div class="statCell" data-up><b data-count="12">12</b><span>Nations represented</span></div>
+    <div class="statCell" data-up><b data-count="90" data-suffix=" days">90 days</b><span>Avg. to first client</span></div>
+  </div>
+</section>
+
+<!-- ════════ IS THIS YOU ════════ -->
 <section class="sec">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">Does This Sound Like You?</span>
-      <h2 class="h2">You have the expertise. <em>You were never shown how to be paid for it.</em></h2>
+      <h2 class="h2">You have the expertise. <em>You were simply never shown how to be paid for it.</em></h2>
     </div>
     <div class="fitList">
-      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've spent <b>decades becoming brilliant</b> at what you do, as a coach, consultant, therapist, executive, or expert, and you know your experience is worth far more than your income reflects.</p></div>
-      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've tried courses, content, and "do-it-yourself" funnels, and you're <b>tired of figuring it out alone</b> with no real return to show for it.</p></div>
-      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You don't want to chase a huge following or post three times a day. You want <b>a handful of premium clients</b> and a business that fits your life.</p></div>
-      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You're ready for a proven system and real guidance, <b>not more theory</b>, so you can finally move from "one day" to a paying client.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've spent <b>decades becoming brilliant</b> at what you do, as a coach, consultant, therapist, executive, or expert, and you quietly know your experience is worth far more than your income reflects.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You've tried courses and "do-it-yourself" funnels, and you're <b>tired of figuring it out alone</b> with little to show for it.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You don't want to chase a following or post all day. You want <b>a handful of premium clients</b> and a business that fits your life, not one that consumes it.</p></div>
+      <div class="fitRow" data-up><span class="fitRow__i">✓</span><p class="fitRow__t">You're ready for a proven path and someone in your corner, <b>not more theory</b>, so you can finally move from "one day" to your first or next paying client.</p></div>
     </div>
-    <div style="text-align:center;margin-top:46px" data-up><a href="#apply" class="btnGold">This Is Me, Let's Talk →</a></div>
+    <div class="cta-wrap" style="margin-top:50px" data-up><a href="#apply" class="btnGold">This Is Me, Let's Talk →</a></div>
   </div>
 </section>
 
@@ -329,7 +447,7 @@ ul{list-style:none}
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">How We Help</span>
       <h2 class="h2">The Client-To-Cash Method™</h2>
-      <p class="lead">A simple, proven path from "a lifetime of knowledge" to consistent, premium income. It's the same system behind every result on this page.</p>
+      <p class="lead">A calm, proven path from "a lifetime of knowledge" to consistent, premium income. The same system behind every result on this page.</p>
     </div>
     <div class="steps4">
       <div class="stepCard" data-up><span class="stepCard__n">01</span><h3 class="stepCard__h">Package</h3><p class="stepCard__p">We shape what you already know into one premium offer people understand instantly and happily pay for.</p></div>
@@ -340,8 +458,34 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- ════════ FEATURED CASE STUDIES ════════ -->
+<!-- ════════ A GLIMPSE INSIDE (screenshots) ════════ -->
 <section class="sec">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">A Glimpse Inside</span>
+      <h2 class="h2">You'll never be left to <em>figure it out alone.</em></h2>
+      <p class="lead">Real coaching, real tools, a real room of women, the moment you need them.</p>
+    </div>
+    <div class="glimpse">
+      <div class="shotCard" data-up>
+        <div class="shotCard__img"><img src="/public/images/coaching-session.png" alt="A 1:1 coaching session with Indrodip" loading="lazy"></div>
+        <div class="shotCard__body"><div class="shotCard__tag">Live Coaching</div><h3 class="shotCard__h">Direct access, every week</h3><p class="shotCard__p">Bring your real situation and leave with a specific answer, not a recording.</p></div>
+      </div>
+      <div class="shotCard" data-up>
+        <div class="shotCard__img"><img src="/public/images/zigzag-ai.png" alt="The5th AI, your personal CMO" loading="lazy"></div>
+        <div class="shotCard__body"><div class="shotCard__tag">The5th AI</div><h3 class="shotCard__h">Your personal CMO, 24/7</h3><p class="shotCard__p">Trained on our exact frameworks. Writes your offers, emails, and scripts on demand.</p></div>
+      </div>
+      <div class="shotCard" data-up>
+        <div class="shotCard__img"><img src="/public/images/highlight-content.png" alt="A post inside the private community" loading="lazy"></div>
+        <div class="shotCard__body"><div class="shotCard__tag">The Community</div><h3 class="shotCard__h">A private room of women</h3><p class="shotCard__p">Accomplished women who are building, not bystanding, cheering each other on.</p></div>
+      </div>
+    </div>
+    <p class="bridge" style="margin-top:60px" data-up>It's a system, a guide, and a room, working together. <b>Here's what it produces.</b></p>
+  </div>
+</section>
+
+<!-- ════════ FEATURED CASE STUDIES ════════ -->
+<section class="sec sec--ivory">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">Real Women · Real Numbers</span>
@@ -352,21 +496,23 @@ ul{list-style:none}
 
       <div class="caseCard" data-up>
         <div class="caseCard__body">
-          <div class="caseCard__tag">Leadership Coach · Norway</div>
-          <div class="caseCard__name">Torill</div>
-          <div class="caseCard__role">Returned after a 15-year absence</div>
-          <p class="caseCard__line">A celebrity coach who once advised governments, Torill stepped away for 15 years. She came back with <b>no current audience and no platform</b>. We built her re-entry from scratch, structured a $7,000 leadership program, and created the launch system that turned her reputation into revenue.</p>
-          <div class="caseCard__metrics"><span class="metric">30 enrolled at $7,000</span><span class="metric">1 launch</span></div>
+          <div class="caseCard__head">
+            <img class="caseCard__av" src="/public/clients/toril.jpg" alt="Torill" width="54" height="54" loading="lazy">
+            <div><div class="caseCard__tag">Leadership Coach · Norway</div><div class="caseCard__name">Torill</div><div class="caseCard__role">Returned after a 15-year absence</div></div>
+          </div>
+          <p class="caseCard__line">A celebrity coach who once advised governments, Torill stepped away for 15 years. She came back with <b>no current audience and no platform</b>. We built her re-entry from scratch, structured a $7,000 leadership program, and created the launch that turned her reputation into revenue.</p>
+          <div class="caseCard__metrics"><span class="metric">30 enrolled at $7,000</span><span class="metric">One launch</span></div>
         </div>
-        <div class="caseCard__side"><div class="caseCard__big">$210,000</div><div class="caseCard__bigLab">From a single program launch in 3 months</div></div>
+        <div class="caseCard__side"><div class="caseCard__big">$210,000</div><div class="caseCard__bigLab">From a single launch in 3 months</div></div>
       </div>
 
       <div class="caseCard" data-up>
         <div class="caseCard__body">
-          <div class="caseCard__tag">Dating Coach · TEDx Speaker</div>
-          <div class="caseCard__name">Laurie Gerber</div>
-          <div class="caseCard__role">20 years' experience, helping women over 50</div>
-          <p class="caseCard__line">Despite deep credibility, Laurie's earlier course launch had underperformed at just $79. We rebuilt the launch around a webinar and a community, then <b>repositioned the price from $79 to $249</b> to reflect the true transformation she delivers.</p>
+          <div class="caseCard__head">
+            <img class="caseCard__av" src="/public/clients/laurie.jpg" alt="Laurie Gerber" width="54" height="54" loading="lazy">
+            <div><div class="caseCard__tag">Dating Coach · TEDx Speaker</div><div class="caseCard__name">Laurie Gerber</div><div class="caseCard__role">20 years' experience, women over 50</div></div>
+          </div>
+          <p class="caseCard__line">Despite deep credibility, Laurie's earlier launch had underperformed at just $79. We rebuilt it around a webinar and a community, then <b>repositioned the price from $79 to $249</b> to reflect the true transformation she delivers.</p>
           <div class="caseCard__metrics"><span class="metric">600 joined her community</span><span class="metric">57 buyers at $249</span></div>
         </div>
         <div class="caseCard__side"><div class="caseCard__big">$14,193</div><div class="caseCard__bigLab">In revenue within 60 days</div></div>
@@ -374,55 +520,88 @@ ul{list-style:none}
 
       <div class="caseCard" data-up>
         <div class="caseCard__body">
-          <div class="caseCard__tag">Coach · From $0</div>
-          <div class="caseCard__name">Gurpreet</div>
-          <div class="caseCard__role">Had invested $16,000 elsewhere with no return</div>
-          <p class="caseCard__line">Gurpreet arrived exhausted and close to giving up, with <b>no active income</b> after spending more than $16,000 across other programs. We stripped everything back to fundamentals: a clear offer, an ideal client, and a simple outreach system she could actually run.</p>
+          <div class="caseCard__head">
+            <span class="caseCard__avMono">G</span>
+            <div><div class="caseCard__tag">Coach · Started From $0</div><div class="caseCard__name">Gurpreet</div><div class="caseCard__role">Had invested $16,000 elsewhere, no return</div></div>
+          </div>
+          <p class="caseCard__line">Gurpreet arrived exhausted and close to giving up, with <b>no active income</b> after spending more than $16,000 across other programs. We stripped everything back to fundamentals: a clear offer, an ideal client, and a simple system she could actually run.</p>
           <div class="caseCard__metrics"><span class="metric">$0 → first clients in weeks</span><span class="metric">Repeatable system</span></div>
         </div>
-        <div class="caseCard__side"><div class="caseCard__big">$18,000</div><div class="caseCard__bigLab">In 3 months, on a business that had produced nothing</div></div>
+        <div class="caseCard__side"><div class="caseCard__big">$18,000</div><div class="caseCard__bigLab">In 3 months, from nothing</div></div>
       </div>
 
     </div>
+    <div class="cta-wrap" style="margin-top:50px" data-up><a href="#apply" class="btnGold">Map My Path On a Call →</a></div>
   </div>
 </section>
 
-<!-- ════════ MORE RESULTS GRID ════════ -->
-<section class="sec sec--ivory">
+<!-- ════════ MORE RESULTS ════════ -->
+<section class="sec">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">And Many More</span>
       <h2 class="h2">A track record across <em>every kind of expertise.</em></h2>
+      <p class="lead">Different industries, different starting points, the same system.</p>
     </div>
     <div class="resGrid">
       <div class="resCard" data-up><div class="resCard__fig">$180,000</div><div class="resCard__when">In 5 months</div><div class="resCard__nm">Shyama Prasad Goswami</div><div class="resCard__ro">Former Fortune 500 CEO → high-ticket consulting</div></div>
-      <div class="resCard" data-up><div class="resCard__fig">$100,000</div><div class="resCard__when">First year public</div><div class="resCard__nm">Girish</div><div class="resCard__ro">Law of Attraction coach's first public launch</div></div>
+      <div class="resCard" data-up><div class="resCard__fig">$100,000</div><div class="resCard__when">First year public</div><div class="resCard__nm">Girish</div><div class="resCard__ro">A coach's first-ever public launch</div></div>
       <div class="resCard" data-up><div class="resCard__fig">$21,000</div><div class="resCard__when">In 2 months</div><div class="resCard__nm">Abbas Jamie</div><div class="resCard__ro">Ex-CEO → conscious-living coach &amp; author</div></div>
       <div class="resCard" data-up><div class="resCard__fig">$18,000</div><div class="resCard__when">One challenge</div><div class="resCard__nm">Bharti Chauhan</div><div class="resCard__ro">Marriage coach &amp; TEDx speaker, retreat revival</div></div>
       <div class="resCard" data-up><div class="resCard__fig">$16,000</div><div class="resCard__when">In 5 months</div><div class="resCard__nm">Amalia</div><div class="resCard__ro">Army veteran &amp; mom → six-figure fitness coach</div></div>
       <div class="resCard" data-up><div class="resCard__fig">$9,000</div><div class="resCard__when">In 3.5 months</div><div class="resCard__nm">Max</div><div class="resCard__ro">Veteran turned divorce coach from lived experience</div></div>
     </div>
-    <div style="text-align:center;margin-top:48px" data-up><a href="#apply" class="btnGold">Map My Results On a Call →</a></div>
+  </div>
+</section>
+
+<!-- ════════ SOCIAL-PROOF SCREENSHOT ════════ -->
+<section class="sec sec--mid">
+  <div class="wrap">
+    <div class="proofShot">
+      <div class="proofShot__img" data-up><img src="/public/images/highlight-results.png" alt="A client message: I'm going ahead with the payment, so grateful to have found you as my coach" loading="lazy"></div>
+      <div class="proofShot__copy" data-up>
+        <span class="eyebrow">The Real Moment</span>
+        <h2 class="h2">This is what it looks like <em>when it clicks.</em></h2>
+        <p>Not a screenshot of a dashboard, a screenshot of a life changing. Messages like this arrive when an experienced woman finally has the words, the offer, and the confidence to be paid like the expert she always was.</p>
+        <div class="cta-wrap" style="text-align:left;margin-top:28px"><a href="#apply" class="btnGold">I'd Like That Too →</a></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ════════ VIDEO TESTIMONIALS ════════ -->
-<section class="sec sec--mid">
+<section class="sec">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">In Their Own Words</span>
       <h2 class="h2">Hear it <em>from the women themselves.</em></h2>
-      <p class="lead">Real members, real results, unscripted.</p>
+      <p class="lead">Real members. Real results. Unscripted.</p>
     </div>
     <div class="vtGrid">
       <!-- ════ VIDEO TESTIMONIAL 1: replace .vtPH with your Wistia embed ════ -->
       <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 1</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
-      <!-- ════ VIDEO TESTIMONIAL 2 ════ -->
       <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 2</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
-      <!-- ════ VIDEO TESTIMONIAL 3 ════ -->
       <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 3</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
-      <!-- ════ VIDEO TESTIMONIAL 4 ════ -->
       <div class="vtFrame" data-up><div class="vtPH"><div class="vtPH__play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><div class="vtPH__nm">Video testimonial 4</div><div class="vtPH__hint">Wistia · 16:9</div></div></div>
+    </div>
+    <p class="aggregate" data-up><span class="stars">★★★★★</span><b>4.9 average</b> · 76+ women coached · 12 countries</p>
+  </div>
+</section>
+
+<!-- ════════ FOUNDER AUTHORITY ════════ -->
+<section class="sec sec--dark grain glow">
+  <div class="wrap">
+    <div class="founder">
+      <div class="founder__media" data-up><img src="/public/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="founder__body" data-up>
+        <span class="eyebrow eyebrow--light">Who You'll Be Speaking With</span>
+        <h2 class="h2">Strategy that's advised <em>billion-dollar companies.</em></h2>
+        <p>I'm Indrodip Ghosh. I've spent my career advising <b>Fortune 500 executives, billion-dollar companies, celebrity coaches, and governments</b> on the exact things most experts are never taught: positioning, marketing, and sales.</p>
+        <p>The title I'm proudest of isn't "consultant." It's helping experienced women turn what they already know into a business that creates real freedom, the kind of wealth that changes a family for generations.</p>
+        <p>On your call, you're not getting a junior closer reading a script. You're getting <b>that same strategy</b>, applied to your story, in a calm, honest conversation.</p>
+        <div class="founder__sig"><div class="founder__sig-nm">Indrodip Ghosh</div><div class="founder__sig-ro">Founder · The5th &amp; 10K Roadmap</div></div>
+        <div class="cta-wrap" style="text-align:left;margin-top:30px"><a href="#apply" class="btnGold">Speak With Indrodip →</a></div>
+      </div>
     </div>
   </div>
 </section>
@@ -435,32 +614,15 @@ ul{list-style:none}
       <h2 class="h2">What members say.</h2>
     </div>
     <div class="quotes">
-      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"I came in sceptical. I left with nearly <em>nine thousand dollars</em> in new revenue and a business model that finally makes sense for my life."</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/laurie.jpg" alt="Laurie" onerror="this.style.display='none'"><div><div class="qCard__nm">Laurie</div><div class="qCard__ro">$8,900 in 5 weeks</div></div></div></div>
-      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. <em>The framework works if you work it.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/angela.jpg" alt="Angela" onerror="this.style.display='none'"><div><div class="qCard__nm">Angela</div><div class="qCard__ro">$12,000 in 9 weeks</div></div></div></div>
-      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started <em>owning the value I bring.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/hayley.jpg" alt="Hayley" onerror="this.style.display='none'"><div><div class="qCard__nm">Hayley</div><div class="qCard__ro">$2,200 in 3 weeks</div></div></div></div>
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"I came in sceptical. I left with nearly <em>nine thousand dollars</em> in new revenue and a business model that finally makes sense for my life."</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/laurie.jpg" alt="Laurie" width="44" height="44" loading="lazy"><div><div class="qCard__nm">Laurie</div><div class="qCard__ro">$8,900 in 5 weeks</div></div></div></div>
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. <em>The framework works if you work it.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/angela.jpg" alt="Angela" width="44" height="44" loading="lazy"><div><div class="qCard__nm">Angela</div><div class="qCard__ro">$12,000 in 9 weeks</div></div></div></div>
+      <div class="qCard" data-up><div class="qCard__stars">★★★★★</div><p class="qCard__q">"Three weeks in and I had already made my investment back. I finally stopped undercharging and started <em>owning the value I bring.</em>"</p><div class="qCard__by"><img class="qCard__av" src="/public/clients/hayley.jpg" alt="Hayley" width="44" height="44" loading="lazy"><div><div class="qCard__nm">Hayley</div><div class="qCard__ro">$2,200 in 3 weeks</div></div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ════════ FOUNDER AUTHORITY ════════ -->
-<section class="sec sec--dark grain">
-  <div class="wrap">
-    <div class="founder">
-      <div class="founder__media" data-up><img src="/public/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" onerror="this.parentNode.style.display='none'"></div>
-      <div class="founder__body" data-up>
-        <span class="eyebrow eyebrow--light">Who You'll Be Speaking With</span>
-        <h2 class="h2">Strategy that's advised <em>billion-dollar companies.</em></h2>
-        <p>I'm Indrodip Ghosh. I've spent my career advising <b>Fortune 500 executives, billion-dollar companies, celebrity coaches, and governments</b> on the exact things most experts are never taught: positioning, marketing, and sales.</p>
-        <p>The title I'm proudest of isn't "consultant." It's helping experienced women turn what they already know into a business that creates real freedom, the kind of wealth that changes a family for generations.</p>
-        <p>On your call, you're not getting a junior closer reading a script. You're getting <b>that same strategy</b>, applied to your story.</p>
-        <div class="founder__sig"><div class="founder__sig-nm">Indrodip Ghosh</div><div class="founder__sig-ro">Founder · The5th &amp; 10K Roadmap</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════ WHY DIFFERENT / OBJECTIONS ════════ -->
-<section class="sec">
+<!-- ════════ WHY DIFFERENT ════════ -->
+<section class="sec sec--ivory">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">Why This Is Different</span>
@@ -480,7 +642,7 @@ ul{list-style:none}
       <div class="diffCol diffCol--us" data-up>
         <span class="diffCol__lab">The5th</span>
         <ul>
-          <li><span class="diffCol__m">✓</span> Designed for experienced women over 40</li>
+          <li><span class="diffCol__m">✓</span> Designed for experienced women over 45</li>
           <li><span class="diffCol__m">✓</span> A proven system plus real human guidance</li>
           <li><span class="diffCol__m">✓</span> Premium clients from your own network</li>
           <li><span class="diffCol__m">✓</span> Strategy tailored to your exact expertise</li>
@@ -491,51 +653,68 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- ════════ GUARANTEE / RISK REVERSAL ════════ -->
-<section class="sec sec--mid" style="padding-top:0;padding-bottom:104px">
+<!-- ════════ GUARANTEE ════════ -->
+<section class="sec" style="padding-bottom:0">
   <div class="wrap">
     <div class="guar" data-up>
-      <div class="guar__seal">Our Promise</div>
-      <h3 class="h3">The call is genuinely risk-free.</h3>
-      <p>It's a real conversation, never a hard pitch. You'll leave with a clear next step for turning your expertise into income, whether or not we ever work together. And if we do, our programs are backed by a written results guarantee.</p>
+      <div class="guar__seal"><svg viewBox="0 0 24 24"><path d="M12 2l7 3v6c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V5l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3 class="h3">The conversation itself is risk-free.</h3>
+      <p>It's a real conversation, never a hard pitch. <b>You'll leave with a clear next step for turning your expertise into income, whether or not we ever work together.</b> And if we do, our flagship program is backed by a written results guarantee, your investment is protected.</p>
+      <div class="cta-wrap" style="margin-top:28px"><a href="#apply" class="btnGold">See If We're a Fit →</a></div>
     </div>
   </div>
 </section>
 
 <!-- ════════ FAQ ════════ -->
-<section class="sec sec--ivory">
+<section class="sec">
   <div class="wrap">
     <div class="secHead" data-up>
       <span class="eyebrow eyebrow--c">Before You Apply</span>
       <h2 class="h2">Questions women often ask.</h2>
     </div>
     <div class="faq">
-      <div class="faqItem" data-up><button class="faqBtn">Is this call really free, and is it a sales pitch?<span class="faqIco">+</span></button><div class="faqA"><p>The call is free and it's a real conversation, not a pitch. We'll look honestly at your experience and goals, and you'll leave with a clear next step either way. If it turns out we can genuinely help, we'll tell you what working together looks like, with no pressure.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">What if I've never sold anything online before?<span class="faqIco">+</span></button><div class="faqA"><p>That's most of the women we work with. Your decades of experience are the asset, we simply help you package, price, and position it. You don't need tech skills or an audience to start.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">I'm not sure I'm "ready." Should I still apply?<span class="faqIco">+</span></button><div class="faqA"><p>If you have real expertise and you're willing to follow a proven system, you're ready enough. The whole point of the call is to find your clearest next step from wherever you are right now, including from zero.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">Do I need a big social media following?<span class="faqIco">+</span></button><div class="faqA"><p>No. Our clients land premium clients from their existing networks, without ads, funnels, or posting three times a day. We focus on clients, not followers.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">How much time will this take?<span class="faqIco">+</span></button><div class="faqA"><p>The system is designed to fit around a full life, a few focused hours a week. You follow a clear roadmap instead of guessing what to do next.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">Why do I have to answer questions before booking?<span class="faqIco">+</span></button><div class="faqA"><p>So your call is genuinely useful. A few short questions let us understand your situation in advance and make sure we can actually help, which means your time on the call is spent on you, not on getting up to speed.</p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">Is my information safe?<span class="faqIco">+</span></button><div class="faqA"><p>Completely. We never sell or share your details and we'll never spam you. Your answers are used only to prepare for your call. <a href="/privacy" style="color:var(--gold-deep);font-weight:600">Read our privacy policy.</a></p></div></div>
-      <div class="faqItem" data-up><button class="faqBtn">What happens after I apply?<span class="faqIco">+</span></button><div class="faqA"><p>You'll answer a few short questions, then choose a time that suits you. You'll get an instant confirmation and a calendar invite, and we'll come to the call prepared for your specific situation.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">Is this call really free, and will I be pressured to buy?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>The call is free and it's a real conversation, not a pitch. We'll look honestly at your experience and goals, and you'll leave with a clear next step either way. If it turns out we can genuinely help, we'll tell you what working together looks like, calmly, with no pressure to decide on the spot.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">I'm 55 (or 60+). Is it too late for me?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>It's precisely the right time. Your decades of experience are the asset most younger entrepreneurs simply don't have. Many of the women we work with are in their 50s and 60s, and that depth is exactly what their clients pay a premium for.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">What if I've never sold anything online before?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>That's most of the women we work with. We simply help you package, price, and position what you already know. You don't need tech skills or an audience to start.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">What if I don't have a niche yet?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>Finding the one premium offer hiding inside your experience is one of the very first things we do together. You don't need to arrive with it figured out.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">I'm in the UK, Canada, or Australia. Do the time zones work?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>Yes. We work with women across the US, UK, Canada, and Australia, and you'll choose a call time that suits your zone. Everything inside is on demand, so the system fits your schedule, wherever you are.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">How soon could I realistically see results?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>It varies, but many women generate their first revenue around the 60 to 90 day mark once their offer is live. Some move faster. We'll give you an honest read on your own timeline during the call.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">How much do your programs cost?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>We have options at different levels, and we'll only ever discuss what genuinely fits your situation. There's no payment to apply or to have the conversation, the call is simply where we find the right fit, if there is one.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">How much time will this take each week?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>The system is designed to fit around a full life, a few focused hours a week. You follow a clear roadmap instead of guessing what to do next.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">Why do I have to answer questions before booking?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>So your call is genuinely useful. A few short questions let us understand your situation in advance and make sure we can actually help, which means your time on the call is spent entirely on you.</p></div></div>
+      <div class="faqItem" data-up><button class="faqBtn" aria-expanded="false">Is my information safe?<span class="faqIco" aria-hidden="true">+</span></button><div class="faqA"><p>Completely. We never sell or share your details and we'll never spam you. Your answers are used only to prepare for your call. <a href="/privacy">Read our privacy policy.</a></p></div></div>
+    </div>
+    <div class="cta-wrap" style="margin-top:48px" data-up><a href="#apply" class="btnGold">I'm Ready to Talk →</a></div>
+  </div>
+</section>
+
+<!-- ════════ WHAT HAPPENS AFTER YOU APPLY ════════ -->
+<section class="sec sec--mid">
+  <div class="wrap">
+    <div class="secHead" data-up>
+      <span class="eyebrow eyebrow--c">What Happens After You Apply</span>
+      <h2 class="h2">No surprises. <em>Just a calm, clear path.</em></h2>
+    </div>
+    <div class="whatNext">
+      <div>
+        <div class="nstep" data-up><span class="nstep__n">1</span><div><div class="nstep__h">You apply in about 2 minutes</div><p class="nstep__p">A few thoughtful questions, no payment, no pressure. Just enough for us to understand where you are.</p></div></div>
+        <div class="nstep" data-up><span class="nstep__n">2</span><div><div class="nstep__h">We personally review it</div><p class="nstep__p">We read every application and prepare for your specific situation, so the call is about you from the first minute.</p></div></div>
+        <div class="nstep" data-up><span class="nstep__n">3</span><div><div class="nstep__h">You choose a time that suits you</div><p class="nstep__p">Instant confirmation and a calendar invite, in your time zone. Nothing to prepare.</p></div></div>
+        <div class="nstep" data-up><span class="nstep__n">4</span><div><div class="nstep__h">We map your plan together</div><p class="nstep__p">A calm, honest conversation. You leave with a clear next step, whether or not we ever work together.</p></div></div>
+      </div>
+      <div class="whatNext__media" data-up><img src="/public/images/coaching-session.png" alt="A 1:1 coaching call with Indrodip and the booking screen" loading="lazy"></div>
     </div>
   </div>
 </section>
 
-<!-- ════════ APPLY (Typeform) ════════ -->
-<section class="sec sec--dark grain" id="apply">
+<!-- ════════ APPLY ════════ -->
+<section class="sec sec--dark grain glow" id="apply">
   <div class="wrap">
     <div class="applyCard" data-up>
       <span class="scarce"><span class="dot"></span> We open only a handful of calls each week</span>
       <h2 class="h2">Apply for your <em>private call.</em></h2>
       <p class="lead">Answer a few short questions so we can prepare and make sure we can genuinely help. Then choose a time that suits you.</p>
-      <div class="applySteps">
-        <div class="applyStep"><b>1</b><span>Answer a few questions</span></div>
-        <span class="applyArrow">→</span>
-        <div class="applyStep"><b>2</b><span>Pick your time</span></div>
-        <span class="applyArrow">→</span>
-        <div class="applyStep"><b>3</b><span>We map your plan together</span></div>
-      </div>
+      <div class="applyFounder"><img src="/public/images/live-coaching.png" alt="Indrodip Ghosh" width="42" height="42" loading="lazy"><span><b>You'll be speaking with Indrodip</b><br>personally, not a sales rep.</span></div>
 
       <!-- ════════════════════════════════════════════════════════
            TYPEFORM APPLICATION: replace this .formMount block with your
@@ -550,7 +729,7 @@ ul{list-style:none}
       </div>
 
       <a href="https://quiz.the5th.consulting" class="btnGold btnGold--lg" data-tf-cta>Start My Application →</a>
-      <p class="applyFine">Takes about 2 minutes · No payment to apply · We'll never spam you · <a href="/privacy">Privacy Policy</a></p>
+      <p class="applyFine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Takes about 2 minutes · No payment to apply · 100% confidential · <a href="/privacy">Privacy</a></p>
     </div>
   </div>
 </section>
@@ -566,31 +745,45 @@ ul{list-style:none}
 
 <script>
 (function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // reveal
   var els=document.querySelectorAll('[data-up]');
-  if('IntersectionObserver' in window){
+  if('IntersectionObserver' in window && !reduce){
     var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
     els.forEach(function(el){io.observe(el);});
   }else{els.forEach(function(el){el.classList.add('in');});}
 
-  // FAQ accordion
+  // count-up
+  function countUp(el){
+    var t=parseFloat(el.getAttribute('data-count')),pre=el.getAttribute('data-prefix')||'',suf=el.getAttribute('data-suffix')||'',s=null;
+    if(reduce){el.textContent=pre+t.toLocaleString()+suf;return;}
+    function step(ts){if(!s)s=ts;var p=Math.min((ts-s)/1400,1),e=1-Math.pow(1-p,3);el.textContent=pre+Math.round(t*e).toLocaleString()+suf;if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var seen=new WeakSet();
+  if('IntersectionObserver' in window){
+    var co=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting&&!seen.has(e.target)){seen.add(e.target);countUp(e.target);co.unobserve(e.target);}});},{threshold:.6});
+    document.querySelectorAll('[data-count]').forEach(function(el){co.observe(el);});
+  }else{document.querySelectorAll('[data-count]').forEach(countUp);}
+
+  // FAQ accordion (accessible)
   document.querySelectorAll('.faqItem').forEach(function(item){
     var btn=item.querySelector('.faqBtn'),a=item.querySelector('.faqA');
     btn.addEventListener('click',function(){
       var open=item.classList.contains('open');
-      document.querySelectorAll('.faqItem.open').forEach(function(o){if(o!==item){o.classList.remove('open');o.querySelector('.faqA').style.maxHeight=null;}});
-      if(open){item.classList.remove('open');a.style.maxHeight=null;}
-      else{item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+      document.querySelectorAll('.faqItem.open').forEach(function(o){if(o!==item){o.classList.remove('open');o.querySelector('.faqA').style.maxHeight=null;o.querySelector('.faqBtn').setAttribute('aria-expanded','false');}});
+      if(open){item.classList.remove('open');a.style.maxHeight=null;btn.setAttribute('aria-expanded','false');}
+      else{item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';btn.setAttribute('aria-expanded','true');}
     });
   });
 
-  // sticky CTA appears after hero, hides over the apply section
+  // sticky CTA: appears after hero, hides over the apply section
   var sticky=document.getElementById('stickyCta'),apply=document.getElementById('apply');
   function onScroll(){
-    var past=window.scrollY>640;
-    var nearForm=false;
-    if(apply){var r=apply.getBoundingClientRect();nearForm=r.top< window.innerHeight*0.9;}
-    sticky.classList.toggle('show', past && !nearForm);
+    var past=window.scrollY>680,nearForm=false;
+    if(apply){var r=apply.getBoundingClientRect();nearForm=r.top<window.innerHeight*0.9;}
+    sticky.classList.toggle('show',past&&!nearForm);
   }
   window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 })();

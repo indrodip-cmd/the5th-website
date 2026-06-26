@@ -34,8 +34,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Code expired. Please request a new one.' }, { status: 400 })
     }
 
+    // Single-use: a code that has already been redeemed cannot be replayed.
     if (session.verified) {
-      // Already verified — still return the lead data
+      return NextResponse.json({ error: 'This code was already used. Please request a new one.' }, { status: 400 })
     }
 
     // Mark as verified

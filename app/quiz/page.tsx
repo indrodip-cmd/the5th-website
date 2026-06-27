@@ -1837,7 +1837,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             transition={tr(0.42)}
           >
             <motion.button className="qp-btn-gold" onClick={onStart}              whileHover={prefersReduced ? {} : { scale:1.03, y:-2 }} whileTap={{ scale:0.97 }} transition={spr}>
-              TAKE THE ASSESSMENT
+              Take the assessment
             </motion.button>
           </motion.div>
 
@@ -1892,7 +1892,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               <div className="qp-card-h">How It Works</div>
               <ul className="qp-bullet-list">
                 {[
-                  'Answer 20 carefully designed questions about your business, goals, strengths, challenges, and current growth stage.',
+                  'Answer a short series of carefully designed questions about your business, goals, strengths, challenges, and current growth stage.',
                   'Our AI analyses your responses and identifies patterns, opportunities, bottlenecks, and growth drivers.',
                   'Receive your Expert Income Archetype™, personalised roadmap, growth diagnosis, and custom recommendations instantly.',
                 ].map((s, i) => (
@@ -2066,7 +2066,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               Discover the growth strategy that's actually aligned with you
             </h2>
             <motion.button className="qp-btn-dark-gold" onClick={onStart}              whileHover={prefersReduced ? {} : { scale:1.03, y:-2 }} whileTap={{ scale:0.97 }} transition={spr}>
-              DISCOVER MY ARCHETYPE
+              Discover my archetype
             </motion.button>
             <p className="qp-trust-line" style={{ fontSize: '16px', color: 'rgba(255,255,255,0.6)', marginTop: '24px', lineHeight: 1.7 }}>
               ✓ Personalised Archetype Analysis &nbsp;&nbsp; ✓ Hidden Bottleneck Diagnosis &nbsp;&nbsp; ✓ Custom Growth Roadmap &nbsp;&nbsp; ✓ Instant Results &nbsp;&nbsp; ✓ Free Assessment
@@ -2076,6 +2076,19 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             </p>
             <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '10px', textAlign: 'center', fontStyle: 'italic', maxWidth: '560px', marginLeft: 'auto', marginRight: 'auto' }}>
               Built using real-world coaching, consulting, messaging, sales, and client acquisition data from businesses responsible for over $15M in revenue.
+            </p>
+
+            {/* Founder credibility — answers "who is behind this?" (key trust for 45+ professional women) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, margin: '32px auto 0', maxWidth: 480, paddingTop: 26, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
+              <img src="/images/live-coaching.png" alt="Indrodip Ghosh, founder of The5th" width={52} height={52} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.45)', flexShrink: 0 }} />
+              <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.72)', textAlign: 'left', lineHeight: 1.55 }}>
+                Designed by <b style={{ color: '#fff', fontWeight: 600 }}>Indrodip Ghosh</b>, who has advised Fortune 500 leaders, celebrity coaches, and governments, applied here for women building their own businesses.
+              </span>
+            </div>
+
+            {/* Safety reassurance at the decision point */}
+            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', marginTop: 18, letterSpacing: '0.01em' }}>
+              🔒 Free &amp; private &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; We never share or sell your email
             </p>
           </motion.div>
         </div>

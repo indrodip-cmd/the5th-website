@@ -2156,6 +2156,11 @@ export default function Page() {
   const [resendIn, setResendIn] = useState(0)
   const [verified, setVerified] = useState(false)
   const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
+  // Only treat Turnstile as active when the key has a real Cloudflare shape
+  // (prod "0x...", or test "1x/2x/3x..."). A placeholder/typo value (e.g. the
+  // var name pasted as the value) degrades gracefully — no widget, no hard
+  // block — instead of stranding every user at the email gate.
+  const TURNSTILE_ACTIVE = /^[0-3]x[A-Za-z0-9_-]{12,}$/.test(TURNSTILE_SITE_KEY)
   // Feature flag: when '1', the email gate runs the OTP verification flow.
   // Off by default so deploying this code never changes the live flow until activated.
   const REQUIRE_OTP = process.env.NEXT_PUBLIC_REQUIRE_OTP === '1'
@@ -2183,7 +2188,7 @@ export default function Page() {
 
   /* ── Cloudflare Turnstile widget (only when configured + on the email screen) ── */
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || screen !== 'email') return
+    if (!TURNSTILE_ACTIVE || screen !== 'email') return
     const SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     type TS = { render: (el: Element, opts: Record<string, unknown>) => void }
     const getTS = (): TS | undefined => (window as unknown as { turnstile?: TS }).turnstile
@@ -2205,7 +2210,7 @@ export default function Page() {
     }
     const iv = setInterval(() => { if (getTS()) { clearInterval(iv); render() } }, 200)
     return () => clearInterval(iv)
-  }, [screen, TURNSTILE_SITE_KEY])
+  }, [screen, TURNSTILE_ACTIVE])
 
   /* ── Navigation ── */
   const goForward = useCallback(() => {
@@ -2401,7 +2406,7 @@ export default function Page() {
     const emailDomain = emailValue.split('@')[1]?.toLowerCase()
     if (!emailDomain) { setError('Please enter a valid email address'); return }
     if (BLOCKED_DOMAINS.includes(emailDomain)) { setError('Please use your real email address. Temporary emails are not accepted.'); return }
-    if (REQUIRE_OTP && TURNSTILE_SITE_KEY && !turnstileToken) { setError('Please complete the verification just below.'); return }
+    if (REQUIRE_OTP && TURNSTILE_ACTIVE && !turnstileToken) { setError('Please complete the verification just below.'); return }
     setSubmitting(true); setError('')
     sessionStorage.setItem('quiz_name', name)
     sessionStorage.setItem('quiz_email', emailValue)
@@ -2809,7 +2814,7 @@ export default function Page() {
           <div style={{ maxWidth: 480, margin: '0 auto' }}>
             <input className="qinput" style={{ marginBottom: 12 }} type="text" placeholder="Your first name" value={name} onChange={e => setName(e.target.value)} />
             <input className="qinput" style={{ marginBottom: 20 }} type="email" placeholder="Your best email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleEmailSubmit()} />
-            {TURNSTILE_SITE_KEY && <div id="cf-turnstile-box" style={{ display: 'flex', justifyContent: 'center', marginBottom: 16, minHeight: 1 }} />}
+            {TURNSTILE_ACTIVE && <div id="cf-turnstile-box" style={{ display: 'flex', justifyContent: 'center', marginBottom: 16, minHeight: 1 }} />}
             {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14, textAlign: 'left' }}>{error}</p>}
             <button className="gbtn" onClick={handleEmailSubmit} disabled={submitting}>
               {submitting ? 'Sending your code…' : 'Show Me My Report →'}

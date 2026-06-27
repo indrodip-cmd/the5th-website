@@ -9,13 +9,17 @@
 */
 
 const SECRET = process.env.TURNSTILE_SECRET_KEY
+// Only enforce when the secret has a real Cloudflare shape ("0x..."). A
+// placeholder/typo (e.g. the var name pasted as the value) is treated as
+// "not configured" so it fails open instead of 403-ing every request.
+const CONFIGURED = !!SECRET && /^0x[A-Za-z0-9_-]{12,}$/.test(SECRET)
 
 export function turnstileEnabled(): boolean {
-  return !!SECRET
+  return CONFIGURED
 }
 
 export async function verifyTurnstile(token: unknown, ip?: string): Promise<boolean> {
-  if (!SECRET) return true // not configured -> do not block
+  if (!CONFIGURED) return true // not configured / placeholder -> do not block
   if (typeof token !== 'string' || token.length < 10 || token.length > 4096) return false
   try {
     const body = new URLSearchParams({ secret: SECRET, response: token })

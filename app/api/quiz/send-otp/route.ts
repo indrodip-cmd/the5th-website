@@ -42,20 +42,27 @@ export async function POST(req: NextRequest) {
     const { email: rawEmail, name: rawName, answers } = reqBody
     const email = typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : ''
     const name = sanitizeName(rawName)
-    if (!isValidEmail(email) || !name) return NextResponse.json({ error: 'A valid email and name are required' }, { status: 400 })
+    // "Login" mode: a returning user re-verifying an expired session sends no
+    // answers. In that case we must NOT regenerate their report, re-fire the
+    // welcome sequence, or overwrite their saved answers — only send a code.
+    const hasAnswers = !!answers && typeof answers === 'object' && Object.keys(answers).length > 0
+    if (!isValidEmail(email) || (hasAnswers && !name)) return NextResponse.json({ error: 'A valid email and name are required' }, { status: 400 })
 
     // Cap OTP sends per email to prevent inbox bombing.
     const emailLimit = await limit(`otp:email:${email}`, 5, 1800)
     if (!emailLimit.ok) return NextResponse.json({ error: 'Please check your inbox, an email is already on its way.' }, { status: 429 })
 
-    const firstName = name.split(' ')[0]
+    let firstName = (name || '').split(' ')[0] || 'there'
 
-    // 1. Upsert lead
-    let lead: { id: string } | null = null
+    // 1. Upsert lead (preserve saved answers/name on a re-verify login)
+    const upsertRow: Record<string, unknown> = { email }
+    if (name) upsertRow.name = name
+    if (hasAnswers) upsertRow.answers = answers
+    let lead: { id: string; name?: string } | null = null
     try {
       const { data, error: leadErr } = await getSupabaseAdmin()
         .from('quiz_leads')
-        .upsert({ email, name, answers }, { onConflict: 'email', ignoreDuplicates: false })
+        .upsert(upsertRow, { onConflict: 'email', ignoreDuplicates: false })
         .select()
         .single()
       if (leadErr) {
@@ -66,14 +73,16 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `Failed to save lead: ${leadErr.message}` }, { status: 500 })
       }
       lead = data
+      // Personalize the code email with the saved name when re-verifying/logging in.
+      firstName = (name || (data as { name?: string } | null)?.name || '').split(' ')[0] || 'there'
     } catch (e) {
       console.error('send-otp: lead upsert threw', e)
       return NextResponse.json({ error: 'Database error saving lead' }, { status: 500 })
     }
 
-    // 2. Generate AI roadmap
+    // 2. Generate AI roadmap (skipped on re-verify login — keep the saved one)
     let roadmap = null
-    try {
+    if (hasAnswers) try {
       const profile = JSON.stringify(answers, null, 2)
       const msg = await getAnthropicClient().messages.create({
         model: 'claude-haiku-4-5-20251001',
@@ -97,8 +106,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3. Save roadmap
-    try {
+    // 3. Save roadmap (only when freshly generated)
+    if (hasAnswers && roadmap) try {
       const { error: rmErr } = await getSupabaseAdmin().from('quiz_leads').update({ roadmap }).eq('email', email)
       if (rmErr) console.error('send-otp: roadmap save failed', JSON.stringify({ code: rmErr.code, message: rmErr.message }))
     } catch (e) {
@@ -125,7 +134,7 @@ export async function POST(req: NextRequest) {
       await getResendClient().emails.send({
         from: FROM,
         to: email,
-        subject: 'Your 6-digit code to unlock your roadmap',
+        subject: hasAnswers ? 'Your 6-digit code to unlock your roadmap' : 'Your secure 6-digit sign-in code',
         html: otpEmail(firstName, otp, days3)
       })
     } catch (e) {
@@ -133,8 +142,8 @@ export async function POST(req: NextRequest) {
       // Don't fail — OTP is saved, user can request resend
     }
 
-    // 6. Trigger email sequence (fire-and-forget)
-    triggerEmailSequence(email, firstName, roadmap, lead?.id ?? '')
+    // 6. Trigger welcome sequence (fresh completions only — never on a re-verify)
+    if (hasAnswers) triggerEmailSequence(email, firstName, roadmap, lead?.id ?? '')
 
     return NextResponse.json({ success: true })
   } catch (err) {

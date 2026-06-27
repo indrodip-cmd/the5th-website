@@ -24,6 +24,16 @@ interface Lead {
 interface ChatMessage { role: 'user' | 'assistant'; content: string }
 interface OptionItem { value: string; emoji: string; label: string; sub: string }
 
+/* Journey state for a recognized returning visitor (from /api/quiz/me). */
+type JourneyStage = 'client' | 'booked' | 'report_seen' | 'report_unseen' | 'assessing'
+interface MeState {
+  authenticated: boolean
+  email?: string; name?: string; firstName?: string
+  stage?: JourneyStage
+  hasReport?: boolean; reportViewed?: boolean; callBooked?: boolean; isClient?: boolean
+  currentDay?: number; streak?: number; revenueLogged?: number
+}
+
 type SelectQ   = { id: string; num: number; title: string; sub: string; type: 'select';   options: OptionItem[] }
 type MultiQ    = { id: string; num: number; title: string; sub: string; type: 'multi';    options: OptionItem[] }
 type TextareaQ = { id: string; num: number; title: string; sub: string; type: 'textarea'; placeholder: string }
@@ -1405,7 +1415,7 @@ function AnnotationRight({ children }: { children: React.ReactNode }) {
 }
 
 /* ─── LandingPage component ─── */
-function LandingPage({ onStart }: { onStart: () => void }) {
+function LandingPage({ onStart, onLogin }: { onStart: () => void; onLogin?: () => void }) {
   const [prefersReduced] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   )
@@ -1487,8 +1497,15 @@ function LandingPage({ onStart }: { onStart: () => void }) {
       <style>{LP_CSS}</style>
 
       {/* ══ NAV ══ */}
-      <motion.nav className="qp-nav" initial={{ y:-64, opacity:0 }} animate={{ y:0, opacity:1 }} transition={tr(0)}>
+      <motion.nav className="qp-nav" initial={{ y:-64, opacity:0 }} animate={{ y:0, opacity:1 }} transition={tr(0)} style={{ justifyContent: 'center' }}>
         <div className="qp-logo"><Image src="/logo-white2.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
+        {onLogin && (
+          <button onClick={onLogin} aria-label="Log in to your saved report"
+            style={{ position: 'absolute', right: isMobile ? 16 : 40, top: '50%', transform: 'translateY(-50%)', display: 'inline-flex', alignItems: 'center', gap: 7, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.22)', color: '#fff', fontFamily: "'DM Sans',sans-serif", fontSize: isMobile ? 12.5 : 13, fontWeight: 600, padding: isMobile ? '8px 14px' : '9px 20px', borderRadius: 50, cursor: 'pointer', letterSpacing: '.02em', backdropFilter: 'blur(8px)', whiteSpace: 'nowrap' }}>
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#C9A84C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Log in
+          </button>
+        )}
       </motion.nav>
 
       {/* ══ HERO ══ */}
@@ -2136,7 +2153,12 @@ function LandingPage({ onStart }: { onStart: () => void }) {
 
 /* ─── Page ─── */
 export default function Page() {
-  const [screen, setScreen] = useState<'start' | 'quiz' | 'email' | 'otp' | 'dashboard'>('start')
+  const [screen, setScreen] = useState<'start' | 'quiz' | 'email' | 'otp' | 'dashboard' | 'home' | 'reverify' | 'login'>('start')
+  // Returning-visitor recognition (secure: signed session, never fingerprinting).
+  const [booting, setBooting] = useState(true)
+  const [me, setMe] = useState<MeState | null>(null)
+  const [knownUser, setKnownUser] = useState<{ email: string; firstName: string } | null>(null)
+  const [homeChatOpen, setHomeChatOpen] = useState(false)
   const [currentQ, setCurrentQ] = useState(0)
   const [introsSeen, setIntrosSeen] = useState<Set<string>>(new Set())
   const [cardKey, setCardKey] = useState(0)
@@ -2174,6 +2196,46 @@ export default function Page() {
   const chatEndRef = useRef<HTMLDivElement>(null)
   const advancingRef = useRef(false)
 
+  /* ── Returning-visitor recognition ──
+     Brand-new visitors (no local marker) see the landing instantly with no
+     network call. Anyone who has verified before left a tiny marker holding
+     ONLY their own email + first name (never any report data); for them we
+     check the signed session: a live session opens their AI Home, an expired
+     one offers a quick re-verify. Authorization is always the httpOnly session
+     cookie, verified server-side — there is no device fingerprinting. */
+  useEffect(() => {
+    let known: { email?: string; firstName?: string } | null = null
+    try { const raw = localStorage.getItem('a5_known'); if (raw) known = JSON.parse(raw) } catch { /* private mode */ }
+    if (!known?.email) { setBooting(false); return } // never seen before → normal landing
+
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch('/api/quiz/me', { headers: { Accept: 'application/json' } })
+        const data: MeState = await res.json().catch(() => ({ authenticated: false }))
+        if (cancelled) return
+        if (data?.authenticated) {
+          setMe(data)
+          setName(data.name || known!.firstName || '')
+          setEmail(data.email || known!.email || '')
+          // Minimal lead so "Ask The5th AI" works (the coach authorizes by session).
+          setLead({
+            id: '', email: data.email || known!.email || '', name: data.name || '',
+            answers: {}, roadmap: null, current_day: data.currentDay || 1,
+            streak: data.streak || 0, revenue_logged: data.revenueLogged || 0, last_visit: null,
+          })
+          setScreen('home')
+        } else {
+          // Session expired — recognize them and offer a quick re-verify.
+          setKnownUser({ email: known!.email!, firstName: known!.firstName || '' })
+          setScreen('reverify')
+        }
+      } catch { /* fall back to landing */ }
+      finally { if (!cancelled) setBooting(false) }
+    })()
+    return () => { cancelled = true }
+  }, [])
+
   /* ── Resend countdown ── */
   useEffect(() => {
     if (resendIn <= 0) return
@@ -2183,7 +2245,7 @@ export default function Page() {
 
   /* ── Cloudflare Turnstile widget (only when configured + on the email screen) ── */
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || screen !== 'email') return
+    if (!TURNSTILE_SITE_KEY || (screen !== 'email' && screen !== 'reverify' && screen !== 'login')) return
     const SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     type TS = { render: (el: Element, opts: Record<string, unknown>) => void }
     const getTS = (): TS | undefined => (window as unknown as { turnstile?: TS }).turnstile
@@ -2382,11 +2444,11 @@ export default function Page() {
   ]
 
   const startResend = () => { setResendIn(45) }
-  const sendOtp = async (emailValue: string, silent = false): Promise<boolean> => {
+  const sendOtp = async (emailValue: string, silent = false, nameOverride?: string): Promise<boolean> => {
     try {
       const res = await fetch('/api/quiz/send-otp', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: emailValue, name: name.trim(), answers, turnstileToken })
+        body: JSON.stringify({ email: emailValue, name: (nameOverride ?? name).trim(), answers, turnstileToken })
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || data.error) { (silent ? setOtpError : setError)(data.error || 'Something went wrong. Please try again.'); return false }
@@ -2426,11 +2488,18 @@ export default function Page() {
       const data = await res.json().catch(() => ({}))
       if (!res.ok || data.error) { setOtpError(data.error || 'That code did not work. Please try again.'); setOtpDigits(['', '', '', '', '', '']); setTimeout(() => otpRefs.current[0]?.focus(), 40); setSubmitting(false); return }
       // Verified — the signed session cookie is now set. Show a brief success beat, then continue.
+      const verifiedEmail = email.trim().toLowerCase()
+      // Remember them for next time: only their own email + first name, never any
+      // report data. Lets us recognize an expired session and offer a re-verify.
+      try { localStorage.setItem('a5_known', JSON.stringify({ email: verifiedEmail, firstName: (name || '').split(' ')[0] })) } catch { /* private mode */ }
       sessionStorage.setItem('quiz_name', name)
-      sessionStorage.setItem('quiz_email', email.trim().toLowerCase())
+      sessionStorage.setItem('quiz_email', verifiedEmail)
       sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
       setVerified(true)
-      setTimeout(() => { window.location.href = '/quiz/results' }, 1100)
+      // Fresh completion (answers in hand) → the report. Re-verify of a returning
+      // user (no answers) → their AI Home, which detects the fresh session.
+      const target = Object.keys(answers).length > 0 ? '/quiz/results' : '/quiz'
+      setTimeout(() => { window.location.href = target }, 1100)
     } catch { setOtpError('Something went wrong. Please try again.'); setSubmitting(false) }
   }
   const handleOtpDigit = (i: number, val: string) => {
@@ -2526,8 +2595,283 @@ export default function Page() {
     </nav>
   )
 
+  /* ── AI Home handlers ── */
+  const startNewAssessment = () => {
+    setAnswers({}); setTextAnswers({}); setMultiAnswers({}); setFromTo({ from: '', to: '' })
+    setCurrentQ(0); setIntrosSeen(new Set()); setError(''); setHomeChatOpen(false)
+    setScreen('quiz')
+  }
+  const handleSignOut = async () => {
+    try { await fetch('/api/quiz/logout', { method: 'POST' }) } catch { /* ignore */ }
+    try { localStorage.removeItem('a5_known') } catch { /* ignore */ }
+    window.location.href = '/quiz'
+  }
+  const startReverify = async () => {
+    if (!knownUser) return
+    if (REQUIRE_OTP && TURNSTILE_SITE_KEY && !turnstileToken) { setError('Please complete the quick check just below.'); return }
+    setSubmitting(true); setError('')
+    setName(''); setEmail(knownUser.email)
+    // No answers and no name in state → the server runs "login" mode: it only
+    // emails a code (personalized from the saved name), and never regenerates the
+    // report, re-sends the welcome sequence, or overwrites their saved details.
+    const ok = await sendOtp(knownUser.email, false, '')
+    setSubmitting(false)
+    if (ok) { setOtpDigits(['', '', '', '', '', '']); setOtpError(''); setScreen('otp'); startResend(); setTimeout(() => otpRefs.current[0]?.focus(), 60) }
+  }
+  const startLogin = async () => {
+    const e = email.trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { setError('Please enter a valid email address'); return }
+    if (REQUIRE_OTP && TURNSTILE_SITE_KEY && !turnstileToken) { setError('Please complete the quick check just below.'); return }
+    setSubmitting(true); setError('')
+    setName('') // login mode: never overwrite the saved name
+    const ok = await sendOtp(e, false, '')
+    setSubmitting(false)
+    if (ok) { setOtpDigits(['', '', '', '', '', '']); setOtpError(''); setScreen('otp'); startResend(); setTimeout(() => otpRefs.current[0]?.focus(), 60) }
+  }
+
   /* ══════════════ START ══════════════ */
-  if (screen === 'start') return <LandingPage onStart={() => setScreen('quiz')} />
+  if (screen === 'start') {
+    // Avoid flashing the landing then jumping to the AI Home while we confirm a
+    // returning user's session. Only ever shown to people with a local marker.
+    if (booting) return (
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 54, height: 54, position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1.5px solid rgba(201,168,76,.3)' }} />
+          <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', borderTop: '1.5px solid #C9A84C', borderRight: '1.5px solid transparent', borderBottom: '1.5px solid transparent', borderLeft: '1.5px solid transparent', animation: 'spin 1s linear infinite' }} />
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 22, fontStyle: 'italic', color: '#B0902F' }}>5</div>
+          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+        </div>
+      </div>
+    )
+    return <LandingPage onStart={() => setScreen('quiz')} onLogin={REQUIRE_OTP ? () => { setError(''); setEmail(''); setScreen('login') } : undefined} />
+  }
+
+  /* ══════════════ AI HOME (returning, verified) ══════════════ */
+  if (screen === 'home' && me) {
+    const H = {
+      cream: '#FAF6F0', ivory: '#FBF8F2', plum: '#3D2645', plumDark: '#2E1A35',
+      gold: '#C9A84C', goldSoft: '#E4C879', goldDeep: '#B0902F', goldLine: 'rgba(201,168,76,.32)',
+      ink: '#1A1A2E', inkSoft: '#5a5550', muted: '#8A8075', border: '#E2DCD2', white: '#fff',
+    }
+    const fn = me.firstName || (me.name || '').split(' ')[0] || 'there'
+
+    type Action = { key: string; eyebrow: string; title: string; desc: string; cta: string; href?: string; onClick?: () => void; highlight?: boolean }
+    const aAsk: Action = { key: 'ask', eyebrow: 'Always on', title: 'Ask The5th AI', desc: 'Specific coaching on your exact situation, any time you need it.', cta: homeChatOpen ? 'Open below ↓' : 'Ask a question', onClick: () => setHomeChatOpen(true) }
+    const aBook: Action = { key: 'book', eyebrow: 'Recommended next step', title: 'Book your Strategy & Coaching Session', desc: 'Walk through your full report with Indrodip and map your next 90 days together.', cta: 'Book my session', href: '/call', highlight: true }
+    const aCommunity: Action = { key: 'community', eyebrow: 'Members', title: 'Your Growth Community', desc: 'Step inside The5th Collective and keep your momentum alongside others on the path.', cta: 'Open the community', href: '/collective' }
+
+    const plan: { hero: Action; secondary: Action[] } = (() => {
+      switch (me.stage) {
+        case 'assessing':
+          return { hero: { key: 'resume', eyebrow: 'Almost there', title: "Let's finish your Business DNA Report", desc: "You're verified and saved. Pick up your assessment exactly where you left off.", cta: 'Resume my assessment', onClick: startNewAssessment }, secondary: [aAsk] }
+        case 'report_unseen':
+          return { hero: { key: 'view', eyebrow: 'Your report is ready', title: 'View your Business DNA Report', desc: 'Our AI has finished building your personalized report. It is saved and waiting for you.', cta: 'Open my report', href: '/quiz/results' }, secondary: [aBook, aAsk] }
+        case 'booked':
+          return { hero: { key: 'prep', eyebrow: 'Your Strategy Session is booked', title: 'Prepare for your session', desc: 'Review your Business DNA Report so your time together goes straight to what matters most.', cta: 'Review my report', href: '/quiz/results' }, secondary: [aAsk] }
+        case 'client':
+          return { hero: { key: 'workspace', eyebrow: 'Welcome back', title: 'Continue inside your workspace', desc: 'Your report, your roadmap, and The5th AI are all here whenever you need them.', cta: 'Open my roadmap', href: '/quiz/results' }, secondary: [aAsk, aCommunity] }
+        case 'report_seen':
+        default:
+          return { hero: { key: 'continue', eyebrow: 'Pick up where you left off', title: 'Continue your AI roadmap', desc: 'Your full report is saved. The next move is the one that actually changes your income.', cta: 'Continue my roadmap', href: '/quiz/results' }, secondary: [aBook, aAsk] }
+      }
+    })()
+
+    const go = (a: Action) => { if (a.onClick) a.onClick(); else if (a.href) window.location.href = a.href }
+    const eyebrow: React.CSSProperties = { fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', fontWeight: 700, display: 'block' }
+
+    return (
+      <div style={{ minHeight: '100vh', background: H.cream, fontFamily: "'DM Sans', system-ui, sans-serif", color: H.ink }}>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
+          *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+          @keyframes hfade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+          .hu{animation:hfade .6s cubic-bezier(.2,.7,.2,1) both}
+          .hu2{animation:hfade .6s .08s cubic-bezier(.2,.7,.2,1) both}
+          .hu3{animation:hfade .6s .16s cubic-bezier(.2,.7,.2,1) both}
+          .hwrap{max-width:860px;margin:0 auto;padding:0 24px}
+          .hcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+          .hcard{transition:transform .2s ease, box-shadow .2s ease}
+          .hcard:hover{transform:translateY(-3px);box-shadow:0 20px 44px -30px rgba(46,26,53,.5)}
+        `}</style>
+
+        {/* top bar */}
+        <header style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${H.border}`, background: H.ivory }}>
+          <Image src="/logo-the5th.png" alt="The5th Consulting" width={150} height={38} style={{ objectFit: 'contain' }} />
+          <button onClick={handleSignOut} style={{ background: 'none', border: 'none', color: H.muted, fontSize: 12.5, cursor: 'pointer', letterSpacing: '.04em' }}>
+            Not you? Sign out
+          </button>
+        </header>
+
+        {/* welcome */}
+        <section className="hwrap hu" style={{ padding: '56px 24px 8px' }}>
+          <span style={{ ...eyebrow, color: H.goldDeep, marginBottom: 14 }}>Welcome back</span>
+          <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(34px,5.4vw,54px)', fontWeight: 500, color: H.ink, lineHeight: 1.04, letterSpacing: '-.02em' }}>
+            Welcome back, <em style={{ fontStyle: 'italic', color: H.goldDeep }}>{fn}.</em>
+          </h1>
+          <p style={{ fontSize: 17, fontWeight: 300, color: H.inkSoft, maxWidth: 560, margin: '18px 0 0', lineHeight: 1.7 }}>
+            Your Business DNA Report is securely saved. Here&apos;s where we left off.
+          </p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 18, padding: '7px 14px', borderRadius: 999, background: H.ivory, border: `1px solid ${H.border}` }}>
+            <span style={{ fontSize: 13 }}>🔒</span>
+            <span style={{ fontSize: 12.5, color: H.muted }}>Private &amp; secure · only you can open this</span>
+          </div>
+        </section>
+
+        {/* hero next-best action */}
+        <section className="hwrap hu2" style={{ padding: '28px 24px 8px' }}>
+          <div style={{ background: `linear-gradient(165deg,${H.plum},${H.plumDark})`, color: '#fff', borderRadius: 18, padding: 'clamp(28px,4vw,44px)', boxShadow: '0 30px 70px -46px rgba(46,26,53,.7)' }}>
+            <span style={{ ...eyebrow, color: H.gold, marginBottom: 12 }}>{plan.hero.eyebrow}</span>
+            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(26px,3.6vw,38px)', fontWeight: 600, color: '#fff', lineHeight: 1.12, letterSpacing: '-.01em', maxWidth: 560 }}>
+              {plan.hero.title}
+            </h2>
+            <p style={{ fontSize: 16, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '14px 0 26px', lineHeight: 1.7 }}>
+              {plan.hero.desc}
+            </p>
+            <button onClick={() => go(plan.hero)} style={{ display: 'inline-block', background: `linear-gradient(180deg,${H.goldSoft},${H.gold} 60%,${H.goldDeep})`, color: H.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 36px', borderRadius: 7, border: 'none', cursor: 'pointer', boxShadow: '0 14px 34px rgba(201,168,76,.32)' }}>
+              {plan.hero.cta} →
+            </button>
+          </div>
+        </section>
+
+        {/* secondary actions, prioritized (never an equal nav row) */}
+        <section className="hwrap hu3" style={{ padding: '22px 24px 8px' }}>
+          <span style={{ ...eyebrow, color: H.muted, marginBottom: 16 }}>Also available to you</span>
+          <div className="hcards">
+            {plan.secondary.map(a => (
+              <div key={a.key} className="hcard" onClick={() => go(a)}
+                style={{ cursor: 'pointer', background: a.highlight ? `linear-gradient(165deg,${H.ivory},#F4EEE4)` : H.white, border: `1px solid ${a.highlight ? H.goldLine : H.border}`, borderRadius: 16, padding: '26px 26px', display: 'flex', flexDirection: 'column' }}>
+                <span style={{ ...eyebrow, color: a.highlight ? H.goldDeep : H.muted, marginBottom: 10, fontSize: 10.5 }}>{a.eyebrow}</span>
+                <h3 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 23, fontWeight: 600, color: H.ink, lineHeight: 1.15, marginBottom: 8 }}>{a.title}</h3>
+                <p style={{ fontSize: 14.5, fontWeight: 300, color: H.inkSoft, lineHeight: 1.6, marginBottom: 18, flex: 1 }}>{a.desc}</p>
+                <span style={{ fontSize: 14, fontWeight: 600, color: a.highlight ? H.goldDeep : H.plum }}>{a.cta} →</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Ask The5th AI — inline chat */}
+        {homeChatOpen && (
+          <section className="hwrap" style={{ padding: '24px 24px 8px' }}>
+            <div style={{ background: H.white, border: `1px solid ${H.border}`, borderRadius: 16, overflow: 'hidden' }}>
+              <div style={{ padding: '16px 22px', borderBottom: `1px solid ${H.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: H.ivory }}>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: H.ink }}>The5th AI · your private coach</span>
+                <button onClick={() => setHomeChatOpen(false)} style={{ background: 'none', border: 'none', color: H.muted, cursor: 'pointer', fontSize: 18, lineHeight: 1 }}>×</button>
+              </div>
+              <div style={{ maxHeight: 320, overflowY: 'auto', padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {chatMessages.length === 0 && (
+                  <p style={{ fontSize: 14.5, color: H.muted, fontWeight: 300, lineHeight: 1.6 }}>
+                    Ask anything about your offer, pricing, or next step. I already know your answers, so be as specific as you like.
+                  </p>
+                )}
+                {chatMessages.map((m, i) => (
+                  <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '82%', background: m.role === 'user' ? H.plum : H.cream, color: m.role === 'user' ? '#fff' : H.ink, padding: '11px 15px', borderRadius: 12, fontSize: 14.5, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                    {m.content}
+                  </div>
+                ))}
+                {chatLoading && <div style={{ alignSelf: 'flex-start', color: H.muted, fontSize: 14 }}>The5th AI is thinking…</div>}
+                <div ref={chatEndRef} />
+              </div>
+              <div style={{ display: 'flex', gap: 10, padding: '14px 18px', borderTop: `1px solid ${H.border}` }}>
+                <input value={chatInput} onChange={e => setChatInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && !chatLoading && handleChatSend()}
+                  placeholder="Ask The5th AI a question…"
+                  style={{ flex: 1, border: `1px solid ${H.border}`, borderRadius: 9, padding: '12px 14px', fontSize: 14.5, fontFamily: 'inherit', outline: 'none', color: H.ink }} />
+                <button onClick={handleChatSend} disabled={chatLoading || !chatInput.trim()}
+                  style={{ background: H.plum, color: '#fff', border: 'none', borderRadius: 9, padding: '0 20px', fontSize: 14.5, fontWeight: 600, cursor: chatLoading || !chatInput.trim() ? 'default' : 'pointer', opacity: chatLoading || !chatInput.trim() ? .5 : 1 }}>
+                  Send
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* quiet tertiary — fresh read */}
+        <section className="hwrap" style={{ padding: '30px 24px 64px', textAlign: 'center' }}>
+          <p style={{ fontSize: 14, color: H.muted, fontWeight: 300 }}>
+            Want an updated read on where you are now?{' '}
+            <button onClick={startNewAssessment} style={{ background: 'none', border: 'none', color: H.goldDeep, fontWeight: 600, cursor: 'pointer', fontSize: 14, textDecoration: 'underline', textUnderlineOffset: 3 }}>
+              Retake the assessment
+            </button>
+          </p>
+        </section>
+      </div>
+    )
+  }
+
+  /* ══════════════ RE-VERIFY (returning, expired session) ══════════════ */
+  if (screen === 'reverify' && knownUser) {
+    const fn = knownUser.firstName || 'there'
+    return (
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', display: 'flex', flexDirection: 'column' }}>
+        <style>{CSS}</style>
+        <SiteHeader screen="email" currentQ={questions.length} />
+        <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '110px 24px 64px' }}>
+          <div className="afu-1" style={{ maxWidth: 520, width: '100%', textAlign: 'center' }}>
+            <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 18 }}>
+              Welcome back
+            </div>
+            <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px, 5vw, 46px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 14, lineHeight: 1.05, letterSpacing: '-.02em' }}>
+              Welcome back, <em style={{ fontStyle: 'italic', color: '#B0902F' }}>{fn}.</em>
+            </h2>
+            <p style={{ fontSize: 16.5, fontWeight: 300, color: '#5a5550', marginBottom: 14, lineHeight: 1.7, maxWidth: 440, marginLeft: 'auto', marginRight: 'auto' }}>
+              Your Business DNA Report is safe and saved. For your privacy, we just need to confirm it&apos;s you before opening your private business insights.
+            </p>
+            <p style={{ fontSize: 15, fontWeight: 300, color: '#8A8075', marginBottom: 28, lineHeight: 1.7, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+              We&apos;ll email a quick 6-digit code to <b style={{ color: '#403b3b', fontWeight: 600 }}>{knownUser.email}</b>. No password, takes seconds.
+            </p>
+            {TURNSTILE_SITE_KEY && <div id="cf-turnstile-box" style={{ display: 'flex', justifyContent: 'center', marginBottom: 16, minHeight: 1 }} />}
+            {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14 }}>{error}</p>}
+            <button className="gbtn" onClick={startReverify} disabled={submitting} style={{ maxWidth: 360, marginLeft: 'auto', marginRight: 'auto' }}>
+              {submitting ? 'Sending your code…' : 'Email me a secure code →'}
+            </button>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 18, lineHeight: 1.6 }}>
+              Not you, or want to start fresh?{' '}
+              <button onClick={() => { setKnownUser(null); setError(''); setScreen('start') }} style={{ background: 'none', border: 'none', color: '#B0902F', fontWeight: 600, cursor: 'pointer', fontSize: 12.5, textDecoration: 'underline' }}>
+                Take the assessment
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  /* ══════════════ LOG IN (returning user, any device) ══════════════ */
+  if (screen === 'login') return (
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', display: 'flex', flexDirection: 'column' }}>
+      <style>{CSS}</style>
+      <SiteHeader screen="email" currentQ={questions.length} />
+      <div className="email-screen-inner" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '110px 24px 64px' }}>
+        <div className="afu-1" style={{ maxWidth: 500, width: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', marginBottom: 18 }}>
+            Welcome back
+          </div>
+          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px, 5vw, 46px)', fontWeight: 500, color: '#1A1A2E', marginBottom: 14, lineHeight: 1.05, letterSpacing: '-.02em' }}>
+            Log in to your <em style={{ fontStyle: 'italic', color: '#B0902F' }}>Business DNA Report.</em>
+          </h2>
+          <p style={{ fontSize: 16.5, fontWeight: 300, color: '#5a5550', marginBottom: 28, lineHeight: 1.7, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
+            Enter the email you used for your assessment. We&apos;ll send a quick 6-digit code to confirm it&apos;s you, then open your saved report. No password needed.
+          </p>
+          <div style={{ maxWidth: 420, margin: '0 auto' }}>
+            <input className="qinput" style={{ marginBottom: 16 }} type="email" placeholder="Your email address" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && startLogin()} />
+            {TURNSTILE_SITE_KEY && <div id="cf-turnstile-box" style={{ display: 'flex', justifyContent: 'center', marginBottom: 16, minHeight: 1 }} />}
+            {error && <p style={{ fontSize: 13, color: '#ef4444', marginBottom: 14, textAlign: 'left' }}>{error}</p>}
+            <button className="gbtn" onClick={startLogin} disabled={submitting}>
+              {submitting ? 'Sending your code…' : 'Email me a sign-in code →'}
+            </button>
+            <p style={{ fontSize: 12.5, color: '#8A8075', marginTop: 16, lineHeight: 1.6 }}>
+              🔒 We only use this to confirm it&apos;s you and protect your private business insights.
+            </p>
+            <p style={{ fontSize: 13, color: '#8A8075', marginTop: 22 }}>
+              New here?{' '}
+              <button onClick={() => { setError(''); setScreen('start') }} style={{ background: 'none', border: 'none', color: '#B0902F', fontWeight: 600, cursor: 'pointer', fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3 }}>
+                Take the free assessment
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
   /* ══════════════ QUIZ ══════════════ */
   if (screen === 'quiz') {

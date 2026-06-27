@@ -10,6 +10,17 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export const maxDuration = 60
 
+/* Stamp the first time a report is shown, without overwriting an earlier view,
+   so the /quiz AI Home can tell "has a report" from "has seen their report". */
+async function markReportViewed(supabase: ReturnType<typeof getSupabaseAdmin>, email: string) {
+  try {
+    await supabase.from('quiz_leads')
+      .update({ report_viewed_at: new Date().toISOString() })
+      .eq('email', email)
+      .is('report_viewed_at', null)
+  } catch { /* non-fatal */ }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = clientIp(req)
@@ -52,6 +63,7 @@ export async function POST(req: NextRequest) {
       try {
         const { data } = await supabase.from('quiz_leads').select('roadmap').eq('email', email).maybeSingle()
         if (data?.roadmap && String(data.roadmap).length > 200) {
+          await markReportViewed(supabase, email)
           const archetypeC = ({ starting: 'The Pioneer', idea: 'The Pioneer', launched: 'The Pathfinder', scaling: 'The Builder', established: 'The Luminary' } as Record<string, string>)[String(answers.q1)] || 'The Pioneer'
           return NextResponse.json({ roadmap: data.roadmap, archetype: archetypeC, personality: (answers.q2 as string) || 'action', cached: true })
         }
@@ -308,6 +320,8 @@ RULES:
     // Persist the report so it is never regenerated on reload/reopen.
     if (email && isValidEmail(email) && supabase && roadmapText.length > 200) {
       try { await supabase.from('quiz_leads').update({ roadmap: roadmapText }).eq('email', email) } catch { /* non-fatal */ }
+      // The user is on the results page now, so this report counts as seen.
+      await markReportViewed(supabase, email)
     }
 
     return NextResponse.json({

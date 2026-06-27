@@ -141,12 +141,43 @@ export default function ResultsPage() {
     const storedName    = sessionStorage.getItem('quiz_name')    || ''
     const storedEmail   = sessionStorage.getItem('quiz_email')   || ''
     const storedAnswers = JSON.parse(sessionStorage.getItem('quiz_answers') || '{}')
-    setName(storedName)
-    setEmail(storedEmail)
-    setAnswers(storedAnswers)
-    generateRoadmap(storedName, storedAnswers)
-    saveLead(storedName, storedEmail, storedAnswers)
+
+    // Fresh completion: this browser still holds the answers, so generate (or
+    // load the cached) report and run the one-time lead/welcome side effects.
+    if (Object.keys(storedAnswers).length > 0) {
+      setName(storedName)
+      setEmail(storedEmail)
+      setAnswers(storedAnswers)
+      generateRoadmap(storedName, storedAnswers)
+      saveLead(storedName, storedEmail, storedAnswers)
+      return
+    }
+
+    // Returning user (new browser session): no answers in memory. Load the
+    // already-saved report straight from their signed session — never regenerate,
+    // never re-run the welcome sequence.
+    loadSavedReport()
   }, [])
+
+  /* Hydrate a returning user's report from their session. Falls back to the
+     /quiz AI Home (which offers a quick re-verify) if the session is gone. */
+  const loadSavedReport = async () => {
+    try {
+      const res = await fetch('/api/quiz/report', { headers: { 'Accept': 'application/json' } })
+      if (res.status === 401 || res.status === 404) { window.location.href = '/quiz'; return }
+      const data = await res.json().catch(() => ({}))
+      if (!data?.hasReport || !data?.roadmap) { window.location.href = '/quiz'; return }
+      setName(data.name || '')
+      setEmail(data.email || '')
+      setAnswers(data.answers || {})
+      setRoadmap(data.roadmap)
+      if (data.archetype)   setArchetype(data.archetype)
+      if (data.personality) setPersonalityType(data.personality)
+      setLoading(false)
+    } catch {
+      window.location.href = '/quiz'
+    }
+  }
 
   const getVideoSlug = (q1: string) => {
     if (q1 === 'starting' || q1 === 'idea') return 'v1'

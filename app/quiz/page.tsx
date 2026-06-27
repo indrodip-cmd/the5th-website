@@ -1354,7 +1354,7 @@ const LP_CSS = `
 }
 
 /* ─── Gelica headings ─── */
-.qp-h1,.qp-sect-h,.qp-arch-name,.qp-about-h,.qp-card-h,.qp-dark-h{font-family:'Gelica',serif !important;}
+.qp-h1,.qp-sect-h,.qp-arch-name,.qp-about-h,.qp-card-h,.qp-dark-h{font-family:'Cormorant Garamond',Georgia,serif !important;}
 
 /* ─── Social proof grid ─── */
 .qp-proof-section{background:#faf9f7;padding:80px 60px;border-top:1px solid #f0ece6;margin-top:0;}
@@ -1510,39 +1510,39 @@ function LandingPage({ onStart }: { onStart: () => void }) {
                 maxWidth:'90vw',
               }}>
                 <span style={{
-                  width:'8px',
-                  height:'8px',
+                  width:'7px',
+                  height:'7px',
                   borderRadius:'50%',
-                  background:'#ef4444',
+                  background:'#C9A84C',
                   display:'inline-block',
-                  boxShadow:'0 0 8px #ef4444, 0 0 20px rgba(239,68,68,0.8)',
-                  animation:'redpulse 1.5s ease-in-out infinite',
+                  boxShadow:'0 0 0 3px rgba(201,168,76,0.18)',
                   flexShrink:0,
                 }}></span>
                 <span style={{
                   fontSize:'clamp(9px, 2.2vw, 11px)',
                   fontWeight:'700',
-                  letterSpacing:'0.1em',
+                  letterSpacing:'0.16em',
                   textTransform:'uppercase',
-                  color:'#ffffff',
+                  color:'rgba(255,255,255,0.92)',
                   textAlign:'center',
                   maxWidth:'90vw',
-                }}>NEW · The AI Assessment That Identifies Your Exact Growth Bottleneck In 5 Minutes</span>
+                }}>The5th AI Business Assessment · Results in 5 minutes</span>
               </div>
             </div>
           </motion.div>
 
           <motion.h1 className="qp-h1" initial="hidden" animate="visible" variants={fadeUp} custom={1} style={{
-            fontSize: isMobile ? 'clamp(28px, 7vw, 42px)' : '52px',
-            fontWeight: 800,
-            lineHeight: isMobile ? 1.2 : 1.1,
+            fontSize: isMobile ? 'clamp(31px, 7.6vw, 44px)' : '60px',
+            fontWeight: 500,
+            lineHeight: 1.05,
+            letterSpacing: '-0.02em',
             color: '#ffffff',
             textAlign: 'center',
-            margin: '0 auto 24px',
-            maxWidth: '860px',
-            fontFamily: 'Gelica, serif',
+            margin: '0 auto 22px',
+            maxWidth: '880px',
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
           }}>
-           What If You're Not Stuck Because Of Your Offer... But Because You're Following A Business Model That Doesn't Suit You?
+            What if you&apos;re not stuck because of your offer, but because you&apos;re following a business model that <em style={{ fontStyle: 'italic', color: '#C9A84C' }}>doesn&apos;t suit you?</em>
           </motion.h1>
 
           <motion.p className="qp-hero-sub" initial="hidden" animate="visible" variants={fadeUp} custom={2} style={{
@@ -1558,33 +1558,21 @@ function LandingPage({ onStart }: { onStart: () => void }) {
 
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3}>
             <motion.div
-              animate={{
-                boxShadow: [
-                  '0 8px 32px rgba(15,17,23,0.4), 0 0 0px rgba(15,17,23,0)',
-                  '0 12px 48px rgba(15,17,23,0.7), 0 0 40px rgba(61,38,69,0.4)',
-                  '0 8px 32px rgba(15,17,23,0.4), 0 0 0px rgba(15,17,23,0)',
-                ],
-                opacity: [1, 0.88, 1],
-                scale: [1, 1.015, 1],
-              }}
-              transition={{
-                duration: 3.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              whileHover={{ scale: 1.04, opacity: 1 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={prefersReduced ? {} : { scale: 1.025, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={spr}
               style={{ borderRadius: '999px', display: 'flex', justifyContent: 'center', width: isMobile ? '100%' : 'auto', maxWidth: '420px', margin: '0 auto', minWidth: 0 }}
             >
-              <motion.button className="qp-btn-gold" onClick={onStart} style={{
+              <button className="qp-btn-gold" onClick={onStart} style={{
                 width: isMobile ? '100%' : 'auto',
                 minWidth: 0,
-                fontSize: isMobile ? '14px' : '16px',
-                padding: isMobile ? '16px 20px' : '18px 40px',
+                fontSize: isMobile ? '15px' : '16px',
+                padding: isMobile ? '16px 24px' : '18px 44px',
                 whiteSpace: 'nowrap',
+                letterSpacing: '0.01em',
               }}>
-                DISCOVER MY ARCHETYPE &amp; ROADMAP →
-              </motion.button>
+                Discover my archetype &amp; roadmap →
+              </button>
             </motion.div>
           </motion.div>
 
@@ -1597,7 +1585,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             marginTop: '20px',
             padding: '0 16px',
           }}>
-            Takes 5 Minutes&nbsp;&nbsp;•&nbsp;&nbsp;20 Questions&nbsp;&nbsp;•&nbsp;&nbsp;Instant Results
+            About 5 minutes&nbsp;&nbsp;·&nbsp;&nbsp;Instant results&nbsp;&nbsp;·&nbsp;&nbsp;Completely free
           </p>
 
           <div style={{ textAlign: 'center', marginTop: '10px' }}>

@@ -838,7 +838,21 @@
       '.cw-rel-t{flex:1;min-width:0;display:flex;flex-direction:column;font:600 14px/1.3 "Inter";color:#fff;}',
       '.cw-rel-t i{font:400 12px/1.3 "Inter";color:var(--tx2);font-style:normal;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.cw-rel svg:last-child{width:17px;height:17px;flex-shrink:0;}',
-      '.cw-rel:hover svg:last-child{color:var(--acc);}'
+      '.cw-rel:hover svg:last-child{color:var(--acc);}',
+      // ── premium featured covers (branded image + text overlay) ──
+      '.cw-cover-hero .cw-cover-grad{background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,transparent 32%,rgba(13,13,13,.55) 68%,rgba(13,13,13,.92) 100%);}',
+      '.cw-cover-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px 16px 15px;}',
+      '.cw-cover-eyebrow{display:inline-block;font:700 10px/1 "Inter";letter-spacing:.09em;text-transform:uppercase;color:#1a1206;background:var(--acc);padding:5px 10px;border-radius:999px;margin-bottom:9px;box-shadow:0 4px 12px rgba(0,0,0,.35);}',
+      '.cw-cover-title{font:700 23px/1.14 "Inter";letter-spacing:-.02em;color:#fff;margin:0;text-shadow:0 2px 14px rgba(0,0,0,.6);}',
+      '.cw-cover-sub{display:block;font:500 13px/1.4 "Inter";color:rgba(255,255,255,.92);margin-top:4px;text-shadow:0 1px 8px rgba(0,0,0,.55);}',
+      '.cw-cover-cta{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;font:600 11.5px "Inter";color:#fff;background:rgba(13,13,13,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);padding:6px 11px;border-radius:999px;opacity:0;transform:translateY(-4px);transition:opacity .2s,transform .2s var(--sp);}',
+      '.cw-cover-cta svg{width:14px;height:14px;}',
+      '.cw-feat:hover .cw-cover-cta,.cw-product-cover:hover .cw-cover-cta{opacity:1;transform:none;}',
+      '.cw-cover-hero .cw-cover-emoji{position:absolute;inset:0;margin:auto;}',
+      // The5th AI product card with cover
+      '.cw-product-cover{position:relative;margin:-22px -22px 18px;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}',
+      '.cw-product-cover .cw-cover-emoji{position:absolute;inset:0;margin:auto;font-size:52px;align-items:center;justify-content:center;}',
+      '.cw-product-body{position:relative;z-index:1;}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -931,7 +945,7 @@
   var PROGRAMS = {
     fastforward: {
       id: 'fastforward', type: 'hero', emoji: '🚀', badge: '🔥', category: 'Featured Program',
-      cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)',
+      cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)', coverImage: '/images/coaching-session.png',
       title: 'Fast Forward', sub: 'Backed by a 100% Money-Back Guarantee',
       desc: "Build a scalable coaching or service business using proven systems, AI-powered workflows, modern marketing strategies, and direct implementation support. If you meet the guarantee requirements and don't achieve the agreed outcome, we'll refund your investment according to our policy.",
       features: ['Weekly Coaching', 'AI Tools', 'Sales Systems', 'Marketing Strategy', 'Funnel Templates', 'Lifetime Community'],
@@ -942,7 +956,7 @@
     },
     ai: {
       id: 'ai', type: 'promotion', emoji: '🤖', badge: '✨', category: 'AI Assistant',
-      cover: 'linear-gradient(135deg,#141b2e,#3D2645)',
+      cover: 'linear-gradient(135deg,#141b2e,#3D2645)', coverImage: '/images/hero-ai.png',
       title: 'The5th AI', sub: 'Your complete marketing team, powered by AI',
       desc: 'Generate landing pages, sales funnels, email campaigns, webinar scripts, offers, ad copy, content calendars, business strategies, client proposals and much more — all within one intelligent workspace.',
       features: ['Marketing', 'Funnels', 'Content', 'Emails', 'Sales', 'Automation', 'AI Agents', 'Business Plans'],
@@ -952,7 +966,7 @@
     },
     collective: {
       id: 'collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
-      cover: 'linear-gradient(135deg,#143826,#3D2645)',
+      cover: 'linear-gradient(135deg,#143826,#3D2645)', coverImage: '/images/live-coaching.png',
       title: 'The Collective', sub: 'Scale toward and past $10K/month',
       desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
       features: ['Group Coaching', 'Community 40+', 'Accountability', 'Live Sessions'],
@@ -1082,6 +1096,22 @@
     return '<div class="cw-cover' + (big ? ' cw-cover-lg' : '') + '"' + (m.coverImage ? '' : ' style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '>'
       + inner + '<div class="cw-cover-grad"></div></div>';
   }
+  // Premium cover: image (with gradient + emoji fallback) and a branded
+  // text overlay (eyebrow + title + subtitle) — never just an emoji.
+  function heroCover(m, big) {
+    var sub = m.sub || m.subtitle || '';
+    var eyebrow = (m.badge ? m.badge + ' ' : '') + (m.category || '');
+    var fallback = "this.style.display='none';var e=this.parentNode.querySelector('.cw-cover-emoji');if(e)e.style.display='flex'";
+    return '<div class="cw-cover cw-cover-hero' + (big ? ' cw-cover-lg' : '') + '" style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '">'
+      + '<span class="cw-cover-emoji" style="display:none">' + (m.emoji || '✦') + '</span>'
+      + '<img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" onerror="' + fallback + '" />'
+      + '<div class="cw-cover-grad"></div>'
+      + '<div class="cw-cover-cap">'
+      + (eyebrow.trim() ? '<span class="cw-cover-eyebrow">' + esc(eyebrow.trim()) + '</span>' : '')
+      + '<h4 class="cw-cover-title">' + esc(m.title) + '</h4>'
+      + (sub ? '<span class="cw-cover-sub">' + esc(sub) + '</span>' : '')
+      + '</div><span class="cw-cover-cta">Learn more ' + ICON.arrow + '</span></div>';
+  }
   function ctaHtml(m) {
     var out = '';
     if (m.primaryAction) out += '<button class="cw-btn cw-btn-primary" ' + actAttr(m.primaryAction) + '>' + esc(m.primaryAction.label) + ' <i class="cw-cta-arrow">→</i></button>';
@@ -1155,13 +1185,15 @@
         + '<div class="cw-athumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '></div>'
         + '<div class="cw-abody">' + badgeHtml(m) + '<h5>' + esc(m.title) + '</h5>' + metaHtml(m) + '</div></div>';
     }
-    // hero / promotion / base — full card
+    // hero / promotion / base — full card. With a cover image, the title +
+    // subtitle live on the branded cover overlay (no duplicate in the body).
+    var withCap = !!m.coverImage;
+    var cover = withCap ? heroCover(m, t === 'hero') + lockOverlay(m) : coverHtml(m, t === 'hero') + badgeHtml(m) + lockOverlay(m);
+    var body = withCap
+      ? (desc ? '<p class="cw-feat-desc">' + esc(desc) + '</p>' : '') + featureGrid(m) + infoRow(m) + metaHtml(m) + ctaHtml(m)
+      : '<h4>' + esc((m.emoji ? m.emoji + ' ' : '') + m.title) + '</h4>' + (sub ? '<div class="cw-feat-sub">' + esc(sub) + '</div>' : '') + (desc ? '<p class="cw-feat-desc">' + esc(desc) + '</p>' : '') + featureGrid(m) + infoRow(m) + metaHtml(m) + ctaHtml(m);
     return '<div class="cw-feat' + (t === 'hero' ? ' cw-hero-card' : '') + (m.locked ? ' cw-locked' : '') + '" ' + clickable + ' tabindex="0" role="button">'
-      + coverHtml(m, t === 'hero') + badgeHtml(m) + lockOverlay(m)
-      + '<div class="cw-feat-body"><h4>' + esc((m.emoji ? m.emoji + ' ' : '') + m.title) + '</h4>'
-      + (sub ? '<div class="cw-feat-sub">' + esc(sub) + '</div>' : '')
-      + (desc ? '<p class="cw-feat-desc">' + esc(desc) + '</p>' : '')
-      + featureGrid(m) + infoRow(m) + metaHtml(m) + ctaHtml(m) + '</div></div>';
+      + cover + '<div class="cw-feat-body">' + body + '</div></div>';
   }
 
   function renderSkeletonCard() {
@@ -1173,15 +1205,19 @@
   // The5th AI — a deliberately DIFFERENT layout from the Fast Forward card.
   function productCard(p) {
     var feats = (p.features || []).map(function (f) { return '<span class="cw-pchip">' + esc(f) + '</span>'; }).join('');
+    var fallback = "this.style.display='none';var e=this.parentNode.querySelector('.cw-cover-emoji');if(e)e.style.display='flex'";
+    var cover = p.coverImage
+      ? '<div class="cw-product-cover" data-ak="article" data-av="ai" role="button"><span class="cw-cover-emoji" style="display:none">' + p.emoji + '</span>'
+        + '<img class="cw-cov-img" src="' + esc(p.coverImage) + '" alt="" loading="lazy" onerror="' + fallback + '" /><div class="cw-cover-grad"></div>'
+        + '<div class="cw-cover-cap"><span class="cw-cover-eyebrow">' + esc((p.badge || '✨') + ' AI Product') + '</span>'
+        + '<h4 class="cw-cover-title">' + esc(p.title) + '</h4><span class="cw-cover-sub">' + esc(p.sub) + '</span></div></div>'
+      : '';
     return '<div class="cw-product">'
-      + '<div class="cw-product-glow"></div>'
-      + '<div class="cw-product-top"><span class="cw-badge2 cw-badge-ai">' + esc((p.badge || '✨') + ' AI Product') + '</span></div>'
-      + '<h4 class="cw-product-h">' + esc(p.emoji + ' ' + p.title) + '</h4>'
-      + '<p class="cw-product-sub">' + esc(p.sub) + '</p>'
-      + '<div class="cw-pgrid">' + feats + '</div>'
+      + '<div class="cw-product-glow"></div>' + cover
+      + '<div class="cw-product-body"><div class="cw-pgrid">' + feats + '</div>'
       + '<div class="cw-feat-btns"><button class="cw-btn cw-btn-primary" data-ak="article" data-av="ai">Try Free <i class="cw-cta-arrow">→</i></button>'
       + '<button class="cw-btn cw-btn-ghost" data-ak="nav" data-av="/ai">Buy Now</button>'
-      + '<button class="cw-btn cw-btn-ghost" data-ak="article" data-av="ai">Learn More</button></div></div>';
+      + '<button class="cw-btn cw-btn-ghost" data-ak="article" data-av="ai">Learn More</button></div></div></div>';
   }
 
   function knowledgeGrid() {
@@ -1546,7 +1582,6 @@
       + '<button data-menu="export" role="menuitem">' + ICON.download + ' Export transcript</button>'
       + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div></div>'
       + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
-      + '<button class="cw-newpill" id="cw-newpill" hidden>' + ICON.arrow + ' New messages</button>'
       + '<div class="cw-comp"><div class="cw-slash" id="cw-slash" role="listbox" hidden></div>'
       + '<div class="cw-atts" id="cw-atts"></div>'
       + '<div class="cw-comp-row" id="cw-comprow">'
@@ -1566,7 +1601,6 @@
     els.send.addEventListener('click', function () { sendMessage(els.in.value); });
     wireComposer();
     cscroll.addEventListener('scroll', function () { if (nearBottom()) hideNewPill(); });
-    els.win.querySelector('#cw-newpill').addEventListener('click', function () { scrollChat(); hideNewPill(); });
     // Delegated copy for code blocks rendered inside markdown.
     els.msgs.addEventListener('click', function (e) {
       var cp = e.target.closest && e.target.closest('.cw-code-copy');

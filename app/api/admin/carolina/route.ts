@@ -34,6 +34,16 @@ export async function PATCH(req: NextRequest) {
   if (typeof body.active_lead_magnet === 'string' || body.active_lead_magnet === null) {
     patch.active_lead_magnet = body.active_lead_magnet || null
   }
+  if (body.ai_config && typeof body.ai_config === 'object') {
+    const c = body.ai_config as Record<string, unknown>
+    patch.ai_config = {
+      model: typeof c.model === 'string' ? c.model : 'claude-sonnet-4-6',
+      temperature: Math.min(Math.max(Number(c.temperature) || 0.7, 0), 1),
+      cta_threshold: Math.min(Math.max(Math.round(Number(c.cta_threshold) || 8), 1), 40),
+      retrieval_limit: Math.min(Math.max(Math.round(Number(c.retrieval_limit) || 5), 1), 12),
+      max_tokens: Math.min(Math.max(Math.round(Number(c.max_tokens) || 700), 200), 2000),
+    }
+  }
 
   const { error } = await getSupabaseAdmin().from('carolina_settings').upsert(patch, { onConflict: 'id' })
   if (error) {

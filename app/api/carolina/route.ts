@@ -5,7 +5,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { getSlots, createBooking, CAL_PUBLIC_LINK } from '@/lib/calcom'
 import { sendAppointmentEmail } from '@/lib/carolina-email'
-import { loadSettings, loadActiveLeadMagnet, loadAgents, type LeadMagnet } from '@/lib/carolina-config'
+import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagnet } from '@/lib/carolina-config'
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
 import { logActivity } from '@/lib/crm'
@@ -356,6 +356,7 @@ export async function POST(req: NextRequest) {
     for (const a of agents) personas[a.key] = a.persona
     if (settings.persona && !personas.carolina) personas.carolina = settings.persona
 
+    const cfg = aiConfig(settings)
     let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
 
     // ── AI Brain: intent, state, lead scoring, planning, memory + RAG ──
@@ -366,7 +367,7 @@ export async function POST(req: NextRequest) {
     let sources: Source[] = []
     let brainIntent = 'general', brainState = 'general', brainScore = 0
     try {
-      const brain = await orchestrate({ conversationId, lastUserText: lastText, viewContext: context, handoff })
+      const brain = await orchestrate({ conversationId, lastUserText: lastText, viewContext: context, handoff, ctaThreshold: cfg.cta_threshold, retrievalLimit: cfg.retrieval_limit })
       sources = brain.sources; brainIntent = brain.intent; brainState = brain.state; brainScore = brain.score
       if (brain.context) system += `\n\n${brain.context}`
     } catch (e) {
@@ -387,7 +388,7 @@ export async function POST(req: NextRequest) {
     }
 
     for (let round = 0; round < 5; round++) {
-      const res = await client.messages.create({ model: MODEL, max_tokens: 700, system, tools: TOOLS, messages })
+      const res = await client.messages.create({ model: cfg.model || MODEL, max_tokens: cfg.max_tokens || 700, temperature: cfg.temperature, system, tools: TOOLS, messages })
       const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
       const text = res.content.filter((b) => b.type === 'text').map((b) => (b as Anthropic.TextBlock).text).join('\n').trim()
 

@@ -619,9 +619,10 @@ interface CarolinaMagnet {
   id: string; title: string; description: string | null; pdf_url: string | null
   hook: string | null; popup_message: string | null; selling_points: string[] | null; active: boolean
 }
+interface AiCfg { model: string; temperature: number; cta_threshold: number; retrieval_limit: number; max_tokens: number }
 interface CarolinaSettingsT {
   avatar_url: string | null; greeting: string | null; knowledge_base: string | null; persona: string | null
-  proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null
+  proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null; ai_config?: AiCfg
 }
 interface CarolinaAgent { key: string; name: string; role: string | null; avatar_url: string | null }
 
@@ -828,6 +829,39 @@ function CarolinaAdmin() {
           onChange={e => setSettings({ ...settings, persona: e.target.value })} />
         <button style={{ ...btn, marginTop: 10 }} disabled={saving} onClick={() => patch({ persona: settings.persona || '' })}>Save persona</button>
       </div>
+
+      {/* AI Control Center */}
+      {(() => {
+        const ai: AiCfg = settings.ai_config || { model: 'claude-sonnet-4-6', temperature: 0.7, cta_threshold: 8, retrieval_limit: 5, max_tokens: 700 }
+        const setAi = (k: keyof AiCfg, v: string | number) => setSettings({ ...settings, ai_config: { ...ai, [k]: v } })
+        return (
+          <div style={card}>
+            <div style={label}>AI Control Center</div>
+            <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>Tune the model and behaviour without touching code.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Model</div>
+                <select value={ai.model} onChange={e => setAi('model', e.target.value)} style={field}>
+                  {['claude-sonnet-4-6', 'claude-opus-4-8', 'claude-haiku-4-5-20251001'].map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Temperature: {ai.temperature}</div>
+                <input type="range" min={0} max={1} step={0.1} value={ai.temperature} onChange={e => setAi('temperature', Number(e.target.value))} style={{ width: '100%' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>CTA threshold (lead score to suggest a call)</div>
+                <input type="number" min={1} max={40} value={ai.cta_threshold} onChange={e => setAi('cta_threshold', Number(e.target.value))} style={field} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Retrieval limit (sources per answer)</div>
+                <input type="number" min={1} max={12} value={ai.retrieval_limit} onChange={e => setAi('retrieval_limit', Number(e.target.value))} style={field} />
+              </div>
+            </div>
+            <button style={{ ...btn, marginTop: 14 }} disabled={saving} onClick={() => patch({ ai_config: ai } as Partial<CarolinaSettingsT>)}>Save AI config</button>
+          </div>
+        )
+      })()}
     </div>
   )
 }
@@ -985,6 +1019,79 @@ function CmsAdmin() {
   )
 }
 
+/* ─── Operations dashboard (business intelligence) ─── */
+interface Dash {
+  kpis: { conversations: number; contacts: number; booked: number; highIntent: number; customers: number; avgLatencyMs: number; turns: number }
+  funnel: { label: string; value: number }[]
+  pipeline: { stage: string; count: number }[]
+  intents: { intent: string; count: number }[]
+  knowledge: { content: number; published: number; chunks: number; embedded: number; provider: string }
+  recent: { type: string; title: string | null; detail: string | null; contact_email: string; created_at: string }[]
+}
+function OpsDashboard() {
+  const [d, setD] = useState<Dash | null>(null)
+  useEffect(() => { fetch('/api/admin/dashboard').then(r => r.ok ? r.json() : null).then(setD).catch(() => {}) }, [])
+  if (!d) return null
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, padding: '20px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '.05em', color: '#225840', textTransform: 'uppercase', marginBottom: 14 }
+  const maxF = Math.max(1, ...d.funnel.map(f => f.value))
+  const maxI = Math.max(1, ...d.intents.map(i => i.count))
+  const fmt = (s: string) => { try { return new Date(s).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) } catch { return s } }
+  return (
+    <div style={{ marginBottom: 26 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 14, marginBottom: 18 }}>
+        <StatCard label="Conversations" value={d.kpis.conversations} />
+        <StatCard label="Leads" value={d.kpis.contacts} />
+        <StatCard label="Calls Booked" value={d.kpis.booked} accent />
+        <StatCard label="High Intent" value={d.kpis.highIntent} hint="score ≥ 8" />
+        <StatCard label="Avg AI Response" value={Math.round(d.kpis.avgLatencyMs / 100) / 10} suffix="s" />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 16, marginBottom: 16 }}>
+        <div style={card}>
+          <div style={lbl}>Conversion Funnel (30d)</div>
+          {d.funnel.map((f, i) => (
+            <div key={f.label} style={{ marginBottom: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}><span style={{ color: '#374151' }}>{f.label}</span><span style={{ fontWeight: 700, color: '#0a0a0a' }}>{f.value}{i > 0 && d.funnel[0].value > 0 ? <span style={{ color: '#9ca3af', fontWeight: 400 }}> · {Math.round((f.value / Math.max(1, d.funnel[0].value)) * 100)}%</span> : null}</span></div>
+              <div style={{ height: 8, background: '#f0f0f0', borderRadius: 4 }}><div style={{ width: `${(f.value / maxF) * 100}%`, height: '100%', background: 'linear-gradient(90deg,#225840,#2d6a4f)', borderRadius: 4 }} /></div>
+            </div>
+          ))}
+        </div>
+        <div style={card}>
+          <div style={lbl}>Top Intents (30d)</div>
+          {d.intents.length === 0 ? <div style={{ color: '#9ca3af', fontSize: 13 }}>No data yet.</div> : d.intents.map(it => (
+            <div key={it.intent} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <div style={{ width: 90, fontSize: 12.5, color: '#374151', textTransform: 'capitalize' }}>{it.intent.replace('_', ' ')}</div>
+              <div style={{ flex: 1, height: 7, background: '#f0f0f0', borderRadius: 4 }}><div style={{ width: `${(it.count / maxI) * 100}%`, height: '100%', background: '#C9A84C', borderRadius: 4 }} /></div>
+              <div style={{ width: 26, textAlign: 'right', fontSize: 12, fontWeight: 700, color: '#225840' }}>{it.count}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div style={card}>
+          <div style={lbl}>Knowledge Health</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 13 }}>
+            <div><div style={{ color: '#9ca3af', fontSize: 11 }}>CONTENT</div><b style={{ fontSize: 18 }}>{d.knowledge.content}</b> <span style={{ color: '#9ca3af' }}>({d.knowledge.published} live)</span></div>
+            <div><div style={{ color: '#9ca3af', fontSize: 11 }}>CHUNKS</div><b style={{ fontSize: 18 }}>{d.knowledge.chunks}</b></div>
+            <div><div style={{ color: '#9ca3af', fontSize: 11 }}>EMBEDDED</div><b style={{ fontSize: 18, color: d.knowledge.embedded > 0 ? '#225840' : '#b91c1c' }}>{d.knowledge.embedded}</b></div>
+            <div><div style={{ color: '#9ca3af', fontSize: 11 }}>PROVIDER</div><b style={{ fontSize: 14 }}>{d.knowledge.provider}</b></div>
+          </div>
+          {d.knowledge.provider === 'none' && <div style={{ marginTop: 12, fontSize: 12, color: '#b45309', background: '#fef3c7', padding: '8px 10px', borderRadius: 8 }}>Semantic search off — set OPENAI_API_KEY and reindex in Content.</div>}
+        </div>
+        <div style={card}>
+          <div style={lbl}>Live Activity</div>
+          {d.recent.length === 0 ? <div style={{ color: '#9ca3af', fontSize: 13 }}>No activity yet.</div> : d.recent.slice(0, 7).map((a, i) => (
+            <div key={i} style={{ display: 'flex', gap: 9, padding: '6px 0', fontSize: 12.5 }}>
+              <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#2d6a4f', marginTop: 4, flexShrink: 0 }} />
+              <div style={{ flex: 1 }}><span style={{ fontWeight: 600, color: '#0a0a0a' }}>{a.title || a.type}</span> <span style={{ color: '#9ca3af' }}>· {a.contact_email}</span><div style={{ color: '#9ca3af', fontSize: 11 }}>{fmt(a.created_at)}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─── CRM ─── */
 interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; updated_at: string }
 interface Activity { id: string; type: string; title: string | null; detail: string | null; created_at: string }
@@ -1024,16 +1131,12 @@ function CrmAdmin() {
 
   if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading CRM…</div>
   const shown = q ? contacts.filter(c => (c.name || '').toLowerCase().includes(q.toLowerCase()) || c.email.toLowerCase().includes(q.toLowerCase())) : contacts
-  const stats = { total: contacts.length, booked: contacts.filter(c => c.call_booked).length, hot: contacts.filter(c => c.lead_score >= 8).length }
 
   return (
     <div>
       {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
-      <div style={{ display: 'flex', gap: 20, marginBottom: 24, flexWrap: 'wrap' }}>
-        <StatCard label="Contacts" value={stats.total} />
-        <StatCard label="Calls Booked" value={stats.booked} />
-        <StatCard label="High Intent" value={stats.hot} accent hint="score ≥ 8" />
-      </div>
+      <OpsDashboard />
+      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.05em', color: '#225840', textTransform: 'uppercase', marginBottom: 12 }}>Contacts</div>
       <input placeholder="Search name or email…" value={q} onChange={e => setQ(e.target.value)} style={{ padding: '10px 16px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, width: 320, marginBottom: 14, background: '#fff', color: '#0a0a0a' }} />
       <div style={{ ...card, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>

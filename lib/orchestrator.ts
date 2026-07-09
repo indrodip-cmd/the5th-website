@@ -93,7 +93,10 @@ export async function orchestrate(opts: {
   lastUserText: string
   viewContext?: string | null
   handoff?: boolean
+  ctaThreshold?: number
+  retrievalLimit?: number
 }): Promise<Brain> {
+  const ctaThreshold = opts.ctaThreshold ?? 8
   const session = await loadSession(opts.conversationId)
   const intent = detectIntent(opts.lastUserText)
   const turns = session.turns + 1
@@ -104,7 +107,7 @@ export async function orchestrate(opts: {
   let sources: Source[] = []
   let grounding = ''
   if (!opts.handoff && opts.lastUserText) {
-    const r = await retrieve(opts.lastUserText, { hint: opts.viewContext || undefined })
+    const r = await retrieve(opts.lastUserText, { hint: opts.viewContext || undefined, limit: opts.retrievalLimit })
     sources = r.sources
     if (r.context) grounding = r.context
   }
@@ -118,7 +121,7 @@ export async function orchestrate(opts: {
 
   if (session.recommended.length) parts.push(`ALREADY RECOMMENDED: ${session.recommended.join(', ')}. Don't repeat these — go deeper or suggest a genuinely different next step.`)
 
-  if (score >= 8 || intent === 'purchase' || intent === 'booking' || intent === 'comparison') {
+  if (score >= ctaThreshold || intent === 'purchase' || intent === 'booking' || intent === 'comparison') {
     parts.push('BUYING SIGNALS: HIGH — a strategy call or clear next step is appropriate now. Offer it naturally (show_card booking) if it genuinely helps.')
   } else if (score >= 4) {
     parts.push('BUYING SIGNALS: MEDIUM — keep educating and building trust; only suggest a call if they ask about fit, pricing, or implementation.')

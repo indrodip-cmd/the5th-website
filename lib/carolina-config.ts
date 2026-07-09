@@ -12,6 +12,15 @@ export interface LeadMagnet {
   active: boolean
 }
 
+export interface AiConfig {
+  model: string
+  temperature: number
+  cta_threshold: number
+  retrieval_limit: number
+  max_tokens: number
+}
+export const DEFAULT_AI_CONFIG: AiConfig = { model: 'claude-sonnet-4-6', temperature: 0.7, cta_threshold: 8, retrieval_limit: 5, max_tokens: 700 }
+
 export interface CarolinaSettings {
   avatar_url: string | null
   greeting: string | null
@@ -20,6 +29,10 @@ export interface CarolinaSettings {
   proactive_enabled: boolean
   proactive_delay_seconds: number
   active_lead_magnet: string | null
+  ai_config: AiConfig
+}
+export function aiConfig(s: CarolinaSettings): AiConfig {
+  return { ...DEFAULT_AI_CONFIG, ...(s.ai_config || {}) }
 }
 
 const DEFAULT_GREETING =
@@ -44,6 +57,7 @@ export async function loadSettings(): Promise<CarolinaSettings> {
     proactive_enabled: true,
     proactive_delay_seconds: 12,
     active_lead_magnet: null,
+    ai_config: DEFAULT_AI_CONFIG,
   }
 }
 

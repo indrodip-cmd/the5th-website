@@ -9,6 +9,7 @@ import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagn
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
 import { MASTER_PLAYBOOK } from '@/lib/playbook'
+import { CONSTITUTION } from '@/lib/constitution'
 import { logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
@@ -92,6 +93,7 @@ function buildSystem(opts: {
   const a = AGENTS[opts.agent]
   const persona = opts.personas[opts.agent] || null
   const parts: string[] = []
+  parts.push(CONSTITUTION)   // highest authority — always first
   parts.push(
     `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Consulting, a company that helps women over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
   )

@@ -99,6 +99,25 @@
   var homeScroll = 0, pendingScroll = null;   // remember Home scroll across chat
   var lastMsgKey = null;                        // message grouping (role+agent)
   var thinkTimer = null;                        // rotating "thinking" status
+  var phTimer = null;                           // rotating composer placeholder
+  var histIndex = -1;                           // composer prompt history cursor
+  var slashIndex = 0;                           // slash-command menu selection
+
+  var PLACEHOLDERS = [
+    'Ask The5th AI anything…', 'Ask about Fast Forward…', 'Which program fits me?…',
+    'Compare Fast Forward vs The5th AI…', 'Explain pricing & fit…', 'Book a strategy call…'
+  ];
+  var SLASH = [
+    { cmd: '/help', desc: 'What can you help with?', run: function () { sendMessage('What can you help me with?'); } },
+    { cmd: '/programs', desc: 'See the programs', run: function () { sendMessage('Tell me about your programs.'); } },
+    { cmd: '/fastforward', desc: 'Learn about Fast Forward', run: function () { sendMessage('Tell me about Fast Forward.'); } },
+    { cmd: '/ai', desc: 'Learn about The5th AI', run: function () { sendMessage('Tell me about The5th AI.'); } },
+    { cmd: '/pricing', desc: 'Pricing & fit', run: function () { sendMessage('Can you explain pricing and fit?'); } },
+    { cmd: '/quiz', desc: 'Take the free assessment', run: function () { sendMessage('I want to take the free assessment.'); } },
+    { cmd: '/book', desc: 'Book a strategy call', run: function () { sendMessage("I'd like to book a strategy call."); } },
+    { cmd: '/support', desc: 'Talk to a person', run: function () { sendMessage('I need help from a person.'); } },
+    { cmd: '/clear', desc: 'Clear this chat', run: function () { chatMenu('clear'); } }
+  ];
 
   // Nav badge state (data-driven; number | 'NEW' | 'dot' | null). None by default.
   var badges = { home: null, chat: null, knowledge: null, discover: null, account: null };
@@ -758,7 +777,25 @@
       '.cw-wcard:hover::before{opacity:1;}',
       '.cw-wcard-ic{width:38px;height:38px;border-radius:12px;background:rgba(201,168,76,.12);color:var(--acc);display:flex;align-items:center;justify-content:center;}',
       '.cw-wcard-ic svg{width:20px;height:20px;}',
-      '.cw-wcard-t{font:600 13.5px/1.35 "Inter";color:#fff;}'
+      '.cw-wcard-t{font:600 13.5px/1.35 "Inter";color:#fff;}',
+      // ── Part 2B4 composer ──
+      '.cw-comp{position:relative;background:rgba(20,20,20,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));}',
+      '.cw-comp-row{min-height:54px;border-radius:20px;align-items:flex-end;padding:7px 7px 7px 16px;transition:border-color .2s var(--sp),box-shadow .2s;}',
+      '.cw-comp-row:focus-within{border-color:rgba(201,168,76,.45);box-shadow:0 0 0 4px rgba(201,168,76,.1);}',
+      '.cw-in{font-size:15px;line-height:1.6;max-height:200px;padding:9px 0;}',
+      '.cw-in::placeholder{transition:opacity .2s var(--sp);}',
+      '.cw-in.cw-ph-fade::placeholder{opacity:0;}',
+      '.cw-send{width:40px;height:40px;transition:transform .12s var(--sp),opacity .2s,background .2s;}',
+      '.cw-send:disabled{background:rgba(255,255,255,.09);color:var(--mut);box-shadow:none;cursor:not-allowed;}',
+      '.cw-send:disabled svg{fill:var(--mut);}',
+      '.cw-send:not(:disabled):active{transform:scale(.94);}',
+      '.cw-cred b{color:var(--tx2);font-weight:600;}',
+      // slash-command menu
+      '.cw-slash{position:absolute;left:14px;right:14px;bottom:100%;margin-bottom:6px;z-index:30;background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.55);padding:6px;max-height:262px;overflow-y:auto;animation:cwDrop .16s var(--sp);}',
+      '.cw-slash-i{display:flex;align-items:baseline;gap:10px;width:100%;padding:9px 12px;background:none;border:none;border-radius:10px;color:#fff;font:500 13.5px "Inter";cursor:pointer;text-align:left;}',
+      '.cw-slash-i b{color:var(--acc2);font-weight:600;min-width:96px;}',
+      '.cw-slash-i span{color:var(--tx2);font-size:12.5px;}',
+      '.cw-slash-i.on,.cw-slash-i:hover{background:var(--hover);}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -913,7 +950,7 @@
   // then show the current tab. The nav is NOT rebuilt on tab switches so the
   // active capsule animates rather than jumping.
   function renderPanels() {
-    clearHomeTimers();
+    clearHomeTimers(); clearPh();
     mode = 'panels';
     if (tab === 'messages') tab = 'chat';
     els.win.innerHTML =
@@ -1451,9 +1488,10 @@
       + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div></div>'
       + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
       + '<button class="cw-newpill" id="cw-newpill" hidden>' + ICON.arrow + ' New messages</button>'
-      + '<div class="cw-comp"><div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" placeholder="Message The5th AI…"></textarea>'
-      + '<button class="cw-send" id="cw-send" aria-label="Send">' + ICON.send + '</button></div>'
-      + '<p class="cw-cred">Powered by <b>The5th AI</b></p></div></div>';
+      + '<div class="cw-comp"><div class="cw-slash" id="cw-slash" role="listbox" hidden></div>'
+      + '<div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="Ask The5th AI anything…"></textarea>'
+      + '<button class="cw-send" id="cw-send" aria-label="Send" disabled>' + ICON.send + '</button></div>'
+      + '<p class="cw-cred">Powered by <b>The5th AI</b> · type <b>/</b> for commands</p></div></div>';
 
     els.msgs = els.win.querySelector('#cw-msgs');
     els.in = els.win.querySelector('#cw-in');
@@ -1462,8 +1500,7 @@
 
     els.win.querySelector('#cw-back').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
     els.send.addEventListener('click', function () { sendMessage(els.in.value); });
-    els.in.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(els.in.value); } });
-    els.in.addEventListener('input', function () { els.in.style.height = 'auto'; els.in.style.height = Math.min(els.in.scrollHeight, 100) + 'px'; });
+    wireComposer();
     cscroll.addEventListener('scroll', function () { if (nearBottom()) hideNewPill(); });
     els.win.querySelector('#cw-newpill').addEventListener('click', function () { scrollChat(); hideNewPill(); });
     // Delegated copy for code blocks rendered inside markdown.
@@ -1514,6 +1551,63 @@
     var ava = els.win.querySelector('#cw-chead-ava'); if (ava) ava.innerHTML = agentAva(a.key);
     var nm = els.win.querySelector('#cw-chead-name'); if (nm) nm.textContent = a.name;
     var role = els.win.querySelector('#cw-chead-role'); if (role) role.textContent = a.role;
+  }
+
+  function clearPh() { if (phTimer) { clearInterval(phTimer); phTimer = null; } }
+  function promptHistory() { var c = activeConv(); if (!c) return []; return c.messages.filter(function (m) { return m.role === 'user'; }).map(function (m) { return m.content; }).reverse(); }
+
+  // The composer: auto-grow, rotating placeholder, send state, prompt history,
+  // and a slash-command menu (the "command center").
+  function wireComposer() {
+    var ta = els.in, send = els.send, slash = els.win.querySelector('#cw-slash');
+    function autoGrow() { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'; }
+    function updateSend() { send.disabled = !ta.value.trim(); }
+    function startPh() {
+      clearPh(); if (REDUCE) return; var i = 0;
+      phTimer = setInterval(function () {
+        if (document.activeElement === ta || ta.value) return;
+        i = (i + 1) % PLACEHOLDERS.length; ta.classList.add('cw-ph-fade');
+        setTimeout(function () { ta.setAttribute('placeholder', PLACEHOLDERS[i]); ta.classList.remove('cw-ph-fade'); }, 200);
+      }, 3400);
+    }
+    function slashItems(q) { q = q.toLowerCase(); return SLASH.filter(function (s) { return s.cmd.indexOf(q) === 0; }); }
+    function openSlash(items) {
+      slashIndex = 0;
+      slash.innerHTML = items.map(function (s, i) { return '<button class="cw-slash-i' + (i === 0 ? ' on' : '') + '" data-cmd="' + s.cmd + '"><b>' + s.cmd + '</b><span>' + esc(s.desc) + '</span></button>'; }).join('');
+      slash.hidden = false;
+      slash.querySelectorAll('.cw-slash-i').forEach(function (b) { b.addEventListener('mousedown', function (e) { e.preventDefault(); pickSlash(b.getAttribute('data-cmd')); }); });
+    }
+    function closeSlash() { slash.hidden = true; slash.innerHTML = ''; }
+    function pickSlash(cmd) { var s = null; SLASH.forEach(function (x) { if (x.cmd === cmd) s = x; }); ta.value = ''; autoGrow(); updateSend(); closeSlash(); if (s) s.run(); }
+    function highlight() { var items = slash.querySelectorAll('.cw-slash-i'); items.forEach(function (b, i) { b.classList.toggle('on', i === slashIndex); if (i === slashIndex && b.scrollIntoView) b.scrollIntoView({ block: 'nearest' }); }); }
+
+    ta.addEventListener('input', function () {
+      autoGrow(); updateSend(); histIndex = -1;
+      var v = ta.value;
+      if (v.charAt(0) === '/' && v.indexOf(' ') === -1) { var items = slashItems(v); if (items.length) openSlash(items); else closeSlash(); }
+      else closeSlash();
+    });
+    ta.addEventListener('focus', updateSend);
+    ta.addEventListener('keydown', function (e) {
+      if (!slash.hidden) {
+        var items = slash.querySelectorAll('.cw-slash-i');
+        if (e.key === 'ArrowDown') { e.preventDefault(); slashIndex = (slashIndex + 1) % items.length; highlight(); return; }
+        if (e.key === 'ArrowUp') { e.preventDefault(); slashIndex = (slashIndex - 1 + items.length) % items.length; highlight(); return; }
+        if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); var b = items[slashIndex]; if (b) pickSlash(b.getAttribute('data-cmd')); return; }
+        if (e.key === 'Escape') { e.preventDefault(); closeSlash(); return; }
+      }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(ta.value); return; }
+      if (e.key === 'Escape') { ta.value = ''; ta.style.height = 'auto'; updateSend(); return; }
+      if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && ta.selectionStart === 0 && ta.selectionEnd === 0) {
+        var hist = promptHistory(); if (!hist.length) return;
+        e.preventDefault();
+        if (e.key === 'ArrowUp') histIndex = Math.min(histIndex + 1, hist.length - 1);
+        else histIndex = Math.max(histIndex - 1, -1);
+        ta.value = histIndex === -1 ? '' : hist[histIndex];
+        autoGrow(); updateSend();
+      }
+    });
+    updateSend(); startPh();
   }
 
   // ── scroll helpers ──
@@ -1839,7 +1933,7 @@
     els.launcher.classList.toggle('cw-open', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
     if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); }
-    else { clearHomeTimers(); }
+    else { clearHomeTimers(); clearPh(); }
   }
 
   // ── Proactive popup ──
@@ -1901,6 +1995,15 @@
     document.body.appendChild(launcher); document.body.appendChild(win);
     els.launcher = launcher; els.win = win;
     launcher.addEventListener('click', function () { toggle(); });
+    // Cmd/Ctrl+K focuses the composer (opening the widget / a chat if needed).
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        if (!isOpen) toggle(true);
+        if (mode !== 'chat') startNewChat();
+        setTimeout(function () { if (els.in) els.in.focus(); }, 260);
+      }
+    });
     renderPanels();
 
     // auto-reopen after navigation (e.g. guiding through the quiz)

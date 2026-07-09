@@ -892,7 +892,7 @@
 
   function renderMessages() {
     var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Chat</div>'
-      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+      + teamCluster() + '</div></div>';
     var convs = store.conversations.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; });
     var list;
     if (!convs.length) {
@@ -914,7 +914,7 @@
 
   function renderKnowledge() {
     var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Help &amp; Knowledge</div>'
-      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+      + teamCluster() + '</div></div>';
     var search = '<div class="cw-sect"><div class="cw-ksearch">' + ICON.search
       + '<input id="cw-ksearch" placeholder="Search for help…" /></div>';
     var items = '<div class="cw-slabel">Popular questions</div>';
@@ -927,7 +927,7 @@
   // Discover — blogs, videos, case studies, news, events (data-driven).
   function renderDiscover() {
     var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Discover</div>'
-      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+      + teamCluster() + '</div></div>';
     var out = '';
     if (ANNOUNCEMENTS.length) out += '<div class="cw-sect">' + sectionTitle('Updates') + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>';
     if (BLOG.length) out += '<div class="cw-sect">' + sectionTitle('Latest blog') + BLOG.map(function (b) { b.type = 'article'; return renderCard(b); }).join('') + '</div>';

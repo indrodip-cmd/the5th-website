@@ -109,6 +109,25 @@
   var MAX_FILE = 7 * 1024 * 1024;               // 7MB
   function fmtSize(n) { return n < 1024 * 1024 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
 
+  // ── Appearance (dark/light) + language ──
+  var theme = 'dark'; try { theme = localStorage.getItem('the5th_carolina_theme') || 'dark'; } catch (e) {}
+  var lang = 'en'; try { lang = localStorage.getItem('the5th_carolina_lang') || 'en'; } catch (e) {}
+  var LANGS = [['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['es', 'Español'], ['it', 'Italiano'], ['pt', 'Português'], ['nl', 'Nederlands']];
+  function langName(c) { return ({ en: 'English', fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch' })[c] || 'English'; }
+  var I18N = {
+    en: { hi: 'Hello there.', help: 'How can we help?', ask: 'Ask a question', askSub: 'Our AI agent and team are here to help', ph: 'Ask The5th AI anything…', welcome: 'Welcome to The5th AI 👋' },
+    fr: { hi: 'Bonjour.', help: 'Comment pouvons-nous aider ?', ask: 'Posez une question', askSub: 'Notre agent IA et notre équipe sont là pour vous aider', ph: 'Demandez tout à The5th AI…', welcome: 'Bienvenue chez The5th AI 👋' },
+    de: { hi: 'Hallo.', help: 'Wie können wir helfen?', ask: 'Stellen Sie eine Frage', askSub: 'Unser KI-Agent und Team helfen gerne', ph: 'Fragen Sie The5th AI…', welcome: 'Willkommen bei The5th AI 👋' },
+    es: { hi: 'Hola.', help: '¿Cómo podemos ayudar?', ask: 'Haz una pregunta', askSub: 'Nuestro agente de IA y equipo están aquí para ayudar', ph: 'Pregúntale lo que sea a The5th AI…', welcome: 'Bienvenido a The5th AI 👋' },
+    it: { hi: 'Ciao.', help: 'Come possiamo aiutarti?', ask: 'Fai una domanda', askSub: 'Il nostro agente AI e il team sono qui per aiutarti', ph: 'Chiedi qualsiasi cosa a The5th AI…', welcome: 'Benvenuto in The5th AI 👋' },
+    pt: { hi: 'Olá.', help: 'Como podemos ajudar?', ask: 'Faça uma pergunta', askSub: 'Nosso agente de IA e equipe estão aqui para ajudar', ph: 'Pergunte qualquer coisa ao The5th AI…', welcome: 'Bem-vindo ao The5th AI 👋' },
+    nl: { hi: 'Hallo.', help: 'Waarmee kunnen we helpen?', ask: 'Stel een vraag', askSub: 'Onze AI-agent en team helpen je graag', ph: 'Vraag The5th AI alles…', welcome: 'Welkom bij The5th AI 👋' }
+  };
+  function T(k) { var d = I18N[lang] || I18N.en; return d[k] || I18N.en[k] || k; }
+  function applyTheme() { if (els.win) els.win.classList.toggle('cw-light', theme === 'light'); if (els.promo) els.promo.classList.toggle('cw-light', theme === 'light'); }
+  function setTheme(t) { theme = t; try { localStorage.setItem('the5th_carolina_theme', t); } catch (e) {} applyTheme(); }
+  function setLang(l) { lang = l; try { localStorage.setItem('the5th_carolina_lang', l); } catch (e) {} if (mode === 'panels') showTab(tab); }
+
   var PLACEHOLDERS = [
     'Ask The5th AI anything…', 'Ask about Fast Forward…', 'Which program fits me?…',
     'Compare Fast Forward vs The5th AI…', 'Explain pricing & fit…', 'Book a strategy call…'
@@ -911,6 +930,37 @@
       '.cw-book-done{display:flex;align-items:center;gap:12px;padding:18px 16px;}',
       '.cw-book-done b{display:block;font:700 15px "Inter";color:#fff;}',
       '.cw-book-done span{font:400 12.5px "Inter";color:var(--tx2);}',
+      // ── appearance + language controls (Account) ──
+      '.cw-seg{display:inline-flex;background:var(--bg2);border:1px solid var(--bd);border-radius:9px;padding:2px;}',
+      '.cw-seg-b{padding:5px 13px;border:none;background:transparent;color:var(--mut);font:600 12px "Inter";border-radius:7px;cursor:pointer;}',
+      '.cw-seg-b.on{background:var(--acc);color:#1a1206;}',
+      '.cw-langsel{background:var(--bg2);border:1px solid var(--bd);border-radius:9px;color:var(--tx);font:500 13px "Inter";padding:7px 10px;cursor:pointer;outline:none;}',
+      // ── light theme ──
+      '.cw-win.cw-light{--bg:#FFFFFF;--bg2:#F4F4F3;--card:#FFFFFF;--bd:rgba(0,0,0,.09);--hover:rgba(0,0,0,.045);--tx:#1A1A2E;--tx2:#57534E;--mut:#8A8075;--acc:#B0902F;--acc2:#9c7f2c;box-shadow:0 40px 100px rgba(0,0,0,.22);border-color:rgba(0,0,0,.09);}',
+      '.cw-win.cw-light h1,.cw-win.cw-light h3,.cw-win.cw-light h4,.cw-win.cw-light h5{color:var(--tx);}',
+      '.cw-win.cw-light .cw-cover-title,.cw-win.cw-light .cw-cover-cap h4,.cw-win.cw-light .cw-cover-sub{color:#fff;}',
+      '.cw-win.cw-light .cw-logo,.cw-win.cw-light .cw-h3,.cw-win.cw-light .cw-greet,.cw-win.cw-light .cw-hg2,.cw-win.cw-light .cw-chead-tx h4,.cw-win.cw-light .cw-welcome h3,.cw-win.cw-light .cw-acct-id h4,.cw-win.cw-light .cw-sc-tx b{color:var(--tx);}',
+      '.cw-win.cw-light .cw-hg1{color:rgba(0,0,0,.42);}',
+      '.cw-win.cw-light .cw-chead{background:linear-gradient(160deg,#F7F3EE,#fff);border-bottom:1px solid var(--bd);}',
+      '.cw-win.cw-light .cw-iconbtn{background:rgba(0,0,0,.05);color:var(--tx);}.cw-win.cw-light .cw-iconbtn:hover{background:rgba(0,0,0,.09);}',
+      '.cw-win.cw-light .cw-herowrap{background:radial-gradient(circle at 100% 0%,rgba(201,168,76,.16),transparent 42%),linear-gradient(180deg,#F7F3EE,#fff);}',
+      '.cw-win.cw-light .cw-herowrap::before{opacity:0;}.cw-win.cw-light .cw-herowrap::after{box-shadow:none;}',
+      '.cw-win.cw-light .cw-hero{background:linear-gradient(165deg,#F3EEF6,#FBF7FF);}',
+      '.cw-win.cw-light .cw-topbar.scrolled{background:rgba(255,255,255,.82);}',
+      '.cw-win.cw-light .cw-m.bot .cw-bub{color:var(--tx);}',
+      '.cw-win.cw-light .cw-richbody{color:#3d3d3d;}',
+      '.cw-win.cw-light .cw-nav{background:rgba(255,255,255,.92);}',
+      '.cw-win.cw-light .cw-tab.on{background:rgba(0,0,0,.05);}',
+      '.cw-win.cw-light .cw-comp{background:rgba(250,250,249,.95);}',
+      '.cw-win.cw-light .cw-in{color:var(--tx);}',
+      '.cw-win.cw-light .cw-cred{color:var(--mut);}',
+      '.cw-win.cw-light .cw-feat-sub{color:var(--acc2);}',
+      '.cw-win.cw-light .cw-book-h{background:linear-gradient(150deg,#F7F3EE,#fff);color:var(--tx);border-bottom:1px solid var(--bd);}',
+      '.cw-win.cw-light .cw-book-done b{color:var(--tx);}',
+      '.cw-win.cw-light .cw-product{background:linear-gradient(150deg,#FBF7FF,#fff);border-color:rgba(176,144,47,.25);}',
+      '.cw-win.cw-light .cw-pchip{color:#3d3d3d;background:rgba(0,0,0,.04);}',
+      '.cw-win.cw-light .cw-news{background:linear-gradient(150deg,#F7F3EE,#fff);}.cw-win.cw-light .cw-news h4,.cw-win.cw-light .cw-news p{color:var(--tx);}',
+      '.cw-win.cw-light .cw-community{background:#fff;}',
       // The5th AI product card with cover
       '.cw-product-cover{position:relative;margin:-22px -22px 18px;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}',
       '.cw-product-cover .cw-cover-emoji{position:absolute;inset:0;margin:auto;font-size:52px;align-items:center;justify-content:center;}',
@@ -1357,11 +1407,11 @@
       + '<div class="cw-tb-right">' + teamCluster(true)
       + '<button class="cw-iconbtn cw-hero-x" id="cw-home-close" aria-label="Close">' + ICON.close + '</button></div></div>';
 
-    var greet = '<div class="cw-hgreet"><span class="cw-hg1">Hello there.</span><span class="cw-hg2">How can we help?</span></div>';
+    var greet = '<div class="cw-hgreet"><span class="cw-hg1">' + esc(T('hi')) + '</span><span class="cw-hg2">' + esc(T('help')) + '</span></div>';
 
     var searchCard = '<button class="cw-searchcard" id="cw-searchcard">'
       + '<span class="cw-sc-ic">' + ICON.search + '</span>'
-      + '<span class="cw-sc-tx"><b>Ask a question</b><i>Our AI agent and team are here to help</i></span>'
+      + '<span class="cw-sc-tx"><b>' + esc(T('ask')) + '</b><i>' + esc(T('askSub')) + '</i></span>'
       + heroStack() + '</button>';
 
     var heroBlock = '<div class="cw-herowrap">' + topbar + '<div class="cw-heropad">' + greet + searchCard + '</div></div>';
@@ -1683,8 +1733,10 @@
     var prefs = '<div class="cw-sect">' + sectionTitle('Preferences')
       + '<div class="cw-alist">'
       + toggleRow(ICON.bell, 'Notifications', notifEnabled(), 'cw-notif-tg')
-      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.moon + '</span><span class="cw-arow-lb">Appearance</span><span class="cw-arow-tag">Dark</span></div>'
-      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.globe + '</span><span class="cw-arow-lb">Language</span><span class="cw-arow-tag">English</span></div>'
+      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.moon + '</span><span class="cw-arow-lb">Appearance</span>'
+      + '<span class="cw-seg"><button class="cw-seg-b' + (theme === 'dark' ? ' on' : '') + '" data-theme="dark">Dark</button><button class="cw-seg-b' + (theme === 'light' ? ' on' : '') + '" data-theme="light">Light</button></span></div>'
+      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.globe + '</span><span class="cw-arow-lb">Language</span>'
+      + '<select class="cw-langsel" id="cw-lang" aria-label="Language">' + LANGS.map(function (l) { return '<option value="' + l[0] + '"' + (lang === l[0] ? ' selected' : '') + '>' + l[1] + '</option>'; }).join('') + '</select></div>'
       + '</div></div>';
 
     var actions = '<div class="cw-sect">' + sectionTitle('Support')
@@ -1787,7 +1839,7 @@
       + '<div class="cw-comp-row" id="cw-comprow">'
       + (cfg.features.attachments ? '<button class="cw-attach" id="cw-attach" aria-label="Attach a file" title="Attach a screenshot or file">' + ICON.clip + '</button>'
         + '<input type="file" id="cw-file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" hidden />' : '')
-      + '<textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="Ask The5th AI anything…"></textarea>'
+      + '<textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="' + esc(T('ph')) + '"></textarea>'
       + '<button class="cw-send" id="cw-send" aria-label="Send" disabled>' + ICON.send + '</button></div>'
       + '<div class="cw-drop" id="cw-drop">' + ICON.clip + ' Drop files to attach</div>'
       + '<p class="cw-cred">Powered by <b>The5th AI</b> · type <b>/</b> for commands</p></div></div>';
@@ -1911,7 +1963,7 @@
     });
     renderAttChips();
     function startPh() {
-      clearPh(); if (REDUCE) return; var i = 0;
+      clearPh(); if (REDUCE || lang !== 'en') return; var i = 0;
       phTimer = setInterval(function () {
         if (document.activeElement === ta || ta.value) return;
         i = (i + 1) % PLACEHOLDERS.length; ta.classList.add('cw-ph-fade');
@@ -2157,7 +2209,7 @@
   function renderWelcome() {
     var head = document.createElement('div'); head.className = 'cw-welcome';
     head.innerHTML = '<div class="cw-wava">' + agentAva('carolina') + '</div>'
-      + '<h3>Welcome to The5th AI 👋</h3>'
+      + '<h3>' + esc(T('welcome')) + '</h3>'
       + '<p>I\'m your business advisor. I can answer questions, recommend the right program, explain what\'s included, point you to resources, and book you a strategy call — all right here. What would you like to work on?</p>';
     els.msgs.appendChild(head);
     var grid = document.createElement('div'); grid.className = 'cw-wgrid';
@@ -2209,6 +2261,7 @@
         .map(function (m) { return { role: m.role, content: m.content }; });
       var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id };
       if (viewContext) body.context = viewContext;
+      if (lang && lang !== 'en') body.lang = lang;
       // Attachments apply to the current turn only (never on the handoff request).
       if (!handoff && atts && atts.length) body.attachments = atts.map(function (a) { return { kind: a.kind, media_type: a.media_type, data: a.data }; });
       var r = await fetch(API, {
@@ -2356,6 +2409,12 @@
       notif.classList.toggle('on', on); notif.setAttribute('aria-checked', on ? 'true' : 'false');
       try { localStorage.setItem('the5th_carolina_notif', on ? '1' : '0'); } catch (e) {}
     });
+    // Account: appearance (dark/light) + language
+    els.win.querySelectorAll('[data-theme]').forEach(function (b) {
+      b.addEventListener('click', function () { setTheme(b.getAttribute('data-theme')); showTab('account'); });
+    });
+    var ls = els.win.querySelector('#cw-lang');
+    if (ls) ls.addEventListener('change', function () { setLang(ls.value); });
     // Account: clear conversations
     var clear = els.win.querySelector('#cw-clearconv');
     if (clear) clear.addEventListener('click', function () {
@@ -2432,6 +2491,7 @@
     var win = el('<div class="cw cw-win" role="dialog" aria-label="The5th assistant"></div>');
     document.body.appendChild(launcher); document.body.appendChild(win);
     els.launcher = launcher; els.win = win;
+    applyTheme();
     launcher.addEventListener('click', function () { toggle(); });
     // Cmd/Ctrl+K focuses the composer (opening the widget / a chat if needed).
     document.addEventListener('keydown', function (e) {

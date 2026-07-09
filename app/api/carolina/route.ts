@@ -367,6 +367,11 @@ export async function POST(req: NextRequest) {
     const cfg = aiConfig(settings)
     let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
 
+    // Respond in the visitor's chosen language.
+    const LANGS: Record<string, string> = { fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch' }
+    const langName = LANGS[sanitizeText(body?.lang, 6)]
+    if (langName) system += `\n\nLANGUAGE: Always respond in ${langName}, warmly and fluently, regardless of the language of the question or the content.`
+
     // ── AI Brain: intent, state, lead scoring, planning, memory + RAG ──
     const t0 = Date.now()
     const conversationId = sanitizeText(body?.conversationId, 80) || `ip:${ip}`

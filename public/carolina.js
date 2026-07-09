@@ -46,12 +46,20 @@
     return a.avatar ? '<img src="' + esc(a.avatar) + '" alt="' + esc(a.name) + '">' : '<span>' + esc(a.name.charAt(0)) + '</span>';
   }
   // Overlapping cluster of the whole team (Intercom-style faces).
-  function teamCluster() {
-    var html = '<div class="cw-team" aria-label="The5th team — online">';
+  function teamCluster(big) {
+    var html = '<div class="cw-team' + (big ? ' cw-team-lg' : '') + '" aria-label="The5th team — online">';
     ['carolina', 'natasha', 'benjamin'].forEach(function (k) {
       html += '<span class="cw-tm" title="' + esc(agentInfo(k).name) + '">' + agentAva(k) + '</span>';
     });
     return html + '<span class="cw-team-dot"></span></div>';
+  }
+  // Team faces + an AI badge — "both AI and humans are available".
+  function heroStack() {
+    var html = '<div class="cw-hstack">';
+    ['carolina', 'natasha', 'benjamin'].forEach(function (k) {
+      html += '<span class="cw-hs-face">' + agentAva(k) + '</span>';
+    });
+    return html + '<span class="cw-hs-ai" title="The5th AI">' + ICON.spark + '</span></div>';
   }
   var leadName = '';
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -500,7 +508,42 @@
       '.cw-switch{width:42px;height:24px;border-radius:999px;background:rgba(255,255,255,.14);border:none;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;padding:0;}',
       '.cw-switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s var(--sp);}',
       '.cw-switch.on{background:var(--acc);}',
-      '.cw-switch.on span{transform:translateX(18px);}'
+      '.cw-switch.on span{transform:translateX(18px);}',
+      // ── cinematic Home hero (widget) ──
+      '.cw-herowrap{position:relative;background:radial-gradient(circle at 100% 0%,rgba(255,255,255,.08),transparent 38%),radial-gradient(circle at 0% 100%,rgba(255,255,255,.045),transparent 42%),linear-gradient(180deg,#151515 0%,#111 42%,#0D0D0D 100%);}',
+      '.cw-herowrap::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.04;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27140%27 height=%27140%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%272%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E");}',
+      '.cw-herowrap::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 -46px 60px -34px rgba(0,0,0,.65);}',
+      '.cw-heropad{position:relative;z-index:1;padding:4px 20px 26px;}',
+      '.cw-brand{display:inline-flex;align-items:center;animation:cwHF .5s var(--sp) both;}',
+      '.cw-brand img{height:26px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45));}',
+      '.cw-brand{font:700 17px/1 "Inter";color:#fff;}.cw-brand b{color:var(--acc);}',
+      '.cw-tb-right{animation:cwHD .5s var(--sp) .05s both;}',
+      '.cw-team-lg .cw-tm{width:46px;height:46px;margin-left:-14px;border:3px solid rgba(255,255,255,.9);font-size:16px;}',
+      '.cw-team-lg .cw-tm:first-child{margin-left:0;}',
+      '.cw-team-lg:hover .cw-tm{transform:translateY(-1px) scale(1.04);}',
+      '.cw-team-lg .cw-team-dot{width:12px;height:12px;border:2px solid #151515;}',
+      '.cw-hero-x{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);margin-left:10px;}',
+      '.cw-hero-x:hover{background:rgba(255,255,255,.14);}',
+      '.cw-hero-x svg{transition:transform .2s var(--sp);}.cw-hero-x:hover svg{transform:rotate(3deg);}',
+      '.cw-hgreet{display:flex;flex-direction:column;margin-top:30px;animation:cwHU .55s var(--sp) .12s both;}',
+      '.cw-hg1{font:700 clamp(30px,8.6vw,40px)/0.95 "Inter";letter-spacing:-.02em;color:rgba(255,255,255,.46);}',
+      '.cw-hg2{font:800 clamp(31px,9vw,42px)/0.95 "Inter";letter-spacing:-.025em;color:#fff;margin-top:2px;}',
+      '.cw-searchcard{display:flex;align-items:center;gap:13px;width:100%;margin-top:28px;min-height:84px;padding:15px 16px;background:rgba(27,27,27,.92);border:1px solid var(--bd);border-radius:22px;box-shadow:0 18px 44px rgba(0,0,0,.45);cursor:pointer;text-align:left;animation:cwHU .55s var(--sp) .18s both;transition:transform .2s var(--sp),border-color .2s,box-shadow .2s;}',
+      '.cw-searchcard:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.32);box-shadow:0 26px 56px rgba(0,0,0,.55);}',
+      '.cw-sc-ic{width:44px;height:44px;border-radius:13px;background:rgba(201,168,76,.12);color:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+      '.cw-sc-ic svg{width:20px;height:20px;}',
+      '.cw-sc-tx{flex:1;min-width:0;display:flex;flex-direction:column;}',
+      '.cw-sc-tx b{font:700 18px/1.2 "Inter";color:#fff;}',
+      '.cw-sc-tx i{font:400 12.5px/1.35 "Inter";color:var(--tx2);font-style:normal;margin-top:3px;}',
+      '.cw-hstack{display:flex;align-items:center;flex-shrink:0;}',
+      '.cw-hs-face,.cw-hs-ai{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #1B1B1B;margin-left:-10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+      '.cw-hstack>:first-child{margin-left:0;}',
+      '.cw-hs-face{background:linear-gradient(145deg,var(--acc),#9c7f2c);color:#1a1206;font:700 12px "Inter";}',
+      '.cw-hs-face img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-hs-ai{background:linear-gradient(145deg,#2A1830,#141b2e);color:var(--acc);}.cw-hs-ai svg{width:16px;height:16px;}',
+      '@keyframes cwHF{from{opacity:0;}to{opacity:1;}}',
+      '@keyframes cwHD{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}',
+      '@keyframes cwHU{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -768,20 +811,24 @@
   }
 
   function renderHome() {
-    // Sticky compact header
-    var topbar = '<div class="cw-topbar" id="cw-topbar"><div class="cw-tb-left"><div class="cw-logo">the<b>5</b>th</div>'
-      + '<span class="cw-greet">' + greeting() + '</span></div>'
-      + '<div class="cw-tb-right">' + teamCluster() + '</div></div>';
+    // ── Cinematic hero: sticky top bar + greeting + search card ──
+    var topbar = '<div class="cw-topbar" id="cw-topbar">'
+      + '<div class="cw-tb-left"><span class="cw-brand"><img src="/logo-white2.png" alt="The5th" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'the<b>5</b>th\'" /></span></div>'
+      + '<div class="cw-tb-right">' + teamCluster(true)
+      + '<button class="cw-iconbtn cw-hero-x" id="cw-home-close" aria-label="Close">' + ICON.close + '</button></div></div>';
 
-    // Hero title + search
-    var hero = '<div class="cw-htitle"><h1>The5th AI</h1><p>Your business growth assistant</p></div>'
-      + '<div class="cw-search" id="cw-search">' + ICON.search
-      + '<input id="cw-search-in" placeholder="Ask me anything…" aria-label="Ask me anything" />'
-      + '<span class="cw-search-spark">' + ICON.spark + '</span></div>';
+    var greet = '<div class="cw-hgreet"><span class="cw-hg1">Hello there.</span><span class="cw-hg2">How can we help?</span></div>';
 
-    // Quick action pills
+    var searchCard = '<button class="cw-searchcard" id="cw-searchcard">'
+      + '<span class="cw-sc-ic">' + ICON.search + '</span>'
+      + '<span class="cw-sc-tx"><b>Ask a question</b><i>Our AI agent and team are here to help</i></span>'
+      + heroStack() + '</button>';
+
+    var heroBlock = '<div class="cw-herowrap">' + topbar + '<div class="cw-heropad">' + greet + searchCard + '</div></div>';
+
+    // Quick action pills (below the hero)
     var pills = '<div class="cw-pills">';
-    QUICK.forEach(function (q, i) {
+    QUICK.forEach(function (q) {
       var attr = q.article ? 'data-article="' + q.article + '"' : q.gotab ? 'data-gotab="' + q.gotab + '"' : 'data-seed="' + esc(q.seed) + '"';
       pills += '<button class="cw-pill" ' + attr + '>' + esc(q.label) + '</button>';
     });
@@ -846,7 +893,7 @@
       + emptyState(ICON.book, 'New content coming soon', 'Fresh guides, videos and updates will appear here.',
         '<button class="cw-btn cw-btn-ghost" data-gotab="knowledge" style="margin-top:14px">Explore Knowledge Base</button>') + '</div>';
 
-    return topbar + '<div class="cw-home">' + hero + pills + recent + announce + featured + kb + blog + success + videos + feed + '</div>';
+    return heroBlock + '<div class="cw-home">' + pills + recent + announce + featured + kb + blog + success + videos + feed + '</div>';
   }
 
   // Internal article viewer (slides in over the panels)
@@ -875,8 +922,10 @@
   // Home mount: search, pills, and the success carousel.
   // (Sticky-header + nav scroll behaviour live in attachShellScroll.)
   function mountHome() {
-    var si = els.win.querySelector('#cw-search-in');
-    if (si) si.addEventListener('keydown', function (e) { if (e.key === 'Enter' && si.value.trim()) startNewChat(si.value.trim()); });
+    var sc = els.win.querySelector('#cw-searchcard');
+    if (sc) sc.addEventListener('click', function () { startNewChat(); });
+    var hx = els.win.querySelector('#cw-home-close');
+    if (hx) hx.addEventListener('click', function () { toggle(false); });
     els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
     els.win.querySelectorAll('[data-gotab]').forEach(function (n) { n.addEventListener('click', function () { showTab(n.getAttribute('data-gotab')); }); });
     // carousel auto-advance

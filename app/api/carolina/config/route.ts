@@ -26,6 +26,7 @@ export async function GET() {
       avatar_url: settings.avatar_url || null,
       greeting: settings.greeting || null,
       agents: agents.map((a) => ({ key: a.key, name: a.name, role: a.role, avatar_url: a.avatar_url })),
+      features: { attachments: settings.features?.attachments !== false, booking: settings.features?.booking !== false },
       proactive: {
         enabled: !!settings.proactive_enabled,
         delay: settings.proactive_delay_seconds || 12,

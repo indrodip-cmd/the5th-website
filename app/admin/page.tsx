@@ -622,7 +622,7 @@ interface CarolinaMagnet {
 interface AiCfg { model: string; temperature: number; cta_threshold: number; retrieval_limit: number; max_tokens: number }
 interface CarolinaSettingsT {
   avatar_url: string | null; greeting: string | null; knowledge_base: string | null; persona: string | null
-  proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null; ai_config?: AiCfg
+  proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null; ai_config?: AiCfg; features?: Record<string, boolean>
 }
 interface CarolinaAgent { key: string; name: string; role: string | null; avatar_url: string | null }
 
@@ -859,6 +859,24 @@ function CarolinaAdmin() {
               </div>
             </div>
             <button style={{ ...btn, marginTop: 14 }} disabled={saving} onClick={() => patch({ ai_config: ai } as Partial<CarolinaSettingsT>)}>Save AI config</button>
+          </div>
+        )
+      })()}
+
+      {/* Feature flags — kill switches, no redeploy */}
+      {(() => {
+        const feat = settings.features || { attachments: true, booking: true, proactive: true, automation: true }
+        const toggle = (k: string) => { const next = { ...feat, [k]: !feat[k] }; setSettings({ ...settings, features: next }); patch({ features: next } as Partial<CarolinaSettingsT>) }
+        return (
+          <div style={card}>
+            <div style={label}>Feature Flags</div>
+            <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 14 }}>Instantly enable or disable capabilities — no deploy needed.</p>
+            {[['attachments', 'File uploads in chat'], ['booking', 'In-chat booking calendar'], ['proactive', 'Proactive popups'], ['automation', 'Automation engine']].map(([k, lbl]) => (
+              <label key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #f0f0f0' }}>
+                <span style={{ fontSize: 14, color: '#374151' }}>{lbl}</span>
+                <button onClick={() => toggle(k)} style={{ width: 42, height: 24, borderRadius: 12, border: 'none', background: feat[k] !== false ? '#2d6a4f' : '#d1d5db', cursor: 'pointer', position: 'relative' }}><span style={{ position: 'absolute', top: 3, left: feat[k] !== false ? 21 : 3, width: 18, height: 18, borderRadius: '50%', background: '#fff', transition: 'left .15s' }} /></button>
+              </label>
+            ))}
           </div>
         )
       })()}
@@ -1164,7 +1182,10 @@ function CrmAdmin() {
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
                   <div><div style={{ fontSize: 20, fontWeight: 800, color: '#0a0a0a' }}>{profile.contact.name || 'Contact'}</div><div style={{ fontSize: 13, color: '#6b7280' }}>{profile.contact.email}</div></div>
-                  <button onClick={() => setSel(null)} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontSize: 16 }}>×</button>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button title="Delete contact & all data (GDPR)" onClick={async () => { if (!confirm('Permanently delete this contact and ALL their data (activities, notes, tasks, session)? This cannot be undone.')) return; await fetch('/api/admin/crm?email=' + encodeURIComponent(profile.contact.email), { method: 'DELETE' }); setSel(null); flash('Contact erased'); load() }} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #e0a0a0', background: '#fff', cursor: 'pointer', color: '#b91c1c', fontSize: 15 }}>🗑</button>
+                    <button onClick={() => setSel(null)} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontSize: 16 }}>×</button>
+                  </div>
                 </div>
                 <div style={{ ...card, padding: 16, marginBottom: 16 }}>
                   <div style={{ display: 'flex', gap: 18, marginBottom: 14, fontSize: 13 }}>

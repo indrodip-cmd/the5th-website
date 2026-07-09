@@ -30,7 +30,9 @@ export interface CarolinaSettings {
   proactive_delay_seconds: number
   active_lead_magnet: string | null
   ai_config: AiConfig
+  features?: Record<string, boolean>
 }
+export const DEFAULT_FEATURES = { attachments: true, booking: true, proactive: true, automation: true }
 export function aiConfig(s: CarolinaSettings): AiConfig {
   return { ...DEFAULT_AI_CONFIG, ...(s.ai_config || {}) }
 }
@@ -58,6 +60,7 @@ export async function loadSettings(): Promise<CarolinaSettings> {
     proactive_delay_seconds: 12,
     active_lead_magnet: null,
     ai_config: DEFAULT_AI_CONFIG,
+    features: DEFAULT_FEATURES,
   }
 }
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { listContent, searchContent, getCategories } from '@/lib/cms'
 import { sanitizeText } from '@/lib/validation'
+import { limit, clientIp } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +10,8 @@ export const dynamic = 'force-dynamic'
    /api/carolina/content?q=funnel            (search)
    /api/carolina/content?categories=1&type=knowledge  (taxonomy) */
 export async function GET(req: NextRequest) {
+  const rl = await limit(`content:${clientIp(req)}`, 120, 60)
+  if (!rl.ok) return NextResponse.json({ error: 'Rate limited' }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } })
   const u = new URL(req.url)
   const q = sanitizeText(u.searchParams.get('q'), 120)
 

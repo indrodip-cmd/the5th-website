@@ -48,6 +48,22 @@ export async function PATCH(req: NextRequest) {
   return NextResponse.json({ ok: true })
 }
 
+/* DELETE ?email= — GDPR erasure: remove the contact and all their data. */
+export async function DELETE(req: NextRequest) {
+  if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const email = (new URL(req.url).searchParams.get('email') || '').toLowerCase()
+  if (!email) return NextResponse.json({ error: 'Missing email.' }, { status: 400 })
+  const db = getSupabaseAdmin()
+  await Promise.all([
+    db.from('crm_activities').delete().eq('contact_email', email),
+    db.from('crm_notes').delete().eq('contact_email', email),
+    db.from('crm_tasks').delete().eq('contact_email', email),
+    db.from('carolina_sessions').delete().eq('email', email),
+  ])
+  await db.from('carolina_leads').delete().eq('email', email)
+  return NextResponse.json({ ok: true })
+}
+
 /* POST: add a note to a contact. */
 export async function POST(req: NextRequest) {
   if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

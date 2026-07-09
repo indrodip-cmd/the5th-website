@@ -34,6 +34,15 @@ export async function PATCH(req: NextRequest) {
   if (typeof body.active_lead_magnet === 'string' || body.active_lead_magnet === null) {
     patch.active_lead_magnet = body.active_lead_magnet || null
   }
+  if (body.features && typeof body.features === 'object') {
+    const f = body.features as Record<string, unknown>
+    patch.features = {
+      attachments: f.attachments !== false,
+      booking: f.booking !== false,
+      proactive: f.proactive !== false,
+      automation: f.automation !== false,
+    }
+  }
   if (body.ai_config && typeof body.ai_config === 'object') {
     const c = body.ai_config as Record<string, unknown>
     patch.ai_config = {

@@ -29,7 +29,8 @@
     avatar: null,
     greeting: "Hi, I'm Carolina 👋 I help women 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?",
     proactive: { enabled: false, delay: 12, gift: { message: null }, quiz: { message: null } },
-    agents: {}
+    agents: {},
+    features: { attachments: true, booking: true }
   };
 
   // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
@@ -1784,8 +1785,8 @@
       + '<div class="cw-comp"><div class="cw-slash" id="cw-slash" role="listbox" hidden></div>'
       + '<div class="cw-atts" id="cw-atts"></div>'
       + '<div class="cw-comp-row" id="cw-comprow">'
-      + '<button class="cw-attach" id="cw-attach" aria-label="Attach a file" title="Attach a screenshot or file">' + ICON.clip + '</button>'
-      + '<input type="file" id="cw-file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" hidden />'
+      + (cfg.features.attachments ? '<button class="cw-attach" id="cw-attach" aria-label="Attach a file" title="Attach a screenshot or file">' + ICON.clip + '</button>'
+        + '<input type="file" id="cw-file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" hidden />' : '')
       + '<textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="Ask The5th AI anything…"></textarea>'
       + '<button class="cw-send" id="cw-send" aria-label="Send" disabled>' + ICON.send + '</button></div>'
       + '<div class="cw-drop" id="cw-drop">' + ICON.clip + ' Drop files to attach</div>'
@@ -1869,6 +1870,7 @@
   }
   function removeAttachment(id) { attachments = attachments.filter(function (a) { return a.id !== id; }); renderAttChips(); updateSendState(); }
   function addFiles(files) {
+    if (cfg.features && cfg.features.attachments === false) return;
     Array.prototype.slice.call(files || []).forEach(function (f) {
       if (attachments.length >= 5) { toast('You can attach up to 5 files'); return; }
       var isImg = IMG_TYPES.indexOf(f.type) !== -1, isPdf = f.type === 'application/pdf';
@@ -2097,6 +2099,7 @@
 
   // ── In-chat visual booking calendar (Part 3E) — never leaves the chat ──
   function openBooking() {
+    if (cfg.features && cfg.features.booking === false) { window.open('https://cal.com/indrodip-ghosh-ut1vxh/60min', '_blank'); return; }
     if (mode !== 'chat' || !els.msgs) startNewChat();
     appendBookingCard();
   }
@@ -2468,6 +2471,7 @@
       if (Array.isArray(d.agents)) {
         d.agents.forEach(function (a) { if (a && a.key) cfg.agents[a.key] = { name: a.name, role: a.role, avatar: a.avatar_url }; });
       }
+      if (d.features) cfg.features = { attachments: d.features.attachments !== false, booking: d.features.booking !== false };
       applyConfig();
       maybeShowPromo();
     }).catch(function () { maybeShowPromo(); });

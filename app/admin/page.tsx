@@ -1204,10 +1204,13 @@ function CrmAdmin() {
   const [toast, setToast] = useState('')
   const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
 
-  const load = useCallback(() => {
-    setLoading(true)
-    fetch('/api/admin/crm').then(r => r.ok ? r.json() : Promise.reject()).then((d: { contacts: Contact[]; pipeline: string[] }) => { setContacts(d.contacts || []); setPipeline(d.pipeline || []) }).catch(() => flash('Failed')).finally(() => setLoading(false))
+  const load = useCallback((silent?: boolean) => {
+    if (!silent) setLoading(true)
+    fetch('/api/admin/crm').then(r => r.ok ? r.json() : Promise.reject()).then((d: { contacts: Contact[]; pipeline: string[] }) => { setContacts(d.contacts || []); setPipeline(d.pipeline || []) }).catch(() => { if (!silent) flash('Failed') }).finally(() => { if (!silent) setLoading(false) })
   }, [])
+  // Silent, stable refresh used after the cal.com sync (never toggles the
+  // full-page loader, so CallsBooked isn't unmounted → no reload loop).
+  const refresh = useCallback(() => load(true), [load])
   useEffect(() => { load() }, [load])
   const openProfile = (email: string) => { setSel(email); setProfile(null); setEmailOpen(false); setInsights(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(d => { setProfile(d); setEdit({ name: d.contact?.name, company: d.contact?.company, country: d.contact?.country, interest: d.contact?.interest, revenue: d.contact?.revenue || 0 }) }) }
   const patchContact = async (email: string, body: Record<string, unknown>, silent?: boolean) => {
@@ -1278,7 +1281,7 @@ function CrmAdmin() {
           </div>
         )
       })()}
-      <CallsBooked onOpen={openProfile} onSynced={load} />
+      <CallsBooked onOpen={openProfile} onSynced={refresh} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: 6, background: '#eef0ee', borderRadius: 9, padding: 3 }}>
           {(['board', 'table'] as const).map(v => <button key={v} onClick={() => setView(v)} style={{ padding: '7px 16px', borderRadius: 7, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: view === v ? '#fff' : 'transparent', color: view === v ? '#225840' : '#6b7280', boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none' }}>{v === 'board' ? 'Pipeline' : 'Table'}</button>)}

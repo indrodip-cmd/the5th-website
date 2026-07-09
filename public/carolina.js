@@ -63,6 +63,19 @@
   }
   var leadName = '';
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  // Respect the OS "reduce motion" setting — disables scale/slide/streaming.
+  var REDUCE = false;
+  try { REDUCE = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+  function shake(el) { if (!el || REDUCE) return; el.classList.remove('cw-shake'); void el.offsetWidth; el.classList.add('cw-shake'); }
+  // Cascading entrance for the cards in a freshly-rendered panel.
+  function staggerIn(root) {
+    if (REDUCE) return;
+    var nodes = root.querySelectorAll('.cw-home > .cw-sect > .cw-feat, .cw-home .cw-kbcard, .cw-home .cw-conv, .cw-home .cw-anc, .cw-home .cw-acard, .cw-home .cw-vcard, .cw-home .cw-carousel, .cw-home .cw-empty');
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].style.animationDelay = Math.min(i, 10) * 40 + 'ms';
+      nodes[i].classList.add('cw-rise');
+    }
+  }
 
   // ── State ──
   var store = { conversations: [], activeId: null };
@@ -543,7 +556,34 @@
       '.cw-hs-ai{background:linear-gradient(145deg,#2A1830,#141b2e);color:var(--acc);}.cw-hs-ai svg{width:16px;height:16px;}',
       '@keyframes cwHF{from{opacity:0;}to{opacity:1;}}',
       '@keyframes cwHD{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}',
-      '@keyframes cwHU{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}'
+      '@keyframes cwHU{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}',
+      // ── Part 2A4 global motion system ──
+      '.cw{--sp-soft:cubic-bezier(.2,.8,.3,1);--t-fast:.14s;--t-med:.22s;--t-slow:.32s;}',
+      // cascading card entrance
+      '.cw-rise{opacity:0;animation:cwRise .44s var(--sp) both;}',
+      '@keyframes cwRise{from{opacity:0;transform:translateY(8px) scale(.985);}to{opacity:1;transform:none;}}',
+      // streaming AI text cursor
+      '.cw-cursor{display:inline-block;width:2px;height:1em;background:var(--acc);margin-left:1px;vertical-align:text-bottom;border-radius:1px;animation:cwBlink 1s steps(1) infinite;}',
+      '@keyframes cwBlink{50%{opacity:0;}}',
+      // directional chat bubbles (assistant from left, user from right)
+      '.cw-m.bot{animation:cwBubL .22s var(--sp);}',
+      '.cw-m.user{animation:cwBubR .22s var(--sp);}',
+      '@keyframes cwBubL{from{opacity:0;transform:translateX(-10px) translateY(4px);}to{opacity:1;transform:none;}}',
+      '@keyframes cwBubR{from{opacity:0;transform:translateX(10px) translateY(4px);}to{opacity:1;transform:none;}}',
+      // error shake
+      '.cw-shake{animation:cwShake .4s var(--sp);}',
+      '@keyframes cwShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-4px);}40%{transform:translateX(4px);}60%{transform:translateX(-3px);}80%{transform:translateX(2px);}}',
+      // tactile press
+      '.cw-btn:active,.cw-feat:active,.cw-card:active,.cw-searchcard:active,.cw-pill:active,.cw-chip:active,.cw-cat:active,.cw-acard:active,.cw-vcard:active,.cw-conv:active,.cw-kitem:active,.cw-arow:active{transform:scale(.98);}',
+      // meaningful cursors
+      '.cw button:disabled,.cw [aria-disabled="true"]{cursor:not-allowed;}',
+      '.cw-feat,.cw-card,.cw-conv,.cw-kitem,.cw-searchcard,.cw-vcard,.cw-acard{cursor:pointer;}',
+      // success (checkmark draws itself)
+      '.cw-success{display:flex;align-items:center;gap:9px;align-self:flex-start;margin:2px 0 2px 35px;color:#4ade80;font:600 13px "Inter";}',
+      '.cw-check{width:26px;height:26px;flex-shrink:0;}',
+      '.cw-check-c{fill:none;stroke:#4ade80;stroke-width:3;stroke-dasharray:150;stroke-dashoffset:150;animation:cwDraw .5s var(--sp) forwards;}',
+      '.cw-check-p{fill:none;stroke:#4ade80;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:cwDraw .4s var(--sp) .35s forwards;}',
+      '@keyframes cwDraw{to{stroke-dashoffset:0;}}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -675,6 +715,7 @@
     wirePanels();
     wireActions(els.win);
     if (t === 'home') mountHome();
+    staggerIn(view);
   }
 
   function sectionTitle(t) { return '<h3 class="cw-h3">' + esc(t) + '</h3>'; }
@@ -1133,6 +1174,28 @@
     els.msgs.appendChild(wrap);
     if (!noScroll) scrollChat();
   }
+  // Progressive "streaming" reveal for assistant replies — grows smoothly,
+  // blinking cursor, then settles. Falls back to instant on reduced-motion.
+  function streamBotMsg(text, agentKey) {
+    return new Promise(function (resolve) {
+      var wrap = document.createElement('div');
+      wrap.className = 'cw-m bot';
+      wrap.innerHTML = '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div><div class="cw-bub"></div>';
+      var bub = wrap.querySelector('.cw-bub');
+      els.msgs.appendChild(wrap); scrollChat();
+      if (REDUCE || text.length < 3) { bub.innerHTML = renderMd(text); scrollChat(); return resolve(); }
+      bub.classList.add('cw-streaming');
+      var tokens = text.split(/(\s+)/); var i = 0, acc = '';
+      (function step() {
+        if (i >= tokens.length) { bub.classList.remove('cw-streaming'); bub.innerHTML = renderMd(text); scrollChat(); return resolve(); }
+        acc += tokens[i++];
+        bub.innerHTML = renderMd(acc) + '<span class="cw-cursor"></span>';
+        scrollChat();
+        setTimeout(step, 16 + Math.random() * 34);
+      })();
+    });
+  }
+
   // "Benjamin joined the chat" system separator.
   function addJoinSeparator(agentKey, noScroll) {
     var a = agentInfo(agentKey);
@@ -1140,6 +1203,12 @@
     row.innerHTML = '<span class="cw-join-ava">' + agentAva(agentKey) + '</span><span class="cw-join-tx"><b>' + esc(a.name) + '</b> joined the chat</span>';
     els.msgs.appendChild(row);
     if (!noScroll) scrollChat();
+  }
+  // Animated "booked" confirmation (checkmark draws itself).
+  function addSuccessCheck() {
+    var row = document.createElement('div'); row.className = 'cw-success';
+    row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
+    els.msgs.appendChild(row); scrollChat();
   }
   function renderChips() {
     var chips = ['Tell me about the programs', 'Book a call', 'Take the free quiz'];
@@ -1202,14 +1271,15 @@
     addJoinSeparator(to);
     await wait(500); showTyping(to); await wait(1500); hideTyping();
     var greet = joinGreeting(to, leadName);
-    addBotMsg(greet, false, to); conv.messages.push({ role: 'assistant', content: greet, agent: to }); saveStore();
+    await streamBotMsg(greet, to); conv.messages.push({ role: 'assistant', content: greet, agent: to }); saveStore();
     // Pause as if reading, then fetch the real answer from the new agent.
     await wait(700); showTyping(to); await wait(2200);
     var res = await callApi(conv, true);
     hideTyping();
     if (!res || res.error) { addBotMsg((res && res.error) || "Sorry, I hit a snag — could you say that again?", false, to); return; }
     var reply = res.reply || 'How can I help?';
-    addBotMsg(reply, false, to); conv.messages.push({ role: 'assistant', content: reply, agent: to }); conv.updatedAt = Date.now(); saveStore();
+    await streamBotMsg(reply, to); conv.messages.push({ role: 'assistant', content: reply, agent: to }); conv.updatedAt = Date.now(); saveStore();
+    if (res.booked) addSuccessCheck();
     handleActions(res.actions);
   }
 
@@ -1224,15 +1294,18 @@
     showTyping(conv.agent);
     var res = await callApi(conv, false);
     hideTyping();
-    if (!res || res.error) { addBotMsg((res && res.error) || "I couldn't reach the team just now — mind trying again in a moment?", false, conv.agent); }
-    else if (res.transfer && res.transfer.to) {
+    if (!res || res.error) {
+      addBotMsg((res && res.error) || "I couldn't reach the team just now — mind trying again in a moment?", false, conv.agent);
+      shake(els.win.querySelector('.cw-comp-row'));
+    } else if (res.transfer && res.transfer.to) {
       // Current agent's short handoff line, then the human transfer sequence.
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
-      addBotMsg(line, false, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
+      await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
       await doTransfer(conv, res.transfer);
     } else {
       var reply = res.reply || "I'm here — how can I help?";
-      addBotMsg(reply, false, conv.agent); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent }); conv.updatedAt = Date.now(); saveStore();
+      await streamBotMsg(reply, conv.agent); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent }); conv.updatedAt = Date.now(); saveStore();
+      if (res.booked) addSuccessCheck();
       handleActions(res.actions);
     }
     sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus();

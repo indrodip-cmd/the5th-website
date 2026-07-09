@@ -5,6 +5,7 @@
    no orchestration logic lives in the frontend. */
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { retrieve, type Source } from '@/lib/retrieval'
+import { loadScenario, scenarioBlock } from '@/lib/playbook'
 
 export interface Session {
   conversation_id: string
@@ -115,6 +116,10 @@ export async function orchestrate(opts: {
   // Response planning — computed hints steer the LLM (no extra model call).
   const parts: string[] = []
   parts.push(`CONVERSATION STATE: ${state}. Detected intent: ${intent}. This is turn ${turns}.`)
+
+  // Playbook scenario for this intent (admin-editable behaviour).
+  const scenario = await loadScenario(intent)
+  if (scenario) parts.push(scenarioBlock(scenario))
 
   const profile = await knownProfile(session.email)
   if (profile) parts.push(`YOU ALREADY KNOW THIS VISITOR (${profile}). Do not re-ask what you already know; build on it.`)

@@ -1362,11 +1362,92 @@ function AutomationsAdmin() {
   )
 }
 
+/* ─── Conversation Playbook ─── */
+interface Scenario { id?: string; name: string; intent: string; objective: string; tone: string; gather: string; recommend: string; escalation: string; enabled: boolean; priority: number }
+function PlaybookAdmin() {
+  const [scenarios, setScenarios] = useState<Scenario[]>([])
+  const [intents, setIntents] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [edit, setEdit] = useState<Scenario | null>(null)
+  const [toast, setToast] = useState('')
+  const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/playbook').then(r => r.ok ? r.json() : Promise.reject()).then(d => { setScenarios(d.scenarios || []); setIntents(d.intents || []) }).catch(() => flash('Failed')).finally(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+  const save = async (s: Scenario) => {
+    const r = await fetch('/api/admin/playbook', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(s) })
+    const d = await r.json(); if (!r.ok) return flash(d.error || 'Save failed')
+    flash('Saved ✓'); setEdit(null); load()
+  }
+  const del = async (id: string) => { if (!confirm('Delete scenario?')) return; await fetch('/api/admin/playbook?id=' + id, { method: 'DELETE' }); load() }
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, padding: 22, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const field: React.CSSProperties = { width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 13.5, fontFamily: 'inherit', padding: '9px 11px', outline: 'none', color: '#0a0a0a', background: '#fff', marginBottom: 12 }
+  const lbl: React.CSSProperties = { fontSize: 12.5, fontWeight: 700, color: '#374151', margin: '2px 0 5px', display: 'block' }
+  const btn: React.CSSProperties = { padding: '9px 18px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }
+  if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading playbook…</div>
+
+  if (edit) {
+    const e = edit; const set = (p: Partial<Scenario>) => setEdit({ ...e, ...p })
+    return (
+      <div>
+        {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 18 }}>
+          <button onClick={() => setEdit(null)} style={{ ...btn, background: '#eef2ee', color: '#225840' }}>← Back</button>
+          <button onClick={() => save(e)} style={btn}>Save scenario</button>
+        </div>
+        <div style={card}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
+            <div><label style={lbl}>Name</label><input value={e.name} onChange={ev => set({ name: ev.target.value })} style={field} /></div>
+            <div><label style={lbl}>Intent (trigger)</label><select value={e.intent} onChange={ev => set({ intent: ev.target.value })} style={field}>{intents.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
+          </div>
+          <label style={lbl}>Objective</label><textarea value={e.objective || ''} onChange={ev => set({ objective: ev.target.value })} rows={2} style={{ ...field, resize: 'vertical' }} />
+          <label style={lbl}>Tone</label><input value={e.tone || ''} onChange={ev => set({ tone: ev.target.value })} style={field} />
+          <label style={lbl}>Information to gather</label><input value={e.gather || ''} onChange={ev => set({ gather: ev.target.value })} style={field} />
+          <label style={lbl}>What to recommend</label><textarea value={e.recommend || ''} onChange={ev => set({ recommend: ev.target.value })} rows={2} style={{ ...field, resize: 'vertical' }} />
+          <label style={lbl}>Escalation rules</label><input value={e.escalation || ''} onChange={ev => set({ escalation: ev.target.value })} style={field} />
+          <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}><input type="checkbox" checked={e.enabled} onChange={ev => set({ enabled: ev.target.checked })} /> Enabled</label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151' }}>Priority <input type="number" value={e.priority || 0} onChange={ev => set({ priority: Number(ev.target.value) })} style={{ ...field, width: 80, marginBottom: 0 }} /></label>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
+        <p style={{ fontSize: 13, color: '#6b7280', margin: 0, maxWidth: 640, lineHeight: 1.6 }}>How the AI behaves per scenario. The orchestrator injects the matching scenario (by detected intent) into every conversation — edit here, no code.</p>
+        <button onClick={() => setEdit({ name: '', intent: intents[0] || 'general', objective: '', tone: '', gather: '', recommend: '', escalation: '', enabled: true, priority: 0 })} style={btn}>+ New scenario</button>
+      </div>
+      <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+          <thead><tr style={{ background: '#0a1a0f' }}>{['Scenario', 'Intent', 'Objective', 'On', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase' }}>{c}</th>)}</tr></thead>
+          <tbody>
+            {scenarios.length === 0 ? <tr><td colSpan={5} style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>No scenarios.</td></tr> : scenarios.map((s, i) => (
+              <tr key={s.id} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
+                <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a0a0a' }}>{s.name}</td>
+                <td style={{ padding: '12px 16px', color: '#6b7280' }}>{s.intent}</td>
+                <td style={{ padding: '12px 16px', color: '#6b7280', maxWidth: 340, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.objective}</td>
+                <td style={{ padding: '12px 16px' }}>{s.enabled ? <span style={{ color: '#225840', fontWeight: 700 }}>●</span> : <span style={{ color: '#d1d5db' }}>○</span>}</td>
+                <td style={{ padding: '12px 16px', display: 'flex', gap: 8 }}><button onClick={() => setEdit(s)} style={{ ...btn, padding: '6px 14px', fontSize: 12 }}>Edit</button><button onClick={() => del(s.id!)} style={{ padding: '6px 12px', background: '#fff', border: '1px solid #e0a0a0', borderRadius: 6, color: '#b91c1c', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Delete</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 /* ─── AdminPage ─── */
 export default function AdminPage() {
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content' | 'crm' | 'automations'>('overview')
+  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content' | 'crm' | 'automations' | 'playbook'>('overview')
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -1443,12 +1524,12 @@ export default function AdminPage() {
           <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '.04em' }}>Command Center</span>
         </div>
         <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4 }}>
-          {(['overview', 'leads', 'crm', 'carolina', 'content', 'automations'] as const).map(t => (
+          {(['overview', 'leads', 'crm', 'carolina', 'content', 'automations', 'playbook'] as const).map(t => (
             <button
               key={t} onClick={() => setTab(t)} className="tab-btn"
               style={{ background: tab === t ? '#2d6a4f' : 'transparent', color: tab === t ? '#fff' : 'rgba(255,255,255,0.6)' }}
             >
-              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'crm' ? 'CRM' : t === 'carolina' ? 'Carolina' : t === 'content' ? 'Content' : 'Automations'}
+              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'crm' ? 'CRM' : t === 'carolina' ? 'Carolina' : t === 'content' ? 'Content' : t === 'automations' ? 'Automations' : 'Playbook'}
             </button>
           ))}
         </div>
@@ -1468,6 +1549,8 @@ export default function AdminPage() {
           <CrmAdmin />
         ) : tab === 'automations' ? (
           <AutomationsAdmin />
+        ) : tab === 'playbook' ? (
+          <PlaybookAdmin />
         ) : (
           <>
             <div style={{ display: 'flex', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>

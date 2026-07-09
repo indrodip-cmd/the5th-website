@@ -8,6 +8,7 @@ import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagnet } from '@/lib/carolina-config'
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
+import { MASTER_PLAYBOOK } from '@/lib/playbook'
 import { logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
@@ -99,6 +100,7 @@ function buildSystem(opts: {
   parts.push(
     `SALES-CONCIERGE FRAMEWORK: Guide every conversation through — understand their situation → educate → build trust (the guarantee and real client outcomes, never fabricated) → recommend the right fit → invite the natural next step (usually the free assessment or a strategy call) → keep helping. Discover their business, goal and where they are now conversationally (never a form) and save it with save_lead as you learn it. Only suggest a call at genuine high-intent moments (comparing options, fit/implementation questions, ready to move) — never pushy, never mid-thought. Keep everything INSIDE this chat: use show_card for programs and booking rather than sending them to the website.`
   )
+  parts.push(MASTER_PLAYBOOK)
   if (opts.context) parts.push(`CURRENT CONTEXT: The visitor is viewing "${opts.context}" inside the chat. Answer questions about it directly without asking what they're referring to.`)
   if (opts.kb) parts.push(opts.kb)
   if (opts.magnet && a.canBook) {

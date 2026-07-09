@@ -1111,7 +1111,8 @@ function OpsDashboard() {
 }
 
 /* ─── CRM ─── */
-interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; updated_at: string }
+interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; updated_at: string; company?: string | null; country?: string | null }
+interface Insights { summary: string; signals: string[]; next_action: string; email_draft: { subject: string; body: string } }
 interface Activity { id: string; type: string; title: string | null; detail: string | null; created_at: string }
 interface Note { id: string; body: string; author: string | null; created_at: string }
 const STAGE_LABEL: Record<string, string> = { new: 'New', qualified: 'Qualified', discovery: 'Discovery', call_booked: 'Call booked', call_completed: 'Call done', proposal: 'Proposal', won: 'Won', lost: 'Lost', customer: 'Customer' }
@@ -1120,10 +1121,16 @@ function CrmAdmin() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [pipeline, setPipeline] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
+  const [view, setView] = useState<'board' | 'table'>('board')
   const [sel, setSel] = useState<string | null>(null)
   const [profile, setProfile] = useState<{ contact: Contact; activities: Activity[]; notes: Note[] } | null>(null)
   const [note, setNote] = useState('')
   const [q, setQ] = useState('')
+  const [edit, setEdit] = useState<Partial<Contact>>({})
+  const [emailOpen, setEmailOpen] = useState(false)
+  const [emSub, setEmSub] = useState(''); const [emBody, setEmBody] = useState(''); const [sending, setSending] = useState(false)
+  const [insights, setInsights] = useState<Insights | null>(null); const [insBusy, setInsBusy] = useState(false)
+  const [drag, setDrag] = useState<string | null>(null)
   const [toast, setToast] = useState('')
   const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
 
@@ -1132,48 +1139,96 @@ function CrmAdmin() {
     fetch('/api/admin/crm').then(r => r.ok ? r.json() : Promise.reject()).then((d: { contacts: Contact[]; pipeline: string[] }) => { setContacts(d.contacts || []); setPipeline(d.pipeline || []) }).catch(() => flash('Failed')).finally(() => setLoading(false))
   }, [])
   useEffect(() => { load() }, [load])
-  const openProfile = (email: string) => { setSel(email); setProfile(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(setProfile) }
-  const setStage = async (email: string, stage: string) => {
-    await fetch('/api/admin/crm', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, pipeline_stage: stage }) })
-    flash('Stage updated'); load(); if (sel === email) openProfile(email)
+  const openProfile = (email: string) => { setSel(email); setProfile(null); setEmailOpen(false); setInsights(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(d => { setProfile(d); setEdit({ name: d.contact?.name, company: d.contact?.company, country: d.contact?.country, interest: d.contact?.interest }) }) }
+  const patchContact = async (email: string, body: Record<string, unknown>, silent?: boolean) => {
+    // optimistic
+    setContacts(cs => cs.map(c => c.email === email ? { ...c, ...body } as Contact : c))
+    await fetch('/api/admin/crm', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, ...body }) })
+    if (!silent) flash('Saved ✓')
   }
-  const addNote = async () => {
-    if (!sel || !note.trim()) return
-    await fetch('/api/admin/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel, body: note }) })
-    setNote(''); openProfile(sel)
+  const setStage = async (email: string, stage: string) => { await patchContact(email, { pipeline_stage: stage }, true); if (sel === email) openProfile(email) }
+  const saveFields = async () => { if (!sel) return; await patchContact(sel, edit); openProfile(sel) }
+  const addNote = async () => { if (!sel || !note.trim()) return; await fetch('/api/admin/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel, body: note }) }); setNote(''); openProfile(sel) }
+  const sendEmail = async () => {
+    if (!sel || !emSub.trim() || !emBody.trim()) return
+    setSending(true)
+    const r = await fetch('/api/admin/crm/email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel, subject: emSub, body: emBody }) })
+    const d = await r.json(); setSending(false)
+    if (r.ok) { flash('Email sent ✓'); setEmailOpen(false); setEmSub(''); setEmBody(''); openProfile(sel) } else flash(d.error || 'Send failed')
+  }
+  const runInsights = async () => {
+    if (!sel) return; setInsBusy(true); setInsights(null)
+    const r = await fetch('/api/admin/crm/insights', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel }) })
+    const d = await r.json(); setInsBusy(false)
+    if (r.ok) setInsights(d.insights); else flash(d.error || 'AI failed')
   }
 
   const card: React.CSSProperties = { background: '#fff', borderRadius: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const inp: React.CSSProperties = { width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 11px', fontSize: 13, fontFamily: 'inherit', marginBottom: 8, color: '#0a0a0a' }
   const chip = (s: string) => <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: s === 'won' || s === 'customer' ? '#e8f0ea' : s === 'lost' ? '#fdeaea' : s === 'call_booked' ? '#e0f2fe' : '#f3f4f6', color: s === 'won' || s === 'customer' ? '#225840' : s === 'lost' ? '#b91c1c' : '#374151' }}>{STAGE_LABEL[s] || s}</span>
   const fmt = (d: string) => { try { return new Date(d).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) } catch { return d } }
 
   if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading CRM…</div>
   const shown = q ? contacts.filter(c => (c.name || '').toLowerCase().includes(q.toLowerCase()) || c.email.toLowerCase().includes(q.toLowerCase())) : contacts
+  const stageColor = (s: string) => s === 'won' || s === 'customer' ? '#225840' : s === 'lost' ? '#b91c1c' : s === 'call_booked' ? '#0369a1' : '#6b7280'
 
   return (
     <div>
       {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
       <OpsDashboard />
-      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.05em', color: '#225840', textTransform: 'uppercase', marginBottom: 12 }}>Contacts</div>
-      <input placeholder="Search name or email…" value={q} onChange={e => setQ(e.target.value)} style={{ padding: '10px 16px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, width: 320, marginBottom: 14, background: '#fff', color: '#0a0a0a' }} />
-      <div style={{ ...card, overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-          <thead><tr style={{ background: '#0a1a0f' }}>{['Contact', 'Interest', 'Score', 'Stage', 'Updated', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
-          <tbody>
-            {shown.length === 0 ? <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No contacts yet — they appear as visitors chat.</td></tr> :
-              shown.map((c, i) => (
-                <tr key={c.email} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
-                  <td style={{ padding: '12px 16px' }}><div style={{ fontWeight: 600, color: '#0a0a0a' }}>{c.name || '—'}</div><div style={{ fontSize: 12, color: '#6b7280' }}>{c.email}</div></td>
-                  <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#374151' }}>{c.lead_score}</td>
-                  <td style={{ padding: '12px 16px' }}>{chip(c.pipeline_stage)}</td>
-                  <td style={{ padding: '12px 16px', color: '#9ca3af', fontSize: 12 }}>{fmt(c.updated_at)}</td>
-                  <td style={{ padding: '12px 16px' }}><button onClick={() => openProfile(c.email)} style={{ padding: '6px 14px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Open</button></td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 6, background: '#eef0ee', borderRadius: 9, padding: 3 }}>
+          {(['board', 'table'] as const).map(v => <button key={v} onClick={() => setView(v)} style={{ padding: '7px 16px', borderRadius: 7, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: view === v ? '#fff' : 'transparent', color: view === v ? '#225840' : '#6b7280', boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none' }}>{v === 'board' ? 'Pipeline' : 'Table'}</button>)}
+        </div>
+        <input placeholder="Search name or email…" value={q} onChange={e => setQ(e.target.value)} style={{ padding: '10px 16px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, width: 300, background: '#fff', color: '#0a0a0a' }} />
       </div>
+
+      {view === 'board' ? (
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 12 }}>
+          {pipeline.map(stage => {
+            const items = shown.filter(c => (c.pipeline_stage || 'new') === stage)
+            return (
+              <div key={stage} onDragOver={e => e.preventDefault()} onDrop={() => { if (drag) { setStage(drag, stage); setDrag(null) } }}
+                style={{ minWidth: 232, width: 232, flexShrink: 0, background: '#f1f3f1', borderRadius: 12, padding: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '4px 6px 10px', fontSize: 12, fontWeight: 700, color: stageColor(stage), textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: stageColor(stage) }} />{STAGE_LABEL[stage] || stage} <span style={{ color: '#9ca3af', fontWeight: 600 }}>{items.length}</span>
+                </div>
+                {items.map(c => (
+                  <div key={c.email} draggable onDragStart={() => setDrag(c.email)} onDragEnd={() => setDrag(null)} onClick={() => openProfile(c.email)}
+                    style={{ background: '#fff', borderRadius: 10, padding: '11px 12px', marginBottom: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #eee', cursor: 'grab' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                      <div style={{ fontWeight: 600, fontSize: 13.5, color: '#0a0a0a' }}>{c.name || c.email.split('@')[0]}</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#9ca3af' }}>{c.lead_score}</div>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: '#6b7280', marginTop: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.interest || c.email}</div>
+                    {c.call_booked && <div style={{ marginTop: 6, fontSize: 10.5, fontWeight: 700, color: '#0369a1' }}>📅 Call booked</div>}
+                  </div>
+                ))}
+                {items.length === 0 && <div style={{ padding: 14, textAlign: 'center', color: '#b8bdb8', fontSize: 12 }}>—</div>}
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <div style={{ ...card, overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+            <thead><tr style={{ background: '#0a1a0f' }}>{['Contact', 'Interest', 'Score', 'Stage', 'Updated', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
+            <tbody>
+              {shown.length === 0 ? <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No contacts yet — they appear as visitors chat.</td></tr> :
+                shown.map((c, i) => (
+                  <tr key={c.email} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
+                    <td style={{ padding: '12px 16px' }}><div style={{ fontWeight: 600, color: '#0a0a0a' }}>{c.name || '—'}</div><div style={{ fontSize: 12, color: '#6b7280' }}>{c.email}</div></td>
+                    <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#374151' }}>{c.lead_score}</td>
+                    <td style={{ padding: '12px 16px' }}>{chip(c.pipeline_stage)}</td>
+                    <td style={{ padding: '12px 16px', color: '#9ca3af', fontSize: 12 }}>{fmt(c.updated_at)}</td>
+                    <td style={{ padding: '12px 16px' }}><button onClick={() => openProfile(c.email)} style={{ padding: '6px 14px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Open</button></td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {sel && (
         <div onClick={() => setSel(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 250, display: 'flex', justifyContent: 'flex-end' }}>
@@ -1198,6 +1253,38 @@ function CrmAdmin() {
                     {pipeline.map(s => <button key={s} onClick={() => setStage(profile.contact.email, s)} style={{ padding: '6px 11px', borderRadius: 999, border: `1px solid ${profile.contact.pipeline_stage === s ? '#2d6a4f' : '#e0e0e0'}`, background: profile.contact.pipeline_stage === s ? '#e8f0ea' : '#fff', color: profile.contact.pipeline_stage === s ? '#225840' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>{STAGE_LABEL[s] || s}</button>)}
                   </div>
                 </div>
+                <div style={{ ...card, padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Details</div>
+                  <input value={edit.name || ''} onChange={e => setEdit({ ...edit, name: e.target.value })} placeholder="Name" style={inp} />
+                  <div style={{ display: 'flex', gap: 8 }}><input value={edit.company || ''} onChange={e => setEdit({ ...edit, company: e.target.value })} placeholder="Company" style={inp} /><input value={edit.country || ''} onChange={e => setEdit({ ...edit, country: e.target.value })} placeholder="Country" style={inp} /></div>
+                  <input value={edit.interest || ''} onChange={e => setEdit({ ...edit, interest: e.target.value })} placeholder="Interest / goal" style={inp} />
+                  <button onClick={saveFields} style={{ padding: '8px 16px', background: '#eef2ee', border: 'none', borderRadius: 8, color: '#225840', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Save details</button>
+                </div>
+
+                <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+                  <button onClick={() => setEmailOpen(o => !o)} style={{ flex: 1, padding: '10px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>✉ Send email</button>
+                  <button onClick={runInsights} disabled={insBusy} style={{ flex: 1, padding: '10px', background: '#2E1A35', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>{insBusy ? 'Analysing…' : '✨ AI insights'}</button>
+                </div>
+
+                {emailOpen && (
+                  <div style={{ ...card, padding: 16, marginBottom: 16 }}>
+                    <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Compose email → {profile.contact.email}</div>
+                    <input value={emSub} onChange={e => setEmSub(e.target.value)} placeholder="Subject" style={inp} />
+                    <textarea value={emBody} onChange={e => setEmBody(e.target.value)} placeholder="Write your message…" rows={6} style={{ ...inp, resize: 'vertical' }} />
+                    <button onClick={sendEmail} disabled={sending} style={{ padding: '9px 18px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>{sending ? 'Sending…' : 'Send email'}</button>
+                  </div>
+                )}
+
+                {insights && (
+                  <div style={{ ...card, padding: 16, marginBottom: 16, background: '#faf7ff', borderColor: '#e6ddf5' }}>
+                    <div style={{ fontSize: 11, color: '#6b21a8', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>✨ AI insights</div>
+                    <div style={{ fontSize: 13.5, color: '#374151', lineHeight: 1.6, marginBottom: 10 }}>{insights.summary}</div>
+                    {insights.signals?.length > 0 && <ul style={{ margin: '0 0 10px', paddingLeft: 18, fontSize: 13, color: '#6b7280' }}>{insights.signals.map((s, i) => <li key={i}>{s}</li>)}</ul>}
+                    {insights.next_action && <div style={{ fontSize: 13, color: '#0a0a0a', background: '#fff', border: '1px solid #e6ddf5', borderRadius: 8, padding: '10px 12px', marginBottom: 10 }}><b>Next action:</b> {insights.next_action}</div>}
+                    {insights.email_draft && <button onClick={() => { setEmSub(insights.email_draft.subject); setEmBody(insights.email_draft.body); setEmailOpen(true) }} style={{ padding: '8px 14px', background: '#6b21a8', border: 'none', borderRadius: 8, color: '#fff', fontSize: 12.5, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Use AI email draft →</button>}
+                  </div>
+                )}
+
                 <div style={{ ...card, padding: 16, marginBottom: 16 }}>
                   <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Notes</div>
                   <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Add a note…" rows={2} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 11px', fontSize: 13, fontFamily: 'inherit', resize: 'vertical' }} />

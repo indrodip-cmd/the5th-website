@@ -39,6 +39,12 @@ export async function PATCH(req: NextRequest) {
   if (typeof b.pipeline_stage === 'string' && PIPELINE.includes(b.pipeline_stage)) patch.pipeline_stage = b.pipeline_stage
   if (Array.isArray(b.tags)) patch.tags = b.tags.slice(0, 20).map((t: unknown) => sanitizeText(t, 40)).filter(Boolean)
   if (typeof b.status === 'string') patch.status = sanitizeText(b.status, 40)
+  if (typeof b.name === 'string') patch.name = sanitizeText(b.name, 120) || null
+  if (typeof b.company === 'string') patch.company = sanitizeText(b.company, 160) || null
+  if (typeof b.country === 'string') patch.country = sanitizeText(b.country, 80) || null
+  if (typeof b.interest === 'string') patch.interest = sanitizeText(b.interest, 200) || null
+  if (typeof b.owner === 'string') patch.owner = sanitizeText(b.owner, 120) || null
+  if (Number.isFinite(b.lead_score)) patch.lead_score = Math.max(0, Math.round(b.lead_score))
   const { error } = await getSupabaseAdmin().from('carolina_leads').update(patch).eq('email', email)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   if (patch.pipeline_stage) {

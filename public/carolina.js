@@ -102,6 +102,10 @@
   var phTimer = null;                           // rotating composer placeholder
   var histIndex = -1;                           // composer prompt history cursor
   var slashIndex = 0;                           // slash-command menu selection
+  var attachments = [];                         // pending composer attachments
+  var IMG_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+  var MAX_FILE = 7 * 1024 * 1024;               // 7MB
+  function fmtSize(n) { return n < 1024 * 1024 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
 
   var PLACEHOLDERS = [
     'Ask The5th AI anything…', 'Ask about Fast Forward…', 'Which program fits me?…',
@@ -222,7 +226,9 @@
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
     refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>',
     up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v3h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>',
-    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 4H17"/></svg>'
+    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 4H17"/></svg>',
+    clip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.6 1.6 0 0 1-2.3-2.3l7.8-7.8"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>'
   };
 
   function avatarInner() {
@@ -782,7 +788,30 @@
       '.cw-comp{position:relative;background:rgba(20,20,20,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));}',
       '.cw-comp-row{min-height:54px;border-radius:20px;align-items:flex-end;padding:7px 7px 7px 16px;transition:border-color .2s var(--sp),box-shadow .2s;}',
       '.cw-comp-row:focus-within{border-color:rgba(201,168,76,.45);box-shadow:0 0 0 4px rgba(201,168,76,.1);}',
-      '.cw-in{font-size:15px;line-height:1.6;max-height:200px;padding:9px 0;}',
+      '.cw-in{font-size:15px;line-height:1.6;min-height:44px;max-height:300px;padding:11px 0;}',
+      '.cw-comp-row{min-height:62px;}',
+      // attach button
+      '.cw-attach{flex-shrink:0;width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .16s,color .16s;align-self:flex-end;}',
+      '.cw-attach:hover{background:var(--hover);color:#fff;}.cw-attach svg{width:19px;height:19px;}',
+      // attachment preview chips (above composer)
+      '.cw-atts{display:none;flex-wrap:wrap;gap:8px;padding:0 2px 10px;}',
+      '.cw-att{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:7px 9px;max-width:220px;animation:cwRise .3s var(--sp);}',
+      '.cw-att-th{width:34px;height:34px;border-radius:8px;background-size:cover;background-position:center;flex-shrink:0;}',
+      '.cw-att-ic{width:34px;height:34px;border-radius:8px;background:rgba(201,168,76,.12);color:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;}.cw-att-ic svg{width:17px;height:17px;}',
+      '.cw-att-tx{display:flex;flex-direction:column;min-width:0;}',
+      '.cw-att-tx b{font:600 12.5px "Inter";color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}',
+      '.cw-att-tx i{font:400 11px "Inter";color:var(--mut);font-style:normal;}',
+      '.cw-att-x{width:20px;height:20px;border-radius:6px;border:none;background:rgba(255,255,255,.06);color:var(--tx2);cursor:pointer;font-size:15px;line-height:1;flex-shrink:0;}',
+      '.cw-att-x:hover{background:rgba(248,113,113,.2);color:#fca5a5;}',
+      // drop zone overlay
+      '.cw-drop{display:none;position:absolute;inset:8px;z-index:25;border:2px dashed rgba(201,168,76,.5);border-radius:18px;background:rgba(201,168,76,.08);color:var(--acc2);align-items:center;justify-content:center;gap:8px;font:600 14px "Inter";pointer-events:none;}',
+      '.cw-comp-row.cw-dragging + .cw-drop,.cw-comp-row.cw-dragging~.cw-drop{display:flex;}',
+      '.cw-comp-row.cw-dragging{border-color:rgba(201,168,76,.5);}',
+      // attachments shown inside a sent user message
+      '.cw-msgatts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;justify-content:flex-end;}',
+      '.cw-msgatt{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 9px;font:500 12px "Inter";color:var(--tx2);}',
+      '.cw-msgatt svg{width:15px;height:15px;color:var(--mut);}',
+      '.cw-msgatt.img{width:120px;height:120px;padding:0;border-radius:12px;background-size:cover;background-position:center;}',
       '.cw-in::placeholder{transition:opacity .2s var(--sp);}',
       '.cw-in.cw-ph-fade::placeholder{opacity:0;}',
       '.cw-send{width:40px;height:40px;transition:transform .12s var(--sp),opacity .2s,background .2s;}',
@@ -1489,8 +1518,13 @@
       + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
       + '<button class="cw-newpill" id="cw-newpill" hidden>' + ICON.arrow + ' New messages</button>'
       + '<div class="cw-comp"><div class="cw-slash" id="cw-slash" role="listbox" hidden></div>'
-      + '<div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="Ask The5th AI anything…"></textarea>'
+      + '<div class="cw-atts" id="cw-atts"></div>'
+      + '<div class="cw-comp-row" id="cw-comprow">'
+      + '<button class="cw-attach" id="cw-attach" aria-label="Attach a file" title="Attach a screenshot or file">' + ICON.clip + '</button>'
+      + '<input type="file" id="cw-file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" hidden />'
+      + '<textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="Ask The5th AI anything…"></textarea>'
       + '<button class="cw-send" id="cw-send" aria-label="Send" disabled>' + ICON.send + '</button></div>'
+      + '<div class="cw-drop" id="cw-drop">' + ICON.clip + ' Drop files to attach</div>'
       + '<p class="cw-cred">Powered by <b>The5th AI</b> · type <b>/</b> for commands</p></div></div>';
 
     els.msgs = els.win.querySelector('#cw-msgs');
@@ -1525,7 +1559,7 @@
       addBotMsg(cfg.greeting, true, 'carolina');
       conv.messages.forEach(function (m) {
         if (m.role === 'system' && m.kind === 'join') { addJoinSeparator(m.agent, true); lastMsgKey = null; }
-        else addMsg(m.role, m.content, true, m.agent, m.cards);
+        else addMsg(m.role, m.content, true, m.agent, m.cards, m.att);
       });
     }
     setTimeout(function () { els.in.focus(); scrollChat(); }, 220);
@@ -1556,12 +1590,61 @@
   function clearPh() { if (phTimer) { clearInterval(phTimer); phTimer = null; } }
   function promptHistory() { var c = activeConv(); if (!c) return []; return c.messages.filter(function (m) { return m.role === 'user'; }).map(function (m) { return m.content; }).reverse(); }
 
+  // ── attachments ──
+  function updateSendState() { if (els.send && els.in) els.send.disabled = !(els.in.value.trim() || attachments.length); }
+  function renderAttChips() {
+    var box = els.win && els.win.querySelector('#cw-atts'); if (!box) return;
+    box.innerHTML = '';
+    attachments.forEach(function (a) {
+      var chip = document.createElement('div'); chip.className = 'cw-att';
+      var thumb = (a.kind === 'image' && a.url) ? '<span class="cw-att-th" style="background-image:url(' + a.url + ')"></span>' : '<span class="cw-att-ic">' + ICON.doc + '</span>';
+      chip.innerHTML = thumb + '<span class="cw-att-tx"><b>' + esc(a.name) + '</b><i>' + fmtSize(a.size) + '</i></span><button class="cw-att-x" aria-label="Remove">&times;</button>';
+      chip.querySelector('.cw-att-x').addEventListener('click', function () { removeAttachment(a.id); });
+      box.appendChild(chip);
+    });
+    box.style.display = attachments.length ? 'flex' : 'none';
+  }
+  function removeAttachment(id) { attachments = attachments.filter(function (a) { return a.id !== id; }); renderAttChips(); updateSendState(); }
+  function addFiles(files) {
+    Array.prototype.slice.call(files || []).forEach(function (f) {
+      if (attachments.length >= 5) { toast('You can attach up to 5 files'); return; }
+      var isImg = IMG_TYPES.indexOf(f.type) !== -1, isPdf = f.type === 'application/pdf';
+      if (!isImg && !isPdf) { toast('Only images and PDFs are supported'); return; }
+      if (f.size > MAX_FILE) { toast(f.name + ' is too large (max 7MB)'); return; }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var res = String(reader.result || ''); var data = res.split(',')[1] || '';
+        attachments.push({ id: 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: f.name, size: f.size, kind: isImg ? 'image' : 'pdf', media_type: f.type, data: data, url: isImg ? res : null });
+        renderAttChips(); updateSendState();
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
   // The composer: auto-grow, rotating placeholder, send state, prompt history,
   // and a slash-command menu (the "command center").
   function wireComposer() {
     var ta = els.in, send = els.send, slash = els.win.querySelector('#cw-slash');
-    function autoGrow() { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'; }
-    function updateSend() { send.disabled = !ta.value.trim(); }
+    function autoGrow() { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 300) + 'px'; }
+    var updateSend = updateSendState;
+
+    // attachments: button, file input, drag & drop, paste
+    var fileInput = els.win.querySelector('#cw-file');
+    var attachBtn = els.win.querySelector('#cw-attach');
+    var row = els.win.querySelector('#cw-comprow');
+    if (attachBtn) attachBtn.addEventListener('click', function () { fileInput.click(); });
+    if (fileInput) fileInput.addEventListener('change', function () { addFiles(fileInput.files); fileInput.value = ''; });
+    if (row) {
+      var dz = 0;
+      ['dragenter', 'dragover'].forEach(function (ev) { row.addEventListener(ev, function (e) { e.preventDefault(); row.classList.add('cw-dragging'); }); });
+      ['dragleave', 'drop'].forEach(function (ev) { row.addEventListener(ev, function (e) { e.preventDefault(); if (ev === 'drop' && e.dataTransfer) addFiles(e.dataTransfer.files); row.classList.remove('cw-dragging'); }); });
+    }
+    ta.addEventListener('paste', function (e) {
+      var items = e.clipboardData && e.clipboardData.items; if (!items) return;
+      var files = []; for (var k = 0; k < items.length; k++) { if (items[k].kind === 'file') { var f = items[k].getAsFile(); if (f) files.push(f); } }
+      if (files.length) { e.preventDefault(); addFiles(files); }
+    });
+    renderAttChips();
     function startPh() {
       clearPh(); if (REDUCE) return; var i = 0;
       phTimer = setInterval(function () {
@@ -1644,12 +1727,20 @@
   }
   function flashAct(bar, a) { var b = bar.querySelector('[data-a="' + a + '"]'); if (b) { b.classList.add('on'); setTimeout(function () { b.classList.remove('on'); }, 900); } }
 
+  function attChipsHtml(att) {
+    if (!att || !att.length) return '';
+    return '<div class="cw-msgatts">' + att.map(function (a) {
+      return (a.kind === 'image' && a.url)
+        ? '<span class="cw-msgatt img" style="background-image:url(' + a.url + ')"></span>'
+        : '<span class="cw-msgatt">' + ICON.doc + '<span>' + esc(a.name) + '</span></span>';
+    }).join('') + '</div>';
+  }
   function addBotMsg(text, noScroll, agentKey) { addMsg('assistant', text, noScroll, agentKey); }
-  function addMsg(role, text, noScroll, agentKey, cards) {
+  function addMsg(role, text, noScroll, agentKey, cards, att) {
     var wrap = makeMsgWrap(role, agentKey);
     var col = wrap.querySelector('.cw-mcol');
-    var bub = document.createElement('div'); bub.className = 'cw-bub'; bub.innerHTML = renderMd(text);
-    col.appendChild(bub);
+    if (role === 'user' && att && att.length) { var ac = document.createElement('div'); ac.innerHTML = attChipsHtml(att); col.appendChild(ac.firstChild); }
+    if (text) { var bub = document.createElement('div'); bub.className = 'cw-bub'; bub.innerHTML = renderMd(text); col.appendChild(bub); }
     if (role !== 'user') botActions(col, text);
     els.msgs.appendChild(wrap);
     if (cards && cards.length) renderInlineCards(cards);
@@ -1775,14 +1866,17 @@
   function openConv(id) { captureHomeScroll(); store.activeId = id; saveStore(); renderChat(); }
 
   // Post the conversation to the API (stripping local-only fields).
-  async function callApi(conv, handoff) {
+  async function callApi(conv, handoff, atts) {
     try {
       var payload = conv.messages
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
+      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff };
+      // Attachments apply to the current turn only (never on the handoff request).
+      if (!handoff && atts && atts.length) body.attachments = atts.map(function (a) { return { kind: a.kind, media_type: a.media_type, data: a.data }; });
       var r = await fetch(API, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff })
+        body: JSON.stringify(body)
       });
       var d = await r.json().catch(function () { return {}; });
       if (!r.ok || d.error) return { error: d.error || 'Sorry, I had trouble there. Could you try again?' };
@@ -1826,23 +1920,30 @@
   }
   async function sendMessage(text) {
     text = (text || '').trim();
-    if (!text || sending) return;
+    var atts = attachments.slice();
+    if ((!text && !atts.length) || sending) return;
     clearChips();
     var conv = ensureActiveConv();
-    addMsg('user', text); conv.messages.push({ role: 'user', content: text }); conv.updatedAt = Date.now(); saveStore();
+    var displayAtt = atts.map(function (a) { return { name: a.name, kind: a.kind, url: a.url }; });
+    var storeAtt = atts.length ? atts.map(function (a) { return { name: a.name, kind: a.kind }; }) : undefined;
+    var storeText = text || ('[Attached: ' + atts.map(function (a) { return a.name; }).join(', ') + ']');
+    addMsg('user', text, false, null, null, displayAtt);
+    conv.messages.push({ role: 'user', content: storeText, att: storeAtt }); conv.updatedAt = Date.now(); saveStore();
+    attachments = []; renderAttChips();
     if (els.in) { els.in.value = ''; els.in.style.height = 'auto'; }
-    await respond(conv);
+    updateSendState();
+    await respond(conv, atts);
   }
   // Fetch + render one assistant turn for the given conversation (retryable).
-  async function respond(conv) {
+  async function respond(conv, atts) {
     if (sending) return;
     sending = true; if (els.send) els.send.disabled = true;
     clearChips();
     showTyping(conv.agent);
-    var res = await callApi(conv, false);
+    var res = await callApi(conv, false, atts);
     hideTyping();
     if (!res || res.error) {
-      addErrorCard(function () { respond(conv); });
+      addErrorCard(function () { respond(conv, atts); });
       shake(els.win.querySelector('.cw-comp-row'));
     } else if (res.transfer && res.transfer.to) {
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
@@ -1856,7 +1957,7 @@
       handleActions(res.actions);
       renderSuggestions(reply);
     }
-    sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus();
+    sending = false; updateSendState(); if (els.in) els.in.focus();
   }
   // Contextual follow-up chips — change based on what the AI just said.
   function suggestFor(reply) {

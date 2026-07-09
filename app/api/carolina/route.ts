@@ -65,6 +65,7 @@ SHARED RULES:
 - Only discuss The5th's offers, service, support, booking and scheduling. Politely decline anything off-topic.
 - ETHICS: Never invent company policies, features, testimonials, availability, or pricing. Do not quote exact prices — the team covers pricing and fit on a call. Never promise income, results, or guarantees. If you don't know something, say so and offer to connect them with the team.
 - HUMAN HANDOFF: If you cannot confidently help, offer to bring in the team — book a call, or hand off to a colleague.
+- ATTACHMENTS: Visitors may upload images (e.g. screenshots) or documents. Only engage with a file IN THE CONTEXT OF THE5TH — their business situation as it relates to working with us, our programs, or their question about us. If a file is unrelated to The5th (random images, someone else's material, code, homework, general tasks, document analysis, transcription, etc.), politely say you can only look at things related to The5th and their business with us, then steer back. Never perform general-purpose file analysis or tasks outside sales, service and support. Do not describe explicit, personal, or sensitive content.
 - Keep replies short and human: 2-4 sentences, first person, warm. One question at a time.
 - When you describe a program (Fast Forward, The5th AI, The Collective) or invite them to book, call show_card to render a rich card instead of listing details in prose — then keep your text brief.
 - Capture the visitor's first name and email early via save_lead.
@@ -313,6 +314,26 @@ export async function POST(req: NextRequest) {
 
     if (!messages.length || messages[messages.length - 1].role !== 'user') {
       return NextResponse.json({ error: 'Expected a user message.' }, { status: 400 })
+    }
+
+    // Attach files (images / PDFs) to the current turn only. Guardrail lives
+    // in the system prompt: the AI only engages with them in a The5th context.
+    const IMG_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
+    const rawAtts: Array<{ kind?: string; media_type?: string; data?: string }> = Array.isArray(body?.attachments) ? body.attachments : []
+    const attBlocks: Anthropic.ContentBlockParam[] = []
+    for (const a of rawAtts.slice(0, 5)) {
+      const data = typeof a?.data === 'string' ? a.data : ''
+      if (!data || data.length > 9_500_000) continue // ~7MB file
+      if (a.kind === 'image' && IMG_TYPES.includes(String(a.media_type))) {
+        attBlocks.push({ type: 'image', source: { type: 'base64', media_type: a.media_type as 'image/png', data } })
+      } else if (a.kind === 'pdf') {
+        attBlocks.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data } })
+      }
+    }
+    if (attBlocks.length) {
+      const last = messages[messages.length - 1]
+      const text = typeof last.content === 'string' ? last.content : ''
+      last.content = [{ type: 'text', text: text || 'Please take a look at what I attached.' }, ...attBlocks]
     }
 
     const agentKey: AgentKey = AGENT_KEYS.includes(body?.agent) ? body.agent : 'carolina'

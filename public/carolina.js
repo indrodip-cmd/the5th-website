@@ -36,6 +36,8 @@
   var sending = false;
   var promoScheduled = false;
   var els = {};
+  var homeTimers = [];
+  function clearHomeTimers() { homeTimers.forEach(function (t) { clearInterval(t); }); homeTimers = []; }
 
   // ── Persistence ──
   function loadStore() {
@@ -263,6 +265,89 @@
       '@media(prefers-reduced-motion:reduce){.cw *{animation:none !important;transition:none !important;}}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-styles'; st.textContent = css; document.head.appendChild(st);
+    injectHomeStyles();
+  }
+
+  function injectHomeStyles() {
+    if (document.getElementById('carolina-home-styles')) return;
+    var css = [
+      '.cw-home{padding-bottom:24px;}',
+      // sticky top bar
+      '.cw-topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;height:72px;padding:0 16px;background:rgba(13,13,13,0);transition:background .3s var(--sp),border-color .3s,backdrop-filter .3s;border-bottom:1px solid transparent;}',
+      '.cw-topbar.scrolled{background:rgba(13,13,13,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);}',
+      '.cw-tb-left{display:flex;align-items:center;gap:12px;}',
+      '.cw-greet{font:500 14px/1 "Inter";color:var(--tx2);}',
+      '.cw-tb-right{display:flex;align-items:center;gap:10px;}',
+      '.cw-bell{background:var(--card);border:1px solid var(--bd);}',
+      // hero title
+      '.cw-htitle{padding:8px 16px 18px;}',
+      '.cw-htitle h1{font:700 28px/1.1 "Inter";letter-spacing:-.02em;color:#fff;margin:0 0 6px;}',
+      '.cw-htitle p{font:400 15px/1.4 "Inter";color:var(--tx2);margin:0;}',
+      // search
+      '.cw-search{display:flex;align-items:center;gap:11px;height:58px;margin:0 16px;padding:0 16px;background:var(--bg2);border:1px solid var(--bd);border-radius:18px;color:var(--mut);transition:border-color .25s var(--sp),box-shadow .25s,background .2s;}',
+      '.cw-search:hover{background:#191919;}',
+      '.cw-search:focus-within{border-color:rgba(201,168,76,.55);box-shadow:0 0 0 4px rgba(201,168,76,.12),0 10px 30px rgba(0,0,0,.3);}',
+      '.cw-search svg{width:19px;height:19px;flex-shrink:0;}',
+      '.cw-search input{flex:1;background:none;border:none;outline:none;color:#fff;font:400 15px "Inter";height:100%;}',
+      '.cw-search input::placeholder{color:var(--mut);}',
+      '.cw-search-spark{color:var(--acc);display:flex;}.cw-search-spark svg{width:18px;height:18px;}',
+      // pills
+      '.cw-pills{display:flex;gap:8px;overflow-x:auto;padding:16px;scrollbar-width:none;}',
+      '.cw-pills::-webkit-scrollbar{display:none;}',
+      '.cw-pill{flex-shrink:0;height:36px;padding:0 15px;border-radius:999px;background:var(--card);border:1px solid var(--bd);color:var(--tx2);font:500 13px "Inter";cursor:pointer;white-space:nowrap;transition:transform .16s var(--sp),background .16s,color .16s,border-color .16s;}',
+      '.cw-pill:hover{transform:translateY(-1px);background:#201a10;color:var(--acc2);border-color:rgba(201,168,76,.3);}',
+      // section title
+      '.cw-sect{padding:0 16px;}',
+      '.cw-h3{font:600 20px/1.2 "Inter";color:#fff;margin:32px 2px 16px;letter-spacing:-.01em;}',
+      // featured card
+      '.cw-feat{background:var(--card);border:1px solid var(--bd);border-radius:18px;overflow:hidden;margin-bottom:16px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .18s var(--sp),box-shadow .18s,border-color .18s;}',
+      '.cw-feat:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 18px 44px rgba(0,0,0,.4);border-color:rgba(201,168,76,.25);}',
+      '.cw-cover{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;}',
+      '.cw-cover::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 70% 10%,rgba(255,255,255,.12),transparent 60%);}',
+      '.cw-cover-emoji{font-size:52px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4));position:relative;z-index:1;}',
+      '.cw-cover-lg{aspect-ratio:16/8;border-radius:0;}',
+      '.cw-feat-body{padding:18px;}',
+      '.cw-feat-body h4{font:600 18px/1.25 "Inter";color:#fff;margin:0 0 4px;}',
+      '.cw-feat-sub{font:600 12.5px/1 "Inter";color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}',
+      '.cw-feat-desc{font:400 13.5px/1.6 "Inter";color:var(--tx2);margin:0 0 16px;}',
+      '.cw-feat-btns{display:flex;gap:10px;flex-wrap:wrap;}',
+      '.cw-btn{border:none;border-radius:14px;padding:11px 18px;font:600 13.5px "Inter";cursor:pointer;transition:transform .16s var(--sp),box-shadow .18s,background .18s;}',
+      '.cw-btn-primary{background:linear-gradient(145deg,var(--acc),#a9862f);color:#1a1206;box-shadow:0 8px 22px rgba(201,168,76,.24);}',
+      '.cw-btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(201,168,76,.36);}',
+      '.cw-btn-ghost{background:transparent;border:1px solid var(--bd);color:#fff;}',
+      '.cw-btn-ghost:hover{background:var(--hover);border-color:rgba(255,255,255,.18);}',
+      // knowledge card
+      '.cw-kbcard{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;}',
+      '.cw-kbcard-head{display:flex;align-items:center;gap:13px;margin-bottom:16px;}',
+      '.cw-kbcard-head h5{font:600 15px/1.2 "Inter";color:#fff;margin:0 0 2px;}',
+      '.cw-kbcard-head p{font:400 12.5px "Inter";color:var(--tx2);margin:0;}',
+      '.cw-catrow{display:flex;flex-wrap:wrap;gap:8px;}',
+      '.cw-cat{padding:8px 14px;border-radius:999px;background:var(--bg2);border:1px solid var(--bd);color:var(--tx2);font:500 12.5px "Inter";cursor:pointer;transition:background .16s,color .16s,border-color .16s;}',
+      '.cw-cat:hover{background:#201a10;color:var(--acc2);border-color:rgba(201,168,76,.3);}',
+      // carousel
+      '.cw-carousel{position:relative;overflow:hidden;border-radius:18px;}',
+      '.cw-track{display:flex;transition:transform .5s var(--sp);}',
+      '.cw-slide{flex:0 0 100%;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;}',
+      '.cw-slide-rev{font:700 24px/1 "Inter";color:var(--acc);margin-bottom:12px;}',
+      '.cw-slide-q{font:400 15px/1.6 "Inter";color:#ECECEC;margin:0 0 14px;}',
+      '.cw-slide-who{font:500 13px "Inter";color:var(--tx2);}',
+      '.cw-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;}',
+      '.cw-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .2s,width .2s;}',
+      '.cw-dots span.on{background:var(--acc);width:18px;border-radius:3px;}',
+      // article viewer
+      '.cw-artbar{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd);background:rgba(13,13,13,.9);backdrop-filter:blur(20px);}',
+      '.cw-artbar>span{flex:1;font:600 15px "Inter";color:#fff;}',
+      '.cw-article{}',
+      '.cw-slidein{animation:cwSlide .34s var(--sp);}',
+      '@keyframes cwSlide{from{opacity:0;transform:translateX(24px);}to{opacity:1;transform:none;}}',
+      '.cw-art-body{padding:20px 18px 30px;}',
+      '.cw-art-body h1{font:700 26px/1.2 "Inter";color:#fff;margin:16px 0 4px;letter-spacing:-.02em;}',
+      '.cw-art-desc{font:400 15px/1.7 "Inter";color:var(--tx2);margin:14px 0 4px;}',
+      '.cw-art-list{list-style:none;padding:0;margin:16px 0 0;}',
+      '.cw-art-list li{position:relative;padding-left:24px;font:400 14px/1.5 "Inter";color:#ECECEC;margin-bottom:10px;}',
+      '.cw-art-list li::before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--acc);}'
+    ].join('\n');
+    var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
 
   // ── Helpers ──
@@ -274,15 +359,54 @@
   }
   function el(html) { var d = document.createElement('div'); d.innerHTML = html; return d.firstElementChild; }
 
-  // ── Home actions data ──
-  function homeCards() {
-    return [
-      { ic: ICON.gift, cls: 'gift', title: 'Get your free gift', desc: 'A PDF: your first $3K/month', seed: "Yes! I'd love the free $3K/month PDF." },
-      { ic: ICON.chart, title: 'Take the free assessment', desc: 'Your Business Health Score in 60s', seed: 'I want to take the free quiz — can you guide me?' },
-      { ic: ICON.phone, title: 'Book a strategy call', desc: 'Free 1:1 consultation', seed: "I'd like to book a call with the team." },
-      { ic: ICON.spark, title: 'Explore the programs', desc: 'Fast Forward · Collective · The5th AI', seed: 'Tell me about your programs.' }
-    ];
+  // ── Home data (data-driven, reusable) ──
+  function greeting() {
+    var h = new Date().getHours();
+    if (h < 12) return 'Good morning 👋';
+    if (h < 18) return 'Good afternoon 👋';
+    return 'Good evening 👋';
   }
+
+  var QUICK = [
+    { label: 'Learn Fast Forward', article: 'fastforward' },
+    { label: 'Pricing', seed: 'What are your pricing options?' },
+    { label: 'Book Strategy Call', seed: "I'd like to book a call with the team." },
+    { label: 'Get The5th AI', article: 'ai' },
+    { label: 'Success Stories', seed: 'Can you share some client success stories?' },
+    { label: 'Knowledge Base', gotab: 'knowledge' }
+  ];
+
+  var PROGRAMS = {
+    fastforward: {
+      emoji: '🚀', cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)',
+      title: 'Fast Forward', sub: '100% Money-Back Guarantee',
+      desc: "Grow your business with personalized coaching, proven marketing systems, and AI-powered execution. If you don't achieve measurable results, we'll refund your investment according to our guarantee.",
+      points: ['Personalised 1:1 coaching', 'Proven marketing systems', 'AI-powered execution'],
+      primary: { label: 'Learn More', url: '/fast-forward' },
+      secondary: { label: 'Book Strategy Call', seed: "I'd like to book a call with the team." }
+    },
+    ai: {
+      emoji: '🤖', cover: 'linear-gradient(135deg,#141b2e,#3D2645)',
+      title: 'The5th AI', sub: 'Your marketing team inside AI',
+      desc: 'Generate funnels, landing pages, ads, emails, sales scripts, social media content, offers, pricing strategies, business plans and more — all powered by AI trained on our frameworks.',
+      points: ['Funnels, ads & emails in minutes', 'Trained on the 10K Roadmap method', 'Built around your niche & offer'],
+      primary: { label: 'Try Now', url: '/ai' },
+      secondary: { label: 'Explore', seed: 'Tell me about The5th AI.' }
+    },
+    collective: {
+      emoji: '✨', cover: 'linear-gradient(135deg,#143826,#3D2645)',
+      title: 'The Collective', sub: 'Scale past $10K/month',
+      desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
+      points: ['Ongoing group coaching', 'A community of women 40+', 'Accountability that compounds'],
+      primary: { label: 'Learn More', url: '/collective' },
+      secondary: { label: 'Book Strategy Call', seed: "I'd like to book a call with the team." }
+    }
+  };
+
+  var KB_CATS = ['Funnels', 'Marketing', 'Sales', 'AI', 'Automation', 'Mindset', 'Offers', 'Ads'];
+
+  // Real client stories only — empty by default (never fabricate income claims).
+  var STORIES = [];
   function knowledgeItems() {
     return [
       { q: 'Which program is right for me?', seed: 'Which program is right for me?' },
@@ -296,6 +420,7 @@
 
   // ── Renderers ──
   function renderPanels() {
+    clearHomeTimers();
     mode = 'panels';
     var body = '';
     if (tab === 'home') body = renderHome();
@@ -305,32 +430,134 @@
     els.win.innerHTML =
       '<div class="cw-scroll" id="cw-scroll"><div class="cw-view">' + body + '</div></div>' + navHtml();
     wirePanels();
+    if (tab === 'home') mountHome();
+  }
+
+  function sectionTitle(t) { return '<h3 class="cw-h3">' + esc(t) + '</h3>'; }
+
+  function programCardHtml(key) {
+    var p = PROGRAMS[key];
+    return '<div class="cw-feat" data-article="' + key + '">'
+      + '<div class="cw-cover" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span></div>'
+      + '<div class="cw-feat-body"><h4>' + esc(p.emoji + ' ' + p.title) + '</h4>'
+      + '<div class="cw-feat-sub">' + esc(p.sub) + '</div>'
+      + '<p class="cw-feat-desc">' + esc(p.desc) + '</p>'
+      + '<div class="cw-feat-btns"><button class="cw-btn cw-btn-primary" data-article="' + key + '">' + esc(p.primary.label) + ' →</button>'
+      + '<button class="cw-btn cw-btn-ghost" data-seed="' + esc(p.secondary.seed || '') + '">' + esc(p.secondary.label) + '</button></div></div></div>';
   }
 
   function renderHome() {
-    var hello = '<div class="cw-hero"><div class="cw-hero-top"><div class="cw-logo">the<b>5</b>th</div>'
-      + '<div class="cw-ava">' + avatarInner() + '</div></div>'
-      + '<div class="cw-hi">Hello there.<b>How can we help?</b></div></div>';
-    var ask = '<div class="cw-ask" id="cw-ask"><h4>Ask a question</h4><p>Carolina replies instantly — programs, pricing, or booking.</p>'
-      + '<div class="cw-ask-row">Write a message…<span class="cw-sendmini">' + ICON.send + '</span></div></div>';
-    var cards = '<div class="cw-sect"><div class="cw-slabel">Get started</div>';
-    homeCards().forEach(function (c, i) {
-      cards += '<div class="cw-card ' + (c.cls || '') + '" data-seed="' + esc(c.seed) + '">'
-        + '<div class="cw-card-ic">' + c.ic + '</div>'
-        + '<div class="cw-card-tx"><h5>' + esc(c.title) + '</h5><p>' + esc(c.desc) + '</p></div>'
-        + '<div class="cw-card-go">' + ICON.arrow + '</div></div>';
+    // Sticky compact header
+    var topbar = '<div class="cw-topbar" id="cw-topbar"><div class="cw-tb-left"><div class="cw-logo">the<b>5</b>th</div>'
+      + '<span class="cw-greet">' + greeting() + '</span></div>'
+      + '<div class="cw-tb-right"><button class="cw-iconbtn cw-bell" aria-label="Notifications">' + ICON.spark + '</button>'
+      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+
+    // Hero title + search
+    var hero = '<div class="cw-htitle"><h1>The5th AI</h1><p>Your business growth assistant</p></div>'
+      + '<div class="cw-search" id="cw-search">' + ICON.search
+      + '<input id="cw-search-in" placeholder="Ask me anything…" aria-label="Ask me anything" />'
+      + '<span class="cw-search-spark">' + ICON.spark + '</span></div>';
+
+    // Quick action pills
+    var pills = '<div class="cw-pills">';
+    QUICK.forEach(function (q, i) {
+      var attr = q.article ? 'data-article="' + q.article + '"' : q.gotab ? 'data-gotab="' + q.gotab + '"' : 'data-seed="' + esc(q.seed) + '"';
+      pills += '<button class="cw-pill" ' + attr + '>' + esc(q.label) + '</button>';
     });
-    cards += '</div>';
-    // recent conversation continue
+    pills += '</div>';
+
+    // Continue (recent conversation)
     var recent = '';
     var conv = store.conversations.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; })[0];
     if (conv && conv.messages.length) {
-      recent = '<div class="cw-sect" style="padding-top:0"><div class="cw-slabel">Continue</div>'
+      recent = '<div class="cw-sect">' + sectionTitle('Continue where you left off')
         + '<div class="cw-conv" data-conv="' + conv.id + '"><div class="cw-conv-ava">' + avatarInner() + '</div>'
         + '<div class="cw-conv-tx"><h5>' + esc(convTitle(conv)) + '</h5><p>' + esc(convPreview(conv)) + '</p></div>'
         + '<div class="cw-conv-t">' + timeAgo(conv.updatedAt) + '</div></div></div>';
     }
-    return hello + ask + cards + recent;
+
+    // Featured programs
+    var featured = '<div class="cw-sect">' + sectionTitle('Featured')
+      + programCardHtml('fastforward') + programCardHtml('ai') + programCardHtml('collective') + '</div>';
+
+    // Knowledge center
+    var kb = '<div class="cw-sect">' + sectionTitle('Knowledge Center')
+      + '<div class="cw-kbcard"><div class="cw-kbcard-head"><div class="cw-card-ic">' + ICON.book + '</div>'
+      + '<div><h5>Find answers instantly</h5><p>Search our knowledge base and guides.</p></div></div>'
+      + '<div class="cw-catrow">';
+    KB_CATS.forEach(function (c) { kb += '<button class="cw-cat" data-seed="I need help with ' + esc(c) + '.">' + esc(c) + '</button>'; });
+    kb += '</div></div></div>';
+
+    // Client success
+    var success = '<div class="cw-sect">' + sectionTitle('Client Success');
+    if (STORIES.length) {
+      success += '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">';
+      STORIES.forEach(function (s) {
+        success += '<div class="cw-slide"><div class="cw-slide-rev">' + esc(s.revenue) + '</div><p class="cw-slide-q">“' + esc(s.quote) + '”</p>'
+          + '<div class="cw-slide-who">' + esc(s.name) + ' · ' + esc(s.industry) + '</div></div>';
+      });
+      success += '</div><div class="cw-dots" id="cw-dots"></div></div>';
+    } else {
+      success += '<div class="cw-empty" style="padding:36px 20px"><div class="e-ic">' + ICON.spark + '</div>'
+        + '<h4>Client stories coming soon</h4><p>Real results from women building with The5th, shared here shortly.</p></div>';
+    }
+    success += '</div>';
+
+    // Feed empty state (blog/videos/news populate here later)
+    var feed = '<div class="cw-sect">' + sectionTitle('Latest')
+      + '<div class="cw-empty" style="padding:30px 20px"><div class="e-ic">' + ICON.book + '</div>'
+      + '<h4>New content coming soon</h4><p>Fresh guides, videos and updates will appear here.</p>'
+      + '<button class="cw-btn cw-btn-ghost" data-gotab="knowledge" style="margin-top:14px">Explore Knowledge Base</button></div></div>';
+
+    return topbar + '<div class="cw-home">' + hero + pills + recent + featured + kb + success + feed + '</div>';
+  }
+
+  // Internal article viewer (slides in over the panels)
+  function openArticle(key) {
+    var p = PROGRAMS[key]; if (!p) return;
+    mode = 'article';
+    clearHomeTimers();
+    var pts = p.points.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+    els.win.innerHTML =
+      '<div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
+      + '<span>' + esc(p.title) + '</span><button class="cw-iconbtn" id="cw-artclose" aria-label="Close">' + ICON.close + '</button></div>'
+      + '<div class="cw-scroll"><div class="cw-article">'
+      + '<div class="cw-cover cw-cover-lg" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span></div>'
+      + '<div class="cw-art-body"><h1>' + esc(p.emoji + ' ' + p.title) + '</h1><div class="cw-feat-sub">' + esc(p.sub) + '</div>'
+      + '<p class="cw-art-desc">' + esc(p.desc) + '</p><ul class="cw-art-list">' + pts + '</ul>'
+      + '<div class="cw-feat-btns" style="margin-top:22px"><button class="cw-btn cw-btn-primary" data-nav="' + p.primary.url + '">' + esc(p.primary.label) + ' →</button>'
+      + '<button class="cw-btn cw-btn-ghost" data-seed="' + esc(p.secondary.seed || 'Tell me more.') + '">' + esc(p.secondary.label) + '</button></div>'
+      + '</div></div></div>';
+    var art = els.win.querySelector('.cw-article'); if (art) { art.classList.add('cw-slidein'); }
+    els.win.querySelector('#cw-artback').addEventListener('click', function () { renderPanels(); });
+    els.win.querySelector('#cw-artclose').addEventListener('click', function () { toggle(false); });
+    els.win.querySelectorAll('[data-nav]').forEach(function (n) { n.addEventListener('click', function () { window.location.href = n.getAttribute('data-nav'); }); });
+    els.win.querySelectorAll('[data-seed]').forEach(function (n) { n.addEventListener('click', function () { startNewChat(n.getAttribute('data-seed')); }); });
+  }
+
+  // Home mount: sticky header blur on scroll + success carousel
+  function mountHome() {
+    var scroll = els.win.querySelector('#cw-scroll');
+    var topbar = els.win.querySelector('#cw-topbar');
+    if (scroll && topbar) {
+      scroll.addEventListener('scroll', function () { topbar.classList.toggle('scrolled', scroll.scrollTop > 8); });
+    }
+    // search
+    var si = els.win.querySelector('#cw-search-in');
+    if (si) si.addEventListener('keydown', function (e) { if (e.key === 'Enter' && si.value.trim()) startNewChat(si.value.trim()); });
+    // article + pill handlers
+    els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
+    els.win.querySelectorAll('[data-gotab]').forEach(function (n) { n.addEventListener('click', function () { tab = n.getAttribute('data-gotab'); renderPanels(); }); });
+    // carousel auto-advance
+    var track = els.win.querySelector('#cw-track');
+    if (track && STORIES.length > 1) {
+      var dots = els.win.querySelector('#cw-dots');
+      var idx = 0;
+      for (var i = 0; i < STORIES.length; i++) dots.insertAdjacentHTML('beforeend', '<span class="cw-dot-i' + (i === 0 ? ' on' : '') + '"></span>');
+      var go = function (n) { idx = (n + STORIES.length) % STORIES.length; track.style.transform = 'translateX(-' + (idx * 100) + '%)'; dots.querySelectorAll('span').forEach(function (d, di) { d.classList.toggle('on', di === idx); }); };
+      homeTimers.push(setInterval(function () { go(idx + 1); }, 6000));
+    }
   }
 
   function renderMessages() {
@@ -375,6 +602,7 @@
   }
 
   function renderChat() {
+    clearHomeTimers();
     mode = 'chat';
     var conv = activeConv();
     els.win.innerHTML =
@@ -489,7 +717,7 @@
     var newc = els.win.querySelector('#cw-newconv');
     if (newc) newc.addEventListener('click', function () { startNewChat(); });
     els.win.querySelectorAll('[data-seed]').forEach(function (n) {
-      n.addEventListener('click', function () { startNewChat(n.getAttribute('data-seed')); });
+      n.addEventListener('click', function (e) { e.stopPropagation(); startNewChat(n.getAttribute('data-seed')); });
     });
     els.win.querySelectorAll('[data-conv]').forEach(function (n) {
       n.addEventListener('click', function () { openConv(n.getAttribute('data-conv')); });
@@ -505,6 +733,7 @@
     els.launcher.classList.toggle('cw-open', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
     if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); }
+    else { clearHomeTimers(); }
   }
 
   // ── Proactive popup ──

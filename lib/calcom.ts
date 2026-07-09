@@ -49,13 +49,17 @@ export async function getEventTypeId(): Promise<number | null> {
     })
     if (!r.ok) return null
     const j = await r.json()
-    const list =
+    const list: Array<{ id?: number; title?: string; slug?: string; lengthInMinutes?: number; length?: number }> =
       j?.data?.eventTypeGroups?.flatMap((g: { eventTypes?: unknown[] }) => g.eventTypes || []) ||
       j?.data ||
       []
-    // Prefer a ~60 minute event; otherwise take the first one.
+    const matches = (e: { title?: string; slug?: string }, needle: string) =>
+      `${e.title || ''} ${e.slug || ''}`.toLowerCase().includes(needle)
+    // Prefer the "Free 1:1 Consultation" event, then any consultation, then 60min, then first.
     const chosen =
-      list.find((e: { lengthInMinutes?: number; length?: number }) => (e.lengthInMinutes || e.length) === 60) ||
+      list.find((e) => matches(e, 'consultation') && matches(e, 'free')) ||
+      list.find((e) => matches(e, 'consultation')) ||
+      list.find((e) => (e.lengthInMinutes || e.length) === 60) ||
       list[0]
     if (chosen?.id) {
       cachedEventTypeId = Number(chosen.id)

@@ -614,11 +614,193 @@ function LoginScreen({ onLogin }: { onLogin: (email: string) => void }) {
   )
 }
 
+/* ─── Carolina concierge admin ─── */
+interface CarolinaMagnet {
+  id: string; title: string; description: string | null; pdf_url: string | null
+  hook: string | null; popup_message: string | null; selling_points: string[] | null; active: boolean
+}
+interface CarolinaSettingsT {
+  avatar_url: string | null; greeting: string | null; knowledge_base: string | null; persona: string | null
+  proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null
+}
+
+function CarolinaAdmin() {
+  const [settings, setSettings] = useState<CarolinaSettingsT | null>(null)
+  const [magnets, setMagnets] = useState<CarolinaMagnet[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [toast, setToast] = useState('')
+  const [avatarBusy, setAvatarBusy] = useState(false)
+  const [magnetBusy, setMagnetBusy] = useState(false)
+  const [newTitle, setNewTitle] = useState('')
+
+  const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2600) }
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/carolina')
+      .then(r => r.ok ? r.json() : Promise.reject(new Error('load')))
+      .then((d: { settings: CarolinaSettingsT | null; magnets: CarolinaMagnet[] }) => {
+        setSettings(d.settings || { avatar_url: null, greeting: '', knowledge_base: '', persona: '', proactive_enabled: true, proactive_delay_seconds: 12, active_lead_magnet: null })
+        setMagnets(d.magnets || [])
+      })
+      .catch(() => flash('Failed to load'))
+      .finally(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+
+  const patch = async (body: Partial<CarolinaSettingsT>) => {
+    setSaving(true)
+    try {
+      const r = await fetch('/api/admin/carolina', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      if (!r.ok) throw new Error('save')
+      flash('Saved ✓')
+    } catch { flash('Save failed') } finally { setSaving(false) }
+  }
+
+  const uploadAvatar = async (file: File) => {
+    setAvatarBusy(true)
+    const fd = new FormData(); fd.append('kind', 'avatar'); fd.append('file', file)
+    try {
+      const r = await fetch('/api/admin/carolina/upload', { method: 'POST', body: fd })
+      const d = await r.json(); if (!r.ok) throw new Error(d.error || 'upload')
+      setSettings(s => s ? { ...s, avatar_url: d.avatar_url } : s); flash('Avatar updated ✓')
+    } catch (e) { flash(e instanceof Error ? e.message : 'Upload failed') } finally { setAvatarBusy(false) }
+  }
+
+  const uploadMagnet = async (file: File) => {
+    setMagnetBusy(true)
+    const fd = new FormData(); fd.append('kind', 'lead_magnet'); fd.append('file', file); if (newTitle) fd.append('title', newTitle)
+    try {
+      const r = await fetch('/api/admin/carolina/upload', { method: 'POST', body: fd })
+      const d = await r.json(); if (!r.ok) throw new Error(d.error || 'upload')
+      setNewTitle(''); flash('Lead magnet added — Carolina wrote the copy ✓'); load()
+    } catch (e) { flash(e instanceof Error ? e.message : 'Upload failed') } finally { setMagnetBusy(false) }
+  }
+
+  const deleteMagnet = async (id: string) => {
+    if (!confirm('Delete this lead magnet?')) return
+    try {
+      const r = await fetch(`/api/admin/carolina/upload?id=${id}`, { method: 'DELETE' })
+      if (!r.ok) throw new Error('del'); flash('Deleted'); load()
+    } catch { flash('Delete failed') }
+  }
+
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, padding: '24px 26px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0', marginBottom: 22 }
+  const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '.06em', color: '#225840', textTransform: 'uppercase', marginBottom: 14 }
+  const field: React.CSSProperties = { width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', padding: '10px 12px', outline: 'none', color: '#0a0a0a', background: '#fff' }
+  const btn: React.CSSProperties = { padding: '10px 20px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }
+
+  if (loading || !settings) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading Carolina…</div>
+
+  return (
+    <div>
+      {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 200 }}>{toast}</div>}
+
+      {/* Avatar + basics */}
+      <div style={card}>
+        <div style={label}>Avatar & Greeting</div>
+        <div style={{ display: 'flex', gap: 22, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 84, height: 84, borderRadius: '50%', overflow: 'hidden', background: 'linear-gradient(145deg,#C9A84C,#B0902F)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2E1A35', fontFamily: 'Georgia,serif', fontSize: 34, margin: '0 auto 8px' }}>
+              {settings.avatar_url ? <img src={settings.avatar_url} alt="Carolina" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'C'}
+            </div>
+            <label style={{ ...btn, display: 'inline-block', padding: '7px 14px', opacity: avatarBusy ? 0.6 : 1 }}>
+              {avatarBusy ? 'Uploading…' : 'Upload image'}
+              <input type="file" accept="image/*" style={{ display: 'none' }} disabled={avatarBusy}
+                onChange={e => { const f = e.target.files?.[0]; if (f) uploadAvatar(f) }} />
+            </label>
+          </div>
+          <div style={{ flex: 1, minWidth: 260 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Opening greeting</div>
+            <textarea value={settings.greeting || ''} rows={3} style={{ ...field, resize: 'vertical' }}
+              onChange={e => setSettings({ ...settings, greeting: e.target.value })} />
+            <button style={{ ...btn, marginTop: 10 }} disabled={saving} onClick={() => patch({ greeting: settings.greeting || '' })}>Save greeting</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Proactive popup */}
+      <div style={card}>
+        <div style={label}>Proactive Popup</div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#374151', marginBottom: 14 }}>
+          <input type="checkbox" checked={settings.proactive_enabled}
+            onChange={e => { const v = e.target.checked; setSettings({ ...settings, proactive_enabled: v }); patch({ proactive_enabled: v }) }} />
+          Show a proactive teaser bubble to first-time visitors (promotes your active lead magnet)
+        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 14, color: '#374151' }}>Appear after</span>
+          <input type="number" min={0} max={120} value={settings.proactive_delay_seconds}
+            style={{ ...field, width: 90 }} onChange={e => setSettings({ ...settings, proactive_delay_seconds: Number(e.target.value) })} />
+          <span style={{ fontSize: 14, color: '#374151' }}>seconds</span>
+          <button style={btn} disabled={saving} onClick={() => patch({ proactive_delay_seconds: settings.proactive_delay_seconds })}>Save</button>
+        </div>
+      </div>
+
+      {/* Lead magnets */}
+      <div style={card}>
+        <div style={label}>Lead Magnets</div>
+        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>Upload a PDF and Carolina reads it to write her own persuasive hook, selling points, and popup message. The newest upload becomes the active magnet she promotes.</p>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
+          <input type="text" placeholder="Title (optional)" value={newTitle} onChange={e => setNewTitle(e.target.value)} style={{ ...field, width: 240 }} />
+          <label style={{ ...btn, display: 'inline-block', opacity: magnetBusy ? 0.6 : 1 }}>
+            {magnetBusy ? 'Analyzing PDF…' : 'Upload PDF'}
+            <input type="file" accept="application/pdf" style={{ display: 'none' }} disabled={magnetBusy}
+              onChange={e => { const f = e.target.files?.[0]; if (f) uploadMagnet(f) }} />
+          </label>
+        </div>
+        {magnets.length === 0 ? (
+          <p style={{ fontSize: 14, color: '#9ca3af' }}>No lead magnets yet.</p>
+        ) : magnets.map(m => {
+          const isActive = settings.active_lead_magnet === m.id
+          return (
+            <div key={m.id} style={{ border: `1.5px solid ${isActive ? '#2d6a4f' : '#eee'}`, borderRadius: 10, padding: 16, marginBottom: 12, background: isActive ? '#f4faf6' : '#fff' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, color: '#0a0a0a', fontSize: 15 }}>{m.title} {isActive && <span style={{ fontSize: 11, color: '#2d6a4f', fontWeight: 700 }}>● ACTIVE</span>}</div>
+                  {m.description && <div style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>{m.description}</div>}
+                  {m.hook && <div style={{ fontSize: 13, color: '#B0902F', marginTop: 6, fontStyle: 'italic' }}>“{m.hook}”</div>}
+                  {m.popup_message && <div style={{ fontSize: 12.5, color: '#374151', marginTop: 6, background: '#faf6f0', padding: '8px 10px', borderRadius: 6 }}>Popup: {m.popup_message}</div>}
+                  {Array.isArray(m.selling_points) && m.selling_points.length > 0 && (
+                    <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 12.5, color: '#6b7280' }}>{m.selling_points.map((p, i) => <li key={i}>{p}</li>)}</ul>
+                  )}
+                  <div style={{ marginTop: 8, display: 'flex', gap: 12 }}>
+                    {m.pdf_url && <a href={m.pdf_url} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#225840', fontWeight: 600 }}>View PDF ↗</a>}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {!isActive && <button style={{ ...btn, padding: '6px 12px', fontSize: 12 }} onClick={() => { setSettings({ ...settings, active_lead_magnet: m.id }); patch({ active_lead_magnet: m.id }) }}>Set active</button>}
+                  <button style={{ padding: '6px 12px', background: '#fff', border: '1px solid #e0a0a0', borderRadius: 6, color: '#b91c1c', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }} onClick={() => deleteMagnet(m.id)}>Delete</button>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Knowledge base */}
+      <div style={card}>
+        <div style={label}>Sales Knowledge Base</div>
+        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6 }}>What Carolina knows about your offers, tone, and routing. Sales & lead-gen only — she never coaches or teaches tactics.</p>
+        <textarea value={settings.knowledge_base || ''} rows={16} style={{ ...field, resize: 'vertical', fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 13, lineHeight: 1.55 }}
+          onChange={e => setSettings({ ...settings, knowledge_base: e.target.value })} />
+        <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+          <button style={btn} disabled={saving} onClick={() => patch({ knowledge_base: settings.knowledge_base || '' })}>Save knowledge base</button>
+        </div>
+        <div style={{ ...label, marginTop: 26 }}>Persona</div>
+        <textarea value={settings.persona || ''} rows={3} style={{ ...field, resize: 'vertical' }}
+          onChange={e => setSettings({ ...settings, persona: e.target.value })} />
+        <button style={{ ...btn, marginTop: 10 }} disabled={saving} onClick={() => patch({ persona: settings.persona || '' })}>Save persona</button>
+      </div>
+    </div>
+  )
+}
+
 /* ─── AdminPage ─── */
 export default function AdminPage() {
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'leads'>('overview')
+  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina'>('overview')
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -695,12 +877,12 @@ export default function AdminPage() {
           <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '.04em' }}>Command Center</span>
         </div>
         <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4 }}>
-          {(['overview', 'leads'] as const).map(t => (
+          {(['overview', 'leads', 'carolina'] as const).map(t => (
             <button
               key={t} onClick={() => setTab(t)} className="tab-btn"
               style={{ background: tab === t ? '#2d6a4f' : 'transparent', color: tab === t ? '#fff' : 'rgba(255,255,255,0.6)' }}
             >
-              {t === 'overview' ? 'Analytics' : 'Leads'}
+              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : 'Carolina'}
             </button>
           ))}
         </div>
@@ -712,6 +894,8 @@ export default function AdminPage() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '32px 24px' }}>
         {tab === 'overview' ? (
           <AnalyticsDashboard stats={stats} loading={statsLoading} days={days} onDays={setDays} />
+        ) : tab === 'carolina' ? (
+          <CarolinaAdmin />
         ) : (
           <>
             <div style={{ display: 'flex', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>

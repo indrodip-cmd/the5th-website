@@ -1,0 +1,43 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getSupabaseAdmin } from '@/lib/supabase'
+import { adminEmail } from '@/lib/session'
+import { sanitizeText } from '@/lib/validation'
+
+export const dynamic = 'force-dynamic'
+
+/* GET: current Carolina settings + all lead magnets (admin only). */
+export async function GET(req: NextRequest) {
+  if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const db = getSupabaseAdmin()
+  const [{ data: settings }, { data: magnets }] = await Promise.all([
+    db.from('carolina_settings').select('*').eq('id', 1).single(),
+    db.from('carolina_lead_magnets').select('*').order('created_at', { ascending: false }),
+  ])
+  return NextResponse.json({ settings: settings || null, magnets: magnets || [] })
+}
+
+/* PATCH: update editable settings fields. */
+export async function PATCH(req: NextRequest) {
+  if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const body = await req.json().catch(() => null)
+  if (!body || typeof body !== 'object') return NextResponse.json({ error: 'Bad request' }, { status: 400 })
+
+  const patch: Record<string, unknown> = { id: 1, updated_at: new Date().toISOString() }
+  if (typeof body.greeting === 'string') patch.greeting = sanitizeText(body.greeting, 600)
+  if (typeof body.persona === 'string') patch.persona = sanitizeText(body.persona, 4000)
+  if (typeof body.knowledge_base === 'string') patch.knowledge_base = sanitizeText(body.knowledge_base, 20000)
+  if (typeof body.proactive_enabled === 'boolean') patch.proactive_enabled = body.proactive_enabled
+  if (Number.isFinite(body.proactive_delay_seconds)) {
+    patch.proactive_delay_seconds = Math.min(Math.max(Math.round(body.proactive_delay_seconds), 0), 120)
+  }
+  if (typeof body.active_lead_magnet === 'string' || body.active_lead_magnet === null) {
+    patch.active_lead_magnet = body.active_lead_magnet || null
+  }
+
+  const { error } = await getSupabaseAdmin().from('carolina_settings').upsert(patch, { onConflict: 'id' })
+  if (error) {
+    console.error('carolina settings patch failed', error.message)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+  return NextResponse.json({ ok: true })
+}

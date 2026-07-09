@@ -25,17 +25,35 @@ interface PerPage { path: string; views: number; visitors: number; avg_scroll: n
 interface DayPoint { day: string; views: number; visitors: number }
 interface Referrer { referrer: string; views: number }
 interface Device { device: string; pageviews: number; visitors: number }
+interface Country { country: string; pageviews: number; visitors: number }
 interface Stats {
   range_days: number
   since: string
   totals: { pageviews: number; unique_visitors: number; sessions: number }
   per_page: PerPage[]
   devices: Device[]
+  countries: Country[]
   timeseries: DayPoint[]
   referrers: Referrer[]
   conversions: number
   leads: number
   leads_total: number
+}
+
+/* ISO 3166 alpha-2 → flag emoji (regional indicator symbols). */
+function flagEmoji(code: string): string {
+  if (!code || code.length !== 2 || !/^[A-Za-z]{2}$/.test(code)) return '🌐'
+  const cc = code.toUpperCase()
+  return String.fromCodePoint(...[...cc].map(c => 0x1f1e6 + c.charCodeAt(0) - 65))
+}
+
+let REGION_NAMES: Intl.DisplayNames | null = null
+function countryName(code: string): string {
+  if (!code || code === '??') return 'Unknown'
+  try {
+    if (!REGION_NAMES) REGION_NAMES = new Intl.DisplayNames(['en'], { type: 'region' })
+    return REGION_NAMES.of(code.toUpperCase()) || code
+  } catch { return code }
 }
 
 const DEVICE_META: Record<string, { label: string; color: string; icon: string }> = {
@@ -264,6 +282,52 @@ function AnalyticsDashboard({ stats, loading, days, onDays }: { stats: Stats | n
                 )
               })}
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Countries / Geo */}
+      <div style={sectionCard}>
+        <div style={sectionLabel}>Top Countries</div>
+        {(!stats || stats.countries.length === 0) ? (
+          <EmptyHint />
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
+                  {['Country', 'Visitors', 'Views', 'Share', ''].map((c, i) => (
+                    <th key={c || i} style={{ padding: '10px 12px', textAlign: i === 0 || i === 4 ? 'left' : 'right', fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '.06em', whiteSpace: 'nowrap', width: i === 4 ? '26%' : undefined }}>{c}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(() => {
+                  const totalV = stats.countries.reduce((s, c) => s + c.visitors, 0) || 1
+                  const maxV = Math.max(1, ...stats.countries.map(c => c.visitors))
+                  return stats.countries.map((c) => {
+                    const share = (c.visitors / totalV) * 100
+                    return (
+                      <tr key={c.country} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                        <td style={{ padding: '11px 12px', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 18, marginRight: 10 }}>{c.country === '??' ? '🌐' : flagEmoji(c.country)}</span>
+                          <span style={{ fontWeight: 600, color: '#0a0a0a' }}>{countryName(c.country)}</span>
+                          {c.country !== '??' && <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 6 }}>{c.country}</span>}
+                        </td>
+                        <td style={{ padding: '11px 12px', textAlign: 'right', fontWeight: 700, color: '#225840', fontVariantNumeric: 'tabular-nums' }}>{c.visitors.toLocaleString()}</td>
+                        <td style={{ padding: '11px 12px', textAlign: 'right', color: '#374151', fontVariantNumeric: 'tabular-nums' }}>{c.pageviews.toLocaleString()}</td>
+                        <td style={{ padding: '11px 12px', textAlign: 'right', color: '#374151', fontVariantNumeric: 'tabular-nums' }}>{pctStr(Math.round(share * 10) / 10)}</td>
+                        <td style={{ padding: '11px 12px' }}>
+                          <div style={{ background: '#f0f0f0', borderRadius: 4, height: 8, overflow: 'hidden' }}>
+                            <div style={{ width: `${(c.visitors / maxV) * 100}%`, height: '100%', background: 'linear-gradient(90deg,#2d6a4f,#225840)', borderRadius: 4 }} />
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })
+                })()}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

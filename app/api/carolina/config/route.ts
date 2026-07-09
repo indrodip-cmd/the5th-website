@@ -9,6 +9,15 @@ export async function GET() {
   const settings = await loadSettings()
   const magnet = settings.proactive_enabled ? await loadActiveLeadMagnet(settings) : null
 
+  const giftMessage =
+    magnet?.popup_message ||
+    (magnet?.title
+      ? `🎁 I have a free gift for you — my “${magnet.title}”. Want me to send it over?`
+      : '🎁 I have a free gift for you — a short PDF showing exactly how to make your first $3K/month in your coaching business. Want me to send it over?')
+
+  const quizMessage =
+    'Curious what’s quietly holding your business back? Take our free 60-second assessment — I’ll walk you through it. Ready?'
+
   return NextResponse.json(
     {
       avatar_url: settings.avatar_url || null,
@@ -16,10 +25,11 @@ export async function GET() {
       proactive: {
         enabled: !!settings.proactive_enabled,
         delay: settings.proactive_delay_seconds || 12,
-        message:
-          magnet?.popup_message ||
-          (magnet?.title ? `Want my free ${magnet.title}? I can send it over 👇` : null) ||
-          'Not sure where to start? I can point you to the right next step — want a hand?',
+        // First-time visitors get the lead-magnet gift; returning visitors get the quiz.
+        gift: { message: giftMessage, magnet_title: magnet?.title || null },
+        quiz: { message: quizMessage },
+        // legacy field (older widget builds)
+        message: giftMessage,
       },
     },
     { headers: { 'Cache-Control': 'public, max-age=30, s-maxage=60' } }

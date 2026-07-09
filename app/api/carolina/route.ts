@@ -80,15 +80,20 @@ function buildSystem(opts: {
   magnet: LeadMagnet | null
   timeZone: string
   handoff: boolean
+  context?: string | null
 }): string {
   const a = AGENTS[opts.agent]
   const persona = opts.personas[opts.agent] || null
   const parts: string[] = []
   parts.push(
-    `You are ${a.name}, part of the customer team at The5th Consulting — a company that helps women over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support).`
+    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Consulting, a company that helps women over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
   )
   parts.push(`YOUR ROLE: ${a.scope}`)
   if (persona) parts.push(`PERSONA: ${persona}`)
+  parts.push(
+    `SALES-CONCIERGE FRAMEWORK: Guide every conversation through — understand their situation → educate → build trust (the guarantee and real client outcomes, never fabricated) → recommend the right fit → invite the natural next step (usually the free assessment or a strategy call) → keep helping. Discover their business, goal and where they are now conversationally (never a form) and save it with save_lead as you learn it. Only suggest a call at genuine high-intent moments (comparing options, fit/implementation questions, ready to move) — never pushy, never mid-thought. Keep everything INSIDE this chat: use show_card for programs and booking rather than sending them to the website.`
+  )
+  if (opts.context) parts.push(`CURRENT CONTEXT: The visitor is viewing "${opts.context}" inside the chat. Answer questions about it directly without asking what they're referring to.`)
   if (opts.kb) parts.push(opts.kb)
   if (opts.magnet && a.canBook) {
     const pts = Array.isArray(opts.magnet.selling_points) ? opts.magnet.selling_points.join('; ') : ''
@@ -338,6 +343,7 @@ export async function POST(req: NextRequest) {
 
     const agentKey: AgentKey = AGENT_KEYS.includes(body?.agent) ? body.agent : 'carolina'
     const handoff = body?.handoff === true
+    const context = sanitizeText(body?.context, 300) || null
 
     const settings = await loadSettings()
     const [magnet, agents] = await Promise.all([loadActiveLeadMagnet(settings), loadAgents()])
@@ -345,7 +351,7 @@ export async function POST(req: NextRequest) {
     for (const a of agents) personas[a.key] = a.persona
     if (settings.persona && !personas.carolina) personas.carolina = settings.persona
 
-    const system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff })
+    const system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
 
     const client = anthropic()
     const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false } }

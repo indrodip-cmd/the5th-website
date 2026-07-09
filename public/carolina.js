@@ -65,6 +65,7 @@
     return html + '<span class="cw-hs-ai" title="The5th AI">' + ICON.spark + '</span></div>';
   }
   var leadName = '';
+  var viewContext = '';   // what content the visitor is viewing, for AI context awareness
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   // Respect the OS "reduce motion" setting — disables scale/slide/streaming.
   var REDUCE = false;
@@ -824,7 +825,20 @@
       '.cw-slash-i{display:flex;align-items:baseline;gap:10px;width:100%;padding:9px 12px;background:none;border:none;border-radius:10px;color:#fff;font:500 13.5px "Inter";cursor:pointer;text-align:left;}',
       '.cw-slash-i b{color:var(--acc2);font-weight:600;min-width:96px;}',
       '.cw-slash-i span{color:var(--tx2);font-size:12.5px;}',
-      '.cw-slash-i.on,.cw-slash-i:hover{background:var(--hover);}'
+      '.cw-slash-i.on,.cw-slash-i:hover{background:var(--hover);}',
+      // ── Part 2B5 in-chat content viewer ──
+      '.cw-art-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 4px;}',
+      '.cw-readtime{display:inline-flex;align-items:center;gap:5px;font:500 12px "Inter";color:var(--mut);white-space:nowrap;}',
+      '.cw-readtime svg{width:14px;height:14px;}',
+      '.cw-art-rel{margin-top:28px;padding-top:20px;border-top:1px solid var(--bd);}',
+      '.cw-rel{display:flex;align-items:center;gap:12px;width:100%;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:11px 12px;margin-bottom:9px;cursor:pointer;text-align:left;transition:transform .16s var(--sp),border-color .16s;color:var(--mut);}',
+      '.cw-rel:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.25);}',
+      '.cw-rel-ic{width:40px;height:40px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}',
+      '.cw-rel-ic svg{width:19px;height:19px;}',
+      '.cw-rel-t{flex:1;min-width:0;display:flex;flex-direction:column;font:600 14px/1.3 "Inter";color:#fff;}',
+      '.cw-rel-t i{font:400 12px/1.3 "Inter";color:var(--tx2);font-style:normal;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.cw-rel svg:last-child{width:17px;height:17px;flex-shrink:0;}',
+      '.cw-rel:hover svg:last-child{color:var(--acc);}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -1289,26 +1303,42 @@
   }
 
   // Internal article viewer (slides in over the panels)
+  // Rich in-chat content viewer — never leaves the chatbot.
   function openArticle(key) {
     var p = PROGRAMS[key]; if (!p) return;
     captureHomeScroll();
     mode = 'article';
     clearHomeTimers();
     var pts = (p.features || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
-    var secondary = p.secondaryAction || { label: 'Book a call', kind: 'seed', value: "I'd like to book a call with the team." };
+    var ctxLabel = p.title + ' — program overview';
+    // Related: the other two programs + the free assessment.
+    var related = Object.keys(PROGRAMS).filter(function (k) { return k !== key; }).map(function (k) {
+      var r = PROGRAMS[k];
+      return '<button class="cw-rel" data-article="' + k + '"><span class="cw-rel-ic" style="background:' + r.cover + '">' + r.emoji + '</span><span class="cw-rel-t">' + esc(r.title) + '<i>' + esc(r.sub) + '</i></span>' + ICON.arrow + '</button>';
+    }).join('');
+
     els.win.innerHTML =
-      '<div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
+      '<div class="cw-chatview"><div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
       + '<span>' + esc(p.title) + '</span><button class="cw-iconbtn" id="cw-artclose" aria-label="Close">' + ICON.close + '</button></div>'
       + '<div class="cw-scroll"><div class="cw-article">'
       + '<div class="cw-cover cw-cover-lg" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span><div class="cw-cover-grad"></div></div>'
-      + '<div class="cw-art-body">' + badgeHtml(p) + '<h1>' + esc(p.emoji + ' ' + p.title) + '</h1><div class="cw-feat-sub">' + esc(p.sub) + '</div>'
+      + '<div class="cw-art-body">' + badgeHtml(p) + '<h1>' + esc(p.emoji + ' ' + p.title) + '</h1>'
+      + '<div class="cw-art-meta"><span class="cw-feat-sub" style="margin:0">' + esc(p.sub) + '</span><span class="cw-readtime">' + ICON.book + ' 4 min read</span></div>'
       + '<p class="cw-art-desc">' + esc(p.desc) + '</p><ul class="cw-art-list">' + pts + '</ul>' + infoRow(p)
-      + '<div class="cw-feat-btns" style="margin-top:22px"><button class="cw-btn cw-btn-primary" data-ak="nav" data-av="' + esc(p.url) + '">Get started <i class="cw-cta-arrow">→</i></button>'
-      + '<button class="cw-btn cw-btn-ghost" data-ak="' + esc(secondary.kind) + '" data-av="' + esc(secondary.value) + '">' + esc(secondary.label) + '</button></div>'
-      + '</div></div></div>';
-    var art = els.win.querySelector('.cw-article'); if (art) { art.classList.add('cw-slidein'); }
+      + '<div class="cw-feat-btns" style="margin-top:22px">'
+      + '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call about ' + esc(p.title) + '.">Book a strategy call</button>'
+      + '<button class="cw-btn cw-btn-ghost" id="cw-askabout">Ask The5th AI about this</button></div>'
+      + '<div class="cw-art-rel"><div class="cw-slabel">Explore also</div>' + related
+      + '<button class="cw-rel" data-ak="seed" data-av="I want to take the free assessment."><span class="cw-rel-ic" style="background:linear-gradient(135deg,#3D2645,#143826)">' + ICON.chart + '</span><span class="cw-rel-t">Free assessment<i>Your Business Health Score</i></span>' + ICON.arrow + '</button></div>'
+      + '</div></div></div></div>';
+
+    var art = els.win.querySelector('.cw-article'); if (art) art.classList.add('cw-slidein');
     els.win.querySelector('#cw-artback').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
     els.win.querySelector('#cw-artclose').addEventListener('click', function () { toggle(false); });
+    els.win.querySelector('#cw-askabout').addEventListener('click', function () {
+      startNewChat('I have a question about ' + p.title + '.', ctxLabel);
+    });
+    els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
     wireActions(els.win);
   }
 
@@ -1857,13 +1887,14 @@
     var sc = els.win && els.win.querySelector('#cw-scroll');
     if (sc && mode === 'panels' && tab === 'home') homeScroll = sc.scrollTop;
   }
-  function startNewChat(seed) {
+  function startNewChat(seed, ctx) {
     captureHomeScroll();
+    viewContext = ctx || '';   // AI context awareness (e.g. which page they came from)
     var c = mkConv([]); store.conversations.push(c); store.activeId = c.id; saveStore();
     renderChat();
     if (seed) sendMessage(seed);
   }
-  function openConv(id) { captureHomeScroll(); store.activeId = id; saveStore(); renderChat(); }
+  function openConv(id) { captureHomeScroll(); viewContext = ''; store.activeId = id; saveStore(); renderChat(); }
 
   // Post the conversation to the API (stripping local-only fields).
   async function callApi(conv, handoff, atts) {
@@ -1872,6 +1903,7 @@
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
       var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff };
+      if (viewContext) body.context = viewContext;
       // Attachments apply to the current turn only (never on the handoff request).
       if (!handoff && atts && atts.length) body.attachments = atts.map(function (a) { return { kind: a.kind, media_type: a.media_type, data: a.data }; });
       var r = await fetch(API, {

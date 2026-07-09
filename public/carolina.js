@@ -39,6 +39,17 @@
   var homeTimers = [];
   function clearHomeTimers() { homeTimers.forEach(function (t) { clearInterval(t); }); homeTimers = []; }
 
+  // Nav badge state (data-driven; number | 'NEW' | 'dot' | null). None by default.
+  var badges = { home: null, chat: null, knowledge: null, discover: null, account: null };
+  var NAV_ORDER = ['home', 'chat', 'knowledge', 'discover', 'account'];
+  function navBadge(b) {
+    if (!b) return '';
+    if (b === 'dot') return '<span class="cw-nav-dot"></span>';
+    if (typeof b === 'number') return b > 0 ? '<span class="cw-nav-badge">' + (b > 99 ? '99+' : b) + '</span>' : '';
+    return '<span class="cw-nav-badge">' + esc(b) + '</span>';
+  }
+  function notifEnabled() { try { return localStorage.getItem('the5th_carolina_notif') !== '0'; } catch (e) { return true; } }
+
   // ── Persistence ──
   function loadStore() {
     try {
@@ -114,7 +125,14 @@
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
     gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7S12 3 9 3a2.5 2.5 0 0 0 0 5M12 7s0-4 3-4a2.5 2.5 0 0 1 0 5"/></svg>',
     chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 4-6"/></svg>',
-    phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 3.2 2 2 0 0 1 4 1h2a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 8.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>'
+    phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 3.2 2 2 0 0 1 4 1h2a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 8.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>',
+    compass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2z"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6 6 0 0 1 11 0"/></svg>',
+    bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>'
   };
 
   function avatarInner() {
@@ -402,7 +420,45 @@
       '.cw-sk{position:relative;overflow:hidden;background:#1a1a1a;}',
       '.cw-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);animation:cwShine 1.4s infinite;}',
       '@keyframes cwShine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}',
-      '.cw-sk-line{height:12px;border-radius:6px;margin:10px 0;}'
+      '.cw-sk-line{height:12px;border-radius:6px;margin:10px 0;}',
+      // ── floating glass navigation (overrides base) ──
+      '.cw-nav{margin:0 16px 16px;height:72px;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;background:rgba(22,22,22,.92);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,.06);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.4);flex-shrink:0;transition:transform .32s var(--sp),opacity .3s;}',
+      '.cw-nav.tuck{transform:translateY(12px);opacity:.92;}',
+      '.cw-tab{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:center;height:48px;min-width:48px;border:none;background:transparent;color:#7A7A82;cursor:pointer;border-radius:999px;padding:0 13px;transition:background .3s var(--sp),color .25s,padding .3s var(--sp),transform .08s;}',
+      '.cw-tab-ic{position:relative;display:flex;align-items:center;justify-content:center;}',
+      '.cw-tab-ic svg{width:22px;height:22px;}',
+      '.cw-tab-lb{max-width:0;opacity:0;white-space:nowrap;font:600 12px/1 "Inter";overflow:hidden;transition:max-width .32s var(--sp),opacity .24s,margin .32s var(--sp);}',
+      '.cw-tab.on{background:rgba(255,255,255,.08);color:#fff;}',
+      '.cw-tab.on .cw-tab-lb{max-width:96px;opacity:1;margin-left:8px;}',
+      '.cw-tab.on .cw-tab-ic{animation:cwPop .3s var(--sp);}',
+      '@keyframes cwPop{0%{transform:scale(1);}55%{transform:scale(1.12);}100%{transform:scale(1);}}',
+      '.cw-tab:not(.on):hover{background:rgba(255,255,255,.03);color:#a1a1aa;}',
+      '.cw-tab:active{transform:scale(.96);}',
+      '.cw-tab:focus-visible{outline:2px solid var(--acc);outline-offset:2px;}',
+      '.cw-navava{width:24px;height:24px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.25);}',
+      '.cw-nav-badge{position:absolute;top:-7px;right:-9px;min-width:18px;height:18px;border-radius:999px;background:#EF4444;color:#fff;font:700 11px/18px "Inter";text-align:center;padding:0 5px;box-shadow:0 0 0 2px rgba(22,22,22,.9);animation:cwBadgePop .4s var(--sp);}',
+      '@keyframes cwBadgePop{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}',
+      '.cw-nav-dot{position:absolute;top:-2px;right:-4px;width:8px;height:8px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 2px rgba(22,22,22,.9);}',
+      '@media(max-width:480px){.cw-nav{height:78px;margin:0 10px calc(10px + env(safe-area-inset-bottom,0px));}}',
+      // ── account panel ──
+      '.cw-acct-id{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}',
+      '.cw-acct-ava{width:52px;height:52px;border-radius:50%;background:var(--card);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--acc);flex-shrink:0;}',
+      '.cw-acct-ava svg{width:26px;height:26px;}',
+      '.cw-acct-id h4{font:600 18px "Inter";color:#fff;margin:0 0 2px;}',
+      '.cw-acct-id p{font:400 13px "Inter";color:var(--tx2);margin:0;}',
+      '.cw-alist{background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;}',
+      '.cw-arow{display:flex;align-items:center;gap:13px;width:100%;padding:14px 16px;background:none;border:none;border-bottom:1px solid var(--bd);color:#fff;font:500 14.5px "Inter";cursor:pointer;text-align:left;transition:background .16s;}',
+      '.cw-arow:last-child{border-bottom:none;}',
+      'button.cw-arow:hover{background:var(--hover);}',
+      '.cw-arow-ic{color:var(--tx2);display:flex;flex-shrink:0;}.cw-arow-ic svg{width:19px;height:19px;}',
+      '.cw-arow-lb{flex:1;}',
+      '.cw-arow-r{color:var(--mut);display:flex;}.cw-arow-r svg{width:17px;height:17px;}',
+      '.cw-arow-tag{color:var(--mut);font:500 13px "Inter";}',
+      '.cw-arow.danger{color:#f87171;}.cw-arow.danger .cw-arow-ic{color:#f87171;}',
+      '.cw-switch{width:42px;height:24px;border-radius:999px;background:rgba(255,255,255,.14);border:none;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;padding:0;}',
+      '.cw-switch span{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s var(--sp);}',
+      '.cw-switch.on{background:var(--acc);}',
+      '.cw-switch.on span{transform:translateX(18px);}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -490,19 +546,50 @@
   }
 
   // ── Renderers ──
+  // Enter panels mode: build the persistent shell (scroll body + nav) once,
+  // then show the current tab. The nav is NOT rebuilt on tab switches so the
+  // active capsule animates rather than jumping.
   function renderPanels() {
     clearHomeTimers();
     mode = 'panels';
-    var body = '';
-    if (tab === 'home') body = renderHome();
-    else if (tab === 'messages') body = renderMessages();
-    else body = renderKnowledge();
-
+    if (tab === 'messages') tab = 'chat';
     els.win.innerHTML =
-      '<div class="cw-scroll" id="cw-scroll"><div class="cw-view">' + body + '</div></div>' + navHtml();
+      '<div class="cw-scroll" id="cw-scroll"><div class="cw-view" id="cw-view"></div></div>' + navHtml();
+    wireNav();
+    attachShellScroll();
+    showTab(tab);
+  }
+
+  function bodyForTab(t) {
+    if (t === 'home') return renderHome();
+    if (t === 'chat') return renderMessages();
+    if (t === 'knowledge') return renderKnowledge();
+    if (t === 'discover') return renderDiscover();
+    if (t === 'account') return renderAccount();
+    return renderHome();
+  }
+
+  // Swap only the body + move the capsule (nav persists).
+  function showTab(t) {
+    tab = t;
+    clearHomeTimers();
+    var view = els.win.querySelector('#cw-view');
+    if (!view) { renderPanels(); return; }
+    view.innerHTML = bodyForTab(t);
+    // restart the fade-in
+    view.classList.remove('cw-view'); void view.offsetWidth; view.classList.add('cw-view');
+    var sc = els.win.querySelector('#cw-scroll'); if (sc) sc.scrollTop = 0;
+    var nav = els.win.querySelector('#cw-nav');
+    if (nav) {
+      nav.classList.remove('tuck');
+      nav.querySelectorAll('.cw-tab').forEach(function (b) {
+        var on = b.getAttribute('data-tab') === t;
+        b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
     wirePanels();
     wireActions(els.win);
-    if (tab === 'home') mountHome();
+    if (t === 'home') mountHome();
   }
 
   function sectionTitle(t) { return '<h3 class="cw-h3">' + esc(t) + '</h3>'; }
@@ -744,19 +831,13 @@
     wireActions(els.win);
   }
 
-  // Home mount: sticky header blur on scroll + success carousel
+  // Home mount: search, pills, and the success carousel.
+  // (Sticky-header + nav scroll behaviour live in attachShellScroll.)
   function mountHome() {
-    var scroll = els.win.querySelector('#cw-scroll');
-    var topbar = els.win.querySelector('#cw-topbar');
-    if (scroll && topbar) {
-      scroll.addEventListener('scroll', function () { topbar.classList.toggle('scrolled', scroll.scrollTop > 8); });
-    }
-    // search
     var si = els.win.querySelector('#cw-search-in');
     if (si) si.addEventListener('keydown', function (e) { if (e.key === 'Enter' && si.value.trim()) startNewChat(si.value.trim()); });
-    // article + pill handlers
     els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
-    els.win.querySelectorAll('[data-gotab]').forEach(function (n) { n.addEventListener('click', function () { tab = n.getAttribute('data-gotab'); renderPanels(); }); });
+    els.win.querySelectorAll('[data-gotab]').forEach(function (n) { n.addEventListener('click', function () { showTab(n.getAttribute('data-gotab')); }); });
     // carousel auto-advance
     var track = els.win.querySelector('#cw-track');
     if (track && STORIES.length > 1) {
@@ -769,7 +850,7 @@
   }
 
   function renderMessages() {
-    var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Messages</div>'
+    var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Chat</div>'
       + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
     var convs = store.conversations.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; });
     var list;
@@ -802,11 +883,111 @@
     return head + search + items + '</div>';
   }
 
-  function navHtml() {
-    function t(id, ic, label) {
-      return '<button class="cw-tab ' + (tab === id ? 'on' : '') + '" data-tab="' + id + '">' + ic + '<span>' + label + '</span></button>';
+  // Discover — blogs, videos, case studies, news, events (data-driven).
+  function renderDiscover() {
+    var head = '<div class="cw-hero" style="padding-bottom:22px"><div class="cw-hero-top"><div class="cw-logo">Discover</div>'
+      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+    var out = '';
+    if (ANNOUNCEMENTS.length) out += '<div class="cw-sect">' + sectionTitle('Updates') + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>';
+    if (BLOG.length) out += '<div class="cw-sect">' + sectionTitle('Latest blog') + BLOG.map(function (b) { b.type = 'article'; return renderCard(b); }).join('') + '</div>';
+    if (VIDEOS.length) out += '<div class="cw-sect">' + sectionTitle('Videos') + '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div></div>';
+    if (STORIES.length) out += '<div class="cw-sect">' + sectionTitle('Case studies') + STORIES.map(function (s) { s.type = 'casestudy'; return '<div style="margin-bottom:10px">' + renderCard(s) + '</div>'; }).join('') + '</div>';
+    if (EVENTS.length) out += '<div class="cw-sect">' + sectionTitle('Events') + EVENTS.map(function (e) { e.type = 'promotion'; return renderCard(e); }).join('') + '</div>';
+    if (!out) out = emptyState(ICON.compass, 'Discover is coming soon', 'Fresh blogs, videos, case studies and events will land here — stay tuned.',
+      '<button class="cw-btn cw-btn-ghost" data-ak="seed" data-av="What can The5th help me with?" style="margin-top:14px">Ask Carolina instead</button>');
+    return head + '<div class="cw-home">' + out + '</div>';
+  }
+
+  // Account — profile, settings, preferences (all functional, local).
+  function renderAccount() {
+    var head = '<div class="cw-hero" style="padding-bottom:26px"><div class="cw-hero-top"><div class="cw-logo">Account</div></div>'
+      + '<div class="cw-acct-id"><div class="cw-acct-ava">' + ICON.user + '</div>'
+      + '<div><h4>Welcome 👋</h4><p>Chat with Carolina for personalised help</p></div></div></div>';
+
+    function row(icon, label, right, attrs, danger) {
+      return '<button class="cw-arow' + (danger ? ' danger' : '') + '"' + (attrs || '') + '>'
+        + '<span class="cw-arow-ic">' + icon + '</span><span class="cw-arow-lb">' + label + '</span>'
+        + '<span class="cw-arow-r">' + (right || ICON.arrow) + '</span></button>';
     }
-    return '<div class="cw-nav">' + t('home', ICON.home, 'Home') + t('messages', ICON.msg, 'Messages') + t('knowledge', ICON.book, 'Help') + '</div>';
+    function toggleRow(icon, label, on, id) {
+      return '<div class="cw-arow"><span class="cw-arow-ic">' + icon + '</span><span class="cw-arow-lb">' + label + '</span>'
+        + '<button class="cw-switch' + (on ? ' on' : '') + '" id="' + id + '" role="switch" aria-checked="' + on + '" aria-label="' + label + '"><span></span></button></div>';
+    }
+
+    var prefs = '<div class="cw-sect">' + sectionTitle('Preferences')
+      + '<div class="cw-alist">'
+      + toggleRow(ICON.bell, 'Notifications', notifEnabled(), 'cw-notif-tg')
+      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.moon + '</span><span class="cw-arow-lb">Appearance</span><span class="cw-arow-tag">Dark</span></div>'
+      + '<div class="cw-arow"><span class="cw-arow-ic">' + ICON.globe + '</span><span class="cw-arow-lb">Language</span><span class="cw-arow-tag">English</span></div>'
+      + '</div></div>';
+
+    var actions = '<div class="cw-sect">' + sectionTitle('Support')
+      + '<div class="cw-alist">'
+      + row(ICON.phone, 'Book a strategy call', ICON.arrow, ' data-ak="seed" data-av="I\'d like to book a call with the team."')
+      + row(ICON.msg, 'Contact support', ICON.arrow, ' data-ak="seed" data-av="I need help from a person."')
+      + row(ICON.shield, 'Privacy Policy', ICON.arrow, ' data-ak="nav" data-av="/privacy"')
+      + row(ICON.book, 'Terms of Service', ICON.arrow, ' data-ak="nav" data-av="/terms"')
+      + '</div></div>';
+
+    var danger = '<div class="cw-sect">'
+      + '<div class="cw-alist">' + row(ICON.trash, 'Clear all conversations', '', ' id="cw-clearconv"', true) + '</div>'
+      + '<p class="cw-cred" style="margin-top:18px">Powered by <b>The5th AI</b></p></div>';
+
+    return head + prefs + actions + danger;
+  }
+
+  // Five-item floating glass navigation. Icons are Lucide-style, 1.8 stroke.
+  var NAV_ITEMS = [
+    { id: 'home', ic: 'home', label: 'Home' },
+    { id: 'chat', ic: 'msg', label: 'Chat' },
+    { id: 'knowledge', ic: 'book', label: 'Knowledge' },
+    { id: 'discover', ic: 'compass', label: 'Discover' },
+    { id: 'account', ic: 'user', label: 'Account' }
+  ];
+  function navHtml() {
+    var html = '<nav class="cw-nav" id="cw-nav" role="tablist" aria-label="Primary">';
+    NAV_ITEMS.forEach(function (it) {
+      var on = tab === it.id;
+      var icon = (it.id === 'account' && cfg.userAvatar)
+        ? '<img class="cw-navava" src="' + esc(cfg.userAvatar) + '" alt="" />'
+        : ICON[it.ic];
+      html += '<button class="cw-tab' + (on ? ' on' : '') + '" role="tab" tabindex="' + (on ? '0' : '-1') + '"'
+        + ' aria-selected="' + (on ? 'true' : 'false') + '" aria-label="' + it.label + '" data-tab="' + it.id + '">'
+        + '<span class="cw-tab-ic">' + icon + navBadge(badges[it.id]) + '</span>'
+        + '<span class="cw-tab-lb">' + it.label + '</span></button>';
+    });
+    return html + '</nav>';
+  }
+  function wireNav() {
+    var nav = els.win.querySelector('#cw-nav');
+    if (!nav) return;
+    nav.querySelectorAll('.cw-tab').forEach(function (b) {
+      b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); });
+    });
+    nav.addEventListener('keydown', function (e) {
+      var i = NAV_ORDER.indexOf(tab);
+      if (e.key === 'ArrowRight') { e.preventDefault(); showTab(NAV_ORDER[(i + 1) % NAV_ORDER.length]); focusActiveTab(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); showTab(NAV_ORDER[(i - 1 + NAV_ORDER.length) % NAV_ORDER.length]); focusActiveTab(); }
+    });
+  }
+  function focusActiveTab() { var a = els.win.querySelector('.cw-tab.on'); if (a) a.focus(); }
+
+  // One scroll listener drives both the Home sticky-header blur and the
+  // nav "tuck" (slides down + lightens while scrolling down).
+  function attachShellScroll() {
+    var sc = els.win.querySelector('#cw-scroll');
+    var nav = els.win.querySelector('#cw-nav');
+    if (!sc) return;
+    var last = 0;
+    sc.addEventListener('scroll', function () {
+      var top = sc.scrollTop;
+      var tb = els.win.querySelector('#cw-topbar'); if (tb) tb.classList.toggle('scrolled', top > 8);
+      if (nav) {
+        if (top > last + 3 && top > 40) nav.classList.add('tuck');
+        else if (top < last - 3) nav.classList.remove('tuck');
+      }
+      last = top;
+    });
   }
 
   function renderChat() {
@@ -913,13 +1094,8 @@
     });
   }
 
-  // ── Panel wiring ──
+  // ── Panel-body wiring (nav is wired once in wireNav) ──
   function wirePanels() {
-    var scroll = els.win.querySelector('#cw-scroll');
-    // tab nav
-    els.win.querySelectorAll('.cw-tab').forEach(function (b) {
-      b.addEventListener('click', function () { tab = b.getAttribute('data-tab'); renderPanels(); });
-    });
     var ask = els.win.querySelector('#cw-ask');
     if (ask) ask.addEventListener('click', function () { startNewChat(); });
     var newc = els.win.querySelector('#cw-newconv');
@@ -932,6 +1108,19 @@
     });
     var ks = els.win.querySelector('#cw-ksearch');
     if (ks) ks.addEventListener('keydown', function (e) { if (e.key === 'Enter' && ks.value.trim()) startNewChat(ks.value.trim()); });
+    // Account: notifications toggle
+    var notif = els.win.querySelector('#cw-notif-tg');
+    if (notif) notif.addEventListener('click', function () {
+      var on = !notif.classList.contains('on');
+      notif.classList.toggle('on', on); notif.setAttribute('aria-checked', on ? 'true' : 'false');
+      try { localStorage.setItem('the5th_carolina_notif', on ? '1' : '0'); } catch (e) {}
+    });
+    // Account: clear conversations
+    var clear = els.win.querySelector('#cw-clearconv');
+    if (clear) clear.addEventListener('click', function () {
+      if (!confirm('Clear all conversations? This cannot be undone.')) return;
+      store = { conversations: [], activeId: null }; saveStore(); showTab('account');
+    });
   }
 
   // ── Open/close ──
@@ -951,6 +1140,7 @@
   }
   function maybeShowPromo() {
     if (promoScheduled || isOpen) return;
+    if (!notifEnabled()) return;
     if (!cfg.proactive || !cfg.proactive.enabled) return;
     // don't nag if they already have a real conversation
     var hasChat = store.conversations.some(function (c) { return c.messages.length > 0; });

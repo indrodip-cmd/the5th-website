@@ -70,7 +70,7 @@
   // Cascading entrance for the cards in a freshly-rendered panel.
   function staggerIn(root) {
     if (REDUCE) return;
-    var nodes = root.querySelectorAll('.cw-home > .cw-sect > .cw-feat, .cw-home .cw-kbcard, .cw-home .cw-conv, .cw-home .cw-anc, .cw-home .cw-acard, .cw-home .cw-vcard, .cw-home .cw-carousel, .cw-home .cw-empty');
+    var nodes = root.querySelectorAll('.cw-home > .cw-sect > .cw-feat, .cw-home .cw-product, .cw-home .cw-kbcard, .cw-home .cw-kgrid, .cw-home .cw-conv, .cw-home .cw-anc, .cw-home .cw-acard, .cw-home .cw-vcard, .cw-home .cw-carousel, .cw-home .cw-community, .cw-home .cw-news, .cw-home .cw-empty');
     for (var i = 0; i < nodes.length; i++) {
       nodes[i].style.animationDelay = Math.min(i, 10) * 40 + 'ms';
       nodes[i].classList.add('cw-rise');
@@ -181,7 +181,11 @@
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>',
     moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
     shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
-    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>'
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>',
+    folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+    users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6a3 3 0 0 1 0 5.5M20.5 19a5.5 5.5 0 0 0-4-5.3"/></svg>',
+    mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor" stroke="none"/></svg>'
   };
 
   function avatarInner() {
@@ -583,7 +587,58 @@
       '.cw-check{width:26px;height:26px;flex-shrink:0;}',
       '.cw-check-c{fill:none;stroke:#4ade80;stroke-width:3;stroke-dasharray:150;stroke-dashoffset:150;animation:cwDraw .5s var(--sp) forwards;}',
       '.cw-check-p{fill:none;stroke:#4ade80;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:cwDraw .4s var(--sp) .35s forwards;}',
-      '@keyframes cwDraw{to{stroke-dashoffset:0;}}'
+      '@keyframes cwDraw{to{stroke-dashoffset:0;}}',
+      // ── Part 2A5 Home content ──
+      '.cw-ssub{font:400 13.5px/1.5 "Inter";color:var(--tx2);margin:-8px 2px 14px;}',
+      // The5th AI product card (distinct)
+      '.cw-product{position:relative;overflow:hidden;background:linear-gradient(150deg,#1a1030,#141b2e 60%,#141414);border:1px solid rgba(201,168,76,.18);border-radius:22px;padding:22px;box-shadow:0 16px 42px rgba(0,0,0,.4);}',
+      '.cw-product-glow{position:absolute;top:-40%;right:-20%;width:70%;height:120%;background:radial-gradient(ellipse,rgba(201,168,76,.16),transparent 70%);pointer-events:none;animation:cwGlow 6s ease-in-out infinite;}',
+      '@keyframes cwGlow{0%,100%{opacity:.7;}50%{opacity:1;}}',
+      '.cw-product-top{position:relative;z-index:1;margin-bottom:12px;}',
+      '.cw-badge-ai{position:static;background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.3);color:var(--acc2);}',
+      '.cw-product-h{position:relative;z-index:1;font:700 22px/1.2 "Inter";color:#fff;margin:0 0 4px;}',
+      '.cw-product-sub{position:relative;z-index:1;font:500 14px/1.5 "Inter";color:var(--tx2);margin:0 0 16px;}',
+      '.cw-pgrid{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}',
+      '.cw-pchip{font:500 12.5px "Inter";color:#E6E6EA;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:999px;padding:7px 12px;}',
+      // knowledge search + category grid
+      '.cw-ksrch{margin-top:2px;min-height:64px;}',
+      '.cw-kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}',
+      '.cw-kcat{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:13px 14px;cursor:pointer;text-align:left;transition:transform .16s var(--sp),background .16s,border-color .16s;}',
+      '.cw-kcat:hover{transform:translateY(-2px);background:#201a10;border-color:rgba(201,168,76,.25);}',
+      '.cw-kcat-ic{width:30px;height:30px;border-radius:9px;background:rgba(201,168,76,.1);color:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+      '.cw-kcat-ic svg{width:16px;height:16px;}',
+      '.cw-kcat-t{font:600 13.5px "Inter";color:#fff;}',
+      // community card
+      '.cw-community{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:20px;cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.28);transition:transform .18s var(--sp),border-color .18s;}',
+      '.cw-community:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.25);}',
+      '.cw-cm-head{display:flex;align-items:center;gap:13px;margin-bottom:14px;}',
+      '.cw-cm-head h5{font:700 16px/1.2 "Inter";color:#fff;margin:0 0 2px;}',
+      '.cw-cm-head p{font:400 12.5px "Inter";color:var(--tx2);margin:0;}',
+      '.cw-cm-desc{font:400 13.5px/1.6 "Inter";color:var(--tx2);margin:0 0 16px;}',
+      '.cw-cm-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}',
+      '.cw-cm-faces{display:flex;}',
+      '.cw-cm-face{width:32px;height:32px;border-radius:50%;overflow:hidden;border:2px solid var(--card);margin-left:-10px;background:linear-gradient(145deg,var(--acc),#9c7f2c);color:#1a1206;font:700 12px/28px "Inter";text-align:center;}',
+      '.cw-cm-face:first-child{margin-left:0;}.cw-cm-face img{width:100%;height:100%;object-fit:cover;}',
+      // newsletter
+      '.cw-news{position:relative;overflow:hidden;background:linear-gradient(150deg,#241530,#141414);border:1px solid var(--bd);border-radius:24px;padding:24px 22px;}',
+      '.cw-news-glow{position:absolute;top:-50%;left:-20%;width:70%;height:140%;background:radial-gradient(ellipse,rgba(201,168,76,.14),transparent 70%);pointer-events:none;}',
+      '.cw-news h4{position:relative;z-index:1;display:flex;align-items:center;gap:8px;font:700 19px/1.2 "Inter";color:#fff;margin:0 0 8px;}',
+      '.cw-news h4 svg{width:20px;height:20px;color:var(--acc);}',
+      '.cw-news p{position:relative;z-index:1;font:400 13.5px/1.6 "Inter";color:var(--tx2);margin:0 0 16px;}',
+      '.cw-news-form{position:relative;z-index:1;display:flex;gap:8px;}',
+      '.cw-news-form input{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--bd);border-radius:13px;padding:12px 14px;color:#fff;font:400 14px "Inter";outline:none;transition:border-color .2s;}',
+      '.cw-news-form input:focus{border-color:rgba(201,168,76,.5);}',
+      '.cw-news-form .cw-btn{flex-shrink:0;}',
+      '.cw-news-ok{position:relative;z-index:1;display:flex;align-items:center;gap:8px;font:600 13.5px "Inter";margin-top:12px;}',
+      '.cw-news-ok.done{color:#4ade80;}.cw-news-ok.err{color:#f87171;}',
+      '.cw-news-ok .cw-check{width:22px;height:22px;}',
+      // footer
+      '.cw-foot2{padding:26px 4px 8px;text-align:center;}',
+      '.cw-foot2-links{display:flex;align-items:center;justify-content:center;gap:10px;font:500 13px "Inter";}',
+      '.cw-foot2-links a{color:var(--tx2);cursor:pointer;transition:color .15s;}',
+      '.cw-foot2-links a:hover{color:var(--acc2);}',
+      '.cw-foot2-links span{color:var(--mut);}',
+      '.cw-foot2-meta{font:400 11px "Inter";color:var(--mut);margin-top:10px;}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -652,10 +707,15 @@
   // Data-driven feeds — empty until real content/CMS is connected.
   var BLOG = [];         // {id,type:'article',category,title,readingTime,publishedAt,author,cover}
   var VIDEOS = [];       // {id,type:'video',title,duration,speaker,views,cover}
-  var ANNOUNCEMENTS = [];// {id,type:'announcement',title,description,badge}
   var EVENTS = [];       // {id,type:'event',title,date,location,cover,live}
+  // Truthful "updates" that route internally (no fabricated metrics).
+  var ANNOUNCEMENTS = [
+    { badge: 'NEW', title: 'Free business assessment', description: 'Get your Business Health Score in 60 seconds', icon: null, primaryAction: { kind: 'seed', value: 'I want to take the free quiz — can you guide me?' } },
+    { title: 'Book a strategy call', description: 'A free 1:1 consultation with the team', primaryAction: { kind: 'seed', value: "I'd like to book a call with the team." } },
+    { title: 'Meet The5th AI', description: 'Your marketing team, powered by AI', primaryAction: { kind: 'article', value: 'ai' } }
+  ];
 
-  var KB_CATS = ['Funnels', 'Marketing', 'Sales', 'AI', 'Automation', 'Mindset', 'Offers', 'Ads'];
+  var KB_CATS = ['Marketing', 'Funnels', 'Sales', 'AI', 'Automation', 'Mindset', 'Offers', 'Pricing', 'Ads', 'Email', 'Community', 'Scaling'];
 
   // Real client stories only — empty by default (never fabricate income claims).
   var STORIES = [];
@@ -851,6 +911,56 @@
       + '<div class="cw-sk cw-sk-line" style="width:80%"></div><div class="cw-sk cw-sk-line" style="width:65%"></div></div></div>';
   }
 
+  // The5th AI — a deliberately DIFFERENT layout from the Fast Forward card.
+  function productCard(p) {
+    var feats = (p.features || []).map(function (f) { return '<span class="cw-pchip">' + esc(f) + '</span>'; }).join('');
+    return '<div class="cw-product">'
+      + '<div class="cw-product-glow"></div>'
+      + '<div class="cw-product-top"><span class="cw-badge2 cw-badge-ai">' + esc((p.badge || '✨') + ' AI Product') + '</span></div>'
+      + '<h4 class="cw-product-h">' + esc(p.emoji + ' ' + p.title) + '</h4>'
+      + '<p class="cw-product-sub">' + esc(p.sub) + '</p>'
+      + '<div class="cw-pgrid">' + feats + '</div>'
+      + '<div class="cw-feat-btns"><button class="cw-btn cw-btn-primary" data-ak="article" data-av="ai">Try Free <i class="cw-cta-arrow">→</i></button>'
+      + '<button class="cw-btn cw-btn-ghost" data-ak="nav" data-av="/ai">Buy Now</button>'
+      + '<button class="cw-btn cw-btn-ghost" data-ak="article" data-av="ai">Learn More</button></div></div>';
+  }
+
+  function knowledgeGrid() {
+    var grid = '<div class="cw-kgrid">';
+    KB_CATS.forEach(function (c) {
+      grid += '<button class="cw-kcat" data-ak="seed" data-av="I need help with ' + esc(c) + '."><span class="cw-kcat-ic">' + ICON.folder + '</span><span class="cw-kcat-t">' + esc(c) + '</span></button>';
+    });
+    return grid + '</div>';
+  }
+
+  function communityCard() {
+    var faces = ['carolina', 'natasha', 'benjamin'].map(function (k) { return '<span class="cw-cm-face">' + agentAva(k) + '</span>'; }).join('');
+    return '<div class="cw-community" data-ak="article" data-av="collective" tabindex="0" role="button">'
+      + '<div class="cw-cm-head"><div class="cw-card-ic">' + ICON.users + '</div>'
+      + '<div><h5>The Collective</h5><p>Women 40+ building on their own terms</p></div></div>'
+      + '<p class="cw-cm-desc">Ongoing coaching, accountability and a community that takes you toward — and past — consistent $10K months.</p>'
+      + '<div class="cw-cm-foot"><div class="cw-cm-faces">' + faces + '</div>'
+      + '<button class="cw-btn cw-btn-primary" data-ak="article" data-av="collective">Join the community</button></div></div>';
+  }
+
+  function newsletterCard() {
+    return '<div class="cw-news"><div class="cw-news-glow"></div>'
+      + '<h4>' + ICON.mail + ' Join The5th Weekly</h4>'
+      + '<p>Business strategies, AI updates, marketing frameworks and exclusive resources — every week.</p>'
+      + '<form class="cw-news-form" id="cw-news-form"><input type="email" id="cw-news-email" placeholder="you@email.com" aria-label="Email address" />'
+      + '<button type="submit" class="cw-btn cw-btn-primary" id="cw-news-btn">Subscribe</button></form>'
+      + '<div class="cw-news-ok" id="cw-news-ok"></div></div>';
+  }
+
+  function footerHtml() {
+    var year = new Date().getFullYear();
+    return '<div class="cw-foot2"><div class="cw-foot2-links">'
+      + '<a data-ak="nav" data-av="/privacy">Privacy</a><span>·</span>'
+      + '<a data-ak="nav" data-av="/terms">Terms</a><span>·</span>'
+      + '<a data-ak="seed" data-av="I need help from a person.">Contact</a></div>'
+      + '<div class="cw-foot2-meta">The5th AI · v2 · © ' + year + ' The5th Consulting</div></div>';
+  }
+
   function renderHome() {
     // ── Cinematic hero: sticky top bar + greeting + search card ──
     var topbar = '<div class="cw-topbar" id="cw-topbar">'
@@ -867,14 +977,6 @@
 
     var heroBlock = '<div class="cw-herowrap">' + topbar + '<div class="cw-heropad">' + greet + searchCard + '</div></div>';
 
-    // Quick action pills (below the hero)
-    var pills = '<div class="cw-pills">';
-    QUICK.forEach(function (q) {
-      var attr = q.article ? 'data-article="' + q.article + '"' : q.gotab ? 'data-gotab="' + q.gotab + '"' : 'data-seed="' + esc(q.seed) + '"';
-      pills += '<button class="cw-pill" ' + attr + '>' + esc(q.label) + '</button>';
-    });
-    pills += '</div>';
-
     // Continue (recent conversation)
     var recent = '';
     var conv = store.conversations.slice().sort(function (a, b) { return b.updatedAt - a.updatedAt; })[0];
@@ -885,56 +987,60 @@
         + '<div class="cw-conv-t">' + timeAgo(conv.updatedAt) + '</div></div></div>';
     }
 
-    // Announcements (data-driven; hidden when empty)
-    var announce = '';
-    if (ANNOUNCEMENTS.length) {
-      announce = '<div class="cw-sect">' + sectionTitle('Latest updates')
-        + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>';
-    }
+    // 1) Featured Program — Fast Forward (hero card)
+    var featured = '<div class="cw-sect">' + sectionTitle('Featured Program') + renderCard(PROGRAMS.fastforward) + '</div>';
 
-    // Featured programs — rendered through the card system
-    var featured = '<div class="cw-sect">' + sectionTitle('Featured')
-      + renderCard(PROGRAMS.fastforward) + renderCard(PROGRAMS.ai) + renderCard(PROGRAMS.collective) + '</div>';
+    // 2) The5th AI — distinct product layout
+    var product = '<div class="cw-sect">' + sectionTitle('The5th AI') + productCard(PROGRAMS.ai) + '</div>';
 
-    // Knowledge center (KnowledgeCard + category pills)
+    // 3) Latest Updates
+    var updates = ANNOUNCEMENTS.length
+      ? '<div class="cw-sect">' + sectionTitle('Latest updates') + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>'
+      : '';
+
+    // 4) Knowledge Center — header + category grid
     var kb = '<div class="cw-sect">' + sectionTitle('Knowledge Center')
-      + '<div class="cw-kbcard"><div class="cw-kbcard-head"><div class="cw-card-ic">' + ICON.book + '</div>'
-      + '<div><h5>Find answers instantly</h5><p>Search our knowledge base and guides.</p></div></div>'
-      + '<div class="cw-catrow">';
-    KB_CATS.forEach(function (c) { kb += '<button class="cw-cat" data-ak="seed" data-av="I need help with ' + esc(c) + '.">' + esc(c) + '</button>'; });
-    kb += '</div></div></div>';
+      + '<p class="cw-ssub">Browse everything, instantly.</p>'
+      + '<div class="cw-searchcard cw-ksrch" data-ak="seed" data-av="I have a question about The5th.">'
+      + '<span class="cw-sc-ic">' + ICON.search + '</span>'
+      + '<span class="cw-sc-tx"><b>Search the knowledge base</b><i>Ask our AI anything</i></span></div>'
+      + knowledgeGrid() + '</div>';
 
-    // Latest blog (ArticleCards) — data-driven
-    var blog = '';
-    if (BLOG.length) {
-      blog = '<div class="cw-sect">' + sectionTitle('Latest blog')
-        + BLOG.slice(0, 3).map(function (b) { b.type = 'article'; return renderCard(b); }).join('') + '</div>';
-    }
+    // 5) Latest Articles — editorial (data-driven)
+    var articles = '<div class="cw-sect">' + sectionTitle('Latest articles')
+      + (BLOG.length
+        ? BLOG.slice(0, 3).map(function (b) { b.type = 'article'; return renderCard(b); }).join('')
+        : emptyState(ICON.book, 'No articles yet', 'Ask The5th AI for a recommendation and I’ll point you to the right next step.',
+          '<button class="cw-btn cw-btn-ghost" data-ak="seed" data-av="Can you recommend where I should start?" style="margin-top:14px">Ask for a recommendation</button>'))
+      + '</div>';
 
-    // Client success (CaseStudyCards in a carousel) — data-driven
-    var success = '<div class="cw-sect">' + sectionTitle('Client Success');
-    if (STORIES.length) {
-      success += '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">'
-        + STORIES.map(function (s) { s.type = 'casestudy'; return renderCard(s); }).join('')
-        + '</div><div class="cw-dots" id="cw-dots"></div></div>';
-    } else {
-      success += emptyState(ICON.spark, 'Client stories coming soon', 'Real results from women building with The5th, shared here shortly.');
-    }
-    success += '</div>';
+    // 6) Client Success — carousel (data-driven)
+    var success = '<div class="cw-sect">' + sectionTitle('Client success')
+      + (STORIES.length
+        ? '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">' + STORIES.map(function (s) { s.type = 'casestudy'; return renderCard(s); }).join('') + '</div><div class="cw-dots" id="cw-dots"></div></div>'
+        : emptyState(ICON.spark, 'Client stories coming soon', 'Real results from women building with The5th, shared here shortly.'))
+      + '</div>';
 
-    // Latest videos (VideoCards) — data-driven
-    var videos = '';
-    if (VIDEOS.length) {
-      videos = '<div class="cw-sect">' + sectionTitle('Latest videos')
-        + '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div></div>';
-    }
+    // 7) Video Library — horizontal (data-driven)
+    var videos = '<div class="cw-sect">' + sectionTitle('Video library')
+      + (VIDEOS.length
+        ? '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div>'
+        : emptyState(ICON.play, 'More content coming soon', 'Fresh videos and walkthroughs will appear here.'))
+      + '</div>';
 
-    // Feed empty state when there is no blog/video content yet
-    var feed = (BLOG.length || VIDEOS.length) ? '' : '<div class="cw-sect">' + sectionTitle('Latest')
-      + emptyState(ICON.book, 'New content coming soon', 'Fresh guides, videos and updates will appear here.',
-        '<button class="cw-btn cw-btn-ghost" data-gotab="knowledge" style="margin-top:14px">Explore Knowledge Base</button>') + '</div>';
+    // 8) Upcoming Events (data-driven)
+    var events = '<div class="cw-sect">' + sectionTitle('Upcoming events')
+      + (EVENTS.length
+        ? EVENTS.map(function (e) { e.type = 'promotion'; return renderCard(e); }).join('')
+        : emptyState(ICON.spark, 'No events scheduled', 'Check back later — live workshops are announced here.'))
+      + '</div>';
 
-    return heroBlock + '<div class="cw-home">' + pills + recent + announce + featured + kb + blog + success + videos + feed + '</div>';
+    // 9) Community  10) Newsletter  11) Footer
+    var community = '<div class="cw-sect">' + sectionTitle('Community') + communityCard() + '</div>';
+    var newsletter = '<div class="cw-sect">' + newsletterCard() + '</div>';
+    var footer = footerHtml();
+
+    return heroBlock + '<div class="cw-home">' + recent + featured + product + updates + kb + articles + success + videos + events + community + newsletter + footer + '</div>';
   }
 
   // Internal article viewer (slides in over the panels)
@@ -967,6 +1073,23 @@
     if (sc) sc.addEventListener('click', function () { startNewChat(); });
     var hx = els.win.querySelector('#cw-home-close');
     if (hx) hx.addEventListener('click', function () { toggle(false); });
+    // Newsletter subscribe
+    var nf = els.win.querySelector('#cw-news-form');
+    if (nf) nf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = (els.win.querySelector('#cw-news-email') || {}).value || '';
+      var ok = els.win.querySelector('#cw-news-ok');
+      var btn = els.win.querySelector('#cw-news-btn');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { if (ok) { ok.textContent = 'Please enter a valid email.'; ok.className = 'cw-news-ok err'; } shake(nf); return; }
+      if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
+      fetch('/api/carolina/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }); })
+        .then(function (d) {
+          if (d && d.ok) { nf.style.display = 'none'; if (ok) { ok.className = 'cw-news-ok done'; ok.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg> You’re in — welcome to The5th Weekly.'; } }
+          else { if (ok) { ok.textContent = (d && d.error) || 'Something went wrong.'; ok.className = 'cw-news-ok err'; } if (btn) { btn.disabled = false; btn.textContent = 'Subscribe'; } }
+        })
+        .catch(function () { if (ok) { ok.textContent = 'Network error — try again.'; ok.className = 'cw-news-ok err'; } if (btn) { btn.disabled = false; btn.textContent = 'Subscribe'; } });
+    });
     els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
     els.win.querySelectorAll('[data-gotab]').forEach(function (n) { n.addEventListener('click', function () { showTab(n.getAttribute('data-gotab')); }); });
     // carousel auto-advance

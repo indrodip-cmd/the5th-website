@@ -744,7 +744,21 @@
       '.cw-launcher .l-close{color:#3D2645;}.cw-launcher .l-close svg{color:#3D2645;}',
       '.cw-open .l-chat{opacity:0;transform:rotate(40deg) scale(.6);}',
       '@media(max-width:768px){.cw-launcher{width:58px;height:58px;}}',
-      '@media(max-width:480px){.cw-launcher{width:56px;height:56px;}}'
+      '@media(max-width:480px){.cw-launcher{width:56px;height:56px;}}',
+      // ── Part 2B3 welcome experience ──
+      '.cw-welcome{padding:8px 4px 6px;}',
+      '.cw-wava{width:48px;height:48px;border-radius:50%;overflow:hidden;background:linear-gradient(145deg,var(--acc),#9c7f2c);color:#1a1206;font:700 20px/48px "Inter";text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.3);margin-bottom:14px;}',
+      '.cw-wava img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-welcome h3{font:700 22px/1.25 "Inter";letter-spacing:-.01em;color:#fff;margin:0 0 8px;}',
+      '.cw-welcome p{font:400 14px/1.6 "Inter";color:var(--tx2);margin:0;}',
+      '.cw-wgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 6px;}',
+      '.cw-wcard{position:relative;display:flex;flex-direction:column;gap:10px;align-items:flex-start;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:15px;cursor:pointer;transition:transform .18s var(--sp),box-shadow .18s,border-color .18s;overflow:hidden;}',
+      '.cw-wcard::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(135deg,rgba(201,168,76,.5),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .2s;}',
+      '.cw-wcard:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(0,0,0,.4);border-color:transparent;}',
+      '.cw-wcard:hover::before{opacity:1;}',
+      '.cw-wcard-ic{width:38px;height:38px;border-radius:12px;background:rgba(201,168,76,.12);color:var(--acc);display:flex;align-items:center;justify-content:center;}',
+      '.cw-wcard-ic svg{width:20px;height:20px;}',
+      '.cw-wcard-t{font:600 13.5px/1.35 "Inter";color:#fff;}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -1409,10 +1423,14 @@
     });
   }
 
-  var CHAT_PROMPTS = [
-    'Which program is right for me?', 'Compare Fast Forward vs The5th AI', 'Tell me about The5th AI',
-    'Explain pricing & fit', 'Take the free assessment', 'Book a strategy call',
-    'Recommend a resource', 'Talk to support'
+  // Premium first-open suggestion cards (refined SVG icons, not emoji).
+  var WELCOME_CARDS = [
+    { ic: 'chart', title: 'Grow my business', seed: 'I want to grow my business — where should I start?' },
+    { ic: 'compass', title: 'Which program fits me?', seed: 'Which program is right for me?' },
+    { ic: 'spark', title: 'Learn about The5th AI', seed: 'Tell me about The5th AI.' },
+    { ic: 'book', title: 'Browse the knowledge base', seed: 'What can I learn from your knowledge base?' },
+    { ic: 'shield', title: 'Learn about Fast Forward', seed: 'Tell me about Fast Forward.' },
+    { ic: 'phone', title: 'Book a strategy call', seed: "I'd like to book a strategy call." }
   ];
 
   function renderChat() {
@@ -1462,13 +1480,17 @@
       b.addEventListener('click', function () { pop.hidden = true; chatMenu(b.getAttribute('data-menu')); });
     });
 
-    // paint — AI welcome, then history (each author's avatar, grouped).
-    addBotMsg(cfg.greeting, true, 'carolina');
-    (conv ? conv.messages : []).forEach(function (m) {
-      if (m.role === 'system' && m.kind === 'join') { addJoinSeparator(m.agent, true); lastMsgKey = null; }
-      else addMsg(m.role, m.content, true, m.agent, m.cards);
-    });
-    if (!conv || conv.messages.length === 0) renderPrompts();
+    // paint — premium welcome for a fresh chat, else the AI intro + history.
+    var empty = !conv || conv.messages.length === 0;
+    if (empty) {
+      renderWelcome();
+    } else {
+      addBotMsg(cfg.greeting, true, 'carolina');
+      conv.messages.forEach(function (m) {
+        if (m.role === 'system' && m.kind === 'join') { addJoinSeparator(m.agent, true); lastMsgKey = null; }
+        else addMsg(m.role, m.content, true, m.agent, m.cards);
+      });
+    }
     setTimeout(function () { els.in.focus(); scrollChat(); }, 220);
   }
 
@@ -1611,13 +1633,24 @@
     row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
     els.msgs.appendChild(row); maybeScroll(false);
   }
-  function renderPrompts() {
-    var row = document.createElement('div'); row.className = 'cw-chips'; row.id = 'cw-chips';
-    CHAT_PROMPTS.forEach(function (l) { var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b); });
-    els.msgs.appendChild(row); maybeScroll(false);
+  // Premium first-open welcome: avatar, headline, description + big cards.
+  function renderWelcome() {
+    var head = document.createElement('div'); head.className = 'cw-welcome';
+    head.innerHTML = '<div class="cw-wava">' + agentAva('carolina') + '</div>'
+      + '<h3>Welcome to The5th AI 👋</h3>'
+      + '<p>I\'m your business advisor. I can answer questions, recommend the right program, explain what\'s included, point you to resources, and book you a strategy call — all right here. What would you like to work on?</p>';
+    els.msgs.appendChild(head);
+    var grid = document.createElement('div'); grid.className = 'cw-wgrid';
+    WELCOME_CARDS.forEach(function (c) {
+      var b = document.createElement('button'); b.className = 'cw-wcard';
+      b.innerHTML = '<span class="cw-wcard-ic">' + (ICON[c.ic] || ICON.spark) + '</span><span class="cw-wcard-t">' + esc(c.title) + '</span>';
+      b.addEventListener('click', function () { sendMessage(c.seed); });
+      grid.appendChild(b);
+    });
+    els.msgs.appendChild(grid); maybeScroll(false);
   }
   function clearThink() { if (thinkTimer) { clearInterval(thinkTimer); thinkTimer = null; } }
-  var THINK_MSGS = ['Reviewing your question…', 'Preparing an answer…', 'One moment…'];
+  var THINK_MSGS = ['Searching knowledge…', 'Reviewing your business…', 'Finding the best resources…', 'Preparing recommendations…', 'Building your strategy…'];
   function showTyping(agentKey) {
     hideTyping();
     var t = document.createElement('div'); t.className = 'cw-m bot'; t.id = 'cw-typing';
@@ -1721,21 +1754,31 @@
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
       await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
       await doTransfer(conv, res.transfer);
-      renderSuggestions();
+      renderSuggestions('');
     } else {
       var reply = res.reply || "I'm here — how can I help?";
       await streamBotMsg(reply, conv.agent, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
       if (res.booked) addSuccessCheck();
       handleActions(res.actions);
-      renderSuggestions();
+      renderSuggestions(reply);
     }
     sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus();
   }
-  // Contextual follow-up chips after a completed AI response.
-  function renderSuggestions() {
+  // Contextual follow-up chips — change based on what the AI just said.
+  function suggestFor(reply) {
+    var t = (reply || '').toLowerCase();
+    if (/price|pricing|cost|invest|\$/.test(t)) return ['Compare programs', 'Is there a guarantee?', 'Book a call', 'Payment options'];
+    if (/fast\s?forward/.test(t)) return ["What's included?", 'Money-back guarantee', 'Compare with The5th AI', 'Book a call'];
+    if (/the5th ai|\bai\b|funnel|landing page|email|content/.test(t)) return ['Try The5th AI', 'Compare programs', 'See pricing on a call', 'Book a call'];
+    if (/collective|community/.test(t)) return ['Who is it for?', 'Compare programs', 'Book a call'];
+    if (/quiz|assessment|score/.test(t)) return ['Take the assessment', 'What will I get?', 'Book a call'];
+    if (/book|call|consult|schedule|time/.test(t)) return ['Find a time', 'What happens on the call?', 'Talk to support'];
+    return ['Tell me more', 'Which program fits me?', 'See pricing', 'Book a call'];
+  }
+  function renderSuggestions(reply) {
     var old = els.win.querySelector('#cw-suggest'); if (old) old.remove();
     var row = document.createElement('div'); row.className = 'cw-chips cw-suggest'; row.id = 'cw-suggest';
-    ['Explain further', 'Show pricing', 'Compare programs', 'Book a strategy call'].forEach(function (l) {
+    suggestFor(reply).forEach(function (l) {
       var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b);
     });
     els.msgs.appendChild(row); maybeScroll(false);

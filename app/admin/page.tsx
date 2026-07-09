@@ -24,16 +24,25 @@ interface Lead {
 interface PerPage { path: string; views: number; visitors: number; avg_scroll: number }
 interface DayPoint { day: string; views: number; visitors: number }
 interface Referrer { referrer: string; views: number }
+interface Device { device: string; pageviews: number; visitors: number }
 interface Stats {
   range_days: number
   since: string
   totals: { pageviews: number; unique_visitors: number; sessions: number }
   per_page: PerPage[]
+  devices: Device[]
   timeseries: DayPoint[]
   referrers: Referrer[]
   conversions: number
   leads: number
   leads_total: number
+}
+
+const DEVICE_META: Record<string, { label: string; color: string; icon: string }> = {
+  desktop: { label: 'Desktop', color: '#225840', icon: '🖥️' },
+  mobile:  { label: 'Mobile',  color: '#2d6a4f', icon: '📱' },
+  tablet:  { label: 'Tablet',  color: '#b8960c', icon: '📲' },
+  unknown: { label: 'Unknown', color: '#9ca3af', icon: '❔' },
 }
 
 /* ─── Question labels ─── */
@@ -183,7 +192,8 @@ function AnalyticsDashboard({ stats, loading, days, onDays }: { stats: Stats | n
         <StatCard label="Unique Visitors" value={visitors} />
         <StatCard label="Page Views" value={pageviews} hint={`${stats?.totals.sessions || 0} sessions`} />
         <StatCard label="Leads Captured" value={leads} hint={`${stats?.leads_total || 0} all-time`} />
-        <StatCard label="Visitor → Lead" value={Math.round(convRate * 10) / 10} suffix="%" accent hint={`${leads} of ${visitors} visitors`} />
+        <StatCard label="Visitor → Lead" value={Math.round(convRate * 10) / 10} suffix="%" hint={`${leads} of ${visitors} visitors`} />
+        <StatCard label="Quiz Conversion" value={Math.round(quizConv * 10) / 10} suffix="%" accent hint={`${leads} of ${quizVisitors} quiz visitors`} />
       </div>
 
       {/* Traffic over time */}
@@ -217,6 +227,45 @@ function AnalyticsDashboard({ stats, loading, days, onDays }: { stats: Stats | n
           <FunnelArrow pct={quizConv} />
           <FunnelStep label="Completed (Leads)" value={leads} sub={pctStr(Math.round(quizConv * 10) / 10) + ' of quiz'} highlight />
         </div>
+      </div>
+
+      {/* Devices */}
+      <div style={sectionCard}>
+        <div style={sectionLabel}>Devices — Mobile vs Desktop</div>
+        {(!stats || stats.devices.length === 0) ? (
+          <EmptyHint />
+        ) : (
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'stretch' }}>
+            {/* Donut-style share bar */}
+            <div style={{ flex: '1 1 320px', minWidth: 280 }}>
+              <div style={{ display: 'flex', height: 16, borderRadius: 8, overflow: 'hidden', marginBottom: 18 }}>
+                {stats.devices.map(d => {
+                  const total = stats.devices.reduce((s, x) => s + x.pageviews, 0) || 1
+                  const meta = DEVICE_META[d.device] || DEVICE_META.unknown
+                  return <div key={d.device} title={`${meta.label}: ${d.pageviews} views`} style={{ width: `${(d.pageviews / total) * 100}%`, background: meta.color }} />
+                })}
+              </div>
+              {stats.devices.map(d => {
+                const totalP = stats.devices.reduce((s, x) => s + x.pageviews, 0) || 1
+                const meta = DEVICE_META[d.device] || DEVICE_META.unknown
+                const share = (d.pageviews / totalP) * 100
+                return (
+                  <div key={d.device} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: meta.color, flexShrink: 0 }} />
+                    <div style={{ width: 74, fontSize: 14, fontWeight: 600, color: '#0a0a0a' }}>{meta.icon} {meta.label}</div>
+                    <div style={{ flex: 1, background: '#f0f0f0', borderRadius: 4, height: 8, overflow: 'hidden' }}>
+                      <div style={{ width: `${share}%`, height: '100%', background: meta.color, borderRadius: 4 }} />
+                    </div>
+                    <div style={{ width: 48, textAlign: 'right', fontSize: 14, fontWeight: 700, color: meta.color, fontVariantNumeric: 'tabular-nums' }}>{pctStr(Math.round(share * 10) / 10)}</div>
+                    <div style={{ width: 140, textAlign: 'right', fontSize: 12, color: '#9ca3af', fontVariantNumeric: 'tabular-nums' }}>
+                      {d.pageviews.toLocaleString()} views · {d.visitors.toLocaleString()} {d.visitors === 1 ? 'visitor' : 'visitors'}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Per-page table */}

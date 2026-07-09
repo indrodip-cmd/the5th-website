@@ -856,6 +856,38 @@
       '.cw-src:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.3);color:#fff;}',
       '.cw-src svg{width:13px;height:13px;flex-shrink:0;color:var(--acc);}',
       '.cw-src span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      // ── Part 3D unified content viewer ──
+      '.cw-progress{height:3px;background:rgba(255,255,255,.06);flex-shrink:0;}',
+      '.cw-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .1s linear;}',
+      '.cw-content-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 10px;}',
+      '.cw-ctype{font:700 10.5px "Inter";letter-spacing:.07em;text-transform:uppercase;color:#1a1206;background:var(--acc);padding:4px 10px;border-radius:999px;}',
+      '.cw-content-meta .cw-readtime,.cw-cauthor{font:500 12px "Inter";color:var(--mut);display:inline-flex;align-items:center;gap:5px;}',
+      '.cw-content-meta .cw-readtime svg{width:14px;height:14px;}',
+      '.cw-richbody{font:400 15px/1.75 "Inter";color:#D4D4D8;margin-top:6px;}',
+      '.cw-richbody .cw-mh{color:#fff;margin:22px 0 10px;}',
+      '.cw-richbody .cw-p{margin:0 0 14px;}',
+      '.cw-toc{margin:6px 0 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;}',
+      '.cw-toc summary{padding:11px 14px;cursor:pointer;font:600 13px "Inter";color:#fff;list-style:none;}',
+      '.cw-toc summary::-webkit-details-marker{display:none;}',
+      '.cw-toc ul{margin:0;padding:0 8px 8px;list-style:none;}',
+      '.cw-toc li{padding:8px 10px;border-radius:8px;cursor:pointer;font:400 13px "Inter";color:var(--tx2);transition:background .15s,color .15s;}',
+      '.cw-toc li:hover{background:var(--hover);color:var(--acc2);}',
+      '.cw-embed{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;margin:14px 0;background:#000;}',
+      '.cw-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}',
+      '.cw-faq{margin:14px 0;}',
+      '.cw-faq-i{border:1px solid var(--bd);border-radius:12px;margin-bottom:9px;overflow:hidden;background:var(--card);}',
+      '.cw-faq-i summary{padding:14px 16px;cursor:pointer;font:600 14px "Inter";color:#fff;list-style:none;}',
+      '.cw-faq-i summary::-webkit-details-marker{display:none;}',
+      '.cw-faq-i>div{padding:0 16px 14px;font:400 13.5px/1.6 "Inter";color:var(--tx2);}',
+      '.cw-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}',
+      '.cw-metric{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;}',
+      '.cw-metric b{display:block;font:700 22px "Inter";color:var(--acc);}',
+      '.cw-metric span{font:500 12px "Inter";color:var(--tx2);}',
+      '.cw-feedback{display:flex;align-items:center;gap:8px;margin:24px 0 0;padding-top:18px;border-top:1px solid var(--bd);font:500 13px "Inter";color:var(--tx2);}',
+      '.cw-feedback button{width:34px;height:30px;border-radius:9px;border:1px solid var(--bd);background:var(--card);cursor:pointer;font-size:15px;transition:transform .15s,border-color .15s;}',
+      '.cw-feedback button:hover{transform:translateY(-1px);}.cw-feedback button.on{border-color:var(--acc);background:#241a10;}',
+      '.cw-loading{padding:18px;}',
+      '.cw-artbar #cw-bm{font-size:18px;line-height:1;color:var(--acc);}',
       // The5th AI product card with cover
       '.cw-product-cover{position:relative;margin:-22px -22px 18px;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}',
       '.cw-product-cover .cw-cover-emoji{position:absolute;inset:0;margin:auto;font-size:52px;align-items:center;justify-content:center;}',
@@ -1378,45 +1410,149 @@
     return heroBlock + '<div class="cw-home">' + recent + featured + product + updates + kb + articles + success + videos + events + community + newsletter + footer + '</div>';
   }
 
-  // Internal article viewer (slides in over the panels)
-  // Rich in-chat content viewer — never leaves the chatbot.
-  function openArticle(key) {
-    var p = getProgram(key); if (!p) return;
-    captureHomeScroll();
-    mode = 'article';
-    clearHomeTimers();
-    var pts = (p.features || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
-    var ctxLabel = p.title + ' — program overview';
-    // Related: the other programs + the free assessment.
-    var related = Object.keys(PROGRAMS).filter(function (k) { return k !== p.id; }).map(function (k) {
-      var r = PROGRAMS[k];
-      return '<button class="cw-rel" data-article="' + k + '"><span class="cw-rel-ic" style="background:' + r.cover + '">' + r.emoji + '</span><span class="cw-rel-t">' + esc(r.title) + '<i>' + esc(r.sub) + '</i></span>' + ICON.arrow + '</button>';
+  // ── Unified in-chat content viewer (Part 3D) — every CMS type ──
+  var TYPE_META = {
+    program: { badge: 'Program', ic: 'spark' }, product: { badge: 'Product', ic: 'spark' },
+    article: { badge: 'Article', ic: 'book' }, knowledge: { badge: 'Guide', ic: 'book' },
+    case_study: { badge: 'Case study', ic: 'chart' }, video: { badge: 'Video', ic: 'play' },
+    faq: { badge: 'FAQ', ic: 'book' }, announcement: { badge: 'Update', ic: 'spark' },
+    event: { badge: 'Event', ic: 'phone' }, testimonial: { badge: 'Story', ic: 'chart' },
+    page: { badge: 'Page', ic: 'book' }, team: { badge: 'Team', ic: 'user' }
+  };
+  function programToItem(p) {
+    return {
+      type: p.type === 'promotion' ? 'product' : 'program', slug: p.id, title: p.title, subtitle: p.sub,
+      description: p.desc, cover_image: p.coverImage, category: p.category, reading_time: 4,
+      data: { emoji: p.emoji, badge: p.badge, cover: p.cover, features: p.features, info: p.info, url: p.url }
+    };
+  }
+  function videoEmbed(data) {
+    if (!data) return '';
+    if (data.provider === 'youtube' && data.videoId) return '<div class="cw-embed"><iframe src="https://www.youtube.com/embed/' + esc(data.videoId) + '" allowfullscreen loading="lazy"></iframe></div>';
+    if (data.provider === 'vimeo' && data.videoId) return '<div class="cw-embed"><iframe src="https://player.vimeo.com/video/' + esc(data.videoId) + '" allowfullscreen loading="lazy"></iframe></div>';
+    return '';
+  }
+  function faqHtml(data) {
+    var items = (data && data.items) || [];
+    if (!items.length) return '';
+    return '<div class="cw-faq">' + items.map(function (f) {
+      return '<details class="cw-faq-i"><summary>' + esc(f.q || '') + '</summary><div>' + renderMd(f.a || '') + '</div></details>';
+    }).join('') + '</div>';
+  }
+  function metricsHtml(data) {
+    var m = (data && data.metrics) || [];
+    if (!m.length) return '';
+    return '<div class="cw-metrics">' + m.map(function (x) { return '<div class="cw-metric"><b>' + esc(x.v) + '</b><span>' + esc(x.k) + '</span></div>'; }).join('') + '</div>';
+  }
+  function relatedHtml(related) {
+    if (!related || !related.length) return '';
+    return '<div class="cw-slabel">Related</div>' + related.slice(0, 6).map(function (r) {
+      var meta = TYPE_META[r.type] || { badge: r.type, ic: 'book' };
+      var ico = r.cover_image ? '<span class="cw-rel-ic" style="background-image:url(' + esc(r.cover_image) + ');background-size:cover"></span>' : '<span class="cw-rel-ic" style="background:linear-gradient(135deg,#3D2645,#143826)">' + ICON[meta.ic] + '</span>';
+      return '<button class="cw-rel" data-content="' + esc(r.slug) + '">' + ico + '<span class="cw-rel-t">' + esc(r.title) + '<i>' + esc(meta.badge) + '</i></span>' + ICON.arrow + '</button>';
     }).join('');
+  }
+  function ctaFor(item) {
+    var t = item.type, title = item.title, d = item.data || {};
+    if (t === 'program') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call about ' + esc(title) + '.">Book a strategy call</button>';
+    if (t === 'product') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I want to try ' + esc(title) + '.">Try Free</button>' + (d.url ? '<button class="cw-btn cw-btn-ghost" data-ak="nav" data-av="' + esc(d.url) + '">Buy Now</button>' : '');
+    if (t === 'case_study') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call.">Book a strategy call</button>';
+    if (t === 'event') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to reserve a spot for ' + esc(title) + '.">Reserve my spot</button>';
+    return '';
+  }
+
+  function bookmarks() { try { return JSON.parse(localStorage.getItem('the5th_carolina_bm') || '[]'); } catch (e) { return []; } }
+  function isBookmarked(slug) { return bookmarks().indexOf(slug) !== -1; }
+  function toggleBookmark(slug) { var b = bookmarks(); var i = b.indexOf(slug); if (i === -1) b.push(slug); else b.splice(i, 1); try { localStorage.setItem('the5th_carolina_bm', JSON.stringify(b)); } catch (e) {} return i === -1; }
+
+  function renderContentView(item, related) {
+    mode = 'article';
+    var d = item.data || {};
+    var meta = TYPE_META[item.type] || { badge: item.type, ic: 'book' };
+    var emoji = d.emoji ? d.emoji + ' ' : '';
+    var cover = item.cover_image
+      ? '<div class="cw-cover cw-cover-lg"><img class="cw-cov-img" src="' + esc(item.cover_image) + '" alt="" onerror="this.style.display=\'none\'"/><div class="cw-cover-grad"></div></div>'
+      : '<div class="cw-cover cw-cover-lg" style="background:' + (d.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"><span class="cw-cover-emoji">' + (d.emoji || '✦') + '</span><div class="cw-cover-grad"></div></div>';
+    var metaLine = '<span class="cw-ctype">' + esc(meta.badge) + '</span>'
+      + (item.reading_time ? '<span class="cw-readtime">' + ICON.book + ' ' + item.reading_time + ' min read</span>' : '')
+      + (item.author ? '<span class="cw-cauthor">' + esc(item.author) + '</span>' : '');
+    var typeTop = (item.type === 'program' || item.type === 'product')
+      ? ((d.features && d.features.length ? '<ul class="cw-art-list">' + d.features.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + (d.info && d.info.length ? infoRow({ info: d.info }) : ''))
+      : (videoEmbed(d) + metricsHtml(d));
 
     els.win.innerHTML =
       '<div class="cw-chatview"><div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
-      + '<span>' + esc(p.title) + '</span><button class="cw-iconbtn" id="cw-artclose" aria-label="Close">' + ICON.close + '</button></div>'
-      + '<div class="cw-scroll"><div class="cw-article">'
-      + '<div class="cw-cover cw-cover-lg" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span><div class="cw-cover-grad"></div></div>'
-      + '<div class="cw-art-body">' + badgeHtml(p) + '<h1>' + esc(p.emoji + ' ' + p.title) + '</h1>'
-      + '<div class="cw-art-meta"><span class="cw-feat-sub" style="margin:0">' + esc(p.sub) + '</span><span class="cw-readtime">' + ICON.book + ' 4 min read</span></div>'
-      + '<p class="cw-art-desc">' + esc(p.desc) + '</p><ul class="cw-art-list">' + pts + '</ul>' + infoRow(p)
-      + '<div class="cw-feat-btns" style="margin-top:22px">'
-      + '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call about ' + esc(p.title) + '.">Book a strategy call</button>'
+      + '<span>' + esc(item.title) + '</span>'
+      + '<button class="cw-iconbtn" id="cw-bm" aria-label="Bookmark" title="Bookmark">' + (isBookmarked(item.slug) ? '★' : '☆') + '</button>'
+      + '<button class="cw-iconbtn" id="cw-share" aria-label="Copy link" title="Copy link">' + ICON.copy + '</button></div>'
+      + '<div class="cw-progress"><span id="cw-progress-bar"></span></div>'
+      + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-article">'
+      + cover
+      + '<div class="cw-art-body"><div class="cw-content-meta">' + metaLine + '</div>'
+      + '<h1>' + esc(emoji + item.title) + '</h1>'
+      + (item.subtitle ? '<div class="cw-feat-sub" style="margin:0 0 12px">' + esc(item.subtitle) + '</div>' : '')
+      + '<div id="cw-toc"></div>'
+      + typeTop
+      + '<div class="cw-richbody" id="cw-richbody">' + renderMd(item.description || item.summary || '') + '</div>'
+      + (item.type === 'faq' ? faqHtml(d) : '')
+      + '<div class="cw-feat-btns" style="margin-top:22px">' + ctaFor(item)
       + '<button class="cw-btn cw-btn-ghost" id="cw-askabout">Ask The5th AI about this</button></div>'
-      + '<div class="cw-art-rel"><div class="cw-slabel">Explore also</div>' + related
-      + '<button class="cw-rel" data-ak="seed" data-av="I want to take the free assessment."><span class="cw-rel-ic" style="background:linear-gradient(135deg,#3D2645,#143826)">' + ICON.chart + '</span><span class="cw-rel-t">Free assessment<i>Your Business Health Score</i></span>' + ICON.arrow + '</button></div>'
+      + '<div class="cw-feedback">Was this helpful? <button data-fb="up">👍</button><button data-fb="down">👎</button></div>'
+      + '<div class="cw-art-rel" id="cw-related">' + relatedHtml(related) + '</div>'
       + '</div></div></div></div>';
 
+    viewContext = item.title + ' (' + item.type + ')';
     var art = els.win.querySelector('.cw-article'); if (art) art.classList.add('cw-slidein');
-    els.win.querySelector('#cw-artback').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
-    els.win.querySelector('#cw-artclose').addEventListener('click', function () { toggle(false); });
-    els.win.querySelector('#cw-askabout').addEventListener('click', function () {
-      startNewChat('I have a question about ' + p.title + '.', ctxLabel);
-    });
-    els.win.querySelectorAll('[data-article]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openArticle(n.getAttribute('data-article')); }); });
+    wireContent(item);
+    buildToc();
+  }
+
+  function wireContent(item) {
+    els.win.querySelector('#cw-artback').addEventListener('click', function () { pendingScroll = homeScroll; viewContext = ''; renderPanels(); });
+    var bm = els.win.querySelector('#cw-bm');
+    if (bm) bm.addEventListener('click', function () { var on = toggleBookmark(item.slug); bm.textContent = on ? '★' : '☆'; toast(on ? 'Bookmarked' : 'Removed'); });
+    var sh = els.win.querySelector('#cw-share');
+    if (sh) sh.addEventListener('click', function () { var url = location.origin + (item.data && item.data.url ? item.data.url : '/' + item.slug); try { navigator.clipboard.writeText(url); } catch (e) {} toast('Link copied'); });
+    var ask = els.win.querySelector('#cw-askabout');
+    if (ask) ask.addEventListener('click', function () { startNewChat('I have a question about ' + item.title + '.', item.title + ' (' + item.type + ')'); });
+    els.win.querySelectorAll('.cw-feedback [data-fb]').forEach(function (b) { b.addEventListener('click', function () { els.win.querySelectorAll('.cw-feedback [data-fb]').forEach(function (x) { x.classList.remove('on'); }); b.classList.add('on'); toast('Thanks for the feedback'); }); });
+    els.win.querySelectorAll('[data-content]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openContent(n.getAttribute('data-content')); }); });
+    // reading progress
+    var sc = els.win.querySelector('#cw-cscroll'), bar = els.win.querySelector('#cw-progress-bar');
+    if (sc && bar) sc.addEventListener('scroll', function () { var m = sc.scrollHeight - sc.clientHeight; bar.style.width = (m > 0 ? Math.min(100, (sc.scrollTop / m) * 100) : 0) + '%'; });
     wireActions(els.win);
   }
+  function buildToc() {
+    var body = els.win.querySelector('#cw-richbody'); var toc = els.win.querySelector('#cw-toc');
+    if (!body || !toc) return;
+    var hs = body.querySelectorAll('.cw-mh1, .cw-mh2');
+    if (hs.length < 2) return;
+    var html = '<details class="cw-toc"><summary>Contents</summary><ul>';
+    hs.forEach(function (h, i) { var id = 'sec' + i; h.id = id; html += '<li data-goto="' + id + '">' + esc(h.textContent) + '</li>'; });
+    toc.innerHTML = html + '</ul></details>';
+    toc.querySelectorAll('[data-goto]').forEach(function (li) { li.addEventListener('click', function () { var t = document.getElementById(li.getAttribute('data-goto')); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); });
+  }
+
+  function openContent(slug) {
+    captureHomeScroll(); clearHomeTimers(); mode = 'article';
+    var local = getProgram(slug);
+    if (local) {
+      renderContentView(programToItem(local), []);
+      // fetch CMS related in the background
+      fetch('/api/carolina/content/' + encodeURIComponent(slug)).then(function (r) { return r.ok ? r.json() : null; }).then(function (dd) {
+        if (dd && dd.related && dd.related.length) { var el = els.win.querySelector('#cw-related'); if (el) { el.innerHTML = relatedHtml(dd.related); el.querySelectorAll('[data-content]').forEach(function (n) { n.addEventListener('click', function (e) { e.stopPropagation(); openContent(n.getAttribute('data-content')); }); }); } }
+      }).catch(function () {});
+      return;
+    }
+    els.win.innerHTML = '<div class="cw-chatview"><div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback">' + ICON.back + '</button><span>Loading…</span></div><div class="cw-scroll"><div class="cw-loading"><div class="cw-feat cw-skel"><div class="cw-cover cw-sk"></div><div class="cw-feat-body"><div class="cw-sk cw-sk-line" style="width:50%"></div><div class="cw-sk cw-sk-line"></div><div class="cw-sk cw-sk-line" style="width:70%"></div></div></div></div></div></div>';
+    var bk = els.win.querySelector('#cw-artback'); if (bk) bk.addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
+    fetch('/api/carolina/content/' + encodeURIComponent(slug)).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || !d.item) { renderPanels(); toast('Content unavailable'); return; }
+      renderContentView(d.item, d.related || []);
+    }).catch(function () { renderPanels(); toast('Content unavailable'); });
+  }
+  // Back-compat: existing wiring calls openArticle — route it to the unified viewer.
+  function openArticle(key) { openContent(key); }
 
   // Home mount: search, pills, and the success carousel.
   // (Sticky-header + nav scroll behaviour live in attachShellScroll.)
@@ -1848,11 +1984,7 @@
       return '<button class="cw-src" data-slug="' + esc(s.slug) + '" data-title="' + esc(s.title) + '">' + ICON.doc + '<span>' + esc(s.title) + '</span></button>';
     }).join('');
     row.querySelectorAll('.cw-src').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var slug = b.getAttribute('data-slug'), title = b.getAttribute('data-title');
-        if (getProgram(slug)) openArticle(slug);
-        else startNewChat('Tell me more about "' + title + '".', title);
-      });
+      b.addEventListener('click', function () { openContent(b.getAttribute('data-slug')); });
     });
     col.appendChild(row);
   }

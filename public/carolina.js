@@ -20,6 +20,9 @@
 
   var TZ = 'UTC';
   try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) {}
+  // Official The5th AI launcher icon (upload to /public). Falls back to a
+  // built-in glyph if the asset is missing. Swap the path to change the icon.
+  var LAUNCHER_ICON = '/Untitled%20design%20-%202026-07-09T192610.060.png';
 
   // ── Config (admin-driven) ──
   var cfg = {
@@ -67,6 +70,12 @@
   var REDUCE = false;
   try { REDUCE = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
   function shake(el) { if (!el || REDUCE) return; el.classList.remove('cw-shake'); void el.offsetWidth; el.classList.add('cw-shake'); }
+  function toast(msg) {
+    var t = document.createElement('div'); t.className = 'cw cw-toast'; t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('show'); });
+    setTimeout(function () { t.classList.remove('show'); setTimeout(function () { if (t.parentNode) t.remove(); }, 320); }, 1600);
+  }
   // Cascading entrance for the cards in a freshly-rendered panel.
   function staggerIn(root) {
     if (REDUCE) return;
@@ -686,17 +695,124 @@
       '.cw-incard-b p{font:400 12.5px/1.45 "Inter";color:var(--tx2);margin:0 0 10px;}',
       '.cw-incard-btns{display:flex;gap:8px;flex-wrap:wrap;}',
       '.cw-incard-btns .cw-btn{padding:8px 14px;font-size:12.5px;border-radius:11px;}',
-      '.cw-incard-book{cursor:default;}'
+      '.cw-incard-book{cursor:default;}',
+      // ── Part 2B2 markdown + components ──
+      '.cw-m-ava{width:30px;height:30px;}',
+      '.cw-bub{border-radius:18px;padding:13px 16px;font-size:14.5px;line-height:1.68;}',
+      '.cw-bub>*:first-child{margin-top:0;}.cw-bub>*:last-child{margin-bottom:0;}',
+      '.cw-p{margin:0 0 11px;}',
+      '.cw-mh{font-weight:700;color:#fff;margin:15px 0 8px;line-height:1.3;}',
+      '.cw-mh1{font-size:19px;}.cw-mh2{font-size:16.5px;}.cw-mh3{font-size:15px;}',
+      '.cw-list{margin:0 0 11px;padding-left:20px;}',
+      '.cw-list li{margin:4px 0;line-height:1.6;}',
+      '.cw-list li.cw-li-check{list-style:none;margin-left:-20px;display:flex;gap:8px;align-items:flex-start;}',
+      '.cw-cbx{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--bd);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#1a1206;margin-top:1px;}',
+      '.cw-cbx.on{background:var(--acc);border-color:var(--acc);}',
+      '.cw-ic{background:rgba(255,255,255,.08);border:1px solid var(--bd);border-radius:6px;padding:1px 6px;font:500 12.5px ui-monospace,Menlo,monospace;color:#f0d98a;}',
+      '.cw-code{border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin:10px 0;background:#0f0f0f;}',
+      '.cw-code-top{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--bd);}',
+      '.cw-code-top span{font:600 11px ui-monospace,Menlo,monospace;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;}',
+      '.cw-code-copy{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--tx2);font:500 11.5px "Inter";cursor:pointer;}',
+      '.cw-code-copy svg{width:13px;height:13px;}.cw-code-copy:hover{color:#fff;}',
+      '.cw-code pre{margin:0;padding:14px;overflow-x:auto;}',
+      '.cw-code code{font:400 12.5px/1.6 ui-monospace,Menlo,monospace;color:#E6E6EA;white-space:pre;}',
+      '.cw-table-wrap{overflow-x:auto;margin:10px 0;border:1px solid var(--bd);border-radius:12px;}',
+      '.cw-table{border-collapse:collapse;width:100%;font-size:13px;}',
+      '.cw-table th{background:rgba(255,255,255,.04);text-align:left;padding:9px 12px;font-weight:600;color:#fff;border-bottom:1px solid var(--bd);white-space:nowrap;}',
+      '.cw-table td{padding:9px 12px;color:var(--tx2);border-bottom:1px solid var(--bd);}',
+      '.cw-table tr:last-child td{border-bottom:none;}',
+      '.cw-table tbody tr:nth-child(odd){background:rgba(255,255,255,.015);}',
+      '.cw-table tbody tr:hover{background:rgba(255,255,255,.045);}',
+      '.cw-bq{border-left:3px solid var(--acc);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;color:var(--tx2);font-style:italic;}',
+      '.cw-hr{border:none;border-top:1px solid var(--bd);margin:14px 0;}',
+      // error card
+      '.cw-errcard{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);border-radius:16px;padding:16px;}',
+      '.cw-errcard h5{font:700 14.5px "Inter";color:#fca5a5;margin:0 0 4px;}',
+      '.cw-errcard p{font:400 13px "Inter";color:var(--tx2);margin:0 0 12px;}',
+      '.cw-retry{padding:8px 16px;font-size:13px;}',
+      // toast
+      '.cw-toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(10px);z-index:2147483000;background:#1B1B1B;border:1px solid var(--bd);color:#fff;font:600 13px "Inter";padding:10px 18px;border-radius:999px;box-shadow:0 12px 34px rgba(0,0,0,.5);opacity:0;transition:opacity .28s var(--sp),transform .28s var(--sp);pointer-events:none;}',
+      '.cw-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}',
+      // ── launcher (official white FAB) ──
+      '.cw-launcher{width:64px;height:64px;background:#FFFFFF !important;border:none !important;box-shadow:0 18px 50px rgba(0,0,0,.28);}',
+      '.cw-launcher:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 24px 60px rgba(0,0,0,.35);}',
+      '.cw-launcher:active{transform:scale(.94);}',
+      '.cw-launcher .l-chat{position:relative;display:flex;align-items:center;justify-content:center;width:58%;height:58%;opacity:1;transform:none;}',
+      '.cw-launcher .l-icon{width:100%;height:100%;object-fit:contain;display:block;}',
+      '.cw-launcher .l-fb{display:none;align-items:center;justify-content:center;width:100%;height:100%;color:#3D2645;position:static;}',
+      '.cw-launcher .l-fb svg{width:100%;height:100%;color:#3D2645;position:static;}',
+      '.cw-launcher .l-close{color:#3D2645;}.cw-launcher .l-close svg{color:#3D2645;}',
+      '.cw-open .l-chat{opacity:0;transform:rotate(40deg) scale(.6);}',
+      '@media(max-width:768px){.cw-launcher{width:58px;height:58px;}}',
+      '@media(max-width:480px){.cw-launcher{width:56px;height:56px;}}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
 
   // ── Helpers ──
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function renderMd(t) {
-    var h = esc(t).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    h = h.replace(/(https?:\/\/[^\s<]+)/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; });
-    return h.replace(/\n/g, '<br>');
+  // Inline markdown → HTML (escaped): code, bold, italic, links.
+  function mdInline(t) {
+    t = esc(t);
+    t = t.replace(/`([^`]+)`/g, '<code class="cw-ic">$1</code>');
+    t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g, function (_, txt, url) {
+      var ext = /^https?:/.test(url);
+      return '<a href="' + url + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '>' + txt + '</a>';
+    });
+    t = t.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, function (m, sp, url) { return sp + '<a href="' + url + '" target="_blank" rel="noopener">' + url + '</a>'; });
+    return t;
+  }
+  function mdCode(lang, code) {
+    return '<div class="cw-code"><div class="cw-code-top"><span>' + esc(lang || 'code') + '</span>'
+      + '<button class="cw-code-copy" data-code="' + encodeURIComponent(code) + '">' + ICON.copy + ' Copy</button></div>'
+      + '<pre><code>' + esc(code) + '</code></pre></div>';
+  }
+  function mdTable(rows) {
+    function cells(r) { return r.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map(function (c) { return c.trim(); }); }
+    var head = cells(rows[0]);
+    var body = rows.slice(1).map(cells);
+    var h = '<div class="cw-table-wrap"><table class="cw-table"><thead><tr>' + head.map(function (c) { return '<th>' + mdInline(c) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    body.forEach(function (r) { h += '<tr>' + r.map(function (c) { return '<td>' + mdInline(c) + '</td>'; }).join('') + '</tr>'; });
+    return h + '</tbody></table></div>';
+  }
+  // Block-level markdown renderer.
+  function renderMd(src) {
+    src = String(src);
+    var blocks = [];
+    src = src.replace(/```(\w+)?\n?([\s\S]*?)```/g, function (_, lang, code) { blocks.push({ lang: lang || '', code: code.replace(/\n$/, '') }); return ' C' + (blocks.length - 1) + ' '; });
+    var lines = src.split(/\r?\n/), html = '', i = 0;
+    while (i < lines.length) {
+      var line = lines[i];
+      var cm = line.match(/^ C(\d+) $/);
+      if (cm) { var b = blocks[+cm[1]]; html += mdCode(b.lang, b.code); i++; continue; }
+      if (/^\s*$/.test(line)) { i++; continue; }
+      if (/^\s*(---|\*\*\*|___)\s*$/.test(line)) { html += '<hr class="cw-hr">'; i++; continue; }
+      var h = line.match(/^(#{1,3})\s+(.*)$/);
+      if (h) { var lv = h[1].length; html += '<h' + (lv + 2) + ' class="cw-mh cw-mh' + lv + '">' + mdInline(h[2]) + '</h' + (lv + 2) + '>'; i++; continue; }
+      if (/\|/.test(line) && i + 1 < lines.length && /^\s*\|?[\s:|-]*-[\s:|-]*$/.test(lines[i + 1])) {
+        var tbl = [line]; i += 2;
+        while (i < lines.length && /\|/.test(lines[i]) && !/^\s*$/.test(lines[i])) { tbl.push(lines[i]); i++; }
+        html += mdTable(tbl); continue;
+      }
+      if (/^\s*>\s?/.test(line)) { var q = []; while (i < lines.length && /^\s*>\s?/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, '')); i++; } html += '<blockquote class="cw-bq">' + mdInline(q.join(' ')) + '</blockquote>'; continue; }
+      if (/^\s*([-*+]|\d+\.)\s+/.test(line)) {
+        var ordered = /^\s*\d+\./.test(line), items = '';
+        while (i < lines.length && /^\s*([-*+]|\d+\.)\s+/.test(lines[i])) {
+          var it = lines[i].replace(/^\s*([-*+]|\d+\.)\s+/, '');
+          var cb = it.match(/^\[([ xX])\]\s+(.*)$/);
+          if (cb) items += '<li class="cw-li-check"><span class="cw-cbx' + (cb[1].toLowerCase() === 'x' ? ' on' : '') + '">' + (cb[1].toLowerCase() === 'x' ? '✓' : '') + '</span><span>' + mdInline(cb[2]) + '</span></li>';
+          else items += '<li>' + mdInline(it) + '</li>';
+          i++;
+        }
+        html += (ordered ? '<ol' : '<ul') + ' class="cw-list">' + items + (ordered ? '</ol>' : '</ul>'); continue;
+      }
+      var para = [line]; i++;
+      while (i < lines.length && !/^\s*$/.test(lines[i]) && !/^\s*(#{1,3}\s|>|[-*+]\s|\d+\.\s|---)/.test(lines[i]) && !/^ C\d+ $/.test(lines[i]) && !/\|/.test(lines[i])) { para.push(lines[i]); i++; }
+      html += '<p class="cw-p">' + mdInline(para.join(' ')) + '</p>';
+    }
+    return html;
   }
   function el(html) { var d = document.createElement('div'); d.innerHTML = html; return d.firstElementChild; }
 
@@ -1332,6 +1448,11 @@
     els.in.addEventListener('input', function () { els.in.style.height = 'auto'; els.in.style.height = Math.min(els.in.scrollHeight, 100) + 'px'; });
     cscroll.addEventListener('scroll', function () { if (nearBottom()) hideNewPill(); });
     els.win.querySelector('#cw-newpill').addEventListener('click', function () { scrollChat(); hideNewPill(); });
+    // Delegated copy for code blocks rendered inside markdown.
+    els.msgs.addEventListener('click', function (e) {
+      var cp = e.target.closest && e.target.closest('.cw-code-copy');
+      if (cp) { try { navigator.clipboard.writeText(decodeURIComponent(cp.getAttribute('data-code') || '')); } catch (_) {} toast('Copied to clipboard'); }
+    });
 
     // 3-dot menu
     var menu = els.win.querySelector('#cw-menu'), pop = els.win.querySelector('#cw-menu-pop');
@@ -1399,7 +1520,7 @@
       + '<button title="Regenerate" data-a="regen">' + ICON.refresh + '</button>'
       + '<button title="Helpful" data-a="up">' + ICON.up + '</button>'
       + '<button title="Not helpful" data-a="down">' + ICON.down + '</button>';
-    bar.querySelector('[data-a="copy"]').addEventListener('click', function () { try { navigator.clipboard.writeText(text); } catch (e) {} flashAct(bar, 'copy'); });
+    bar.querySelector('[data-a="copy"]').addEventListener('click', function () { try { navigator.clipboard.writeText(text); } catch (e) {} flashAct(bar, 'copy'); toast('Copied to clipboard'); });
     bar.querySelector('[data-a="regen"]').addEventListener('click', function () { regenerate(); });
     bar.querySelector('[data-a="up"]').addEventListener('click', function (e) { e.currentTarget.classList.toggle('on'); });
     bar.querySelector('[data-a="down"]').addEventListener('click', function (e) { e.currentTarget.classList.toggle('on'); });
@@ -1438,7 +1559,8 @@
       (function step() {
         if (i >= tokens.length) return finish();
         acc += tokens[i++];
-        bub.innerHTML = renderMd(acc) + '<span class="cw-cursor"></span>';
+        // stream as plain escaped text; full markdown is rendered at finish()
+        bub.innerHTML = esc(acc).replace(/\n/g, '<br>') + '<span class="cw-cursor"></span>';
         maybeScroll(false);
         setTimeout(step, 16 + Math.random() * 34);
       })();
@@ -1571,32 +1693,60 @@
     handleActions(res.actions);
   }
 
+  function clearChips() {
+    var c = els.win.querySelector('#cw-chips'); if (c) c.remove();
+    var s = els.win.querySelector('#cw-suggest'); if (s) s.remove();
+  }
   async function sendMessage(text) {
     text = (text || '').trim();
     if (!text || sending) return;
-    var chips = els.win.querySelector('#cw-chips'); if (chips) chips.remove();
+    clearChips();
     var conv = ensureActiveConv();
-    sending = true; if (els.send) els.send.disabled = true;
     addMsg('user', text); conv.messages.push({ role: 'user', content: text }); conv.updatedAt = Date.now(); saveStore();
     if (els.in) { els.in.value = ''; els.in.style.height = 'auto'; }
+    await respond(conv);
+  }
+  // Fetch + render one assistant turn for the given conversation (retryable).
+  async function respond(conv) {
+    if (sending) return;
+    sending = true; if (els.send) els.send.disabled = true;
+    clearChips();
     showTyping(conv.agent);
     var res = await callApi(conv, false);
     hideTyping();
     if (!res || res.error) {
-      addBotMsg((res && res.error) || "I couldn't reach the team just now — mind trying again in a moment?", false, conv.agent);
+      addErrorCard(function () { respond(conv); });
       shake(els.win.querySelector('.cw-comp-row'));
     } else if (res.transfer && res.transfer.to) {
-      // Current agent's short handoff line, then the human transfer sequence.
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
       await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
       await doTransfer(conv, res.transfer);
+      renderSuggestions();
     } else {
       var reply = res.reply || "I'm here — how can I help?";
       await streamBotMsg(reply, conv.agent, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
       if (res.booked) addSuccessCheck();
       handleActions(res.actions);
+      renderSuggestions();
     }
     sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus();
+  }
+  // Contextual follow-up chips after a completed AI response.
+  function renderSuggestions() {
+    var old = els.win.querySelector('#cw-suggest'); if (old) old.remove();
+    var row = document.createElement('div'); row.className = 'cw-chips cw-suggest'; row.id = 'cw-suggest';
+    ['Explain further', 'Show pricing', 'Compare programs', 'Book a strategy call'].forEach(function (l) {
+      var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b);
+    });
+    els.msgs.appendChild(row); maybeScroll(false);
+  }
+  // Elegant error card with retry (never exposes technical errors).
+  function addErrorCard(retryFn) {
+    var wrap = document.createElement('div'); wrap.className = 'cw-m bot';
+    wrap.innerHTML = '<div class="cw-m-ava">' + agentAva('carolina') + '</div><div class="cw-mcol"><div class="cw-errcard">'
+      + '<h5>Something went wrong</h5><p>Please try again in a moment.</p><button class="cw-btn cw-btn-ghost cw-retry">Retry</button></div></div>';
+    wrap.querySelector('.cw-retry').addEventListener('click', function () { wrap.remove(); if (retryFn) retryFn(); });
+    els.msgs.appendChild(wrap); lastMsgKey = null; maybeScroll(false);
   }
 
   function handleActions(actions) {
@@ -1698,8 +1848,11 @@
   // ── Build shell ──
   function build() {
     injectStyles(); suppressIntercom();
-    var launcher = el('<button class="cw cw-launcher" aria-label="Chat with Carolina">'
-      + '<span class="l-chat">' + ICON.msg + '</span><span class="l-close">' + ICON.close + '</span>'
+    var launcher = el('<button class="cw cw-launcher" aria-label="Chat with The5th AI">'
+      + '<span class="l-chat"><img class="l-icon" src="' + LAUNCHER_ICON + '" alt="" '
+      + 'onerror="this.style.display=\'none\';var f=this.parentNode.querySelector(\'.l-fb\');if(f)f.style.display=\'flex\'" />'
+      + '<span class="l-fb">' + ICON.msg + '</span></span>'
+      + '<span class="l-close">' + ICON.close + '</span>'
       + '<span class="cw-badge">1</span></button>');
     var win = el('<div class="cw cw-win" role="dialog" aria-label="The5th assistant"></div>');
     document.body.appendChild(launcher); document.body.appendChild(win);

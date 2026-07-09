@@ -176,6 +176,10 @@ function AnalyticsDashboard({ stats, loading, days, onDays }: { stats: Stats | n
   const maxTs = Math.max(1, ...(stats?.timeseries || []).map(t => t.views))
   const maxPageViews = Math.max(1, ...(stats?.per_page || []).map(p => p.views))
 
+  // Live cal.com bookings (independent of the analytics range).
+  const [cal, setCal] = useState<{ configured: boolean; totalBooked: number; upcomingCount: number } | null>(null)
+  useEffect(() => { fetch('/api/admin/calcom').then(r => r.ok ? r.json() : null).then(setCal).catch(() => {}) }, [])
+
   if (loading && !stats) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -212,6 +216,7 @@ function AnalyticsDashboard({ stats, loading, days, onDays }: { stats: Stats | n
         <StatCard label="Leads Captured" value={leads} hint={`${stats?.leads_total || 0} all-time`} />
         <StatCard label="Visitor → Lead" value={Math.round(convRate * 10) / 10} suffix="%" hint={`${leads} of ${visitors} visitors`} />
         <StatCard label="Quiz Conversion" value={Math.round(quizConv * 10) / 10} suffix="%" accent hint={`${leads} of ${quizVisitors} quiz visitors`} />
+        {cal?.configured ? <StatCard label="Calls Booked" value={cal.totalBooked} hint={`${cal.upcomingCount} upcoming · live cal.com`} /> : null}
       </div>
 
       {/* Traffic over time */}
@@ -1111,8 +1116,8 @@ function OpsDashboard() {
 }
 
 /* ─── Calls Booked (live cal.com) ─── */
-interface CalBk { uid: string; title: string; start: string; end: string; status: string; name: string; email: string; timeZone: string; meetingUrl?: string }
-interface CalOverview { configured: boolean; hint?: string; totalBooked: number; upcomingCount: number; pastCount: number; upcoming: CalBk[]; past: CalBk[] }
+interface CalBk { uid: string; title: string; start: string; end: string; status: string; name: string; email: string; timeZone: string; meetingUrl?: string; noShow: boolean }
+interface CalOverview { configured: boolean; hint?: string; totalBooked: number; upcomingCount: number; pastCount: number; cancelledCount: number; noShowCount: number; upcoming: CalBk[]; past: CalBk[]; cancelled: CalBk[] }
 
 function CallsBooked({ onOpen, onSynced }: { onOpen: (email: string) => void; onSynced?: () => void }) {
   const [d, setD] = useState<CalOverview | null>(null)
@@ -1131,10 +1136,10 @@ function CallsBooked({ onOpen, onSynced }: { onOpen: (email: string) => void; on
   )
   if (!d) return null
 
-  const tile = (label: string, value: number | string, accent?: boolean) => (
-    <div style={{ ...card, padding: '14px 18px', minWidth: 120, flex: '1 1 120px' }}>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: accent ? '#0369a1' : '#9ca3af' }}>{label}</div>
-      <div style={{ fontSize: 26, fontWeight: 800, marginTop: 3, color: accent ? '#0369a1' : '#0a0a0a' }}>{value}</div>
+  const tile = (label: string, value: number | string, color?: string) => (
+    <div style={{ ...card, padding: '14px 18px', minWidth: 110, flex: '1 1 110px' }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: color || '#9ca3af' }}>{label}</div>
+      <div style={{ fontSize: 26, fontWeight: 800, marginTop: 3, color: color || '#0a0a0a' }}>{value}</div>
     </div>
   )
 
@@ -1146,8 +1151,10 @@ function CallsBooked({ onOpen, onSynced }: { onOpen: (email: string) => void; on
       </div>
       <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
         {tile('Total Booked', d.totalBooked)}
-        {tile('Upcoming', d.upcomingCount, true)}
+        {tile('Upcoming', d.upcomingCount, '#0369a1')}
         {tile('Completed', d.pastCount)}
+        {tile('No-show', d.noShowCount, d.noShowCount > 0 ? '#b45309' : undefined)}
+        {tile('Cancelled', d.cancelledCount, d.cancelledCount > 0 ? '#b91c1c' : undefined)}
       </div>
       <div style={{ ...card, padding: 16 }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: '#225840', marginBottom: 12 }}>Upcoming appointments</div>

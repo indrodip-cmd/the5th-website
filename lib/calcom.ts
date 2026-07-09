@@ -133,6 +133,7 @@ export interface CalBooking {
   email: string
   timeZone: string
   meetingUrl?: string
+  noShow: boolean
 }
 
 /* Normalise a raw cal.com v2 booking into our flat shape. */
@@ -141,6 +142,7 @@ function normalizeBooking(b: Record<string, unknown>): CalBooking | null {
   if (!start) return null
   const attendees = (b.attendees as Array<Record<string, unknown>>) || []
   const a = attendees[0] || {}
+  const noShow = attendees.some((x) => x && (x as { noShow?: boolean }).noShow === true)
   return {
     uid: String(b.uid || b.id || ''),
     title: String(b.title || 'Strategy call'),
@@ -151,6 +153,7 @@ function normalizeBooking(b: Record<string, unknown>): CalBooking | null {
     email: String(a.email || '').toLowerCase(),
     timeZone: String(a.timeZone || 'UTC'),
     meetingUrl: (b.meetingUrl as string) || (typeof b.location === 'string' ? b.location : undefined),
+    noShow,
   }
 }
 
@@ -177,25 +180,36 @@ export interface BookingsOverview {
   totalBooked: number
   upcomingCount: number
   pastCount: number
+  cancelledCount: number
+  noShowCount: number
   upcoming: CalBooking[]
   past: CalBooking[]
+  cancelled: CalBooking[]
 }
 
 /** Live overview of the account's real bookings for the CRM dashboard. */
 export async function getBookingsOverview(): Promise<BookingsOverview> {
   const key = calKey()
-  if (!key) return { configured: false, totalBooked: 0, upcomingCount: 0, pastCount: 0, upcoming: [], past: [] }
-  const [upcoming, past] = await Promise.all([fetchBookings(key, 'upcoming'), fetchBookings(key, 'past')])
+  if (!key) return { configured: false, totalBooked: 0, upcomingCount: 0, pastCount: 0, cancelledCount: 0, noShowCount: 0, upcoming: [], past: [], cancelled: [] }
+  const [upcoming, past, cancelled] = await Promise.all([
+    fetchBookings(key, 'upcoming'),
+    fetchBookings(key, 'past'),
+    fetchBookings(key, 'cancelled'),
+  ])
   const live = (b: CalBooking) => b.status !== 'cancelled' && b.status !== 'rejected'
   const up = upcoming.filter(live)
   const pa = past.filter(live)
+  const noShowCount = pa.filter((b) => b.noShow).length
   return {
     configured: true,
     totalBooked: up.length + pa.length,
     upcomingCount: up.length,
     pastCount: pa.length,
+    cancelledCount: cancelled.length,
+    noShowCount,
     upcoming: up,
     past: pa.slice(0, 20),
+    cancelled: cancelled.slice(0, 20),
   }
 }
 

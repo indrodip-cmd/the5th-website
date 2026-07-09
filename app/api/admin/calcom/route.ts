@@ -55,7 +55,10 @@ export async function GET(req: NextRequest) {
     totalBooked: ov.totalBooked,
     upcomingCount: ov.upcomingCount,
     pastCount: ov.pastCount,
+    cancelledCount: ov.cancelledCount,
+    noShowCount: ov.noShowCount,
     upcoming: ov.upcoming.slice(0, 25),
     past: ov.past,
+    cancelled: ov.cancelled,
   })
 }

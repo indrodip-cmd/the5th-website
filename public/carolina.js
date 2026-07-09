@@ -20,9 +20,9 @@
 
   var TZ = 'UTC';
   try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) {}
-  // Official The5th AI launcher icon (upload to /public). Falls back to a
+  // Official The5th AI launcher icon (public/images/). Falls back to a
   // built-in glyph if the asset is missing. Swap the path to change the icon.
-  var LAUNCHER_ICON = '/Untitled%20design%20-%202026-07-09T192610.060.png';
+  var LAUNCHER_ICON = '/images/Untitled%20design%20-%202026-07-09T192610.060.png';
 
   // ── Config (admin-driven) ──
   var cfg = {

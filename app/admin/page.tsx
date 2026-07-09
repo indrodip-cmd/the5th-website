@@ -1110,6 +1110,64 @@ function OpsDashboard() {
   )
 }
 
+/* ─── Calls Booked (live cal.com) ─── */
+interface CalBk { uid: string; title: string; start: string; end: string; status: string; name: string; email: string; timeZone: string; meetingUrl?: string }
+interface CalOverview { configured: boolean; hint?: string; totalBooked: number; upcomingCount: number; pastCount: number; upcoming: CalBk[]; past: CalBk[] }
+
+function CallsBooked({ onOpen, onSynced }: { onOpen: (email: string) => void; onSynced?: () => void }) {
+  const [d, setD] = useState<CalOverview | null>(null)
+  const [loading, setLoading] = useState(true)
+  const load = useCallback(() => { setLoading(true); fetch('/api/admin/calcom').then(r => r.ok ? r.json() : null).then((j) => { setD(j); if (j?.configured && onSynced) onSynced() }).catch(() => {}).finally(() => setLoading(false)) }, [onSynced])
+  useEffect(() => { load() }, [load])
+  const fmt = (s: string, tz: string) => { try { return new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: tz || undefined }).format(new Date(s)) } catch { try { return new Date(s).toLocaleString() } catch { return s } } }
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+
+  if (loading && !d) return <div style={{ ...card, padding: 20, marginBottom: 18, color: '#9ca3af', fontSize: 13 }}>Loading calls…</div>
+  if (d && !d.configured) return (
+    <div style={{ ...card, padding: '16px 20px', marginBottom: 18, background: '#fff7ed', borderColor: '#fed7aa' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#9a3412', marginBottom: 4 }}>📅 Calls Booked — cal.com not connected</div>
+      <div style={{ fontSize: 12.5, color: '#b45309' }}>{d.hint || 'Add CALCOM_API_KEY in Vercel to show live bookings here.'}</div>
+    </div>
+  )
+  if (!d) return null
+
+  const tile = (label: string, value: number | string, accent?: boolean) => (
+    <div style={{ ...card, padding: '14px 18px', minWidth: 120, flex: '1 1 120px' }}>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: accent ? '#0369a1' : '#9ca3af' }}>{label}</div>
+      <div style={{ fontSize: 26, fontWeight: 800, marginTop: 3, color: accent ? '#0369a1' : '#0a0a0a' }}>{value}</div>
+    </div>
+  )
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: '#0a0a0a', display: 'flex', alignItems: 'center', gap: 8 }}>📅 Calls Booked <span style={{ fontSize: 11, fontWeight: 600, color: '#0369a1', background: '#e0f2fe', padding: '2px 8px', borderRadius: 20 }}>live · cal.com</span></div>
+        <button onClick={load} disabled={loading} style={{ padding: '6px 12px', border: '1px solid #e0e0e0', background: '#fff', borderRadius: 8, fontSize: 12, fontWeight: 600, color: '#374151', cursor: 'pointer', fontFamily: 'inherit' }}>{loading ? 'Refreshing…' : '↻ Refresh'}</button>
+      </div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+        {tile('Total Booked', d.totalBooked)}
+        {tile('Upcoming', d.upcomingCount, true)}
+        {tile('Completed', d.pastCount)}
+      </div>
+      <div style={{ ...card, padding: 16 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.05em', textTransform: 'uppercase', color: '#225840', marginBottom: 12 }}>Upcoming appointments</div>
+        {d.upcoming.length === 0 ? <div style={{ color: '#9ca3af', fontSize: 13 }}>No upcoming calls scheduled.</div> :
+          d.upcoming.map((b) => (
+            <div key={b.uid} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid #f2f2f2' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: '#e0f2fe', color: '#0369a1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 15, flexShrink: 0 }}>{(b.name || b.email || '?').trim().charAt(0).toUpperCase()}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 13.5, color: '#0a0a0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{b.name || b.email.split('@')[0]}</div>
+                <div style={{ fontSize: 12, color: '#6b7280' }}>{fmt(b.start, b.timeZone)}{b.status !== 'accepted' ? <span style={{ marginLeft: 6, color: '#b45309' }}>· {b.status}</span> : null}</div>
+              </div>
+              {b.meetingUrl && /^https?:/.test(b.meetingUrl) && <a href={b.meetingUrl} target="_blank" rel="noopener" style={{ fontSize: 12, fontWeight: 700, color: '#0369a1', textDecoration: 'none', padding: '6px 10px', border: '1px solid #bae6fd', borderRadius: 7 }}>Join →</a>}
+              {b.email && <button onClick={() => onOpen(b.email)} style={{ fontSize: 12, fontWeight: 600, color: '#225840', background: '#eef2ee', border: 'none', borderRadius: 7, padding: '6px 10px', cursor: 'pointer', fontFamily: 'inherit' }}>Open</button>}
+            </div>
+          ))}
+      </div>
+    </div>
+  )
+}
+
 /* ─── CRM ─── */
 interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; revenue: number; updated_at: string; company?: string | null; country?: string | null }
 interface Insights { summary: string; signals: string[]; next_action: string; email_draft: { subject: string; body: string } }
@@ -1213,6 +1271,7 @@ function CrmAdmin() {
           </div>
         )
       })()}
+      <CallsBooked onOpen={openProfile} onSynced={load} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: 6, background: '#eef0ee', borderRadius: 9, padding: 3 }}>
           {(['board', 'table'] as const).map(v => <button key={v} onClick={() => setView(v)} style={{ padding: '7px 16px', borderRadius: 7, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: view === v ? '#fff' : 'transparent', color: view === v ? '#225840' : '#6b7280', boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none' }}>{v === 'board' ? 'Pipeline' : 'Table'}</button>)}

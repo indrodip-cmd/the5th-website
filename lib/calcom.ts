@@ -123,6 +123,82 @@ export interface BookingResult {
   error?: string
 }
 
+export interface CalBooking {
+  uid: string
+  title: string
+  start: string
+  end: string
+  status: string
+  name: string
+  email: string
+  timeZone: string
+  meetingUrl?: string
+}
+
+/* Normalise a raw cal.com v2 booking into our flat shape. */
+function normalizeBooking(b: Record<string, unknown>): CalBooking | null {
+  const start = (b.start || b.startTime) as string
+  if (!start) return null
+  const attendees = (b.attendees as Array<Record<string, unknown>>) || []
+  const a = attendees[0] || {}
+  return {
+    uid: String(b.uid || b.id || ''),
+    title: String(b.title || 'Strategy call'),
+    start,
+    end: String(b.end || b.endTime || start),
+    status: String(b.status || 'accepted'),
+    name: String(a.name || ''),
+    email: String(a.email || '').toLowerCase(),
+    timeZone: String(a.timeZone || 'UTC'),
+    meetingUrl: (b.meetingUrl as string) || (typeof b.location === 'string' ? b.location : undefined),
+  }
+}
+
+/* Fetch one page of bookings by status (upcoming | past | cancelled …). */
+async function fetchBookings(key: string, status: string, take = 100): Promise<CalBooking[]> {
+  try {
+    const url = new URL(`${CAL_BASE}/bookings`)
+    url.searchParams.set('status', status)
+    url.searchParams.set('sortStart', status === 'past' ? 'desc' : 'asc')
+    url.searchParams.set('take', String(take))
+    const r = await fetch(url.toString(), { headers: headers(BOOKINGS_API_VERSION, key), cache: 'no-store' })
+    if (!r.ok) return []
+    const j = await r.json()
+    const list: Array<Record<string, unknown>> = Array.isArray(j?.data) ? j.data : (j?.data?.bookings || [])
+    return list.map(normalizeBooking).filter((x): x is CalBooking => !!x)
+  } catch (e) {
+    console.error('calcom fetchBookings failed', e)
+    return []
+  }
+}
+
+export interface BookingsOverview {
+  configured: boolean
+  totalBooked: number
+  upcomingCount: number
+  pastCount: number
+  upcoming: CalBooking[]
+  past: CalBooking[]
+}
+
+/** Live overview of the account's real bookings for the CRM dashboard. */
+export async function getBookingsOverview(): Promise<BookingsOverview> {
+  const key = calKey()
+  if (!key) return { configured: false, totalBooked: 0, upcomingCount: 0, pastCount: 0, upcoming: [], past: [] }
+  const [upcoming, past] = await Promise.all([fetchBookings(key, 'upcoming'), fetchBookings(key, 'past')])
+  const live = (b: CalBooking) => b.status !== 'cancelled' && b.status !== 'rejected'
+  const up = upcoming.filter(live)
+  const pa = past.filter(live)
+  return {
+    configured: true,
+    totalBooked: up.length + pa.length,
+    upcomingCount: up.length,
+    pastCount: pa.length,
+    upcoming: up,
+    past: pa.slice(0, 20),
+  }
+}
+
 /** Create a confirmed booking for the given attendee at `startISO`. */
 export async function createBooking(opts: {
   startISO: string

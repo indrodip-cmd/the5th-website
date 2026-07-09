@@ -6,7 +6,9 @@ import { emitEvent } from '@/lib/events'
 
 export const dynamic = 'force-dynamic'
 
-export const PIPELINE = ['new', 'qualified', 'discovery', 'call_booked', 'call_completed', 'proposal', 'won', 'lost', 'customer']
+export const PIPELINE = ['new', 'qualified', 'discovery', 'call_booked', 'call_completed', 'proposal', 'won', 'closed', 'lost', 'customer']
+// Stages that count as realised revenue.
+export const CLOSED_STAGES = ['won', 'closed', 'customer']
 
 /* GET: contacts list, or ?email=<> for a full profile (contact + timeline + notes). */
 export async function GET(req: NextRequest) {
@@ -23,7 +25,7 @@ export async function GET(req: NextRequest) {
   }
   const { data } = await db
     .from('carolina_leads')
-    .select('email,name,pipeline_stage,lead_score,interest,business_stage,call_booked,tags,updated_at')
+    .select('email,name,pipeline_stage,lead_score,interest,business_stage,call_booked,tags,revenue,updated_at')
     .order('updated_at', { ascending: false })
     .limit(500)
   return NextResponse.json({ contacts: data || [], pipeline: PIPELINE })
@@ -45,11 +47,16 @@ export async function PATCH(req: NextRequest) {
   if (typeof b.interest === 'string') patch.interest = sanitizeText(b.interest, 200) || null
   if (typeof b.owner === 'string') patch.owner = sanitizeText(b.owner, 120) || null
   if (Number.isFinite(b.lead_score)) patch.lead_score = Math.max(0, Math.round(b.lead_score))
+  if (Number.isFinite(b.revenue)) patch.revenue = Math.max(0, Math.round(b.revenue * 100) / 100)
   const { error } = await getSupabaseAdmin().from('carolina_leads').update(patch).eq('email', email)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   if (patch.pipeline_stage) {
     await getSupabaseAdmin().from('crm_activities').insert({ contact_email: email, type: 'note', title: `Stage → ${patch.pipeline_stage}` })
     emitEvent('pipeline_changed', { email, pipeline_stage: patch.pipeline_stage })
+  }
+  if (patch.revenue !== undefined) {
+    await getSupabaseAdmin().from('crm_activities').insert({ contact_email: email, type: 'deal', title: `Revenue set to $${(patch.revenue as number).toLocaleString()}` })
+    emitEvent('revenue_logged', { email, revenue: patch.revenue })
   }
   return NextResponse.json({ ok: true })
 }

@@ -1111,11 +1111,13 @@ function OpsDashboard() {
 }
 
 /* ─── CRM ─── */
-interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; updated_at: string; company?: string | null; country?: string | null }
+interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; revenue: number; updated_at: string; company?: string | null; country?: string | null }
 interface Insights { summary: string; signals: string[]; next_action: string; email_draft: { subject: string; body: string } }
 interface Activity { id: string; type: string; title: string | null; detail: string | null; created_at: string }
 interface Note { id: string; body: string; author: string | null; created_at: string }
-const STAGE_LABEL: Record<string, string> = { new: 'New', qualified: 'Qualified', discovery: 'Discovery', call_booked: 'Call booked', call_completed: 'Call done', proposal: 'Proposal', won: 'Won', lost: 'Lost', customer: 'Customer' }
+const STAGE_LABEL: Record<string, string> = { new: 'New', qualified: 'Qualified', discovery: 'Discovery', call_booked: 'Call booked', call_completed: 'Call done', proposal: 'Proposal', won: 'Won', closed: 'Closed', lost: 'Lost', customer: 'Customer' }
+const CLOSED_STAGES = ['won', 'closed', 'customer']
+const money = (n: number) => '$' + (n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })
 
 function CrmAdmin() {
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -1142,7 +1144,7 @@ function CrmAdmin() {
     fetch('/api/admin/crm').then(r => r.ok ? r.json() : Promise.reject()).then((d: { contacts: Contact[]; pipeline: string[] }) => { setContacts(d.contacts || []); setPipeline(d.pipeline || []) }).catch(() => flash('Failed')).finally(() => setLoading(false))
   }, [])
   useEffect(() => { load() }, [load])
-  const openProfile = (email: string) => { setSel(email); setProfile(null); setEmailOpen(false); setInsights(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(d => { setProfile(d); setEdit({ name: d.contact?.name, company: d.contact?.company, country: d.contact?.country, interest: d.contact?.interest }) }) }
+  const openProfile = (email: string) => { setSel(email); setProfile(null); setEmailOpen(false); setInsights(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(d => { setProfile(d); setEdit({ name: d.contact?.name, company: d.contact?.company, country: d.contact?.country, interest: d.contact?.interest, revenue: d.contact?.revenue || 0 }) }) }
   const patchContact = async (email: string, body: Record<string, unknown>, silent?: boolean) => {
     // optimistic
     setContacts(cs => cs.map(c => c.email === email ? { ...c, ...body } as Contact : c))
@@ -1181,17 +1183,36 @@ function CrmAdmin() {
 
   const card: React.CSSProperties = { background: '#fff', borderRadius: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
   const inp: React.CSSProperties = { width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 11px', fontSize: 13, fontFamily: 'inherit', marginBottom: 8, color: '#0a0a0a' }
-  const chip = (s: string) => <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: s === 'won' || s === 'customer' ? '#e8f0ea' : s === 'lost' ? '#fdeaea' : s === 'call_booked' ? '#e0f2fe' : '#f3f4f6', color: s === 'won' || s === 'customer' ? '#225840' : s === 'lost' ? '#b91c1c' : '#374151' }}>{STAGE_LABEL[s] || s}</span>
+  const chip = (s: string) => <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: CLOSED_STAGES.includes(s) ? '#e8f0ea' : s === 'lost' ? '#fdeaea' : s === 'call_booked' ? '#e0f2fe' : '#f3f4f6', color: CLOSED_STAGES.includes(s) ? '#225840' : s === 'lost' ? '#b91c1c' : '#374151' }}>{STAGE_LABEL[s] || s}</span>
   const fmt = (d: string) => { try { return new Date(d).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) } catch { return d } }
 
   if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading CRM…</div>
   const shown = q ? contacts.filter(c => (c.name || '').toLowerCase().includes(q.toLowerCase()) || c.email.toLowerCase().includes(q.toLowerCase())) : contacts
-  const stageColor = (s: string) => s === 'won' || s === 'customer' ? '#225840' : s === 'lost' ? '#b91c1c' : s === 'call_booked' ? '#0369a1' : '#6b7280'
+  const stageColor = (s: string) => CLOSED_STAGES.includes(s) ? '#225840' : s === 'lost' ? '#b91c1c' : s === 'call_booked' ? '#0369a1' : '#6b7280'
 
   return (
     <div>
       {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
       <OpsDashboard />
+      {(() => {
+        const closed = contacts.filter(c => CLOSED_STAGES.includes(c.pipeline_stage)).reduce((s, c) => s + (c.revenue || 0), 0)
+        const open = contacts.filter(c => !CLOSED_STAGES.includes(c.pipeline_stage) && c.pipeline_stage !== 'lost').reduce((s, c) => s + (c.revenue || 0), 0)
+        const won = contacts.filter(c => CLOSED_STAGES.includes(c.pipeline_stage) && (c.revenue || 0) > 0).length
+        return (
+          <div style={{ display: 'flex', gap: 14, marginBottom: 18, flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 200px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', color: '#fff', borderRadius: 14, padding: '18px 22px', boxShadow: '0 2px 12px rgba(34,88,64,0.25)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: 0.8 }}>Revenue Generated</div>
+              <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4 }}>{money(closed)}</div>
+              <div style={{ fontSize: 12, opacity: 0.85, marginTop: 2 }}>{won} closed deal{won === 1 ? '' : 's'}</div>
+            </div>
+            <div style={{ flex: '1 1 200px', background: '#fff', borderRadius: 14, padding: '18px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: '#C9A84C' }}>Open Pipeline</div>
+              <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: '#0a0a0a' }}>{money(open)}</div>
+              <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>potential, not yet closed</div>
+            </div>
+          </div>
+        )
+      })()}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 12, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', gap: 6, background: '#eef0ee', borderRadius: 9, padding: 3 }}>
           {(['board', 'table'] as const).map(v => <button key={v} onClick={() => setView(v)} style={{ padding: '7px 16px', borderRadius: 7, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', background: view === v ? '#fff' : 'transparent', color: view === v ? '#225840' : '#6b7280', boxShadow: view === v ? '0 1px 4px rgba(0,0,0,0.08)' : 'none' }}>{v === 'board' ? 'Pipeline' : 'Table'}</button>)}
@@ -1203,11 +1224,13 @@ function CrmAdmin() {
         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 12 }}>
           {pipeline.map(stage => {
             const items = shown.filter(c => (c.pipeline_stage || 'new') === stage)
+            const colRev = items.reduce((s, c) => s + (c.revenue || 0), 0)
             return (
               <div key={stage} data-stage={stage} onDragOver={e => e.preventDefault()} onDrop={() => { if (drag) { setStage(drag, stage); setDrag(null) } }}
                 style={{ minWidth: 232, width: 232, flexShrink: 0, background: dropStage === stage ? '#e4ede7' : '#f1f3f1', borderRadius: 12, padding: 10, outline: dropStage === stage ? '2px dashed #2d6a4f' : 'none', transition: 'background .12s' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '4px 6px 10px', fontSize: 12, fontWeight: 700, color: stageColor(stage), textTransform: 'uppercase', letterSpacing: '.04em' }}>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: stageColor(stage) }} />{STAGE_LABEL[stage] || stage} <span style={{ color: '#9ca3af', fontWeight: 600 }}>{items.length}</span>
+                  {colRev > 0 && <span style={{ marginLeft: 'auto', color: '#225840', fontWeight: 700, textTransform: 'none' }}>{money(colRev)}</span>}
                 </div>
                 {items.map(c => (
                   <div key={c.email} draggable onDragStart={() => setDrag(c.email)} onDragEnd={() => setDrag(null)}
@@ -1219,6 +1242,7 @@ function CrmAdmin() {
                       <div style={{ fontSize: 11, fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#9ca3af' }}>{c.lead_score}</div>
                     </div>
                     <div style={{ fontSize: 11.5, color: '#6b7280', marginTop: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.interest || c.email}</div>
+                    {(c.revenue || 0) > 0 && <div style={{ marginTop: 6, display: 'inline-block', fontSize: 11, fontWeight: 800, color: '#225840', background: '#e8f0ea', padding: '2px 9px', borderRadius: 20 }}>{money(c.revenue)}</div>}
                     {c.tags?.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>{c.tags.slice(0, 4).map(t => <span key={t} style={{ fontSize: 9.5, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: '#eef2ff', color: '#4338ca', textTransform: 'uppercase', letterSpacing: '.03em' }}>{t}</span>)}</div>}
                     {c.call_booked && <div style={{ marginTop: 6, fontSize: 10.5, fontWeight: 700, color: '#0369a1' }}>📅 Call booked</div>}
                   </div>
@@ -1231,15 +1255,16 @@ function CrmAdmin() {
       ) : (
         <div style={{ ...card, overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
-            <thead><tr style={{ background: '#0a1a0f' }}>{['Contact', 'Interest', 'Score', 'Stage', 'Updated', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
+            <thead><tr style={{ background: '#0a1a0f' }}>{['Contact', 'Interest', 'Score', 'Stage', 'Revenue', 'Updated', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
             <tbody>
-              {shown.length === 0 ? <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No contacts yet — they appear as visitors chat.</td></tr> :
+              {shown.length === 0 ? <tr><td colSpan={7} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No contacts yet — they appear as visitors chat.</td></tr> :
                 shown.map((c, i) => (
                   <tr key={c.email} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
                     <td style={{ padding: '12px 16px' }}><div style={{ fontWeight: 600, color: '#0a0a0a' }}>{c.name || '—'}</div><div style={{ fontSize: 12, color: '#6b7280' }}>{c.email}</div></td>
                     <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}{c.tags?.length > 0 && <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 4, marginLeft: 6 }}>{c.tags.slice(0, 3).map(t => <span key={t} style={{ fontSize: 9.5, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: '#eef2ff', color: '#4338ca' }}>{t}</span>)}</span>}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#374151' }}>{c.lead_score}</td>
                     <td style={{ padding: '12px 16px' }}>{chip(c.pipeline_stage)}</td>
+                    <td style={{ padding: '12px 16px', fontWeight: 700, color: (c.revenue || 0) > 0 ? '#225840' : '#d1d5db' }}>{(c.revenue || 0) > 0 ? money(c.revenue) : '—'}</td>
                     <td style={{ padding: '12px 16px', color: '#9ca3af', fontSize: 12 }}>{fmt(c.updated_at)}</td>
                     <td style={{ padding: '12px 16px' }}><button onClick={() => openProfile(c.email)} style={{ padding: '6px 14px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Open</button></td>
                   </tr>
@@ -1264,7 +1289,7 @@ function CrmAdmin() {
                 <div style={{ ...card, padding: 16, marginBottom: 16 }}>
                   <div style={{ display: 'flex', gap: 18, marginBottom: 14, fontSize: 13 }}>
                     <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Score</div><div style={{ fontWeight: 700, color: profile.contact.lead_score >= 8 ? '#C9A84C' : '#0a0a0a' }}>{profile.contact.lead_score}</div></div>
-                    <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Interest</div><div>{profile.contact.interest || '—'}</div></div>
+                    <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Revenue</div><div style={{ fontWeight: 700, color: (profile.contact.revenue || 0) > 0 ? '#225840' : '#0a0a0a' }}>{money(profile.contact.revenue || 0)}</div></div>
                     <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Booked</div><div>{profile.contact.call_booked ? 'Yes' : 'No'}</div></div>
                   </div>
                   <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Pipeline stage</div>
@@ -1277,6 +1302,10 @@ function CrmAdmin() {
                   <input value={edit.name || ''} onChange={e => setEdit({ ...edit, name: e.target.value })} placeholder="Name" style={inp} />
                   <div style={{ display: 'flex', gap: 8 }}><input value={edit.company || ''} onChange={e => setEdit({ ...edit, company: e.target.value })} placeholder="Company" style={inp} /><input value={edit.country || ''} onChange={e => setEdit({ ...edit, country: e.target.value })} placeholder="Country" style={inp} /></div>
                   <input value={edit.interest || ''} onChange={e => setEdit({ ...edit, interest: e.target.value })} placeholder="Interest / goal" style={inp} />
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 11, top: 9, fontSize: 13, color: '#9ca3af', fontWeight: 700 }}>$</span>
+                    <input type="number" min={0} value={edit.revenue ?? 0} onChange={e => setEdit({ ...edit, revenue: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)) })} placeholder="Revenue / deal value" style={{ ...inp, paddingLeft: 22 }} />
+                  </div>
                   <button onClick={saveFields} style={{ padding: '8px 16px', background: '#eef2ee', border: 'none', borderRadius: 8, color: '#225840', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Save details</button>
                 </div>
 

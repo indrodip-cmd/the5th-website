@@ -832,11 +832,161 @@ function CarolinaAdmin() {
   )
 }
 
+/* ─── CMS Content Manager ─── */
+interface CmsItem { id: string; type: string; slug: string; title: string; status: string; featured: boolean; category: string | null; updated_at: string }
+interface CmsCat { slug: string; name: string; type: string | null }
+const CMS_TYPES = ['program', 'product', 'article', 'knowledge', 'video', 'case_study', 'faq', 'testimonial', 'announcement', 'event', 'team', 'page']
+
+function CmsAdmin() {
+  const [items, setItems] = useState<CmsItem[]>([])
+  const [cats, setCats] = useState<CmsCat[]>([])
+  const [loading, setLoading] = useState(true)
+  const [editing, setEditing] = useState<Record<string, unknown> | null>(null)
+  const [relatedIds, setRelatedIds] = useState<string[]>([])
+  const [busy, setBusy] = useState(false)
+  const [toast, setToast] = useState('')
+  const [filter, setFilter] = useState('all')
+  const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2600) }
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/cms').then(r => r.ok ? r.json() : Promise.reject()).then((d: { items: CmsItem[]; categories: CmsCat[] }) => {
+      setItems(d.items || []); setCats(d.categories || [])
+    }).catch(() => flash('Failed to load')).finally(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+
+  const openNew = () => { setEditing({ type: 'article', title: '', slug: '', status: 'draft', featured: false, data: {}, seo: {} }); setRelatedIds([]) }
+  const openEdit = async (id: string) => {
+    const r = await fetch('/api/admin/cms?id=' + id); const d = await r.json()
+    if (d.item) { setEditing({ ...d.item, tags: (d.item.tags || []).join(', '), data: d.item.data || {}, seo: d.item.seo || {} }); setRelatedIds(d.related || []) }
+  }
+  const save = async () => {
+    if (!editing) return
+    setBusy(true)
+    const e = editing as Record<string, unknown>
+    const body: Record<string, unknown> = {
+      id: e.id, type: e.type, title: e.title, slug: e.slug, subtitle: e.subtitle, summary: e.summary,
+      description: e.description, cover_image: e.cover_image, category: e.category,
+      tags: typeof e.tags === 'string' ? (e.tags as string).split(',').map(s => s.trim()).filter(Boolean) : e.tags,
+      status: e.status, featured: !!e.featured, sort: Number(e.sort) || 0, seo: e.seo, data: e.data, related: relatedIds,
+    }
+    try {
+      const r = await fetch('/api/admin/cms', { method: e.id ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      const d = await r.json(); if (!r.ok) throw new Error(d.error || 'save')
+      flash('Saved ✓'); setEditing(null); load()
+    } catch (err) { flash(err instanceof Error ? err.message : 'Save failed') } finally { setBusy(false) }
+  }
+  const del = async (id: string) => {
+    if (!confirm('Delete this content?')) return
+    await fetch('/api/admin/cms?id=' + id, { method: 'DELETE' }); flash('Deleted'); load()
+  }
+  const uploadCover = async (file: File) => {
+    const fd = new FormData(); fd.append('kind', 'media'); fd.append('file', file)
+    try {
+      const r = await fetch('/api/admin/carolina/upload', { method: 'POST', body: fd }); const d = await r.json()
+      if (!r.ok) throw new Error(d.error); setEditing(s => s ? { ...s, cover_image: d.url } : s); flash('Image uploaded ✓')
+    } catch (e) { flash(e instanceof Error ? e.message : 'Upload failed') }
+  }
+
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, padding: '24px 26px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const field: React.CSSProperties = { width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', padding: '10px 12px', outline: 'none', color: '#0a0a0a', background: '#fff', marginBottom: 12 }
+  const lbl: React.CSSProperties = { fontSize: 12.5, fontWeight: 700, color: '#374151', margin: '4px 0 5px', display: 'block' }
+  const btn: React.CSSProperties = { padding: '10px 20px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }
+
+  if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading content…</div>
+
+  // ── Editor ──
+  if (editing) {
+    const e = editing as Record<string, string | boolean | number | Record<string, unknown>>
+    const set = (k: string, v: unknown) => setEditing(s => s ? { ...s, [k]: v } : s)
+    return (
+      <div>
+        {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 200 }}>{toast}</div>}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <button onClick={() => setEditing(null)} style={{ ...btn, background: '#eef2ee', color: '#225840' }}>← Back</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button onClick={() => { set('status', 'published'); }} style={{ ...btn, background: '#e8f0ea', color: '#225840' }}>Mark published</button>
+            <button onClick={save} disabled={busy} style={btn}>{busy ? 'Saving…' : 'Save'}</button>
+          </div>
+        </div>
+        <div style={{ ...card, marginBottom: 22 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+            <div><label style={lbl}>Type</label><select value={String(e.type)} onChange={ev => set('type', ev.target.value)} style={field}>{CMS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}</select></div>
+            <div><label style={lbl}>Status</label><select value={String(e.status)} onChange={ev => set('status', ev.target.value)} style={field}>{['draft', 'published', 'archived'].map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+          </div>
+          <label style={lbl}>Title</label><input value={String(e.title || '')} onChange={ev => set('title', ev.target.value)} style={field} />
+          <label style={lbl}>Slug (leave blank to auto-generate)</label><input value={String(e.slug || '')} onChange={ev => set('slug', ev.target.value)} style={field} />
+          <label style={lbl}>Subtitle</label><input value={String(e.subtitle || '')} onChange={ev => set('subtitle', ev.target.value)} style={field} />
+          <label style={lbl}>Summary</label><textarea value={String(e.summary || '')} onChange={ev => set('summary', ev.target.value)} rows={2} style={{ ...field, resize: 'vertical' }} />
+          <label style={lbl}>Body (markdown)</label><textarea value={String(e.description || '')} onChange={ev => set('description', ev.target.value)} rows={10} style={{ ...field, resize: 'vertical', fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 13 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+            <div><label style={lbl}>Category</label><input value={String(e.category || '')} onChange={ev => set('category', ev.target.value)} list="cms-cats" style={field} /><datalist id="cms-cats">{cats.map(c => <option key={c.slug} value={c.slug}>{c.name}</option>)}</datalist></div>
+            <div><label style={lbl}>Tags (comma-sep)</label><input value={String(e.tags || '')} onChange={ev => set('tags', ev.target.value)} style={field} /></div>
+            <div><label style={lbl}>Sort</label><input type="number" value={Number(e.sort) || 0} onChange={ev => set('sort', ev.target.value)} style={field} /></div>
+          </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#374151', margin: '2px 0 14px' }}>
+            <input type="checkbox" checked={!!e.featured} onChange={ev => set('featured', ev.target.checked)} /> Featured
+          </label>
+          <label style={lbl}>Cover image</label>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+            {e.cover_image ? <img src={String(e.cover_image)} alt="" style={{ width: 90, height: 51, objectFit: 'cover', borderRadius: 8 }} /> : null}
+            <input value={String(e.cover_image || '')} onChange={ev => set('cover_image', ev.target.value)} placeholder="/images/… or upload" style={{ ...field, marginBottom: 0, flex: 1 }} />
+            <label style={{ ...btn, padding: '8px 14px' }}>Upload<input type="file" accept="image/*" style={{ display: 'none' }} onChange={ev => { const f = ev.target.files?.[0]; if (f) uploadCover(f) }} /></label>
+          </div>
+          <label style={lbl}>Type-specific data (JSON)</label>
+          <textarea defaultValue={JSON.stringify(e.data || {}, null, 2)} onBlur={ev => { try { set('data', JSON.parse(ev.target.value || '{}')) } catch { flash('Invalid JSON in data') } }} rows={8} style={{ ...field, resize: 'vertical', fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 12.5 }} />
+          <label style={lbl}>Related content</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {items.filter(it => it.id !== e.id).map(it => {
+              const on = relatedIds.includes(it.id)
+              return <button key={it.id} onClick={() => setRelatedIds(on ? relatedIds.filter(x => x !== it.id) : [...relatedIds, it.id])}
+                style={{ padding: '6px 11px', borderRadius: 999, border: `1px solid ${on ? '#2d6a4f' : '#e0e0e0'}`, background: on ? '#e8f0ea' : '#fff', color: on ? '#225840' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>{it.title}</button>
+            })}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── List ──
+  const shown = filter === 'all' ? items : items.filter(i => i.type === filter)
+  return (
+    <div>
+      {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 200 }}>{toast}</div>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, gap: 12, flexWrap: 'wrap' }}>
+        <select value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '9px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, background: '#fff', color: '#0a0a0a' }}>
+          <option value="all">All types</option>{CMS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
+        <button onClick={openNew} style={btn}>+ New content</button>
+      </div>
+      <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+          <thead><tr style={{ background: '#0a1a0f' }}>{['Title', 'Type', 'Category', 'Status', '', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
+          <tbody>
+            {shown.length === 0 ? <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No content yet. Click “New content”.</td></tr> :
+              shown.map((it, i) => (
+                <tr key={it.id} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
+                  <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a0a0a' }}>{it.title}{it.featured && <span style={{ color: '#C9A84C', marginLeft: 6 }}>★</span>}</td>
+                  <td style={{ padding: '12px 16px', color: '#6b7280' }}>{it.type}</td>
+                  <td style={{ padding: '12px 16px', color: '#6b7280' }}>{it.category || '—'}</td>
+                  <td style={{ padding: '12px 16px' }}><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: it.status === 'published' ? '#e8f0ea' : it.status === 'archived' ? '#f3f4f6' : '#fef3c7', color: it.status === 'published' ? '#225840' : '#6b7280' }}>{it.status}</span></td>
+                  <td style={{ padding: '12px 16px' }}><button onClick={() => openEdit(it.id)} style={{ ...btn, padding: '6px 14px', fontSize: 12 }}>Edit</button></td>
+                  <td style={{ padding: '12px 16px' }}><button onClick={() => del(it.id)} style={{ padding: '6px 12px', background: '#fff', border: '1px solid #e0a0a0', borderRadius: 6, color: '#b91c1c', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Delete</button></td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 /* ─── AdminPage ─── */
 export default function AdminPage() {
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina'>('overview')
+  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content'>('overview')
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -913,12 +1063,12 @@ export default function AdminPage() {
           <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '.04em' }}>Command Center</span>
         </div>
         <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4 }}>
-          {(['overview', 'leads', 'carolina'] as const).map(t => (
+          {(['overview', 'leads', 'carolina', 'content'] as const).map(t => (
             <button
               key={t} onClick={() => setTab(t)} className="tab-btn"
               style={{ background: tab === t ? '#2d6a4f' : 'transparent', color: tab === t ? '#fff' : 'rgba(255,255,255,0.6)' }}
             >
-              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : 'Carolina'}
+              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'carolina' ? 'Carolina' : 'Content'}
             </button>
           ))}
         </div>
@@ -932,6 +1082,8 @@ export default function AdminPage() {
           <AnalyticsDashboard stats={stats} loading={statsLoading} days={days} onDays={setDays} />
         ) : tab === 'carolina' ? (
           <CarolinaAdmin />
+        ) : tab === 'content' ? (
+          <CmsAdmin />
         ) : (
           <>
             <div style={{ display: 'flex', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>

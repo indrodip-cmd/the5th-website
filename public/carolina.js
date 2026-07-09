@@ -943,7 +943,7 @@
 
   // Program card models (extend the shared card data model)
   var PROGRAMS = {
-    fastforward: {
+    'fast-forward': {
       id: 'fastforward', type: 'hero', emoji: '🚀', badge: '🔥', category: 'Featured Program',
       cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)', coverImage: '/images/coaching-session.png',
       title: 'Fast Forward', sub: 'Backed by a 100% Money-Back Guarantee',
@@ -954,8 +954,8 @@
       primaryAction: { label: 'Learn More', kind: 'article', value: 'fastforward' },
       secondaryAction: { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
     },
-    ai: {
-      id: 'ai', type: 'promotion', emoji: '🤖', badge: '✨', category: 'AI Assistant',
+    'the5th-ai': {
+      id: 'the5th-ai', type: 'promotion', emoji: '🤖', badge: '✨', category: 'AI Assistant',
       cover: 'linear-gradient(135deg,#141b2e,#3D2645)', coverImage: '/images/hero-ai.png',
       title: 'The5th AI', sub: 'Your complete marketing team, powered by AI',
       desc: 'Generate landing pages, sales funnels, email campaigns, webinar scripts, offers, ad copy, content calendars, business strategies, client proposals and much more — all within one intelligent workspace.',
@@ -964,17 +964,48 @@
       primaryAction: { label: 'Try Free', kind: 'article', value: 'ai' },
       secondaryAction: { label: 'Explore', kind: 'seed', value: 'Tell me about The5th AI.' }
     },
-    collective: {
-      id: 'collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
+    'the-collective': {
+      id: 'the-collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
       cover: 'linear-gradient(135deg,#143826,#3D2645)', coverImage: '/images/live-coaching.png',
       title: 'The Collective', sub: 'Scale toward and past $10K/month',
       desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
       features: ['Group Coaching', 'Community 40+', 'Accountability', 'Live Sessions'],
       url: '/collective',
-      primaryAction: { label: 'Learn More', kind: 'article', value: 'collective' },
+      primaryAction: { label: 'Learn More', kind: 'article', value: 'the-collective' },
       secondaryAction: { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
     }
   };
+  // Legacy short keys (backend show_card / navigate) → CMS slugs.
+  var PROG_ALIAS = { fastforward: 'fast-forward', ai: 'the5th-ai', collective: 'the-collective' };
+  function getProgram(key) { return PROGRAMS[key] || PROGRAMS[PROG_ALIAS[key]] || null; }
+
+  // Load programs/products from the CMS Content API — the single source of
+  // truth. Falls back to the seeded defaults above if the API is unavailable.
+  function loadPrograms() {
+    fetch('/api/carolina/content?type=program&limit=20').then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { return d; }).catch(function () { return null; })
+      .then(function (dProg) {
+        fetch('/api/carolina/content?type=product&limit=20').then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; })
+          .then(function (dProd) {
+            var items = ((dProg && dProg.items) || []).concat((dProd && dProd.items) || []);
+            if (!items.length) return;
+            items.forEach(function (it) {
+              var data = it.data || {};
+              PROGRAMS[it.slug] = {
+                id: it.slug, type: it.type === 'product' ? 'promotion' : 'hero',
+                emoji: data.emoji || '✦', badge: data.badge || '', category: it.category || '',
+                cover: data.cover || 'linear-gradient(135deg,#241528,#141b2e)', coverImage: it.cover_image || null,
+                title: it.title, sub: it.subtitle || '', desc: it.description || it.summary || '',
+                features: data.features || [], info: data.info || [], url: data.url || null,
+                primaryAction: data.primaryAction || { label: 'Learn More', kind: 'article', value: it.slug },
+                secondaryAction: data.secondaryAction || { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
+              };
+            });
+            if (mode === 'panels' && tab === 'home') showTab('home');
+          });
+      });
+  }
 
   // Data-driven feeds — empty until real content/CMS is connected.
   var BLOG = [];         // {id,type:'article',category,title,readingTime,publishedAt,author,cover}
@@ -1283,10 +1314,12 @@
     }
 
     // 1) Featured Program — Fast Forward (hero card)
-    var featured = '<div class="cw-sect">' + sectionTitle('Featured Program') + renderCard(PROGRAMS.fastforward) + '</div>';
+    var ffP = getProgram('fast-forward');
+    var featured = ffP ? '<div class="cw-sect">' + sectionTitle('Featured Program') + renderCard(ffP) + '</div>' : '';
 
     // 2) The5th AI — distinct product layout
-    var product = '<div class="cw-sect">' + sectionTitle('The5th AI') + productCard(PROGRAMS.ai) + '</div>';
+    var aiP = getProgram('the5th-ai');
+    var product = aiP ? '<div class="cw-sect">' + sectionTitle('The5th AI') + productCard(aiP) + '</div>' : '';
 
     // 3) Latest Updates
     var updates = ANNOUNCEMENTS.length
@@ -1341,14 +1374,14 @@
   // Internal article viewer (slides in over the panels)
   // Rich in-chat content viewer — never leaves the chatbot.
   function openArticle(key) {
-    var p = PROGRAMS[key]; if (!p) return;
+    var p = getProgram(key); if (!p) return;
     captureHomeScroll();
     mode = 'article';
     clearHomeTimers();
     var pts = (p.features || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
     var ctxLabel = p.title + ' — program overview';
-    // Related: the other two programs + the free assessment.
-    var related = Object.keys(PROGRAMS).filter(function (k) { return k !== key; }).map(function (k) {
+    // Related: the other programs + the free assessment.
+    var related = Object.keys(PROGRAMS).filter(function (k) { return k !== p.id; }).map(function (k) {
       var r = PROGRAMS[k];
       return '<button class="cw-rel" data-article="' + k + '"><span class="cw-rel-ic" style="background:' + r.cover + '">' + r.emoji + '</span><span class="cw-rel-t">' + esc(r.title) + '<i>' + esc(r.sub) + '</i></span>' + ICON.arrow + '</button>';
     }).join('');
@@ -1842,8 +1875,8 @@
   function renderInlineCards(cards) {
     cards.forEach(function (c) {
       var block = document.createElement('div'); block.className = 'cw-incard-wrap';
-      if (c.type === 'program' && PROGRAMS[c.program]) {
-        var p = PROGRAMS[c.program];
+      if (c.type === 'program' && getProgram(c.program)) {
+        var p = getProgram(c.program);
         block.innerHTML = '<div class="cw-incard" data-ak="article" data-av="' + esc(c.program) + '" role="button" tabindex="0">'
           + '<div class="cw-incard-cover" style="background:' + p.cover + '"><span>' + p.emoji + '</span></div>'
           + '<div class="cw-incard-b"><h5>' + esc(p.title) + '</h5><p>' + esc(p.sub) + '</p>'
@@ -2191,6 +2224,7 @@
     loadStore();
     visitCount = trackVisit();
     build();
+    loadPrograms();   // pull programs/products from the CMS Content API
     fetch(CONFIG_API).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       if (!d) { maybeShowPromo(); return; }
       if (d.avatar_url) cfg.avatar = d.avatar_url;

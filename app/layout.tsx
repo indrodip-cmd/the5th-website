@@ -55,6 +55,8 @@ export default function RootLayout({
         <Script src="/track.js" strategy="afterInteractive" />
         {/* Cookie / privacy consent banner — shown site-wide */}
         <Script src="/cookie-consent.js" strategy="afterInteractive" />
+        {/* Carolina — concierge chat widget (sales + booking) */}
+        <Script src="/carolina.js" strategy="afterInteractive" />
       </head>
       <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>

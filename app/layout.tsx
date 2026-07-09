@@ -53,6 +53,8 @@ export default function RootLayout({
         </Script>
         {/* First-party analytics — feeds the /admin command center */}
         <Script src="/track.js" strategy="afterInteractive" />
+        {/* Cookie / privacy consent banner — shown site-wide */}
+        <Script src="/cookie-consent.js" strategy="afterInteractive" />
       </head>
       <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>

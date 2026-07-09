@@ -5,7 +5,7 @@ import type { NextConfig } from "next";
    references. The Next app owns /quiz, /admin, and /api. */
 const MARKETING_PAGES = [
   'about', 'call', 'fast-forward', 'collective', 'ai',
-  'privacy', 'terms', 'refund', 'disclaimer', 'data',
+  'privacy', 'terms', 'refund', 'disclaimer', 'data', 'california',
 ];
 
 const nextConfig: NextConfig = {

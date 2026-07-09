@@ -9,6 +9,7 @@ import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagn
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
 import { logActivity } from '@/lib/crm'
+import { emitEvent } from '@/lib/events'
 
 export const maxDuration = 45
 
@@ -251,6 +252,7 @@ async function runTool(
     })
     ctx.email.v = email
     logActivity(email, 'chat', 'Captured in chat', sanitizeText(input.interest, 200) || sanitizeText(input.notes, 200) || undefined)
+    emitEvent('lead_captured', { email, interest: sanitizeText(input.interest, 200) })
     return JSON.stringify({ ok: true, saved: true })
   }
 
@@ -385,6 +387,11 @@ export async function POST(req: NextRequest) {
         sources: sources.length, booked: ctx.booked.v, latencyMs: Date.now() - t0,
         email: ctx.email.v, recommended: ctx.recommended,
       })
+      // Fire automation events.
+      if (ctx.email.v) {
+        if (brainScore >= cfg.cta_threshold) emitEvent('lead_qualified', { email: ctx.email.v, intent: brainIntent })
+        if (ctx.recommended.length) emitEvent('program_recommended', { email: ctx.email.v, program: ctx.recommended[0], intent: brainIntent })
+      }
     }
 
     for (let round = 0; round < 5; round++) {

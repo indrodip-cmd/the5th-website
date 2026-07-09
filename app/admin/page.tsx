@@ -1202,11 +1202,150 @@ function CrmAdmin() {
   )
 }
 
+/* ─── Automations (no-code workflows) ─── */
+interface Cond { field: string; op: string; value: string }
+interface Act { type: string; params: Record<string, string> }
+interface Flow { id?: string; name: string; description?: string; trigger: string; match: string; conditions: Cond[]; actions: Act[]; enabled: boolean; status: string; runs?: number; last_run_at?: string }
+interface Run { id: string; automation_name: string; trigger: string; status: string; duration_ms: number; log: unknown[]; created_at: string }
+const OPS = [['eq', '='], ['ne', '≠'], ['gt', '>'], ['gte', '≥'], ['lt', '<'], ['lte', '≤'], ['contains', 'contains']]
+const ACT_PARAMS: Record<string, { k: string; label: string }[]> = {
+  create_task: [{ k: 'title', label: 'Task title' }, { k: 'due_in_days', label: 'Due in (days)' }],
+  add_tag: [{ k: 'tag', label: 'Tag' }], remove_tag: [{ k: 'tag', label: 'Tag' }],
+  move_stage: [{ k: 'stage', label: 'Stage (e.g. qualified)' }],
+  update_score: [{ k: 'delta', label: 'Add to score (+/-)' }],
+  create_note: [{ k: 'body', label: 'Note text' }],
+  notify: [{ k: 'title', label: 'Title' }, { k: 'body', label: 'Body' }],
+  log: [{ k: 'message', label: 'Message' }], ai_summary: [],
+}
+function AutomationsAdmin() {
+  const [flows, setFlows] = useState<Flow[]>([])
+  const [runs, setRuns] = useState<Run[]>([])
+  const [reg, setReg] = useState<{ triggers: string[]; fields: string[]; actions: string[] }>({ triggers: [], fields: [], actions: [] })
+  const [loading, setLoading] = useState(true)
+  const [edit, setEdit] = useState<Flow | null>(null)
+  const [toast, setToast] = useState('')
+  const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/automations').then(r => r.ok ? r.json() : Promise.reject()).then(d => { setFlows(d.automations || []); setRuns(d.runs || []); setReg(d.registry || {}) }).catch(() => flash('Failed')).finally(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+  const save = async (f: Flow) => {
+    const r = await fetch('/api/admin/automations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(f) })
+    const d = await r.json(); if (!r.ok) return flash(d.error || 'Save failed')
+    flash('Saved ✓'); setEdit(null); load()
+  }
+  const toggle = async (f: Flow) => { await fetch('/api/admin/automations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...f, enabled: !f.enabled }) }); load() }
+  const del = async (id: string) => { if (!confirm('Delete workflow?')) return; await fetch('/api/admin/automations?id=' + id, { method: 'DELETE' }); load() }
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, padding: 22, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const field: React.CSSProperties = { border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 13.5, fontFamily: 'inherit', padding: '9px 11px', outline: 'none', color: '#0a0a0a', background: '#fff' }
+  const btn: React.CSSProperties = { padding: '9px 18px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }
+  const label = (s: string) => s.replace(/_/g, ' ')
+  if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading automations…</div>
+
+  if (edit) {
+    const e = edit
+    const set = (patch: Partial<Flow>) => setEdit({ ...e, ...patch })
+    return (
+      <div>
+        {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 18 }}>
+          <button onClick={() => setEdit(null)} style={{ ...btn, background: '#eef2ee', color: '#225840' }}>← Back</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button onClick={() => save({ ...e, status: 'draft' })} style={{ ...btn, background: '#eef2ee', color: '#225840' }}>Save draft</button>
+            <button onClick={() => save({ ...e, status: 'published' })} style={btn}>Publish</button>
+          </div>
+        </div>
+        <div style={{ ...card, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <input value={e.name} onChange={ev => set({ name: ev.target.value })} placeholder="Workflow name" style={{ ...field, fontSize: 16, fontWeight: 600 }} />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#225840', textTransform: 'uppercase', marginBottom: 8 }}>When (trigger)</div>
+            <select value={e.trigger} onChange={ev => set({ trigger: ev.target.value })} style={{ ...field, width: '100%' }}>
+              {reg.triggers.map(t => <option key={t} value={t}>{label(t)}</option>)}
+            </select>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#225840', textTransform: 'uppercase', marginBottom: 8, display: 'flex', gap: 10, alignItems: 'center' }}>If
+              <select value={e.match} onChange={ev => set({ match: ev.target.value })} style={{ ...field, padding: '4px 8px' }}><option value="all">all</option><option value="any">any</option></select> match:</div>
+            {e.conditions.map((c, i) => (
+              <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                <select value={c.field} onChange={ev => { const cs = [...e.conditions]; cs[i] = { ...c, field: ev.target.value }; set({ conditions: cs }) }} style={field}>{reg.fields.map(f => <option key={f} value={f}>{label(f)}</option>)}</select>
+                <select value={c.op} onChange={ev => { const cs = [...e.conditions]; cs[i] = { ...c, op: ev.target.value }; set({ conditions: cs }) }} style={field}>{OPS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>
+                <input value={c.value} onChange={ev => { const cs = [...e.conditions]; cs[i] = { ...c, value: ev.target.value }; set({ conditions: cs }) }} placeholder="value" style={{ ...field, flex: 1 }} />
+                <button onClick={() => set({ conditions: e.conditions.filter((_, x) => x !== i) })} style={{ ...field, cursor: 'pointer', color: '#b91c1c' }}>×</button>
+              </div>
+            ))}
+            <button onClick={() => set({ conditions: [...e.conditions, { field: reg.fields[0] || 'lead_score', op: 'gte', value: '' }] })} style={{ ...btn, background: '#eef2ee', color: '#225840', padding: '6px 12px', fontSize: 12 }}>+ Condition</button>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#225840', textTransform: 'uppercase', marginBottom: 8 }}>Then (actions)</div>
+            {e.actions.map((a, i) => (
+              <div key={i} style={{ border: '1px solid #eee', borderRadius: 10, padding: 12, marginBottom: 8 }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: (ACT_PARAMS[a.type] || []).length ? 8 : 0 }}>
+                  <select value={a.type} onChange={ev => { const as = [...e.actions]; as[i] = { type: ev.target.value, params: {} }; set({ actions: as }) }} style={{ ...field, flex: 1 }}>{reg.actions.map(x => <option key={x} value={x}>{label(x)}</option>)}</select>
+                  <button onClick={() => set({ actions: e.actions.filter((_, x) => x !== i) })} style={{ ...field, cursor: 'pointer', color: '#b91c1c' }}>×</button>
+                </div>
+                {(ACT_PARAMS[a.type] || []).map(pp => (
+                  <input key={pp.k} value={a.params[pp.k] || ''} onChange={ev => { const as = [...e.actions]; as[i] = { ...a, params: { ...a.params, [pp.k]: ev.target.value } }; set({ actions: as }) }} placeholder={pp.label} style={{ ...field, width: '100%', marginBottom: 6 }} />
+                ))}
+              </div>
+            ))}
+            <button onClick={() => set({ actions: [...e.actions, { type: reg.actions[0] || 'notify', params: {} }] })} style={{ ...btn, background: '#eef2ee', color: '#225840', padding: '6px 12px', fontSize: 12 }}>+ Action</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0a' }}>Workflows</div>
+        <button onClick={() => setEdit({ name: '', trigger: reg.triggers[0] || 'lead_qualified', match: 'all', conditions: [], actions: [{ type: 'notify', params: { title: 'New event' } }], enabled: true, status: 'draft' })} style={btn}>+ New workflow</button>
+      </div>
+      <div style={{ ...card, padding: 0, overflow: 'hidden', marginBottom: 22 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+          <thead><tr style={{ background: '#0a1a0f' }}>{['Name', 'Trigger', 'Status', 'Runs', 'On', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase' }}>{c}</th>)}</tr></thead>
+          <tbody>
+            {flows.length === 0 ? <tr><td colSpan={6} style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>No workflows yet.</td></tr> : flows.map((f, i) => (
+              <tr key={f.id} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
+                <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a0a0a' }}>{f.name}</td>
+                <td style={{ padding: '12px 16px', color: '#6b7280' }}>{label(f.trigger)}</td>
+                <td style={{ padding: '12px 16px' }}><span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: f.status === 'published' ? '#e8f0ea' : '#fef3c7', color: f.status === 'published' ? '#225840' : '#92660a' }}>{f.status}</span></td>
+                <td style={{ padding: '12px 16px', color: '#374151' }}>{f.runs || 0}</td>
+                <td style={{ padding: '12px 16px' }}><button onClick={() => toggle(f)} style={{ width: 40, height: 22, borderRadius: 11, border: 'none', background: f.enabled ? '#2d6a4f' : '#d1d5db', cursor: 'pointer', position: 'relative' }}><span style={{ position: 'absolute', top: 2, left: f.enabled ? 20 : 2, width: 18, height: 18, borderRadius: '50%', background: '#fff', transition: 'left .15s' }} /></button></td>
+                <td style={{ padding: '12px 16px', display: 'flex', gap: 8 }}><button onClick={() => setEdit({ ...f, conditions: f.conditions || [], actions: f.actions || [] })} style={{ ...btn, padding: '6px 14px', fontSize: 12 }}>Edit</button><button onClick={() => del(f.id!)} style={{ padding: '6px 12px', background: '#fff', border: '1px solid #e0a0a0', borderRadius: 6, color: '#b91c1c', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>Delete</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0a', marginBottom: 12 }}>Recent executions</div>
+      <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13.5 }}>
+          <tbody>
+            {runs.length === 0 ? <tr><td style={{ padding: 32, textAlign: 'center', color: '#9ca3af' }}>No executions yet.</td></tr> : runs.map(r => (
+              <tr key={r.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                <td style={{ padding: '11px 16px', fontWeight: 600 }}>{r.automation_name}</td>
+                <td style={{ padding: '11px 16px', color: '#6b7280' }}>{label(r.trigger)}</td>
+                <td style={{ padding: '11px 16px' }}><span style={{ color: r.status === 'success' ? '#225840' : '#b91c1c', fontWeight: 600 }}>{r.status}</span></td>
+                <td style={{ padding: '11px 16px', color: '#9ca3af' }}>{r.duration_ms}ms</td>
+                <td style={{ padding: '11px 16px', color: '#9ca3af', fontSize: 12 }}>{new Date(r.created_at).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 /* ─── AdminPage ─── */
 export default function AdminPage() {
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content' | 'crm'>('overview')
+  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content' | 'crm' | 'automations'>('overview')
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -1283,12 +1422,12 @@ export default function AdminPage() {
           <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '.04em' }}>Command Center</span>
         </div>
         <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4 }}>
-          {(['overview', 'leads', 'crm', 'carolina', 'content'] as const).map(t => (
+          {(['overview', 'leads', 'crm', 'carolina', 'content', 'automations'] as const).map(t => (
             <button
               key={t} onClick={() => setTab(t)} className="tab-btn"
               style={{ background: tab === t ? '#2d6a4f' : 'transparent', color: tab === t ? '#fff' : 'rgba(255,255,255,0.6)' }}
             >
-              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'crm' ? 'CRM' : t === 'carolina' ? 'Carolina' : 'Content'}
+              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'crm' ? 'CRM' : t === 'carolina' ? 'Carolina' : t === 'content' ? 'Content' : 'Automations'}
             </button>
           ))}
         </div>
@@ -1306,6 +1445,8 @@ export default function AdminPage() {
           <CmsAdmin />
         ) : tab === 'crm' ? (
           <CrmAdmin />
+        ) : tab === 'automations' ? (
+          <AutomationsAdmin />
         ) : (
           <>
             <div style={{ display: 'flex', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>

@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { adminEmail } from '@/lib/session'
 import { sanitizeText } from '@/lib/validation'
 import { CONTENT_TYPES } from '@/lib/cms'
+import { emitEvent } from '@/lib/events'
 
 export const dynamic = 'force-dynamic'
 
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await getSupabaseAdmin().from('cms_content').insert(row).select('id').single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   await syncRelations(data.id, b.related)
+  if (row.status === 'published') emitEvent('content_published', { slug: row.slug, type: row.type })
   return NextResponse.json({ ok: true, id: data.id })
 }
 

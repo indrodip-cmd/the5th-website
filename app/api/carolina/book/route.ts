@@ -4,6 +4,7 @@ import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { logActivity, upsertContact } from '@/lib/crm'
+import { emitEvent } from '@/lib/events'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 30
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
   const emailed = await sendAppointmentEmail({ name, email, startISO: booking.start || start, timeZone: tz, meetingUrl: booking.meetingUrl })
   await upsertContact(email, { name, call_booked: true, booking_start: booking.start || start, timezone: tz, pipeline_stage: 'call_booked' })
   await logActivity(email, 'call_booked', 'Strategy call booked', new Date(booking.start || start).toISOString(), { meetingUrl: booking.meetingUrl || null, via: 'in-chat calendar' })
+  emitEvent('appointment_booked', { email, start: booking.start || start })
 
   return NextResponse.json({ ok: true, start: booking.start || start, email_sent: emailed, meeting_url: booking.meetingUrl || null })
 }

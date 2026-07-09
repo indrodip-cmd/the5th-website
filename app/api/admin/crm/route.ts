@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { adminEmail } from '@/lib/session'
 import { sanitizeText } from '@/lib/validation'
+import { emitEvent } from '@/lib/events'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,6 +43,7 @@ export async function PATCH(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   if (patch.pipeline_stage) {
     await getSupabaseAdmin().from('crm_activities').insert({ contact_email: email, type: 'note', title: `Stage → ${patch.pipeline_stage}` })
+    emitEvent('pipeline_changed', { email, pipeline_stage: patch.pipeline_stage })
   }
   return NextResponse.json({ ok: true })
 }

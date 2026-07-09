@@ -45,6 +45,14 @@
     var a = agentInfo(key);
     return a.avatar ? '<img src="' + esc(a.avatar) + '" alt="' + esc(a.name) + '">' : '<span>' + esc(a.name.charAt(0)) + '</span>';
   }
+  // Overlapping cluster of the whole team (Intercom-style faces).
+  function teamCluster() {
+    var html = '<div class="cw-team" aria-label="The5th team — online">';
+    ['carolina', 'natasha', 'benjamin'].forEach(function (k) {
+      html += '<span class="cw-tm" title="' + esc(agentInfo(k).name) + '">' + agentAva(k) + '</span>';
+    });
+    return html + '<span class="cw-team-dot"></span></div>';
+  }
   var leadName = '';
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -318,6 +326,12 @@
       '.cw-tb-left{display:flex;align-items:center;gap:12px;}',
       '.cw-greet{font:500 14px/1 "Inter";color:var(--tx2);}',
       '.cw-tb-right{display:flex;align-items:center;gap:10px;}',
+      '.cw-team{position:relative;display:flex;align-items:center;}',
+      '.cw-tm{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #241530;background:linear-gradient(145deg,var(--acc),#9c7f2c);display:flex;align-items:center;justify-content:center;color:#1a1206;font:700 13px "Inter";margin-left:-11px;box-shadow:0 3px 10px rgba(0,0,0,.4);transition:transform .2s var(--sp);}',
+      '.cw-tm:first-child{margin-left:0;}',
+      '.cw-team:hover .cw-tm{margin-left:-6px;}.cw-team:hover .cw-tm:first-child{margin-left:0;}',
+      '.cw-tm img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-team-dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#4ade80;border:2px solid #241530;box-shadow:0 0 0 1px rgba(0,0,0,.2);}',
       '.cw-bell{background:var(--card);border:1px solid var(--bd);}',
       // hero title
       '.cw-htitle{padding:8px 16px 18px;}',
@@ -757,8 +771,7 @@
     // Sticky compact header
     var topbar = '<div class="cw-topbar" id="cw-topbar"><div class="cw-tb-left"><div class="cw-logo">the<b>5</b>th</div>'
       + '<span class="cw-greet">' + greeting() + '</span></div>'
-      + '<div class="cw-tb-right"><button class="cw-iconbtn cw-bell" aria-label="Notifications">' + ICON.spark + '</button>'
-      + '<div class="cw-ava">' + avatarInner() + '</div></div></div>';
+      + '<div class="cw-tb-right">' + teamCluster() + '</div></div>';
 
     // Hero title + search
     var hero = '<div class="cw-htitle"><h1>The5th AI</h1><p>Your business growth assistant</p></div>'

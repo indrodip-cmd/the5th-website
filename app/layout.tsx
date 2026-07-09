@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import Script from 'next/script';
+import PageTracker from './PageTracker';
 
 export const metadata: Metadata = {
   title: "The5th AI Business Assessment | The5th Consulting",
@@ -39,7 +40,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-QFT4216XJD"
+          src="https://www.googletagmanager.com/gtag/js?id=G-T45WJY6Q2W"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -47,11 +48,13 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-QFT4216XJD');
+            gtag('config', 'G-T45WJY6Q2W');
           `}
         </Script>
+        {/* First-party analytics — feeds the /admin command center */}
+        <Script src="/track.js" strategy="afterInteractive" />
       </head>
-      <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<Analytics /></body>
+      <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>
   );
 }

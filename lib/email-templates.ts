@@ -182,3 +182,19 @@ ${HEADER("Your 15 days are almost up — here's what's next")}
 </div>
 ${FOOTER}`)
 }
+
+/* One-time code for signing into the /admin command center. */
+export function adminOtpEmail(otpCode: string) {
+  return BODY_WRAP(`
+${HEADER('Admin sign-in code')}
+<div style="padding:32px 40px">
+  <p style="font-size:15px;color:#555;line-height:1.7;margin-bottom:28px">Use the code below to sign in to the <strong>The5th Command Center</strong>. It expires in 10 minutes.</p>
+  <div style="background:#f6faf7;border:2px solid #2d6a4f;border-radius:16px;padding:28px;text-align:center;margin-bottom:28px">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2d6a4f;margin-bottom:12px">Your Admin Code</div>
+    <div style="font-size:48px;font-weight:900;color:#1a1a1a;letter-spacing:12px;font-family:monospace">${otpCode}</div>
+    <div style="font-size:12px;color:#aaa;margin-top:10px">Expires in 10 minutes</div>
+  </div>
+  <p style="font-size:13px;color:#888;line-height:1.7">If you didn't try to sign in, you can safely ignore this email — no one can access the dashboard without this code.</p>
+</div>
+${FOOTER}`)
+}

@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { NextRequest, NextResponse } from 'next/server'
+import { getSupabaseAdmin } from '@/lib/supabase'
+import { adminEmail } from '@/lib/session'
 
-export async function GET() {
-  const supa = createClient(
-    'https://hlcvxeujqjhropiignjq.supabase.co',
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-  const { data, error } = await supa
+export async function GET(req: NextRequest) {
+  // Lead data is sensitive — only an authenticated admin may read it.
+  if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { data, error } = await getSupabaseAdmin()
     .from('quiz_leads')
     .select('*')
     .order('created_at', { ascending: false })

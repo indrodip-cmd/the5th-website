@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 /* ─── Types ─── */
 interface Lead {
@@ -1131,6 +1131,9 @@ function CrmAdmin() {
   const [emSub, setEmSub] = useState(''); const [emBody, setEmBody] = useState(''); const [sending, setSending] = useState(false)
   const [insights, setInsights] = useState<Insights | null>(null); const [insBusy, setInsBusy] = useState(false)
   const [drag, setDrag] = useState<string | null>(null)
+  const [dropStage, setDropStage] = useState<string | null>(null)
+  const tdrag = useRef<{ email: string; moved: boolean } | null>(null)
+  const [tagInput, setTagInput] = useState('')
   const [toast, setToast] = useState('')
   const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
 
@@ -1143,10 +1146,23 @@ function CrmAdmin() {
   const patchContact = async (email: string, body: Record<string, unknown>, silent?: boolean) => {
     // optimistic
     setContacts(cs => cs.map(c => c.email === email ? { ...c, ...body } as Contact : c))
+    setProfile(p => p && p.contact.email === email ? { ...p, contact: { ...p.contact, ...body } as Contact } : p)
     await fetch('/api/admin/crm', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, ...body }) })
     if (!silent) flash('Saved ✓')
   }
   const setStage = async (email: string, stage: string) => { await patchContact(email, { pipeline_stage: stage }, true); if (sel === email) openProfile(email) }
+  // Touch drag (mobile/tablet) — native HTML5 DnD doesn't fire on touch.
+  const onTStart = (email: string) => () => { tdrag.current = { email, moved: false } }
+  const onTMove = (e: React.TouchEvent) => {
+    if (!tdrag.current) return
+    tdrag.current.moved = true
+    const t = e.touches[0]
+    const col = (document.elementFromPoint(t.clientX, t.clientY) as HTMLElement | null)?.closest('[data-stage]')
+    setDropStage(col ? col.getAttribute('data-stage') : null)
+  }
+  const onTEnd = () => { const d = tdrag.current; if (d && d.moved && dropStage) setStage(d.email, dropStage); tdrag.current = null; setDropStage(null) }
+  const setTags = (email: string, tags: string[]) => patchContact(email, { tags }, true)
+  const addTag = (email: string, current: string[]) => { const t = tagInput.trim().slice(0, 40); if (!t || current.includes(t)) { setTagInput(''); return } setTags(email, [...current, t]); setTagInput('') }
   const saveFields = async () => { if (!sel) return; await patchContact(sel, edit); openProfile(sel) }
   const addNote = async () => { if (!sel || !note.trim()) return; await fetch('/api/admin/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel, body: note }) }); setNote(''); openProfile(sel) }
   const sendEmail = async () => {
@@ -1188,19 +1204,22 @@ function CrmAdmin() {
           {pipeline.map(stage => {
             const items = shown.filter(c => (c.pipeline_stage || 'new') === stage)
             return (
-              <div key={stage} onDragOver={e => e.preventDefault()} onDrop={() => { if (drag) { setStage(drag, stage); setDrag(null) } }}
-                style={{ minWidth: 232, width: 232, flexShrink: 0, background: '#f1f3f1', borderRadius: 12, padding: 10 }}>
+              <div key={stage} data-stage={stage} onDragOver={e => e.preventDefault()} onDrop={() => { if (drag) { setStage(drag, stage); setDrag(null) } }}
+                style={{ minWidth: 232, width: 232, flexShrink: 0, background: dropStage === stage ? '#e4ede7' : '#f1f3f1', borderRadius: 12, padding: 10, outline: dropStage === stage ? '2px dashed #2d6a4f' : 'none', transition: 'background .12s' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '4px 6px 10px', fontSize: 12, fontWeight: 700, color: stageColor(stage), textTransform: 'uppercase', letterSpacing: '.04em' }}>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: stageColor(stage) }} />{STAGE_LABEL[stage] || stage} <span style={{ color: '#9ca3af', fontWeight: 600 }}>{items.length}</span>
                 </div>
                 {items.map(c => (
-                  <div key={c.email} draggable onDragStart={() => setDrag(c.email)} onDragEnd={() => setDrag(null)} onClick={() => openProfile(c.email)}
-                    style={{ background: '#fff', borderRadius: 10, padding: '11px 12px', marginBottom: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #eee', cursor: 'grab' }}>
+                  <div key={c.email} draggable onDragStart={() => setDrag(c.email)} onDragEnd={() => setDrag(null)}
+                    onTouchStart={onTStart(c.email)} onTouchMove={onTMove} onTouchEnd={onTEnd}
+                    onClick={() => { if (!tdrag.current?.moved) openProfile(c.email) }}
+                    style={{ background: '#fff', borderRadius: 10, padding: '11px 12px', marginBottom: 8, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #eee', cursor: 'grab', touchAction: 'none', opacity: drag === c.email ? 0.4 : 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
                       <div style={{ fontWeight: 600, fontSize: 13.5, color: '#0a0a0a' }}>{c.name || c.email.split('@')[0]}</div>
                       <div style={{ fontSize: 11, fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#9ca3af' }}>{c.lead_score}</div>
                     </div>
                     <div style={{ fontSize: 11.5, color: '#6b7280', marginTop: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.interest || c.email}</div>
+                    {c.tags?.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>{c.tags.slice(0, 4).map(t => <span key={t} style={{ fontSize: 9.5, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: '#eef2ff', color: '#4338ca', textTransform: 'uppercase', letterSpacing: '.03em' }}>{t}</span>)}</div>}
                     {c.call_booked && <div style={{ marginTop: 6, fontSize: 10.5, fontWeight: 700, color: '#0369a1' }}>📅 Call booked</div>}
                   </div>
                 ))}
@@ -1218,7 +1237,7 @@ function CrmAdmin() {
                 shown.map((c, i) => (
                   <tr key={c.email} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
                     <td style={{ padding: '12px 16px' }}><div style={{ fontWeight: 600, color: '#0a0a0a' }}>{c.name || '—'}</div><div style={{ fontSize: 12, color: '#6b7280' }}>{c.email}</div></td>
-                    <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}</td>
+                    <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}{c.tags?.length > 0 && <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 4, marginLeft: 6 }}>{c.tags.slice(0, 3).map(t => <span key={t} style={{ fontSize: 9.5, fontWeight: 700, padding: '2px 7px', borderRadius: 20, background: '#eef2ff', color: '#4338ca' }}>{t}</span>)}</span>}</td>
                     <td style={{ padding: '12px 16px', fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#374151' }}>{c.lead_score}</td>
                     <td style={{ padding: '12px 16px' }}>{chip(c.pipeline_stage)}</td>
                     <td style={{ padding: '12px 16px', color: '#9ca3af', fontSize: 12 }}>{fmt(c.updated_at)}</td>
@@ -1259,6 +1278,19 @@ function CrmAdmin() {
                   <div style={{ display: 'flex', gap: 8 }}><input value={edit.company || ''} onChange={e => setEdit({ ...edit, company: e.target.value })} placeholder="Company" style={inp} /><input value={edit.country || ''} onChange={e => setEdit({ ...edit, country: e.target.value })} placeholder="Country" style={inp} /></div>
                   <input value={edit.interest || ''} onChange={e => setEdit({ ...edit, interest: e.target.value })} placeholder="Interest / goal" style={inp} />
                   <button onClick={saveFields} style={{ padding: '8px 16px', background: '#eef2ee', border: 'none', borderRadius: 8, color: '#225840', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Save details</button>
+                </div>
+
+                <div style={{ ...card, padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Tags</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+                    {(profile.contact.tags || []).map(t => (
+                      <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, padding: '4px 6px 4px 11px', borderRadius: 20, background: '#eef2ff', color: '#4338ca' }}>{t}
+                        <button onClick={() => setTags(profile.contact.email, (profile.contact.tags || []).filter(x => x !== t))} style={{ width: 16, height: 16, borderRadius: '50%', border: 'none', background: '#dfe3ff', color: '#4338ca', cursor: 'pointer', fontSize: 12, lineHeight: 1, padding: 0 }}>×</button>
+                      </span>
+                    ))}
+                    {(profile.contact.tags || []).length === 0 && <span style={{ fontSize: 12.5, color: '#b8bdb8' }}>No tags yet</span>}
+                  </div>
+                  <input value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag(profile.contact.email, profile.contact.tags || []) } }} placeholder="Add a tag and press Enter…" style={{ ...inp, marginBottom: 0 }} />
                 </div>
 
                 <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>

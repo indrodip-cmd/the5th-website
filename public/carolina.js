@@ -66,6 +66,12 @@
     return html + '<span class="cw-hs-ai" title="The5th AI">' + ICON.spark + '</span></div>';
   }
   var leadName = '';
+  var leadEmail = '';
+  try { leadEmail = localStorage.getItem('cw_lead_email') || ''; leadName = leadName || localStorage.getItem('cw_lead_name') || ''; } catch (e) {}
+  function setLead(name, email) {
+    if (name) { leadName = String(name).split(' ')[0]; try { localStorage.setItem('cw_lead_name', leadName); } catch (e) {} }
+    if (email) { leadEmail = String(email).trim(); try { localStorage.setItem('cw_lead_email', leadEmail); } catch (e) {} }
+  }
   var viewContext = '';   // what content the visitor is viewing, for AI context awareness
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   // Respect the OS "reduce motion" setting — disables scale/slide/streaming.
@@ -1831,6 +1837,7 @@
       + '<button class="cw-iconbtn" id="cw-menu" aria-label="Conversation options" aria-haspopup="true">' + ICON.dots + '</button>'
       + '<div class="cw-menu-pop" id="cw-menu-pop" role="menu" hidden>'
       + '<button data-menu="clear" role="menuitem">' + ICON.refresh + ' Clear chat</button>'
+      + '<button data-menu="emailme" role="menuitem">' + ICON.mail + ' Email me this chat</button>'
       + '<button data-menu="export" role="menuitem">' + ICON.download + ' Export transcript</button>'
       + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div></div>'
       + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
@@ -1881,8 +1888,51 @@
     setTimeout(function () { els.in.focus(); scrollChat(); }, 220);
   }
 
+  function transcriptPayload() {
+    var conv = activeConv(); if (!conv) return [];
+    return conv.messages.filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
+      .map(function (m) { return { role: m.role, content: m.content }; });
+  }
+  function sendTranscript(email, cb) {
+    var msgs = transcriptPayload();
+    if (!msgs.length) { toast('Start a conversation first'); if (cb) cb(false); return; }
+    fetch('/api/carolina/transcript', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, name: leadName, messages: msgs }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (d) { if (d.ok) { setLead('', email); toast('Sent — check your inbox 📬'); if (cb) cb(true); } else { toast(d.error || 'Could not send that'); if (cb) cb(false); } })
+      .catch(function () { toast('Network error — try again'); if (cb) cb(false); });
+  }
+  function appendEmailCapture() {
+    if (mode !== 'chat' || !els.msgs) return;
+    var wrap = makeMsgWrap('assistant', 'carolina');
+    var col = wrap.querySelector('.cw-mcol');
+    var card = document.createElement('div'); card.className = 'cw-book';
+    card.innerHTML = '<div class="cw-book-h">' + ICON.mail + ' Email me this conversation</div>'
+      + '<div class="cw-book-body"><div class="cw-book-form"><input id="cw-em-in" type="email" placeholder="you@email.com" value="' + esc(leadEmail || '') + '"><button class="cw-btn cw-btn-primary" id="cw-em-send">Send transcript</button></div></div>';
+    col.appendChild(card); els.msgs.appendChild(wrap); maybeScroll(true);
+    var inp = card.querySelector('#cw-em-in'), btn = card.querySelector('#cw-em-send');
+    setTimeout(function () { try { inp.focus(); } catch (e) {} }, 60);
+    function go() {
+      var v = (inp.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { toast('Enter a valid email'); shake(card); return; }
+      btn.disabled = true; btn.textContent = 'Sending…';
+      sendTranscript(v, function (ok) {
+        if (ok) card.innerHTML = '<div class="cw-book-done"><svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><div><b>Sent!</b><span>Your conversation is on its way to ' + esc(v) + '</span></div></div>';
+        else { btn.disabled = false; btn.textContent = 'Send transcript'; }
+      });
+    }
+    btn.addEventListener('click', go);
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+  }
+  function emailTranscript() {
+    var conv = activeConv();
+    if (!conv || conv.messages.filter(function (m) { return m.role !== 'system'; }).length === 0) { toast('Start a conversation first'); return; }
+    if (leadEmail && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(leadEmail)) sendTranscript(leadEmail);
+    else appendEmailCapture();
+  }
+
   function chatMenu(action) {
     var conv = activeConv(); if (!conv) return;
+    if (action === 'emailme') { emailTranscript(); return; }
     if (action === 'clear') { conv.messages = []; saveStore(); renderChat(); }
     else if (action === 'delete') {
       store.conversations = store.conversations.filter(function (c) { return c.id !== conv.id; });
@@ -2200,7 +2250,7 @@
         if (res.ok) {
           var lbl = ''; try { lbl = new Date(res.start).toLocaleString([], { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); } catch (e) { lbl = res.start; }
           card.innerHTML = '<div class="cw-book-done"><svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><div><b>You\'re booked!</b><span>' + esc(lbl) + ' — confirmation on its way to ' + esc(state.email.trim()) + '</span></div></div>';
-          leadName = state.name.trim().split(' ')[0]; maybeScroll(false);
+          setLead(state.name.trim(), state.email.trim()); maybeScroll(false);
         } else { toast(res.error || 'Could not book that time'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } }
       })
       .catch(function () { toast('Network error — try again'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } });

@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { upsertContact, logActivity } from '@/lib/crm'
+import { emitEvent } from '@/lib/events'
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,6 +72,19 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    // Mirror every quiz lead into the native CRM so all leads live in one place.
+    const stageLabel = q1 || ''
+    await upsertContact(email, {
+      name: name || null,
+      source: 'quiz',
+      business_stage: stageLabel || null,
+      interest: quiz_answers?.q2 || quiz_answers?.goal || null,
+      tags: ['quiz', sequence_assigned.toLowerCase()],
+    })
+    await logActivity(email, 'lead', 'Completed the quiz', stageLabel ? `Stage: ${stageLabel} · Track: ${sequence_assigned}` : `Track: ${sequence_assigned}`)
+    emitEvent('lead_captured', { email, name, source: 'quiz', business_stage: stageLabel })
+
     return NextResponse.json({ success: true, lead: data })
   } catch (err) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 })

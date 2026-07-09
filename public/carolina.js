@@ -849,6 +849,13 @@
       '.cw-cover-cta svg{width:14px;height:14px;}',
       '.cw-feat:hover .cw-cover-cta,.cw-product-cover:hover .cw-cover-cta{opacity:1;transform:none;}',
       '.cw-cover-hero .cw-cover-emoji{position:absolute;inset:0;margin:auto;}',
+      // ── Part 3B source attribution chips ──
+      '.cw-sources{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;}',
+      '.cw-sources-lbl{font:600 10.5px "Inter";letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-right:2px;}',
+      '.cw-src{display:inline-flex;align-items:center;gap:6px;max-width:200px;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:6px 11px;cursor:pointer;color:var(--tx2);font:500 12px "Inter";transition:transform .15s var(--sp),border-color .15s,color .15s;}',
+      '.cw-src:hover{transform:translateY(-1px);border-color:rgba(201,168,76,.3);color:#fff;}',
+      '.cw-src svg{width:13px;height:13px;flex-shrink:0;color:var(--acc);}',
+      '.cw-src span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       // The5th AI product card with cover
       '.cw-product-cover{position:relative;margin:-22px -22px 18px;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}',
       '.cw-product-cover .cw-cover-emoji{position:absolute;inset:0;margin:auto;font-size:52px;align-items:center;justify-content:center;}',
@@ -1656,7 +1663,7 @@
       addBotMsg(cfg.greeting, true, 'carolina');
       conv.messages.forEach(function (m) {
         if (m.role === 'system' && m.kind === 'join') { addJoinSeparator(m.agent, true); lastMsgKey = null; }
-        else addMsg(m.role, m.content, true, m.agent, m.cards, m.att);
+        else addMsg(m.role, m.content, true, m.agent, m.cards, m.att, m.sources);
       });
     }
     setTimeout(function () { els.in.focus(); scrollChat(); }, 220);
@@ -1833,19 +1840,35 @@
     }).join('') + '</div>';
   }
   function addBotMsg(text, noScroll, agentKey) { addMsg('assistant', text, noScroll, agentKey); }
-  function addMsg(role, text, noScroll, agentKey, cards, att) {
+  // Source-attribution chips (grounded content) under an AI answer.
+  function renderSources(col, sources) {
+    if (!sources || !sources.length) return;
+    var row = document.createElement('div'); row.className = 'cw-sources';
+    row.innerHTML = '<span class="cw-sources-lbl">Sources</span>' + sources.slice(0, 4).map(function (s) {
+      return '<button class="cw-src" data-slug="' + esc(s.slug) + '" data-title="' + esc(s.title) + '">' + ICON.doc + '<span>' + esc(s.title) + '</span></button>';
+    }).join('');
+    row.querySelectorAll('.cw-src').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var slug = b.getAttribute('data-slug'), title = b.getAttribute('data-title');
+        if (getProgram(slug)) openArticle(slug);
+        else startNewChat('Tell me more about "' + title + '".', title);
+      });
+    });
+    col.appendChild(row);
+  }
+  function addMsg(role, text, noScroll, agentKey, cards, att, sources) {
     var wrap = makeMsgWrap(role, agentKey);
     var col = wrap.querySelector('.cw-mcol');
     if (role === 'user' && att && att.length) { var ac = document.createElement('div'); ac.innerHTML = attChipsHtml(att); col.appendChild(ac.firstChild); }
     if (text) { var bub = document.createElement('div'); bub.className = 'cw-bub'; bub.innerHTML = renderMd(text); col.appendChild(bub); }
-    if (role !== 'user') botActions(col, text);
+    if (role !== 'user') { botActions(col, text); renderSources(col, sources); }
     els.msgs.appendChild(wrap);
     if (cards && cards.length) renderInlineCards(cards);
     if (!noScroll) maybeScroll(role === 'user');
   }
 
   // Progressive streaming reveal (grows smoothly, blinking cursor, then settles).
-  function streamBotMsg(text, agentKey, cards) {
+  function streamBotMsg(text, agentKey, cards, sources) {
     return new Promise(function (resolve) {
       var wrap = makeMsgWrap('assistant', agentKey);
       var col = wrap.querySelector('.cw-mcol');
@@ -1855,6 +1878,7 @@
         bub.classList.remove('cw-streaming'); bub.innerHTML = renderMd(text);
         botActions(col, text);
         if (cards && cards.length) renderInlineCards(cards);
+        renderSources(col, sources);
         maybeScroll(false); resolve();
       }
       if (REDUCE || text.length < 3) { bub.innerHTML = renderMd(text); return finish(); }
@@ -2008,7 +2032,7 @@
     hideTyping();
     if (!res || res.error) { addBotMsg((res && res.error) || "Sorry, I hit a snag — could you say that again?", false, to); return; }
     var reply = res.reply || 'How can I help?';
-    await streamBotMsg(reply, to, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: to, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
+    await streamBotMsg(reply, to, res.cards, res.sources); conv.messages.push({ role: 'assistant', content: reply, agent: to, cards: res.cards && res.cards.length ? res.cards : undefined, sources: res.sources && res.sources.length ? res.sources : undefined }); conv.updatedAt = Date.now(); saveStore();
     if (res.booked) addSuccessCheck();
     handleActions(res.actions);
   }
@@ -2051,7 +2075,7 @@
       renderSuggestions('');
     } else {
       var reply = res.reply || "I'm here — how can I help?";
-      await streamBotMsg(reply, conv.agent, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
+      await streamBotMsg(reply, conv.agent, res.cards, res.sources); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent, cards: res.cards && res.cards.length ? res.cards : undefined, sources: res.sources && res.sources.length ? res.sources : undefined }); conv.updatedAt = Date.now(); saveStore();
       if (res.booked) addSuccessCheck();
       handleActions(res.actions);
       renderSuggestions(reply);

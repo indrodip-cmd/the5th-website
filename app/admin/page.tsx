@@ -958,7 +958,10 @@ function CmsAdmin() {
         <select value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '9px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, background: '#fff', color: '#0a0a0a' }}>
           <option value="all">All types</option>{CMS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-        <button onClick={openNew} style={btn}>+ New content</button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={async () => { setBusy(true); try { const r = await fetch('/api/admin/cms/embed', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); const d = await r.json(); flash(d.ok ? `Reindexed ${d.chunks} chunks (${d.provider})` : (d.error || 'Failed')) } catch { flash('Reindex failed') } finally { setBusy(false) } }} disabled={busy} style={{ ...btn, background: '#eef2ee', color: '#225840' }}>{busy ? 'Reindexing…' : 'Reindex knowledge'}</button>
+          <button onClick={openNew} style={btn}>+ New content</button>
+        </div>
       </div>
       <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>

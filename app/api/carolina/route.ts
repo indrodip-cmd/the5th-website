@@ -6,6 +6,7 @@ import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { getSlots, createBooking, CAL_PUBLIC_LINK } from '@/lib/calcom'
 import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, type LeadMagnet } from '@/lib/carolina-config'
+import { retrieve, type Source } from '@/lib/retrieval'
 
 export const maxDuration = 45
 
@@ -351,7 +352,26 @@ export async function POST(req: NextRequest) {
     for (const a of agents) personas[a.key] = a.persona
     if (settings.persona && !personas.carolina) personas.carolina = settings.persona
 
-    const system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
+    let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
+
+    // ── Knowledge Engine (RAG): ground the answer in published CMS content ──
+    let sources: Source[] = []
+    if (!handoff) {
+      const lastUser = incoming.filter((m) => m.role === 'user').pop()
+      const lastText = lastUser ? sanitizeText(lastUser.content, 500) : ''
+      if (lastText) {
+        try {
+          const r = await retrieve(lastText, { hint: context || undefined })
+          sources = r.sources
+          if (r.context) {
+            system +=
+              `\n\nGROUNDED KNOWLEDGE — the following is The5th's own published content. Answer using it when relevant and refer to it naturally by name. If the answer is not covered here and is not basic sales/booking info, say you're not certain and offer a call — never invent facts, pricing, or policies.\n\n${r.context}`
+          }
+        } catch (e) {
+          console.error('retrieval failed', e)
+        }
+      }
+    }
 
     const client = anthropic()
     const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false } }
@@ -374,11 +394,12 @@ export async function POST(req: NextRequest) {
           transfer: { to, user_name: userName, agent_name: AGENTS[to].name },
           booked: ctx.booked.v,
           actions: ctx.actions,
+          sources,
         })
       }
 
       if (toolUses.length === 0 || res.stop_reason !== 'tool_use') {
-        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards })
+        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards, sources })
       }
 
       messages.push({ role: 'assistant', content: res.content })

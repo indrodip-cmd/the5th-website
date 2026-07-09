@@ -5,7 +5,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { getSlots, createBooking, CAL_PUBLIC_LINK } from '@/lib/calcom'
 import { sendAppointmentEmail } from '@/lib/carolina-email'
-import { loadSettings, loadActiveLeadMagnet, type LeadMagnet } from '@/lib/carolina-config'
+import { loadSettings, loadActiveLeadMagnet, loadAgents, type LeadMagnet } from '@/lib/carolina-config'
 
 export const maxDuration = 45
 
@@ -25,38 +25,66 @@ const PAGES: Record<string, string> = {
   home: '/',
 }
 
-const BASE_RULES = `STRICT RULES:
-- You are a marketing, sales, and scheduling assistant. You are NOT a coach.
-- NEVER give detailed business advice, strategies, step-by-step instructions, tactics, or "how to" answers. There is no knowledge base of tactics to draw from.
-- If asked for advice or specifics, warmly redirect: that is exactly what the free quiz or a call with the team is for.
-- Only speak about The5th's offers, value, resources, booking, and scheduling. Politely decline anything off-topic.
-- NEVER promise income, results, or guarantees. Do not quote exact prices; the team covers pricing and fit on the call.
+export const AGENT_KEYS = ['carolina', 'natasha', 'benjamin'] as const
+type AgentKey = (typeof AGENT_KEYS)[number]
+
+const AGENTS: Record<AgentKey, { name: string; scope: string; routing: string; canBook: boolean }> = {
+  carolina: {
+    name: 'Carolina',
+    scope:
+      'You handle SALES: the programs (Fast Forward, The Collective, The5th AI), the free assessment/quiz, lead magnets, pricing at a high level, and booking calls.',
+    routing:
+      'If the visitor asks a general or customer-success question that is NOT about buying or booking (how things work, what to expect, membership, logistics), hand off to Natasha. If something is broken, or they have a technical, billing, or account-access problem, hand off to Benjamin.',
+    canBook: true,
+  },
+  natasha: {
+    name: 'Natasha',
+    scope:
+      'You handle GENERAL and CUSTOMER-SUCCESS questions: how things work, what to expect, membership and logistics — anything that is not a direct sale and not a technical problem.',
+    routing:
+      'If the visitor wants to buy, discuss pricing, or book a call, hand off to Carolina. If something is broken, or they have a technical, billing, or account-access problem, hand off to Benjamin.',
+    canBook: false,
+  },
+  benjamin: {
+    name: 'Benjamin',
+    scope:
+      'You handle SUPPORT: account access, billing questions, technical issues, and fixing things that have gone wrong.',
+    routing:
+      'If the visitor wants to buy or book a call, hand off to Carolina. If it becomes a general "how does it work" question, hand off to Natasha.',
+    canBook: false,
+  },
+}
+
+function baseRules(canBook: boolean): string {
+  return `SHARED RULES:
+- You are a concierge for marketing, sales, service and support — NOT a coach. Never give detailed business strategies, tactics, or "how to" teaching; there is no knowledge base of tactics. Warmly redirect such requests to the free quiz or a call.
+- Only discuss The5th's offers, service, support, booking and scheduling. Politely decline anything off-topic.
+- Never promise income, results, or guarantees. Do not quote exact prices; the team covers pricing and fit on a call.
 - Do not invent facts, testimonials, features, or availability.
 - Keep replies short and human: 2-4 sentences, first person, warm. One question at a time.
-- Aim to: understand their goal → capture first name + email (call save_lead) → guide them to the right next step.
-
-TOOLS:
-- save_lead: call as soon as you have a first name AND a valid email.
-- navigate_user: when the visitor would be better served on another page (e.g. send someone unsure to the quiz), take them there and offer to guide them through it. Keep chatting after — the conversation continues on the new page.
-- get_lead_magnet: after you have their email, call this to fetch the free resource link and share it.
-- get_availability: call before proposing specific call times so you offer real open slots.
-- book_appointment: only after the visitor confirms ONE specific time and you have their name + email. Confirm warmly afterwards and mention a confirmation email is on the way.
-
-If booking is unavailable for any reason, share this scheduling link instead: ${CAL_PUBLIC_LINK}`
+- Capture the visitor's first name and email early via save_lead.
+${canBook ? '- You CAN book calls: use get_availability, then book_appointment after they confirm a specific time.' : '- You do NOT book calls yourself — if they want to book, hand off to Carolina.'}
+- If booking is unavailable, share this scheduling link: ${CAL_PUBLIC_LINK}`
+}
 
 function buildSystem(opts: {
+  agent: AgentKey
+  personas: Record<string, string | null>
   kb: string | null
-  persona: string | null
   magnet: LeadMagnet | null
   timeZone: string
+  handoff: boolean
 }): string {
+  const a = AGENTS[opts.agent]
+  const persona = opts.personas[opts.agent] || null
   const parts: string[] = []
   parts.push(
-    `You are Carolina, the friendly virtual concierge for The5th Consulting — a company that helps women over 40 turn their expertise into a profitable online business.`
+    `You are ${a.name}, part of the customer team at The5th Consulting — a company that helps women over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support).`
   )
-  if (opts.persona) parts.push(`PERSONA:\n${opts.persona}`)
+  parts.push(`YOUR ROLE: ${a.scope}`)
+  if (persona) parts.push(`PERSONA: ${persona}`)
   if (opts.kb) parts.push(opts.kb)
-  if (opts.magnet) {
+  if (opts.magnet && a.canBook) {
     const pts = Array.isArray(opts.magnet.selling_points) ? opts.magnet.selling_points.join('; ') : ''
     parts.push(
       `ACTIVE FREE RESOURCE you may offer to capture leads:\n` +
@@ -64,10 +92,19 @@ function buildSystem(opts: {
         (opts.magnet.description ? `- What it is: ${opts.magnet.description}\n` : '') +
         (opts.magnet.hook ? `- Hook: ${opts.magnet.hook}\n` : '') +
         (pts ? `- Selling points: ${pts}\n` : '') +
-        `Offer it naturally when it fits. After they give their email (save_lead), call get_lead_magnet and share the link. Write your OWN persuasive, on-brand copy — do not read these notes verbatim.`
+        `Offer it naturally when it fits. After they give their email (save_lead), call get_lead_magnet and share the link. Write your OWN persuasive, on-brand copy.`
     )
   }
-  parts.push(BASE_RULES)
+  parts.push(
+    `WHEN TO HAND OFF: ${a.routing}\n` +
+      `To hand off: say ONE short, warm sentence telling the visitor you're bringing in a colleague who understands this better, THEN call transfer_conversation with the colleague's key and the visitor's first name if you know it. Only hand off when the question clearly belongs to a colleague, and never hand off the same question twice.`
+  )
+  parts.push(baseRules(a.canBook))
+  if (opts.handoff) {
+    parts.push(
+      `NOTE: You have JUST joined this conversation after a colleague handed it to you. The visitor has already been greeted and told you're catching up — do NOT greet again or reintroduce yourself. Read the conversation and answer their latest question directly, warmly, and helpfully.`
+    )
+  }
   parts.push(`The visitor's timezone is ${opts.timeZone}. Today is ${new Date().toISOString().slice(0, 10)}.`)
   return parts.join('\n\n')
 }
@@ -128,6 +165,19 @@ const TOOLS: Anthropic.Tool[] = [
         notes: { type: 'string' },
       },
       required: ['name', 'email', 'start', 'timeZone'],
+    },
+  },
+  {
+    name: 'transfer_conversation',
+    description: "Hand this conversation to a colleague who is better suited to help. First say one short, warm sentence to the visitor, then call this.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        to: { type: 'string', enum: ['carolina', 'natasha', 'benjamin'], description: 'Which colleague should take over.' },
+        reason: { type: 'string', description: 'Why you are handing off.' },
+        user_name: { type: 'string', description: "The visitor's first name, if known." },
+      },
+      required: ['to'],
     },
   },
 ]
@@ -236,9 +286,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Expected a user message.' }, { status: 400 })
     }
 
+    const agentKey: AgentKey = AGENT_KEYS.includes(body?.agent) ? body.agent : 'carolina'
+    const handoff = body?.handoff === true
+
     const settings = await loadSettings()
-    const magnet = await loadActiveLeadMagnet(settings)
-    const system = buildSystem({ kb: settings.knowledge_base, persona: settings.persona, magnet, timeZone })
+    const [magnet, agents] = await Promise.all([loadActiveLeadMagnet(settings), loadAgents()])
+    const personas: Record<string, string | null> = {}
+    for (const a of agents) personas[a.key] = a.persona
+    if (settings.persona && !personas.carolina) personas.carolina = settings.persona
+
+    const system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff })
 
     const client = anthropic()
     const ctx = { magnet, actions: [] as ClientAction[], booked: { v: false } }
@@ -246,10 +303,26 @@ export async function POST(req: NextRequest) {
     for (let round = 0; round < 5; round++) {
       const res = await client.messages.create({ model: MODEL, max_tokens: 700, system, tools: TOOLS, messages })
       const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
+      const text = res.content.filter((b) => b.type === 'text').map((b) => (b as Anthropic.TextBlock).text).join('\n').trim()
+
+      // Handoff to a colleague — short-circuit and let the client play the human transfer.
+      const transfer = toolUses.find((t) => t.name === 'transfer_conversation')
+      if (transfer) {
+        const input = (transfer.input || {}) as Record<string, unknown>
+        const to = AGENT_KEYS.includes(input.to as AgentKey) ? (input.to as AgentKey) : 'benjamin'
+        const userName = sanitizeText(input.user_name, 60) || null
+        const fallback = `Let me bring in my colleague ${AGENTS[to].name} — they can help you with this properly.`
+        return NextResponse.json({
+          reply: text || fallback,
+          agent: agentKey,
+          transfer: { to, user_name: userName, agent_name: AGENTS[to].name },
+          booked: ctx.booked.v,
+          actions: ctx.actions,
+        })
+      }
 
       if (toolUses.length === 0 || res.stop_reason !== 'tool_use') {
-        const text = res.content.filter((b) => b.type === 'text').map((b) => (b as Anthropic.TextBlock).text).join('\n').trim()
-        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", booked: ctx.booked.v, actions: ctx.actions })
+        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions })
       }
 
       messages.push({ role: 'assistant', content: res.content })
@@ -261,7 +334,7 @@ export async function POST(req: NextRequest) {
       messages.push({ role: 'user', content: results })
     }
 
-    return NextResponse.json({ reply: 'Let me get the team to follow up — what is the best email to reach you?', booked: ctx.booked.v, actions: ctx.actions })
+    return NextResponse.json({ reply: 'Let me get the team to follow up — what is the best email to reach you?', agent: agentKey, booked: ctx.booked.v, actions: ctx.actions })
   } catch (err) {
     console.error('carolina route error', err)
     return NextResponse.json({ error: 'Sorry, I hit a snag. Mind trying that again?' }, { status: 500 })

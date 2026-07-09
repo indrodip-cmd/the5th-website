@@ -71,7 +71,21 @@ export async function POST(req: NextRequest) {
   const db = getSupabaseAdmin()
   const buf = Buffer.from(await file.arrayBuffer())
 
-  // ── Avatar image ──
+  // ── Agent avatar image ──
+  if (kind === 'agent_avatar') {
+    if (buf.length > MAX_IMG) return NextResponse.json({ error: 'Image too large (max 5MB).' }, { status: 400 })
+    if (!/^image\//.test(file.type)) return NextResponse.json({ error: 'Please upload an image file.' }, { status: 400 })
+    const agentKey = sanitizeText(form.get('agent'), 40)
+    if (!['carolina', 'natasha', 'benjamin'].includes(agentKey)) return NextResponse.json({ error: 'Unknown agent.' }, { status: 400 })
+    const path = `agents/${agentKey}-${Date.now()}.${extOf(file.name, 'png')}`
+    const up = await db.storage.from(BUCKET).upload(path, buf, { contentType: file.type, upsert: true })
+    if (up.error) return NextResponse.json({ error: up.error.message }, { status: 500 })
+    const url = db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl
+    await db.from('carolina_agents').update({ avatar_url: url, updated_at: new Date().toISOString() }).eq('key', agentKey)
+    return NextResponse.json({ ok: true, agent: agentKey, avatar_url: url })
+  }
+
+  // ── Avatar image (Carolina/global) ──
   if (kind === 'avatar') {
     if (buf.length > MAX_IMG) return NextResponse.json({ error: 'Image too large (max 5MB).' }, { status: 400 })
     if (!/^image\//.test(file.type)) return NextResponse.json({ error: 'Please upload an image file.' }, { status: 400 })

@@ -9,11 +9,12 @@ export const dynamic = 'force-dynamic'
 export async function GET(req: NextRequest) {
   if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const db = getSupabaseAdmin()
-  const [{ data: settings }, { data: magnets }] = await Promise.all([
+  const [{ data: settings }, { data: magnets }, { data: agents }] = await Promise.all([
     db.from('carolina_settings').select('*').eq('id', 1).single(),
     db.from('carolina_lead_magnets').select('*').order('created_at', { ascending: false }),
+    db.from('carolina_agents').select('*').order('sort', { ascending: true }),
   ])
-  return NextResponse.json({ settings: settings || null, magnets: magnets || [] })
+  return NextResponse.json({ settings: settings || null, magnets: magnets || [], agents: agents || [] })
 }
 
 /* PATCH: update editable settings fields. */

@@ -25,8 +25,28 @@
   var cfg = {
     avatar: null,
     greeting: "Hi, I'm Carolina 👋 I help women 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?",
-    proactive: { enabled: false, delay: 12, gift: { message: null }, quiz: { message: null } }
+    proactive: { enabled: false, delay: 12, gift: { message: null }, quiz: { message: null } },
+    agents: {}
   };
+
+  // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
+  var AGENT_DEFAULTS = {
+    carolina: { name: 'Carolina', role: 'Sales concierge' },
+    natasha: { name: 'Natasha', role: 'Customer success' },
+    benjamin: { name: 'Benjamin', role: 'Support specialist' }
+  };
+  function agentInfo(key) {
+    key = key || 'carolina';
+    var c = (cfg.agents && cfg.agents[key]) || {};
+    var d = AGENT_DEFAULTS[key] || AGENT_DEFAULTS.carolina;
+    return { key: key, name: c.name || d.name, role: c.role || d.role, avatar: c.avatar || null };
+  }
+  function agentAva(key) {
+    var a = agentInfo(key);
+    return a.avatar ? '<img src="' + esc(a.avatar) + '" alt="' + esc(a.name) + '">' : '<span>' + esc(a.name.charAt(0)) + '</span>';
+  }
+  var leadName = '';
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
   // ── State ──
   var store = { conversations: [], activeId: null };
@@ -72,7 +92,7 @@
 
   function uid() { return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
   function mkConv(messages) {
-    return { id: uid(), messages: messages || [], createdAt: Date.now(), updatedAt: Date.now() };
+    return { id: uid(), messages: messages || [], agent: 'carolina', createdAt: Date.now(), updatedAt: Date.now() };
   }
   function activeConv() { return store.conversations.find(function (c) { return c.id === store.activeId; }) || null; }
   function convTitle(c) {
@@ -114,9 +134,9 @@
 
   // ── Icons (thin, lucide-like) ──
   var ICON = {
-    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>',
-    msg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-11.9 7.6L3 21l1.9-6.1A8.4 8.4 0 1 1 21 11.5Z"/></svg>',
-    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5A2.5 2.5 0 0 1 4 20.5Z"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.7 12 3.5l9 7.2"/><path d="M5.5 9.4V20a1 1 0 0 0 1 1H10v-4.6a2 2 0 0 1 4 0V21h3.5a1 1 0 0 0 1-1V9.4"/></svg>',
+    msg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.4-4.2A7.5 7.5 0 1 1 20 11.5Z"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.4C10.4 5 8 4.5 4 4.8V18c4-.3 6.4.2 8 1.6 1.6-1.4 4-1.9 8-1.6V4.8c-4-.3-6.4.2-8 1.6z"/><path d="M12 6.4v13.2"/></svg>',
     send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
@@ -126,8 +146,8 @@
     gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7S12 3 9 3a2.5 2.5 0 0 0 0 5M12 7s0-4 3-4a2.5 2.5 0 0 1 0 5"/></svg>',
     chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 4-6"/></svg>',
     phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 3.2 2 2 0 0 1 4 1h2a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 8.9a16 16 0 0 0 6 6l1.3-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>',
-    compass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2z"/></svg>',
-    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6 6 0 0 1 11 0"/></svg>',
+    compass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m14.9 9.1-1.6 4.2-4.2 1.6 1.6-4.2z"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9.2" r="3.3"/><path d="M6 19.2a6.2 6.2 0 0 1 12 0"/><circle cx="12" cy="12" r="9.2"/></svg>',
     bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>',
     moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
@@ -136,7 +156,9 @@
   };
 
   function avatarInner() {
-    if (cfg.avatar) return '<img src="' + cfg.avatar + '" alt="Carolina">';
+    var a = agentInfo('carolina');
+    if (a.avatar) return '<img src="' + esc(a.avatar) + '" alt="Carolina">';
+    if (cfg.avatar) return '<img src="' + esc(cfg.avatar) + '" alt="Carolina">';
     return '<span>C</span>';
   }
 
@@ -422,19 +444,25 @@
       '@keyframes cwShine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}',
       '.cw-sk-line{height:12px;border-radius:6px;margin:10px 0;}',
       // ── floating glass navigation (overrides base) ──
-      '.cw-nav{margin:0 16px 16px;height:72px;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;background:rgba(22,22,22,.92);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,.06);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.4);flex-shrink:0;transition:transform .32s var(--sp),opacity .3s;}',
+      '.cw-nav{margin:0 16px 16px;height:68px;display:flex;align-items:center;justify-content:space-around;gap:2px;padding:0 10px;background:rgba(22,22,22,.92);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,.06);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.4);flex-shrink:0;transition:transform .32s var(--sp),opacity .3s;}',
       '.cw-nav.tuck{transform:translateY(12px);opacity:.92;}',
-      '.cw-tab{position:relative;display:flex;flex-direction:row;align-items:center;justify-content:center;height:48px;min-width:48px;border:none;background:transparent;color:#7A7A82;cursor:pointer;border-radius:999px;padding:0 13px;transition:background .3s var(--sp),color .25s,padding .3s var(--sp),transform .08s;}',
-      '.cw-tab-ic{position:relative;display:flex;align-items:center;justify-content:center;}',
-      '.cw-tab-ic svg{width:22px;height:22px;}',
-      '.cw-tab-lb{max-width:0;opacity:0;white-space:nowrap;font:600 12px/1 "Inter";overflow:hidden;transition:max-width .32s var(--sp),opacity .24s,margin .32s var(--sp);}',
-      '.cw-tab.on{background:rgba(255,255,255,.08);color:#fff;}',
-      '.cw-tab.on .cw-tab-lb{max-width:96px;opacity:1;margin-left:8px;}',
-      '.cw-tab.on .cw-tab-ic{animation:cwPop .3s var(--sp);}',
-      '@keyframes cwPop{0%{transform:scale(1);}55%{transform:scale(1.12);}100%{transform:scale(1);}}',
-      '.cw-tab:not(.on):hover{background:rgba(255,255,255,.03);color:#a1a1aa;}',
-      '.cw-tab:active{transform:scale(.96);}',
+      '.cw-tab{position:relative;display:flex;align-items:center;justify-content:center;width:50px;height:50px;border:none;background:transparent;color:#7A7A82;cursor:pointer;border-radius:16px;transition:background .28s var(--sp),color .25s,transform .1s var(--sp);}',
+      '.cw-tab-glow{position:absolute;inset:0;border-radius:16px;opacity:0;background:radial-gradient(circle at 50% 45%,rgba(201,168,76,.28),transparent 68%);transition:opacity .3s;}',
+      '.cw-tab-ic{position:relative;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--sp);}',
+      '.cw-tab-ic svg{width:23px;height:23px;}',
+      '.cw-tab.on{background:rgba(255,255,255,.07);color:var(--acc);}',
+      '.cw-tab.on .cw-tab-glow{opacity:1;}',
+      '.cw-tab.on .cw-tab-ic{animation:cwPop .34s var(--sp);}',
+      '@keyframes cwPop{0%{transform:scale(1);}50%{transform:scale(1.16);}100%{transform:scale(1);}}',
+      '.cw-tab:not(.on):hover{background:rgba(255,255,255,.03);color:#c9c9d0;}',
+      '.cw-tab:not(.on):hover .cw-tab-ic{transform:translateY(-1px);}',
+      '.cw-tab:active{transform:scale(.92);}',
       '.cw-tab:focus-visible{outline:2px solid var(--acc);outline-offset:2px;}',
+      // agent handoff separator
+      '.cw-join{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px auto 2px;padding:5px 12px;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:999px;width:fit-content;}',
+      '.cw-join-ava{width:20px;height:20px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--acc),#9c7f2c);color:#1a1206;font:700 10px "Inter";}',
+      '.cw-join-ava img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-join-tx{font:400 12px "Inter";color:var(--mut);}.cw-join-tx b{color:var(--tx2);font-weight:600;}',
       '.cw-navava{width:24px;height:24px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.25);}',
       '.cw-nav-badge{position:absolute;top:-7px;right:-9px;min-width:18px;height:18px;border-radius:999px;background:#EF4444;color:#fff;font:700 11px/18px "Inter";text-align:center;padding:0 5px;box-shadow:0 0 0 2px rgba(22,22,22,.9);animation:cwBadgePop .4s var(--sp);}',
       '@keyframes cwBadgePop{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}',
@@ -952,9 +980,8 @@
         ? '<img class="cw-navava" src="' + esc(cfg.userAvatar) + '" alt="" />'
         : ICON[it.ic];
       html += '<button class="cw-tab' + (on ? ' on' : '') + '" role="tab" tabindex="' + (on ? '0' : '-1') + '"'
-        + ' aria-selected="' + (on ? 'true' : 'false') + '" aria-label="' + it.label + '" data-tab="' + it.id + '">'
-        + '<span class="cw-tab-ic">' + icon + navBadge(badges[it.id]) + '</span>'
-        + '<span class="cw-tab-lb">' + it.label + '</span></button>';
+        + ' aria-selected="' + (on ? 'true' : 'false') + '" aria-label="' + it.label + '" title="' + it.label + '" data-tab="' + it.id + '">'
+        + '<span class="cw-tab-glow"></span><span class="cw-tab-ic">' + icon + navBadge(badges[it.id]) + '</span></button>';
     });
     return html + '</nav>';
   }
@@ -994,10 +1021,11 @@
     clearHomeTimers();
     mode = 'chat';
     var conv = activeConv();
+    var cur = agentInfo((conv && conv.agent) || 'carolina');
     els.win.innerHTML =
       '<div class="cw-chead"><button class="cw-iconbtn" id="cw-back" aria-label="Back">' + ICON.back + '</button>'
-      + '<div class="cw-chead-ava">' + avatarInner() + '</div>'
-      + '<div class="cw-chead-tx"><h4>Carolina</h4><p><span class="cw-live"></span>The5th concierge · replies instantly</p></div>'
+      + '<div class="cw-chead-ava" id="cw-chead-ava">' + agentAva(cur.key) + '</div>'
+      + '<div class="cw-chead-tx"><h4 id="cw-chead-name">' + esc(cur.name) + '</h4><p><span class="cw-live"></span><span id="cw-chead-role">' + esc(cur.role) + '</span> · online</p></div>'
       + '<button class="cw-iconbtn" id="cw-close2" aria-label="Close">' + ICON.close + '</button></div>'
       + '<div class="cw-scroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
       + '<div class="cw-comp"><div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" placeholder="Write a message…"></textarea>'
@@ -1014,23 +1042,41 @@
     els.in.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(els.in.value); } });
     els.in.addEventListener('input', function () { els.in.style.height = 'auto'; els.in.style.height = Math.min(els.in.scrollHeight, 100) + 'px'; });
 
-    // paint
-    addBotMsg(cfg.greeting, true);
-    (conv ? conv.messages : []).forEach(function (m) { addMsg(m.role, m.content, true); });
+    // paint — greeting first (from Carolina), then history with each author's avatar.
+    addBotMsg(cfg.greeting, true, 'carolina');
+    (conv ? conv.messages : []).forEach(function (m) {
+      if (m.role === 'system' && m.kind === 'join') addJoinSeparator(m.agent, true);
+      else addMsg(m.role, m.content, true, m.agent);
+    });
     if (!conv || conv.messages.length === 0) renderChips();
     setTimeout(function () { els.in.focus(); scrollChat(); }, 200);
   }
 
+  function updateChatHeader(agentKey) {
+    var a = agentInfo(agentKey);
+    var ava = els.win.querySelector('#cw-chead-ava'); if (ava) ava.innerHTML = agentAva(a.key);
+    var nm = els.win.querySelector('#cw-chead-name'); if (nm) nm.textContent = a.name;
+    var role = els.win.querySelector('#cw-chead-role'); if (role) role.textContent = a.role;
+  }
+
   function scrollChat() { var s = els.win.querySelector('.cw-scroll'); if (s) s.scrollTop = s.scrollHeight; }
-  function addBotMsg(text, noScroll) { addMsg('assistant', text, noScroll); }
-  function addMsg(role, text, noScroll) {
+  function addBotMsg(text, noScroll, agentKey) { addMsg('assistant', text, noScroll, agentKey); }
+  function addMsg(role, text, noScroll, agentKey) {
     var wrap = document.createElement('div');
     wrap.className = 'cw-m ' + (role === 'user' ? 'user' : 'bot');
     var inner = '';
-    if (role !== 'user') inner += '<div class="cw-m-ava">' + avatarInner() + '</div>';
+    if (role !== 'user') inner += '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div>';
     inner += '<div class="cw-bub">' + renderMd(text) + '</div>';
     wrap.innerHTML = inner;
     els.msgs.appendChild(wrap);
+    if (!noScroll) scrollChat();
+  }
+  // "Benjamin joined the chat" system separator.
+  function addJoinSeparator(agentKey, noScroll) {
+    var a = agentInfo(agentKey);
+    var row = document.createElement('div'); row.className = 'cw-join';
+    row.innerHTML = '<span class="cw-join-ava">' + agentAva(agentKey) + '</span><span class="cw-join-tx"><b>' + esc(a.name) + '</b> joined the chat</span>';
+    els.msgs.appendChild(row);
     if (!noScroll) scrollChat();
   }
   function renderChips() {
@@ -1039,10 +1085,10 @@
     chips.forEach(function (l) { var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b); });
     els.msgs.appendChild(row); scrollChat();
   }
-  function showTyping() {
+  function showTyping(agentKey) {
     hideTyping();
     var t = document.createElement('div'); t.className = 'cw-m bot'; t.id = 'cw-typing';
-    t.innerHTML = '<div class="cw-m-ava">' + avatarInner() + '</div><div class="cw-typing"><span></span><span></span><span></span></div>';
+    t.innerHTML = '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div><div class="cw-typing"><span></span><span></span><span></span></div>';
     els.msgs.appendChild(t); scrollChat();
   }
   function hideTyping() { var t = els.win.querySelector('#cw-typing'); if (t) t.remove(); }
@@ -1060,6 +1106,51 @@
   }
   function openConv(id) { store.activeId = id; saveStore(); renderChat(); }
 
+  // Post the conversation to the API (stripping local-only fields).
+  async function callApi(conv, handoff) {
+    try {
+      var payload = conv.messages
+        .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
+        .map(function (m) { return { role: m.role, content: m.content }; });
+      var r = await fetch(API, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff })
+      });
+      var d = await r.json().catch(function () { return {}; });
+      if (!r.ok || d.error) return { error: d.error || 'Sorry, I had trouble there. Could you try again?' };
+      return d;
+    } catch (e) { return null; }
+  }
+
+  function joinGreeting(agentKey, name) {
+    var n = name ? name : 'there';
+    if (agentKey === 'benjamin') return 'Hey ' + n + ' 👋 Give me a few seconds to read through your chat so I can help you properly…';
+    if (agentKey === 'natasha') return 'Hi ' + n + ' 👋 Carolina filled me in — let me take it from here.';
+    return 'Hi ' + n + ' 👋 Happy to help — one sec while I catch up on your chat.';
+  }
+
+  // Play a human-feeling handoff: colleague joins, greets, pauses, then answers.
+  async function doTransfer(conv, transfer) {
+    var to = transfer.to;
+    if (transfer.user_name) leadName = transfer.user_name;
+    await wait(700);
+    conv.agent = to; conv.updatedAt = Date.now();
+    conv.messages.push({ role: 'system', kind: 'join', agent: to }); saveStore();
+    updateChatHeader(to);
+    addJoinSeparator(to);
+    await wait(500); showTyping(to); await wait(1500); hideTyping();
+    var greet = joinGreeting(to, leadName);
+    addBotMsg(greet, false, to); conv.messages.push({ role: 'assistant', content: greet, agent: to }); saveStore();
+    // Pause as if reading, then fetch the real answer from the new agent.
+    await wait(700); showTyping(to); await wait(2200);
+    var res = await callApi(conv, true);
+    hideTyping();
+    if (!res || res.error) { addBotMsg((res && res.error) || "Sorry, I hit a snag — could you say that again?", false, to); return; }
+    var reply = res.reply || 'How can I help?';
+    addBotMsg(reply, false, to); conv.messages.push({ role: 'assistant', content: reply, agent: to }); conv.updatedAt = Date.now(); saveStore();
+    handleActions(res.actions);
+  }
+
   async function sendMessage(text) {
     text = (text || '').trim();
     if (!text || sending) return;
@@ -1068,19 +1159,21 @@
     sending = true; if (els.send) els.send.disabled = true;
     addMsg('user', text); conv.messages.push({ role: 'user', content: text }); conv.updatedAt = Date.now(); saveStore();
     if (els.in) { els.in.value = ''; els.in.style.height = 'auto'; }
-    showTyping();
-    try {
-      var r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: conv.messages, timeZone: TZ }) });
-      var data = await r.json().catch(function () { return {}; });
-      hideTyping();
-      if (!r.ok || data.error) { addBotMsg(data.error || 'Sorry, I had trouble there. Could you try again?'); }
-      else {
-        var reply = data.reply || "I'm here — how can I help?";
-        addBotMsg(reply); conv.messages.push({ role: 'assistant', content: reply }); conv.updatedAt = Date.now(); saveStore();
-        handleActions(data.actions);
-      }
-    } catch (e) { hideTyping(); addBotMsg("I couldn't reach the team just now — mind trying again in a moment?"); }
-    finally { sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus(); }
+    showTyping(conv.agent);
+    var res = await callApi(conv, false);
+    hideTyping();
+    if (!res || res.error) { addBotMsg((res && res.error) || "I couldn't reach the team just now — mind trying again in a moment?", false, conv.agent); }
+    else if (res.transfer && res.transfer.to) {
+      // Current agent's short handoff line, then the human transfer sequence.
+      var line = res.reply || ('Let me bring in a colleague who can help with this.');
+      addBotMsg(line, false, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
+      await doTransfer(conv, res.transfer);
+    } else {
+      var reply = res.reply || "I'm here — how can I help?";
+      addBotMsg(reply, false, conv.agent); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent }); conv.updatedAt = Date.now(); saveStore();
+      handleActions(res.actions);
+    }
+    sending = false; if (els.send) els.send.disabled = false; if (els.in) els.in.focus();
   }
 
   function handleActions(actions) {
@@ -1214,6 +1307,9 @@
       if (d.avatar_url) cfg.avatar = d.avatar_url;
       if (d.greeting) cfg.greeting = d.greeting;
       if (d.proactive) cfg.proactive = d.proactive;
+      if (Array.isArray(d.agents)) {
+        d.agents.forEach(function (a) { if (a && a.key) cfg.agents[a.key] = { name: a.name, role: a.role, avatar: a.avatar_url }; });
+      }
       applyConfig();
       maybeShowPromo();
     }).catch(function () { maybeShowPromo(); });

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { loadSettings, loadActiveLeadMagnet } from '@/lib/carolina-config'
+import { loadSettings, loadActiveLeadMagnet, loadAgents } from '@/lib/carolina-config'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,7 +7,10 @@ export const dynamic = 'force-dynamic'
    knowledge base or persona — only what the browser legitimately shows. */
 export async function GET() {
   const settings = await loadSettings()
-  const magnet = settings.proactive_enabled ? await loadActiveLeadMagnet(settings) : null
+  const [magnet, agents] = await Promise.all([
+    settings.proactive_enabled ? loadActiveLeadMagnet(settings) : Promise.resolve(null),
+    loadAgents(),
+  ])
 
   const giftMessage =
     magnet?.popup_message ||
@@ -22,6 +25,7 @@ export async function GET() {
     {
       avatar_url: settings.avatar_url || null,
       greeting: settings.greeting || null,
+      agents: agents.map((a) => ({ key: a.key, name: a.name, role: a.role, avatar_url: a.avatar_url })),
       proactive: {
         enabled: !!settings.proactive_enabled,
         delay: settings.proactive_delay_seconds || 12,

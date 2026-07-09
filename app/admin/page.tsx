@@ -623,10 +623,13 @@ interface CarolinaSettingsT {
   avatar_url: string | null; greeting: string | null; knowledge_base: string | null; persona: string | null
   proactive_enabled: boolean; proactive_delay_seconds: number; active_lead_magnet: string | null
 }
+interface CarolinaAgent { key: string; name: string; role: string | null; avatar_url: string | null }
 
 function CarolinaAdmin() {
   const [settings, setSettings] = useState<CarolinaSettingsT | null>(null)
   const [magnets, setMagnets] = useState<CarolinaMagnet[]>([])
+  const [agents, setAgents] = useState<CarolinaAgent[]>([])
+  const [agentBusy, setAgentBusy] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState('')
@@ -640,9 +643,10 @@ function CarolinaAdmin() {
     setLoading(true)
     fetch('/api/admin/carolina')
       .then(r => r.ok ? r.json() : Promise.reject(new Error('load')))
-      .then((d: { settings: CarolinaSettingsT | null; magnets: CarolinaMagnet[] }) => {
+      .then((d: { settings: CarolinaSettingsT | null; magnets: CarolinaMagnet[]; agents?: CarolinaAgent[] }) => {
         setSettings(d.settings || { avatar_url: null, greeting: '', knowledge_base: '', persona: '', proactive_enabled: true, proactive_delay_seconds: 12, active_lead_magnet: null })
         setMagnets(d.magnets || [])
+        setAgents(d.agents || [])
       })
       .catch(() => flash('Failed to load'))
       .finally(() => setLoading(false))
@@ -666,6 +670,16 @@ function CarolinaAdmin() {
       const d = await r.json(); if (!r.ok) throw new Error(d.error || 'upload')
       setSettings(s => s ? { ...s, avatar_url: d.avatar_url } : s); flash('Avatar updated ✓')
     } catch (e) { flash(e instanceof Error ? e.message : 'Upload failed') } finally { setAvatarBusy(false) }
+  }
+
+  const uploadAgentAvatar = async (key: string, file: File) => {
+    setAgentBusy(key)
+    const fd = new FormData(); fd.append('kind', 'agent_avatar'); fd.append('agent', key); fd.append('file', file)
+    try {
+      const r = await fetch('/api/admin/carolina/upload', { method: 'POST', body: fd })
+      const d = await r.json(); if (!r.ok) throw new Error(d.error || 'upload')
+      setAgents(a => a.map(x => x.key === key ? { ...x, avatar_url: d.avatar_url } : x)); flash('Avatar updated ✓')
+    } catch (e) { flash(e instanceof Error ? e.message : 'Upload failed') } finally { setAgentBusy('') }
   }
 
   const uploadMagnet = async (file: File) => {
@@ -717,6 +731,28 @@ function CarolinaAdmin() {
               onChange={e => setSettings({ ...settings, greeting: e.target.value })} />
             <button style={{ ...btn, marginTop: 10 }} disabled={saving} onClick={() => patch({ greeting: settings.greeting || '' })}>Save greeting</button>
           </div>
+        </div>
+      </div>
+
+      {/* Team agents */}
+      <div style={card}>
+        <div style={label}>Team Agents</div>
+        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>Your chat team. Carolina handles sales, Natasha customer success, Benjamin support. Conversations transfer between them automatically. Upload a photo for each so visitors see a real team.</p>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {agents.map(a => (
+            <div key={a.key} style={{ textAlign: 'center', width: 120 }}>
+              <div style={{ width: 72, height: 72, borderRadius: '50%', overflow: 'hidden', background: 'linear-gradient(145deg,#C9A84C,#B0902F)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2E1A35', fontFamily: 'Georgia,serif', fontSize: 28, margin: '0 auto 8px' }}>
+                {a.avatar_url ? <img src={a.avatar_url} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : a.name.charAt(0)}
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0a' }}>{a.name}</div>
+              <div style={{ fontSize: 11.5, color: '#6b7280', marginBottom: 8 }}>{a.role}</div>
+              <label style={{ ...btn, display: 'inline-block', padding: '6px 12px', fontSize: 12, opacity: agentBusy === a.key ? 0.6 : 1 }}>
+                {agentBusy === a.key ? 'Uploading…' : 'Photo'}
+                <input type="file" accept="image/*" style={{ display: 'none' }} disabled={agentBusy === a.key}
+                  onChange={e => { const f = e.target.files?.[0]; if (f) uploadAgentAvatar(a.key, f) }} />
+              </label>
+            </div>
+          ))}
         </div>
       </div>
 

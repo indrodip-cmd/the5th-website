@@ -47,6 +47,32 @@ export async function loadSettings(): Promise<CarolinaSettings> {
   }
 }
 
+export interface Agent {
+  key: string
+  name: string
+  role: string | null
+  avatar_url: string | null
+  persona: string | null
+}
+
+export async function loadAgents(): Promise<Agent[]> {
+  try {
+    const { data } = await getSupabaseAdmin()
+      .from('carolina_agents')
+      .select('key,name,role,avatar_url,persona')
+      .order('sort', { ascending: true })
+    if (data && data.length) return data as Agent[]
+  } catch (e) {
+    console.error('loadAgents failed', e)
+  }
+  // Fallback defaults if the table is unavailable.
+  return [
+    { key: 'carolina', name: 'Carolina', role: 'Sales concierge', avatar_url: null, persona: null },
+    { key: 'natasha', name: 'Natasha', role: 'Customer success', avatar_url: null, persona: null },
+    { key: 'benjamin', name: 'Benjamin', role: 'Support specialist', avatar_url: null, persona: null },
+  ]
+}
+
 export async function loadActiveLeadMagnet(settings: CarolinaSettings): Promise<LeadMagnet | null> {
   try {
     const db = getSupabaseAdmin()

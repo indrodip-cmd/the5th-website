@@ -345,7 +345,64 @@
       '.cw-art-desc{font:400 15px/1.7 "Inter";color:var(--tx2);margin:14px 0 4px;}',
       '.cw-art-list{list-style:none;padding:0;margin:16px 0 0;}',
       '.cw-art-list li{position:relative;padding-left:24px;font:400 14px/1.5 "Inter";color:#ECECEC;margin-bottom:10px;}',
-      '.cw-art-list li::before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--acc);}'
+      '.cw-art-list li::before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--acc);}',
+      // ── card component system ──
+      '.cw-feat{position:relative;}',
+      '.cw-feat:focus-visible,.cw-vcard:focus-visible,.cw-acard:focus-visible{outline:2px solid var(--acc);outline-offset:2px;}',
+      '.cw-hero-card{border-color:rgba(201,168,76,.22);box-shadow:0 16px 42px rgba(0,0,0,.4);}',
+      '.cw-cov-img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-cover-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,transparent 30%,transparent 60%,rgba(13,13,13,.55) 100%);}',
+      '.cw-feat:hover .cw-cov-img{transform:scale(1.02);}',
+      '.cw-cover .cw-cov-img{transition:transform .4s var(--sp);}',
+      // category badge
+      '.cw-badge2{position:absolute;top:14px;left:14px;z-index:2;height:26px;display:inline-flex;align-items:center;padding:0 12px;border-radius:999px;background:rgba(13,13,13,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);color:#fff;font:600 11.5px/1 "Inter";letter-spacing:.04em;text-transform:uppercase;}',
+      '.cw-art-body .cw-badge2,.cw-abody .cw-badge2{position:static;margin-bottom:10px;}',
+      // cta arrow slide
+      '.cw-cta-arrow{display:inline-block;font-style:normal;transition:transform .18s var(--sp);}',
+      '.cw-btn-primary:hover .cw-cta-arrow{transform:translateX(4px);}',
+      // meta row
+      '.cw-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:400 13px "Inter";color:var(--mut);margin:12px 0 2px;}',
+      '.cw-meta-dot{color:var(--mut);opacity:.6;}',
+      // feature grid (two column)
+      '.cw-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin:2px 0 16px;}',
+      '.cw-feat-item{font:500 13px/1.4 "Inter";color:#D4D4D8;}',
+      // info row
+      '.cw-info-row{display:flex;gap:10px;margin:0 0 16px;border-top:1px solid var(--bd);padding-top:14px;}',
+      '.cw-info-cell{flex:1;}',
+      '.cw-info-cell span{display:block;font:700 14px/1.2 "Inter";color:#fff;}',
+      '.cw-info-cell small{font:500 11px/1 "Inter";color:var(--mut);text-transform:uppercase;letter-spacing:.04em;}',
+      // premium lock
+      '.cw-locked .cw-cover{filter:blur(6px) saturate(.7);}',
+      '.cw-lock{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(13,13,13,.5);}',
+      '.cw-lock-badge{font:700 13px "Inter";color:#fff;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:999px;border:1px solid var(--bd);}',
+      // knowledge count
+      '.cw-count{font:600 12px "Inter";color:var(--acc);margin-right:8px;}',
+      // announcement (reuses .cw-card)
+      '.cw-anc{width:100%;text-align:left;}',
+      // video card
+      '.cw-hscroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;scroll-snap-type:x mandatory;}',
+      '.cw-hscroll::-webkit-scrollbar{display:none;}',
+      '.cw-vcard{flex:0 0 220px;scroll-snap-align:start;background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .18s var(--sp),border-color .18s;}',
+      '.cw-vcard:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.25);}',
+      '.cw-vthumb{position:relative;aspect-ratio:16/9;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;}',
+      '.cw-play{width:40px;height:40px;border-radius:50%;background:rgba(13,13,13,.65);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;padding-left:3px;transition:transform .2s var(--sp);}',
+      '.cw-vcard:hover .cw-play{transform:scale(1.12);}',
+      '.cw-vthumb .cw-dur{position:absolute;bottom:8px;right:8px;background:rgba(13,13,13,.75);color:#fff;font:600 11px "Inter";padding:3px 7px;border-radius:6px;}',
+      '.cw-vbody{padding:12px 14px;}',
+      '.cw-vbody h5{font:600 14px/1.35 "Inter";color:#fff;margin:0 0 3px;}',
+      '.cw-vbody p{font:400 12px "Inter";color:var(--tx2);margin:0;}',
+      // article card (compact horizontal)
+      '.cw-acard{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;margin-bottom:10px;cursor:pointer;transition:transform .18s var(--sp),border-color .18s;}',
+      '.cw-acard:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.25);}',
+      '.cw-athumb{width:76px;height:76px;flex-shrink:0;border-radius:12px;background-size:cover;background-position:center;}',
+      '.cw-abody{flex:1;min-width:0;}',
+      '.cw-abody h5{font:600 15px/1.35 "Inter";color:#fff;margin:0 0 4px;}',
+      // skeleton
+      '.cw-skel{pointer-events:none;}',
+      '.cw-sk{position:relative;overflow:hidden;background:#1a1a1a;}',
+      '.cw-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);animation:cwShine 1.4s infinite;}',
+      '@keyframes cwShine{from{transform:translateX(-100%);}to{transform:translateX(100%);}}',
+      '.cw-sk-line{height:12px;border-radius:6px;margin:10px 0;}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -376,32 +433,46 @@
     { label: 'Knowledge Base', gotab: 'knowledge' }
   ];
 
+  // Program card models (extend the shared card data model)
   var PROGRAMS = {
     fastforward: {
-      emoji: '🚀', cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)',
-      title: 'Fast Forward', sub: '100% Money-Back Guarantee',
-      desc: "Grow your business with personalized coaching, proven marketing systems, and AI-powered execution. If you don't achieve measurable results, we'll refund your investment according to our guarantee.",
-      points: ['Personalised 1:1 coaching', 'Proven marketing systems', 'AI-powered execution'],
-      primary: { label: 'Learn More', url: '/fast-forward' },
-      secondary: { label: 'Book Strategy Call', seed: "I'd like to book a call with the team." }
+      id: 'fastforward', type: 'hero', emoji: '🚀', badge: '🔥', category: 'Featured Program',
+      cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)',
+      title: 'Fast Forward', sub: 'Backed by a 100% Money-Back Guarantee',
+      desc: "Build a scalable coaching or service business using proven systems, AI-powered workflows, modern marketing strategies, and direct implementation support. If you meet the guarantee requirements and don't achieve the agreed outcome, we'll refund your investment according to our policy.",
+      features: ['Weekly Coaching', 'AI Tools', 'Sales Systems', 'Marketing Strategy', 'Funnel Templates', 'Lifetime Community'],
+      info: [{ k: 'Guarantee', v: '100% Money-Back' }, { k: 'Format', v: '1:1 + Group' }],
+      url: '/fast-forward',
+      primaryAction: { label: 'Learn More', kind: 'article', value: 'fastforward' },
+      secondaryAction: { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
     },
     ai: {
-      emoji: '🤖', cover: 'linear-gradient(135deg,#141b2e,#3D2645)',
-      title: 'The5th AI', sub: 'Your marketing team inside AI',
-      desc: 'Generate funnels, landing pages, ads, emails, sales scripts, social media content, offers, pricing strategies, business plans and more — all powered by AI trained on our frameworks.',
-      points: ['Funnels, ads & emails in minutes', 'Trained on the 10K Roadmap method', 'Built around your niche & offer'],
-      primary: { label: 'Try Now', url: '/ai' },
-      secondary: { label: 'Explore', seed: 'Tell me about The5th AI.' }
+      id: 'ai', type: 'promotion', emoji: '🤖', badge: '✨', category: 'AI Assistant',
+      cover: 'linear-gradient(135deg,#141b2e,#3D2645)',
+      title: 'The5th AI', sub: 'Your complete marketing team, powered by AI',
+      desc: 'Generate landing pages, sales funnels, email campaigns, webinar scripts, offers, ad copy, content calendars, business strategies, client proposals and much more — all within one intelligent workspace.',
+      features: ['Marketing', 'Funnels', 'Content', 'Emails', 'Sales', 'Automation', 'AI Agents', 'Business Plans'],
+      url: '/ai',
+      primaryAction: { label: 'Try Free', kind: 'article', value: 'ai' },
+      secondaryAction: { label: 'Explore', kind: 'seed', value: 'Tell me about The5th AI.' }
     },
     collective: {
-      emoji: '✨', cover: 'linear-gradient(135deg,#143826,#3D2645)',
-      title: 'The Collective', sub: 'Scale past $10K/month',
+      id: 'collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
+      cover: 'linear-gradient(135deg,#143826,#3D2645)',
+      title: 'The Collective', sub: 'Scale toward and past $10K/month',
       desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
-      points: ['Ongoing group coaching', 'A community of women 40+', 'Accountability that compounds'],
-      primary: { label: 'Learn More', url: '/collective' },
-      secondary: { label: 'Book Strategy Call', seed: "I'd like to book a call with the team." }
+      features: ['Group Coaching', 'Community 40+', 'Accountability', 'Live Sessions'],
+      url: '/collective',
+      primaryAction: { label: 'Learn More', kind: 'article', value: 'collective' },
+      secondaryAction: { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
     }
   };
+
+  // Data-driven feeds — empty until real content/CMS is connected.
+  var BLOG = [];         // {id,type:'article',category,title,readingTime,publishedAt,author,cover}
+  var VIDEOS = [];       // {id,type:'video',title,duration,speaker,views,cover}
+  var ANNOUNCEMENTS = [];// {id,type:'announcement',title,description,badge}
+  var EVENTS = [];       // {id,type:'event',title,date,location,cover,live}
 
   var KB_CATS = ['Funnels', 'Marketing', 'Sales', 'AI', 'Automation', 'Mindset', 'Offers', 'Ads'];
 
@@ -430,20 +501,141 @@
     els.win.innerHTML =
       '<div class="cw-scroll" id="cw-scroll"><div class="cw-view">' + body + '</div></div>' + navHtml();
     wirePanels();
+    wireActions(els.win);
     if (tab === 'home') mountHome();
   }
 
   function sectionTitle(t) { return '<h3 class="cw-h3">' + esc(t) + '</h3>'; }
 
-  function programCardHtml(key) {
-    var p = PROGRAMS[key];
-    return '<div class="cw-feat" data-article="' + key + '">'
-      + '<div class="cw-cover" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span></div>'
-      + '<div class="cw-feat-body"><h4>' + esc(p.emoji + ' ' + p.title) + '</h4>'
-      + '<div class="cw-feat-sub">' + esc(p.sub) + '</div>'
-      + '<p class="cw-feat-desc">' + esc(p.desc) + '</p>'
-      + '<div class="cw-feat-btns"><button class="cw-btn cw-btn-primary" data-article="' + key + '">' + esc(p.primary.label) + ' →</button>'
-      + '<button class="cw-btn cw-btn-ghost" data-seed="' + esc(p.secondary.seed || '') + '">' + esc(p.secondary.label) + '</button></div></div></div>';
+  function emptyState(icon, title, desc, extra) {
+    return '<div class="cw-empty" style="padding:36px 20px"><div class="e-ic">' + icon + '</div>'
+      + '<h4>' + esc(title) + '</h4><p>' + esc(desc) + '</p>' + (extra || '') + '</div>';
+  }
+
+  // Unified action dispatch for any element carrying data-ak / data-av.
+  function applyAction(kind, value) {
+    if (kind === 'article') openArticle(value);
+    else if (kind === 'nav') window.location.href = value;
+    else if (kind === 'seed') startNewChat(value);
+    else if (kind === 'tab') { tab = value; renderPanels(); }
+    else if (kind === 'conv') openConv(value);
+  }
+  function wireActions(root) {
+    root.querySelectorAll('[data-ak]').forEach(function (n) {
+      n.addEventListener('click', function (e) { e.stopPropagation(); applyAction(n.getAttribute('data-ak'), n.getAttribute('data-av')); });
+      if (n.getAttribute('role') === 'button') {
+        n.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); applyAction(n.getAttribute('data-ak'), n.getAttribute('data-av')); } });
+      }
+    });
+  }
+
+  // ── Reusable card component system ──────────────────────────────
+  // A single data model renders every card variant. Fields:
+  //  id,type,title,subtitle/sub,description/desc,category,badge,cover,
+  //  emoji,coverImage,features[],info[],author,publishedAt,readingTime,
+  //  views,duration,revenue,timeline,locked,primaryAction,secondaryAction
+  function actAttr(a) {
+    if (!a) return '';
+    return 'data-ak="' + esc(a.kind) + '" data-av="' + esc(a.value) + '"';
+  }
+  function badgeHtml(m) {
+    if (!m.category && !m.badge) return '';
+    var txt = (m.badge ? m.badge + ' ' : '') + (m.category || '');
+    return '<span class="cw-badge2">' + esc(txt.trim()) + '</span>';
+  }
+  function coverHtml(m, big) {
+    var inner = m.coverImage
+      ? '<img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" />'
+      : '<span class="cw-cover-emoji">' + (m.emoji || '✦') + '</span>';
+    return '<div class="cw-cover' + (big ? ' cw-cover-lg' : '') + '"' + (m.coverImage ? '' : ' style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '>'
+      + inner + '<div class="cw-cover-grad"></div></div>';
+  }
+  function ctaHtml(m) {
+    var out = '';
+    if (m.primaryAction) out += '<button class="cw-btn cw-btn-primary" ' + actAttr(m.primaryAction) + '>' + esc(m.primaryAction.label) + ' <i class="cw-cta-arrow">→</i></button>';
+    if (m.secondaryAction) out += '<button class="cw-btn cw-btn-ghost" ' + actAttr(m.secondaryAction) + '>' + esc(m.secondaryAction.label) + '</button>';
+    return out ? '<div class="cw-feat-btns">' + out + '</div>' : '';
+  }
+  function metaHtml(m) {
+    var bits = [];
+    if (m.author) bits.push(esc(m.author));
+    if (m.publishedAt) bits.push(esc(m.publishedAt));
+    if (m.readingTime) bits.push(esc(m.readingTime));
+    if (m.views) bits.push(esc(m.views) + ' views');
+    if (!bits.length) return '';
+    return '<div class="cw-meta">' + bits.join('<span class="cw-meta-dot">·</span>') + '</div>';
+  }
+  function featureGrid(m) {
+    if (!m.features || !m.features.length) return '';
+    var items = m.features.map(function (f) { return '<div class="cw-feat-item">✔ ' + esc(f) + '</div>'; }).join('');
+    return '<div class="cw-feat-grid">' + items + '</div>';
+  }
+  function infoRow(m) {
+    if (!m.info || !m.info.length) return '';
+    var items = m.info.map(function (x) { return '<div class="cw-info-cell"><span>' + esc(x.v) + '</span><small>' + esc(x.k) + '</small></div>'; }).join('');
+    return '<div class="cw-info-row">' + items + '</div>';
+  }
+  function lockOverlay(m) {
+    if (!m.locked) return '';
+    return '<div class="cw-lock"><div class="cw-lock-badge">🔒 Premium</div>'
+      + '<button class="cw-btn cw-btn-primary" ' + actAttr(m.unlockAction || { kind: 'seed', value: 'How do I unlock this?' }) + '>Unlock</button></div>';
+  }
+
+  // Master renderer — switches presentation by type, one data model.
+  function renderCard(m) {
+    var t = m.type || 'base';
+    var sub = m.sub || m.subtitle || '';
+    var desc = m.desc || m.description || '';
+    // Whole card is clickable → its cardAction, or falls back to the primary CTA.
+    var clickable = actAttr(m.cardAction || m.primaryAction);
+
+    // Compact announcement
+    if (t === 'announcement') {
+      return '<button class="cw-card cw-anc" ' + actAttr(m.primaryAction || m.cardAction) + '>'
+        + '<div class="cw-card-ic">' + (m.icon || ICON.spark) + '</div>'
+        + '<div class="cw-card-tx"><h5>' + esc(m.title) + '</h5><p>' + esc(desc) + '</p></div>'
+        + '<div class="cw-card-go">' + ICON.arrow + '</div></button>';
+    }
+    // Knowledge card
+    if (t === 'knowledge') {
+      return '<button class="cw-card" ' + actAttr(m.primaryAction || m.cardAction) + '>'
+        + '<div class="cw-card-ic">' + (m.icon || ICON.book) + '</div>'
+        + '<div class="cw-card-tx"><h5>' + esc(m.title) + '</h5><p>' + esc(desc) + '</p></div>'
+        + '<div class="cw-card-go">' + (m.count ? '<span class="cw-count">' + esc(m.count) + '</span>' : '') + ICON.arrow + '</div></button>';
+    }
+    // Video card (horizontal)
+    if (t === 'video') {
+      return '<div class="cw-vcard" ' + actAttr(m.primaryAction || m.cardAction) + '>'
+        + '<div class="cw-vthumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '>'
+        + '<div class="cw-play">▶</div>' + (m.duration ? '<span class="cw-dur">' + esc(m.duration) + '</span>' : '') + '</div>'
+        + '<div class="cw-vbody"><h5>' + esc(m.title) + '</h5><p>' + esc(m.speaker || '') + (m.views ? ' · ' + esc(m.views) + ' views' : '') + '</p></div></div>';
+    }
+    // Case study card
+    if (t === 'casestudy') {
+      return '<div class="cw-slide" ' + actAttr(m.cardAction) + '>'
+        + (m.revenue ? '<div class="cw-slide-rev">' + esc(m.revenue) + '</div>' : '')
+        + '<p class="cw-slide-q">“' + esc(m.quote || '') + '”</p>'
+        + '<div class="cw-slide-who">' + esc(m.name || '') + (m.company ? ' · ' + esc(m.company) : '') + (m.timeline ? ' · ' + esc(m.timeline) : '') + '</div></div>';
+    }
+    // Article card (compact horizontal)
+    if (t === 'article') {
+      return '<div class="cw-acard" ' + actAttr(m.primaryAction || m.cardAction) + '>'
+        + '<div class="cw-athumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '></div>'
+        + '<div class="cw-abody">' + badgeHtml(m) + '<h5>' + esc(m.title) + '</h5>' + metaHtml(m) + '</div></div>';
+    }
+    // hero / promotion / base — full card
+    return '<div class="cw-feat' + (t === 'hero' ? ' cw-hero-card' : '') + (m.locked ? ' cw-locked' : '') + '" ' + clickable + ' tabindex="0" role="button">'
+      + coverHtml(m, t === 'hero') + badgeHtml(m) + lockOverlay(m)
+      + '<div class="cw-feat-body"><h4>' + esc((m.emoji ? m.emoji + ' ' : '') + m.title) + '</h4>'
+      + (sub ? '<div class="cw-feat-sub">' + esc(sub) + '</div>' : '')
+      + (desc ? '<p class="cw-feat-desc">' + esc(desc) + '</p>' : '')
+      + featureGrid(m) + infoRow(m) + metaHtml(m) + ctaHtml(m) + '</div></div>';
+  }
+
+  function renderSkeletonCard() {
+    return '<div class="cw-feat cw-skel"><div class="cw-cover cw-sk"></div>'
+      + '<div class="cw-feat-body"><div class="cw-sk cw-sk-line" style="width:40%"></div>'
+      + '<div class="cw-sk cw-sk-line" style="width:80%"></div><div class="cw-sk cw-sk-line" style="width:65%"></div></div></div>';
   }
 
   function renderHome() {
@@ -477,40 +669,56 @@
         + '<div class="cw-conv-t">' + timeAgo(conv.updatedAt) + '</div></div></div>';
     }
 
-    // Featured programs
-    var featured = '<div class="cw-sect">' + sectionTitle('Featured')
-      + programCardHtml('fastforward') + programCardHtml('ai') + programCardHtml('collective') + '</div>';
+    // Announcements (data-driven; hidden when empty)
+    var announce = '';
+    if (ANNOUNCEMENTS.length) {
+      announce = '<div class="cw-sect">' + sectionTitle('Latest updates')
+        + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>';
+    }
 
-    // Knowledge center
+    // Featured programs — rendered through the card system
+    var featured = '<div class="cw-sect">' + sectionTitle('Featured')
+      + renderCard(PROGRAMS.fastforward) + renderCard(PROGRAMS.ai) + renderCard(PROGRAMS.collective) + '</div>';
+
+    // Knowledge center (KnowledgeCard + category pills)
     var kb = '<div class="cw-sect">' + sectionTitle('Knowledge Center')
       + '<div class="cw-kbcard"><div class="cw-kbcard-head"><div class="cw-card-ic">' + ICON.book + '</div>'
       + '<div><h5>Find answers instantly</h5><p>Search our knowledge base and guides.</p></div></div>'
       + '<div class="cw-catrow">';
-    KB_CATS.forEach(function (c) { kb += '<button class="cw-cat" data-seed="I need help with ' + esc(c) + '.">' + esc(c) + '</button>'; });
+    KB_CATS.forEach(function (c) { kb += '<button class="cw-cat" data-ak="seed" data-av="I need help with ' + esc(c) + '.">' + esc(c) + '</button>'; });
     kb += '</div></div></div>';
 
-    // Client success
+    // Latest blog (ArticleCards) — data-driven
+    var blog = '';
+    if (BLOG.length) {
+      blog = '<div class="cw-sect">' + sectionTitle('Latest blog')
+        + BLOG.slice(0, 3).map(function (b) { b.type = 'article'; return renderCard(b); }).join('') + '</div>';
+    }
+
+    // Client success (CaseStudyCards in a carousel) — data-driven
     var success = '<div class="cw-sect">' + sectionTitle('Client Success');
     if (STORIES.length) {
-      success += '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">';
-      STORIES.forEach(function (s) {
-        success += '<div class="cw-slide"><div class="cw-slide-rev">' + esc(s.revenue) + '</div><p class="cw-slide-q">“' + esc(s.quote) + '”</p>'
-          + '<div class="cw-slide-who">' + esc(s.name) + ' · ' + esc(s.industry) + '</div></div>';
-      });
-      success += '</div><div class="cw-dots" id="cw-dots"></div></div>';
+      success += '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">'
+        + STORIES.map(function (s) { s.type = 'casestudy'; return renderCard(s); }).join('')
+        + '</div><div class="cw-dots" id="cw-dots"></div></div>';
     } else {
-      success += '<div class="cw-empty" style="padding:36px 20px"><div class="e-ic">' + ICON.spark + '</div>'
-        + '<h4>Client stories coming soon</h4><p>Real results from women building with The5th, shared here shortly.</p></div>';
+      success += emptyState(ICON.spark, 'Client stories coming soon', 'Real results from women building with The5th, shared here shortly.');
     }
     success += '</div>';
 
-    // Feed empty state (blog/videos/news populate here later)
-    var feed = '<div class="cw-sect">' + sectionTitle('Latest')
-      + '<div class="cw-empty" style="padding:30px 20px"><div class="e-ic">' + ICON.book + '</div>'
-      + '<h4>New content coming soon</h4><p>Fresh guides, videos and updates will appear here.</p>'
-      + '<button class="cw-btn cw-btn-ghost" data-gotab="knowledge" style="margin-top:14px">Explore Knowledge Base</button></div></div>';
+    // Latest videos (VideoCards) — data-driven
+    var videos = '';
+    if (VIDEOS.length) {
+      videos = '<div class="cw-sect">' + sectionTitle('Latest videos')
+        + '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div></div>';
+    }
 
-    return topbar + '<div class="cw-home">' + hero + pills + recent + featured + kb + success + feed + '</div>';
+    // Feed empty state when there is no blog/video content yet
+    var feed = (BLOG.length || VIDEOS.length) ? '' : '<div class="cw-sect">' + sectionTitle('Latest')
+      + emptyState(ICON.book, 'New content coming soon', 'Fresh guides, videos and updates will appear here.',
+        '<button class="cw-btn cw-btn-ghost" data-gotab="knowledge" style="margin-top:14px">Explore Knowledge Base</button>') + '</div>';
+
+    return topbar + '<div class="cw-home">' + hero + pills + recent + announce + featured + kb + blog + success + videos + feed + '</div>';
   }
 
   // Internal article viewer (slides in over the panels)
@@ -518,22 +726,22 @@
     var p = PROGRAMS[key]; if (!p) return;
     mode = 'article';
     clearHomeTimers();
-    var pts = p.points.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+    var pts = (p.features || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+    var secondary = p.secondaryAction || { label: 'Book a call', kind: 'seed', value: "I'd like to book a call with the team." };
     els.win.innerHTML =
       '<div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
       + '<span>' + esc(p.title) + '</span><button class="cw-iconbtn" id="cw-artclose" aria-label="Close">' + ICON.close + '</button></div>'
       + '<div class="cw-scroll"><div class="cw-article">'
-      + '<div class="cw-cover cw-cover-lg" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span></div>'
-      + '<div class="cw-art-body"><h1>' + esc(p.emoji + ' ' + p.title) + '</h1><div class="cw-feat-sub">' + esc(p.sub) + '</div>'
-      + '<p class="cw-art-desc">' + esc(p.desc) + '</p><ul class="cw-art-list">' + pts + '</ul>'
-      + '<div class="cw-feat-btns" style="margin-top:22px"><button class="cw-btn cw-btn-primary" data-nav="' + p.primary.url + '">' + esc(p.primary.label) + ' →</button>'
-      + '<button class="cw-btn cw-btn-ghost" data-seed="' + esc(p.secondary.seed || 'Tell me more.') + '">' + esc(p.secondary.label) + '</button></div>'
+      + '<div class="cw-cover cw-cover-lg" style="background:' + p.cover + '"><span class="cw-cover-emoji">' + p.emoji + '</span><div class="cw-cover-grad"></div></div>'
+      + '<div class="cw-art-body">' + badgeHtml(p) + '<h1>' + esc(p.emoji + ' ' + p.title) + '</h1><div class="cw-feat-sub">' + esc(p.sub) + '</div>'
+      + '<p class="cw-art-desc">' + esc(p.desc) + '</p><ul class="cw-art-list">' + pts + '</ul>' + infoRow(p)
+      + '<div class="cw-feat-btns" style="margin-top:22px"><button class="cw-btn cw-btn-primary" data-ak="nav" data-av="' + esc(p.url) + '">Get started <i class="cw-cta-arrow">→</i></button>'
+      + '<button class="cw-btn cw-btn-ghost" data-ak="' + esc(secondary.kind) + '" data-av="' + esc(secondary.value) + '">' + esc(secondary.label) + '</button></div>'
       + '</div></div></div>';
     var art = els.win.querySelector('.cw-article'); if (art) { art.classList.add('cw-slidein'); }
     els.win.querySelector('#cw-artback').addEventListener('click', function () { renderPanels(); });
     els.win.querySelector('#cw-artclose').addEventListener('click', function () { toggle(false); });
-    els.win.querySelectorAll('[data-nav]').forEach(function (n) { n.addEventListener('click', function () { window.location.href = n.getAttribute('data-nav'); }); });
-    els.win.querySelectorAll('[data-seed]').forEach(function (n) { n.addEventListener('click', function () { startNewChat(n.getAttribute('data-seed')); }); });
+    wireActions(els.win);
   }
 
   // Home mount: sticky header blur on scroll + success carousel

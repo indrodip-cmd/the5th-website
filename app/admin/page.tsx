@@ -985,11 +985,125 @@ function CmsAdmin() {
   )
 }
 
+/* ─── CRM ─── */
+interface Contact { email: string; name: string | null; pipeline_stage: string; lead_score: number; interest: string | null; business_stage: string | null; call_booked: boolean; tags: string[]; updated_at: string }
+interface Activity { id: string; type: string; title: string | null; detail: string | null; created_at: string }
+interface Note { id: string; body: string; author: string | null; created_at: string }
+const STAGE_LABEL: Record<string, string> = { new: 'New', qualified: 'Qualified', discovery: 'Discovery', call_booked: 'Call booked', call_completed: 'Call done', proposal: 'Proposal', won: 'Won', lost: 'Lost', customer: 'Customer' }
+
+function CrmAdmin() {
+  const [contacts, setContacts] = useState<Contact[]>([])
+  const [pipeline, setPipeline] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const [sel, setSel] = useState<string | null>(null)
+  const [profile, setProfile] = useState<{ contact: Contact; activities: Activity[]; notes: Note[] } | null>(null)
+  const [note, setNote] = useState('')
+  const [q, setQ] = useState('')
+  const [toast, setToast] = useState('')
+  const flash = (m: string) => { setToast(m); setTimeout(() => setToast(''), 2400) }
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/admin/crm').then(r => r.ok ? r.json() : Promise.reject()).then((d: { contacts: Contact[]; pipeline: string[] }) => { setContacts(d.contacts || []); setPipeline(d.pipeline || []) }).catch(() => flash('Failed')).finally(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+  const openProfile = (email: string) => { setSel(email); setProfile(null); fetch('/api/admin/crm?email=' + encodeURIComponent(email)).then(r => r.json()).then(setProfile) }
+  const setStage = async (email: string, stage: string) => {
+    await fetch('/api/admin/crm', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, pipeline_stage: stage }) })
+    flash('Stage updated'); load(); if (sel === email) openProfile(email)
+  }
+  const addNote = async () => {
+    if (!sel || !note.trim()) return
+    await fetch('/api/admin/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: sel, body: note }) })
+    setNote(''); openProfile(sel)
+  }
+
+  const card: React.CSSProperties = { background: '#fff', borderRadius: 14, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f0f0f0' }
+  const chip = (s: string) => <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: s === 'won' || s === 'customer' ? '#e8f0ea' : s === 'lost' ? '#fdeaea' : s === 'call_booked' ? '#e0f2fe' : '#f3f4f6', color: s === 'won' || s === 'customer' ? '#225840' : s === 'lost' ? '#b91c1c' : '#374151' }}>{STAGE_LABEL[s] || s}</span>
+  const fmt = (d: string) => { try { return new Date(d).toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) } catch { return d } }
+
+  if (loading) return <div style={{ color: '#9ca3af', padding: 40 }}>Loading CRM…</div>
+  const shown = q ? contacts.filter(c => (c.name || '').toLowerCase().includes(q.toLowerCase()) || c.email.toLowerCase().includes(q.toLowerCase())) : contacts
+  const stats = { total: contacts.length, booked: contacts.filter(c => c.call_booked).length, hot: contacts.filter(c => c.lead_score >= 8).length }
+
+  return (
+    <div>
+      {toast && <div style={{ position: 'fixed', top: 74, right: 24, background: '#0a1a0f', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, zIndex: 300 }}>{toast}</div>}
+      <div style={{ display: 'flex', gap: 20, marginBottom: 24, flexWrap: 'wrap' }}>
+        <StatCard label="Contacts" value={stats.total} />
+        <StatCard label="Calls Booked" value={stats.booked} />
+        <StatCard label="High Intent" value={stats.hot} accent hint="score ≥ 8" />
+      </div>
+      <input placeholder="Search name or email…" value={q} onChange={e => setQ(e.target.value)} style={{ padding: '10px 16px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, width: 320, marginBottom: 14, background: '#fff', color: '#0a0a0a' }} />
+      <div style={{ ...card, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+          <thead><tr style={{ background: '#0a1a0f' }}>{['Contact', 'Interest', 'Score', 'Stage', 'Updated', ''].map((c, i) => <th key={i} style={{ padding: '12px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.07em' }}>{c}</th>)}</tr></thead>
+          <tbody>
+            {shown.length === 0 ? <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: '#9ca3af' }}>No contacts yet — they appear as visitors chat.</td></tr> :
+              shown.map((c, i) => (
+                <tr key={c.email} style={{ background: i % 2 ? '#f9f9f9' : '#fff' }}>
+                  <td style={{ padding: '12px 16px' }}><div style={{ fontWeight: 600, color: '#0a0a0a' }}>{c.name || '—'}</div><div style={{ fontSize: 12, color: '#6b7280' }}>{c.email}</div></td>
+                  <td style={{ padding: '12px 16px', color: '#6b7280' }}>{c.interest || c.business_stage || '—'}</td>
+                  <td style={{ padding: '12px 16px', fontWeight: 700, color: c.lead_score >= 8 ? '#C9A84C' : '#374151' }}>{c.lead_score}</td>
+                  <td style={{ padding: '12px 16px' }}>{chip(c.pipeline_stage)}</td>
+                  <td style={{ padding: '12px 16px', color: '#9ca3af', fontSize: 12 }}>{fmt(c.updated_at)}</td>
+                  <td style={{ padding: '12px 16px' }}><button onClick={() => openProfile(c.email)} style={{ padding: '6px 14px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 6, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Open</button></td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+
+      {sel && (
+        <div onClick={() => setSel(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 250, display: 'flex', justifyContent: 'flex-end' }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 460, maxWidth: '92vw', height: '100%', background: '#f7f8f7', overflowY: 'auto', padding: 24, boxShadow: '-12px 0 40px rgba(0,0,0,0.2)' }}>
+            {!profile ? <div style={{ color: '#9ca3af' }}>Loading…</div> : (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+                  <div><div style={{ fontSize: 20, fontWeight: 800, color: '#0a0a0a' }}>{profile.contact.name || 'Contact'}</div><div style={{ fontSize: 13, color: '#6b7280' }}>{profile.contact.email}</div></div>
+                  <button onClick={() => setSel(null)} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontSize: 16 }}>×</button>
+                </div>
+                <div style={{ ...card, padding: 16, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', gap: 18, marginBottom: 14, fontSize: 13 }}>
+                    <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Score</div><div style={{ fontWeight: 700, color: profile.contact.lead_score >= 8 ? '#C9A84C' : '#0a0a0a' }}>{profile.contact.lead_score}</div></div>
+                    <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Interest</div><div>{profile.contact.interest || '—'}</div></div>
+                    <div><div style={{ color: '#9ca3af', fontSize: 11, textTransform: 'uppercase', fontWeight: 700 }}>Booked</div><div>{profile.contact.call_booked ? 'Yes' : 'No'}</div></div>
+                  </div>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 8 }}>Pipeline stage</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {pipeline.map(s => <button key={s} onClick={() => setStage(profile.contact.email, s)} style={{ padding: '6px 11px', borderRadius: 999, border: `1px solid ${profile.contact.pipeline_stage === s ? '#2d6a4f' : '#e0e0e0'}`, background: profile.contact.pipeline_stage === s ? '#e8f0ea' : '#fff', color: profile.contact.pipeline_stage === s ? '#225840' : '#6b7280', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>{STAGE_LABEL[s] || s}</button>)}
+                  </div>
+                </div>
+                <div style={{ ...card, padding: 16, marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Notes</div>
+                  <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Add a note…" rows={2} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 11px', fontSize: 13, fontFamily: 'inherit', resize: 'vertical' }} />
+                  <button onClick={addNote} style={{ marginTop: 8, padding: '8px 16px', background: 'linear-gradient(135deg,#225840,#2d6a4f)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Add note</button>
+                  {profile.notes.map(n => <div key={n.id} style={{ marginTop: 10, padding: 10, background: '#f4faf6', borderRadius: 8, fontSize: 13, color: '#374151' }}>{n.body}<div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>{fmt(n.created_at)}</div></div>)}
+                </div>
+                <div style={{ ...card, padding: 16 }}>
+                  <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: 10 }}>Timeline</div>
+                  {profile.activities.length === 0 ? <div style={{ color: '#9ca3af', fontSize: 13 }}>No activity yet.</div> :
+                    profile.activities.map(a => (
+                      <div key={a.id} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid #f0f0f0' }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#2d6a4f', marginTop: 5, flexShrink: 0 }} />
+                        <div><div style={{ fontSize: 13, fontWeight: 600, color: '#0a0a0a' }}>{a.title || a.type}</div>{a.detail && <div style={{ fontSize: 12, color: '#6b7280' }}>{a.detail}</div>}<div style={{ fontSize: 11, color: '#9ca3af' }}>{fmt(a.created_at)}</div></div>
+                      </div>
+                    ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ─── AdminPage ─── */
 export default function AdminPage() {
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
-  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content'>('overview')
+  const [tab, setTab] = useState<'overview' | 'leads' | 'carolina' | 'content' | 'crm'>('overview')
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [statsLoading, setStatsLoading] = useState(false)
@@ -1066,12 +1180,12 @@ export default function AdminPage() {
           <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '.04em' }}>Command Center</span>
         </div>
         <div style={{ display: 'flex', gap: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4 }}>
-          {(['overview', 'leads', 'carolina', 'content'] as const).map(t => (
+          {(['overview', 'leads', 'crm', 'carolina', 'content'] as const).map(t => (
             <button
               key={t} onClick={() => setTab(t)} className="tab-btn"
               style={{ background: tab === t ? '#2d6a4f' : 'transparent', color: tab === t ? '#fff' : 'rgba(255,255,255,0.6)' }}
             >
-              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'carolina' ? 'Carolina' : 'Content'}
+              {t === 'overview' ? 'Analytics' : t === 'leads' ? 'Leads' : t === 'crm' ? 'CRM' : t === 'carolina' ? 'Carolina' : 'Content'}
             </button>
           ))}
         </div>
@@ -1087,6 +1201,8 @@ export default function AdminPage() {
           <CarolinaAdmin />
         ) : tab === 'content' ? (
           <CmsAdmin />
+        ) : tab === 'crm' ? (
+          <CrmAdmin />
         ) : (
           <>
             <div style={{ display: 'flex', gap: 20, marginBottom: 28, flexWrap: 'wrap' }}>

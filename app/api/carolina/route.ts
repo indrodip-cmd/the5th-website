@@ -8,6 +8,7 @@ import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, type LeadMagnet } from '@/lib/carolina-config'
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
+import { logActivity } from '@/lib/crm'
 
 export const maxDuration = 45
 
@@ -249,6 +250,7 @@ async function runTool(
       notes: sanitizeText(input.notes, 1000) || null,
     })
     ctx.email.v = email
+    logActivity(email, 'chat', 'Captured in chat', sanitizeText(input.interest, 200) || sanitizeText(input.notes, 200) || undefined)
     return JSON.stringify({ ok: true, saved: true })
   }
 

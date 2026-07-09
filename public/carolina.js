@@ -229,7 +229,8 @@
     up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v3h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>',
     down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 4H17"/></svg>',
     clip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.6 1.6 0 0 1-2.3-2.3l7.8-7.8"/></svg>',
-    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>'
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
+    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/></svg>'
   };
 
   function avatarInner() {
@@ -888,6 +889,27 @@
       '.cw-feedback button:hover{transform:translateY(-1px);}.cw-feedback button.on{border-color:var(--acc);background:#241a10;}',
       '.cw-loading{padding:18px;}',
       '.cw-artbar #cw-bm{font-size:18px;line-height:1;color:var(--acc);}',
+      // ── Part 3E in-chat booking calendar ──
+      '.cw-book{align-self:flex-start;width:100%;max-width:340px;background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;}',
+      '.cw-book-h{display:flex;align-items:center;gap:8px;padding:13px 15px;font:600 14px "Inter";color:#fff;background:linear-gradient(150deg,#241531,#141414);border-bottom:1px solid var(--bd);}',
+      '.cw-book-h svg{width:17px;height:17px;color:var(--acc);}',
+      '.cw-book-body{padding:13px 14px;font:400 13px "Inter";color:var(--tx2);}',
+      '.cw-book-body a{color:var(--acc2);}',
+      '.cw-book-days{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}',
+      '.cw-book-days::-webkit-scrollbar{display:none;}',
+      '.cw-book-day{flex-shrink:0;padding:7px 11px;border-radius:10px;border:1px solid var(--bd);background:var(--bg2);color:var(--tx2);font:600 12px "Inter";cursor:pointer;white-space:nowrap;transition:all .15s;}',
+      '.cw-book-day.on{background:var(--acc);color:#1a1206;border-color:var(--acc);}',
+      '.cw-book-times{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:4px;}',
+      '.cw-book-time{padding:9px 4px;border-radius:9px;border:1px solid var(--bd);background:var(--bg2);color:#fff;font:600 12.5px "Inter";cursor:pointer;transition:all .15s;}',
+      '.cw-book-time:hover{border-color:rgba(201,168,76,.4);}',
+      '.cw-book-time.on{background:var(--acc);color:#1a1206;border-color:var(--acc);}',
+      '.cw-book-form{display:flex;flex-direction:column;gap:8px;margin-top:12px;}',
+      '.cw-book-form input{background:var(--bg2);border:1px solid var(--bd);border-radius:11px;padding:11px 13px;color:#fff;font:400 14px "Inter";outline:none;}',
+      '.cw-book-form input:focus{border-color:rgba(201,168,76,.5);}',
+      '.cw-book-form .cw-btn{margin-top:2px;}',
+      '.cw-book-done{display:flex;align-items:center;gap:12px;padding:18px 16px;}',
+      '.cw-book-done b{display:block;font:700 15px "Inter";color:#fff;}',
+      '.cw-book-done span{font:400 12.5px "Inter";color:var(--tx2);}',
       // The5th AI product card with cover
       '.cw-product-cover{position:relative;margin:-22px -22px 18px;aspect-ratio:16/9;overflow:hidden;cursor:pointer;}',
       '.cw-product-cover .cw-cover-emoji{position:absolute;inset:0;margin:auto;font-size:52px;align-items:center;justify-content:center;}',
@@ -1135,6 +1157,7 @@
     else if (kind === 'seed') startNewChat(value);
     else if (kind === 'tab') { tab = value; renderPanels(); }
     else if (kind === 'conv') openConv(value);
+    else if (kind === 'book') openBooking();
   }
   function wireActions(root) {
     root.querySelectorAll('[data-ak]').forEach(function (n) {
@@ -1454,9 +1477,9 @@
   }
   function ctaFor(item) {
     var t = item.type, title = item.title, d = item.data || {};
-    if (t === 'program') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call about ' + esc(title) + '.">Book a strategy call</button>';
+    if (t === 'program') return '<button class="cw-btn cw-btn-primary" data-ak="book" data-av="1">Book a strategy call</button>';
     if (t === 'product') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I want to try ' + esc(title) + '.">Try Free</button>' + (d.url ? '<button class="cw-btn cw-btn-ghost" data-ak="nav" data-av="' + esc(d.url) + '">Buy Now</button>' : '');
-    if (t === 'case_study') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to book a strategy call.">Book a strategy call</button>';
+    if (t === 'case_study') return '<button class="cw-btn cw-btn-primary" data-ak="book" data-av="1">Book a strategy call</button>';
     if (t === 'event') return '<button class="cw-btn cw-btn-primary" data-ak="seed" data-av="I\'d like to reserve a spot for ' + esc(title) + '.">Reserve my spot</button>';
     return '';
   }
@@ -2041,7 +2064,7 @@
       } else if (c.type === 'booking') {
         block.innerHTML = '<div class="cw-incard cw-incard-book"><div class="cw-incard-b"><h5>' + ICON.phone + ' Free strategy call</h5>'
           + '<p>A no-pressure 1:1 to map your next step.</p>'
-          + '<div class="cw-incard-btns"><button class="cw-btn cw-btn-primary" data-ak="seed" data-av="Yes, let\'s find a time to book my call.">Find a time</button></div></div></div>';
+          + '<div class="cw-incard-btns"><button class="cw-btn cw-btn-primary" data-ak="book" data-av="1">Find a time</button></div></div></div>';
       }
       if (block.firstChild) { els.msgs.appendChild(block); wireActions(block); }
     });
@@ -2070,6 +2093,62 @@
     var row = document.createElement('div'); row.className = 'cw-success';
     row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
     els.msgs.appendChild(row); maybeScroll(false);
+  }
+
+  // ── In-chat visual booking calendar (Part 3E) — never leaves the chat ──
+  function openBooking() {
+    if (mode !== 'chat' || !els.msgs) startNewChat();
+    appendBookingCard();
+  }
+  function appendBookingCard() {
+    clearChips();
+    var wrap = makeMsgWrap('assistant', 'carolina');
+    var col = wrap.querySelector('.cw-mcol');
+    var card = document.createElement('div'); card.className = 'cw-book';
+    card.innerHTML = '<div class="cw-book-h">' + ICON.cal + ' Book a free strategy call</div><div class="cw-book-body">Loading available times…</div>';
+    col.appendChild(card); els.msgs.appendChild(wrap); maybeScroll(true);
+    fetch('/api/carolina/availability?tz=' + encodeURIComponent(TZ)).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || !d.days || !d.days.length) {
+        var link = (d && d.fallback_link) || 'https://cal.com/indrodip-ghosh-ut1vxh/60min';
+        card.querySelector('.cw-book-body').innerHTML = 'No open times right now. <a href="' + esc(link) + '" target="_blank" rel="noopener">Use the scheduling link →</a>';
+        return;
+      }
+      renderBookingUI(card, d);
+    }).catch(function () { card.querySelector('.cw-book-body').textContent = 'Could not load times — please try again.'; });
+  }
+  function renderBookingUI(card, d) {
+    var state = { dayIdx: 0, start: null, name: leadName || '', email: '' };
+    function draw() {
+      var day = d.days[state.dayIdx];
+      var tabs = d.days.map(function (dd, i) { return '<button class="cw-book-day' + (i === state.dayIdx ? ' on' : '') + '" data-day="' + i + '">' + esc(dd.label) + '</button>'; }).join('');
+      var times = day.slots.map(function (s) { return '<button class="cw-book-time' + (state.start === s.start ? ' on' : '') + '" data-start="' + esc(s.start) + '">' + esc(s.label) + '</button>'; }).join('');
+      var form = state.start ? '<div class="cw-book-form"><input id="cw-bk-name" placeholder="Your name" value="' + esc(state.name || '') + '"><input id="cw-bk-email" type="email" placeholder="you@email.com" value="' + esc(state.email || '') + '"><button class="cw-btn cw-btn-primary" id="cw-bk-confirm">Confirm booking</button></div>' : '';
+      card.querySelector('.cw-book-body').innerHTML = '<div class="cw-book-days">' + tabs + '</div><div class="cw-book-times">' + times + '</div>' + form;
+      card.querySelectorAll('[data-day]').forEach(function (b) { b.addEventListener('click', function () { state.dayIdx = +b.getAttribute('data-day'); state.start = null; draw(); }); });
+      card.querySelectorAll('[data-start]').forEach(function (b) { b.addEventListener('click', function () { state.start = b.getAttribute('data-start'); draw(); maybeScroll(false); }); });
+      var cf = card.querySelector('#cw-bk-confirm');
+      if (cf) {
+        var ni = card.querySelector('#cw-bk-name'), ei = card.querySelector('#cw-bk-email');
+        ni.addEventListener('input', function () { state.name = ni.value; });
+        ei.addEventListener('input', function () { state.email = ei.value; });
+        cf.addEventListener('click', function () { confirmBooking(card, state); });
+      }
+    }
+    draw();
+  }
+  function confirmBooking(card, state) {
+    if (!state.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((state.email || '').trim())) { toast('Add your name and a valid email'); shake(card); return; }
+    var btn = card.querySelector('#cw-bk-confirm'); if (btn) { btn.disabled = true; btn.textContent = 'Booking…'; }
+    fetch('/api/carolina/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: state.name.trim(), email: state.email.trim(), start: state.start, timeZone: TZ }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (res) {
+        if (res.ok) {
+          var lbl = ''; try { lbl = new Date(res.start).toLocaleString([], { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); } catch (e) { lbl = res.start; }
+          card.innerHTML = '<div class="cw-book-done"><svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><div><b>You\'re booked!</b><span>' + esc(lbl) + ' — confirmation on its way to ' + esc(state.email.trim()) + '</span></div></div>';
+          leadName = state.name.trim().split(' ')[0]; maybeScroll(false);
+        } else { toast(res.error || 'Could not book that time'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } }
+      })
+      .catch(function () { toast('Network error — try again'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } });
   }
   // Premium first-open welcome: avatar, headline, description + big cards.
   function renderWelcome() {

@@ -6,7 +6,8 @@ import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { getSlots, createBooking, CAL_PUBLIC_LINK } from '@/lib/calcom'
 import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, type LeadMagnet } from '@/lib/carolina-config'
-import { retrieve, type Source } from '@/lib/retrieval'
+import { type Source } from '@/lib/retrieval'
+import { orchestrate, persistTurn } from '@/lib/orchestrator'
 
 export const maxDuration = 45
 
@@ -223,15 +224,15 @@ async function upsertLead(email: string, patch: LeadPatch) {
 async function runTool(
   name: string,
   input: Record<string, unknown>,
-  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; cards: ChatCard[]; booked: { v: boolean } }
+  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; cards: ChatCard[]; booked: { v: boolean }; email: { v: string | null }; recommended: string[] }
 ): Promise<string> {
   if (name === 'show_card') {
     const type = String(input.type || '')
     if (type === 'program') {
       const pg = String(input.program || '')
-      if (['fastforward', 'ai', 'collective'].includes(pg)) ctx.cards.push({ type: 'program', program: pg })
+      if (['fastforward', 'ai', 'collective'].includes(pg)) { ctx.cards.push({ type: 'program', program: pg }); ctx.recommended.push(pg) }
     } else if (type === 'booking') {
-      ctx.cards.push({ type: 'booking' })
+      ctx.cards.push({ type: 'booking' }); ctx.recommended.push('strategy_call')
     }
     return JSON.stringify({ ok: true, shown: true })
   }
@@ -247,6 +248,7 @@ async function runTool(
       interest: sanitizeText(input.interest, 200) || null,
       notes: sanitizeText(input.notes, 1000) || null,
     })
+    ctx.email.v = email
     return JSON.stringify({ ok: true, saved: true })
   }
 
@@ -354,27 +356,33 @@ export async function POST(req: NextRequest) {
 
     let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
 
-    // ── Knowledge Engine (RAG): ground the answer in published CMS content ──
+    // ── AI Brain: intent, state, lead scoring, planning, memory + RAG ──
+    const t0 = Date.now()
+    const conversationId = sanitizeText(body?.conversationId, 80) || `ip:${ip}`
+    const lastUser = incoming.filter((m) => m.role === 'user').pop()
+    const lastText = lastUser ? sanitizeText(lastUser.content, 500) : ''
     let sources: Source[] = []
-    if (!handoff) {
-      const lastUser = incoming.filter((m) => m.role === 'user').pop()
-      const lastText = lastUser ? sanitizeText(lastUser.content, 500) : ''
-      if (lastText) {
-        try {
-          const r = await retrieve(lastText, { hint: context || undefined })
-          sources = r.sources
-          if (r.context) {
-            system +=
-              `\n\nGROUNDED KNOWLEDGE — the following is The5th's own published content. Answer using it when relevant and refer to it naturally by name. If the answer is not covered here and is not basic sales/booking info, say you're not certain and offer a call — never invent facts, pricing, or policies.\n\n${r.context}`
-          }
-        } catch (e) {
-          console.error('retrieval failed', e)
-        }
-      }
+    let brainIntent = 'general', brainState = 'general', brainScore = 0
+    try {
+      const brain = await orchestrate({ conversationId, lastUserText: lastText, viewContext: context, handoff })
+      sources = brain.sources; brainIntent = brain.intent; brainState = brain.state; brainScore = brain.score
+      if (brain.context) system += `\n\n${brain.context}`
+    } catch (e) {
+      console.error('orchestrate failed', e)
     }
 
     const client = anthropic()
-    const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false } }
+    const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false }, email: { v: null as string | null }, recommended: [] as string[] }
+
+    // Persist session memory + one observability event (once per user turn).
+    const finishTurn = () => {
+      if (handoff) return
+      persistTurn({
+        conversationId, agent: agentKey, intent: brainIntent, state: brainState, score: brainScore,
+        sources: sources.length, booked: ctx.booked.v, latencyMs: Date.now() - t0,
+        email: ctx.email.v, recommended: ctx.recommended,
+      })
+    }
 
     for (let round = 0; round < 5; round++) {
       const res = await client.messages.create({ model: MODEL, max_tokens: 700, system, tools: TOOLS, messages })
@@ -388,6 +396,7 @@ export async function POST(req: NextRequest) {
         const to = AGENT_KEYS.includes(input.to as AgentKey) ? (input.to as AgentKey) : 'benjamin'
         const userName = sanitizeText(input.user_name, 60) || null
         const fallback = `Let me bring in my colleague ${AGENTS[to].name} — they can help you with this properly.`
+        finishTurn()
         return NextResponse.json({
           reply: text || fallback,
           agent: agentKey,
@@ -399,6 +408,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (toolUses.length === 0 || res.stop_reason !== 'tool_use') {
+        finishTurn()
         return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards, sources })
       }
 
@@ -411,7 +421,8 @@ export async function POST(req: NextRequest) {
       messages.push({ role: 'user', content: results })
     }
 
-    return NextResponse.json({ reply: 'Let me get the team to follow up — what is the best email to reach you?', agent: agentKey, booked: ctx.booked.v, actions: ctx.actions })
+    finishTurn()
+    return NextResponse.json({ reply: 'Let me get the team to follow up — what is the best email to reach you?', agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, sources })
   } catch (err) {
     console.error('carolina route error', err)
     return NextResponse.json({ error: 'Sorry, I hit a snag. Mind trying that again?' }, { status: 500 })

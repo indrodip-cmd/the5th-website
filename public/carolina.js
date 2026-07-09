@@ -1993,7 +1993,7 @@
       var payload = conv.messages
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
-      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff };
+      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id };
       if (viewContext) body.context = viewContext;
       // Attachments apply to the current turn only (never on the handoff request).
       if (!handoff && atts && atts.length) body.attachments = atts.map(function (a) { return { kind: a.kind, media_type: a.media_type, data: a.data }; });

@@ -87,6 +87,9 @@
   var els = {};
   var homeTimers = [];
   function clearHomeTimers() { homeTimers.forEach(function (t) { clearInterval(t); }); homeTimers = []; }
+  var homeScroll = 0, pendingScroll = null;   // remember Home scroll across chat
+  var lastMsgKey = null;                        // message grouping (role+agent)
+  var thinkTimer = null;                        // rotating "thinking" status
 
   // Nav badge state (data-driven; number | 'NEW' | 'dot' | null). None by default.
   var badges = { home: null, chat: null, knowledge: null, discover: null, account: null };
@@ -185,7 +188,13 @@
     folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
     users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 6a3 3 0 0 1 0 5.5M20.5 19a5.5 5.5 0 0 0-4-5.3"/></svg>',
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>',
-    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor" stroke="none"/></svg>'
+    play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor" stroke="none"/></svg>',
+    dots: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>',
+    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v3h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/></svg>',
+    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 4H17"/></svg>'
   };
 
   function avatarInner() {
@@ -638,7 +647,46 @@
       '.cw-foot2-links a{color:var(--tx2);cursor:pointer;transition:color .15s;}',
       '.cw-foot2-links a:hover{color:var(--acc2);}',
       '.cw-foot2-links span{color:var(--mut);}',
-      '.cw-foot2-meta{font:400 11px "Inter";color:var(--mut);margin-top:10px;}'
+      '.cw-foot2-meta{font:400 11px "Inter";color:var(--mut);margin-top:10px;}',
+      // ── Part 2B1 AI chat ──
+      '.cw-chatview{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;animation:cwChatIn .3s var(--sp);}',
+      '@keyframes cwChatIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:none;}}',
+      '.cw-chead{position:relative;}',
+      '.cw-chead-mid{flex:1;display:flex;align-items:center;gap:11px;min-width:0;}',
+      '.cw-menu-pop{position:absolute;top:58px;right:14px;z-index:20;background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);padding:6px;min-width:196px;animation:cwDrop .16s var(--sp);}',
+      '@keyframes cwDrop{from{opacity:0;transform:translateY(-4px) scale(.98);}to{opacity:1;transform:none;}}',
+      '.cw-menu-pop button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:none;border:none;border-radius:9px;color:#fff;font:500 13.5px "Inter";cursor:pointer;text-align:left;transition:background .15s;}',
+      '.cw-menu-pop button:hover{background:var(--hover);}',
+      '.cw-menu-pop button svg{width:16px;height:16px;color:var(--tx2);}',
+      '.cw-menu-pop button.danger{color:#f87171;}.cw-menu-pop button.danger svg{color:#f87171;}',
+      '.cw-newpill{position:absolute;left:50%;transform:translateX(-50%);bottom:86px;z-index:15;display:flex;align-items:center;gap:6px;background:var(--acc);color:#1a1206;border:none;border-radius:999px;padding:8px 15px;font:600 12.5px "Inter";cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:cwHU .3s var(--sp);}',
+      '.cw-newpill svg{width:15px;height:15px;transform:rotate(90deg);}',
+      // message column, grouping, width
+      '.cw-m{max-width:80%;}',
+      '.cw-mcol{display:flex;flex-direction:column;min-width:0;max-width:100%;}',
+      '.cw-m.user .cw-mcol{align-items:flex-end;}',
+      '.cw-m.cw-grouped{margin-top:-6px;}',
+      '.cw-m.cw-grouped .cw-m-ava{visibility:hidden;}',
+      // inline actions
+      '.cw-mact{display:flex;gap:1px;margin-top:5px;opacity:0;transform:translateY(-2px);transition:opacity .16s var(--sp),transform .16s var(--sp);}',
+      '.cw-m.bot:hover .cw-mact{opacity:1;transform:none;}',
+      '.cw-mact button{width:26px;height:26px;border-radius:7px;border:none;background:transparent;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s;}',
+      '.cw-mact button:hover{background:var(--hover);color:#fff;}.cw-mact button.on{color:var(--acc);}',
+      '.cw-mact button svg{width:15px;height:15px;}',
+      // thinking caption
+      '.cw-think{align-self:center;font:400 12px "Inter";color:var(--mut);}',
+      // inline cards
+      '.cw-incard-wrap{align-self:flex-start;max-width:88%;margin:2px 0 2px 36px;}',
+      '.cw-incard{display:flex;gap:12px;background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;padding:12px;cursor:pointer;transition:transform .18s var(--sp),border-color .18s;}',
+      '.cw-incard:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.3);}',
+      '.cw-incard-cover{width:60px;height:60px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:26px;}',
+      '.cw-incard-b{flex:1;min-width:0;}',
+      '.cw-incard-b h5{display:flex;align-items:center;gap:6px;font:700 14.5px "Inter";color:#fff;margin:0 0 3px;}',
+      '.cw-incard-b h5 svg{width:16px;height:16px;color:var(--acc);}',
+      '.cw-incard-b p{font:400 12.5px/1.45 "Inter";color:var(--tx2);margin:0 0 10px;}',
+      '.cw-incard-btns{display:flex;gap:8px;flex-wrap:wrap;}',
+      '.cw-incard-btns .cw-btn{padding:8px 14px;font-size:12.5px;border-radius:11px;}',
+      '.cw-incard-book{cursor:default;}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-home-styles'; st.textContent = css; document.head.appendChild(st);
   }
@@ -763,7 +811,8 @@
     view.innerHTML = bodyForTab(t);
     // restart the fade-in
     view.classList.remove('cw-view'); void view.offsetWidth; view.classList.add('cw-view');
-    var sc = els.win.querySelector('#cw-scroll'); if (sc) sc.scrollTop = 0;
+    var sc = els.win.querySelector('#cw-scroll');
+    if (sc) { sc.scrollTop = (t === 'home' && pendingScroll != null) ? pendingScroll : 0; pendingScroll = null; }
     var nav = els.win.querySelector('#cw-nav');
     if (nav) {
       nav.classList.remove('tuck');
@@ -1046,6 +1095,7 @@
   // Internal article viewer (slides in over the panels)
   function openArticle(key) {
     var p = PROGRAMS[key]; if (!p) return;
+    captureHomeScroll();
     mode = 'article';
     clearHomeTimers();
     var pts = (p.features || []).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
@@ -1061,7 +1111,7 @@
       + '<button class="cw-btn cw-btn-ghost" data-ak="' + esc(secondary.kind) + '" data-av="' + esc(secondary.value) + '">' + esc(secondary.label) + '</button></div>'
       + '</div></div></div>';
     var art = els.win.querySelector('.cw-article'); if (art) { art.classList.add('cw-slidein'); }
-    els.win.querySelector('#cw-artback').addEventListener('click', function () { renderPanels(); });
+    els.win.querySelector('#cw-artback').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
     els.win.querySelector('#cw-artclose').addEventListener('click', function () { toggle(false); });
     wireActions(els.win);
   }
@@ -1243,39 +1293,77 @@
     });
   }
 
+  var CHAT_PROMPTS = [
+    'Which program is right for me?', 'Compare Fast Forward vs The5th AI', 'Tell me about The5th AI',
+    'Explain pricing & fit', 'Take the free assessment', 'Book a strategy call',
+    'Recommend a resource', 'Talk to support'
+  ];
+
   function renderChat() {
-    clearHomeTimers();
+    clearHomeTimers(); clearThink();
     mode = 'chat';
+    lastMsgKey = null;
     var conv = activeConv();
     var cur = agentInfo((conv && conv.agent) || 'carolina');
     els.win.innerHTML =
-      '<div class="cw-chead"><button class="cw-iconbtn" id="cw-back" aria-label="Back">' + ICON.back + '</button>'
-      + '<div class="cw-chead-ava" id="cw-chead-ava">' + agentAva(cur.key) + '</div>'
-      + '<div class="cw-chead-tx"><h4 id="cw-chead-name">' + esc(cur.name) + '</h4><p><span class="cw-live"></span><span id="cw-chead-role">' + esc(cur.role) + '</span> · online</p></div>'
-      + '<button class="cw-iconbtn" id="cw-close2" aria-label="Close">' + ICON.close + '</button></div>'
-      + '<div class="cw-scroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
-      + '<div class="cw-comp"><div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" placeholder="Write a message…"></textarea>'
+      '<div class="cw-chatview">'
+      + '<div class="cw-chead"><button class="cw-iconbtn" id="cw-back" aria-label="Back to home">' + ICON.back + '</button>'
+      + '<div class="cw-chead-mid"><div class="cw-chead-ava" id="cw-chead-ava">' + agentAva(cur.key) + '</div>'
+      + '<div class="cw-chead-tx"><h4 id="cw-chead-name">' + esc(cur.name) + '</h4><p><span class="cw-live"></span><span id="cw-chead-role">' + esc(cur.role) + '</span> · online</p></div></div>'
+      + '<button class="cw-iconbtn" id="cw-menu" aria-label="Conversation options" aria-haspopup="true">' + ICON.dots + '</button>'
+      + '<div class="cw-menu-pop" id="cw-menu-pop" role="menu" hidden>'
+      + '<button data-menu="clear" role="menuitem">' + ICON.refresh + ' Clear chat</button>'
+      + '<button data-menu="export" role="menuitem">' + ICON.download + ' Export transcript</button>'
+      + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div></div>'
+      + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
+      + '<button class="cw-newpill" id="cw-newpill" hidden>' + ICON.arrow + ' New messages</button>'
+      + '<div class="cw-comp"><div class="cw-comp-row"><textarea class="cw-in" id="cw-in" rows="1" placeholder="Message The5th AI…"></textarea>'
       + '<button class="cw-send" id="cw-send" aria-label="Send">' + ICON.send + '</button></div>'
-      + '<p class="cw-cred">Powered by <b>The5th AI</b></p></div>';
+      + '<p class="cw-cred">Powered by <b>The5th AI</b></p></div></div>';
 
     els.msgs = els.win.querySelector('#cw-msgs');
     els.in = els.win.querySelector('#cw-in');
     els.send = els.win.querySelector('#cw-send');
+    var cscroll = els.win.querySelector('#cw-cscroll');
 
-    els.win.querySelector('#cw-back').addEventListener('click', function () { renderPanels(); });
-    els.win.querySelector('#cw-close2').addEventListener('click', function () { toggle(false); });
+    els.win.querySelector('#cw-back').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
     els.send.addEventListener('click', function () { sendMessage(els.in.value); });
     els.in.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(els.in.value); } });
     els.in.addEventListener('input', function () { els.in.style.height = 'auto'; els.in.style.height = Math.min(els.in.scrollHeight, 100) + 'px'; });
+    cscroll.addEventListener('scroll', function () { if (nearBottom()) hideNewPill(); });
+    els.win.querySelector('#cw-newpill').addEventListener('click', function () { scrollChat(); hideNewPill(); });
 
-    // paint — greeting first (from Carolina), then history with each author's avatar.
+    // 3-dot menu
+    var menu = els.win.querySelector('#cw-menu'), pop = els.win.querySelector('#cw-menu-pop');
+    menu.addEventListener('click', function (e) { e.stopPropagation(); pop.hidden = !pop.hidden; });
+    document.addEventListener('click', function () { if (pop) pop.hidden = true; });
+    pop.querySelectorAll('[data-menu]').forEach(function (b) {
+      b.addEventListener('click', function () { pop.hidden = true; chatMenu(b.getAttribute('data-menu')); });
+    });
+
+    // paint — AI welcome, then history (each author's avatar, grouped).
     addBotMsg(cfg.greeting, true, 'carolina');
     (conv ? conv.messages : []).forEach(function (m) {
-      if (m.role === 'system' && m.kind === 'join') addJoinSeparator(m.agent, true);
-      else addMsg(m.role, m.content, true, m.agent);
+      if (m.role === 'system' && m.kind === 'join') { addJoinSeparator(m.agent, true); lastMsgKey = null; }
+      else addMsg(m.role, m.content, true, m.agent, m.cards);
     });
-    if (!conv || conv.messages.length === 0) renderChips();
-    setTimeout(function () { els.in.focus(); scrollChat(); }, 200);
+    if (!conv || conv.messages.length === 0) renderPrompts();
+    setTimeout(function () { els.in.focus(); scrollChat(); }, 220);
+  }
+
+  function chatMenu(action) {
+    var conv = activeConv(); if (!conv) return;
+    if (action === 'clear') { conv.messages = []; saveStore(); renderChat(); }
+    else if (action === 'delete') {
+      store.conversations = store.conversations.filter(function (c) { return c.id !== conv.id; });
+      store.activeId = null; saveStore(); tab = 'chat'; renderPanels();
+    } else if (action === 'export') {
+      var lines = conv.messages.filter(function (m) { return m.role !== 'system'; })
+        .map(function (m) { return (m.role === 'user' ? 'You' : agentInfo(m.agent).name) + ': ' + m.content; });
+      var blob = new Blob(['The5th AI conversation\n\n' + lines.join('\n\n')], { type: 'text/plain' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'the5th-conversation.txt'; a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    }
   }
 
   function updateChatHeader(agentKey) {
@@ -1285,38 +1373,107 @@
     var role = els.win.querySelector('#cw-chead-role'); if (role) role.textContent = a.role;
   }
 
-  function scrollChat() { var s = els.win.querySelector('.cw-scroll'); if (s) s.scrollTop = s.scrollHeight; }
-  function addBotMsg(text, noScroll, agentKey) { addMsg('assistant', text, noScroll, agentKey); }
-  function addMsg(role, text, noScroll, agentKey) {
+  // ── scroll helpers ──
+  function chatScrollEl() { return els.win.querySelector('#cw-cscroll'); }
+  function scrollChat() { var s = chatScrollEl(); if (s) s.scrollTop = s.scrollHeight; }
+  function nearBottom() { var s = chatScrollEl(); if (!s) return true; return s.scrollHeight - s.scrollTop - s.clientHeight < 100; }
+  function maybeScroll(force) { if (force || nearBottom()) scrollChat(); else showNewPill(); }
+  function showNewPill() { var p = els.win.querySelector('#cw-newpill'); if (p) p.hidden = false; }
+  function hideNewPill() { var p = els.win.querySelector('#cw-newpill'); if (p) p.hidden = true; }
+
+  // ── message rendering (grouping + inline actions + inline cards) ──
+  function msgKey(role, agentKey) { return role === 'user' ? 'user' : 'bot:' + (agentKey || 'carolina'); }
+  function makeMsgWrap(role, agentKey) {
+    var key = msgKey(role, agentKey);
+    var grouped = key === lastMsgKey;
+    lastMsgKey = key;
     var wrap = document.createElement('div');
-    wrap.className = 'cw-m ' + (role === 'user' ? 'user' : 'bot');
-    var inner = '';
-    if (role !== 'user') inner += '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div>';
-    inner += '<div class="cw-bub">' + renderMd(text) + '</div>';
-    wrap.innerHTML = inner;
-    els.msgs.appendChild(wrap);
-    if (!noScroll) scrollChat();
+    wrap.className = 'cw-m ' + (role === 'user' ? 'user' : 'bot') + (grouped ? ' cw-grouped' : '');
+    if (role !== 'user') { var av = document.createElement('div'); av.className = 'cw-m-ava'; av.innerHTML = agentAva(agentKey || 'carolina'); wrap.appendChild(av); }
+    var col = document.createElement('div'); col.className = 'cw-mcol'; wrap.appendChild(col);
+    return wrap;
   }
-  // Progressive "streaming" reveal for assistant replies — grows smoothly,
-  // blinking cursor, then settles. Falls back to instant on reduced-motion.
-  function streamBotMsg(text, agentKey) {
+  function botActions(col, text) {
+    var bar = document.createElement('div'); bar.className = 'cw-mact';
+    bar.innerHTML = '<button title="Copy" data-a="copy">' + ICON.copy + '</button>'
+      + '<button title="Regenerate" data-a="regen">' + ICON.refresh + '</button>'
+      + '<button title="Helpful" data-a="up">' + ICON.up + '</button>'
+      + '<button title="Not helpful" data-a="down">' + ICON.down + '</button>';
+    bar.querySelector('[data-a="copy"]').addEventListener('click', function () { try { navigator.clipboard.writeText(text); } catch (e) {} flashAct(bar, 'copy'); });
+    bar.querySelector('[data-a="regen"]').addEventListener('click', function () { regenerate(); });
+    bar.querySelector('[data-a="up"]').addEventListener('click', function (e) { e.currentTarget.classList.toggle('on'); });
+    bar.querySelector('[data-a="down"]').addEventListener('click', function (e) { e.currentTarget.classList.toggle('on'); });
+    col.appendChild(bar);
+  }
+  function flashAct(bar, a) { var b = bar.querySelector('[data-a="' + a + '"]'); if (b) { b.classList.add('on'); setTimeout(function () { b.classList.remove('on'); }, 900); } }
+
+  function addBotMsg(text, noScroll, agentKey) { addMsg('assistant', text, noScroll, agentKey); }
+  function addMsg(role, text, noScroll, agentKey, cards) {
+    var wrap = makeMsgWrap(role, agentKey);
+    var col = wrap.querySelector('.cw-mcol');
+    var bub = document.createElement('div'); bub.className = 'cw-bub'; bub.innerHTML = renderMd(text);
+    col.appendChild(bub);
+    if (role !== 'user') botActions(col, text);
+    els.msgs.appendChild(wrap);
+    if (cards && cards.length) renderInlineCards(cards);
+    if (!noScroll) maybeScroll(role === 'user');
+  }
+
+  // Progressive streaming reveal (grows smoothly, blinking cursor, then settles).
+  function streamBotMsg(text, agentKey, cards) {
     return new Promise(function (resolve) {
-      var wrap = document.createElement('div');
-      wrap.className = 'cw-m bot';
-      wrap.innerHTML = '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div><div class="cw-bub"></div>';
-      var bub = wrap.querySelector('.cw-bub');
-      els.msgs.appendChild(wrap); scrollChat();
-      if (REDUCE || text.length < 3) { bub.innerHTML = renderMd(text); scrollChat(); return resolve(); }
+      var wrap = makeMsgWrap('assistant', agentKey);
+      var col = wrap.querySelector('.cw-mcol');
+      var bub = document.createElement('div'); bub.className = 'cw-bub'; col.appendChild(bub);
+      els.msgs.appendChild(wrap); maybeScroll(false);
+      function finish() {
+        bub.classList.remove('cw-streaming'); bub.innerHTML = renderMd(text);
+        botActions(col, text);
+        if (cards && cards.length) renderInlineCards(cards);
+        maybeScroll(false); resolve();
+      }
+      if (REDUCE || text.length < 3) { bub.innerHTML = renderMd(text); return finish(); }
       bub.classList.add('cw-streaming');
       var tokens = text.split(/(\s+)/); var i = 0, acc = '';
       (function step() {
-        if (i >= tokens.length) { bub.classList.remove('cw-streaming'); bub.innerHTML = renderMd(text); scrollChat(); return resolve(); }
+        if (i >= tokens.length) return finish();
         acc += tokens[i++];
         bub.innerHTML = renderMd(acc) + '<span class="cw-cursor"></span>';
-        scrollChat();
+        maybeScroll(false);
         setTimeout(step, 16 + Math.random() * 34);
       })();
     });
+  }
+
+  // Inline rich cards returned by the AI (show_card tool).
+  function renderInlineCards(cards) {
+    cards.forEach(function (c) {
+      var block = document.createElement('div'); block.className = 'cw-incard-wrap';
+      if (c.type === 'program' && PROGRAMS[c.program]) {
+        var p = PROGRAMS[c.program];
+        block.innerHTML = '<div class="cw-incard" data-ak="article" data-av="' + esc(c.program) + '" role="button" tabindex="0">'
+          + '<div class="cw-incard-cover" style="background:' + p.cover + '"><span>' + p.emoji + '</span></div>'
+          + '<div class="cw-incard-b"><h5>' + esc(p.title) + '</h5><p>' + esc(p.sub) + '</p>'
+          + '<div class="cw-incard-btns"><button class="cw-btn cw-btn-primary" data-ak="article" data-av="' + esc(c.program) + '">Learn More</button>'
+          + '<button class="cw-btn cw-btn-ghost" data-ak="seed" data-av="I\'d like to book a call about ' + esc(p.title) + '.">Book a call</button></div></div></div>';
+      } else if (c.type === 'booking') {
+        block.innerHTML = '<div class="cw-incard cw-incard-book"><div class="cw-incard-b"><h5>' + ICON.phone + ' Free strategy call</h5>'
+          + '<p>A no-pressure 1:1 to map your next step.</p>'
+          + '<div class="cw-incard-btns"><button class="cw-btn cw-btn-primary" data-ak="seed" data-av="Yes, let\'s find a time to book my call.">Find a time</button></div></div></div>';
+      }
+      if (block.firstChild) { els.msgs.appendChild(block); wireActions(block); }
+    });
+  }
+
+  function regenerate() {
+    var conv = activeConv(); if (!conv || sending) return;
+    // drop trailing assistant messages, then re-send the last user turn.
+    while (conv.messages.length && conv.messages[conv.messages.length - 1].role !== 'user') conv.messages.pop();
+    var lastUser = conv.messages.length ? conv.messages[conv.messages.length - 1] : null;
+    if (!lastUser) return;
+    conv.messages.pop(); saveStore();
+    renderChat();
+    sendMessage(lastUser.content);
   }
 
   // "Benjamin joined the chat" system separator.
@@ -1324,28 +1481,31 @@
     var a = agentInfo(agentKey);
     var row = document.createElement('div'); row.className = 'cw-join';
     row.innerHTML = '<span class="cw-join-ava">' + agentAva(agentKey) + '</span><span class="cw-join-tx"><b>' + esc(a.name) + '</b> joined the chat</span>';
-    els.msgs.appendChild(row);
-    if (!noScroll) scrollChat();
+    els.msgs.appendChild(row); lastMsgKey = null;
+    if (!noScroll) maybeScroll(false);
   }
-  // Animated "booked" confirmation (checkmark draws itself).
   function addSuccessCheck() {
     var row = document.createElement('div'); row.className = 'cw-success';
     row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
-    els.msgs.appendChild(row); scrollChat();
+    els.msgs.appendChild(row); maybeScroll(false);
   }
-  function renderChips() {
-    var chips = ['Tell me about the programs', 'Book a call', 'Take the free quiz'];
+  function renderPrompts() {
     var row = document.createElement('div'); row.className = 'cw-chips'; row.id = 'cw-chips';
-    chips.forEach(function (l) { var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b); });
-    els.msgs.appendChild(row); scrollChat();
+    CHAT_PROMPTS.forEach(function (l) { var b = document.createElement('button'); b.className = 'cw-chip'; b.textContent = l; b.addEventListener('click', function () { sendMessage(l); }); row.appendChild(b); });
+    els.msgs.appendChild(row); maybeScroll(false);
   }
+  function clearThink() { if (thinkTimer) { clearInterval(thinkTimer); thinkTimer = null; } }
+  var THINK_MSGS = ['Reviewing your question…', 'Preparing an answer…', 'One moment…'];
   function showTyping(agentKey) {
     hideTyping();
     var t = document.createElement('div'); t.className = 'cw-m bot'; t.id = 'cw-typing';
-    t.innerHTML = '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div><div class="cw-typing"><span></span><span></span><span></span></div>';
-    els.msgs.appendChild(t); scrollChat();
+    t.innerHTML = '<div class="cw-m-ava">' + agentAva(agentKey || 'carolina') + '</div>'
+      + '<div class="cw-typing"><span></span><span></span><span></span></div><span class="cw-think"></span>';
+    els.msgs.appendChild(t); maybeScroll(false);
+    var cap = t.querySelector('.cw-think'); var i = 0; cap.textContent = THINK_MSGS[0];
+    clearThink(); thinkTimer = setInterval(function () { i = (i + 1) % THINK_MSGS.length; cap.textContent = THINK_MSGS[i]; }, 1500);
   }
-  function hideTyping() { var t = els.win.querySelector('#cw-typing'); if (t) t.remove(); }
+  function hideTyping() { clearThink(); var t = els.win.querySelector('#cw-typing'); if (t) t.remove(); }
 
   // ── Conversation flow ──
   function ensureActiveConv() {
@@ -1353,12 +1513,17 @@
     if (!c) { c = mkConv([]); store.conversations.push(c); store.activeId = c.id; saveStore(); }
     return c;
   }
+  function captureHomeScroll() {
+    var sc = els.win && els.win.querySelector('#cw-scroll');
+    if (sc && mode === 'panels' && tab === 'home') homeScroll = sc.scrollTop;
+  }
   function startNewChat(seed) {
+    captureHomeScroll();
     var c = mkConv([]); store.conversations.push(c); store.activeId = c.id; saveStore();
     renderChat();
     if (seed) sendMessage(seed);
   }
-  function openConv(id) { store.activeId = id; saveStore(); renderChat(); }
+  function openConv(id) { captureHomeScroll(); store.activeId = id; saveStore(); renderChat(); }
 
   // Post the conversation to the API (stripping local-only fields).
   async function callApi(conv, handoff) {
@@ -1401,7 +1566,7 @@
     hideTyping();
     if (!res || res.error) { addBotMsg((res && res.error) || "Sorry, I hit a snag — could you say that again?", false, to); return; }
     var reply = res.reply || 'How can I help?';
-    await streamBotMsg(reply, to); conv.messages.push({ role: 'assistant', content: reply, agent: to }); conv.updatedAt = Date.now(); saveStore();
+    await streamBotMsg(reply, to, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: to, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
     if (res.booked) addSuccessCheck();
     handleActions(res.actions);
   }
@@ -1427,7 +1592,7 @@
       await doTransfer(conv, res.transfer);
     } else {
       var reply = res.reply || "I'm here — how can I help?";
-      await streamBotMsg(reply, conv.agent); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent }); conv.updatedAt = Date.now(); saveStore();
+      await streamBotMsg(reply, conv.agent, res.cards); conv.messages.push({ role: 'assistant', content: reply, agent: conv.agent, cards: res.cards && res.cards.length ? res.cards : undefined }); conv.updatedAt = Date.now(); saveStore();
       if (res.booked) addSuccessCheck();
       handleActions(res.actions);
     }

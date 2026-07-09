@@ -62,6 +62,7 @@ function baseRules(canBook: boolean): string {
 - Never promise income, results, or guarantees. Do not quote exact prices; the team covers pricing and fit on a call.
 - Do not invent facts, testimonials, features, or availability.
 - Keep replies short and human: 2-4 sentences, first person, warm. One question at a time.
+- When you describe a program (Fast Forward, The5th AI, The Collective) or invite them to book, call show_card to render a rich card instead of listing details in prose — then keep your text brief.
 - Capture the visitor's first name and email early via save_lead.
 ${canBook ? '- You CAN book calls: use get_availability, then book_appointment after they confirm a specific time.' : '- You do NOT book calls yourself — if they want to book, hand off to Carolina.'}
 - If booking is unavailable, share this scheduling link: ${CAL_PUBLIC_LINK}`
@@ -168,6 +169,18 @@ const TOOLS: Anthropic.Tool[] = [
     },
   },
   {
+    name: 'show_card',
+    description: 'Display a rich card inline in the chat to support your reply. Use when you describe a program or invite the visitor to book. Call it alongside your short text reply — do not repeat the card details in prose.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', enum: ['program', 'booking'] },
+        program: { type: 'string', enum: ['fastforward', 'ai', 'collective'], description: 'Required when type is "program".' },
+      },
+      required: ['type'],
+    },
+  },
+  {
     name: 'transfer_conversation',
     description: "Hand this conversation to a colleague who is better suited to help. First say one short, warm sentence to the visitor, then call this.",
     input_schema: {
@@ -184,6 +197,7 @@ const TOOLS: Anthropic.Tool[] = [
 
 type LeadPatch = Record<string, unknown>
 type ClientAction = { type: string; url?: string }
+type ChatCard = { type: string; program?: string }
 
 async function upsertLead(email: string, patch: LeadPatch) {
   try {
@@ -198,8 +212,19 @@ async function upsertLead(email: string, patch: LeadPatch) {
 async function runTool(
   name: string,
   input: Record<string, unknown>,
-  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; booked: { v: boolean } }
+  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; cards: ChatCard[]; booked: { v: boolean } }
 ): Promise<string> {
+  if (name === 'show_card') {
+    const type = String(input.type || '')
+    if (type === 'program') {
+      const pg = String(input.program || '')
+      if (['fastforward', 'ai', 'collective'].includes(pg)) ctx.cards.push({ type: 'program', program: pg })
+    } else if (type === 'booking') {
+      ctx.cards.push({ type: 'booking' })
+    }
+    return JSON.stringify({ ok: true, shown: true })
+  }
+
   if (name === 'save_lead') {
     const email = String(input.email || '').trim().toLowerCase()
     const nm = sanitizeText(input.name, 120)
@@ -298,7 +323,7 @@ export async function POST(req: NextRequest) {
     const system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff })
 
     const client = anthropic()
-    const ctx = { magnet, actions: [] as ClientAction[], booked: { v: false } }
+    const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false } }
 
     for (let round = 0; round < 5; round++) {
       const res = await client.messages.create({ model: MODEL, max_tokens: 700, system, tools: TOOLS, messages })
@@ -322,7 +347,7 @@ export async function POST(req: NextRequest) {
       }
 
       if (toolUses.length === 0 || res.stop_reason !== 'tool_use') {
-        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions })
+        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards })
       }
 
       messages.push({ role: 'assistant', content: res.content })

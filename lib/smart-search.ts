@@ -32,7 +32,7 @@ export async function parseQuery(nl: string): Promise<SmartFilter> {
       'Omit keys you cannot infer. Return ONLY minified JSON.',
     messages: [{ role: 'user', content: nl }],
   })
-  logAiEvent({ endpoint: 'smart_search', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0 })
+  await logAiEvent({ endpoint: 'smart_search', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0 })
   const text = msg.content.find((b) => b.type === 'text')
   const raw = text && text.type === 'text' ? text.text : '{}'
   let parsed: Row = {}

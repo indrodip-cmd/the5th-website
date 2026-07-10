@@ -140,7 +140,7 @@ async function runAction(action: Action, ctx: Ctx): Promise<string> {
         system: 'You write a crisp 3-4 sentence sales CRM summary of a lead for the team. Be factual; no fluff.',
         messages: [{ role: 'user', content: `Lead: ${JSON.stringify(lead)}\nRecent activity: ${JSON.stringify(acts)}` }],
       })
-      logAiEvent({ endpoint: 'ai_summary', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0, email })
+      await logAiEvent({ endpoint: 'ai_summary', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0, email })
       const text = msg.content.find((b) => b.type === 'text')
       const summary = text && text.type === 'text' ? text.text : ''
       if (summary) await db.from('crm_notes').insert({ contact_id: cid, contact_email: email, body: 'AI summary: ' + summary, author: 'automation' })

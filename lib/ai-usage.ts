@@ -30,26 +30,24 @@ export function costOf(model: string, u: AnthropicUsage): number {
   return Math.round(cost * 1e6) / 1e6
 }
 
-/* Log one AI call. Fire-and-forget. */
-export function logAiEvent(input: {
+/* Log one AI call. Awaited by callers so the write persists before the
+   serverless function freezes (fire-and-forget can be dropped on Vercel). */
+export async function logAiEvent(input: {
   endpoint: string; model?: string; usage?: AnthropicUsage; latencyMs?: number
   conversationId?: string | null; visitorId?: string | null; email?: string | null
   status?: string; error?: string; meta?: Row
 }) {
   const u = input.usage || {}
-  const run = async () => {
-    try {
-      await getSupabaseAdmin().from('ai_events').insert({
-        endpoint: input.endpoint, model: input.model || null,
-        conversation_id: input.conversationId || null, visitor_id: input.visitorId || null, contact_email: input.email || null,
-        input_tokens: u.input_tokens || 0, output_tokens: u.output_tokens || 0,
-        cache_read_tokens: u.cache_read_input_tokens || 0, cache_write_tokens: u.cache_creation_input_tokens || 0,
-        cost_usd: input.model ? costOf(input.model, u) : 0, latency_ms: input.latencyMs ?? null,
-        status: input.status || 'ok', error: input.error || null, meta: input.meta || {},
-      })
-    } catch (e) { console.error('logAiEvent failed', e) }
-  }
-  run()
+  try {
+    await getSupabaseAdmin().from('ai_events').insert({
+      endpoint: input.endpoint, model: input.model || null,
+      conversation_id: input.conversationId || null, visitor_id: input.visitorId || null, contact_email: input.email || null,
+      input_tokens: u.input_tokens || 0, output_tokens: u.output_tokens || 0,
+      cache_read_tokens: u.cache_read_input_tokens || 0, cache_write_tokens: u.cache_creation_input_tokens || 0,
+      cost_usd: input.model ? costOf(input.model, u) : 0, latency_ms: input.latencyMs ?? null,
+      status: input.status || 'ok', error: input.error || null, meta: input.meta || {},
+    })
+  } catch (e) { console.error('logAiEvent failed', e) }
 }
 
 // ── Reads for the dashboards ──

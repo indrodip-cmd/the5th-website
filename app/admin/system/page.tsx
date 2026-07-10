@@ -67,12 +67,36 @@ function HealthPanel() {
 }
 
 function AiPanel() {
-  const { data, loading } = useAdminFetch<{ cost: Row; perf: Row }>('/api/admin/system?panel=ai')
+  const { data, loading } = useAdminFetch<{ cost: Row; perf: Row; org: Row }>('/api/admin/system?panel=ai')
   if (loading && !data) return <div className="skeleton" style={{ height: 200, borderRadius: 14 }} />
-  const c = (data?.cost as Row) || {}, p = (data?.perf as Row) || {}
+  const c = (data?.cost as Row) || {}, p = (data?.perf as Row) || {}, org = (data?.org as Row) || {}
   const metric = (label: string, val: string, sub?: string) => <Card pad={16}><div style={{ fontSize: 22, fontWeight: 800, color: T.ink }}>{val}</div><div style={{ fontSize: 12, color: T.sub, marginTop: 4 }}>{label}</div>{sub && <div style={{ fontSize: 11, color: T.muted }}>{sub}</div>}</Card>
   return (
     <>
+      {/* Anthropic org — matches the Claude console (all apps on the key) */}
+      <Card style={{ marginBottom: 16, background: `linear-gradient(135deg,${T.ink},${T.green})` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '.05em' }}>Anthropic organization · matches Claude console</div>
+            {org.configured ? (
+              <div style={{ display: 'flex', gap: 28, marginTop: 8, flexWrap: 'wrap' }}>
+                <div><div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>{money(Number(org.today || 0), (org.currency as string) || 'USD')}</div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>Today (org)</div></div>
+                <div><div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>{money(Number(org.month || 0), (org.currency as string) || 'USD')}</div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>This month (org)</div></div>
+                <div><div style={{ fontSize: 28, fontWeight: 800, color: '#fff' }}>{(Number(org.inputTokens || 0) + Number(org.outputTokens || 0)).toLocaleString()}</div><div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>Tokens (month)</div></div>
+              </div>
+            ) : (
+              <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.85)', marginTop: 8, maxWidth: 520 }}>Add an <strong>ANTHROPIC_ADMIN_KEY</strong> (Console → Settings → Admin keys, starts with sk-ant-admin) in Vercel to show your whole organization&apos;s spend + tokens here — exactly what the Claude console reports.</div>
+            )}
+          </div>
+          <a href="https://console.anthropic.com/settings/usage" target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#fff', textDecoration: 'underline' }}>Open console ↗</a>
+        </div>
+        {Boolean(org.configured) && ((org.byModel as Row[]) || []).length > 0 && (
+          <div style={{ marginTop: 14, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            {(org.byModel as Row[]).map((m) => <span key={m.model as string} style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>{m.model as string}: {(Number(m.inputTokens || 0) + Number(m.outputTokens || 0)).toLocaleString()} tok</span>)}
+          </div>
+        )}
+      </Card>
+      <div style={{ fontSize: 12, color: T.muted, marginBottom: 8 }}>This site&apos;s AI (attributed per conversation / feature):</div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 12, marginBottom: 16 }}>
         {metric("Today's AI cost", money(Number(c.today || 0)), `Yesterday ${money(Number(c.yesterday || 0))}`)}
         {metric('This month', money(Number(c.month || 0)), `${c.calls || 0} calls`)}

@@ -6,6 +6,7 @@ import { dbHealth } from '@/lib/db-health'
 import { aiCostSummary, aiPerformance } from '@/lib/ai-usage'
 import { getCostSettings } from '@/lib/cost-guard'
 import { listIntegrations, runAllSyncs } from '@/lib/integrations'
+import { getAnthropicOrgUsage } from '@/lib/connectors/anthropic-usage'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -26,8 +27,8 @@ export async function GET(req: NextRequest) {
   if (panel === 'database') return NextResponse.json(await dbHealth())
   if (panel === 'integrations') return NextResponse.json({ integrations: await listIntegrations() })
   if (panel === 'ai') {
-    const [cost, perf, settings] = await Promise.all([aiCostSummary(), aiPerformance(), getCostSettings()])
-    return NextResponse.json({ cost, perf, settings })
+    const [cost, perf, settings, org] = await Promise.all([aiCostSummary(), aiPerformance(), getCostSettings(), getAnthropicOrgUsage()])
+    return NextResponse.json({ cost, perf, settings, org })
   }
   if (panel === 'webhooks') {
     const { data } = await db.from('integration_webhooks').select('*').order('received_at', { ascending: false }).limit(100)

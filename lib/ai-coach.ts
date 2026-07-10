@@ -93,7 +93,7 @@ export async function generateInsight(kind: string, entity: { contactId?: string
     model: cfg.model, max_tokens: 500, system: GROUND,
     messages: [{ role: 'user', content: `${cfg.instruction}\n\nCRM DATA:\n${JSON.stringify(context)}` }],
   })
-  logAiEvent({ endpoint: 'insight', model: cfg.model, usage: msg.usage, latencyMs: Date.now() - t0, meta: { kind } })
+  await logAiEvent({ endpoint: 'insight', model: cfg.model, usage: msg.usage, latencyMs: Date.now() - t0, meta: { kind } })
   const text = msg.content.find((b) => b.type === 'text')
   const body = extractJson(text && text.type === 'text' ? text.text : '{}')
   const db = getSupabaseAdmin()
@@ -153,7 +153,7 @@ export async function coachChat(messages: Array<{ role: 'user' | 'assistant'; co
   for (let hop = 0; hop < 5; hop++) {
     const t0 = Date.now()
     const res = await ai.messages.create({ model: SONNET, max_tokens: 900, system, tools: TOOLS, messages: convo })
-    logAiEvent({ endpoint: 'coach', model: SONNET, usage: res.usage, latencyMs: Date.now() - t0 })
+    await logAiEvent({ endpoint: 'coach', model: SONNET, usage: res.usage, latencyMs: Date.now() - t0 })
     const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
     if (toolUses.length === 0) {
       const text = res.content.find((b) => b.type === 'text')

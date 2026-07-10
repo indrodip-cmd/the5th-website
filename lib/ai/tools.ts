@@ -1,0 +1,117 @@
+/* Command AI tool registry (3I.3.5) — permission-checked, READ-ONLY tools that
+   return only what an admin may see. Wraps the existing business libs + reads
+   the shared DB (website CRM/revenue/meetings/CMS + platform coaching data).
+   Every tool is grounded: it returns real data or an explicit "none". */
+import Anthropic from '@anthropic-ai/sdk'
+import { getSupabaseAdmin } from '@/lib/supabase'
+import { searchContacts, resolveContact } from '@/lib/crm'
+import { getRevenueSummary, getBalances } from '@/lib/revenue'
+import { listBoard } from '@/lib/sales'
+import { contactContext } from '@/lib/ai-coach'
+
+type Row = Record<string, unknown>
+export interface Tool { def: Anthropic.Tool; run: (input: Row) => Promise<string> }
+
+const j = (v: unknown) => JSON.stringify(v)
+const clip = (s: unknown, n: number) => String(s || '').slice(0, n)
+
+export const TOOLS: Tool[] = [
+  {
+    def: { name: 'search_contacts', description: 'Find CRM contacts (leads & customers) by name, email, company or phone.', input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    run: async (i) => j(await searchContacts(String(i.query || ''), 15)),
+  },
+  {
+    def: { name: 'get_contact_360', description: 'Full 360 profile for one contact (fields, activity, notes, tasks, purchases, attribution) by id or email.', input_schema: { type: 'object', properties: { id_or_email: { type: 'string' } }, required: ['id_or_email'] } },
+    run: async (i) => {
+      const key = String(i.id_or_email || '')
+      const c = await resolveContact(key.includes('@') ? { email: key } : { id: key })
+      if (!c) return j({ error: 'not found' })
+      return j(await contactContext(c.id as string))
+    },
+  },
+  {
+    def: { name: 'revenue_metrics', description: 'Revenue summary: today/week/month/lifetime, refunds, AOV, top products, and current provider balances.', input_schema: { type: 'object', properties: {} } },
+    run: async () => { const [summary, balances] = await Promise.all([getRevenueSummary(), getBalances()]); return j({ summary, balances }) },
+  },
+  {
+    def: { name: 'pipeline_stats', description: 'Sales pipeline: opportunity count and total value per stage.', input_schema: { type: 'object', properties: {} } },
+    run: async () => { const b = await listBoard(); return j((b.stages || []).map((s: Row) => ({ stage: s.name, count: s.count, value: s.value }))) },
+  },
+  {
+    def: { name: 'search_meetings', description: 'Search all meetings & recorded calls (Cal.com/Zoom/Fathom + coaching calls) by keyword across titles, summaries, participants, objections and wins.', input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    run: async (i) => {
+      const db = getSupabaseAdmin(); const like = `%${String(i.query || '')}%`
+      const [crm, ci, cc] = await Promise.all([
+        db.from('crm_meetings').select('id,title,status,starts_at,summary,contact:crm_contacts(name,email)').or(`title.ilike.${like},summary.ilike.${like}`).limit(8),
+        db.from('call_intelligence').select('id,call_type,call_date,participant_names,summary,objections_raised,client_wins').or(`summary.ilike.${like},participant_names.ilike.${like}`).limit(8),
+        db.from('coaching_calls').select('id,title,date,summary').or(`title.ilike.${like},summary.ilike.${like}`).limit(8),
+      ])
+      return j({ crm_meetings: crm.data || [], call_intelligence: ci.data || [], coaching_calls: cc.data || [] })
+    },
+  },
+  {
+    def: { name: 'get_meeting_detail', description: 'Full detail for one meeting/call incl. transcript, summary, action items, objections. Source: crm_meetings | call_intelligence | coaching_calls.', input_schema: { type: 'object', properties: { id: { type: 'string' }, source: { type: 'string', enum: ['crm_meetings', 'call_intelligence', 'coaching_calls'] } }, required: ['id', 'source'] } },
+    run: async (i) => {
+      const db = getSupabaseAdmin(); const src = String(i.source || 'crm_meetings')
+      const { data } = await db.from(src).select('*').eq('id', String(i.id)).maybeSingle()
+      if (!data) return j({ error: 'not found' })
+      const d = data as Row
+      // truncate transcripts to keep the model context bounded
+      for (const k of ['transcript', 'raw_transcript', 'raw_payload']) if (d[k]) d[k] = clip(d[k], 12000)
+      return j(d)
+    },
+  },
+  {
+    def: { name: 'search_knowledge', description: 'Search the coaching knowledge base: golden answers (canonical corrected coaching answers) + published CMS content (programs, articles, case studies).', input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    run: async (i) => {
+      const db = getSupabaseAdmin(); const like = `%${String(i.query || '')}%`
+      const [gold, cms] = await Promise.all([
+        db.from('golden_answers').select('topic_tag,question,golden_answer,category').eq('is_active', true).or(`question.ilike.${like},golden_answer.ilike.${like},topic_tag.ilike.${like}`).limit(8),
+        db.from('cms_content').select('title,type,slug,summary').eq('status', 'published').or(`title.ilike.${like},summary.ilike.${like}`).limit(8),
+      ])
+      return j({ golden_answers: gold.data || [], cms_content: cms.data || [] })
+    },
+  },
+  {
+    def: { name: 'list_tasks', description: 'Open follow-up tasks across the CRM (optionally overdue only).', input_schema: { type: 'object', properties: { overdue_only: { type: 'boolean' } } } },
+    run: async (i) => {
+      let q = getSupabaseAdmin().from('crm_tasks').select('title,due_date,status,contact:crm_contacts(name,email)').neq('status', 'done').order('due_date', { ascending: true, nullsFirst: false }).limit(30)
+      if (i.overdue_only) q = q.lt('due_date', new Date().toISOString().slice(0, 10))
+      const { data } = await q; return j(data || [])
+    },
+  },
+  {
+    def: { name: 'list_members', description: 'Membership base: Whop customers with lifetime value + status, or platform members. Optional name/email search.', input_schema: { type: 'object', properties: { query: { type: 'string' } } } },
+    run: async (i) => {
+      const db = getSupabaseAdmin(); const q = String(i.query || '')
+      let mq = db.from('whop_members').select('name,email,derived_status,usd_total_spent,joined_at').order('usd_total_spent', { ascending: false }).limit(25)
+      if (q) mq = mq.or(`name.ilike.%${q}%,email.ilike.%${q}%`)
+      const { data } = await mq; return j(data || [])
+    },
+  },
+  {
+    def: { name: 'business_snapshot', description: 'A live snapshot: new leads (7d), calls today, hot leads, open pipeline value, upcoming meetings, month revenue.', input_schema: { type: 'object', properties: {} } },
+    run: async () => {
+      const db = getSupabaseAdmin(); const now = new Date()
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString()
+      const endToday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString()
+      const last7 = new Date(Date.now() - 7 * 86400000).toISOString()
+      const [newLeads, callsToday, hot, opps, upcoming, rev] = await Promise.all([
+        db.from('crm_contacts').select('id', { count: 'exact', head: true }).is('deleted_at', null).gte('created_at', last7),
+        db.from('crm_meetings').select('id', { count: 'exact', head: true }).eq('status', 'upcoming').gte('starts_at', startToday).lt('starts_at', endToday),
+        db.from('crm_contacts').select('id', { count: 'exact', head: true }).is('deleted_at', null).gte('lead_score', 50),
+        db.from('crm_opportunities').select('value').eq('status', 'open').is('deleted_at', null),
+        db.from('crm_meetings').select('id', { count: 'exact', head: true }).eq('status', 'upcoming').gte('starts_at', now.toISOString()),
+        getRevenueSummary(),
+      ])
+      return j({ new_leads_7d: newLeads.count || 0, calls_today: callsToday.count || 0, hot_leads: hot.count || 0, open_pipeline_value: (opps.data || []).reduce((s, o) => s + Number(o.value || 0), 0), upcoming_meetings: upcoming.count || 0, revenue_today: (rev as Row).today, revenue_month: (rev as Row).month, revenue_lifetime: (rev as Row).lifetime })
+    },
+  },
+]
+
+export const TOOL_DEFS: Anthropic.Tool[] = TOOLS.map((t) => t.def)
+export async function runTool(name: string, input: Row): Promise<string> {
+  const t = TOOLS.find((x) => x.def.name === name)
+  if (!t) return j({ error: 'unknown tool' })
+  try { return await t.run(input) } catch (e) { return j({ error: String(e) }) }
+}

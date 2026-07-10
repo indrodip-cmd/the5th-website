@@ -11,7 +11,10 @@ import CommandPalette from './CommandPalette'
 
 interface NavItem { href: string; label: string; icon: string; match: (p: string) => boolean }
 const NAV: Array<{ section?: string; items: NavItem[] }> = [
-  { items: [{ href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' }] },
+  { items: [
+    { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
+    { href: '/admin/ai', label: 'Command AI', icon: '🤖', match: (p) => p.startsWith('/admin/ai') },
+  ] },
   { section: 'CRM', items: [
     { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },
     { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },

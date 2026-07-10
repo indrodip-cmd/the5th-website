@@ -67,8 +67,14 @@ function windowStart(kind: 'today' | 'yesterday' | 'week' | 'month' | 'year'): s
 
 export async function getRevenueSummary() {
   const db = getSupabaseAdmin()
-  const { data } = await db.from('revenue_events').select('type,amount,product,occurred_at,currency').limit(50000)
+  const [{ data }, membersAgg] = await Promise.all([
+    db.from('revenue_events').select('type,amount,product,occurred_at,currency').limit(50000),
+    db.from('whop_members').select('usd_total_spent'),
+  ])
   const events = (data || []) as Row[]
+  // Members' server-calculated LTV = a reliable lifetime figure even before any
+  // payment backfill (today/week/month still need dated events).
+  const membersLtv = (membersAgg.data || []).reduce((s, m) => s + Number((m as Row).usd_total_spent || 0), 0)
   const sales = events.filter((e) => e.type === 'sale')
   const refunds = events.filter((e) => e.type === 'refund')
   const sum = (rows: Row[], since?: string) => rows.filter((r) => !since || (r.occurred_at as string) >= since).reduce((s, r) => s + Number(r.amount || 0), 0)
@@ -78,7 +84,10 @@ export async function getRevenueSummary() {
   for (const s of sales) { const k = (s.product as string) || 'Unknown'; const c = products.get(k) || { count: 0, revenue: 0 }; c.count++; c.revenue += Number(s.amount || 0); products.set(k, c) }
 
   const refundTotal = sum(refunds)
-  const lifetime = sum(sales)
+  const eventsLifetime = sum(sales)
+  // Prefer real payment events; fall back to members' aggregate LTV so Lifetime
+  // is never $0 once members are synced (even before a payment backfill).
+  const lifetime = eventsLifetime > 0 ? eventsLifetime : Math.round(membersLtv * 100) / 100
   return {
     today: sum(sales, todayStart),
     yesterday: sum(sales.filter((s) => (s.occurred_at as string) < todayStart), yStart),
@@ -86,9 +95,10 @@ export async function getRevenueSummary() {
     month: sum(sales, windowStart('month')),
     year: sum(sales, windowStart('year')),
     lifetime,
+    membersLtv: Math.round(membersLtv * 100) / 100,
     refunds: refundTotal,
     netLifetime: lifetime - refundTotal,
-    aov: sales.length ? Math.round((lifetime / sales.length) * 100) / 100 : 0,
+    aov: sales.length ? Math.round((eventsLifetime / sales.length) * 100) / 100 : 0,
     salesCount: sales.length,
     topProducts: [...products].map(([product, v]) => ({ product, ...v })).sort((a, b) => b.revenue - a.revenue).slice(0, 6),
   }

@@ -10,6 +10,7 @@ import { orchestrate, persistTurn } from '@/lib/orchestrator'
 import { MASTER_PLAYBOOK } from '@/lib/playbook'
 import { CONSTITUTION } from '@/lib/constitution'
 import { logActivity, upsertContact, resolveContact, addNote, createTask } from '@/lib/crm'
+import { identify } from '@/lib/identity'
 import { emitEvent } from '@/lib/events'
 
 export const maxDuration = 45
@@ -253,7 +254,7 @@ async function upsertLead(email: string, patch: LeadPatch) {
 async function runTool(
   name: string,
   input: Record<string, unknown>,
-  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; cards: ChatCard[]; booked: { v: boolean }; email: { v: string | null }; recommended: string[] }
+  ctx: { magnet: LeadMagnet | null; actions: ClientAction[]; cards: ChatCard[]; booked: { v: boolean }; email: { v: string | null }; recommended: string[]; visitorId?: string }
 ): Promise<string> {
   if (name === 'show_card') {
     const type = String(input.type || '')
@@ -280,6 +281,7 @@ async function runTool(
     ctx.email.v = email
     logActivity(email, 'chat', 'Captured in chat', sanitizeText(input.interest, 200) || sanitizeText(input.notes, 200) || undefined)
     emitEvent('lead_captured', { email, interest: sanitizeText(input.interest, 200) })
+    if (ctx.visitorId) identify({ visitorId: ctx.visitorId, email, name: nm, source: 'chat' }).catch(() => {})
     return JSON.stringify({ ok: true, saved: true })
   }
 
@@ -446,7 +448,7 @@ export async function POST(req: NextRequest) {
     }
 
     const client = anthropic()
-    const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false }, email: { v: null as string | null }, recommended: [] as string[] }
+    const ctx = { magnet, actions: [] as ClientAction[], cards: [] as ChatCard[], booked: { v: false }, email: { v: null as string | null }, recommended: [] as string[], visitorId: typeof body?.visitor_id === 'string' ? body.visitor_id : undefined }
 
     // Persist session memory + one observability event (once per user turn).
     const finishTurn = () => {

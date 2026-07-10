@@ -21,6 +21,23 @@
 
   var visitorId = persist(window.localStorage, 'a5_vid');   // stable across sessions
   var sessionId = persist(window.sessionStorage, 'a5_sid'); // per browser session
+
+  // First-touch attribution: captured once, persisted, never overwritten.
+  function param(name) { try { return new URLSearchParams(location.search).get(name) || ''; } catch (e) { return ''; } }
+  var firstTouch = (function () {
+    try {
+      var saved = window.localStorage.getItem('a5_ft');
+      if (saved) return JSON.parse(saved);
+      var ft = {
+        utm_source: param('utm_source'), utm_medium: param('utm_medium'), utm_campaign: param('utm_campaign'),
+        utm_content: param('utm_content'), utm_term: param('utm_term'),
+        landing: location.pathname, referrer: document.referrer || ''
+      };
+      window.localStorage.setItem('a5_ft', JSON.stringify(ft));
+      return ft;
+    } catch (e) { return {}; }
+  })();
+
   var maxScroll = 0;
   var scrollSent = false;
   var currentPath = location.pathname;
@@ -80,7 +97,11 @@
     currentPath = path || location.pathname;
     maxScroll = 0;
     scrollSent = false;
-    send({ event_type: 'pageview', path: currentPath });
+    send({
+      event_type: 'pageview', path: currentPath,
+      utm_source: firstTouch.utm_source, utm_medium: firstTouch.utm_medium, utm_campaign: firstTouch.utm_campaign,
+      utm_content: firstTouch.utm_content, utm_term: firstTouch.utm_term, landing: firstTouch.landing
+    });
     maybeConversion(currentPath);
   }
 
@@ -98,5 +119,18 @@
   window.__a5trackPage = function (path) {
     flushScroll();
     pageview(path);
+  };
+
+  // Identity hooks: expose the stable visitor id + a one-line identify helper so
+  // the chatbot / quiz / forms can link an anonymous visitor to a known contact.
+  window.__a5vid = visitorId;
+  window.__a5identify = function (email, name) {
+    if (!email) return;
+    try {
+      fetch('/api/identify', {
+        method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitor_id: visitorId, email: email, name: name || '' })
+      });
+    } catch (e) {}
   };
 })();

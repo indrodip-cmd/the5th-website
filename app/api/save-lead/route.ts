@@ -5,6 +5,7 @@ import { isValidEmail } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
+import { identify } from '@/lib/identity'
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
     })
     await logActivity(email, 'lead', 'Completed the quiz', stageLabel ? `Stage: ${stageLabel} · Track: ${sequence_assigned}` : `Track: ${sequence_assigned}`)
     emitEvent('lead_captured', { email, name, source: 'quiz', business_stage: stageLabel })
+    if (body?.visitor_id) identify({ visitorId: String(body.visitor_id), email, name, source: 'quiz' }).catch(() => {})
 
     return NextResponse.json({ success: true, lead: data })
   } catch (err) {

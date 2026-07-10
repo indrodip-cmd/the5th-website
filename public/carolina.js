@@ -17,6 +17,9 @@
   var DISMISS = { gift: 'the5th_carolina_gift_x', quiz: 'the5th_carolina_quiz_x' };
   var API = '/api/carolina';
   var CONFIG_API = '/api/carolina/config';
+  // Stable anonymous visitor id (set by track.js) so the CRM can merge this
+  // chat into the visitor's journey once they identify themselves.
+  function vid() { try { return window.__a5vid || window.localStorage.getItem('a5_vid') || ''; } catch (e) { return ''; } }
 
   var TZ = 'UTC';
   try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) {}
@@ -1650,7 +1653,7 @@
       var btn = els.win.querySelector('#cw-news-btn');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { if (ok) { ok.textContent = 'Please enter a valid email.'; ok.className = 'cw-news-ok err'; } shake(nf); return; }
       if (btn) { btn.disabled = true; btn.textContent = 'Subscribing…'; }
-      fetch('/api/carolina/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) })
+      fetch('/api/carolina/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), visitor_id: vid() }) })
         .then(function (r) { return r.json().catch(function () { return {}; }); })
         .then(function (d) {
           if (d && d.ok) { nf.style.display = 'none'; if (ok) { ok.className = 'cw-news-ok done'; ok.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg> You’re in — welcome to The5th Weekly.'; } }
@@ -2244,7 +2247,7 @@
   function confirmBooking(card, state) {
     if (!state.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((state.email || '').trim())) { toast('Add your name and a valid email'); shake(card); return; }
     var btn = card.querySelector('#cw-bk-confirm'); if (btn) { btn.disabled = true; btn.textContent = 'Booking…'; }
-    fetch('/api/carolina/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: state.name.trim(), email: state.email.trim(), start: state.start, timeZone: TZ }) })
+    fetch('/api/carolina/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: state.name.trim(), email: state.email.trim(), start: state.start, timeZone: TZ, visitor_id: vid() }) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (res) {
         if (res.ok) {
@@ -2309,7 +2312,7 @@
       var payload = conv.messages
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
-      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id };
+      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid() };
       if (viewContext) body.context = viewContext;
       if (lang && lang !== 'en') body.lang = lang;
       // Attachments apply to the current turn only (never on the handoff request).

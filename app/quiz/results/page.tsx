@@ -213,7 +213,7 @@ export default function ResultsPage() {
       await fetch('/api/save-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: n, email: e, quiz_answers: a, video_assigned: getVideoSlug(a.q1), sequence_assigned: 'A' })
+        body: JSON.stringify({ name: n, email: e, quiz_answers: a, video_assigned: getVideoSlug(a.q1), sequence_assigned: 'A', visitor_id: (typeof window !== 'undefined' && window.localStorage.getItem('a5_vid')) || undefined })
       })
       try { localStorage.setItem(key, '1') } catch { /* ignore */ }
       fetch('/api/sync-lead', {

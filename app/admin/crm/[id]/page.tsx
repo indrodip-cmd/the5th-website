@@ -19,7 +19,7 @@ interface Bundle {
   business: Row | null; relationships: Row[]; customValues: Row[]; attachments: Row[]
 }
 
-const TABS = ['Timeline', 'Notes', 'Tasks', 'Business', 'Relationships', 'Tags', 'Files', 'Custom'] as const
+const TABS = ['Timeline', 'AI', 'Attribution', 'Notes', 'Tasks', 'Purchases', 'Business', 'Relationships', 'Tags', 'Files', 'Custom'] as const
 
 export default function ContactProfile() {
   const params = useParams<{ id: string }>()
@@ -54,6 +54,7 @@ export default function ContactProfile() {
             <Stat label="Stage" value={((c.pipeline_stage as string) || '—').replace(/_/g, ' ')} />
             <Stat label="Score" value={String(c.lead_score ?? 0)} />
             <Stat label="Revenue" value={`$${Number(c.revenue || 0).toLocaleString()}`} />
+            <Stat label="LTV" value={`$${Number(c.ltv || 0).toLocaleString()}`} />
             <Button variant="ghost" onClick={() => setEditing(true)}>Edit</Button>
           </div>
         </div>
@@ -74,6 +75,9 @@ export default function ContactProfile() {
       </div>
 
       {tab === 'Timeline' && <Card><JourneyStrip activities={data.activities} /><ActivityTimeline activities={data.activities} /></Card>}
+      {tab === 'AI' && <AiTab contactId={id} />}
+      {tab === 'Attribution' && <AttributionTab id={id} />}
+      {tab === 'Purchases' && <PurchasesTab base={base} reload={reload} />}
       {tab === 'Notes' && <NotesTab base={base} notes={data.notes} reload={reload} />}
       {tab === 'Tasks' && <TasksTab base={base} tasks={data.tasks} reload={reload} />}
       {tab === 'Business' && <BusinessTab base={base} business={data.business} reload={reload} />}
@@ -109,6 +113,102 @@ function QuickActions({ contactId, onDone, onTab }: { contactId: string; onDone:
 function Stat({ label, value }: { label: string; value: string }) {
   return <div style={{ textAlign: 'center' }}><div style={{ fontSize: 16, fontWeight: 700, color: T.ink }}>{value}</div><div style={{ fontSize: 11, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em', marginTop: 2 }}>{label}</div></div>
 }
+
+// ── AI insights (grounded, cited) ──
+const INSIGHT_KINDS: Array<{ kind: string; label: string }> = [
+  { kind: 'summary', label: 'Summary' }, { kind: 'next_actions', label: 'Next actions' },
+  { kind: 'close_probability', label: 'Close probability' }, { kind: 'risk', label: 'Risks' }, { kind: 'insight', label: 'Signals' },
+]
+function renderInsightBody(kind: string, body: Row): React.ReactNode {
+  if (kind === 'summary') return <div style={{ fontSize: 14, color: T.text, lineHeight: 1.6 }}>{(body.text as string) || '—'}</div>
+  if (kind === 'close_probability') return <div><div style={{ fontSize: 24, fontWeight: 800, color: T.green }}>{Number(body.probability ?? 0)}%</div><div style={{ fontSize: 13, color: T.sub, marginTop: 4 }}>{body.reasoning as string}</div></div>
+  const list = (body.actions || body.risks || body.insights || []) as string[]
+  if (Array.isArray(list) && list.length) return <ul style={{ margin: 0, paddingLeft: 18 }}>{list.map((x, i) => <li key={i} style={{ fontSize: 14, color: T.text, marginBottom: 4 }}>{x}</li>)}</ul>
+  return <div style={{ fontSize: 13, color: T.muted }}>{JSON.stringify(body)}</div>
+}
+function AiTab({ contactId }: { contactId: string }) {
+  const { data, loading, reload } = useAdminFetch<{ insights: Row[] }>(`/api/admin/crm/insights?contact_id=${contactId}`)
+  const [busy, setBusy] = useState<string | null>(null)
+  const byKind = new Map((data?.insights || []).map((i) => [i.kind as string, i]))
+  const generate = async (kind: string) => {
+    setBusy(kind)
+    try { await adminSend('/api/admin/crm/insights', 'POST', { kind, contact_id: contactId }); reload() }
+    catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setBusy(null) }
+  }
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <Card pad={16}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {INSIGHT_KINDS.map((k) => (
+            <Button key={k.kind} variant="ghost" disabled={busy === k.kind} onClick={() => generate(k.kind)}>{busy === k.kind ? 'Thinking…' : `✨ ${k.label}`}</Button>
+          ))}
+        </div>
+        <div style={{ fontSize: 12, color: T.muted, marginTop: 10 }}>Grounded in this contact&apos;s CRM data. The coach never invents facts.</div>
+      </Card>
+      {loading && !data ? <div className="skeleton" style={{ height: 80 }} /> : INSIGHT_KINDS.filter((k) => byKind.has(k.kind)).map((k) => {
+        const ins = byKind.get(k.kind)!
+        return (
+          <Card key={k.kind}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <h3 style={secLabel}>{k.label}</h3>
+              <span style={{ fontSize: 11, color: T.muted }}>{fmtDate(ins.created_at as string)}</span>
+            </div>
+            {renderInsightBody(k.kind, ins.body as Row)}
+          </Card>
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Attribution / Customer 360 web journey ──
+function touchLabel(t: Row | null): string {
+  if (!t) return '—'
+  return `${(t.source as string) || 'direct'} / ${(t.medium as string) || '(none)'}${t.campaign ? ` · ${t.campaign as string}` : ''}`
+}
+function AttributionTab({ id }: { id: string }) {
+  const { data, loading } = useAdminFetch<{ first_touch: Row | null; last_touch: Row | null; first_seen_at: string | null; touchpoints: Row[]; models: Record<string, Array<{ channel: string; credit: number }>>; webEvents: Row[] }>(`/api/admin/crm/contacts/${id}/attribution`)
+  if (loading && !data) return <Card><div className="skeleton" style={{ height: 120 }} /></Card>
+  const d = data!
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <Card>
+        <h3 style={secLabel}>Attribution</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div><div style={{ fontSize: 11, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em' }}>First touch</div><div style={{ fontSize: 14, color: T.ink, fontWeight: 600, marginTop: 3 }}>{touchLabel(d.first_touch)}</div>{d.first_seen_at ? <div style={{ fontSize: 12, color: T.muted }}>{fmtDate(d.first_seen_at)}</div> : null}</div>
+          <div><div style={{ fontSize: 11, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em' }}>Last touch</div><div style={{ fontSize: 14, color: T.ink, fontWeight: 600, marginTop: 3 }}>{touchLabel(d.last_touch)}</div></div>
+        </div>
+        {Object.keys(d.models?.linear || {}).length > 0 || (d.touchpoints?.length || 0) > 0 ? (
+          <div style={{ marginTop: 16 }}>
+            <div style={{ fontSize: 11, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 8 }}>Channel credit (position-based)</div>
+            {(d.models?.position || []).map((m) => (
+              <div key={m.channel} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                <span style={{ fontSize: 13, color: T.text, width: 200 }}>{m.channel}</span>
+                <div style={{ flex: 1, height: 8, background: '#f0f1f0', borderRadius: 4, overflow: 'hidden' }}><div style={{ width: `${Math.round(m.credit * 100)}%`, height: '100%', background: T.green2 }} /></div>
+                <span style={{ fontSize: 12, color: T.sub, width: 42, textAlign: 'right' }}>{Math.round(m.credit * 100)}%</span>
+              </div>
+            ))}
+          </div>
+        ) : <div style={{ fontSize: 13, color: T.muted, marginTop: 14 }}>No attributable touchpoints yet.</div>}
+      </Card>
+      <Card>
+        <h3 style={secLabel}>Web journey {d.webEvents?.length ? `· ${d.webEvents.length}` : ''}</h3>
+        {(d.webEvents || []).length === 0 ? <EmptyState title="No anonymous web activity linked" hint="Merges automatically once the visitor identifies." /> : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 360, overflowY: 'auto' }}>
+            {d.webEvents.map((e, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, padding: '7px 0', borderBottom: '1px solid #f4f5f4', fontSize: 13 }}>
+                <span style={{ width: 74, color: T.muted }}>{e.event_type as string}</span>
+                <span style={{ flex: 1, color: T.text }}>{(e.path as string) || '—'}{e.scroll_pct != null ? <span style={{ color: T.muted }}> · {e.scroll_pct as number}%</span> : null}</span>
+                <span style={{ color: T.muted, whiteSpace: 'nowrap' }}>{new Date(e.created_at as string).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+    </div>
+  )
+}
+const secLabel: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '.05em', color: T.green, textTransform: 'uppercase', marginBottom: 12 }
 
 // ── Notes ──
 function NotesTab({ base, notes, reload }: { base: string; notes: Row[]; reload: () => void }) {
@@ -168,6 +268,46 @@ function TasksTab({ base, tasks, reload }: { base: string; tasks: Row[]; reload:
           </div>
         ))}
       </div>
+    </Card>
+  )
+}
+
+// ── Purchases ──
+function PurchasesTab({ base, reload }: { base: string; reload: () => void }) {
+  const { data, loading, reload: reloadP } = useAdminFetch<{ purchases: Row[] }>(`${base}/purchases`)
+  const [product, setProduct] = useState('')
+  const [amount, setAmount] = useState('')
+  const purchases = data?.purchases || []
+  const add = async () => {
+    if (!product.trim()) return
+    await adminSend(`${base}/purchases`, 'POST', { product, amount: Number(amount) || 0 })
+    setProduct(''); setAmount(''); reloadP(); reload()
+  }
+  const refund = async (pid: string) => { await adminSend(`${base}/purchases`, 'PATCH', { purchase_id: pid }); reloadP(); reload() }
+  const ltv = purchases.filter((p) => p.status === 'paid').reduce((s, p) => s + Number(p.amount || 0), 0)
+  return (
+    <Card>
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 8 }}>
+        <Input placeholder="Product" value={product} onChange={(e) => setProduct(e.target.value)} style={{ flex: 1, minWidth: 160 }} />
+        <Input type="number" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} style={{ width: 130 }} />
+        <Button disabled={!product.trim()} onClick={add}>Record purchase</Button>
+      </div>
+      <div style={{ fontSize: 13, color: T.sub, marginBottom: 14 }}>Lifetime value: <strong style={{ color: T.green }}>${ltv.toLocaleString()}</strong></div>
+      {loading ? <div className="skeleton" style={{ height: 40 }} /> : purchases.length === 0 ? <EmptyState title="No purchases yet" /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {purchases.map((p) => (
+            <div key={p.id as string} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 10, background: '#fafbfa', border: `1px solid ${T.border}`, opacity: p.status === 'refunded' ? 0.55 : 1 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{p.product as string}</div>
+                <div style={{ fontSize: 12, color: T.muted }}>{fmtDate(p.purchased_at as string)} · {p.provider as string}</div>
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: p.status === 'refunded' ? T.muted : T.green }}>${Number(p.amount || 0).toLocaleString()}</span>
+              {p.status === 'paid' ? <button onClick={() => refund(p.id as string)} style={{ background: 'none', border: 'none', color: T.danger, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>Refund</button>
+                : <span className="a-pill" style={{ background: '#f3f4f6', color: T.sub }}>refunded</span>}
+            </div>
+          ))}
+        </div>
+      )}
     </Card>
   )
 }

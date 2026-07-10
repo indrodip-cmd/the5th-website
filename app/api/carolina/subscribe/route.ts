@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
 import { upsertContact, logActivity } from '@/lib/crm'
+import { identify } from '@/lib/identity'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +20,7 @@ export async function POST(req: NextRequest) {
   try {
     await upsertContact(email, { interest: 'newsletter', source: 'newsletter' })
     await logActivity(email, 'lead', 'Newsletter signup', 'Opted in from the Carolina Home footer')
+    if (body?.visitor_id) identify({ visitorId: String(body.visitor_id), email, source: 'newsletter' }).catch(() => {})
   } catch (e) {
     console.error('carolina subscribe failed', e)
   }

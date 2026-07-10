@@ -51,6 +51,16 @@ export default function RootLayout({
             gtag('config', 'G-T45WJY6Q2W');
           `}
         </Script>
+        {/* Microsoft Clarity — session recordings + heatmaps */}
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "xk846cesvj");
+          `}
+        </Script>
         {/* First-party analytics — feeds the /admin command center */}
         <Script src="/track.js" strategy="afterInteractive" />
         {/* Cookie / privacy consent banner — shown site-wide */}

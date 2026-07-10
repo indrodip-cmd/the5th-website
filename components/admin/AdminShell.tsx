@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ADMIN_CSS, T } from './theme'
+import CoachChat from './CoachChat'
 
 const NAV: Array<{ href: string; label: string; icon: string; match: (p: string) => boolean }> = [
   { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
@@ -13,6 +14,7 @@ const NAV: Array<{ href: string; label: string; icon: string; match: (p: string)
   { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
   { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
   { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },
+  { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
   { href: '/admin/crm/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/crm/settings') },
 ]
 
@@ -61,7 +63,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="ws-main">
         <header className="ws-topbar">
           <GlobalSearch />
-          <span style={{ fontSize: 13, color: T.sub }}>The5th CRM OS</span>
+          <CoachChat />
         </header>
         <main className="ws-content">{children}</main>
       </div>

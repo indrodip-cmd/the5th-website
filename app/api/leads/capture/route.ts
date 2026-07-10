@@ -3,6 +3,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
+import { identify } from '@/lib/identity'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
   await upsertContact(email, { name, source, interest, tags: finalTags })
   await logActivity(email, 'lead', `New lead — ${source}`, message || interest || undefined)
   emitEvent('lead_captured', { email, name, source, interest })
+  if (b?.visitor_id) identify({ visitorId: String(b.visitor_id), email, name: name || undefined, source }).catch(() => {})
 
   return NextResponse.json({ ok: true })
 }

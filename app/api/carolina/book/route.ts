@@ -5,6 +5,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { logActivity, upsertContact } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
+import { identify } from '@/lib/identity'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 30
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
   await upsertContact(email, { name, call_booked: true, booking_start: booking.start || start, timezone: tz, pipeline_stage: 'call_booked' })
   await logActivity(email, 'call_booked', 'Strategy call booked', new Date(booking.start || start).toISOString(), { meetingUrl: booking.meetingUrl || null, via: 'in-chat calendar' })
   emitEvent('appointment_booked', { email, start: booking.start || start })
+  if (body?.visitor_id) identify({ visitorId: String(body.visitor_id), email, name, source: 'booking' }).catch(() => {})
 
   return NextResponse.json({ ok: true, start: booking.start || start, email_sent: emailed, meeting_url: booking.meetingUrl || null })
 }

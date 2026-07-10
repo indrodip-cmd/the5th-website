@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
+import { recordVisitor } from '@/lib/identity'
 
 /* Public first-party analytics collector. Receives beacons from every page
    (static marketing HTML + the Next app) and records pageviews, scroll depth
@@ -67,6 +68,20 @@ export async function POST(req: NextRequest) {
     }
 
     await getSupabaseAdmin().from('analytics_events').insert(row)
+
+    // Identity engine: record/refresh the anonymous visitor + first-touch attribution.
+    if (row.visitor_id && eventType === 'pageview') {
+      recordVisitor(row.visitor_id, {
+        source: clampStr(body.utm_source, 120) || undefined,
+        medium: clampStr(body.utm_medium, 120) || undefined,
+        campaign: clampStr(body.utm_campaign, 200) || undefined,
+        content: clampStr(body.utm_content, 200) || undefined,
+        term: clampStr(body.utm_term, 200) || undefined,
+        landing_page: clampStr(body.landing, 512) || row.path || undefined,
+        referrer: row.referrer || undefined,
+        country: row.country || undefined,
+      }).catch(() => {})
+    }
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('track: unhandled', err)

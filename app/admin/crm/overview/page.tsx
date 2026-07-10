@@ -1,8 +1,9 @@
 'use client'
-/* CRM · Overview — the sales dashboard: leads, calls, pipeline value, meetings,
-   overdue tasks, recently won/lost, hot leads. */
+/* CRM · Overview — executive dashboard + smart search + sales widgets. */
+import { useState } from 'react'
 import Link from 'next/link'
-import { T, Card, Avatar, EmptyState, PageHeader, useAdminFetch, money, fmtDate, leadBand, bandColor } from '@/components/admin/ui'
+import { useRouter } from 'next/navigation'
+import { T, Card, Button, Input, Avatar, EmptyState, PageHeader, useAdminFetch, adminSend, money, fmtDate, leadBand, bandColor } from '@/components/admin/ui'
 
 type Row = Record<string, unknown>
 interface Dash {
@@ -18,6 +19,8 @@ export default function CrmOverview() {
   return (
     <>
       <PageHeader title="CRM Overview" subtitle="Your sales workspace at a glance" />
+      <SmartSearch />
+      <ExecutiveAnalytics />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: 20 }}>
         <Metric label="New leads · 7d" value={String(d.newLeads)} />
         <Metric label="Calls today" value={String(d.callsToday)} />
@@ -79,6 +82,76 @@ export default function CrmOverview() {
         </Panel>
       </div>
     </>
+  )
+}
+
+function SmartSearch() {
+  const router = useRouter()
+  const [q, setQ] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [res, setRes] = useState<{ filter: Row; contacts: Row[] } | null>(null)
+  const run = async () => {
+    if (!q.trim()) return
+    setBusy(true)
+    try { setRes(await adminSend('/api/admin/crm/smart-search', 'POST', { q }) as { filter: Row; contacts: Row[] }) }
+    catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setBusy(false) }
+  }
+  return (
+    <Card style={{ marginBottom: 18 }}>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Input placeholder='Ask in plain English — "people from Facebook in Canada who booked a call"' value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && run()} />
+        <Button disabled={busy} onClick={run}>{busy ? 'Searching…' : 'Smart search'}</Button>
+      </div>
+      {res && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 12, color: T.muted, marginBottom: 8 }}>Interpreted as: {Object.keys(res.filter).length ? Object.entries(res.filter).map(([k, v]) => `${k}=${v}`).join(' · ') : 'no filters'} → {res.contacts.length} results</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {res.contacts.slice(0, 12).map((c) => (
+              <Link key={c.id as string} href={`/admin/crm/${c.id}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', textDecoration: 'none', borderBottom: '1px solid #f4f5f4' }}>
+                <Avatar name={c.name as string} email={c.email as string} size={28} />
+                <span style={{ flex: 1, fontSize: 13.5, color: T.ink, fontWeight: 600 }}>{(c.name as string) || (c.email as string)}</span>
+                <span style={{ fontSize: 12, color: T.sub }}>{(c.source as string) || ''} · {(c.country as string) || ''}</span>
+              </Link>
+            ))}
+            {res.contacts.length === 0 && <EmptyState title="No matches" />}
+          </div>
+        </div>
+      )}
+    </Card>
+  )
+}
+
+interface Exec { revenue: number; purchaseRevenue: number; pipelineValue: number; conversionRate: number; meetingCloseRate: number; bookedCount: number; totalContacts: number; leadSources: Array<{ source: string; count: number }>; trafficSources: Array<{ source: string; count: number }>; products: Array<{ product: string; count: number; revenue: number }> }
+function ExecutiveAnalytics() {
+  const { data } = useAdminFetch<Exec>('/api/admin/analytics')
+  if (!data) return null
+  const d = data
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 14, marginBottom: 14 }}>
+        <Metric label="Won revenue" value={money(d.revenue)} />
+        <Metric label="Purchase revenue" value={money(d.purchaseRevenue)} />
+        <Metric label="Lead→call conversion" value={`${d.conversionRate}%`} hint={`${d.bookedCount}/${d.totalContacts}`} />
+        <Metric label="Meeting close rate" value={`${d.meetingCloseRate}%`} />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 14 }}>
+        <BreakCard title="Lead sources" rows={d.leadSources.map((s) => ({ label: s.source, value: String(s.count) }))} />
+        <BreakCard title="Traffic sources" rows={d.trafficSources.map((s) => ({ label: s.source, value: String(s.count) }))} />
+        <BreakCard title="Products sold" rows={d.products.map((p) => ({ label: p.product, value: money(p.revenue) }))} />
+      </div>
+    </div>
+  )
+}
+function BreakCard({ title, rows }: { title: string; rows: Array<{ label: string; value: string }> }) {
+  return (
+    <Card pad={16}>
+      <h3 style={{ fontSize: 13, fontWeight: 700, color: T.sub, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 10 }}>{title}</h3>
+      {rows.length === 0 ? <div style={{ fontSize: 13, color: T.muted }}>No data yet</div> : rows.map((r) => (
+        <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: 13.5, color: T.text, borderBottom: '1px solid #f4f5f4' }}>
+          <span style={{ textTransform: 'capitalize' }}>{r.label}</span><span style={{ fontWeight: 600 }}>{r.value}</span>
+        </div>
+      ))}
+    </Card>
   )
 }
 

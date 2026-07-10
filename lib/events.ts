@@ -17,6 +17,9 @@ export const TRIGGERS = [
   'opportunity_created', 'opportunity_updated', 'opportunity_stage_changed',
   'opportunity_won', 'opportunity_lost', 'meeting_synced', 'meeting_completed',
   'lead_score_changed',
+  // AI CRM / attribution (3I.3) events
+  'visitor_seen', 'identity_merged', 'attribution_recorded', 'purchase_recorded',
+  'refund_recorded', 'content_viewed', 'insight_generated', 'integration_synced',
 ] as const
 
 /* Resolve a contact id from an email against the CRM source of truth. Kept

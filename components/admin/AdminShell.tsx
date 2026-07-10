@@ -28,6 +28,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
   ] },
   { section: 'Platform', items: [
     { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
+    { href: '/admin/system', label: 'System', icon: '❤', match: (p) => p.startsWith('/admin/system') },
     { href: '/admin/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/settings') },
     { href: '/admin/legacy', label: 'Legacy tools', icon: '◲', match: (p) => p.startsWith('/admin/legacy') },
   ] },

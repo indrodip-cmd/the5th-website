@@ -4,6 +4,7 @@
    raises an internal notification. Fire-and-forget: never blocks a request. */
 import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { logAiEvent } from '@/lib/ai-usage'
 
 // ── Registries (also surfaced to the admin builder) ──
 export const TRIGGERS = [
@@ -133,11 +134,13 @@ async function runAction(action: Action, ctx: Ctx): Promise<string> {
         db.from('crm_activities').select('type,title,created_at').eq('contact_id', cid).order('created_at', { ascending: false }).limit(20),
       ])
       const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+      const t0 = Date.now()
       const msg = await client.messages.create({
         model: 'claude-haiku-4-5-20251001', max_tokens: 300,
         system: 'You write a crisp 3-4 sentence sales CRM summary of a lead for the team. Be factual; no fluff.',
         messages: [{ role: 'user', content: `Lead: ${JSON.stringify(lead)}\nRecent activity: ${JSON.stringify(acts)}` }],
       })
+      logAiEvent({ endpoint: 'ai_summary', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0, email })
       const text = msg.content.find((b) => b.type === 'text')
       const summary = text && text.type === 'text' ? text.text : ''
       if (summary) await db.from('crm_notes').insert({ contact_id: cid, contact_email: email, body: 'AI summary: ' + summary, author: 'automation' })

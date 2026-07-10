@@ -17,6 +17,7 @@ import { getContactBundle, listContacts, searchContacts } from '@/lib/crm'
 import { getOpportunity, listBoard } from '@/lib/sales'
 import { computeAttribution } from '@/lib/attribution'
 import { listPurchases } from '@/lib/purchases'
+import { logAiEvent } from '@/lib/ai-usage'
 
 const SONNET = 'claude-sonnet-4-6'
 const HAIKU = 'claude-haiku-4-5-20251001'
@@ -87,10 +88,12 @@ export async function generateInsight(kind: string, entity: { contactId?: string
   if (!cfg || !ai) return null
   const context = entity.opportunityId ? await opportunityContext(entity.opportunityId) : entity.contactId ? await contactContext(entity.contactId) : null
   if (!context) return null
+  const t0 = Date.now()
   const msg = await ai.messages.create({
     model: cfg.model, max_tokens: 500, system: GROUND,
     messages: [{ role: 'user', content: `${cfg.instruction}\n\nCRM DATA:\n${JSON.stringify(context)}` }],
   })
+  logAiEvent({ endpoint: 'insight', model: cfg.model, usage: msg.usage, latencyMs: Date.now() - t0, meta: { kind } })
   const text = msg.content.find((b) => b.type === 'text')
   const body = extractJson(text && text.type === 'text' ? text.text : '{}')
   const db = getSupabaseAdmin()
@@ -148,7 +151,9 @@ export async function coachChat(messages: Array<{ role: 'user' | 'assistant'; co
   const convo: Anthropic.MessageParam[] = messages.slice(-16).map((m) => ({ role: m.role, content: m.content }))
   const system = `${GROUND}\nYou can call tools to read the CRM. Always base answers on tool results; cite the contact/opportunity you mean. Today is ${new Date().toISOString().slice(0, 10)}.`
   for (let hop = 0; hop < 5; hop++) {
+    const t0 = Date.now()
     const res = await ai.messages.create({ model: SONNET, max_tokens: 900, system, tools: TOOLS, messages: convo })
+    logAiEvent({ endpoint: 'coach', model: SONNET, usage: res.usage, latencyMs: Date.now() - t0 })
     const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
     if (toolUses.length === 0) {
       const text = res.content.find((b) => b.type === 'text')

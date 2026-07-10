@@ -11,6 +11,8 @@ import { MASTER_PLAYBOOK } from '@/lib/playbook'
 import { CONSTITUTION } from '@/lib/constitution'
 import { logActivity, upsertContact, resolveContact, addNote, createTask } from '@/lib/crm'
 import { identify } from '@/lib/identity'
+import { logAiEvent } from '@/lib/ai-usage'
+import { checkAiAllowed } from '@/lib/cost-guard'
 import { emitEvent } from '@/lib/events'
 
 export const maxDuration = 45
@@ -465,8 +467,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Cost protection — enforced before any Anthropic call (safe defaults = no-op).
+    const guard = await checkAiAllowed({ visitorId: ctx.visitorId })
+    if (!guard.allowed) {
+      logAiEvent({ endpoint: 'carolina', status: guard.reason === 'emergency' ? 'blocked' : 'throttled', visitorId: ctx.visitorId, email: ctx.email.v })
+      const decline = guard.reason === 'emergency'
+        ? "I'm briefly offline for maintenance — please email us and we'll help you right away."
+        : "Thanks for chatting! I've reached my limit for now — book a call or email us and a human will help you directly."
+      return NextResponse.json({ reply: decline, agent: agentKey })
+    }
+
     for (let round = 0; round < 5; round++) {
-      const res = await client.messages.create({ model: cfg.model || MODEL, max_tokens: cfg.max_tokens || 700, temperature: cfg.temperature, system, tools: TOOLS, messages })
+      const aiT0 = Date.now()
+      const res = await client.messages.create({ model: cfg.model || MODEL, max_tokens: Math.min(cfg.max_tokens || 700, guard.maxTokens || 100000), temperature: cfg.temperature, system, tools: TOOLS, messages })
+      logAiEvent({ endpoint: 'carolina', model: cfg.model || MODEL, usage: res.usage, latencyMs: Date.now() - aiT0, conversationId: typeof body?.conversationId === 'string' ? body.conversationId : undefined, visitorId: ctx.visitorId, email: ctx.email.v })
       const toolUses = res.content.filter((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
       const text = res.content.filter((b) => b.type === 'text').map((b) => (b as Anthropic.TextBlock).text).join('\n').trim()
 

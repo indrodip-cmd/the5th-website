@@ -3,6 +3,7 @@
    The model can only emit whitelisted keys; anything else is dropped. */
 import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { logAiEvent } from '@/lib/ai-usage'
 
 type Row = Record<string, unknown>
 
@@ -21,6 +22,7 @@ const ALLOWED = new Set<keyof SmartFilter>([
 export async function parseQuery(nl: string): Promise<SmartFilter> {
   if (!process.env.ANTHROPIC_API_KEY) return {}
   const ai = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  const t0 = Date.now()
   const msg = await ai.messages.create({
     model: 'claude-haiku-4-5-20251001', max_tokens: 300,
     system:
@@ -30,6 +32,7 @@ export async function parseQuery(nl: string): Promise<SmartFilter> {
       'Omit keys you cannot infer. Return ONLY minified JSON.',
     messages: [{ role: 'user', content: nl }],
   })
+  logAiEvent({ endpoint: 'smart_search', model: 'claude-haiku-4-5-20251001', usage: msg.usage, latencyMs: Date.now() - t0 })
   const text = msg.content.find((b) => b.type === 'text')
   const raw = text && text.type === 'text' ? text.text : '{}'
   let parsed: Row = {}

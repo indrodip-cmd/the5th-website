@@ -3,6 +3,7 @@ import { syncCalcomBookings, syncFathomRecordings } from '@/lib/meetings'
 import { runAllSyncs } from '@/lib/integrations'
 import { refreshContentStats } from '@/lib/content-attribution'
 import { whopSyncProducts, whopSyncMembers } from '@/lib/connectors/whop'
+import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -21,5 +22,6 @@ export async function GET(req: NextRequest) {
   const whopProducts = await whopSyncProducts().catch((e) => ({ error: String(e) }))
   const whopMembers = await whopSyncMembers().catch((e) => ({ error: String(e) }))
   const content = await refreshContentStats().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content })
+  const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, alerts })
 }

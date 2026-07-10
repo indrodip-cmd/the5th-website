@@ -97,6 +97,11 @@ function AiPanel() {
         )}
       </Card>
       <div style={{ fontSize: 12, color: T.muted, marginBottom: 8 }}>This site&apos;s AI (attributed per conversation / feature):</div>
+      {Number(c.calls || 0) === 0 && (
+        <Card pad={14} style={{ marginBottom: 12, background: '#fafbfa' }}>
+          <div style={{ fontSize: 13, color: T.sub }}>No AI activity recorded on this site yet — this fills as the concierge, AI Coach or insights are used. The org totals above already reflect all Anthropic usage. <strong>Try it:</strong> open the ✨ Coach in the top bar and ask a question, or generate an insight on a contact.</div>
+        </Card>
+      )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 12, marginBottom: 16 }}>
         {metric("Today's AI cost", money(Number(c.today || 0)), `Yesterday ${money(Number(c.yesterday || 0))}`)}
         {metric('This month', money(Number(c.month || 0)), `${c.calls || 0} calls`)}

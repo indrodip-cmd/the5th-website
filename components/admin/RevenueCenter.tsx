@@ -30,13 +30,16 @@ export function RevenueCenterFull() {
             <div><div style={{ fontSize: 15, fontWeight: 700, color: T.ink }}>No payment provider connected</div><div style={{ fontSize: 13, color: T.sub }}>Connect Whop to sync balances and payments automatically.</div></div>
             <Link href="/admin/integrations" className="a-btn a-btn-primary">Connect Whop</Link>
           </div></Card>
-        ) : d.balances.map((b) => (
-          <Card key={b.provider as string} style={{ background: `linear-gradient(135deg,${T.ink},${T.green})` }}>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', textTransform: 'capitalize' }}>{b.provider as string} · available</div>
-            <div style={{ fontSize: 30, fontWeight: 800, color: '#fff', marginTop: 4 }}>{money(Number(b.available || 0), b.currency as string)}</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 6 }}>Pending {money(Number(b.pending || 0), b.currency as string)} · Reserve {money(Number(b.reserve || 0), b.currency as string)}</div>
-          </Card>
-        ))}
+        ) : d.balances.map((b) => {
+          const isTreasury = b.currency === 'TREASURY'
+          return (
+            <Card key={(b.provider as string) + (b.currency as string)} style={{ background: isTreasury ? '#fff' : `linear-gradient(135deg,${T.ink},${T.green})`, border: isTreasury ? `1px solid ${T.border}` : undefined }}>
+              <div style={{ fontSize: 12, color: isTreasury ? T.sub : 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{isTreasury ? 'Combined · USD-normalized' : `${b.provider as string} · ${b.currency as string} · available`}</div>
+              <div style={{ fontSize: 30, fontWeight: 800, color: isTreasury ? T.green : '#fff', marginTop: 4 }}>{money(Number(b.available || 0), isTreasury ? 'USD' : (b.currency as string))}</div>
+              {!isTreasury && <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 6 }}>Pending {money(Number(b.pending || 0), b.currency as string)} · Reserve {money(Number(b.reserve || 0), b.currency as string)}</div>}
+            </Card>
+          )
+        })}
       </div>
 
       {/* KPI row */}

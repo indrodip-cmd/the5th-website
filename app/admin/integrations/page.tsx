@@ -31,6 +31,11 @@ export default function IntegrationCenter() {
     try { const r = await adminSend('/api/admin/integrations', 'POST', { provider, action: 'backfill' }) as { imported?: number }; alert(`Imported ${r?.imported ?? 0} historical payments. Re-run to continue if truncated.`); reload() }
     catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setSyncing(null) }
   }
+  const syncWhopEntity = async (kind: 'members' | 'products') => {
+    setSyncing('whop')
+    try { const r = await adminSend(`/api/admin/crm/${kind}`, 'POST') as { records?: number }; alert(`Synced ${r?.records ?? 0} ${kind}.`) }
+    catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setSyncing(null) }
+  }
 
   const Section = ({ title, cat }: { title: string; cat: string }) => (
     <div style={{ marginBottom: 26 }}>
@@ -57,6 +62,8 @@ export default function IntegrationCenter() {
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {i.has_sync && <Button variant={i.configured ? 'primary' : 'ghost'} disabled={!i.configured || syncing === i.provider} onClick={() => sync(i.provider)}>{syncing === i.provider ? 'Syncing…' : 'Sync now'}</Button>}
                 {i.provider === 'whop' && i.configured && <Button variant="ghost" disabled={syncing === i.provider} onClick={() => backfill(i.provider)}>Backfill history</Button>}
+                {i.provider === 'whop' && i.configured && <Button variant="ghost" disabled={syncing === i.provider} onClick={() => syncWhopEntity('members')}>Sync members</Button>}
+                {i.provider === 'whop' && i.configured && <Button variant="ghost" disabled={syncing === i.provider} onClick={() => syncWhopEntity('products')}>Sync products</Button>}
                 <Button variant="ghost" onClick={() => setLogsFor(i.provider)}>Logs</Button>
               </div>
             </Card>

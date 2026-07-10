@@ -17,6 +17,8 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
     { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
     { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },
+    { href: '/admin/crm/members', label: 'Members', icon: '👥', match: (p) => p.startsWith('/admin/crm/members') },
+    { href: '/admin/crm/products', label: 'Products', icon: '📦', match: (p) => p.startsWith('/admin/crm/products') },
   ] },
   { section: 'Business', items: [
     { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },

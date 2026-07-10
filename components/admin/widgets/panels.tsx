@@ -47,6 +47,31 @@ function RevenueSnapshot() {
 }
 registerWidget({ id: 'revenue-center', title: 'Revenue', category: 'revenue', defaultW: 2, defaultH: 'md', Component: RevenueSnapshot })
 
+// ── Balances (all currencies) ──
+function Balances() {
+  const d = useWidgetData()
+  const balances = ((d.revenue?.balances as Row[]) || [])
+  const currencies = balances.filter((b) => b.currency !== 'TREASURY')
+  const treasury = balances.find((b) => b.currency === 'TREASURY')
+  return (
+    <>
+      <WidgetTitle title="Balances" action={<Link href="/admin/revenue" style={{ fontSize: 12, color: T.green, textDecoration: 'none' }}>Revenue →</Link>} />
+      {currencies.length === 0 ? <NotConnected label="Whop" /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {currencies.map((b) => (
+            <div key={b.currency as string} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '7px 0', borderBottom: '1px solid #f4f5f4' }}>
+              <span style={{ fontSize: 12.5, color: T.sub, textTransform: 'uppercase', letterSpacing: '.04em' }}>{b.currency as string}</span>
+              <span style={{ fontSize: 18, fontWeight: 800, color: T.ink }}>{money(Number(b.available || 0), b.currency as string)}</span>
+            </div>
+          ))}
+          {treasury && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 8 }}><span style={{ fontSize: 12, color: T.muted }}>Combined (USD)</span><span style={{ fontSize: 14, fontWeight: 700, color: T.green }}>{money(Number(treasury.available || 0), 'USD')}</span></div>}
+        </div>
+      )}
+    </>
+  )
+}
+registerWidget({ id: 'balances', title: 'Balances', category: 'revenue', defaultW: 1, defaultH: 'md', Component: Balances })
+
 // ── Upcoming meetings ──
 function UpcomingMeetings() {
   const d = useWidgetData()

@@ -8,7 +8,7 @@ export const PRESETS: Record<string, Preset> = {
     name: 'CEO', layout: [
       { id: 'kpi-available-balance', w: 1 }, { id: 'kpi-revenue-today', w: 1 }, { id: 'kpi-revenue-month', w: 1 }, { id: 'kpi-revenue-lifetime', w: 1 },
       { id: 'kpi-pipeline-value', w: 1 }, { id: 'kpi-hot-leads', w: 1 }, { id: 'kpi-calls-today', w: 1 }, { id: 'kpi-conversion', w: 1 },
-      { id: 'revenue-center', w: 2 }, { id: 'activity-feed', w: 2 },
+      { id: 'balances', w: 1 }, { id: 'revenue-center', w: 2 }, { id: 'activity-feed', w: 1 },
       { id: 'crm-insights', w: 1 }, { id: 'upcoming-meetings', w: 2 }, { id: 'recently-won', w: 1 },
     ],
   },

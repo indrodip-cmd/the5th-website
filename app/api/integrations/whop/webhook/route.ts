@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { verifyWhopWebhook, normalizeWhopEvent, whopConfigured } from '@/lib/connectors/whop'
+import { verifyWhopWebhook, normalizeWhopEvent, whopConfigured, whopSyncBalances, whopRefreshMember } from '@/lib/connectors/whop'
 import { recordRevenueEvent } from '@/lib/revenue'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
@@ -62,6 +62,13 @@ export async function POST(req: NextRequest) {
       }
     }
     await finish('processed')
+
+    // Keep the multi-currency balance cache + affected member fresh (fees/FX
+    // make manual math unreliable — always re-fetch from Whop).
+    const data = (body.data as Record<string, unknown>) || {}
+    const userId = String((data.user as Record<string, unknown>)?.id || data.user_id || '')
+    if (['payment.succeeded', 'refund.created', 'refund.updated'].includes(action)) whopSyncBalances().catch(() => {})
+    if (['membership.activated', 'membership.deactivated', 'payment.succeeded'].includes(action) && userId) whopRefreshMember(userId).catch(() => {})
   } catch (e) {
     await finish('error', String(e))
     await notify('webhook_failure', 'Whop webhook failed', String(e))

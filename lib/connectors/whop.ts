@@ -9,6 +9,9 @@
 import crypto from 'crypto'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { recordRevenueEvent, type RevenueEvent } from '@/lib/revenue'
+import { resolveOrCreateContact } from '@/lib/crm'
+
+type Row = Record<string, unknown>
 
 const BASE = 'https://api.whop.com'
 
@@ -45,8 +48,109 @@ export async function whopSyncBalances(): Promise<{ records: number; log: string
     })
     records++
   }
+  // Treasury: a USD-normalized combined total across everything (if present).
+  const treasury = data.treasury_balance as Record<string, unknown> | undefined
+  if (treasury && treasury.balance_usd != null) {
+    await db.from('revenue_balances').insert({ provider: 'whop', available: num(treasury.balance_usd), pending: 0, reserve: 0, currency: 'TREASURY' })
+    records++
+  }
   const usd = balances.find((b) => String(b.currency).toLowerCase() === 'usd')
-  return { records, log: [`whop balances synced (${records} currencies)${usd ? ` · USD available ${num(usd.balance)}` : ''}`] }
+  return { records, log: [`whop balances synced (${balances.length} currencies)${usd ? ` · USD available ${num(usd.balance)}` : ''}`] }
+}
+
+// ── Products ──
+export async function whopSyncProducts(maxPages = 20): Promise<{ records: number; log: string[] }> {
+  if (!whopConfigured()) return { records: 0, log: ['whop not configured'] }
+  const db = getSupabaseAdmin()
+  let after: string | null = null, records = 0
+  for (let i = 0; i < maxPages; i++) {
+    const data = await whopApi(`/products?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
+    if (!data) break
+    const list = ((data.data as Row[]) || (data.products as Row[]) || []) as Row[]
+    for (const p of list) {
+      await db.from('whop_products').upsert({
+        id: String(p.id), title: (p.title as string) || null, description: (p.description as string) || null,
+        headline: (p.headline as string) || null, custom_cta: (p.custom_cta as string) || null,
+        gallery_images: (p.gallery_images as unknown[]) || [],
+        global_affiliate_percentage: p.global_affiliate_percentage != null ? num(p.global_affiliate_percentage) : null,
+        member_affiliate_percentage: p.member_affiliate_percentage != null ? num(p.member_affiliate_percentage) : null,
+        product_created_at: whopDate(p.created_at), product_updated_at: whopDate(p.updated_at),
+        raw: p, synced_at: new Date().toISOString(),
+      }, { onConflict: 'id' })
+      records++
+    }
+    const pi = (data.page_info as Row) || {}
+    after = (pi.end_cursor as string) || null
+    if (!after || !pi.has_next_page || list.length === 0) break
+  }
+  return { records, log: [`whop products synced: ${records}`] }
+}
+
+// ── Members ──
+function deriveMemberStatus(status: string, mra: string): string {
+  if (mra === 'past_due') return 'Past Due'
+  if (mra === 'canceling') return 'Canceling'
+  if (mra === 'churned' || status === 'left') return 'Churned'
+  if (status === 'joined' && ['paid_subscriber', 'renewing', 'trialing'].includes(mra)) return 'Active'
+  return 'Other'
+}
+
+function mapMember(m: Row): Row {
+  const u = (m.user as Row) || {}
+  const status = String(m.status || ''), mra = String(m.most_recent_action || '')
+  return {
+    id: String(m.id), user_id: (u.id as string) || (m.user_id as string) || null,
+    email: (String(u.email || '') || '').toLowerCase() || null, name: (u.name as string) || null, username: (u.username as string) || null,
+    phone: (m.phone as string) || (u.phone as string) || null, status, access_level: (m.access_level as string) || null,
+    most_recent_action: mra, derived_status: deriveMemberStatus(status, mra),
+    usd_total_spent: num(m.usd_total_spent), company_token_balance: m.company_token_balance != null ? num(m.company_token_balance) : null,
+    joined_at: whopDate(m.joined_at), member_created_at: whopDate(m.created_at), raw: m,
+  }
+}
+
+/* Upsert a member row, link it to a CRM contact by email, and set the contact's
+   LTV to Whop's server-calculated usd_total_spent (authoritative). */
+async function upsertMember(m: Row): Promise<void> {
+  const db = getSupabaseAdmin()
+  const row = mapMember(m)
+  let contactId: string | null = null
+  if (row.email) {
+    const contact = await resolveOrCreateContact({ email: row.email, name: row.name, phone: row.phone }, { source: 'whop' })
+    contactId = (contact?.id as string) || null
+    if (contactId) await db.from('crm_contacts').update({ ltv: row.usd_total_spent, lifecycle_stage: row.derived_status === 'Active' ? 'customer' : (contact?.lifecycle_stage as string) || 'lead' }).eq('id', contactId)
+  }
+  await db.from('whop_members').upsert({ ...row, contact_id: contactId, synced_at: new Date().toISOString() }, { onConflict: 'id' })
+}
+
+export async function whopSyncMembers(maxPages = 40): Promise<{ records: number; log: string[] }> {
+  if (!whopConfigured()) return { records: 0, log: ['whop not configured'] }
+  let after: string | null = null, records = 0
+  for (let i = 0; i < maxPages; i++) {
+    const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
+    if (!data) break
+    const list = ((data.data as Row[]) || (data.members as Row[]) || []) as Row[]
+    for (const m of list) { await upsertMember(m); records++ }
+    const pi = (data.page_info as Row) || {}
+    after = (pi.end_cursor as string) || null
+    if (!after || !pi.has_next_page || list.length === 0) break
+  }
+  return { records, log: [`whop members synced: ${records}`] }
+}
+
+/* Re-fetch a single member (after a webhook) to refresh LTV + status now. */
+export async function whopRefreshMember(userId: string): Promise<void> {
+  if (!whopConfigured() || !userId) return
+  const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&user_ids[]=${encodeURIComponent(userId)}&first=1`)
+  const list = ((data?.data as Row[]) || (data?.members as Row[]) || []) as Row[]
+  if (list[0]) await upsertMember(list[0])
+}
+
+/* Live server-side member search (query param searches name/username/email). */
+export async function whopSearchMembers(query: string): Promise<Row[]> {
+  if (!whopConfigured()) return []
+  const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&query=${encodeURIComponent(query)}&first=25`)
+  const list = ((data?.data as Row[]) || (data?.members as Row[]) || []) as Row[]
+  return list.map(mapMember)
 }
 
 /* One-time historical seed — cursor-paginate GET /api/v1/payments. */

@@ -3,16 +3,31 @@
    is a single line. All read the shared WidgetDataProvider. */
 import { registerWidget, useWidgetData, type WidgetData } from './registry'
 import { KpiView } from './shared'
-import { money } from '../ui'
+import { money, T } from '../ui'
 
 function n(o: Record<string, unknown> | null, k: string): number { return Number((o || {})[k] || 0) }
-function b(o: Record<string, unknown> | null, k: string): boolean { return !!(o || {})[k] }
 
 interface KpiSpec { id: string; title: string; category: 'revenue' | 'crm' | 'meetings' | 'ai' | 'analytics'; get: (d: WidgetData) => { value: string; sub?: string } }
 
+// Balance KPIs show EVERY currency (USD + EUR + …), never a single hardcoded one.
+function BalanceKpi({ field, label }: { field: 'available' | 'pending'; label: string }) {
+  const d = useWidgetData()
+  const balances = (((d.revenue || {}).balances as Array<Record<string, unknown>>) || []).filter((x) => x.currency !== 'TREASURY')
+  if (balances.length === 0) return <KpiView label={label} value="—" sub="Connect Whop" loading={d.loading && !d.revenue} />
+  const primary = balances.find((x) => String(x.currency).toUpperCase() === 'USD') || balances[0]
+  const rest = balances.filter((x) => x !== primary)
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div style={{ fontSize: 24, fontWeight: 800, color: T.ink, lineHeight: 1.1 }}>{money(Number(primary[field] || 0), primary.currency as string)}</div>
+      {rest.map((x) => <div key={x.currency as string} style={{ fontSize: 13, fontWeight: 600, color: T.sub, marginTop: 2 }}>{money(Number(x[field] || 0), x.currency as string)}</div>)}
+      <div style={{ fontSize: 12.5, color: T.sub, marginTop: 6, fontWeight: 500 }}>{label}</div>
+    </div>
+  )
+}
+registerWidget({ id: 'kpi-available-balance', title: 'Available balance', category: 'revenue', defaultW: 1, defaultH: 'sm', Component: () => <BalanceKpi field="available" label="Available balance" /> })
+registerWidget({ id: 'kpi-pending-balance', title: 'Pending balance', category: 'revenue', defaultW: 1, defaultH: 'sm', Component: () => <BalanceKpi field="pending" label="Pending balance" /> })
+
 const KPIS: KpiSpec[] = [
-  { id: 'kpi-available-balance', title: 'Available balance', category: 'revenue', get: (d) => b(d.cc, 'hasBalances') ? { value: money(n(d.cc, 'availableBalance')) } : { value: '—', sub: 'Connect Whop' } },
-  { id: 'kpi-pending-balance', title: 'Pending balance', category: 'revenue', get: (d) => b(d.cc, 'hasBalances') ? { value: money(n(d.cc, 'pendingBalance')) } : { value: '—', sub: 'Connect Whop' } },
   { id: 'kpi-revenue-today', title: "Today's revenue", category: 'revenue', get: (d) => ({ value: money(n(d.cc, 'revenueToday')), sub: `Yesterday ${money(n(d.cc, 'revenueYesterday'))}` }) },
   { id: 'kpi-revenue-week', title: 'This week', category: 'revenue', get: (d) => ({ value: money(n(d.cc, 'revenueWeek')) }) },
   { id: 'kpi-revenue-month', title: 'This month', category: 'revenue', get: (d) => ({ value: money(n(d.cc, 'revenueMonth')) }) },

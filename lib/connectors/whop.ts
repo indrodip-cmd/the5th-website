@@ -64,7 +64,7 @@ export async function whopSyncProducts(maxPages = 20): Promise<{ records: number
   const db = getSupabaseAdmin()
   let after: string | null = null, records = 0
   for (let i = 0; i < maxPages; i++) {
-    const data = await whopApi(`/products?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
+    const data = await whopApi(`/api/v1/products?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
     if (!data) break
     const list = ((data.data as Row[]) || (data.products as Row[]) || []) as Row[]
     for (const p of list) {
@@ -108,11 +108,51 @@ function mapMember(m: Row): Row {
   }
 }
 
-/* Upsert a member row, link it to a CRM contact by email, and set the contact's
-   LTV to Whop's server-calculated usd_total_spent (authoritative). */
-async function upsertMember(m: Row): Promise<void> {
+/* Bulk members sync — fast so it never times out: upsert all member rows, then
+   link the ones whose email already matches a CRM contact and push LTV onto it.
+   (Per-member contact CREATION happens lazily via the webhook, not in bulk.) */
+export async function whopSyncMembers(maxPages = 60): Promise<{ records: number; log: string[] }> {
+  if (!whopConfigured()) return { records: 0, log: ['whop not configured'] }
   const db = getSupabaseAdmin()
-  const row = mapMember(m)
+  let after: string | null = null, records = 0
+  for (let i = 0; i < maxPages; i++) {
+    const data = await whopApi(`/api/v1/members?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
+    if (!data) break
+    const list = ((data.data as Row[]) || (data.members as Row[]) || []) as Row[]
+    const rows = list.map(mapMember)
+    if (rows.length) {
+      await db.from('whop_members').upsert(rows.map((r) => ({ ...r, synced_at: new Date().toISOString() })), { onConflict: 'id' })
+      records += rows.length
+      // Link existing contacts + set LTV (one lookup per page).
+      const emails = rows.map((r) => r.email as string).filter(Boolean)
+      if (emails.length) {
+        const { data: contacts } = await db.from('crm_contacts').select('id,email').in('email', emails)
+        const byEmail = new Map((contacts || []).map((c) => [c.email as string, c.id as string]))
+        for (const r of rows) {
+          const cid = r.email ? byEmail.get(r.email as string) : null
+          if (cid) {
+            await db.from('whop_members').update({ contact_id: cid }).eq('id', r.id as string)
+            await db.from('crm_contacts').update({ ltv: r.usd_total_spent }).eq('id', cid)
+          }
+        }
+      }
+    }
+    const pi = (data.page_info as Row) || {}
+    after = (pi.end_cursor as string) || null
+    if (!after || !pi.has_next_page || list.length === 0) break
+  }
+  return { records, log: [`whop members synced: ${records}`] }
+}
+
+/* Re-fetch a single member (after a webhook). Creates the CRM contact if needed
+   and sets its LTV — affordable since it's one member at a time. */
+export async function whopRefreshMember(userId: string): Promise<void> {
+  if (!whopConfigured() || !userId) return
+  const data = await whopApi(`/api/v1/members?company_id=${process.env.WHOP_BUSINESS_ID}&user_ids[]=${encodeURIComponent(userId)}&first=1`)
+  const list = ((data?.data as Row[]) || (data?.members as Row[]) || []) as Row[]
+  if (!list[0]) return
+  const row = mapMember(list[0])
+  const db = getSupabaseAdmin()
   let contactId: string | null = null
   if (row.email) {
     const contact = await resolveOrCreateContact({ email: row.email, name: row.name, phone: row.phone }, { source: 'whop' })
@@ -122,33 +162,10 @@ async function upsertMember(m: Row): Promise<void> {
   await db.from('whop_members').upsert({ ...row, contact_id: contactId, synced_at: new Date().toISOString() }, { onConflict: 'id' })
 }
 
-export async function whopSyncMembers(maxPages = 40): Promise<{ records: number; log: string[] }> {
-  if (!whopConfigured()) return { records: 0, log: ['whop not configured'] }
-  let after: string | null = null, records = 0
-  for (let i = 0; i < maxPages; i++) {
-    const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&first=100${after ? `&after=${encodeURIComponent(after)}` : ''}`)
-    if (!data) break
-    const list = ((data.data as Row[]) || (data.members as Row[]) || []) as Row[]
-    for (const m of list) { await upsertMember(m); records++ }
-    const pi = (data.page_info as Row) || {}
-    after = (pi.end_cursor as string) || null
-    if (!after || !pi.has_next_page || list.length === 0) break
-  }
-  return { records, log: [`whop members synced: ${records}`] }
-}
-
-/* Re-fetch a single member (after a webhook) to refresh LTV + status now. */
-export async function whopRefreshMember(userId: string): Promise<void> {
-  if (!whopConfigured() || !userId) return
-  const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&user_ids[]=${encodeURIComponent(userId)}&first=1`)
-  const list = ((data?.data as Row[]) || (data?.members as Row[]) || []) as Row[]
-  if (list[0]) await upsertMember(list[0])
-}
-
 /* Live server-side member search (query param searches name/username/email). */
 export async function whopSearchMembers(query: string): Promise<Row[]> {
   if (!whopConfigured()) return []
-  const data = await whopApi(`/members?company_id=${process.env.WHOP_BUSINESS_ID}&query=${encodeURIComponent(query)}&first=25`)
+  const data = await whopApi(`/api/v1/members?company_id=${process.env.WHOP_BUSINESS_ID}&query=${encodeURIComponent(query)}&first=25`)
   const list = ((data?.data as Row[]) || (data?.members as Row[]) || []) as Row[]
   return list.map(mapMember)
 }
@@ -178,9 +195,12 @@ export async function whopBackfillPayments(maxPages = 30): Promise<{ imported: n
 }
 
 /* Map a Whop payment object → a canonical sale RevenueEvent (settled only). */
+const NON_SALE_STATUS = ['failed', 'refunded', 'disputed', 'voided', 'canceled', 'cancelled', 'pending', 'open', 'draft', 'incomplete', 'processing']
 function paymentToRevenue(p: Record<string, unknown>): RevenueEvent | null {
+  // Accept any settled payment with a positive amount; only skip clearly
+  // non-sale statuses (Whop status vocab varies, so allow-list is too brittle).
   const status = String(p.status || '').toLowerCase()
-  if (status && !['paid', 'succeeded', 'successful', 'completed'].includes(status)) return null
+  if (NON_SALE_STATUS.includes(status)) return null
   const user = (p.user as Record<string, unknown>) || {}
   const usd = num(p.usd_total)
   const amount = usd || num(p.total)

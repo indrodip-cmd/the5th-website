@@ -11,18 +11,24 @@ const STATUS: Record<string, { color: string; label: string }> = {
   disconnected: { color: '#9ca3af', label: 'Not connected' },
   error: { color: '#dc2626', label: 'Error' },
 }
-const ICON: Record<string, string> = { clarity: '🔍', ga4: '📊', gsc: '🔎', meta_ads: '📣', google_ads: '🅖', calcom: '📅', zoom: '🎥', fathom: '📝' }
+const ICON: Record<string, string> = { whop: '🟣', ai: '🤖', clarity: '🔍', ga4: '📊', gsc: '🔎', meta_ads: '📣', google_ads: '🅖', calcom: '📅', zoom: '🎥', fathom: '📝' }
 
 export default function IntegrationCenter() {
   const { data, loading, reload } = useAdminFetch<{ integrations: Integ[]; recent: Row[] }>('/api/admin/integrations')
   const [logsFor, setLogsFor] = useState<string | null>(null)
   const [syncing, setSyncing] = useState<string | null>(null)
+  const [view, setView] = useState<'integrations' | 'events'>('integrations')
   const integrations = data?.integrations || []
   const byCat = (c: string) => integrations.filter((i) => i.category === c)
 
   const sync = async (provider: string) => {
     setSyncing(provider)
     try { await adminSend('/api/admin/integrations', 'POST', { provider, action: 'sync' }); reload() }
+    catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setSyncing(null) }
+  }
+  const backfill = async (provider: string) => {
+    setSyncing(provider)
+    try { const r = await adminSend('/api/admin/integrations', 'POST', { provider, action: 'backfill' }) as { imported?: number }; alert(`Imported ${r?.imported ?? 0} historical payments. Re-run to continue if truncated.`); reload() }
     catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setSyncing(null) }
   }
 
@@ -48,8 +54,9 @@ export default function IntegrationCenter() {
                 {i.last_sync_at ? `Last sync ${fmtDate(i.last_sync_at)}` : i.configured ? 'Ready — never synced' : 'Add credentials to connect'}
                 {i.last_error ? <div style={{ color: T.danger, marginTop: 4 }}>{String(i.last_error).slice(0, 80)}</div> : null}
               </div>
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {i.has_sync && <Button variant={i.configured ? 'primary' : 'ghost'} disabled={!i.configured || syncing === i.provider} onClick={() => sync(i.provider)}>{syncing === i.provider ? 'Syncing…' : 'Sync now'}</Button>}
+                {i.provider === 'whop' && i.configured && <Button variant="ghost" disabled={syncing === i.provider} onClick={() => backfill(i.provider)}>Backfill history</Button>}
                 <Button variant="ghost" onClick={() => setLogsFor(i.provider)}>Logs</Button>
               </div>
             </Card>
@@ -61,9 +68,15 @@ export default function IntegrationCenter() {
 
   return (
     <>
-      <PageHeader title="Integrations" subtitle="Connect marketing, analytics & meeting sources into the CRM" />
-      {loading && !data ? <div className="skeleton" style={{ height: 200, borderRadius: 14 }} /> : (
+      <PageHeader title="Integrations" subtitle="Every external system, in one place" />
+      <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
+        {(['integrations', 'events'] as const).map((t) => (
+          <button key={t} className="tab-btn" onClick={() => setView(t)} style={{ background: view === t ? T.green2 : '#fff', color: view === t ? '#fff' : T.sub, border: `1px solid ${view === t ? T.green2 : T.border}`, textTransform: 'capitalize' }}>{t === 'events' ? 'Event Center' : 'Integrations'}</button>
+        ))}
+      </div>
+      {view === 'events' ? <EventCenter /> : loading && !data ? <div className="skeleton" style={{ height: 200, borderRadius: 14 }} /> : (
         <>
+          <Section title="Payments" cat="payments" />
           <Section title="Analytics" cat="analytics" />
           <Section title="Marketing" cat="marketing" />
           <Section title="Meetings" cat="meetings" />
@@ -73,6 +86,35 @@ export default function IntegrationCenter() {
         {logsFor && <LogsPanel provider={logsFor} onClose={() => setLogsFor(null)} />}
       </Drawer>
     </>
+  )
+}
+
+function EventCenter() {
+  const { data, loading } = useAdminFetch<{ webhooks: Row[]; syncs: Row[] }>('/api/admin/events')
+  const pill = (s: string) => <span className="a-pill" style={{ background: s === 'processed' || s === 'success' ? '#dcfce7' : s === 'error' ? '#fee2e2' : s === 'duplicate' ? '#f3f4f6' : '#e0f2fe', color: s === 'processed' || s === 'success' ? '#16a34a' : s === 'error' ? '#dc2626' : s === 'duplicate' ? T.sub : '#0369a1' }}>{s}</span>
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(340px,1fr))', gap: 18 }}>
+      <Card>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 12 }}>Incoming webhooks</h3>
+        {loading ? <div className="skeleton" style={{ height: 40 }} /> : (data?.webhooks || []).length === 0 ? <EmptyState title="No webhooks yet" /> : data!.webhooks.map((w) => (
+          <div key={w.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0', borderBottom: '1px solid #f4f5f4' }}>
+            <span style={{ fontSize: 16 }}>{ICON[w.provider as string] || '🔌'}</span>
+            <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{(w.event_type as string) || 'event'}</div><div style={{ fontSize: 12, color: T.muted }}>{new Date(w.received_at as string).toLocaleString()}</div></div>
+            {pill(w.status as string)}
+          </div>
+        ))}
+      </Card>
+      <Card>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: T.ink, marginBottom: 12 }}>Sync jobs</h3>
+        {loading ? <div className="skeleton" style={{ height: 40 }} /> : (data?.syncs || []).length === 0 ? <EmptyState title="No sync jobs yet" /> : data!.syncs.map((s) => (
+          <div key={s.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0', borderBottom: '1px solid #f4f5f4' }}>
+            <span style={{ fontSize: 16 }}>{ICON[s.provider as string] || '🔌'}</span>
+            <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink, textTransform: 'capitalize' }}>{s.provider as string}</div><div style={{ fontSize: 12, color: T.muted }}>{s.records as number} records · {new Date(s.started_at as string).toLocaleString()}</div></div>
+            {pill(s.status as string)}
+          </div>
+        ))}
+      </Card>
+    </div>
   )
 }
 

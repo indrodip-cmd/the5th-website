@@ -20,6 +20,8 @@ export const TRIGGERS = [
   // AI CRM / attribution (3I.3) events
   'visitor_seen', 'identity_merged', 'attribution_recorded', 'purchase_recorded',
   'refund_recorded', 'content_viewed', 'insight_generated', 'integration_synced',
+  // Command Center (3I.4) events
+  'revenue_recorded', 'webhook_received', 'webhook_failed', 'notification_created',
 ] as const
 
 /* Resolve a contact id from an email against the CRM source of truth. Kept

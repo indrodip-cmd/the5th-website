@@ -66,4 +66,12 @@ body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: anti
 .a-overlay { position: fixed; inset: 0; background: rgba(10,26,15,0.4); z-index: 200; animation: fadeIn .15s ease; }
 .a-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(560px, 94vw); background: #fff; z-index: 201; overflow-y: auto; box-shadow: -8px 0 40px rgba(0,0,0,0.14); }
 .a-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #fff; border-radius: 14px; z-index: 201; width: min(520px, 94vw); max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.24); }
+
+/* ── Dashboard grid ── */
+.dash-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; align-items: start; }
+.dash-cell { min-width: 0; }
+.dash-cell.dragging { opacity: .4; }
+.dash-cell.drop-target { outline: 2px dashed ${T.green2}; outline-offset: 3px; border-radius: 14px; }
+@media (max-width: 1080px) { .dash-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .dash-cell { grid-column: span 2 !important; } }
+@media (max-width: 620px) { .dash-grid { grid-template-columns: 1fr; } .dash-cell { grid-column: span 1 !important; } }
 `

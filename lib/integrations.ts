@@ -11,6 +11,7 @@ import { ga4Configured, ga4Sync, gscConfigured, gscSync, metaAdsConfigured, meta
 import { calKey } from '@/lib/calcom'
 import { zoomConfigured } from '@/lib/zoom'
 import { fathomConfigured } from '@/lib/fathom'
+import { whopConfigured, whopSyncBalances } from '@/lib/connectors/whop'
 
 export interface Provider {
   provider: string
@@ -23,6 +24,8 @@ export interface Provider {
 const noSync = async () => ({ records: 0, log: ['no sync for this provider'] })
 
 export const PROVIDERS: Provider[] = [
+  { provider: 'whop', label: 'Whop', category: 'payments', configured: whopConfigured, sync: whopSyncBalances },
+  { provider: 'ai', label: 'AI (Anthropic)', category: 'analytics', configured: () => !!process.env.ANTHROPIC_API_KEY, sync: noSync },
   { provider: 'clarity', label: 'Microsoft Clarity', category: 'analytics', configured: clarityConfigured, sync: claritySync },
   { provider: 'ga4', label: 'Google Analytics 4', category: 'analytics', configured: ga4Configured, sync: ga4Sync },
   { provider: 'gsc', label: 'Google Search Console', category: 'analytics', configured: gscConfigured, sync: gscSync },

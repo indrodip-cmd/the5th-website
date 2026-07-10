@@ -6,16 +6,29 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ADMIN_CSS, T } from './theme'
 import CoachChat from './CoachChat'
+import NotificationBell from './NotificationBell'
+import CommandPalette from './CommandPalette'
 
-const NAV: Array<{ href: string; label: string; icon: string; match: (p: string) => boolean }> = [
-  { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
-  { href: '/admin/crm/overview', label: 'CRM Overview', icon: '⬡', match: (p) => p === '/admin/crm/overview' },
-  { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' },
-  { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
-  { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
-  { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },
-  { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
-  { href: '/admin/crm/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/crm/settings') },
+interface NavItem { href: string; label: string; icon: string; match: (p: string) => boolean }
+const NAV: Array<{ section?: string; items: NavItem[] }> = [
+  { items: [{ href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' }] },
+  { section: 'CRM', items: [
+    { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },
+    { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
+    { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
+    { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },
+  ] },
+  { section: 'Business', items: [
+    { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },
+    { href: '/admin/analytics', label: 'Analytics', icon: '📈', match: (p) => p.startsWith('/admin/analytics') },
+    { href: '/admin/cms', label: 'CMS', icon: '▦', match: (p) => p.startsWith('/admin/cms') },
+    { href: '/admin/knowledge', label: 'Knowledge', icon: '📚', match: (p) => p.startsWith('/admin/knowledge') },
+  ] },
+  { section: 'Platform', items: [
+    { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
+    { href: '/admin/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/settings') },
+    { href: '/admin/legacy', label: 'Legacy tools', icon: '◲', match: (p) => p.startsWith('/admin/legacy') },
+  ] },
 ]
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
@@ -43,17 +56,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <span style={{ fontSize: 19, fontWeight: 800, color: '#fff' }}>The<span style={{ color: T.green2 }}>5th</span></span>
           <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '.08em', textTransform: 'uppercase' }}>Workspace</span>
         </div>
-        <nav style={{ marginTop: 8, flex: 1 }}>
-          {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
-              <span className="ws-nav-ico" style={{ fontSize: 16, textAlign: 'center' }}>{n.icon}</span>
-              {n.label}
-            </Link>
-          ))}
-          <div style={{ padding: '14px 24px 6px', fontSize: 10, fontWeight: 700, letterSpacing: '.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>Coming online</div>
-          {['Automations', 'Analytics', 'CMS', 'AI', 'Finance'].map((m) => (
-            <div key={m} className="ws-nav-item" style={{ opacity: 0.35, cursor: 'default' }}>
-              <span className="ws-nav-ico" style={{ textAlign: 'center' }}>·</span>{m}
+        <nav style={{ marginTop: 8, flex: 1, overflowY: 'auto' }}>
+          {NAV.map((group, gi) => (
+            <div key={gi} style={{ marginBottom: 6 }}>
+              {group.section && <div style={{ padding: '12px 24px 5px', fontSize: 10, fontWeight: 700, letterSpacing: '.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{group.section}</div>}
+              {group.items.map((n) => (
+                <Link key={n.href} href={n.href} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
+                  <span className="ws-nav-ico" style={{ fontSize: 15, textAlign: 'center' }}>{n.icon}</span>
+                  {n.label}
+                </Link>
+              ))}
             </div>
           ))}
         </nav>
@@ -63,9 +75,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="ws-main">
         <header className="ws-topbar">
           <GlobalSearch />
-          <CoachChat />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <CoachChat />
+            <NotificationBell />
+          </div>
         </header>
         <main className="ws-content">{children}</main>
+        <CommandPalette />
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
-import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeText } from '@/lib/validation'
 import { getSlots, createBooking, CAL_PUBLIC_LINK } from '@/lib/calcom'
@@ -10,7 +9,7 @@ import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
 import { MASTER_PLAYBOOK } from '@/lib/playbook'
 import { CONSTITUTION } from '@/lib/constitution'
-import { logActivity } from '@/lib/crm'
+import { logActivity, upsertContact, resolveContact, addNote, createTask } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
 export const maxDuration = 45
@@ -213,6 +212,32 @@ const TOOLS: Anthropic.Tool[] = [
       required: ['to'],
     },
   },
+  {
+    name: 'crm_lookup',
+    description: "Recall what we already know about THIS visitor (their saved stage, interest, prior context) so you never ask twice. Only works after their email has been captured this conversation.",
+    input_schema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'crm_note',
+    description: 'Leave a private internal note about this visitor for the human sales team. Never shown to the visitor. Use to capture useful context (goals, objections, budget signals).',
+    input_schema: {
+      type: 'object',
+      properties: { note: { type: 'string', description: 'The internal note for the team.' } },
+      required: ['note'],
+    },
+  },
+  {
+    name: 'crm_task',
+    description: 'Create a follow-up task for the human sales team about this visitor (e.g. "Send pricing", "Follow up after their launch").',
+    input_schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Short task title.' },
+        due_in_days: { type: 'number', description: 'Optional: days from now the task is due.' },
+      },
+      required: ['title'],
+    },
+  },
 ]
 
 type LeadPatch = Record<string, unknown>
@@ -220,13 +245,9 @@ type ClientAction = { type: string; url?: string }
 type ChatCard = { type: string; program?: string }
 
 async function upsertLead(email: string, patch: LeadPatch) {
-  try {
-    await getSupabaseAdmin()
-      .from('carolina_leads')
-      .upsert({ email: email.toLowerCase(), ...patch, updated_at: new Date().toISOString() }, { onConflict: 'email' })
-  } catch (e) {
-    console.error('carolina upsertLead failed', e)
-  }
+  // Route through the CRM engine so chat leads dedup (email → phone) and merge
+  // into the single source of truth like every other entry point.
+  await upsertContact(email, { source: 'chat', ...patch })
 }
 
 async function runTool(
@@ -307,6 +328,43 @@ async function runTool(
     await upsertLead(email, { name: nm, call_booked: true, booking_start: booking.start || start, timezone: tz })
     ctx.booked.v = true
     return JSON.stringify({ ok: true, booked: true, email_sent: emailed, meeting_url: booking.meetingUrl || null })
+  }
+
+  // ── CRM tools — scoped to THIS conversation's captured contact only.
+  // We never accept an arbitrary email here (a public widget must not be able
+  // to read or write another person's record), so we key off ctx.email.v.
+  if (name === 'crm_lookup') {
+    const email = ctx.email.v
+    if (!email) return JSON.stringify({ ok: false, known: false, error: 'No visitor email captured yet — call save_lead first.' })
+    const c = await resolveContact({ email })
+    if (!c) return JSON.stringify({ ok: true, known: false })
+    return JSON.stringify({ ok: true, known: true, profile: {
+      name: c.name, business_stage: c.business_stage, interest: c.interest,
+      lifecycle_stage: c.lifecycle_stage, pipeline_stage: c.pipeline_stage,
+      tags: c.tags, call_booked: c.call_booked,
+    } })
+  }
+  if (name === 'crm_note') {
+    const email = ctx.email.v
+    const note = sanitizeText(input.note, 2000)
+    if (!email) return JSON.stringify({ ok: false, error: 'Capture the visitor email first (save_lead).' })
+    if (!note) return JSON.stringify({ ok: false, error: 'Empty note.' })
+    const c = await resolveContact({ email })
+    if (!c) return JSON.stringify({ ok: false, error: 'Contact not found.' })
+    await addNote(c.id as string, note, { author: 'carolina', private: true })
+    return JSON.stringify({ ok: true })
+  }
+  if (name === 'crm_task') {
+    const email = ctx.email.v
+    const title = sanitizeText(input.title, 200)
+    if (!email) return JSON.stringify({ ok: false, error: 'Capture the visitor email first (save_lead).' })
+    if (!title) return JSON.stringify({ ok: false, error: 'Empty task title.' })
+    const c = await resolveContact({ email })
+    if (!c) return JSON.stringify({ ok: false, error: 'Contact not found.' })
+    const days = Number(input.due_in_days)
+    const due = Number.isFinite(days) ? new Date(Date.now() + days * 86400000).toISOString().slice(0, 10) : null
+    await createTask({ contactId: c.id as string, title, dueDate: due, owner: 'carolina', priority: 'normal' })
+    return JSON.stringify({ ok: true })
   }
 
   return JSON.stringify({ ok: false, error: 'unknown tool' })

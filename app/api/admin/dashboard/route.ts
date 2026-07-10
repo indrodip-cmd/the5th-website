@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const since = new Date(Date.now() - 30 * 86400000).toISOString()
 
   const [leadsRes, eventsRes, sessRes, actRes, contentRes, chunkRes, embRes] = await Promise.all([
-    db.from('carolina_leads').select('pipeline_stage,lead_score,call_booked,created_at'),
+    db.from('crm_contacts').select('pipeline_stage,lead_score,call_booked,created_at').is('deleted_at', null),
     db.from('carolina_events').select('intent,latency_ms,booked,created_at').gte('created_at', since),
     db.from('carolina_sessions').select('conversation_id', { count: 'exact', head: true }),
     db.from('crm_activities').select('type,title,detail,contact_email,created_at').order('created_at', { ascending: false }).limit(20),

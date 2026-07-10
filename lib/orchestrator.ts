@@ -75,7 +75,7 @@ async function loadSession(id: string): Promise<Session> {
 async function knownProfile(email: string | null): Promise<string | null> {
   if (!email) return null
   try {
-    const { data } = await getSupabaseAdmin().from('carolina_leads').select('name,business_stage,interest,notes').eq('email', email).single()
+    const { data } = await getSupabaseAdmin().from('crm_contacts').select('name,business_stage,interest,notes').eq('email', email).maybeSingle()
     if (!data) return null
     const bits: string[] = []
     if (data.name) bits.push(`name: ${data.name}`)

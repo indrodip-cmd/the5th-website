@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
   const db = getSupabaseAdmin()
   const [{ data: contact }, { data: acts }, { data: notes }] = await Promise.all([
-    db.from('carolina_leads').select('name,interest,business_stage,lead_score,pipeline_stage,call_booked,country,notes,tags').eq('email', email).single(),
+    db.from('crm_contacts').select('name,interest,business_stage,lead_score,pipeline_stage,call_booked,country,notes,tags').eq('email', email).maybeSingle(),
     db.from('crm_activities').select('type,title,created_at').eq('contact_email', email).order('created_at', { ascending: false }).limit(30),
     db.from('crm_notes').select('body').eq('contact_email', email).limit(10),
   ])

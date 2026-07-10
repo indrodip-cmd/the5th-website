@@ -7,8 +7,8 @@ import { emitEvent } from '@/lib/events'
 export const dynamic = 'force-dynamic'
 
 /* Universal lead intake — any form or page on the site can POST here and the
-   lead lands in the native CRM (carolina_leads) with a source + tags, so every
-   lead is unified in one pipeline. Public + rate-limited. */
+   lead lands in the native CRM (crm_contacts, via the contact engine) with a
+   source + tags, so every lead is unified in one pipeline. Public + rate-limited. */
 export async function POST(req: NextRequest) {
   const ip = clientIp(req)
   const rl = await limit(`leadcap:ip:${ip}`, 20, 600)

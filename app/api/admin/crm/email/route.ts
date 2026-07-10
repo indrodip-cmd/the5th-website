@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   const body = sanitizeText(b?.body, 8000)
   if (!isValidEmail(email) || !subject || !body) return NextResponse.json({ error: 'Email, subject and body are required.' }, { status: 400 })
 
-  const { data: contact } = await getSupabaseAdmin().from('carolina_leads').select('name').eq('email', email).single()
+  const { data: contact } = await getSupabaseAdmin().from('crm_contacts').select('name').eq('email', email).maybeSingle()
   const html = wrap(contact?.name || '', body.split(/\n{2,}/).map((p) => `<p style="margin:0 0 14px;">${p.replace(/\n/g, '<br>')}</p>`).join(''))
 
   try {

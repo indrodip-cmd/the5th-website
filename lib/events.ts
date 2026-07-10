@@ -9,8 +9,23 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 export const TRIGGERS = [
   'lead_captured', 'lead_qualified', 'lead_score_changed', 'pipeline_changed',
   'program_recommended', 'human_handoff', 'appointment_booked', 'appointment_cancelled',
-  'content_published', 'conversation_started',
+  'content_published', 'conversation_started', 'revenue_logged',
+  // CRM OS foundation events
+  'contact_created', 'contact_updated', 'activity_added', 'note_created',
+  'task_created', 'task_completed', 'business_profile_updated',
+  // Sales CRM (3I.2) events
+  'opportunity_created', 'opportunity_updated', 'opportunity_stage_changed',
+  'opportunity_won', 'opportunity_lost', 'meeting_synced', 'meeting_completed',
+  'lead_score_changed',
 ] as const
+
+/* Resolve a contact id from an email against the CRM source of truth. Kept
+   local so the event bus never imports lib/crm (which imports emitEvent). */
+async function contactIdByEmail(email: string): Promise<string | null> {
+  if (!email) return null
+  const { data } = await getSupabaseAdmin().from('crm_contacts').select('id').eq('email', email.toLowerCase()).maybeSingle()
+  return (data?.id as string) || null
+}
 
 export const CONDITION_FIELDS = [
   'lead_score', 'pipeline_stage', 'country', 'interest', 'intent', 'program', 'email',
@@ -55,40 +70,50 @@ async function runAction(action: Action, ctx: Ctx): Promise<string> {
     case 'create_task': {
       const due = Number(p.due_in_days)
       const due_date = Number.isFinite(due) ? new Date(Date.now() + due * 86400000).toISOString().slice(0, 10) : null
-      await db.from('crm_tasks').insert({ contact_email: email || null, title: String(p.title || 'Follow up'), due_date, priority: String(p.priority || 'normal') })
+      const cid = await contactIdByEmail(email)
+      await db.from('crm_tasks').insert({ contact_id: cid, contact_email: email || null, title: String(p.title || 'Follow up'), due_date, priority: String(p.priority || 'normal') })
       return 'task created'
     }
     case 'add_tag':
     case 'remove_tag': {
-      if (!email) return 'no contact'
-      const { data } = await db.from('carolina_leads').select('tags').eq('email', email).single()
-      const cur: string[] = (data?.tags as string[]) || []
-      const tag = String(p.tag || '')
-      const next = action.type === 'add_tag' ? Array.from(new Set([...cur, tag])) : cur.filter((t) => t !== tag)
-      await db.from('carolina_leads').update({ tags: next }).eq('email', email)
+      const cid = await contactIdByEmail(email)
+      if (!cid) return 'no contact'
+      const tag = String(p.tag || '').trim()
+      if (!tag) return 'no tag'
+      if (action.type === 'add_tag') {
+        const { data: t } = await db.from('crm_tags').upsert({ name: tag }, { onConflict: 'name' }).select('id').single()
+        if (t?.id) await db.from('crm_contact_tags').upsert({ contact_id: cid, tag_id: t.id }, { onConflict: 'contact_id,tag_id' })
+      } else {
+        const { data: t } = await db.from('crm_tags').select('id').eq('name', tag).maybeSingle()
+        if (t?.id) await db.from('crm_contact_tags').delete().eq('contact_id', cid).eq('tag_id', t.id)
+      }
       return action.type
     }
     case 'move_stage': {
-      if (!email) return 'no contact'
-      await db.from('carolina_leads').update({ pipeline_stage: String(p.stage || 'qualified') }).eq('email', email)
-      await db.from('crm_activities').insert({ contact_email: email, type: 'note', title: `Automation → ${p.stage}` })
+      const cid = await contactIdByEmail(email)
+      if (!cid) return 'no contact'
+      await db.from('crm_contacts').update({ pipeline_stage: String(p.stage || 'qualified') }).eq('id', cid)
+      await db.from('crm_activities').insert({ contact_id: cid, contact_email: email, type: 'note', title: `Automation → ${p.stage}` })
       return 'stage moved'
     }
     case 'update_score': {
-      if (!email) return 'no contact'
-      const { data } = await db.from('carolina_leads').select('lead_score').eq('email', email).single()
+      const cid = await contactIdByEmail(email)
+      if (!cid) return 'no contact'
+      const { data } = await db.from('crm_contacts').select('lead_score').eq('id', cid).single()
       const base = Number(data?.lead_score || 0)
       const val = p.set != null ? Number(p.set) : base + Number(p.delta || 0)
-      await db.from('carolina_leads').update({ lead_score: Math.max(0, Math.round(val)) }).eq('email', email)
+      await db.from('crm_contacts').update({ lead_score: Math.max(0, Math.round(val)) }).eq('id', cid)
       return 'score updated'
     }
     case 'create_note': {
-      if (!email) return 'no contact'
-      await db.from('crm_notes').insert({ contact_email: email, body: String(p.body || ''), author: 'automation' })
+      const cid = await contactIdByEmail(email)
+      if (!cid) return 'no contact'
+      await db.from('crm_notes').insert({ contact_id: cid, contact_email: email, body: String(p.body || ''), author: 'automation' })
       return 'note created'
     }
     case 'log': {
-      if (email) await db.from('crm_activities').insert({ contact_email: email, type: 'note', title: String(p.message || 'Automation') })
+      const cid = await contactIdByEmail(email)
+      await db.from('crm_activities').insert({ contact_id: cid, contact_email: email || null, type: 'note', title: String(p.message || 'Automation') })
       return 'logged'
     }
     case 'notify': {
@@ -96,10 +121,11 @@ async function runAction(action: Action, ctx: Ctx): Promise<string> {
       return 'notified'
     }
     case 'ai_summary': {
-      if (!email || !process.env.ANTHROPIC_API_KEY) return 'skipped'
+      const cid = await contactIdByEmail(email)
+      if (!cid || !process.env.ANTHROPIC_API_KEY) return 'skipped'
       const [{ data: lead }, { data: acts }] = await Promise.all([
-        db.from('carolina_leads').select('name,interest,business_stage,lead_score,pipeline_stage,notes').eq('email', email).single(),
-        db.from('crm_activities').select('type,title,created_at').eq('contact_email', email).order('created_at', { ascending: false }).limit(20),
+        db.from('crm_contacts').select('name,interest,business_stage,lead_score,pipeline_stage,notes').eq('id', cid).single(),
+        db.from('crm_activities').select('type,title,created_at').eq('contact_id', cid).order('created_at', { ascending: false }).limit(20),
       ])
       const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
       const msg = await client.messages.create({
@@ -109,7 +135,7 @@ async function runAction(action: Action, ctx: Ctx): Promise<string> {
       })
       const text = msg.content.find((b) => b.type === 'text')
       const summary = text && text.type === 'text' ? text.text : ''
-      if (summary) await db.from('crm_notes').insert({ contact_email: email, body: 'AI summary: ' + summary, author: 'automation' })
+      if (summary) await db.from('crm_notes').insert({ contact_id: cid, contact_email: email, body: 'AI summary: ' + summary, author: 'automation' })
       return 'summary generated'
     }
     default:
@@ -149,8 +175,8 @@ export async function emitEvent(type: string, data: Ctx = {}): Promise<void> {
       let ctx = { ...data }
       if (data.email) {
         const { data: lead } = await getSupabaseAdmin()
-          .from('carolina_leads').select('lead_score,pipeline_stage,country,interest')
-          .eq('email', String(data.email).toLowerCase()).single()
+          .from('crm_contacts').select('lead_score,pipeline_stage,country,interest')
+          .eq('email', String(data.email).toLowerCase()).maybeSingle()
         if (lead) ctx = { ...lead, ...ctx }
       }
       await runWorkflows(type, ctx)

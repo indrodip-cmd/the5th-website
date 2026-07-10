@@ -1,0 +1,137 @@
+'use client'
+/* The one Workspace shell: single OTP login, single sidebar, single topbar,
+   single design system. Every /admin module renders inside this. */
+import React, { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { ADMIN_CSS, T } from './theme'
+
+const NAV: Array<{ href: string; label: string; icon: string; match: (p: string) => boolean }> = [
+  { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
+  { href: '/admin/crm/overview', label: 'CRM Overview', icon: '⬡', match: (p) => p === '/admin/crm/overview' },
+  { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' },
+  { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
+  { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
+  { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },
+  { href: '/admin/crm/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/crm/settings') },
+]
+
+export default function AdminShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname() || '/admin'
+  const [ready, setReady] = useState(false)
+  const [authed, setAuthed] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/admin/me').then((r) => setAuthed(r.ok)).catch(() => setAuthed(false)).finally(() => setReady(true))
+  }, [])
+
+  if (!ready) return <div style={{ minHeight: '100vh', background: T.ink }}><style>{ADMIN_CSS}</style></div>
+  if (!authed) return <><style>{ADMIN_CSS}</style><LoginScreen onLogin={() => setAuthed(true)} /></>
+
+  const logout = async () => {
+    try { await fetch('/api/admin/logout', { method: 'POST' }) } catch {}
+    setAuthed(false)
+  }
+
+  return (
+    <div className="ws-layout">
+      <style>{ADMIN_CSS}</style>
+      <aside className="ws-side">
+        <div style={{ padding: '18px 20px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ fontSize: 19, fontWeight: 800, color: '#fff' }}>The<span style={{ color: T.green2 }}>5th</span></span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '.08em', textTransform: 'uppercase' }}>Workspace</span>
+        </div>
+        <nav style={{ marginTop: 8, flex: 1 }}>
+          {NAV.map((n) => (
+            <Link key={n.href} href={n.href} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
+              <span className="ws-nav-ico" style={{ fontSize: 16, textAlign: 'center' }}>{n.icon}</span>
+              {n.label}
+            </Link>
+          ))}
+          <div style={{ padding: '14px 24px 6px', fontSize: 10, fontWeight: 700, letterSpacing: '.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>Coming online</div>
+          {['Automations', 'Analytics', 'CMS', 'AI', 'Finance'].map((m) => (
+            <div key={m} className="ws-nav-item" style={{ opacity: 0.35, cursor: 'default' }}>
+              <span className="ws-nav-ico" style={{ textAlign: 'center' }}>·</span>{m}
+            </div>
+          ))}
+        </nav>
+        <button onClick={logout} style={{ margin: 14, padding: '10px 14px', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 9, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>Log out</button>
+      </aside>
+
+      <div className="ws-main">
+        <header className="ws-topbar">
+          <GlobalSearch />
+          <span style={{ fontSize: 13, color: T.sub }}>The5th CRM OS</span>
+        </header>
+        <main className="ws-content">{children}</main>
+      </div>
+    </div>
+  )
+}
+
+/* Global search — jumps to CRM search results. */
+function GlobalSearch() {
+  const [q, setQ] = useState('')
+  return (
+    <form
+      onSubmit={(e) => { e.preventDefault(); if (q.trim()) window.location.href = `/admin/crm?q=${encodeURIComponent(q.trim())}` }}
+      style={{ flex: 1, maxWidth: 460 }}
+    >
+      <input
+        value={q} onChange={(e) => setQ(e.target.value)}
+        placeholder="Search contacts, notes, tasks…"
+        className="a-input" style={{ background: '#f6f7f6' }}
+      />
+    </form>
+  )
+}
+
+/* ── OTP login (the single sign-in for the whole Workspace) ── */
+function LoginScreen({ onLogin }: { onLogin: (email: string) => void }) {
+  const [step, setStep] = useState<'email' | 'code'>('email')
+  const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  const sendCode = useCallback(async () => {
+    setError(''); setBusy(true)
+    try {
+      const res = await fetch('/api/admin/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+      const d = (await res.json().catch(() => ({}))) as { error?: string }
+      if (!res.ok) { setError(d.error || 'Something went wrong.'); return }
+      setStep('code')
+    } catch { setError('Network error. Please try again.') } finally { setBusy(false) }
+  }, [email])
+
+  const verify = useCallback(async () => {
+    setError(''); setBusy(true)
+    try {
+      const res = await fetch('/api/admin/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, otp }) })
+      const d = (await res.json().catch(() => ({}))) as { success?: boolean; email?: string; error?: string }
+      if (!res.ok || !d.success) { setError(d.error || 'Invalid code.'); return }
+      onLogin(d.email || email)
+    } catch { setError('Network error. Please try again.') } finally { setBusy(false) }
+  }, [email, otp, onLogin])
+
+  return (
+    <div style={{ minHeight: '100vh', background: T.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <div className="a-card" style={{ width: '100%', maxWidth: 380, padding: 34 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: T.ink, marginBottom: 4 }}>The<span style={{ color: T.green2 }}>5th</span> Workspace</div>
+        <div style={{ fontSize: 14, color: T.sub, marginBottom: 22 }}>{step === 'email' ? 'Sign in to continue' : `Enter the code sent to ${email}`}</div>
+        {step === 'email' ? (
+          <input className="a-input" style={{ marginBottom: 14, padding: '14px 16px', fontSize: 16 }} type="email" placeholder="you@10kroadmap.org" value={email}
+            onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && sendCode()} autoFocus />
+        ) : (
+          <input className="a-input" style={{ marginBottom: 14, padding: '14px 16px', fontSize: 18, letterSpacing: '.3em', textAlign: 'center' }} inputMode="numeric" placeholder="••••••" value={otp}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} onKeyDown={(e) => e.key === 'Enter' && verify()} autoFocus />
+        )}
+        {error && <div style={{ color: T.danger, fontSize: 13, marginBottom: 12 }}>{error}</div>}
+        <button className="admin-btn" disabled={busy || (step === 'email' ? !email : otp.length < 6)} onClick={step === 'email' ? sendCode : verify}>
+          {busy ? 'Please wait…' : step === 'email' ? 'Send code' : 'Verify & enter'}
+        </button>
+        {step === 'code' && <button onClick={() => { setStep('email'); setOtp(''); setError('') }} style={{ marginTop: 12, background: 'none', border: 'none', color: T.sub, fontSize: 13, cursor: 'pointer', width: '100%', fontFamily: 'inherit' }}>← Use a different email</button>}
+      </div>
+    </div>
+  )
+}

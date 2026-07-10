@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
+import { upsertContact, logActivity } from '@/lib/crm'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,9 +17,8 @@ export async function POST(req: NextRequest) {
   if (!isValidEmail(email)) return NextResponse.json({ error: 'Please enter a valid email.' }, { status: 400 })
 
   try {
-    await getSupabaseAdmin()
-      .from('carolina_leads')
-      .upsert({ email, interest: 'newsletter', updated_at: new Date().toISOString() }, { onConflict: 'email' })
+    await upsertContact(email, { interest: 'newsletter', source: 'newsletter' })
+    await logActivity(email, 'lead', 'Newsletter signup', 'Opted in from the Carolina Home footer')
   } catch (e) {
     console.error('carolina subscribe failed', e)
   }

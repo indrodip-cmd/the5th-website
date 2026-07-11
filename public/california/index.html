@@ -103,7 +103,16 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
 <meta name="twitter:description" content="Your privacy rights under the California Consumer Privacy Act (CCPA/CPRA), and how to exercise them with The5th Consulting.">
 <meta name="twitter:image" content="https://the5th.consulting/public/images/logo.png">
 <script src="https://t.contentsquare.net/uxa/9af567d0424d8.js" defer></script>
+<style>
+/* Footer polish: centered copyright + glowing the5th watermark */
+.footer-bottom{justify-content:center !important;text-align:center;}
+.footer-wordmark span{background:linear-gradient(100deg,#8a5bb0 0%,#C9A84C 45%,#F4DE93 58%,#8a5bb0 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important;filter:drop-shadow(0 0 24px rgba(201,168,76,.5)) drop-shadow(0 0 64px rgba(138,91,176,.34));animation:fwGlow 4.5s ease-in-out infinite;}
+.footer-wordmark span em{-webkit-text-fill-color:#F6E29B!important;color:#F6E29B!important;}
+@keyframes fwGlow{0%,100%{filter:drop-shadow(0 0 18px rgba(201,168,76,.34)) drop-shadow(0 0 46px rgba(138,91,176,.24));}50%{filter:drop-shadow(0 0 38px rgba(201,168,76,.66)) drop-shadow(0 0 92px rgba(138,91,176,.42));}}
+@media(prefers-reduced-motion:reduce){.footer-wordmark span{animation:none;}}
+</style>
 </head>
+
 <body>
 <header class="legalNav"><div class="legalNav__in">
   <a href="/" class="legalNav__logo"><img src="/public/images/logo-white.png" alt="The5th Consulting"></a>
@@ -207,10 +216,6 @@ a{text-decoration:none;color:inherit}img{display:block;max-width:100%;height:aut
   </div>
   <div class="footer-bottom">
     <span>&copy; 2026 The5th Consulting. All rights reserved.</span>
-    <nav class="footer-legal" aria-label="Legal">
-      <a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/refund">Refunds</a><a href="/data">Cookies</a><a href="/disclaimer">Disclaimer</a><a href="/california">CA Privacy</a>
-    </nav>
-    <span>the5th.consulting</span>
   </div>
   <div class="footer-wordmark"><span>the<em>5</em>th.</span></div>
 </footer>

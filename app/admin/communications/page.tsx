@@ -272,12 +272,13 @@ function CampaignStats({ id, onClose }: { id: string; onClose: () => void }) {
 function Sequences() {
   const { data, loading, reload } = useAdminFetch<{ sequences: Row[]; templates: Row[] }>('/api/admin/communications/campaigns')
   const [open, setOpen] = useState<Row | null>(null)
+  const [ai, setAi] = useState(false)
   const create = async () => { const name = prompt('Sequence name:'); if (!name) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'save_sequence', name }); reload() }
   const toggle = async (s: Row) => { await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'toggle_sequence', id: s.id, status: s.status === 'active' ? 'paused' : 'active' }); reload() }
   const del = async (id: string) => { if (!confirm('Delete sequence?')) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_sequence', id }); reload() }
   return (
     <>
-      <div style={{ marginBottom: 14 }}><Button onClick={create}>＋ New sequence</Button></div>
+      <div style={{ marginBottom: 14, display: 'flex', gap: 8 }}><Button onClick={() => setAi(true)}>✦ AI campaign builder</Button><Button variant="ghost" onClick={create}>＋ Blank sequence</Button></div>
       {loading && !data ? <div className="skeleton" style={{ height: 140 }} /> : (data?.sequences || []).length === 0 ? <EmptyState title="No sequences yet" hint="Build a drip: steps with delays, auto-enrolled from automations or manually." /> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(data?.sequences || []).map((s) => (
@@ -294,7 +295,26 @@ function Sequences() {
         </div>
       )}
       {open && <SequenceModal seq={open} templates={data?.templates || []} onClose={() => { setOpen(null); reload() }} />}
+      {ai && <AiCampaignModal onClose={() => setAi(false)} onDone={(seqId) => { setAi(false); reload(); if (seqId) setTimeout(() => setOpen({ id: seqId, name: 'AI campaign' }), 100) }} />}
     </>
+  )
+}
+function AiCampaignModal({ onClose, onDone }: { onClose: () => void; onDone: (seqId?: string) => void }) {
+  const [brief, setBrief] = useState('')
+  const [busy, setBusy] = useState(false)
+  const go = async () => {
+    if (!brief.trim()) return
+    setBusy(true)
+    try { const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'ai_campaign', brief }) as Row; if (r?.ok) { alert(`Built "${r.name}" — ${r.steps} email steps generated. Review the steps, then enroll the audience.`); onDone(r.sequence_id as string) } else alert((r?.error as string) || 'Failed') }
+    catch (e) { alert(String(e instanceof Error ? e.message : e)) } finally { setBusy(false) }
+  }
+  return (
+    <Modal open onClose={onClose} title="✦ AI Campaign Builder">
+      <div style={{ fontSize: 13, color: T.sub, marginBottom: 10 }}>Describe the campaign — AI plans the audience, writes and designs every email, and builds the sequence. Everything is editable after.</div>
+      <textarea className="a-input" style={{ minHeight: 100, marginBottom: 8 }} placeholder="e.g. A 21-day nurture for people who completed the Business Growth Quiz but haven't booked a strategy call — build trust, share case studies, handle objections, and drive a booking." value={brief} onChange={(e) => setBrief(e.target.value)} />
+      {['21-day Fast Forward nurture for quiz completers', 'Win-back for customers who churned', '5-email welcome for new leads'].map((s) => <button key={s} onClick={() => setBrief(s)} style={{ display: 'inline-block', margin: '0 6px 6px 0', border: `1px solid ${T.border}`, background: '#fafbfa', borderRadius: 999, padding: '4px 10px', fontSize: 11.5, color: T.sub, cursor: 'pointer' }}>{s}</button>)}
+      <div style={{ marginTop: 8 }}><Button disabled={busy || !brief.trim()} onClick={go}>{busy ? 'Building campaign…' : 'Build campaign'}</Button></div>
+    </Modal>
   )
 }
 function SequenceModal({ seq, templates, onClose }: { seq: Row; templates: Row[]; onClose: () => void }) {
@@ -304,6 +324,7 @@ function SequenceModal({ seq, templates, onClose }: { seq: Row; templates: Row[]
   const addStep = async () => { if (!step.template_id) { alert('Pick a template'); return } await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'add_step', sequence_id: seq.id, ...step }); setStep({ delay_hours: 24 }); reload() }
   const delStep = async (id: string) => { await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_step', id }); reload() }
   const enroll = async () => { if (!email.trim()) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'enroll', sequence_id: seq.id, email }) as Row; alert(r?.ok ? 'Enrolled' : `Failed: ${r?.error}`); setEmail(''); reload() }
+  const enrollAudience = async () => { if (!confirm('Enroll everyone matching this campaign\'s audience and activate the sequence?')) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'enroll_audience', sequence_id: seq.id }) as Row; alert(`Enrolled ${r?.enrolled ?? 0} contacts — sequence is now active.`); reload() }
   return (
     <Modal open onClose={onClose} title={`${seq.name} · steps`}>
       {(data?.steps || []).map((s, i) => (
@@ -319,9 +340,10 @@ function SequenceModal({ seq, templates, onClose }: { seq: Row; templates: Row[]
         <input className="a-input" type="number" style={{ width: 110 }} placeholder="wait hrs" value={step.delay_hours as number} onChange={(e) => setStep({ ...step, delay_hours: Number(e.target.value) })} />
         <Button onClick={addStep}>Add step</Button>
       </div>
-      <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 12, display: 'flex', gap: 8 }}>
-        <input className="a-input" placeholder="Enroll email…" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 12, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <input className="a-input" placeholder="Enroll one email…" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Button variant="ghost" onClick={enroll}>Enroll</Button>
+        <Button style={{ marginLeft: 'auto' }} onClick={enrollAudience}>Enroll target audience</Button>
       </div>
     </Modal>
   )

@@ -149,6 +149,23 @@ export async function enrollContact(sequenceId: string, ref: { contactId?: strin
   await db.from('comm_sequences').update({ enrolled: count || 0, updated_at: new Date().toISOString() }).eq('id', sequenceId)
   return { ok: !error, error: error?.message }
 }
+/* Enroll a sequence's whole target audience in one shot (bulk, dedup). */
+export async function enrollAudience(sequenceId: string, cap = 3000): Promise<{ enrolled: number }> {
+  const db = getSupabaseAdmin()
+  const { data: seq } = await db.from('comm_sequences').select('audience').eq('id', sequenceId).maybeSingle()
+  if (!seq) return { enrolled: 0 }
+  const { data: steps } = await db.from('comm_sequence_steps').select('delay_hours').eq('sequence_id', sequenceId).order('step_order').limit(1)
+  if (!steps?.length) return { enrolled: 0 }
+  const firstDelay = Number(steps[0].delay_hours || 0)
+  const audience = await resolveAudience((seq.audience as Audience) || {}, cap)
+  const nextRun = new Date(Date.now() + firstDelay * 3600000).toISOString()
+  const rows = audience.map((c) => ({ sequence_id: sequenceId, contact_id: c.id, contact_email: c.email.toLowerCase(), current_step: 0, next_run_at: nextRun }))
+  for (let i = 0; i < rows.length; i += 500) await db.from('comm_sequence_enrollments').upsert(rows.slice(i, i + 500), { onConflict: 'sequence_id,contact_email', ignoreDuplicates: true })
+  const { count } = await db.from('comm_sequence_enrollments').select('id', { count: 'exact', head: true }).eq('sequence_id', sequenceId)
+  await db.from('comm_sequences').update({ enrolled: count || 0, status: 'active', updated_at: new Date().toISOString() }).eq('id', sequenceId)
+  return { enrolled: rows.length }
+}
+
 export async function processSequences(limit = 60): Promise<{ sent: number; completed: number }> {
   const db = getSupabaseAdmin()
   const { data: due } = await db.from('comm_sequence_enrollments').select('*').eq('status', 'active').lte('next_run_at', new Date().toISOString()).limit(limit)

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { sanitizeText } from '@/lib/validation'
-import { countAudience, sendCampaign, enrollContact, reviewCampaign, campaignStats, campaignChecklist, type Audience } from '@/lib/comm/campaigns'
+import { countAudience, sendCampaign, enrollContact, enrollAudience, reviewCampaign, campaignStats, campaignChecklist, type Audience } from '@/lib/comm/campaigns'
+import { generateCampaign } from '@/lib/comm/campaign-ai'
 import { processQueue } from '@/lib/comm/engine'
 
 export const dynamic = 'force-dynamic'
@@ -72,6 +73,8 @@ export async function POST(req: NextRequest) {
   }
   if (action === 'delete_step') { await db.from('comm_sequence_steps').delete().eq('id', b?.id); return NextResponse.json({ ok: true }) }
   if (action === 'enroll') { return NextResponse.json(await enrollContact(String(b?.sequence_id), { contactId: b?.contact_id, email: b?.email })) }
+  if (action === 'enroll_audience') { return NextResponse.json({ ok: true, ...(await enrollAudience(String(b?.sequence_id))) }) }
+  if (action === 'ai_campaign') { if (!b?.brief) return NextResponse.json({ error: 'Describe the campaign' }, { status: 400 }); return NextResponse.json(await generateCampaign(sanitizeText(b.brief, 1500), actor)) }
 
   return NextResponse.json({ error: 'unknown action' }, { status: 400 })
 }

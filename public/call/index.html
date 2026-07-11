@@ -776,22 +776,16 @@ ul{list-style:none}
       <p class="lead">Answer a few short questions so we can prepare and make sure we can genuinely help. Then choose a time that suits you.</p>
       <div class="applyFounder"><img src="/public/images/founder.png" alt="Indrodip Ghosh" width="42" height="42" loading="lazy"><span><b>You'll be speaking with Indrodip</b><br>personally, not a sales rep.</span></div>
 
-      <!-- Application form (Typeform). On submit → the "choose your time" page. -->
-      <div id="tf-apply" style="width:100%;min-height:560px;border-radius:16px;overflow:hidden;"></div>
+      <!-- Application form (Typeform inline embed). On completion → choose-your-time. -->
+      <div data-tf-live="01KX955X4MK7G3DMA2Y2BEARV5" style="width:100%;min-height:560px;"></div>
       <script src="//embed.typeform.com/next/embed.js"></script>
       <script type="text/javascript">
-        (function () {
-          function boot() {
-            if (window.tf && window.tf.createWidget) {
-              window.tf.createWidget('01KX955X4MK7G3DMA2Y2BEARV5', {
-                container: document.getElementById('tf-apply'),
-                inlineOnMobile: true, opacity: 0, medium: 'the5th-call',
-                onSubmit: function () { window.location.href = '/chose-your-time'; }
-              });
-            } else { setTimeout(boot, 200); }
-          }
-          boot();
-        })();
+        // Redirect the parent page to the booking step when the form is submitted.
+        window.addEventListener('message', function (e) {
+          if (!e || !e.data || typeof e.origin !== 'string' || e.origin.indexOf('typeform.com') === -1) return;
+          var t = typeof e.data === 'string' ? e.data : (e.data.type || '');
+          if (String(t).indexOf('form-submit') !== -1) { window.location.href = '/chose-your-time'; }
+        });
       </script>
       <p class="applyFine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Free · By application only · No payment to apply · <b style="color:#fff;font-weight:600">We'll never spam you</b></p>
       <div class="avstack avstack--light" style="margin-top:24px">

@@ -287,8 +287,16 @@
       '.cw-badge{position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;border-radius:10px;background:var(--acc);color:#1a1206;font:700 11px/19px "Inter";text-align:center;padding:0 5px;box-shadow:0 2px 8px rgba(0,0,0,.4);animation:cwPulse 2.4s infinite;}',
       '@keyframes cwPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.5);}50%{box-shadow:0 0 0 6px rgba(201,168,76,0);}}',
       // window
-      '.cw-win{position:fixed;right:24px;bottom:96px;z-index:2147482500;width:448px;max-width:calc(100vw - 40px);height:min(700px,calc(100dvh - 120px));background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;color:var(--tx);opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .28s var(--sp),transform .34s var(--sp);}',
+      '.cw-win{position:fixed;right:24px;bottom:96px;z-index:2147482500;width:448px;max-width:calc(100vw - 40px);height:min(700px,calc(100dvh - 120px));background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;color:var(--tx);opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .28s var(--sp),transform .34s var(--sp),width .42s var(--sp),height .42s var(--sp);}',
       '.cw-win.cw-show{opacity:1;transform:none;pointer-events:auto;}',
+      // Reading mode — widen the window ~3x on desktop so long content (case
+      // studies, program pages) is comfortable to read; shrinks back on Back.
+      '@media(min-width:481px){',
+      '.cw-win.cw-wide{width:min(1180px,calc(100vw - 44px));height:min(860px,calc(100dvh - 64px));}',
+      '.cw-win.cw-wide .cw-article{max-width:940px;margin:0 auto;}',
+      '.cw-win.cw-wide .cw-art-body{max-width:760px;margin-left:auto;margin-right:auto;}',
+      '.cw-win.cw-wide .cw-richbody{font-size:15.5px;line-height:1.75;}',
+      '}',
       // Always-visible close inside the window — the reliable exit on mobile
       // (the launcher can sit behind a full-screen window). Hidden on desktop.
       '.cw-mclose{display:none;position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:2147482600;width:44px;height:44px;border-radius:50%;border:none;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .16s var(--sp);}',
@@ -483,6 +491,13 @@
       '.cw-cover{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;overflow:hidden;}',
       '.cw-cover::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 70% 10%,rgba(255,255,255,.12),transparent 60%);}',
       '.cw-cover-emoji{font-size:52px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4));position:relative;z-index:1;}',
+      // premium generative artwork (no image): glow orb + glass ring + glyph + grain
+      '.cw-cart{position:relative;}',
+      '.cw-cart::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:4px 4px;opacity:.5;mix-blend-mode:overlay;pointer-events:none;}',
+      '.cw-cart-orb{position:absolute;top:-45%;right:-28%;width:78%;height:160%;background:radial-gradient(circle,var(--cag,rgba(201,168,76,.3)),transparent 66%);pointer-events:none;}',
+      '.cw-cart-ring{position:absolute;left:50%;top:50%;width:126px;height:126px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid var(--ca,#C9A84C);opacity:.3;box-shadow:0 0 50px var(--cag,rgba(201,168,76,.3)) inset,0 0 28px var(--cag,rgba(201,168,76,.3));pointer-events:none;}',
+      '.cw-cart-glyph{position:relative;z-index:1;font-size:50px;line-height:1;color:#fff;filter:drop-shadow(0 8px 22px rgba(0,0,0,.55));}',
+      '.cw-cover-hero .cw-cart-glyph{opacity:.92;}',
       '.cw-cover-lg{aspect-ratio:16/8;border-radius:0;}',
       '.cw-feat-body{padding:18px;}',
       '.cw-feat-body h4{font:600 18px/1.25 "Inter";color:#fff;margin:0 0 4px;}',
@@ -708,7 +723,9 @@
       '.cw-kcat-ic svg{width:16px;height:16px;}',
       '.cw-kcat-t{font:600 13.5px "Inter";color:#fff;}',
       // community card
-      '.cw-community{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:20px;cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.28);transition:transform .18s var(--sp),border-color .18s;}',
+      '.cw-community{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:20px;cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.28);transition:transform .18s var(--sp),border-color .18s;overflow:hidden;}',
+      '.cw-cm-art{position:relative;margin:-20px -20px 16px;aspect-ratio:16/7;overflow:hidden;display:flex;align-items:center;justify-content:center;}',
+      '.cw-cm-art .cw-cov-img{width:100%;height:100%;object-fit:cover;}',
       '.cw-community:hover{transform:translateY(-2px);border-color:rgba(201,168,76,.25);}',
       '.cw-cm-head{display:flex;align-items:center;gap:13px;margin-bottom:14px;}',
       '.cw-cm-head h5{font:700 16px/1.2 "Inter";color:#fff;margin:0 0 2px;}',
@@ -1005,6 +1022,20 @@
 
   // ── Helpers ──
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // Accent hex → rgba (for generative-cover glows).
+  function hexA(hex, a) {
+    try { var h = String(hex).replace('#', ''); if (h.length === 3) h = h.replace(/(.)/g, '$1$1');
+      var r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'; } catch (e) { return 'rgba(201,168,76,' + a + ')'; }
+  }
+  // Premium generative cover — luxury gradient + glow orb + glass ring + glyph.
+  // Used whenever there's no uploaded image, so every product looks intentional.
+  function genCover(m, big) {
+    var ac = m.accent || '#C9A84C', grad = m.cover || 'linear-gradient(158deg,#2A1830,#160D1A 55%,#0D0D0D)';
+    return '<div class="cw-cover cw-cart' + (big ? ' cw-cover-lg' : '') + '" style="--ca:' + ac + ';--cag:' + hexA(ac, .32) + ';background:' + grad + '">'
+      + '<span class="cw-cart-orb"></span><span class="cw-cart-ring"></span>'
+      + '<span class="cw-cart-glyph">' + (m.emoji || '✦') + '</span><div class="cw-cover-grad"></div></div>';
+  }
   // Inline markdown → HTML (escaped): code, bold, italic, links.
   function mdInline(t) {
     t = esc(t);
@@ -1091,7 +1122,7 @@
   var PROGRAMS = {
     'fast-forward': {
       id: 'fastforward', type: 'hero', emoji: '🚀', badge: '🔥', category: 'Featured Program',
-      cover: 'linear-gradient(135deg,#3D2645,#7a4d2b)', coverImage: '/images/coaching-session.png',
+      cover: 'linear-gradient(158deg,#2A1830 0%,#3D2645 48%,#160D1A 100%)', coverImage: null, accent: '#C9A84C',
       title: 'Fast Forward', sub: 'Backed by a 100% Money-Back Guarantee',
       desc: "Build a scalable coaching or service business using proven systems, AI-powered workflows, modern marketing strategies, and direct implementation support. If you meet the guarantee requirements and don't achieve the agreed outcome, we'll refund your investment according to our policy.",
       features: ['Weekly Coaching', 'AI Tools', 'Sales Systems', 'Marketing Strategy', 'Funnel Templates', 'Lifetime Community'],
@@ -1102,7 +1133,7 @@
     },
     'the5th-ai': {
       id: 'the5th-ai', type: 'promotion', emoji: '🤖', badge: '✨', category: 'AI Assistant',
-      cover: 'linear-gradient(135deg,#141b2e,#3D2645)', coverImage: '/images/hero-ai.png',
+      cover: 'linear-gradient(158deg,#1A1330 0%,#2A1840 48%,#0D0D14 100%)', coverImage: null, accent: '#B98CD9',
       title: 'The5th AI', sub: 'Your complete marketing team, powered by AI',
       desc: 'Generate landing pages, sales funnels, email campaigns, webinar scripts, offers, ad copy, content calendars, business strategies, client proposals and much more — all within one intelligent workspace.',
       features: ['Marketing', 'Funnels', 'Content', 'Emails', 'Sales', 'Automation', 'AI Agents', 'Business Plans'],
@@ -1112,7 +1143,7 @@
     },
     'the-collective': {
       id: 'the-collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
-      cover: 'linear-gradient(135deg,#143826,#3D2645)', coverImage: '/images/live-coaching.png',
+      cover: 'linear-gradient(158deg,#14231D 0%,#2A1830 52%,#0D0D0D 100%)', coverImage: null, accent: '#C9A84C',
       title: 'The Collective', sub: 'Scale toward and past $10K/month',
       desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
       features: ['Group Coaching', 'Community 40+', 'Accountability', 'Live Sessions'],
@@ -1135,22 +1166,38 @@
           .catch(function () { return null; })
           .then(function (dProd) {
             var items = ((dProg && dProg.items) || []).concat((dProd && dProd.items) || []);
-            if (!items.length) return;
             items.forEach(function (it) {
               var data = it.data || {};
               PROGRAMS[it.slug] = {
                 id: it.slug, type: it.type === 'product' ? 'promotion' : 'hero',
                 emoji: data.emoji || '✦', badge: data.badge || '', category: it.category || '',
-                cover: data.cover || 'linear-gradient(135deg,#241528,#141b2e)', coverImage: it.cover_image || null,
+                cover: data.cover || 'linear-gradient(158deg,#2A1830,#160D1A 55%,#0D0D0D)', coverImage: it.cover_image || null, accent: data.accent || null,
                 title: it.title, sub: it.subtitle || '', desc: it.description || it.summary || '',
                 features: data.features || [], info: data.info || [], url: data.url || null,
                 primaryAction: data.primaryAction || { label: 'Learn More', kind: 'article', value: it.slug },
                 secondaryAction: data.secondaryAction || { label: 'Book Strategy Call', kind: 'seed', value: "I'd like to book a call with the team." }
               };
             });
-            if (mode === 'panels' && tab === 'home') showTab('home');
+            if (items.length && mode === 'panels' && tab === 'home') showTab('home');
+            loadPromoArt();   // apply uploaded artwork LAST so it always wins
           });
       });
+  }
+
+  // Homepage Promotions CMS → product artwork (image uploaded in
+  // /admin/cms/promos flows straight into these cards). Slugs match PROGRAMS.
+  function loadPromoArt() {
+    fetch('/api/homepage/promos').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || !d.promos) return;
+      var changed = false;
+      d.promos.forEach(function (pr) {
+        var p = PROGRAMS[pr.slug]; if (!p) return;
+        if (pr.image_url) { p.coverImage = pr.image_url; changed = true; }
+        if (pr.accent) { p.accent = pr.accent; changed = true; }
+        if (pr.gradient) { p.cover = pr.gradient; changed = true; }
+      });
+      if (changed && mode === 'panels' && tab === 'home') showTab('home');
+    }).catch(function () {});
   }
 
   // Data-driven feeds — empty until real content/CMS is connected.
@@ -1186,6 +1233,7 @@
   function renderPanels() {
     clearHomeTimers(); clearPh();
     mode = 'panels';
+    if (els.win) els.win.classList.remove('cw-wide');   // shrink back from reading mode
     if (tab === 'messages') tab = 'chat';
     els.win.innerHTML =
       '<div class="cw-scroll" id="cw-scroll"><div class="cw-view" id="cw-view"></div></div>' + navHtml();
@@ -1268,21 +1316,20 @@
     return '<span class="cw-badge2">' + esc(txt.trim()) + '</span>';
   }
   function coverHtml(m, big) {
-    var inner = m.coverImage
-      ? '<img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" />'
-      : '<span class="cw-cover-emoji">' + (m.emoji || '✦') + '</span>';
-    return '<div class="cw-cover' + (big ? ' cw-cover-lg' : '') + '"' + (m.coverImage ? '' : ' style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '>'
-      + inner + '<div class="cw-cover-grad"></div></div>';
+    if (m.coverImage) return '<div class="cw-cover' + (big ? ' cw-cover-lg' : '') + '"><img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /><div class="cw-cover-grad"></div></div>';
+    return genCover(m, big);
   }
   // Premium cover: image (with gradient + emoji fallback) and a branded
   // text overlay (eyebrow + title + subtitle) — never just an emoji.
   function heroCover(m, big) {
     var sub = m.sub || m.subtitle || '';
     var eyebrow = (m.badge ? m.badge + ' ' : '') + (m.category || '');
-    var fallback = "this.style.display='none';var e=this.parentNode.querySelector('.cw-cover-emoji');if(e)e.style.display='flex'";
-    return '<div class="cw-cover cw-cover-hero' + (big ? ' cw-cover-lg' : '') + '" style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '">'
-      + '<span class="cw-cover-emoji" style="display:none">' + (m.emoji || '✦') + '</span>'
-      + '<img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" onerror="' + fallback + '" />'
+    var ac = m.accent || '#C9A84C', grad = m.cover || 'linear-gradient(158deg,#2A1830,#160D1A 55%,#0D0D0D)';
+    var art = m.coverImage
+      ? '<img class="cw-cov-img" src="' + esc(m.coverImage) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" />'
+      : '<span class="cw-cart-orb"></span><span class="cw-cart-ring"></span><span class="cw-cart-glyph">' + (m.emoji || '✦') + '</span>';
+    return '<div class="cw-cover cw-cover-hero cw-cart' + (big ? ' cw-cover-lg' : '') + '" style="--ca:' + ac + ';--cag:' + hexA(ac, .32) + ';background:' + grad + '">'
+      + art
       + '<div class="cw-cover-grad"></div>'
       + '<div class="cw-cover-cap">'
       + (eyebrow.trim() ? '<span class="cw-cover-eyebrow">' + esc(eyebrow.trim()) + '</span>' : '')
@@ -1383,13 +1430,14 @@
   // The5th AI — a deliberately DIFFERENT layout from the Fast Forward card.
   function productCard(p) {
     var feats = (p.features || []).map(function (f) { return '<span class="cw-pchip">' + esc(f) + '</span>'; }).join('');
-    var fallback = "this.style.display='none';var e=this.parentNode.querySelector('.cw-cover-emoji');if(e)e.style.display='flex'";
-    var cover = p.coverImage
-      ? '<div class="cw-product-cover" data-ak="article" data-av="ai" role="button"><span class="cw-cover-emoji" style="display:none">' + p.emoji + '</span>'
-        + '<img class="cw-cov-img" src="' + esc(p.coverImage) + '" alt="" loading="lazy" onerror="' + fallback + '" /><div class="cw-cover-grad"></div>'
-        + '<div class="cw-cover-cap"><span class="cw-cover-eyebrow">' + esc((p.badge || '✨') + ' AI Product') + '</span>'
-        + '<h4 class="cw-cover-title">' + esc(p.title) + '</h4><span class="cw-cover-sub">' + esc(p.sub) + '</span></div></div>'
-      : '';
+    var ac = p.accent || '#B98CD9';
+    var art = p.coverImage
+      ? '<img class="cw-cov-img" src="' + esc(p.coverImage) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" />'
+      : '<span class="cw-cart-orb"></span><span class="cw-cart-ring"></span><span class="cw-cart-glyph">' + (p.emoji || '✦') + '</span>';
+    var cover = '<div class="cw-product-cover cw-cart" data-ak="article" data-av="ai" role="button" style="--ca:' + ac + ';--cag:' + hexA(ac, .32) + ';background:' + (p.cover || 'linear-gradient(158deg,#1A1330,#0D0D14 60%)') + '">'
+      + art + '<div class="cw-cover-grad"></div>'
+      + '<div class="cw-cover-cap"><span class="cw-cover-eyebrow">' + esc((p.badge || '✨') + ' AI Product') + '</span>'
+      + '<h4 class="cw-cover-title">' + esc(p.title) + '</h4><span class="cw-cover-sub">' + esc(p.sub) + '</span></div></div>';
     return '<div class="cw-product">'
       + '<div class="cw-product-glow"></div>' + cover
       + '<div class="cw-product-body"><div class="cw-pgrid">' + feats + '</div>'
@@ -1408,7 +1456,13 @@
 
   function communityCard() {
     var faces = ['carolina', 'natasha', 'benjamin'].map(function (k) { return '<span class="cw-cm-face">' + agentAva(k) + '</span>'; }).join('');
+    var p = getProgram('the-collective') || {};
+    var ac = p.accent || '#C9A84C';
+    var art = p.coverImage
+      ? '<div class="cw-cm-art"><img class="cw-cov-img" src="' + esc(p.coverImage) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /><div class="cw-cover-grad"></div></div>'
+      : '<div class="cw-cm-art cw-cart" style="--ca:' + ac + ';--cag:' + hexA(ac, .32) + ';background:' + (p.cover || 'linear-gradient(158deg,#14231D,#2A1830 52%,#0D0D0D)') + '"><span class="cw-cart-orb"></span><span class="cw-cart-ring"></span><span class="cw-cart-glyph">' + (p.emoji || '◆') + '</span><div class="cw-cover-grad"></div></div>';
     return '<div class="cw-community" data-ak="article" data-av="collective" tabindex="0" role="button">'
+      + art
       + '<div class="cw-cm-head"><div class="cw-card-ic">' + ICON.users + '</div>'
       + '<div><h5>The Collective</h5><p>Women 40+ building on their own terms</p></div></div>'
       + '<p class="cw-cm-desc">Ongoing coaching, accountability and a community that takes you toward — and past — consistent $10K months.</p>'
@@ -1496,13 +1550,6 @@
         : emptyState(ICON.spark, 'Client stories coming soon', 'Real results from women building with The5th, shared here shortly.'))
       + '</div>';
 
-    // 7) Video Library — horizontal (data-driven)
-    var videos = '<div class="cw-sect">' + sectionTitle('Video library')
-      + (VIDEOS.length
-        ? '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div>'
-        : emptyState(ICON.play, 'More content coming soon', 'Fresh videos and walkthroughs will appear here.'))
-      + '</div>';
-
     // 8) Upcoming Events (data-driven)
     var events = '<div class="cw-sect">' + sectionTitle('Upcoming events')
       + (EVENTS.length
@@ -1515,7 +1562,7 @@
     var newsletter = '<div class="cw-sect">' + newsletterCard() + '</div>';
     var footer = footerHtml();
 
-    return heroBlock + '<div class="cw-home">' + recent + featured + product + updates + kb + articles + success + videos + events + community + newsletter + footer + '</div>';
+    return heroBlock + '<div class="cw-home">' + recent + featured + product + updates + kb + articles + success + events + community + newsletter + footer + '</div>';
   }
 
   // ── Unified in-chat content viewer (Part 3D) — every CMS type ──
@@ -1575,6 +1622,7 @@
 
   function renderContentView(item, related) {
     mode = 'article';
+    if (els.win) els.win.classList.add('cw-wide');   // reading mode: comfortable width
     var d = item.data || {};
     var meta = TYPE_META[item.type] || { badge: item.type, ic: 'book' };
     var emoji = d.emoji ? d.emoji + ' ' : '';
@@ -1586,7 +1634,7 @@
       + (item.author ? '<span class="cw-cauthor">' + esc(item.author) + '</span>' : '');
     var typeTop = (item.type === 'program' || item.type === 'product')
       ? ((d.features && d.features.length ? '<ul class="cw-art-list">' + d.features.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + (d.info && d.info.length ? infoRow({ info: d.info }) : ''))
-      : (videoEmbed(d) + metricsHtml(d));
+      : metricsHtml(d);
 
     els.win.innerHTML =
       '<div class="cw-chatview"><div class="cw-artbar"><button class="cw-iconbtn" id="cw-artback" aria-label="Back">' + ICON.back + '</button>'
@@ -1643,6 +1691,7 @@
 
   function openContent(slug) {
     captureHomeScroll(); clearHomeTimers(); mode = 'article';
+    if (els.win) els.win.classList.add('cw-wide');   // widen as the reader loads
     var local = getProgram(slug);
     if (local) {
       renderContentView(programToItem(local), []);
@@ -1740,7 +1789,6 @@
     var out = '';
     if (ANNOUNCEMENTS.length) out += '<div class="cw-sect">' + sectionTitle('Updates') + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>';
     if (BLOG.length) out += '<div class="cw-sect">' + sectionTitle('Latest blog') + BLOG.map(function (b) { b.type = 'article'; return renderCard(b); }).join('') + '</div>';
-    if (VIDEOS.length) out += '<div class="cw-sect">' + sectionTitle('Videos') + '<div class="cw-hscroll">' + VIDEOS.map(function (v) { v.type = 'video'; return renderCard(v); }).join('') + '</div></div>';
     if (STORIES.length) out += '<div class="cw-sect">' + sectionTitle('Case studies') + STORIES.map(function (s) { s.type = 'casestudy'; return '<div style="margin-bottom:10px">' + renderCard(s) + '</div>'; }).join('') + '</div>';
     if (EVENTS.length) out += '<div class="cw-sect">' + sectionTitle('Events') + EVENTS.map(function (e) { e.type = 'promotion'; return renderCard(e); }).join('') + '</div>';
     if (!out) out = emptyState(ICON.compass, 'Discover is coming soon', 'Fresh blogs, videos, case studies and events will land here — stay tuned.',
@@ -1854,6 +1902,7 @@
   function renderChat() {
     clearHomeTimers(); clearThink();
     mode = 'chat';
+    if (els.win) els.win.classList.remove('cw-wide');   // chat uses the standard width
     lastMsgKey = null;
     var conv = activeConv();
     var cur = agentInfo((conv && conv.agent) || 'carolina');
@@ -2510,7 +2559,7 @@
     if (els.mclose) els.mclose.classList.toggle('cw-mshow', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
     if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); }
-    else { clearHomeTimers(); clearPh(); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
+    else { clearHomeTimers(); clearPh(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
   }
 
   // ── Proactive engagement (context-aware, trigger-driven, once/session) ──
@@ -2686,7 +2735,7 @@
     loadStore();
     visitCount = trackVisit();
     build();
-    loadPrograms();   // pull programs/products from the CMS Content API
+    loadPrograms();   // pull programs/products from CMS, then overlay Promotions-CMS artwork
     fetch(CONFIG_API).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       if (!d) { maybeShowPromo(); return; }
       if (d.avatar_url) cfg.avatar = d.avatar_url;

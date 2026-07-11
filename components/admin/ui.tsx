@@ -79,11 +79,25 @@ export function Avatar({ name, email, size = 38 }: { name?: string | null; email
 }
 
 // ── EmptyState ──
-export function EmptyState({ title, hint }: { title: string; hint?: string }) {
+export function EmptyState({ title, hint, icon = '✦', action }: { title: string; hint?: string; icon?: string; action?: React.ReactNode }) {
   return (
-    <div style={{ padding: '52px 24px', textAlign: 'center', color: T.muted }}>
-      <div style={{ fontSize: 15, fontWeight: 600, color: T.sub }}>{title}</div>
-      {hint && <div style={{ fontSize: 13, marginTop: 6 }}>{hint}</div>}
+    <div style={{ padding: '48px 24px', textAlign: 'center', color: T.muted, animation: 'riseIn .3s cubic-bezier(.22,1,.36,1)' }}>
+      <div style={{ width: 52, height: 52, borderRadius: 16, margin: '0 auto 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: T.green, background: 'linear-gradient(160deg,#eef7f1,#f6faf7)', border: `1px solid ${T.border}` }}>{icon}</div>
+      <div style={{ fontSize: 15.5, fontWeight: 700, color: T.ink }}>{title}</div>
+      {hint && <div style={{ fontSize: 13, marginTop: 6, maxWidth: 320, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>{hint}</div>}
+      {action && <div style={{ marginTop: 16 }}>{action}</div>}
+    </div>
+  )
+}
+
+/* Premium, non-technical error state with retry — nothing should feel broken. */
+export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
+  return (
+    <div style={{ padding: '44px 24px', textAlign: 'center', color: T.muted }}>
+      <div style={{ width: 52, height: 52, borderRadius: 16, margin: '0 auto 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>!</div>
+      <div style={{ fontSize: 15, fontWeight: 700, color: T.ink }}>Something went wrong</div>
+      <div style={{ fontSize: 13, marginTop: 6 }}>{message || 'We couldn’t load this right now.'}</div>
+      {onRetry && <button className="a-btn a-btn-ghost" style={{ marginTop: 14 }} onClick={onRetry}>Try again</button>}
     </div>
   )
 }

@@ -47,10 +47,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const pathname = usePathname() || '/admin'
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
+  const [sideOpen, setSideOpen] = useState(false)
 
   useEffect(() => {
     fetch('/api/admin/me').then((r) => setAuthed(r.ok)).catch(() => setAuthed(false)).finally(() => setReady(true))
   }, [])
+  useEffect(() => { setSideOpen(false) }, [pathname]) // close the mobile drawer on navigation
 
   if (!ready) return <div style={{ minHeight: '100vh', background: T.ink }}><style>{ADMIN_CSS}</style></div>
   if (!authed) return <><style>{ADMIN_CSS}</style><LoginScreen onLogin={() => setAuthed(true)} /></>
@@ -63,7 +65,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   return (
     <div className="ws-layout">
       <style>{ADMIN_CSS}</style>
-      <aside className="ws-side">
+      {sideOpen && <div className="ws-side-overlay" onClick={() => setSideOpen(false)} />}
+      <aside className={`ws-side${sideOpen ? ' open' : ''}`}>
         <div style={{ padding: '18px 20px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ fontSize: 19, fontWeight: 800, color: '#fff' }}>The<span style={{ color: T.green2 }}>5th</span></span>
           <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', letterSpacing: '.08em', textTransform: 'uppercase' }}>Workspace</span>
@@ -73,7 +76,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <div key={gi} style={{ marginBottom: 6 }}>
               {group.section && <div style={{ padding: '12px 24px 5px', fontSize: 10, fontWeight: 700, letterSpacing: '.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{group.section}</div>}
               {group.items.map((n) => (
-                <Link key={n.href} href={n.href} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
+                <Link key={n.href} href={n.href} onClick={() => setSideOpen(false)} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
                   <span className="ws-nav-ico" style={{ fontSize: 15, textAlign: 'center' }}>{n.icon}</span>
                   {n.label}
                 </Link>
@@ -86,6 +89,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
       <div className="ws-main">
         <header className="ws-topbar">
+          <button className="ws-hamburger" aria-label="Open menu" onClick={() => setSideOpen(true)}><span /></button>
           <GlobalSearch />
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <CoachChat />

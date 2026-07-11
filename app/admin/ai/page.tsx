@@ -39,6 +39,8 @@ export default function CommandAiPage() {
   const loadThreads = () => fetch('/api/admin/ai').then((r) => r.ok ? r.json() : null).then((d) => d && setThreads(d.threads || [])).catch(() => {})
   useEffect(() => { loadThreads() }, [])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, busy])
+  // Deep-link: /admin/ai?q=... auto-asks (e.g. from the Command Center).
+  useEffect(() => { const q = new URLSearchParams(window.location.search).get('q'); if (q) { history.replaceState(null, '', '/admin/ai'); send(q) } }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openThread = async (id: string) => {
     setThreadId(id)

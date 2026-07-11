@@ -3,6 +3,7 @@ import { syncCalcomBookings, syncFathomRecordings } from '@/lib/meetings'
 import { runAllSyncs } from '@/lib/integrations'
 import { refreshContentStats } from '@/lib/content-attribution'
 import { whopSyncProducts, whopSyncMembers } from '@/lib/connectors/whop'
+import { syncCoachingIntel } from '@/lib/coaching-intel'
 import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -22,6 +23,9 @@ export async function GET(req: NextRequest) {
   const whopProducts = await whopSyncProducts().catch((e) => ({ error: String(e) }))
   const whopMembers = await whopSyncMembers().catch((e) => ({ error: String(e) }))
   const content = await refreshContentStats().catch((e) => ({ error: String(e) }))
+  // Analyze new Fathom coaching/sales calls into structured coaching intelligence
+  // (batched + resumable; safely no-ops without ANTHROPIC_API_KEY).
+  const coaching = await syncCoachingIntel(20).catch((e) => ({ error: String(e) }))
   const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, alerts })
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, alerts })
 }

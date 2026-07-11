@@ -12,8 +12,8 @@ const SUGGESTIONS = [
   "Give me today's executive briefing",
   'Who should I follow up with today?',
   'What are my biggest revenue opportunities right now?',
-  'Which objections came up most in recent calls?',
-  'Prepare me for my upcoming strategy calls',
+  'How are my sales skills developing over the last few months?',
+  'Is my coaching program improving? Show the trend.',
   'What happened in my business this week?',
 ]
 

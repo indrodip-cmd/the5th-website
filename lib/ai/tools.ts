@@ -8,6 +8,7 @@ import { searchContacts, resolveContact } from '@/lib/crm'
 import { getRevenueSummary, getBalances } from '@/lib/revenue'
 import { listBoard } from '@/lib/sales'
 import { contactContext } from '@/lib/ai-coach'
+import { coachingTrends, recentCoachingIntel } from '@/lib/coaching-intel'
 
 type Row = Record<string, unknown>
 export interface Tool { def: Anthropic.Tool; run: (input: Row) => Promise<string> }
@@ -88,6 +89,14 @@ export const TOOLS: Tool[] = [
       if (q) mq = mq.or(`name.ilike.%${q}%,email.ilike.%${q}%`)
       const { data } = await mq; return j(data || [])
     },
+  },
+  {
+    def: { name: 'coaching_trends', description: "Trends across all analyzed Fathom coaching/sales calls: coaching-quality & sales-execution scores by month, most common coaching improvement areas, most common client objections, and recent client wins. Use this to answer how the program is improving or how sales skills are developing over time.", input_schema: { type: 'object', properties: {} } },
+    run: async () => j(await coachingTrends()),
+  },
+  {
+    def: { name: 'recent_coaching_calls', description: 'Most recent analyzed coaching/sales calls with type, coaching-quality & sales scores, and a short summary.', input_schema: { type: 'object', properties: { limit: { type: 'number' } } } },
+    run: async (i) => j(await recentCoachingIntel(Math.min(Number(i.limit) || 15, 40))),
   },
   {
     def: { name: 'business_snapshot', description: 'A live snapshot: new leads (7d), calls today, hot leads, open pipeline value, upcoming meetings, month revenue.', input_schema: { type: 'object', properties: {} } },

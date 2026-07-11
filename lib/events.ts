@@ -188,6 +188,9 @@ export async function emitEvent(type: string, data: Ctx = {}): Promise<void> {
         if (lead) ctx = { ...lead, ...ctx }
       }
       await runWorkflows(type, ctx)
+      // Also dispatch to the Automation Studio (3I.6) graph workflows. Dynamic
+      // import breaks the events↔engine↔crm load cycle.
+      try { const { dispatchEvent } = await import('@/lib/automation/engine'); await dispatchEvent(type, ctx) } catch (e) { console.error('studio dispatch failed', e) }
     } catch (e) {
       console.error('emitEvent failed', type, e)
     }

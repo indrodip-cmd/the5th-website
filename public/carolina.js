@@ -289,12 +289,13 @@
       // window
       '.cw-win{position:fixed;right:24px;bottom:96px;z-index:2147482500;width:448px;max-width:calc(100vw - 40px);height:min(700px,calc(100dvh - 120px));background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;color:var(--tx);opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .28s var(--sp),transform .34s var(--sp),width .42s var(--sp),height .42s var(--sp);}',
       '.cw-win.cw-show{opacity:1;transform:none;pointer-events:auto;}',
-      // Reading mode — widen the window ~3x on desktop so long content (case
-      // studies, program pages) is comfortable to read; shrinks back on Back.
-      '@media(min-width:481px){',
-      '.cw-win.cw-wide{width:min(1180px,calc(100vw - 44px));height:min(860px,calc(100dvh - 64px));}',
-      '.cw-win.cw-wide .cw-article{max-width:940px;margin:0 auto;}',
-      '.cw-win.cw-wide .cw-art-body{max-width:760px;margin-left:auto;margin-right:auto;}',
+      // Reading mode (DESKTOP ONLY, >=768px) — widen the window for comfortable
+      // reading of long content. WIDTH ONLY: height stays the same so the top /
+      // back button never clip off the viewport. Mobile is untouched.
+      '@media(min-width:768px){',
+      '.cw-win.cw-wide{width:min(880px,calc(100vw - 48px));}',
+      '.cw-win.cw-wide .cw-article{max-width:820px;margin:0 auto;}',
+      '.cw-win.cw-wide .cw-art-body{max-width:720px;margin-left:auto;margin-right:auto;}',
       '.cw-win.cw-wide .cw-richbody{font-size:15.5px;line-height:1.75;}',
       '}',
       // Always-visible close inside the window — the reliable exit on mobile
@@ -528,7 +529,7 @@
       '.cw-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .2s,width .2s;}',
       '.cw-dots span.on{background:var(--acc);width:18px;border-radius:3px;}',
       // article viewer
-      '.cw-artbar{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd);background:rgba(13,13,13,.9);backdrop-filter:blur(20px);}',
+      '.cw-artbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd);background:rgba(13,13,13,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}',
       '.cw-artbar>span{flex:1;font:600 15px "Inter";color:#fff;}',
       '.cw-article{}',
       '.cw-slidein{animation:cwSlide .34s var(--sp);}',
@@ -2562,6 +2563,28 @@
     else { clearHomeTimers(); clearPh(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
   }
 
+  // ── Soft notification chime (WebAudio; no asset). Only after a real user
+  // gesture has unlocked audio, and only if notifications aren't muted. ──
+  var _actx = null, audioReady = false;
+  function unlockAudio() {
+    if (audioReady) return;
+    try { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; _actx = _actx || new AC(); if (_actx.state === 'suspended') _actx.resume(); audioReady = true; } catch (e) {}
+  }
+  function playChime() {
+    if (!audioReady || !_actx || !notifEnabled() || REDUCE) return;
+    try {
+      var now = _actx.currentTime;
+      [[880, 0], [1174.66, 0.13]].forEach(function (n) {
+        var o = _actx.createOscillator(), g = _actx.createGain();
+        o.type = 'sine'; o.frequency.value = n[0];
+        g.gain.setValueAtTime(0, now + n[1]);
+        g.gain.linearRampToValueAtTime(0.06, now + n[1] + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + n[1] + 0.32);
+        o.connect(g); g.connect(_actx.destination); o.start(now + n[1]); o.stop(now + n[1] + 0.34);
+      });
+    } catch (e) {}
+  }
+
   // ── Proactive engagement (context-aware, trigger-driven, once/session) ──
   var PROACTIVE_FLAG = 'the5th_carolina_proactive_shown';
   // Per-page greetings — curiosity-first, never pushy. Admin can override any of
@@ -2633,7 +2656,7 @@
       + '<button class="cw-promo-no">Not now</button></div>');
     document.body.appendChild(p); els.promo = p; applyTheme();
     requestAnimationFrame(function () { p.classList.add('cw-show'); });
-    pulseLauncher();
+    pulseLauncher(); playChime();
     // brief typing beat → message (feels like a real person, not a popup ad)
     setTimeout(function () {
       if (!p.parentNode) return;
@@ -2657,13 +2680,13 @@
     try { if (localStorage.getItem(dkey) === '1') return; } catch (e) {}    // remembered dismissal
     promoScheduled = true;
 
-    var MIN = 6000, fired = false, startedAt = Date.now();
-    var baseDelay = Math.max(MIN, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 10) * 1000));
+    var MIN = 2500, fired = false, startedAt = Date.now();
+    var baseDelay = Math.max(4000, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 9) * 1000));
     function fire() { if (fired || isOpen) return; fired = true; cleanup(); showPromoBubble(g, dkey); }
     function cleanup() { clearTimeout(baseT); clearTimeout(idleT); window.removeEventListener('scroll', onScroll); document.removeEventListener('mousemove', onAct); document.removeEventListener('keydown', onAct); document.removeEventListener('touchstart', onAct); }
-    var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay
-    var idleT;                                  // Smart trigger 2: 30s idle
-    function armIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (Date.now() - startedAt >= MIN) fire(); }, 30000); }
+    var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay (fallback)
+    var idleT;                                  // Smart trigger 2: 5s idle
+    function armIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (Date.now() - startedAt >= MIN) fire(); }, 5000); }
     function onAct() { armIdle(); }
     armIdle();
     document.addEventListener('mousemove', onAct, { passive: true }); document.addEventListener('keydown', onAct); document.addEventListener('touchstart', onAct, { passive: true });
@@ -2694,6 +2717,8 @@
     mclose.addEventListener('click', function () { toggle(false); });
     // ESC closes — never trap the user.
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) { e.preventDefault(); toggle(false); } });
+    // Unlock the notification chime on the first real user gesture (autoplay policy).
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, unlockAudio, { passive: true }); });
     // Keyboard-safe composer on mobile: track the visual viewport so the window
     // shrinks to the visible area instead of hiding the input behind the keyboard.
     if (window.visualViewport) {
@@ -2740,7 +2765,12 @@
       if (!d) { maybeShowPromo(); return; }
       if (d.avatar_url) cfg.avatar = d.avatar_url;
       if (d.greeting) cfg.greeting = d.greeting;
-      if (d.proactive) cfg.proactive = Object.assign({ enabled: true, delay: 10 }, d.proactive);
+      if (d.proactive) {
+        cfg.proactive = Object.assign({ enabled: true, delay: 10 }, d.proactive);
+        // The context-aware greeting engine is independent of the legacy
+        // lead-magnet toggle — keep it ON unless explicitly turned off.
+        cfg.proactive.enabled = d.proactive.greetings_off ? false : true;
+      }
       if (Array.isArray(d.agents)) {
         d.agents.forEach(function (a) { if (a && a.key) cfg.agents[a.key] = { name: a.name, role: a.role, avatar: a.avatar_url }; });
       }

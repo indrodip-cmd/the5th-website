@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { Resend } from 'resend'
 import { getSecret, hasSecret } from '@/lib/comm/config'
 
-export interface SendInput { to: string; from: string; replyTo?: string; subject?: string; html?: string; text?: string; tags?: string[] }
+export interface SendInput { to: string; from: string; replyTo?: string; subject?: string; html?: string; text?: string; tags?: string[]; listUnsubscribe?: string }
 export interface SendResult { ok: boolean; id?: string; error?: string }
 export interface WebhookEvent { providerMessageId?: string; event: string; to?: string }
 export interface Provider {
@@ -50,10 +50,14 @@ const resend: Provider = {
       // header (Gmail/Yahoo weigh both heavily for inbox placement).
       const html = i.html || i.text || ''
       const text = i.text && i.text !== i.html ? i.text : htmlToText(html)
-      const unsub = `mailto:${fromEmail(i.from)}?subject=unsubscribe`
+      const mailto = `mailto:${fromEmail(i.from)}?subject=unsubscribe`
+      // RFC-8058 one-click unsubscribe (Gmail/Yahoo bulk requirement): https URL
+      // first, plus List-Unsubscribe-Post so providers POST it directly.
+      const headers: Record<string, string> = i.listUnsubscribe
+        ? { 'List-Unsubscribe': `<${i.listUnsubscribe}>, <${mailto}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' }
+        : { 'List-Unsubscribe': `<${mailto}>` }
       const r = await client.emails.send({
-        from: i.from, to: i.to, subject: i.subject || '', html, text, replyTo: i.replyTo,
-        headers: { 'List-Unsubscribe': `<${unsub}>` },
+        from: i.from, to: i.to, subject: i.subject || '', html, text, replyTo: i.replyTo, headers,
         tags: (i.tags || []).map((t) => ({ name: 'tag', value: t })),
       })
       if (r.error) return { ok: false, error: r.error.message }

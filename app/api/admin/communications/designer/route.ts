@@ -53,7 +53,8 @@ export async function POST(req: NextRequest) {
   }
   if (action === 'preview') {
     const brand = await getBrand()
-    const vars = PERSONAS[b?.persona as string] || undefined
+    const base = PERSONAS[b?.persona as string]
+    const vars = base ? { ...base, unsubscribe_url: '#unsubscribe' } : undefined
     return NextResponse.json({ html: renderEmail(b?.design || { blocks: [] }, brand, vars) })
   }
   if (action === 'save') {

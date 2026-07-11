@@ -5,6 +5,7 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { PROVIDERS, getProvider } from '@/lib/comm/providers'
 import { emitEvent } from '@/lib/events'
+import { isUnsubscribed, unsubscribeUrl } from '@/lib/comm/unsubscribe'
 
 type Row = Record<string, unknown>
 const MAX_ATTEMPTS = 3
@@ -44,7 +45,13 @@ export async function sendMessage(m: SendMessage): Promise<{ id: string | null; 
   const channel = m.channel || 'email'
   if (!m.to) return { id: null, status: 'failed', error: 'no recipient' }
   const contact = await contactForRecipient(m)
-  const vars: Row = { name: (contact?.name as string) || '', first_name: String(contact?.name || '').split(' ')[0] || '', email: (contact?.email as string) || m.to }
+  const recipEmail = (contact?.email as string) || (channel === 'email' ? m.to : (m.contactEmail || ''))
+  const vars: Row = { name: (contact?.name as string) || '', first_name: String(contact?.name || '').split(' ')[0] || '', email: (contact?.email as string) || m.to, unsubscribe_url: recipEmail ? unsubscribeUrl(recipEmail) : '#' }
+  // Honor the suppression list — never email someone who unsubscribed.
+  if (channel === 'email' && recipEmail && m.source !== 'system' && await isUnsubscribed(recipEmail)) {
+    const { data } = await db.from('comm_messages').insert({ channel, direction: 'outbound', to_addr: m.to, subject: m.subject || null, status: 'suppressed', contact_id: (contact?.id as string) || null, contact_email: recipEmail, source: m.source || 'manual', error: 'recipient unsubscribed' }).select('id').single()
+    return { id: (data?.id as string) || null, status: 'suppressed' }
+  }
   const sender = m.from ? { from: m.from, replyTo: m.replyTo } : await defaultSender()
   const scheduled = m.scheduledAt && new Date(m.scheduledAt).getTime() > Date.now()
   const toAddr = channel === 'whatsapp' && !m.to.startsWith('whatsapp:') ? `whatsapp:${m.to}` : m.to
@@ -76,7 +83,7 @@ export async function deliver(id: string): Promise<{ status: string; error?: str
   for (const c of candidates) {
     if (!(await c.adapter!.isConfigured())) { lastErr = `${c.adapter!.slug} not configured`; continue }
     if (await overLimit(c.row as Row)) { lastErr = `${c.adapter!.slug} rate limit reached`; continue }
-    const r = await c.adapter!.send({ to: msg.to_addr as string, from: msg.from_addr as string, replyTo: (msg.reply_to as string) || undefined, subject: (msg.subject as string) || undefined, html: msg.channel === 'email' ? (msg.body as string) : undefined, text: msg.body as string, tags: (msg.tags as string[]) || [] })
+    const r = await c.adapter!.send({ to: msg.to_addr as string, from: msg.from_addr as string, replyTo: (msg.reply_to as string) || undefined, subject: (msg.subject as string) || undefined, html: msg.channel === 'email' ? (msg.body as string) : undefined, text: msg.body as string, tags: (msg.tags as string[]) || [], listUnsubscribe: msg.channel === 'email' && msg.contact_email ? unsubscribeUrl(msg.contact_email as string) : undefined })
     if (r.ok) {
       await db.from('comm_messages').update({ status: 'sent', provider: c.adapter!.slug, provider_message_id: r.id || null, sent_at: new Date().toISOString(), attempts: Number(msg.attempts || 0) + 1, error: null, updated_at: new Date().toISOString() }).eq('id', id)
       await logTimeline(msg, c.adapter!.slug)

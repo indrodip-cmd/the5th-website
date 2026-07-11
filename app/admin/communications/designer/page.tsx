@@ -5,11 +5,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { T, Card, Button, Modal, adminSend } from '@/components/admin/ui'
+import { BLOCK_DEFS, defaultBlock as libDefaultBlock, type Block } from '@/lib/email/render'
 
 type Row = Record<string, unknown>
-interface Block { id: string; type: string; props: Row }
-interface Def { type: string; label: string; icon: string; group: string; defaults: Row }
-const TEXTAREA_KEYS = new Set(['text', 'subtitle', 'description', 'quote', 'features', 'items', 'leftText', 'rightText', 'code'])
+const TEXTAREA_KEYS = new Set(['text', 'subtitle', 'description', 'quote', 'features', 'items', 'leftText', 'rightText', 'code', 'c1', 'c2', 'c3'])
 const NUM_KEYS = new Set(['size', 'height', 'width', 'radius'])
 const uid = () => 'b' + Math.random().toString(36).slice(2, 8)
 
@@ -60,7 +59,7 @@ function Designer({ templateId }: { templateId: string | null }) {
   }, [design, persona])
   useEffect(() => { renderPreview() }, [renderPreview])
 
-  const addBlock = (type: string) => { const nb = { ...defaultBlock(type), id: uid() }; setBlocks((bs) => { const i = sel ? bs.findIndex((b) => b.id === sel) : bs.length - 1; const arr = [...bs]; arr.splice(i + 1, 0, nb); return arr }); setSel(nb.id) }
+  const addBlock = (type: string) => { const nb = { ...libDefaultBlock(type), id: uid() }; setBlocks((bs) => { const i = sel ? bs.findIndex((b) => b.id === sel) : bs.length - 1; const arr = [...bs]; arr.splice(i + 1, 0, nb); return arr }); setSel(nb.id) }
   const update = (bid: string, props: Row) => setBlocks((bs) => bs.map((b) => b.id === bid ? { ...b, props } : b))
   const remove = (bid: string) => setBlocks((bs) => bs.filter((b) => b.id !== bid))
   const dup = (bid: string) => setBlocks((bs) => { const i = bs.findIndex((b) => b.id === bid); if (i < 0) return bs; const arr = [...bs]; arr.splice(i + 1, 0, { ...bs[i], id: uid() }); return arr })
@@ -80,9 +79,22 @@ function Designer({ templateId }: { templateId: string | null }) {
     finally { setBusy('') }
   }
   const sendTest = async () => { const to = prompt('Send test email to:'); if (!to) return; const r = await adminSend('/api/admin/communications/designer', 'POST', { action: 'send_test', to, subject, design }) as Row; alert(r?.ok ? 'Sent — check your inbox.' : `Failed: ${(r?.result as Row)?.error || ''}`) }
+  const download = (content: string, filename: string, mime: string) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([content], { type: mime })); a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000) }
+  const exportHtml = async () => { const r = await adminSend('/api/admin/communications/designer', 'POST', { action: 'preview', design, persona: '' }) as Row; download((r?.html as string) || html, `${name || 'email'}.html`, 'text/html') }
+  const exportJson = () => download(JSON.stringify({ name, subject, category, design }, null, 2), `${name || 'email'}.json`, 'application/json')
+  const importHtml = () => { const code = prompt('Paste HTML to import as a block:'); if (code) { setBlocks((bs) => [...bs, { ...libDefaultBlock('html'), id: uid(), props: { code } }]) } }
 
   const selBlock = blocks.find((b) => b.id === sel)
   const score = quality?.score as number | undefined
+  // Lightweight pre-publish accessibility check (complements the AI review).
+  const a11y = useMemo(() => {
+    const issues: string[] = []
+    const noAlt = blocks.filter((b) => b.type === 'image' && !b.props.alt).length
+    if (noAlt) issues.push(`${noAlt} image(s) missing alt text`)
+    if (!blocks.some((b) => b.type === 'heading')) issues.push('No heading — add structure for screen readers')
+    if (!blocks.some((b) => ['button', 'cta', 'pricing', 'product', 'appointment', 'ai_recommendation'].includes(b.type))) issues.push('No clear call-to-action')
+    return issues
+  }, [blocks])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 116px)' }}>
@@ -95,7 +107,13 @@ function Designer({ templateId }: { templateId: string | null }) {
         {typeof score === 'number' && <span className="a-pill" style={{ background: score >= 80 ? '#dcfce7' : score >= 60 ? '#fef3c7' : '#fee2e2', color: score >= 80 ? '#16a34a' : score >= 60 ? '#d97706' : '#dc2626', cursor: 'pointer' }} onClick={() => setShowVersions(false)}>Score {score}</span>}
         <Button variant="ghost" onClick={() => setShowGen(true)}>✦ AI</Button>
         <Button variant="ghost" disabled={busy === 'review'} onClick={review}>{busy === 'review' ? 'Reviewing…' : 'Review'}</Button>
-        <Button variant="ghost" onClick={sendTest}>Test</Button>
+        {id && <Button variant="ghost" onClick={() => setShowVersions(true)}>History</Button>}
+        <details style={{ position: 'relative' }}>
+          <summary style={{ listStyle: 'none', cursor: 'pointer' }}><span className="a-pill" style={{ background: '#eef2f0', color: T.sub }}>⋯</span></summary>
+          <div style={{ position: 'absolute', right: 0, zIndex: 10, marginTop: 4, background: '#fff', border: `1px solid ${T.border}`, borderRadius: 10, boxShadow: '0 10px 30px rgba(0,0,0,.15)', padding: 6, minWidth: 150 }}>
+            {[['Export HTML', exportHtml], ['Export JSON', exportJson], ['Import HTML', importHtml], ['Send test', sendTest]].map(([l, fn]) => <button key={l as string} onClick={() => (fn as () => void)()} style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', background: 'none', padding: '7px 9px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: T.text }}>{l as string}</button>)}
+          </div>
+        </details>
         <Button disabled={!!busy} onClick={() => save(false)}>{busy === 'save' ? 'Saving…' : 'Save'}</Button>
         <Button disabled={!!busy} onClick={() => save(true)}>{busy === 'publish' ? 'Publishing…' : 'Publish'}</Button>
       </div>
@@ -136,6 +154,10 @@ function Designer({ templateId }: { templateId: string | null }) {
             <div style={{ fontSize: 11.5, color: T.sub, marginBottom: 6 }}>{quality.summary as string}</div>
             {((quality.suggestions as string[]) || []).slice(0, 4).map((s, i) => <div key={i} style={{ fontSize: 11.5, color: T.sub, display: 'flex', gap: 5 }}><span style={{ color: T.green }}>•</span>{s}</div>)}
           </div>}
+          {a11y.length > 0 && <div style={{ marginBottom: 12, padding: 10, borderRadius: 10, background: '#fffdf6', border: '1px solid #f0e2b8' }}>
+            <div style={{ fontSize: 11.5, fontWeight: 700, color: '#a87b1a', marginBottom: 4 }}>♿ Accessibility ({a11y.length})</div>
+            {a11y.map((s, i) => <div key={i} style={{ fontSize: 11.5, color: '#8a6d2a' }}>• {s}</div>)}
+          </div>}
           <div style={{ fontSize: 11, fontWeight: 700, color: T.muted, textTransform: 'uppercase', marginBottom: 6 }}>Blocks ({blocks.length})</div>
           {blocks.map((b, i) => (
             <div key={b.id} onClick={() => setSel(b.id)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 8px', borderRadius: 8, marginBottom: 4, cursor: 'pointer', border: `1px solid ${sel === b.id ? T.green2 : T.border}`, background: sel === b.id ? '#eef7f1' : '#fff' }}>
@@ -161,7 +183,25 @@ function Designer({ templateId }: { templateId: string | null }) {
       </div>
 
       {showGen && <GenModal onClose={() => setShowGen(false)} onDone={(t) => { setName(t.name as string || name); setSubject(t.subject as string || subject); setBlocks(((t.design as Row)?.blocks as Block[] || []).map((b) => ({ ...b, id: uid() }))); setShowGen(false) }} />}
+      {showVersions && id && <VersionsModal templateId={id} onClose={() => setShowVersions(false)} onRestored={() => { setShowVersions(false); window.location.reload() }} />}
     </div>
+  )
+}
+
+function VersionsModal({ templateId, onClose, onRestored }: { templateId: string; onClose: () => void; onRestored: () => void }) {
+  const [versions, setVersions] = useState<Row[]>([])
+  useEffect(() => { fetch(`/api/admin/communications/designer?view=versions&id=${templateId}`).then((r) => r.json()).then((d) => setVersions(d.versions || [])) }, [templateId])
+  const restore = async (vid: string) => { if (!confirm('Restore this version? Current unsaved changes will be replaced.')) return; await adminSend('/api/admin/communications/designer', 'POST', { action: 'restore_version', version_id: vid }); onRestored() }
+  return (
+    <Modal open onClose={onClose} title="Version history">
+      {versions.length === 0 ? <div style={{ fontSize: 13, color: T.sub }}>No published versions yet. Publish to snapshot a version.</div> : versions.map((v) => (
+        <div key={v.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0', borderBottom: `1px solid ${T.border}` }}>
+          <span style={{ flex: 1, fontSize: 13, color: T.ink }}>v{v.version as number} · {v.name as string}</span>
+          <span style={{ fontSize: 11.5, color: T.muted }}>{new Date(v.created_at as string).toLocaleDateString()}</span>
+          <Button variant="ghost" onClick={() => restore(v.id as string)}>Restore</Button>
+        </div>
+      ))}
+    </Modal>
   )
 }
 const mini: React.CSSProperties = { border: 'none', background: '#f1f3f2', width: 20, height: 20, borderRadius: 5, cursor: 'pointer', color: '#6b7280', fontSize: 11 }
@@ -179,24 +219,3 @@ function GenModal({ onClose, onDone }: { onClose: () => void; onDone: (t: Row) =
   )
 }
 
-// Block catalog (mirrors lib/email/render.ts BLOCK_DEFS for the palette + defaults).
-const BLOCK_DEFS: Def[] = [
-  { type: 'heading', label: 'Heading', icon: 'H', group: 'Basic', defaults: { text: 'Your headline here', size: 28, align: 'center' } },
-  { type: 'text', label: 'Paragraph', icon: '¶', group: 'Basic', defaults: { text: 'Write your message here. Use {{first_name}} to personalize.', size: 15, align: 'left' } },
-  { type: 'button', label: 'Button', icon: '▭', group: 'Basic', defaults: { text: 'Learn more', url: 'https://the5th.co', align: 'center' } },
-  { type: 'image', label: 'Image', icon: '🖼', group: 'Basic', defaults: { src: '', alt: '', url: '', width: 100 } },
-  { type: 'divider', label: 'Divider', icon: '—', group: 'Basic', defaults: {} },
-  { type: 'spacer', label: 'Spacer', icon: '⇕', group: 'Basic', defaults: { height: 24 } },
-  { type: 'list', label: 'List', icon: '≡', group: 'Basic', defaults: { items: 'First point\nSecond point\nThird point' } },
-  { type: 'quote', label: 'Quote', icon: '❝', group: 'Basic', defaults: { text: 'A short, powerful quote.', author: '' } },
-  { type: 'columns', label: 'Two columns', icon: '▥', group: 'Layout', defaults: { leftText: 'Left column', rightText: 'Right column' } },
-  { type: 'cta', label: 'CTA banner', icon: '★', group: 'Premium', defaults: { title: 'Ready to take the next step?', subtitle: 'Book a free strategy call with the team.', buttonText: 'Book a call', buttonUrl: 'https://the5th.co/call' } },
-  { type: 'pricing', label: 'Pricing card', icon: '$', group: 'Premium', defaults: { title: 'Fast Forward', price: '$', period: '5-month program', features: 'Weekly 1:1 coaching\nThe Wisdom-to-Income Method\nClient acquisition systems', buttonText: "See what's inside", buttonUrl: 'https://the5th.co/fast-forward' } },
-  { type: 'testimonial', label: 'Testimonial', icon: '“', group: 'Premium', defaults: { quote: 'This changed everything for my business.', author: 'Happy Client', role: 'Founder' } },
-  { type: 'guarantee', label: 'Guarantee box', icon: '✓', group: 'Premium', defaults: { title: '100% Money-Back Guarantee', text: "If you meet the requirements and don't get the result, we refund your investment." } },
-  { type: 'product', label: 'Product card', icon: '▦', group: 'Premium', defaults: { title: 'The5th AI', subtitle: 'Your personal CMO, 24/7', description: 'Trained to help you build a coaching business — writes offers, emails and content.', buttonText: 'Explore', buttonUrl: 'https://the5th.co/ai', image: '' } },
-  { type: 'signature', label: 'Signature', icon: '✍', group: 'Premium', defaults: { name: 'Indrodip', title: 'Founder, The5th' } },
-  { type: 'social', label: 'Social links', icon: '@', group: 'Premium', defaults: {} },
-  { type: 'html', label: 'Custom HTML', icon: '</>', group: 'Advanced', defaults: { code: '<p>Custom HTML…</p>' } },
-]
-function defaultBlock(type: string): Block { const d = BLOCK_DEFS.find((b) => b.type === type); return { id: uid(), type, props: JSON.parse(JSON.stringify(d?.defaults || {})) } }

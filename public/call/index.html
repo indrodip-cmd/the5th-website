@@ -776,8 +776,9 @@ ul{list-style:none}
       <p class="lead">Answer a few short questions so we can prepare and make sure we can genuinely help. Then choose a time that suits you.</p>
       <div class="applyFounder"><img src="/public/images/founder.png" alt="Indrodip Ghosh" width="42" height="42" loading="lazy"><span><b>You'll be speaking with Indrodip</b><br>personally, not a sales rep.</span></div>
 
-      <!-- Application form (Typeform inline embed). On completion → choose-your-time. -->
-      <div data-tf-live="01KX955X4MK7G3DMA2Y2BEARV5" style="width:100%;min-height:560px;"></div>
+      <!-- Application form (Typeform inline embed). Fixed height so the form
+           scrolls internally and never captures the page scroll. -->
+      <div data-tf-live="01KX955X4MK7G3DMA2Y2BEARV5" style="width:100%;height:640px;max-height:80vh;border-radius:16px;overflow:hidden;"></div>
       <script src="//embed.typeform.com/next/embed.js"></script>
       <script type="text/javascript">
         // Redirect the parent page to the booking step when the form is submitted.

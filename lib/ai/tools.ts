@@ -116,6 +116,18 @@ export const TOOLS: Tool[] = [
       return j({ new_leads_7d: newLeads.count || 0, calls_today: callsToday.count || 0, hot_leads: hot.count || 0, open_pipeline_value: (opps.data || []).reduce((s, o) => s + Number(o.value || 0), 0), upcoming_meetings: upcoming.count || 0, revenue_today: (rev as Row).today, revenue_month: (rev as Row).month, revenue_lifetime: (rev as Row).lifetime })
     },
   },
+  {
+    def: { name: 'list_agents', description: 'List the specialist AI agents available to orchestrate (Sales, CRM, Marketing, Meeting, Revenue, CEO, etc.) with their role and what they do.', input_schema: { type: 'object', properties: {} } },
+    run: async () => { const { data } = await getSupabaseAdmin().from('ai_agents').select('key,name,role,description,autonomy').eq('enabled', true).order('name'); return j(data || []) },
+  },
+  {
+    def: { name: 'run_agent', description: 'Delegate a task to a specialist agent (by its key from list_agents). The agent works grounded in real data; any action that changes data is held for human approval. Returns the agent\'s summary and how many approvals it queued.', input_schema: { type: 'object', properties: { agent_key: { type: 'string' }, goal: { type: 'string' } }, required: ['agent_key', 'goal'] } },
+    run: async (i) => {
+      const { runAgent } = await import('@/lib/ai/agents')  // dynamic import breaks the registry↔tools load cycle
+      const r = await runAgent(String(i.agent_key || ''), String(i.goal || ''), 'command-ai')
+      return j({ agent: r.agent, status: r.status, summary: r.reply, tools_used: r.toolsUsed, pending_approvals: r.pendingApprovals, execution_id: r.executionId })
+    },
+  },
 ]
 
 export const TOOL_DEFS: Anthropic.Tool[] = TOOLS.map((t) => t.def)

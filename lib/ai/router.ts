@@ -20,3 +20,21 @@ export function anthropic(): Anthropic | null {
 }
 
 export function aiConfigured(): boolean { return !!process.env.ANTHROPIC_API_KEY }
+
+/* Multi-provider awareness (3I.5). Anthropic is the only live client today; the
+   router advertises which providers are configured and which model serves each
+   task so the platform can route (and the Playground can show) per-task models.
+   Add a provider by wiring its client + extending PROVIDERS/MODELS — callers
+   (Command AI, agents) don't change. */
+export interface ProviderInfo { id: string; label: string; configured: boolean; kinds: TaskKind[] }
+export function providerStatus(): ProviderInfo[] {
+  return [
+    { id: 'anthropic', label: 'Anthropic (Claude)', configured: !!process.env.ANTHROPIC_API_KEY, kinds: ['chat', 'reasoning', 'cheap'] },
+    { id: 'openai', label: 'OpenAI', configured: !!process.env.OPENAI_API_KEY, kinds: ['chat', 'reasoning', 'cheap'] },
+    { id: 'google', label: 'Google Gemini', configured: !!process.env.GEMINI_API_KEY, kinds: ['chat', 'reasoning', 'cheap'] },
+  ]
+}
+/** Task → provider+model routing table (for observability / the Playground). */
+export function modelRoutes() {
+  return (Object.keys(MODELS) as TaskKind[]).map((task) => ({ task, model: MODELS[task], provider: 'anthropic' }))
+}

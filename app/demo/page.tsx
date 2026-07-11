@@ -9,8 +9,8 @@ const SUGGESTIONS = ['How do I price my first coaching offer?', 'Write me a warm
 function md(t: string) {
   return t.split('\n').map((line, i) => {
     const parts = line.split(/(\*\*[^*]+\*\*)/g).map((p, j) => p.startsWith('**') && p.endsWith('**') ? <strong key={j}>{p.slice(2, -2)}</strong> : <span key={j}>{p}</span>)
-    if (/^\s*[-*]\s/.test(line)) return <div key={i} style={{ display: 'flex', gap: 8, padding: '1px 0' }}><span style={{ color: '#C9A84C' }}>•</span><span>{line.replace(/^\s*[-*]\s/, '')}</span></div>
-    if (line.trim() === '') return <div key={i} style={{ height: 8 }} />
+    if (/^\s*[-*]\s/.test(line)) return <div key={i} style={{ display: 'flex', gap: 10, padding: '3px 0' }}><span style={{ color: '#C9A84C' }}>•</span><span>{line.replace(/^\s*[-*]\s/, '')}</span></div>
+    if (line.trim() === '') return <div key={i} style={{ height: 14 }} />
     return <div key={i}>{parts}</div>
   })
 }
@@ -59,28 +59,28 @@ export default function Demo() {
     <div style={{ minHeight: '100dvh', background: '#faf9fb', display: 'flex', flexDirection: 'column', fontFamily: 'Inter, system-ui, sans-serif', color: '#1c1720' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'); *{box-sizing:border-box} @keyframes dot{0%,60%,100%{opacity:.3}30%{opacity:1}} @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
 
-      <header style={{ padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <a href="/ai" style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-.01em', color: '#3D2645', textDecoration: 'none' }}>The<span style={{ color: '#C9A84C' }}>5th</span> AI</a>
-        {started && <span style={{ marginLeft: 'auto', fontSize: 12, color: '#9b93a3' }}>{limit ? 'Demo complete' : `${remaining} free left`}</span>}
+      <header style={{ padding: '24px 34px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <a href="/ai" style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-.01em', color: '#3D2645', textDecoration: 'none' }}>The<span style={{ color: '#C9A84C' }}>5th</span> AI</a>
+        {started && <span style={{ marginLeft: 'auto', fontSize: 12.5, color: '#9b93a3' }}>{limit ? 'Demo complete' : `${remaining} free left`}</span>}
       </header>
 
-      <main style={{ flex: 1, width: '100%', maxWidth: 720, margin: '0 auto', padding: '0 18px', display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: 768, margin: '0 auto', padding: '0 28px', display: 'flex', flexDirection: 'column' }}>
         {!started ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: '12vh' }}>
-            <div style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-.02em', textAlign: 'center', marginBottom: 24, color: '#2a2233' }}>What are you working on?</div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingBottom: '15vh' }}>
+            <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: '-.02em', textAlign: 'center', marginBottom: 40, color: '#2a2233' }}>What are you working on?</div>
             <Composer input={input} setInput={setInput} onSend={() => send()} busy={busy} autoFocus />
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', marginTop: 16 }}>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 24 }}>
               {SUGGESTIONS.map((s) => <button key={s} onClick={() => send(s)} style={chip}>{s}</button>)}
             </div>
           </div>
         ) : (
           <>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '10px 0 20px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 0 28px' }}>
               {messages.map((m, i) => (
-                <div key={i} style={{ animation: 'rise .25s ease', margin: '14px 0' }}>
+                <div key={i} style={{ animation: 'rise .25s ease', margin: '28px 0' }}>
                   {m.role === 'user'
-                    ? <div style={{ display: 'flex', justifyContent: 'flex-end' }}><div style={{ background: '#3D2645', color: '#fff', padding: '10px 15px', borderRadius: '16px 16px 4px 16px', fontSize: 15, lineHeight: 1.5, maxWidth: '84%' }}>{m.content}</div></div>
-                    : <div style={{ fontSize: 15.5, lineHeight: 1.65, color: '#2a2233' }}>{md(m.content)}</div>}
+                    ? <div style={{ display: 'flex', justifyContent: 'flex-end' }}><div style={{ background: '#3D2645', color: '#fff', padding: '13px 18px', borderRadius: '18px 18px 5px 18px', fontSize: 15.5, lineHeight: 1.55, maxWidth: '82%' }}>{m.content}</div></div>
+                    : <div style={{ fontSize: 16.5, lineHeight: 1.8, color: '#2a2233' }}>{md(m.content)}</div>}
                 </div>
               ))}
               {busy && <div style={{ display: 'flex', gap: 5, padding: '8px 0' }}>{[0, 1, 2].map((d) => <span key={d} style={{ width: 7, height: 7, borderRadius: '50%', background: '#C9A84C', animation: `dot 1.1s ${d * 0.16}s infinite` }} />)}</div>}
@@ -102,7 +102,7 @@ export default function Demo() {
               </div>}
               <div ref={endRef} />
             </div>
-            {!limit && !gate && <div style={{ paddingBottom: 20 }}><Composer input={input} setInput={setInput} onSend={() => send()} busy={busy} /></div>}
+            {!limit && !gate && <div style={{ paddingBottom: 28 }}><Composer input={input} setInput={setInput} onSend={() => send()} busy={busy} /></div>}
           </>
         )}
       </main>
@@ -113,18 +113,18 @@ export default function Demo() {
 
 function Composer({ input, setInput, onSend, busy, autoFocus }: { input: string; setInput: (v: string) => void; onSend: () => void; busy: boolean; autoFocus?: boolean }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, background: '#fff', border: '1px solid #e7e2ec', borderRadius: 18, padding: '8px 8px 8px 18px', boxShadow: '0 6px 24px rgba(40,20,50,.06)' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, background: '#fff', border: '1px solid #e7e2ec', borderRadius: 22, padding: '12px 12px 12px 22px', boxShadow: '0 8px 30px rgba(40,20,50,.07)' }}>
       <textarea value={input} onChange={(e) => setInput(e.target.value)} autoFocus={autoFocus} rows={1}
         onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend() } }}
         placeholder="Ask The5th AI anything…"
-        style={{ flex: 1, border: 'none', outline: 'none', resize: 'none', fontSize: 15.5, fontFamily: 'inherit', color: '#1c1720', background: 'none', maxHeight: 160, padding: '8px 0', lineHeight: 1.5 }} />
+        style={{ flex: 1, border: 'none', outline: 'none', resize: 'none', fontSize: 16.5, fontFamily: 'inherit', color: '#1c1720', background: 'none', maxHeight: 200, padding: '11px 0', lineHeight: 1.55 }} />
       <button onClick={onSend} disabled={busy || !input.trim()} aria-label="Send"
-        style={{ width: 38, height: 38, borderRadius: 12, border: 'none', flexShrink: 0, cursor: busy || !input.trim() ? 'default' : 'pointer', background: input.trim() ? 'linear-gradient(145deg,#C9A84C,#a9862f)' : '#e7e2ec', color: input.trim() ? '#1a1206' : '#b3abbb', fontSize: 17, transition: 'background .2s' }}>↑</button>
+        style={{ width: 42, height: 42, borderRadius: 14, border: 'none', flexShrink: 0, cursor: busy || !input.trim() ? 'default' : 'pointer', background: input.trim() ? 'linear-gradient(145deg,#C9A84C,#a9862f)' : '#e7e2ec', color: input.trim() ? '#1a1206' : '#b3abbb', fontSize: 18, transition: 'background .2s' }}>↑</button>
     </div>
   )
 }
 
-const chip: React.CSSProperties = { border: '1px solid #e7e2ec', background: '#fff', borderRadius: 999, padding: '8px 14px', fontSize: 13, color: '#6b6472', cursor: 'pointer', fontFamily: 'inherit' }
+const chip: React.CSSProperties = { border: '1px solid #e7e2ec', background: '#fff', borderRadius: 999, padding: '10px 17px', fontSize: 13.5, color: '#6b6472', cursor: 'pointer', fontFamily: 'inherit' }
 const field: React.CSSProperties = { width: '100%', padding: '11px 14px', border: '1px solid #e7e2ec', borderRadius: 11, fontSize: 14.5, fontFamily: 'inherit', outline: 'none' }
 const gold: React.CSSProperties = { display: 'inline-block', background: 'linear-gradient(145deg,#C9A84C,#a9862f)', color: '#1a1206', fontWeight: 700, fontSize: 14, padding: '11px 22px', borderRadius: 12, border: 'none', textDecoration: 'none', cursor: 'pointer' }
 const ghost: React.CSSProperties = { display: 'inline-block', background: 'rgba(255,255,255,.1)', color: '#fff', fontWeight: 600, fontSize: 14, padding: '11px 22px', borderRadius: 12, border: '1px solid rgba(255,255,255,.2)', textDecoration: 'none' }

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /legacy
+
+Sitemap: https://the5th.consulting/sitemap.xml

@@ -3,12 +3,13 @@
    Compose, queue, track, retry; manage providers/senders/templates; every
    message stored, linked to the CRM timeline, and observable. */
 import { useState } from 'react'
+import Link from 'next/link'
 import { T, Card, Button, PageHeader, EmptyState, Modal, useAdminFetch, adminSend, fmtDate } from '@/components/admin/ui'
 
 type Row = Record<string, unknown>
 const SC: Record<string, string> = { sent: '#0369a1', delivered: '#16a34a', opened: '#16a34a', clicked: '#16a34a', queued: '#6b7280', scheduled: '#7c3aed', sending: '#0369a1', failed: '#dc2626', bounced: '#dc2626', complained: '#dc2626', cancelled: '#9ca3af', replied: '#16a34a' }
 const pill = (s: string) => <span className="a-pill" style={{ background: `${SC[s] || '#6b7280'}1a`, color: SC[s] || '#6b7280' }}>{s}</span>
-const TABS = ['Dashboard', 'Messages', 'Compose', 'Providers', 'Templates', 'Senders'] as const
+const TABS = ['Dashboard', 'Messages', 'Compose', 'Designs', 'Providers', 'Templates', 'Senders'] as const
 type Tab = typeof TABS[number]
 
 export default function Communications() {
@@ -22,6 +23,7 @@ export default function Communications() {
       {tab === 'Dashboard' && <Dashboard />}
       {tab === 'Messages' && <Messages />}
       {tab === 'Compose' && <Compose />}
+      {tab === 'Designs' && <Designs />}
       {tab === 'Providers' && <Providers />}
       {tab === 'Templates' && <Templates />}
       {tab === 'Senders' && <Senders />}
@@ -126,6 +128,41 @@ function Compose() {
         {res && <div style={{ marginTop: 12, fontSize: 13, color: (res.ok ? T.green : T.danger) }}>{res.ok ? `Queued — status: ${(res.result as Row)?.status}` : `Failed: ${(res.result as Row)?.error}`}</div>}
       </Card>
     </div>
+  )
+}
+
+function Designs() {
+  const { data, loading, reload } = useAdminFetch<{ templates: Row[] }>('/api/admin/communications/designer?view=list')
+  const dup = async (id: string) => { await adminSend('/api/admin/communications/designer', 'POST', { action: 'duplicate', id }); reload() }
+  const del = async (id: string) => { if (!confirm('Delete this email design?')) return; await adminSend('/api/admin/communications/designer', 'POST', { action: 'delete', id }); reload() }
+  return (
+    <>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+        <Link href="/admin/communications/designer"><Button>＋ New email design</Button></Link>
+        <Link href="/admin/communications/brand"><Button variant="ghost">Brand system</Button></Link>
+      </div>
+      {loading && !data ? <div className="skeleton" style={{ height: 160, borderRadius: 14 }} /> : (data?.templates || []).length === 0 ? <EmptyState title="No email designs yet" hint="Design one visually or generate it with AI — it inherits your brand system." /> : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 12 }}>
+          {(data?.templates || []).map((t) => {
+            const score = (t.quality as Row)?.score as number | undefined
+            return (
+              <Card key={t.id as string} pad={16}>
+                <div style={{ display: 'flex', gap: 6, marginBottom: 4, alignItems: 'center' }}>
+                  <span style={{ fontSize: 14.5, fontWeight: 700, color: T.ink, flex: 1 }}>{t.name as string}</span>
+                  <span className="a-pill" style={{ background: t.status === 'published' ? '#dcfce7' : '#f3f4f6', color: t.status === 'published' ? '#16a34a' : T.sub }}>{t.status as string}</span>
+                </div>
+                <div style={{ fontSize: 12, color: T.sub, marginBottom: 10 }}>{(t.subject as string) || '—'}{typeof score === 'number' ? ` · score ${score}` : ''}</div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <Link href={`/admin/communications/designer?id=${t.id}`}><Button>Open</Button></Link>
+                  <Button variant="ghost" onClick={() => dup(t.id as string)}>Duplicate</Button>
+                  <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger, marginLeft: 'auto' }} onClick={() => del(t.id as string)}>✕</button>
+                </div>
+              </Card>
+            )
+          })}
+        </div>
+      )}
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import { refreshContentStats } from '@/lib/content-attribution'
 import { whopSyncProducts, whopSyncMembers } from '@/lib/connectors/whop'
 import { syncCoachingIntel } from '@/lib/coaching-intel'
 import { processScheduledRuns } from '@/lib/automation/engine'
+import { syncMemory, summarizeMonth } from '@/lib/memory/ingest'
 import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -29,6 +30,9 @@ export async function GET(req: NextRequest) {
   const coaching = await syncCoachingIntel(20).catch((e) => ({ error: String(e) }))
   // Resume Automation Studio workflows whose scheduled delays have elapsed.
   const automation = await processScheduledRuns().catch((e) => ({ error: String(e) }))
+  // Business Memory: ingest new platform data + roll up this month's digest.
+  const memory = await syncMemory(40).catch((e) => ({ error: String(e) }))
+  const memorySummary = await summarizeMonth().catch((e) => ({ error: String(e) }))
   const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, alerts })
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, alerts })
 }

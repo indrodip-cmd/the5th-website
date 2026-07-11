@@ -9,6 +9,7 @@ import { getRevenueSummary, getBalances } from '@/lib/revenue'
 import { listBoard } from '@/lib/sales'
 import { contactContext } from '@/lib/ai-coach'
 import { coachingTrends, recentCoachingIntel } from '@/lib/coaching-intel'
+import { searchMemories, listDecisions, listExperiments } from '@/lib/memory/store'
 
 type Row = Record<string, unknown>
 export interface Tool { def: Anthropic.Tool; run: (input: Row) => Promise<string> }
@@ -115,6 +116,22 @@ export const TOOLS: Tool[] = [
       ])
       return j({ new_leads_7d: newLeads.count || 0, calls_today: callsToday.count || 0, hot_leads: hot.count || 0, open_pipeline_value: (opps.data || []).reduce((s, o) => s + Number(o.value || 0), 0), upcoming_meetings: upcoming.count || 0, revenue_today: (rev as Row).today, revenue_month: (rev as Row).month, revenue_lifetime: (rev as Row).lifetime })
     },
+  },
+  {
+    def: { name: 'search_memory', description: "Search The5th's Business Memory — the company's permanent organizational brain (past meetings, customers, decisions, experiments, sales, coaching, financial and operational memories). Use this FIRST for any question about business history, patterns over time, or 'why did we…'. Optional filters: memory_type, entity, topic, date range (from/to ISO).", input_schema: { type: 'object', properties: { query: { type: 'string' }, memory_type: { type: 'string' }, entity: { type: 'string' }, topic: { type: 'string' }, from: { type: 'string' }, to: { type: 'string' } } } },
+    run: async (i) => j(await searchMemories({ query: i.query ? String(i.query) : undefined, type: i.memory_type ? String(i.memory_type) : undefined, entity: i.entity ? String(i.entity) : undefined, topic: i.topic ? String(i.topic) : undefined, from: i.from ? String(i.from) : undefined, to: i.to ? String(i.to) : undefined, limit: 40 })),
+  },
+  {
+    def: { name: 'business_timeline', description: "What happened in the business over a period. Returns memories ordered by time. Give an ISO date range (from/to) — e.g. answer 'what changed last quarter' or 'what happened in May'.", input_schema: { type: 'object', properties: { from: { type: 'string' }, to: { type: 'string' }, memory_type: { type: 'string' } }, required: ['from'] } },
+    run: async (i) => j(await searchMemories({ from: String(i.from), to: i.to ? String(i.to) : undefined, type: i.memory_type ? String(i.memory_type) : undefined, limit: 80 })),
+  },
+  {
+    def: { name: 'list_decisions', description: 'The decision log — significant business decisions with who/why/outcome. Use to explain why something was decided or how something evolved.', input_schema: { type: 'object', properties: {} } },
+    run: async () => j(await listDecisions(60)),
+  },
+  {
+    def: { name: 'list_experiments', description: 'The experiment log — business experiments with hypothesis, results and conclusion. Use to compare what worked and avoid repeating failures.', input_schema: { type: 'object', properties: {} } },
+    run: async () => j(await listExperiments(60)),
   },
   {
     def: { name: 'list_agents', description: 'List the specialist AI agents available to orchestrate (Sales, CRM, Marketing, Meeting, Revenue, CEO, etc.) with their role and what they do.', input_schema: { type: 'object', properties: {} } },

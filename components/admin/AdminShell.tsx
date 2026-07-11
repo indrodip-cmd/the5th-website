@@ -16,6 +16,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/ai', label: 'Command AI', icon: '🤖', match: (p) => p === '/admin/ai' || p.startsWith('/admin/ai/') },
     { href: '/admin/agents', label: 'Agent Platform', icon: '⚙︎', match: (p) => p.startsWith('/admin/agents') },
     { href: '/admin/automation', label: 'Automation', icon: '⚡', match: (p) => p.startsWith('/admin/automation') },
+    { href: '/admin/memory', label: 'Business Memory', icon: '🧠', match: (p) => p.startsWith('/admin/memory') },
   ] },
   { section: 'CRM', items: [
     { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },

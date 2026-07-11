@@ -19,7 +19,7 @@ interface Bundle {
   business: Row | null; relationships: Row[]; customValues: Row[]; attachments: Row[]
 }
 
-const TABS = ['Timeline', 'AI', 'Attribution', 'Notes', 'Tasks', 'Purchases', 'Business', 'Relationships', 'Tags', 'Files', 'Custom'] as const
+const TABS = ['Timeline', 'Comms', 'AI', 'Attribution', 'Notes', 'Tasks', 'Purchases', 'Business', 'Relationships', 'Tags', 'Files', 'Custom'] as const
 
 export default function ContactProfile() {
   const params = useParams<{ id: string }>()
@@ -75,6 +75,7 @@ export default function ContactProfile() {
       </div>
 
       {tab === 'Timeline' && <Card><JourneyStrip activities={data.activities} /><ActivityTimeline activities={data.activities} /></Card>}
+      {tab === 'Comms' && <CommsTab base={base} contactId={id} />}
       {tab === 'AI' && <AiTab contactId={id} />}
       {tab === 'Attribution' && <AttributionTab id={id} />}
       {tab === 'Purchases' && <PurchasesTab base={base} reload={reload} />}
@@ -157,6 +158,68 @@ function AiTab({ contactId }: { contactId: string }) {
           </Card>
         )
       })}
+    </div>
+  )
+}
+
+// ── Communication tab — instant email/SMS + AI writers + full history ──
+function CommsTab({ base, contactId }: { base: string; contactId: string }) {
+  const { data, loading, reload } = useAdminFetch<{ messages: Row[]; stats: Row }>(`${base}/comms`)
+  const [channel, setChannel] = useState<'email' | 'sms'>('email')
+  const [subject, setSubject] = useState('')
+  const [body, setBody] = useState('')
+  const [brief, setBrief] = useState('')
+  const [busy, setBusy] = useState('')
+  const gen = async () => {
+    if (!brief.trim()) return
+    setBusy('gen')
+    try {
+      const r = await adminSend(`${base}/comms`, 'POST', { action: channel === 'email' ? 'generate_email' : 'generate_sms', brief }) as Row
+      if (r?.ok) { if (channel === 'email') { setSubject((r.subject as string) || subject); setBody((r.body as string) || '') } else setBody((r.text as string) || '') }
+      else alert((r?.error as string) || 'Generation failed')
+    } finally { setBusy('') }
+  }
+  const send = async () => {
+    if (!body.trim()) return
+    setBusy('send')
+    try { const r = await adminSend(`${base}/comms`, 'POST', { action: 'send', channel, subject, body }) as Row; if (!r?.ok) { alert(`Failed: ${(r?.result as Row)?.error || (r?.error as string) || ''}`); return } setSubject(''); setBody(''); setBrief(''); reload() }
+    finally { setBusy('') }
+  }
+  const s = (data?.stats || {}) as Row
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <Card pad={16}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10, alignItems: 'center' }}>
+          {(['email', 'sms'] as const).map((ch) => <button key={ch} className="tab-btn" onClick={() => setChannel(ch)} style={{ background: channel === ch ? T.green2 : '#fff', color: channel === ch ? '#fff' : T.sub, border: `1px solid ${channel === ch ? T.green2 : T.border}`, textTransform: 'uppercase', padding: '4px 12px' }}>{ch}</button>)}
+          <span style={{ marginLeft: 'auto', fontSize: 12, color: T.muted }}>Engagement <b style={{ color: T.ink }}>{Number(s.engagement || 0)}</b> · {Number(s.sent || 0)} sent · {Number(s.replies || 0)} replies</span>
+        </div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+          <Input placeholder="Tell AI what to write — e.g. follow up on yesterday's call" value={brief} onChange={(e) => setBrief(e.target.value)} />
+          <Button variant="ghost" disabled={busy === 'gen' || !brief.trim()} onClick={gen}>{busy === 'gen' ? 'Writing…' : '✨ AI draft'}</Button>
+        </div>
+        {channel === 'email' && <Input placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} style={{ marginBottom: 8 }} />}
+        <Textarea placeholder={channel === 'email' ? 'Email body — {{first_name}} personalizes' : 'SMS text'} value={body} onChange={(e) => setBody(e.target.value)} style={{ minHeight: 120, marginBottom: 8 }} />
+        <Button disabled={busy === 'send' || !body.trim()} onClick={send}>{busy === 'send' ? 'Sending…' : `Send ${channel}`}</Button>
+      </Card>
+      <Card>
+        <h3 style={secLabel}>Communication history</h3>
+        {loading && !data ? <div className="skeleton" style={{ height: 60 }} /> : (data?.messages || []).length === 0 ? <EmptyState title="No messages yet" hint="Send the first email or SMS above." /> : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
+            {(data?.messages || []).map((m) => {
+              const inbound = m.direction === 'inbound'
+              return (
+                <div key={m.id as string} style={{ display: 'flex', gap: 10, padding: '10px 12px', borderRadius: 10, background: inbound ? '#faf8fc' : '#fafbfa', border: `1px solid ${T.border}` }}>
+                  <span>{inbound ? '📥' : m.channel === 'sms' || m.channel === 'whatsapp' ? '💬' : '✉️'}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: T.ink }}>{(m.subject as string) || String(m.body || '').slice(0, 60) || '(no subject)'}</div>
+                    <div style={{ fontSize: 11.5, color: T.muted }}>{inbound ? `from ${m.from_addr as string}` : `to ${m.to_addr as string}`} · {m.channel as string} · {m.status as string} · {fmtDate(m.created_at as string)}</div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </Card>
     </div>
   )
 }

@@ -126,6 +126,16 @@ export const TOOLS: Tool[] = [
     run: async (i) => j(await searchMemories({ from: String(i.from), to: i.to ? String(i.to) : undefined, type: i.memory_type ? String(i.memory_type) : undefined, limit: 80 })),
   },
   {
+    def: { name: 'search_communications', description: "Search the Communication OS — every email & SMS sent or received (subject, status, channel, direction). Use to answer 'what did we send X', 'why hasn't X replied', or engagement questions. Filter by email (recipient/sender) or keyword.", input_schema: { type: 'object', properties: { email: { type: 'string' }, query: { type: 'string' }, status: { type: 'string' } } } },
+    run: async (i) => {
+      let q = getSupabaseAdmin().from('comm_messages').select('channel,direction,to_addr,from_addr,subject,status,source,created_at').order('created_at', { ascending: false }).limit(30)
+      if (i.email) q = q.or(`to_addr.ilike.%${i.email}%,contact_email.ilike.%${i.email}%,from_addr.ilike.%${i.email}%`)
+      else if (i.query) { const like = `%${i.query}%`; q = q.or(`subject.ilike.${like},body.ilike.${like}`) }
+      if (i.status) q = q.eq('status', String(i.status))
+      const { data } = await q; return j(data || [])
+    },
+  },
+  {
     def: { name: 'list_decisions', description: 'The decision log — significant business decisions with who/why/outcome. Use to explain why something was decided or how something evolved.', input_schema: { type: 'object', properties: {} } },
     run: async () => j(await listDecisions(60)),
   },

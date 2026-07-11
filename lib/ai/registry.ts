@@ -79,6 +79,22 @@ const ACTION_TOOLS: RegisteredTool[] = [
     },
     run: async (i: Row) => j({ ok: true, draft: { to: i.to || null, subject: i.subject || null, body: String(i.body || '') } }),
   },
+  {
+    risk: 'high', category: 'communication', mutating: true, provider: 'internal',
+    def: {
+      name: 'send_email', description: 'Send an email through the Communication Engine (queued, tracked, logged to the CRM timeline). High-risk: an outbound message actually goes out.',
+      input_schema: { type: 'object', properties: { to: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string', description: 'HTML or text body; may use {{name}} {{first_name}}' } }, required: ['to', 'subject', 'body'] },
+    },
+    run: async (i: Row) => { const { sendMessage } = await import('@/lib/comm/engine'); return j(await sendMessage({ channel: 'email', to: String(i.to), subject: String(i.subject), html: String(i.body), source: 'ai' })) },
+  },
+  {
+    risk: 'high', category: 'communication', mutating: true, provider: 'internal',
+    def: {
+      name: 'send_sms', description: 'Send an SMS through the Communication Engine (Twilio). High-risk: an outbound message actually goes out.',
+      input_schema: { type: 'object', properties: { to: { type: 'string', description: 'E.164 phone number' }, body: { type: 'string' } }, required: ['to', 'body'] },
+    },
+    run: async (i: Row) => { const { sendMessage } = await import('@/lib/comm/engine'); return j(await sendMessage({ channel: 'sms', to: String(i.to), text: String(i.body), source: 'ai' })) },
+  },
 ]
 
 // Read tools decorated with metadata → registered tools.

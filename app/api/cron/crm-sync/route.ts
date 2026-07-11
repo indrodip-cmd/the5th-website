@@ -6,6 +6,7 @@ import { whopSyncProducts, whopSyncMembers } from '@/lib/connectors/whop'
 import { syncCoachingIntel } from '@/lib/coaching-intel'
 import { processScheduledRuns } from '@/lib/automation/engine'
 import { syncMemory, summarizeMonth } from '@/lib/memory/ingest'
+import { processQueue } from '@/lib/comm/engine'
 import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -33,6 +34,8 @@ export async function GET(req: NextRequest) {
   // Business Memory: ingest new platform data + roll up this month's digest.
   const memory = await syncMemory(40).catch((e) => ({ error: String(e) }))
   const memorySummary = await summarizeMonth().catch((e) => ({ error: String(e) }))
+  // Communication Engine: deliver scheduled + retry-pending messages.
+  const comms = await processQueue(60).catch((e) => ({ error: String(e) }))
   const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, alerts })
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, comms, alerts })
 }

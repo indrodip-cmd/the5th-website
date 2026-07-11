@@ -24,6 +24,7 @@ export const TRIGGER_TYPES = [
 export const ACTION_TYPES = [
   'create_contact', 'update_contact', 'create_task', 'add_note', 'create_opportunity',
   'move_stage', 'add_tag', 'update_score', 'recommend_product', 'notify', 'log', 'trigger_webhook',
+  'send_email', 'send_sms',   // via the Communication Engine (Tool Registry)
 ]
 
 // ── Variable interpolation: {{path.to.value}} ──

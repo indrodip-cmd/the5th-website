@@ -9,15 +9,15 @@ import CoachChat from './CoachChat'
 import NotificationBell from './NotificationBell'
 import CommandPalette from './CommandPalette'
 
-interface NavItem { href: string; label: string; icon: string; match: (p: string) => boolean }
+interface NavItem { href: string; label: string; icon: string; match: (p: string) => boolean; flag?: string }
 const NAV: Array<{ section?: string; items: NavItem[] }> = [
   { items: [
     { href: '/admin/executive', label: 'Command Center', icon: '◈', match: (p) => p.startsWith('/admin/executive') || p.startsWith('/admin/launch') },
     { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
-    { href: '/admin/ai', label: 'Command AI', icon: '🤖', match: (p) => p === '/admin/ai' || p.startsWith('/admin/ai/') },
-    { href: '/admin/agents', label: 'Agent Platform', icon: '⚙︎', match: (p) => p.startsWith('/admin/agents') },
-    { href: '/admin/automation', label: 'Automation', icon: '⚡', match: (p) => p.startsWith('/admin/automation') },
-    { href: '/admin/memory', label: 'Business Memory', icon: '🧠', match: (p) => p.startsWith('/admin/memory') },
+    { href: '/admin/ai', label: 'Command AI', icon: '🤖', match: (p) => p === '/admin/ai' || p.startsWith('/admin/ai/'), flag: 'command_ai' },
+    { href: '/admin/agents', label: 'Agent Platform', icon: '⚙︎', match: (p) => p.startsWith('/admin/agents'), flag: 'agent_platform' },
+    { href: '/admin/automation', label: 'Automation', icon: '⚡', match: (p) => p.startsWith('/admin/automation'), flag: 'automation_studio' },
+    { href: '/admin/memory', label: 'Business Memory', icon: '🧠', match: (p) => p.startsWith('/admin/memory'), flag: 'business_memory' },
   ] },
   { section: 'CRM', items: [
     { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },
@@ -28,16 +28,18 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/crm/products', label: 'Products', icon: '📦', match: (p) => p.startsWith('/admin/crm/products') },
   ] },
   { section: 'Business', items: [
-    { href: '/admin/communications', label: 'Communications', icon: '✉', match: (p) => p.startsWith('/admin/communications') },
+    { href: '/admin/communications', label: 'Communications', icon: '✉', match: (p) => p.startsWith('/admin/communications'), flag: 'communication_os' },
     { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },
-    { href: '/admin/journeys', label: 'Journeys', icon: '🧭', match: (p) => p.startsWith('/admin/journeys') },
+    { href: '/admin/journeys', label: 'Journeys', icon: '🧭', match: (p) => p.startsWith('/admin/journeys'), flag: 'journey_engine' },
     { href: '/admin/analytics', label: 'Analytics', icon: '📈', match: (p) => p.startsWith('/admin/analytics') },
     { href: '/admin/cms', label: 'CMS', icon: '▦', match: (p) => p.startsWith('/admin/cms') },
     { href: '/admin/knowledge', label: 'Knowledge', icon: '📚', match: (p) => p.startsWith('/admin/knowledge') },
   ] },
   { section: 'Platform', items: [
     { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
+    { href: '/admin/costs', label: 'Costs', icon: '＄', match: (p) => p.startsWith('/admin/costs'), flag: 'cost_center' },
     { href: '/admin/system', label: 'System', icon: '❤', match: (p) => p.startsWith('/admin/system') },
+    { href: '/admin/flags', label: 'Feature Flags', icon: '⚑', match: (p) => p.startsWith('/admin/flags') },
     { href: '/admin/settings', label: 'Settings', icon: '⚙', match: (p) => p.startsWith('/admin/settings') },
     { href: '/admin/legacy', label: 'Legacy tools', icon: '◲', match: (p) => p.startsWith('/admin/legacy') },
   ] },
@@ -48,11 +50,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [ready, setReady] = useState(false)
   const [authed, setAuthed] = useState(false)
   const [sideOpen, setSideOpen] = useState(false)
+  const [flags, setFlags] = useState<string[] | null>(null)
 
   useEffect(() => {
     fetch('/api/admin/me').then((r) => setAuthed(r.ok)).catch(() => setAuthed(false)).finally(() => setReady(true))
   }, [])
+  useEffect(() => { if (authed) fetch('/api/admin/flags?keys=1').then((r) => r.ok ? r.json() : null).then((d) => setFlags(d?.enabled || [])).catch(() => setFlags([])) }, [authed])
   useEffect(() => { setSideOpen(false) }, [pathname]) // close the mobile drawer on navigation
+  // Hide nav for disabled feature flags (fail-open while flags are loading).
+  const flagOn = (f?: string) => !f || flags == null || flags.includes(f)
 
   if (!ready) return <div style={{ minHeight: '100vh', background: T.ink }}><style>{ADMIN_CSS}</style></div>
   if (!authed) return <><style>{ADMIN_CSS}</style><LoginScreen onLogin={() => setAuthed(true)} /></>
@@ -75,7 +81,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           {NAV.map((group, gi) => (
             <div key={gi} style={{ marginBottom: 6 }}>
               {group.section && <div style={{ padding: '12px 24px 5px', fontSize: 10, fontWeight: 700, letterSpacing: '.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{group.section}</div>}
-              {group.items.map((n) => (
+              {group.items.filter((n) => flagOn(n.flag)).map((n) => (
                 <Link key={n.href} href={n.href} onClick={() => setSideOpen(false)} className={`ws-nav-item ${n.match(pathname) ? 'active' : ''}`}>
                   <span className="ws-nav-ico" style={{ fontSize: 15, textAlign: 'center' }}>{n.icon}</span>
                   {n.label}

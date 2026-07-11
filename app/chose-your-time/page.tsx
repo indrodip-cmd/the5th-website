@@ -1,12 +1,11 @@
 'use client'
 /* Post-application "choose your time" — conversion-optimized. Real logo,
-   commitment/value/reassurance copy, trust + scarcity to cut drop-off, live
-   Cal.com embed, and a premium Thank-You pulled from the Cal.com API. */
+   commitment/value/reassurance copy, trust + scarcity to cut drop-off, the
+   official Cal.com React embed (event details hidden), and a premium Thank-You
+   pulled from the Cal.com API. */
 import { useEffect, useState } from 'react'
+import Cal, { getCalApi } from '@calcom/embed-react'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-declare global { interface Window { Cal?: any } }
-const CAL_LINK = 'indrodip-ghosh-ut1vxh/60min'
 const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie', 'toril']
 
 export default function ChoseYourTime() {
@@ -14,24 +13,23 @@ export default function ChoseYourTime() {
   const [info, setInfo] = useState<{ name?: string; start?: string; meetingUrl?: string | null }>({})
 
   useEffect(() => {
-    ;(function (C: any, A: string, L: string) { const p = (a: any, ar: any) => a.q.push(ar); const d = C.document; C.Cal = C.Cal || function (this: any) { const cal = C.Cal; const ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement('script')).src = A; cal.loaded = true } if (ar[0] === L) { const api: any = function () { p(api, arguments) }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === 'string') { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]) } else p(cal, ar); return } p(cal, ar) } })(window, 'https://app.cal.com/embed/embed.js', 'init')
-    const Cal = window.Cal
-    Cal('init', 'cyt', { origin: 'https://cal.com' })
-    Cal.ns.cyt('inline', { elementOrSelector: '#cal-booking', calLink: CAL_LINK, layout: 'month_view' })
-    Cal.ns.cyt('ui', { hideEventTypeDetails: false, layout: 'month_view' })
-    Cal.ns.cyt('on', {
-      action: 'bookingSuccessful',
-      callback: (e: any) => {
-        const d = (e && e.detail && e.detail.data) || {}
-        const b = d.booking || d || {}
-        const att = (b.attendees && b.attendees[0]) || {}
-        const start = b.startTime || d.date || b.start || ''
-        const email = (att.email || '').toLowerCase()
-        setInfo({ name: att.name || '', start }); setBooked(true)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        if (email) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(email)}`).then((r) => r.json()).then((j) => { if (j?.booking) setInfo((c) => ({ name: j.booking.name || c.name, start: j.booking.start || c.start, meetingUrl: j.booking.meetingUrl })) }).catch(() => {})
-      },
-    })
+    ;(async () => {
+      const cal = await getCalApi({ namespace: '60min' })
+      cal('ui', { hideEventTypeDetails: true, layout: 'month_view' })
+      cal('on', {
+        action: 'bookingSuccessful',
+        callback: (e: unknown) => {
+          const d = ((e as { detail?: { data?: Record<string, unknown> } })?.detail?.data) || {}
+          const b = (d.booking as Record<string, unknown>) || d
+          const att = ((b.attendees as Array<Record<string, unknown>>)?.[0]) || {}
+          const start = String(b.startTime || d.date || b.start || '')
+          const email = String(att.email || '').toLowerCase()
+          setInfo({ name: String(att.name || ''), start }); setBooked(true)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+          if (email) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(email)}`).then((r) => r.json()).then((j) => { if (j?.booking) setInfo((c) => ({ name: j.booking.name || c.name, start: j.booking.start || c.start, meetingUrl: j.booking.meetingUrl })) }).catch(() => {})
+        },
+      })
+    })()
   }, [])
 
   const when = info.start ? new Date(info.start).toLocaleString([], { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''
@@ -42,8 +40,8 @@ export default function ChoseYourTime() {
         @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
         @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
         .cyt-grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:40px;align-items:start}
-        .cyt-cal{position:sticky;top:24px}
-        @media(max-width:880px){.cyt-grid{grid-template-columns:1fr;gap:24px}.cyt-cal{position:static}}`}</style>
+        .cyt-cal{position:sticky;top:24px;height:720px}
+        @media(max-width:880px){.cyt-grid{grid-template-columns:1fr;gap:24px}.cyt-cal{position:static;height:640px}}`}</style>
 
       <header style={{ padding: '26px 28px', display: 'flex', justifyContent: 'center' }}>
         <a href="/"><img src="/public/images/logo.png" alt="The5th Consulting" style={{ height: 40, width: 'auto' }} /></a>
@@ -87,7 +85,9 @@ export default function ChoseYourTime() {
             </div>
 
             <div className="cyt-cal">
-              <div id="cal-booking" style={{ width: '100%', minHeight: 640, borderRadius: 20, overflow: 'hidden', background: '#fff', border: '1px solid #ece7f0', boxShadow: '0 16px 50px rgba(40,20,50,.09)' }} />
+              <div style={{ width: '100%', height: '100%', borderRadius: 20, overflow: 'hidden', background: '#fff', border: '1px solid #ece7f0', boxShadow: '0 16px 50px rgba(40,20,50,.09)' }}>
+                <Cal namespace="60min" calLink="indrodip-ghosh-ut1vxh/60min" style={{ width: '100%', height: '100%', overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true' }} />
+              </div>
             </div>
           </div>
         ) : (

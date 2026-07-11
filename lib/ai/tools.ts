@@ -126,6 +126,16 @@ export const TOOLS: Tool[] = [
     run: async (i) => j(await searchMemories({ from: String(i.from), to: i.to ? String(i.to) : undefined, type: i.memory_type ? String(i.memory_type) : undefined, limit: 80 })),
   },
   {
+    def: { name: 'get_journey', description: "A contact's Customer Journey Intelligence: live intent scores (buying intent, engagement, trust, readiness, health), segment, lifecycle, behavioral signals, conversion confidence and the recommended next best action. Use to answer how interested/ready someone is or what to do next. Give id_or_email.", input_schema: { type: 'object', properties: { id_or_email: { type: 'string' } }, required: ['id_or_email'] } },
+    run: async (i) => {
+      const { computeJourney } = await import('@/lib/journey/intent')
+      const key = String(i.id_or_email || '')
+      const c = await resolveContact(key.includes('@') ? { email: key } : { id: key })
+      if (!c) return j({ error: 'contact not found' })
+      return j(await computeJourney(c.id as string))
+    },
+  },
+  {
     def: { name: 'search_communications', description: "Search the Communication OS — every email & SMS sent or received (subject, status, channel, direction). Use to answer 'what did we send X', 'why hasn't X replied', or engagement questions. Filter by email (recipient/sender) or keyword.", input_schema: { type: 'object', properties: { email: { type: 'string' }, query: { type: 'string' }, status: { type: 'string' } } } },
     run: async (i) => {
       let q = getSupabaseAdmin().from('comm_messages').select('channel,direction,to_addr,from_addr,subject,status,source,created_at').order('created_at', { ascending: false }).limit(30)

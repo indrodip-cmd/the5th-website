@@ -8,7 +8,15 @@ import { recordVisitor } from '@/lib/identity'
    and conversions. Deliberately permissive and fail-soft: analytics must never
    break a page, and a failed insert is silently dropped. */
 
-const EVENT_TYPES = new Set(['pageview', 'scroll', 'conversion'])
+// Universal behavioral event bus (3I.8B.1) — pageview/scroll/conversion plus
+// rich journey signals. Details ride in `meta`; unknown types are dropped.
+const EVENT_TYPES = new Set([
+  'pageview', 'scroll', 'conversion',
+  'cta_click', 'outbound_click', 'download', 'pricing_view',
+  'video_start', 'video_progress', 'video_complete', 'video_pause',
+  'quiz_start', 'quiz_progress', 'quiz_complete',
+  'chat_open', 'chat_message', 'booking_start',
+])
 const CONTROL_RE = new RegExp('[\u0000-\u001F\u007F]', 'g')
 
 function clampStr(v: unknown, max: number): string | null {

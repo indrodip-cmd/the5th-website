@@ -29,6 +29,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
   { section: 'Business', items: [
     { href: '/admin/communications', label: 'Communications', icon: '✉', match: (p) => p.startsWith('/admin/communications') },
     { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },
+    { href: '/admin/journeys', label: 'Journeys', icon: '🧭', match: (p) => p.startsWith('/admin/journeys') },
     { href: '/admin/analytics', label: 'Analytics', icon: '📈', match: (p) => p.startsWith('/admin/analytics') },
     { href: '/admin/cms', label: 'CMS', icon: '▦', match: (p) => p.startsWith('/admin/cms') },
     { href: '/admin/knowledge', label: 'Knowledge', icon: '📚', match: (p) => p.startsWith('/admin/knowledge') },

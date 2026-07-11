@@ -31,7 +31,7 @@
   var cfg = {
     avatar: null,
     greeting: "Hi, I'm Carolina 👋 I help women 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?",
-    proactive: { enabled: false, delay: 12, gift: { message: null }, quiz: { message: null } },
+    proactive: { enabled: true, delay: 10 },   // context-aware greetings on; admin can set enabled:false to opt out
     agents: {},
     features: { attachments: true, booking: true }
   };
@@ -287,9 +287,13 @@
       '.cw-badge{position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;border-radius:10px;background:var(--acc);color:#1a1206;font:700 11px/19px "Inter";text-align:center;padding:0 5px;box-shadow:0 2px 8px rgba(0,0,0,.4);animation:cwPulse 2.4s infinite;}',
       '@keyframes cwPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.5);}50%{box-shadow:0 0 0 6px rgba(201,168,76,0);}}',
       // window
-      '.cw-win{position:fixed;right:24px;bottom:96px;z-index:2147482500;width:448px;max-width:calc(100vw - 40px);height:min(700px,calc(100vh - 120px));background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;color:var(--tx);opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .28s var(--sp),transform .34s var(--sp);}',
+      '.cw-win{position:fixed;right:24px;bottom:96px;z-index:2147482500;width:448px;max-width:calc(100vw - 40px);height:min(700px,calc(100dvh - 120px));background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden;color:var(--tx);opacity:0;transform:translateY(20px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .28s var(--sp),transform .34s var(--sp);}',
       '.cw-win.cw-show{opacity:1;transform:none;pointer-events:auto;}',
-      '.cw-scroll{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent;}',
+      // Always-visible close inside the window — the reliable exit on mobile
+      // (the launcher can sit behind a full-screen window). Hidden on desktop.
+      '.cw-mclose{display:none;position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:2147482600;width:44px;height:44px;border-radius:50%;border:none;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .16s var(--sp);}',
+      '.cw-mclose svg{width:23px;height:23px;}.cw-mclose:active{transform:scale(.88);}',
+      '.cw-scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.12) transparent;}',
       '.cw-scroll::-webkit-scrollbar{width:6px;}.cw-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px;}',
       // views fade
       '.cw-view{animation:cwFade .32s var(--sp);}',
@@ -407,8 +411,29 @@
       '.cw-promo-cta:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(201,168,76,.34);}',
       '.cw-promo-no{position:relative;z-index:1;display:block;width:100%;text-align:center;background:none;border:none;color:var(--mut);font:400 12.5px "Inter";margin-top:9px;cursor:pointer;}',
       '.cw-promo-no:hover{color:var(--tx2);}',
-      // mobile
-      '@media(max-width:480px){.cw-win{right:0;left:0;bottom:0;top:0;width:100%;height:100%;border-radius:0;}.cw-launcher{right:16px;bottom:16px;}.cw-promo{right:12px;left:12px;width:auto;bottom:90px;}}',
+      // premium proactive bubble (agent avatar + typing → message)
+      '.cw-promo2{padding-top:16px;}',
+      '.cw-promo-head{display:flex;align-items:center;gap:10px;position:relative;z-index:1;margin-bottom:12px;}',
+      '.cw-promo-ava{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(145deg,var(--acc),#9c7f2c);display:flex;align-items:center;justify-content:center;color:#1a1206;font:700 15px "Inter";}',
+      '.cw-promo-ava img{width:100%;height:100%;object-fit:cover;}',
+      '.cw-promo-who{flex:1;min-width:0;}',
+      '.cw-promo-who b{display:block;font:600 14px "Inter";color:#fff;}',
+      '.cw-promo-who i{font:400 11.5px "Inter";color:var(--tx2);font-style:normal;}',
+      '.cw-promo-body{position:relative;z-index:1;min-height:22px;margin-bottom:14px;animation:cwFade .3s var(--sp);}',
+      '.cw-promo-typing{margin:0;}',
+      '.cw-promo-actions{position:relative;z-index:1;animation:cwFade .3s var(--sp);}',
+      '@keyframes cwBounce{0%{transform:translateY(0);}30%{transform:translateY(-8px);}55%{transform:translateY(0);}72%{transform:translateY(-4px);}100%{transform:translateY(0);}}',
+      '.cw-launcher.cw-bounce{animation:cwBounce .9s var(--sp);}',
+      // mobile — full-screen, keyboard-safe (visualViewport sets --cw-kb),
+      // safe-area aware, with the always-visible close button shown.
+      '@media(max-width:480px){',
+      '.cw-win{right:0;left:0;bottom:0;top:0;width:100%;max-width:100%;height:100dvh;height:calc(100dvh - var(--cw-kb,0px));border-radius:0;transition:opacity .26s var(--sp),transform .3s var(--sp);}',
+      '.cw-mclose.cw-mshow{display:flex;}',
+      '.cw-launcher{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));}',
+      '.cw-promo{right:12px;left:12px;width:auto;bottom:calc(90px + env(safe-area-inset-bottom,0px));}',
+      '.cw-hero,.cw-chead,.cw-topbar{padding-top:calc(16px + env(safe-area-inset-top,0px));}',
+      '.cw-scroll{scroll-padding-bottom:24px;}',
+      '}',
       '@media(prefers-reduced-motion:reduce){.cw *{animation:none !important;transition:none !important;}}'
     ].join('\n');
     var st = document.createElement('style'); st.id = 'carolina-styles'; st.textContent = css; document.head.appendChild(st);
@@ -2254,6 +2279,7 @@
           var lbl = ''; try { lbl = new Date(res.start).toLocaleString([], { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); } catch (e) { lbl = res.start; }
           card.innerHTML = '<div class="cw-book-done"><svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><div><b>You\'re booked!</b><span>' + esc(lbl) + ' — confirmation on its way to ' + esc(state.email.trim()) + '</span></div></div>';
           setLead(state.name.trim(), state.email.trim()); maybeScroll(false);
+          try { localStorage.setItem('cw_booked', '1'); } catch (e) {}
         } else { toast(res.error || 'Could not book that time'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } }
       })
       .catch(function () { toast('Network error — try again'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } });
@@ -2481,55 +2507,122 @@
     isOpen = open == null ? !isOpen : open;
     els.win.classList.toggle('cw-show', isOpen);
     els.launcher.classList.toggle('cw-open', isOpen);
+    if (els.mclose) els.mclose.classList.toggle('cw-mshow', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
     if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); }
-    else { clearHomeTimers(); clearPh(); }
+    else { clearHomeTimers(); clearPh(); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
   }
 
-  // ── Proactive popup ──
-  function dismissPromo(key) {
-    if (els.promo) { els.promo.classList.remove('cw-show'); }
-    if (key) { try { localStorage.setItem(DISMISS[key], '1'); } catch (e) {} }
+  // ── Proactive engagement (context-aware, trigger-driven, once/session) ──
+  var PROACTIVE_FLAG = 'the5th_carolina_proactive_shown';
+  // Per-page greetings — curiosity-first, never pushy. Admin can override any of
+  // these via config (cfg.proactive.pages[<ctx>] = {msgs,cta,seed,agent}).
+  var GREETINGS = {
+    home: { agent: 'carolina', cta: 'Show me', seed: "I'd love to know what's quietly holding my business back — can you help?",
+      returning: 'Welcome back 👋 Want to pick up where you left off, or see your fastest path to the next $10K month?',
+      msgs: ["Want to discover what's quietly capping your business growth?", 'Can I show you the fastest path to your next $10K month?', "Curious what your biggest growth bottleneck is?"] },
+    quiz: { agent: 'carolina', cta: 'Start the quiz', seed: 'Can you guide me through the Business Growth Quiz?',
+      msgs: ["You're only a couple of minutes from personalized insights — ready to begin?", "Take the Business Growth Quiz and discover what's holding your business back."] },
+    quizdone: { agent: 'natasha', cta: 'Walk me through it', seed: 'I just finished the quiz — can you walk me through my results and next steps?',
+      msgs: ['🎉 Nice work finishing the quiz! Want me to walk you through your results and the best next step?'] },
+    blog: { agent: 'benjamin', cta: 'Ask a question', seed: 'I have a question about this article.',
+      msgs: ['Have a question about this article? Ask me anything.', 'Want me to recommend the next read based on what you’re looking at?'] },
+    fastforward: { agent: 'carolina', cta: 'Tell me more', seed: 'Tell me about Fast Forward — the guarantee, case studies, and how a strategy call works.',
+      msgs: ['Questions about Fast Forward? I can share the guarantee, real case studies, or book you a strategy call.'] },
+    ai: { agent: 'carolina', cta: 'Show me a demo', seed: 'Can you show me a live demo of The5th AI, plus pricing and how it compares?',
+      msgs: ['Want a live demo of The5th AI — or a quick look at features, pricing and how it compares?'] },
+    collective: { agent: 'carolina', cta: 'Explore The Collective', seed: "Tell me about The Collective — what's inside and who it's for.",
+      msgs: ["Curious about The Collective? I can show you what's inside and who it's for."] },
+    casestudies: { agent: 'natasha', cta: 'Show me similar wins', seed: 'Show me success stories similar to my business, and how an assessment works.',
+      msgs: ['Want to see success stories similar to your business — or get a quick assessment?'] },
+    booked: { agent: 'natasha', cta: 'Help me prep', seed: 'I have a call booked — can you help me prepare and make the most of it?',
+      msgs: ["You're all set for your call 🎉 Anything I can help you prep in the meantime?"] }
+  };
+
+  function hasBooked() { try { return localStorage.getItem('cw_booked') === '1'; } catch (e) { return false; } }
+  function pageContext() {
+    var p = (location.pathname || '/').toLowerCase();
+    if (hasBooked()) return 'booked';
+    if (/quiz\/(results|thank)/.test(p) || /\/results/.test(p)) return 'quizdone';
+    if (/quiz/.test(p)) return 'quiz';
+    if (/fast-forward/.test(p)) return 'fastforward';
+    if (/\/ai(\/|$)/.test(p)) return 'ai';
+    if (/collective/.test(p)) return 'collective';
+    if (/clients|testimonials|case|success/.test(p)) return 'casestudies';
+    if (/blog|article|post|downloads/.test(p)) return 'blog';
+    return 'home';
   }
+  function greetingFor(ctx) {
+    var over = (cfg.proactive && cfg.proactive.pages && cfg.proactive.pages[ctx]) || null;
+    var G = over || GREETINGS[ctx] || GREETINGS.home;
+    var msgs = G.msgs || []; if (!msgs.length && !G.returning) return null;
+    var idx = 0; try { var k = 'cw_pg_' + ctx, s = sessionStorage.getItem(k); if (s != null) idx = parseInt(s, 10) || 0; else { idx = Math.floor(Math.random() * msgs.length); sessionStorage.setItem(k, String(idx)); } } catch (e) {}
+    var msg = (!isFirstTime() && G.returning) ? G.returning : (msgs[idx % msgs.length] || G.returning);
+    return { ctx: ctx, msg: msg, cta: G.cta || 'Show me', seed: G.seed || '', agent: G.agent || 'carolina' };
+  }
+
+  function dismissPromo(key) {
+    if (els.promo) { var p = els.promo; p.classList.remove('cw-show'); setTimeout(function () { if (p && p.parentNode) p.remove(); }, 320); els.promo = null; }
+    if (key) { try { localStorage.setItem(key, '1'); } catch (e) {} }
+  }
+  function pulseLauncher() {
+    try {
+      var l = els.launcher; if (!l) return;
+      if (!l.querySelector('.cw-badge')) l.appendChild(el('<span class="cw-badge">1</span>'));
+      if (!REDUCE) { l.classList.remove('cw-bounce'); void l.offsetWidth; l.classList.add('cw-bounce'); }
+    } catch (e) {}
+  }
+  function showPromoBubble(g, dkey) {
+    if (isOpen) return;
+    try { sessionStorage.setItem(PROACTIVE_FLAG, '1'); } catch (e) {}
+    var a = agentInfo(g.agent);
+    var p = el('<div class="cw cw-promo cw-promo2"><button class="cw-promo-x" aria-label="Dismiss">' + ICON.close + '</button>'
+      + '<div class="cw-promo-head"><span class="cw-promo-ava">' + agentAva(g.agent) + '</span>'
+      + '<div class="cw-promo-who"><b>' + esc(a.name) + '</b><i>' + esc(a.role) + '</i></div><span class="cw-live"></span></div>'
+      + '<div class="cw-promo-body"><div class="cw-typing cw-promo-typing"><span></span><span></span><span></span></div></div>'
+      + '<div class="cw-promo-actions" style="display:none"><button class="cw-promo-cta">' + esc(g.cta) + '</button>'
+      + '<button class="cw-promo-no">Not now</button></div>');
+    document.body.appendChild(p); els.promo = p; applyTheme();
+    requestAnimationFrame(function () { p.classList.add('cw-show'); });
+    pulseLauncher();
+    // brief typing beat → message (feels like a real person, not a popup ad)
+    setTimeout(function () {
+      if (!p.parentNode) return;
+      var body = p.querySelector('.cw-promo-body'); if (body) body.innerHTML = '<div class="cw-promo-msg">' + esc(g.msg) + '</div>';
+      var act = p.querySelector('.cw-promo-actions'); if (act) act.style.display = '';
+    }, REDUCE ? 0 : 1100);
+    p.querySelector('.cw-promo-x').addEventListener('click', function () { dismissPromo(dkey); });
+    p.querySelector('.cw-promo-no').addEventListener('click', function () { dismissPromo(dkey); });
+    p.querySelector('.cw-promo-cta').addEventListener('click', function () { dismissPromo(); toggle(true); startNewChat(g.seed); });
+  }
+
   function maybeShowPromo() {
     if (promoScheduled || isOpen) return;
     if (!notifEnabled()) return;
-    if (!cfg.proactive || !cfg.proactive.enabled) return;
-    // don't nag if they already have a real conversation
-    var hasChat = store.conversations.some(function (c) { return c.messages.length > 0; });
-    if (hasChat) return;
+    if (cfg.proactive && cfg.proactive.enabled === false) return;     // admin opt-out
+    try { if (sessionStorage.getItem(PROACTIVE_FLAG) === '1') return; } catch (e) {}   // one per session
+    if (store.conversations.some(function (c) { return c.messages.length > 0; })) return;  // never interrupt active chatters
 
-    var first = isFirstTime();
-    var key = first ? 'gift' : 'quiz';
-    var dismissed = false; try { dismissed = localStorage.getItem(DISMISS[key]) === '1'; } catch (e) {}
-    if (dismissed) return;
-
-    var data = first ? (cfg.proactive.gift || {}) : (cfg.proactive.quiz || {});
-    var message = data.message
-      || (first
-        ? '🎁 I have a free gift for you — a short PDF on how to make your first $3K/month in your coaching business. Want it?'
-        : 'Curious what’s quietly holding your business back? Take our free 60-second assessment — I’ll walk you through it.');
-    var ctaLabel = first ? 'Yes, send my gift 🎁' : 'Show me the quiz';
-    var seed = first ? "Yes! I'd love the free $3K/month PDF — please send it over." : 'I want to take the quiz — can you guide me through it?';
-    var icon = first ? ICON.gift : ICON.chart;
-
+    var g = greetingFor(pageContext()); if (!g) return;
+    var dkey = 'cw_px_' + g.ctx;
+    try { if (localStorage.getItem(dkey) === '1') return; } catch (e) {}    // remembered dismissal
     promoScheduled = true;
-    var delay = Math.max(0, Math.min(120, cfg.proactive.delay || 12)) * 1000;
-    setTimeout(function () {
-      if (isOpen) return;
-      var p = el('<div class="cw cw-promo"><button class="cw-promo-x" aria-label="Dismiss">' + ICON.close + '</button>'
-        + '<div class="cw-promo-ic">' + icon + '</div>'
-        + '<div class="cw-promo-msg">' + esc(message) + '</div>'
-        + '<button class="cw-promo-cta">' + ctaLabel + '</button>'
-        + '<button class="cw-promo-no">Maybe later</button></div>');
-      document.body.appendChild(p); els.promo = p;
-      p.querySelector('.cw-promo-x').addEventListener('click', function () { dismissPromo(key); });
-      p.querySelector('.cw-promo-no').addEventListener('click', function () { dismissPromo(key); });
-      p.querySelector('.cw-promo-cta').addEventListener('click', function () {
-        dismissPromo(key); toggle(true); startNewChat(seed);
-      });
-      requestAnimationFrame(function () { p.classList.add('cw-show'); });
-    }, delay);
+
+    var MIN = 6000, fired = false, startedAt = Date.now();
+    var baseDelay = Math.max(MIN, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 10) * 1000));
+    function fire() { if (fired || isOpen) return; fired = true; cleanup(); showPromoBubble(g, dkey); }
+    function cleanup() { clearTimeout(baseT); clearTimeout(idleT); window.removeEventListener('scroll', onScroll); document.removeEventListener('mousemove', onAct); document.removeEventListener('keydown', onAct); document.removeEventListener('touchstart', onAct); }
+    var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay
+    var idleT;                                  // Smart trigger 2: 30s idle
+    function armIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (Date.now() - startedAt >= MIN) fire(); }, 30000); }
+    function onAct() { armIdle(); }
+    armIdle();
+    document.addEventListener('mousemove', onAct, { passive: true }); document.addEventListener('keydown', onAct); document.addEventListener('touchstart', onAct, { passive: true });
+    function onScroll() {   // Smart trigger 3: scrolled 70% of the page
+      var h = document.documentElement, d = h.scrollHeight - h.clientHeight;
+      if (d > 200 && ((h.scrollTop || document.body.scrollTop) / d) >= 0.7 && Date.now() - startedAt >= MIN) fire();
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
   }
 
   // ── Build shell ──
@@ -2542,10 +2635,28 @@
       + '<span class="l-close">' + ICON.close + '</span>'
       + '<span class="cw-badge">1</span></button>');
     var win = el('<div class="cw cw-win" role="dialog" aria-label="The5th assistant"></div>');
-    document.body.appendChild(launcher); document.body.appendChild(win);
-    els.launcher = launcher; els.win = win;
+    // Always-reachable close (mobile can hide the launcher behind a full-screen
+    // window). Large touch target, respects safe areas.
+    var mclose = el('<button class="cw cw-mclose" aria-label="Close chat">' + ICON.close + '</button>');
+    document.body.appendChild(launcher); document.body.appendChild(win); document.body.appendChild(mclose);
+    els.launcher = launcher; els.win = win; els.mclose = mclose;
     applyTheme();
     launcher.addEventListener('click', function () { toggle(); });
+    mclose.addEventListener('click', function () { toggle(false); });
+    // ESC closes — never trap the user.
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) { e.preventDefault(); toggle(false); } });
+    // Keyboard-safe composer on mobile: track the visual viewport so the window
+    // shrinks to the visible area instead of hiding the input behind the keyboard.
+    if (window.visualViewport) {
+      var vv = window.visualViewport;
+      var onVV = function () {
+        if (!isOpen || window.innerWidth > 480) { document.documentElement.style.setProperty('--cw-kb', '0px'); return; }
+        var kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        document.documentElement.style.setProperty('--cw-kb', kb + 'px');
+        if (kb > 60) scrollChat();
+      };
+      vv.addEventListener('resize', onVV); vv.addEventListener('scroll', onVV);
+    }
     // Cmd/Ctrl+K focuses the composer (opening the widget / a chat if needed).
     document.addEventListener('keydown', function (e) {
       if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
@@ -2580,7 +2691,7 @@
       if (!d) { maybeShowPromo(); return; }
       if (d.avatar_url) cfg.avatar = d.avatar_url;
       if (d.greeting) cfg.greeting = d.greeting;
-      if (d.proactive) cfg.proactive = d.proactive;
+      if (d.proactive) cfg.proactive = Object.assign({ enabled: true, delay: 10 }, d.proactive);
       if (Array.isArray(d.agents)) {
         d.agents.forEach(function (a) { if (a && a.key) cfg.agents[a.key] = { name: a.name, role: a.role, avatar: a.avatar_url }; });
       }

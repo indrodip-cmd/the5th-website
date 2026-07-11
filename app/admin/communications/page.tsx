@@ -9,7 +9,7 @@ import { T, Card, Button, PageHeader, EmptyState, Modal, useAdminFetch, adminSen
 type Row = Record<string, unknown>
 const SC: Record<string, string> = { sent: '#0369a1', delivered: '#16a34a', opened: '#16a34a', clicked: '#16a34a', queued: '#6b7280', scheduled: '#7c3aed', sending: '#0369a1', failed: '#dc2626', bounced: '#dc2626', complained: '#dc2626', cancelled: '#9ca3af', replied: '#16a34a', received: '#7c3aed' }
 const pill = (s: string) => <span className="a-pill" style={{ background: `${SC[s] || '#6b7280'}1a`, color: SC[s] || '#6b7280' }}>{s}</span>
-const TABS = ['Dashboard', 'Messages', 'Compose', 'Designs', 'Providers', 'Templates', 'Senders'] as const
+const TABS = ['Dashboard', 'Messages', 'Compose', 'Designs', 'Campaigns', 'Sequences', 'Providers', 'Templates', 'Senders'] as const
 type Tab = typeof TABS[number]
 
 export default function Communications() {
@@ -24,6 +24,8 @@ export default function Communications() {
       {tab === 'Messages' && <Messages />}
       {tab === 'Compose' && <Compose />}
       {tab === 'Designs' && <Designs />}
+      {tab === 'Campaigns' && <Campaigns />}
+      {tab === 'Sequences' && <Sequences />}
       {tab === 'Providers' && <Providers />}
       {tab === 'Templates' && <Templates />}
       {tab === 'Senders' && <Senders />}
@@ -168,6 +170,143 @@ function Designs() {
   )
 }
 
+function Campaigns() {
+  const { data, loading, reload } = useAdminFetch<{ campaigns: Row[]; templates: Row[] }>('/api/admin/communications/campaigns')
+  const [edit, setEdit] = useState<Row | null>(null)
+  const [count, setCount] = useState<number | null>(null)
+  const send = async (c: Row) => { if (!confirm(`Send "${c.name}" now to the audience?`)) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'send_campaign', id: c.id }) as Row; alert(`Queued ${r?.queued ?? 0} emails.`); reload() }
+  const del = async (id: string) => { if (!confirm('Delete campaign?')) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_campaign', id }); reload() }
+  const save = async () => { if (!(edit?.name as string)?.trim() || !edit?.template_id) { alert('Name + template required'); return } await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'save_campaign', ...edit }); setEdit(null); reload() }
+  const preview = async (aud: Row) => { const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'audience_count', audience: aud }) as Row; setCount((r?.count as number) ?? 0) }
+  return (
+    <>
+      <div style={{ marginBottom: 14 }}><Button onClick={() => { setEdit({ audience: {} }); setCount(null) }}>＋ New campaign</Button></div>
+      {loading && !data ? <div className="skeleton" style={{ height: 140 }} /> : (data?.campaigns || []).length === 0 ? <EmptyState title="No campaigns yet" hint="Broadcast a design to a CRM audience — suppression, rate limits & tracking are automatic." /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {(data?.campaigns || []).map((c) => (
+            <Card key={c.id as string} pad={16}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1 }}><b style={{ color: T.ink }}>{c.name as string}</b><div style={{ fontSize: 12, color: T.muted }}>{c.status as string}{c.total ? ` · ${c.sent || c.total} sent` : ''}{c.scheduled_at ? ` · scheduled ${fmtDate(c.scheduled_at as string)}` : ''}</div></div>
+                {pill(c.status as string)}
+                {['draft', 'scheduled'].includes(c.status as string) && <Button onClick={() => send(c)}>Send now</Button>}
+                <Button variant="ghost" onClick={() => { setEdit(c); setCount(null) }}>Edit</Button>
+                <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger }} onClick={() => del(c.id as string)}>✕</button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+      {edit && (
+        <Modal open onClose={() => setEdit(null)} title={edit.id ? 'Edit campaign' : 'New campaign'}>
+          <input className="a-input" style={{ marginBottom: 10 }} placeholder="Campaign name" value={(edit.name as string) || ''} onChange={(e) => setEdit({ ...edit, name: e.target.value })} />
+          <select className="a-input" style={{ marginBottom: 10 }} value={(edit.template_id as string) || ''} onChange={(e) => setEdit({ ...edit, template_id: e.target.value })}><option value="">Choose email design…</option>{(data?.templates || []).map((t) => <option key={t.id as string} value={t.id as string}>{t.name as string}</option>)}</select>
+          <input className="a-input" style={{ marginBottom: 10 }} placeholder="Subject override (optional)" value={(edit.subject as string) || ''} onChange={(e) => setEdit({ ...edit, subject: e.target.value })} />
+          <div style={{ fontSize: 11.5, fontWeight: 700, color: T.sub, textTransform: 'uppercase', marginBottom: 6 }}>Audience</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+            <input className="a-input" placeholder="Tags (comma)" onChange={(e) => setEdit({ ...edit, audience: { ...(edit.audience as Row), tags: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) } })} />
+            <input className="a-input" placeholder="Lifecycle stage" onChange={(e) => setEdit({ ...edit, audience: { ...(edit.audience as Row), lifecycle_stage: e.target.value || undefined } })} />
+            <input className="a-input" placeholder="Country" onChange={(e) => setEdit({ ...edit, audience: { ...(edit.audience as Row), country: e.target.value || undefined } })} />
+            <input className="a-input" type="number" placeholder="Min lead score" onChange={(e) => setEdit({ ...edit, audience: { ...(edit.audience as Row), min_score: e.target.value ? Number(e.target.value) : undefined } })} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
+            <Button variant="ghost" onClick={() => preview(edit.audience as Row)}>Count audience</Button>
+            {count != null && <span style={{ fontSize: 13, color: T.ink }}>{count} recipients</span>}
+            <label style={{ fontSize: 12, color: T.sub, marginLeft: 'auto' }}>Schedule <input type="datetime-local" className="a-input" style={{ display: 'inline-block', width: 190, marginLeft: 4 }} onChange={(e) => setEdit({ ...edit, scheduled_at: e.target.value ? new Date(e.target.value).toISOString() : null })} /></label>
+          </div>
+          <Button onClick={save}>Save campaign</Button>
+        </Modal>
+      )}
+    </>
+  )
+}
+
+function Sequences() {
+  const { data, loading, reload } = useAdminFetch<{ sequences: Row[]; templates: Row[] }>('/api/admin/communications/campaigns')
+  const [open, setOpen] = useState<Row | null>(null)
+  const create = async () => { const name = prompt('Sequence name:'); if (!name) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'save_sequence', name }); reload() }
+  const toggle = async (s: Row) => { await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'toggle_sequence', id: s.id, status: s.status === 'active' ? 'paused' : 'active' }); reload() }
+  const del = async (id: string) => { if (!confirm('Delete sequence?')) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_sequence', id }); reload() }
+  return (
+    <>
+      <div style={{ marginBottom: 14 }}><Button onClick={create}>＋ New sequence</Button></div>
+      {loading && !data ? <div className="skeleton" style={{ height: 140 }} /> : (data?.sequences || []).length === 0 ? <EmptyState title="No sequences yet" hint="Build a drip: steps with delays, auto-enrolled from automations or manually." /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {(data?.sequences || []).map((s) => (
+            <Card key={s.id as string} pad={16}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1 }}><b style={{ color: T.ink }}>{s.name as string}</b><div style={{ fontSize: 12, color: T.muted }}>{s.enrolled as number || 0} enrolled</div></div>
+                {pill(s.status as string)}
+                <Button variant="ghost" onClick={() => toggle(s)}>{s.status === 'active' ? 'Pause' : 'Activate'}</Button>
+                <Button onClick={() => setOpen(s)}>Steps</Button>
+                <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger }} onClick={() => del(s.id as string)}>✕</button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+      {open && <SequenceModal seq={open} templates={data?.templates || []} onClose={() => { setOpen(null); reload() }} />}
+    </>
+  )
+}
+function SequenceModal({ seq, templates, onClose }: { seq: Row; templates: Row[]; onClose: () => void }) {
+  const { data, reload } = useAdminFetch<{ steps: Row[]; enrolled: number }>(`/api/admin/communications/campaigns?view=sequence&id=${seq.id}`)
+  const [step, setStep] = useState<Row>({ delay_hours: 24 })
+  const [email, setEmail] = useState('')
+  const addStep = async () => { if (!step.template_id) { alert('Pick a template'); return } await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'add_step', sequence_id: seq.id, ...step }); setStep({ delay_hours: 24 }); reload() }
+  const delStep = async (id: string) => { await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_step', id }); reload() }
+  const enroll = async () => { if (!email.trim()) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'enroll', sequence_id: seq.id, email }) as Row; alert(r?.ok ? 'Enrolled' : `Failed: ${r?.error}`); setEmail(''); reload() }
+  return (
+    <Modal open onClose={onClose} title={`${seq.name} · steps`}>
+      {(data?.steps || []).map((s, i) => (
+        <div key={s.id as string} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0', borderBottom: `1px solid ${T.border}` }}>
+          <span style={{ fontSize: 12, color: T.muted, width: 18 }}>{i + 1}</span>
+          <span style={{ flex: 1, fontSize: 13, color: T.ink }}>{(templates.find((t) => t.id === s.template_id)?.name as string) || 'template'}</span>
+          <span style={{ fontSize: 11.5, color: T.muted }}>wait {s.delay_hours as number}h</span>
+          <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger }} onClick={() => delStep(s.id as string)}>✕</button>
+        </div>
+      ))}
+      <div style={{ display: 'flex', gap: 8, margin: '12px 0', alignItems: 'center' }}>
+        <select className="a-input" value={(step.template_id as string) || ''} onChange={(e) => setStep({ ...step, template_id: e.target.value })}><option value="">Template…</option>{templates.map((t) => <option key={t.id as string} value={t.id as string}>{t.name as string}</option>)}</select>
+        <input className="a-input" type="number" style={{ width: 110 }} placeholder="wait hrs" value={step.delay_hours as number} onChange={(e) => setStep({ ...step, delay_hours: Number(e.target.value) })} />
+        <Button onClick={addStep}>Add step</Button>
+      </div>
+      <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 12, display: 'flex', gap: 8 }}>
+        <input className="a-input" placeholder="Enroll email…" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Button variant="ghost" onClick={enroll}>Enroll</Button>
+      </div>
+    </Modal>
+  )
+}
+
+function Deliverability() {
+  const { data, loading } = useAdminFetch<{ auth: Row }>('/api/admin/communications?view=deliverability')
+  const a = data?.auth
+  if (loading && !data) return <div className="skeleton" style={{ height: 90, borderRadius: 14, marginBottom: 14 }} />
+  if (!a) return null
+  const row = (label: string, ok: boolean, detail?: string) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5 }}>
+      <span style={{ color: ok ? '#16a34a' : '#dc2626', fontWeight: 800 }}>{ok ? '✓' : '✕'}</span>
+      <span style={{ width: 56, color: T.text }}>{label}</span>
+      <span style={{ color: T.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ok ? (detail || 'configured') : 'not detected'}</span>
+    </div>
+  )
+  const verified = !!(a.verified)
+  return (
+    <Card pad={16} style={{ marginBottom: 14, border: `1px solid ${verified ? '#bbf7d0' : '#fde68a'}`, background: verified ? '#f0fdf4' : '#fffbeb' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <span style={{ fontSize: 14, fontWeight: 800, color: T.ink }}>Deliverability · {a.domain as string}</span>
+        <span className="a-pill" style={{ background: verified ? '#dcfce7' : '#fef3c7', color: verified ? '#16a34a' : '#d97706' }}>{verified ? 'Authenticated' : 'Action needed'}</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 6 }}>
+        {row('SPF', !!(a.spf as Row)?.ok)}
+        {row('DKIM', !!(a.dkim as Row)?.ok, (a.dkim as Row)?.selector as string)}
+        {row('DMARC', !!(a.dmarc as Row)?.ok, (a.dmarc as Row)?.policy as string)}
+      </div>
+      {!verified && <div style={{ fontSize: 11.5, color: '#8a6d2a', marginTop: 8 }}>Add the SPF/DKIM/DMARC records from Resend → Domains for {a.domain as string}. Until verified, mail may land in spam.</div>}
+    </Card>
+  )
+}
+
 function Providers() {
   const { data, loading, reload } = useAdminFetch<{ providers: Row[] }>('/api/admin/communications?view=providers')
   const [busy, setBusy] = useState(false)
@@ -177,6 +316,7 @@ function Providers() {
   if (loading && !data) return <div className="skeleton" style={{ height: 200, borderRadius: 14 }} />
   return (
     <>
+      <Deliverability />
       <div style={{ marginBottom: 14 }}><Button disabled={busy} onClick={health}>{busy ? 'Checking…' : 'Run health check'}</Button></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(340px,1fr))', gap: 14 }}>
         {(data?.providers || []).map((p) => (

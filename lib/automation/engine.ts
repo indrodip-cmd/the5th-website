@@ -26,6 +26,7 @@ export const ACTION_TYPES = [
   'create_contact', 'update_contact', 'create_task', 'add_note', 'create_opportunity',
   'move_stage', 'add_tag', 'update_score', 'recommend_product', 'notify', 'log', 'trigger_webhook',
   'send_email', 'send_sms',   // via the Communication Engine (Tool Registry)
+  'enroll_sequence',          // drip: enroll the contact into an email sequence
 ]
 
 // ── Variable interpolation: {{path.to.value}} ──
@@ -109,6 +110,12 @@ async function runAction(name: string, params: Row, vars: Row): Promise<string> 
       if (!p.url) return 'no url'
       await fetch(String(p.url), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify((p.body as Row) || vars) }).catch(() => {})
       return 'webhook sent'
+    }
+    case 'enroll_sequence': {
+      if (!p.sequence_id || !email) return 'missing sequence_id or email'
+      const { enrollContact } = await import('@/lib/comm/campaigns')
+      const r = await enrollContact(String(p.sequence_id), { email })
+      return r.ok ? 'enrolled' : (r.error || 'enroll failed')
     }
     default: {
       const tool = getRegistered(name)

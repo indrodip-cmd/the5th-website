@@ -5,6 +5,7 @@ import { sanitizeText } from '@/lib/validation'
 import { PROVIDERS, getProvider } from '@/lib/comm/providers'
 import { sendMessage, deliver } from '@/lib/comm/engine'
 import { setSecret, isEnvSecret } from '@/lib/comm/config'
+import { checkDomain } from '@/lib/comm/deliverability'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -30,6 +31,11 @@ export async function GET(req: NextRequest) {
   const view = sp.get('view') || 'dashboard'
 
   if (view === 'providers') return NextResponse.json({ providers: await providerView() })
+  if (view === 'deliverability') {
+    const { data: s } = await db.from('comm_senders').select('email').eq('enabled', true).order('is_default', { ascending: false }).limit(1).maybeSingle()
+    const domain = (s?.email as string) || 'the5th.co'
+    return NextResponse.json({ auth: await checkDomain(domain) })
+  }
   if (view === 'templates') { const { data } = await db.from('comm_templates').select('*').order('updated_at', { ascending: false }); return NextResponse.json({ templates: data || [] }) }
   if (view === 'senders') { const { data } = await db.from('comm_senders').select('*').order('is_default', { ascending: false }); return NextResponse.json({ senders: data || [] }) }
   if (view === 'domains') { const { data } = await db.from('comm_domains').select('*').order('created_at'); return NextResponse.json({ domains: data || [] }) }

@@ -14,7 +14,7 @@ export interface SendMessage {
   channel?: 'email' | 'sms' | 'whatsapp'; to: string; subject?: string; html?: string; text?: string
   from?: string; replyTo?: string; contactId?: string; contactEmail?: string
   templateId?: string; campaignId?: string; source?: string
-  scheduledAt?: string; priority?: number; tags?: string[]
+  scheduledAt?: string; priority?: number; tags?: string[]; queueOnly?: boolean
 }
 
 function interp(s: string, vars: Row): string { return String(s || '').replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_m, k) => { const v = vars[k]; return v == null ? '' : String(v) }) }
@@ -65,6 +65,7 @@ export async function sendMessage(m: SendMessage): Promise<{ id: string | null; 
   const id = (data?.id as string) || null
   if (!id) return { id: null, status: 'failed', error: 'store failed' }
   if (scheduled) return { id, status: 'scheduled' }
+  if (m.queueOnly) return { id, status: 'queued' }   // bulk: let the queue processor drain it
   return { id, ...(await deliver(id)) }
 }
 

@@ -7,6 +7,7 @@ import { syncCoachingIntel } from '@/lib/coaching-intel'
 import { processScheduledRuns } from '@/lib/automation/engine'
 import { syncMemory, summarizeMonth } from '@/lib/memory/ingest'
 import { processQueue } from '@/lib/comm/engine'
+import { processScheduledCampaigns, processSequences } from '@/lib/comm/campaigns'
 import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -35,7 +36,10 @@ export async function GET(req: NextRequest) {
   const memory = await syncMemory(40).catch((e) => ({ error: String(e) }))
   const memorySummary = await summarizeMonth().catch((e) => ({ error: String(e) }))
   // Communication Engine: deliver scheduled + retry-pending messages.
-  const comms = await processQueue(60).catch((e) => ({ error: String(e) }))
+  // Campaigns/sequences enqueue into the same engine queue; drain it last.
+  const campaigns = await processScheduledCampaigns().catch((e) => ({ error: String(e) }))
+  const sequences = await processSequences(80).catch((e) => ({ error: String(e) }))
+  const comms = await processQueue(120).catch((e) => ({ error: String(e) }))
   const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, comms, alerts })
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, campaigns, sequences, comms, alerts })
 }

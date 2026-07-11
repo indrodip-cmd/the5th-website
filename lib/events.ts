@@ -23,6 +23,8 @@ export const TRIGGERS = [
   'refund_recorded', 'content_viewed', 'insight_generated', 'integration_synced',
   // Command Center (3I.4) events
   'revenue_recorded', 'webhook_received', 'webhook_failed', 'notification_created',
+  // Communication OS (3I.8A) events
+  'email_sent', 'sms_sent', 'sms_received', 'whatsapp_received',
 ] as const
 
 /* Resolve a contact id from an email against the CRM source of truth. Kept

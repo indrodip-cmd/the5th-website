@@ -34,9 +34,10 @@ export async function GET(req: NextRequest) {
   if (view === 'senders') { const { data } = await db.from('comm_senders').select('*').order('is_default', { ascending: false }); return NextResponse.json({ senders: data || [] }) }
   if (view === 'domains') { const { data } = await db.from('comm_domains').select('*').order('created_at'); return NextResponse.json({ domains: data || [] }) }
   if (view === 'messages') {
-    let q = db.from('comm_messages').select('id,channel,provider,to_addr,subject,status,source,contact_email,error,created_at,sent_at').order('created_at', { ascending: false }).limit(120)
+    let q = db.from('comm_messages').select('id,channel,provider,direction,to_addr,from_addr,subject,body,status,source,contact_email,error,created_at,sent_at').order('created_at', { ascending: false }).limit(120)
     if (sp.get('status')) q = q.eq('status', sp.get('status'))
     if (sp.get('channel')) q = q.eq('channel', sp.get('channel'))
+    if (sp.get('direction')) q = q.eq('direction', sp.get('direction'))
     if (sp.get('q')) { const like = `%${sp.get('q')}%`; q = q.or(`to_addr.ilike.${like},subject.ilike.${like},contact_email.ilike.${like}`) }
     const { data } = await q
     return NextResponse.json({ messages: data || [] })

@@ -91,8 +91,11 @@ const twilio: Provider = {
   async isConfigured() { return (await hasSecret('TWILIO_ACCOUNT_SID')) && (await hasSecret('TWILIO_AUTH_TOKEN')) && (await hasSecret('TWILIO_FROM_NUMBER')) },
   async send(i) {
     try {
-      const sid = await getSecret('TWILIO_ACCOUNT_SID'), token = await getSecret('TWILIO_AUTH_TOKEN'), from = await getSecret('TWILIO_FROM_NUMBER')
+      const sid = await getSecret('TWILIO_ACCOUNT_SID'), token = await getSecret('TWILIO_AUTH_TOKEN')
+      let from = await getSecret('TWILIO_FROM_NUMBER')
       if (!sid || !token || !from) return { ok: false, error: 'Twilio not configured' }
+      // WhatsApp: both To and From must carry the whatsapp: channel prefix.
+      if (i.to.startsWith('whatsapp:') && !from.startsWith('whatsapp:')) from = `whatsapp:${from}`
       const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
         method: 'POST', headers: { Authorization: 'Basic ' + Buffer.from(`${sid}:${token}`).toString('base64'), 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ To: i.to, From: from, Body: i.text || i.subject || '' }),

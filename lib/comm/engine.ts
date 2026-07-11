@@ -10,7 +10,7 @@ type Row = Record<string, unknown>
 const MAX_ATTEMPTS = 3
 
 export interface SendMessage {
-  channel?: 'email' | 'sms'; to: string; subject?: string; html?: string; text?: string
+  channel?: 'email' | 'sms' | 'whatsapp'; to: string; subject?: string; html?: string; text?: string
   from?: string; replyTo?: string; contactId?: string; contactEmail?: string
   templateId?: string; campaignId?: string; source?: string
   scheduledAt?: string; priority?: number; tags?: string[]
@@ -27,8 +27,13 @@ async function defaultSender(): Promise<{ from: string; replyTo?: string }> {
 async function contactForRecipient(m: SendMessage): Promise<Row | null> {
   const db = getSupabaseAdmin()
   if (m.contactId) { const { data } = await db.from('crm_contacts').select('id,name,email').eq('id', m.contactId).maybeSingle(); if (data) return data }
-  const email = (m.contactEmail || (m.channel !== 'sms' ? m.to : '')).toLowerCase()
+  const email = (m.contactEmail || (m.channel === 'email' ? m.to : '')).toLowerCase()
   if (email) { const { data } = await db.from('crm_contacts').select('id,name,email').eq('email', email).maybeSingle(); return data }
+  // Phone channels: link by phone number.
+  if (m.channel === 'sms' || m.channel === 'whatsapp') {
+    const digits = m.to.replace(/[^\d]/g, '').slice(-10)
+    if (digits) { const { data } = await db.from('crm_contacts').select('id,name,email').ilike('phone', `%${digits}%`).limit(1).maybeSingle(); return data }
+  }
   return null
 }
 
@@ -42,8 +47,9 @@ export async function sendMessage(m: SendMessage): Promise<{ id: string | null; 
   const vars: Row = { name: (contact?.name as string) || '', first_name: String(contact?.name || '').split(' ')[0] || '', email: (contact?.email as string) || m.to }
   const sender = m.from ? { from: m.from, replyTo: m.replyTo } : await defaultSender()
   const scheduled = m.scheduledAt && new Date(m.scheduledAt).getTime() > Date.now()
+  const toAddr = channel === 'whatsapp' && !m.to.startsWith('whatsapp:') ? `whatsapp:${m.to}` : m.to
   const { data } = await db.from('comm_messages').insert({
-    channel, direction: 'outbound', to_addr: m.to, from_addr: sender.from, reply_to: m.replyTo || sender.replyTo || null,
+    channel, direction: 'outbound', to_addr: toAddr, from_addr: sender.from, reply_to: m.replyTo || sender.replyTo || null,
     subject: m.subject ? interp(m.subject, vars) : null, body: interp(m.html || m.text || '', vars),
     status: scheduled ? 'scheduled' : 'queued', contact_id: (contact?.id as string) || m.contactId || null, contact_email: (contact?.email as string) || m.contactEmail || (channel === 'email' ? m.to : null),
     template_id: m.templateId || null, campaign_id: m.campaignId || null, source: m.source || 'manual',
@@ -63,7 +69,8 @@ export async function deliver(id: string): Promise<{ status: string; error?: str
   if (['sent', 'delivered', 'opened', 'clicked', 'cancelled'].includes(msg.status as string)) return { status: msg.status as string }
   await db.from('comm_messages').update({ status: 'sending', updated_at: new Date().toISOString() }).eq('id', id)
 
-  const { data: provRows } = await db.from('comm_providers').select('*').eq('enabled', true).eq('kind', msg.channel as string).order('priority', { ascending: true })
+  const providerKind = msg.channel === 'whatsapp' ? 'sms' : (msg.channel as string)   // Twilio handles SMS + WhatsApp
+  const { data: provRows } = await db.from('comm_providers').select('*').eq('enabled', true).eq('kind', providerKind).order('priority', { ascending: true })
   const candidates = (provRows || []).map((p) => ({ row: p, adapter: getProvider(p.slug as string) })).filter((c) => c.adapter)
   let lastErr = 'no configured provider'
   for (const c of candidates) {

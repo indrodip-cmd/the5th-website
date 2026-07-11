@@ -19,6 +19,7 @@ export const TRIGGER_TYPES = [
   'contact_created', 'contact_updated', 'appointment_booked', 'meeting_completed',
   'purchase_recorded', 'refund_recorded', 'task_created', 'task_completed',
   'content_published', 'opportunity_won', 'opportunity_lost', 'lead_score_changed',
+  'sms_received', 'whatsapp_received', 'email_sent', 'sms_sent',
   'webhook_received', 'revenue_recorded', 'schedule', 'manual', 'webhook',
 ]
 export const ACTION_TYPES = [

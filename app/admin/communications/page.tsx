@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { T, Card, Button, PageHeader, EmptyState, Modal, useAdminFetch, adminSend, fmtDate } from '@/components/admin/ui'
 
 type Row = Record<string, unknown>
-const SC: Record<string, string> = { sent: '#0369a1', delivered: '#16a34a', opened: '#16a34a', clicked: '#16a34a', queued: '#6b7280', scheduled: '#7c3aed', sending: '#0369a1', failed: '#dc2626', bounced: '#dc2626', complained: '#dc2626', cancelled: '#9ca3af', replied: '#16a34a' }
+const SC: Record<string, string> = { sent: '#0369a1', delivered: '#16a34a', opened: '#16a34a', clicked: '#16a34a', queued: '#6b7280', scheduled: '#7c3aed', sending: '#0369a1', failed: '#dc2626', bounced: '#dc2626', complained: '#dc2626', cancelled: '#9ca3af', replied: '#16a34a', received: '#7c3aed' }
 const pill = (s: string) => <span className="a-pill" style={{ background: `${SC[s] || '#6b7280'}1a`, color: SC[s] || '#6b7280' }}>{s}</span>
 const TABS = ['Dashboard', 'Messages', 'Compose', 'Designs', 'Providers', 'Templates', 'Senders'] as const
 type Tab = typeof TABS[number]
@@ -84,19 +84,21 @@ function Messages() {
       </div>
       {loading && !data ? <div className="skeleton" style={{ height: 200, borderRadius: 14 }} /> : (data?.messages || []).length === 0 ? <EmptyState title="No messages" /> : (
         <Card pad={0}>
-          {(data?.messages || []).map((m) => (
-            <div key={m.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderBottom: `1px solid ${T.border}` }}>
-              <span>{m.channel === 'sms' ? '💬' : '✉️'}</span>
+          {(data?.messages || []).map((m) => {
+            const inbound = m.direction === 'inbound'
+            return (
+            <div key={m.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderBottom: `1px solid ${T.border}`, background: inbound ? '#faf8fc' : 'transparent' }}>
+              <span title={inbound ? 'Inbound' : 'Outbound'}>{inbound ? '📥' : m.channel === 'sms' || m.channel === 'whatsapp' ? '💬' : '✉️'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{(m.subject as string) || '(no subject)'}</div>
-                <div style={{ fontSize: 11.5, color: T.muted }}>{m.to_addr as string} · {m.provider as string || m.source as string} {m.error ? `· ${String(m.error).slice(0, 40)}` : ''}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: T.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{inbound ? (String(m.body || '') || '(empty)') : ((m.subject as string) || (String(m.body || '').slice(0, 60)) || '(no subject)')}</div>
+                <div style={{ fontSize: 11.5, color: T.muted }}>{inbound ? `from ${m.from_addr as string}` : (m.to_addr as string)} · {m.channel as string} · {m.provider as string || m.source as string} {m.error ? `· ${String(m.error).slice(0, 40)}` : ''}</div>
               </div>
               {pill(m.status as string)}
               <span style={{ fontSize: 11, color: T.muted, width: 88, textAlign: 'right' }}>{fmtDate(m.created_at as string)}</span>
               {['failed', 'bounced'].includes(m.status as string) && <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.green }} onClick={() => retry(m.id as string)}>Retry</button>}
               {['queued', 'scheduled'].includes(m.status as string) && <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger }} onClick={() => cancel(m.id as string)}>Cancel</button>}
             </div>
-          ))}
+          ) })}
         </Card>
       )}
     </>
@@ -116,9 +118,9 @@ function Compose() {
     <div style={{ maxWidth: 640 }}>
       <Card>
         <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-          {['email', 'sms'].map((c) => <button key={c} className="tab-btn" onClick={() => setF({ ...f, channel: c })} style={{ background: f.channel === c ? T.green2 : '#fff', color: f.channel === c ? '#fff' : T.sub, border: `1px solid ${f.channel === c ? T.green2 : T.border}`, textTransform: 'capitalize' }}>{c}</button>)}
+          {['email', 'sms', 'whatsapp'].map((c) => <button key={c} className="tab-btn" onClick={() => setF({ ...f, channel: c })} style={{ background: f.channel === c ? T.green2 : '#fff', color: f.channel === c ? '#fff' : T.sub, border: `1px solid ${f.channel === c ? T.green2 : T.border}`, textTransform: 'capitalize' }}>{c}</button>)}
         </div>
-        <input className="a-input" style={{ marginBottom: 10 }} placeholder={f.channel === 'sms' ? 'Phone (E.164, +1…)' : 'Recipient email'} value={f.to as string} onChange={(e) => setF({ ...f, to: e.target.value })} />
+        <input className="a-input" style={{ marginBottom: 10 }} placeholder={f.channel !== 'email' ? 'Phone (E.164, +1…)' : 'Recipient email'} value={f.to as string} onChange={(e) => setF({ ...f, to: e.target.value })} />
         {f.channel === 'email' && <input className="a-input" style={{ marginBottom: 10 }} placeholder="Subject" value={f.subject as string} onChange={(e) => setF({ ...f, subject: e.target.value })} />}
         <textarea className="a-input" style={{ minHeight: 140, marginBottom: 10 }} placeholder={f.channel === 'email' ? 'HTML or text — use {{name}}, {{first_name}}' : 'Message text — use {{first_name}}'} value={f.body as string} onChange={(e) => setF({ ...f, body: e.target.value })} />
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

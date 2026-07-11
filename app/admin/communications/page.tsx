@@ -174,7 +174,9 @@ function Campaigns() {
   const { data, loading, reload } = useAdminFetch<{ campaigns: Row[]; templates: Row[] }>('/api/admin/communications/campaigns')
   const [edit, setEdit] = useState<Row | null>(null)
   const [count, setCount] = useState<number | null>(null)
-  const send = async (c: Row) => { if (!confirm(`Send "${c.name}" now to the audience?`)) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'send_campaign', id: c.id }) as Row; alert(`Queued ${r?.queued ?? 0} emails.`); reload() }
+  const [review, setReview] = useState<string | null>(null)
+  const [stats, setStats] = useState<string | null>(null)
+  const send = async (c: Row) => { if (!confirm(`Send "${c.name}" now to the audience?`)) return; const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'send_campaign', id: c.id, require_ready: true }) as Row; if (r?.error) { alert(`Blocked: ${r.error}`); return } const q = Number(r?.queued || 0); alert(`Sent — ${q} emails ${q <= 300 ? 'delivered now' : 'queued'}.`); reload() }
   const del = async (id: string) => { if (!confirm('Delete campaign?')) return; await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'delete_campaign', id }); reload() }
   const save = async () => { if (!(edit?.name as string)?.trim() || !edit?.template_id) { alert('Name + template required'); return } await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'save_campaign', ...edit }); setEdit(null); reload() }
   const preview = async (aud: Row) => { const r = await adminSend('/api/admin/communications/campaigns', 'POST', { action: 'audience_count', audience: aud }) as Row; setCount((r?.count as number) ?? 0) }
@@ -188,7 +190,9 @@ function Campaigns() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ flex: 1 }}><b style={{ color: T.ink }}>{c.name as string}</b><div style={{ fontSize: 12, color: T.muted }}>{c.status as string}{c.total ? ` · ${c.sent || c.total} sent` : ''}{c.scheduled_at ? ` · scheduled ${fmtDate(c.scheduled_at as string)}` : ''}</div></div>
                 {pill(c.status as string)}
-                {['draft', 'scheduled'].includes(c.status as string) && <Button onClick={() => send(c)}>Send now</Button>}
+                <Button variant="ghost" onClick={() => setReview(c.id as string)}>Review</Button>
+                {c.status === 'sent' && <Button variant="ghost" onClick={() => setStats(c.id as string)}>Analytics</Button>}
+                {['draft', 'scheduled'].includes(c.status as string) && <Button onClick={() => send(c)}>Send</Button>}
                 <Button variant="ghost" onClick={() => { setEdit(c); setCount(null) }}>Edit</Button>
                 <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.danger }} onClick={() => del(c.id as string)}>✕</button>
               </div>
@@ -216,7 +220,52 @@ function Campaigns() {
           <Button onClick={save}>Save campaign</Button>
         </Modal>
       )}
+      {review && <CampaignReview id={review} onClose={() => setReview(null)} />}
+      {stats && <CampaignStats id={stats} onClose={() => setStats(null)} />}
     </>
+  )
+}
+
+function scoreColor(n: number) { return n >= 85 ? '#16a34a' : n >= 70 ? '#0369a1' : n >= 50 ? '#d97706' : '#dc2626' }
+function CampaignReview({ id, onClose }: { id: string; onClose: () => void }) {
+  const { data, loading } = useAdminFetch<{ review: Row }>(`/api/admin/communications/campaigns?view=review&id=${id}`)
+  const r = data?.review
+  return (
+    <Modal open onClose={onClose} title="AI pre-launch review">
+      {loading || !r ? <div className="skeleton" style={{ height: 160 }} /> : r.error ? <EmptyState title={r.error as string} /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', border: `4px solid ${scoreColor(r.health as number)}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: scoreColor(r.health as number) }}>{r.health as number}</div>
+            <div><div style={{ fontSize: 16, fontWeight: 800, color: T.ink }}>{r.band as string}</div><div style={{ fontSize: 12, color: T.sub }}>Campaign health · {r.ready ? 'ready to launch' : 'checks failing'}</div></div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+            {Object.entries((r.scores as Row) || {}).map(([k, v]) => <div key={k} style={{ textAlign: 'center', padding: 8, borderRadius: 8, background: '#faf8fc' }}><div style={{ fontSize: 17, fontWeight: 800, color: T.ink }}>{k === 'spam' ? `${v}` : v as number}</div><div style={{ fontSize: 10.5, color: T.muted, textTransform: 'capitalize' }}>{k === 'spam' ? 'spam risk' : k}</div></div>)}
+          </div>
+          {(r.inbox as Row) && <div style={{ fontSize: 12.5, color: T.text }}>📥 Estimated placement: <b>{(r.inbox as Row).placement as string}</b> — {(r.inbox as Row).note as string}</div>}
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: T.sub, textTransform: 'uppercase', marginBottom: 4 }}>Pre-launch checklist</div>
+            {((r.checklist as Row[]) || []).map((c, i) => <div key={i} style={{ display: 'flex', gap: 6, fontSize: 12.5, color: c.ok ? T.text : (c.critical ? '#dc2626' : '#d97706') }}><span>{c.ok ? '✓' : c.critical ? '✕' : '⚠'}</span>{c.label as string}{c.detail ? <span style={{ color: T.muted }}>· {c.detail as string}</span> : null}</div>)}
+          </div>
+          {((r.spam as Row)?.reasons as string[] || []).length > 0 && <div><div style={{ fontSize: 12, fontWeight: 700, color: T.sub, textTransform: 'uppercase', marginBottom: 4 }}>Spam flags</div>{((r.spam as Row).reasons as string[]).map((s, i) => <div key={i} style={{ fontSize: 12, color: '#d97706' }}>• {s}</div>)}</div>}
+          {((r.design_suggestions as string[]) || []).length > 0 && <div><div style={{ fontSize: 12, fontWeight: 700, color: T.sub, textTransform: 'uppercase', marginBottom: 4 }}>AI suggestions</div>{((r.design_suggestions as string[]) || []).slice(0, 5).map((s, i) => <div key={i} style={{ fontSize: 12, color: T.sub }}>• {s}</div>)}</div>}
+        </div>
+      )}
+    </Modal>
+  )
+}
+function CampaignStats({ id, onClose }: { id: string; onClose: () => void }) {
+  const { data, loading } = useAdminFetch<{ stats: Row }>(`/api/admin/communications/campaigns?view=stats&id=${id}`)
+  const s = data?.stats
+  return (
+    <Modal open onClose={onClose} title="Campaign analytics">
+      {loading || !s ? <div className="skeleton" style={{ height: 120 }} /> : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(110px,1fr))', gap: 10 }}>
+          {[['Sent', s.total], ['Delivered %', s.deliveredRate], ['Open %', s.openRate], ['Click %', s.clickRate]].map(([k, v]) => (
+            <div key={k as string} style={{ padding: 12, borderRadius: 10, background: '#faf8fc', textAlign: 'center' }}><div style={{ fontSize: 20, fontWeight: 800, color: T.ink }}>{v as number}</div><div style={{ fontSize: 11, color: T.muted }}>{k as string}</div></div>
+          ))}
+        </div>
+      )}
+    </Modal>
   )
 }
 

@@ -3,6 +3,9 @@
    failover, tracking and the CRM timeline all apply. (3I.8A.3) */
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { unsubscribeUrl, isUnsubscribed } from '@/lib/comm/unsubscribe'
+import { analyzeSpam, inboxEstimate } from '@/lib/comm/spam'
+import { checkDomain } from '@/lib/comm/deliverability'
+import { reviewDesign } from '@/lib/email/ai'
 
 type Row = Record<string, unknown>
 export interface Audience { tags?: string[]; lifecycle_stage?: string; pipeline_stage?: string; country?: string; min_score?: number }
@@ -56,6 +59,74 @@ export async function sendCampaign(id: string): Promise<{ queued: number }> {
   await db.from('comm_campaigns').update({ status: 'sent', total: rows.length, sent_at: new Date().toISOString(), updated_at: new Date().toISOString() }).eq('id', id)
   return { queued: rows.length }
 }
+/* Pre-launch checklist — computed gates. `critical` items block a safe launch. */
+export async function campaignChecklist(id: string): Promise<Array<{ label: string; ok: boolean; critical: boolean; detail?: string }>> {
+  const db = getSupabaseAdmin()
+  const { data: c } = await db.from('comm_campaigns').select('*').eq('id', id).maybeSingle()
+  if (!c) return []
+  const [audience, { data: tpl }, { data: sender }] = await Promise.all([
+    countAudience((c.audience as Audience) || {}),
+    c.template_id ? db.from('comm_templates').select('subject,body').eq('id', c.template_id as string).maybeSingle() : Promise.resolve({ data: null }),
+    db.from('comm_senders').select('email').eq('enabled', true).order('is_default', { ascending: false }).limit(1).maybeSingle(),
+  ])
+  const domain = (sender?.email as string) || 'the5th.co'
+  const auth = await checkDomain(domain)
+  const subject = (c.subject as string) || (tpl?.subject as string) || ''
+  const hasUnsub = tpl ? /unsubscribe|\{\{\s*unsubscribe_url/i.test(tpl.body as string) : false
+  return [
+    { label: 'Audience has recipients', ok: audience > 0, critical: true, detail: `${audience} contacts` },
+    { label: 'Email design selected', ok: !!tpl, critical: true },
+    { label: 'Subject line present', ok: !!subject.trim(), critical: true, detail: subject.slice(0, 40) },
+    { label: 'Sender identity set', ok: !!sender, critical: true, detail: domain },
+    { label: 'Domain authenticated (SPF/DKIM)', ok: auth.verified, critical: false, detail: auth.verified ? 'verified' : 'not verified' },
+    { label: 'Unsubscribe link present', ok: hasUnsub, critical: false },
+  ]
+}
+
+/* Full AI-assisted pre-launch review → a Campaign Health Score. */
+export async function reviewCampaign(id: string): Promise<Row> {
+  const db = getSupabaseAdmin()
+  const { data: c } = await db.from('comm_campaigns').select('*').eq('id', id).maybeSingle()
+  if (!c || !c.template_id) return { error: 'Campaign needs a template' }
+  const { data: tpl } = await db.from('comm_templates').select('subject,body,design').eq('id', c.template_id as string).maybeSingle()
+  const { data: sender } = await db.from('comm_senders').select('email').eq('enabled', true).order('is_default', { ascending: false }).limit(1).maybeSingle()
+  const subject = (c.subject as string) || (tpl?.subject as string) || ''
+  const spam = analyzeSpam((tpl?.body as string) || '', subject)
+  const auth = await checkDomain((sender?.email as string) || 'the5th.co')
+  const design = await reviewDesign({ subject, blocks: ((tpl?.design as Row)?.blocks as never[]) || [] }).catch(() => ({ ok: false }))
+  const designScore = (design as Row)?.ok ? Number(((design as Row).review as Row)?.score || 70) : 70
+  const deliverScore = auth.verified ? 95 : 45
+  const spamScore = 100 - spam.score
+  const health = Math.round(designScore * 0.4 + spamScore * 0.35 + deliverScore * 0.25)
+  const checklist = await campaignChecklist(id)
+  return {
+    health, band: health >= 85 ? 'Excellent' : health >= 70 ? 'Good' : health >= 50 ? 'Needs improvement' : 'High risk',
+    scores: { design: designScore, spam: spam.score, deliverability: deliverScore },
+    spam, inbox: inboxEstimate(spam.score, auth.verified), auth,
+    design_suggestions: (design as Row)?.ok ? (((design as Row).review as Row)?.suggestions || []) : [],
+    checklist, ready: checklist.filter((x) => x.critical).every((x) => x.ok),
+  }
+}
+
+export async function campaignStats(id: string): Promise<Row> {
+  const { data } = await getSupabaseAdmin().from('comm_messages').select('status').eq('campaign_id', id).limit(50000)
+  const rows = data || []
+  const by: Record<string, number> = {}
+  for (const r of rows) by[r.status as string] = (by[r.status as string] || 0) + 1
+  const total = rows.length
+  const delivered = (by.delivered || 0) + (by.opened || 0) + (by.clicked || 0)
+  const opened = (by.opened || 0) + (by.clicked || 0)
+  return { total, byStatus: by, deliveredRate: total ? Math.round((delivered / total) * 100) : 0, openRate: delivered ? Math.round((opened / delivered) * 100) : 0, clickRate: opened ? Math.round(((by.clicked || 0) / opened) * 100) : 0 }
+}
+
+/* Smart stop — end active sequence enrollments for a contact (booked/purchased/
+   unsubscribed) to prevent duplicate communication. */
+export async function stopSequencesFor(email: string): Promise<number> {
+  if (!email) return 0
+  const { data } = await getSupabaseAdmin().from('comm_sequence_enrollments').update({ status: 'stopped' }).eq('contact_email', email.toLowerCase()).eq('status', 'active').select('id')
+  return (data || []).length
+}
+
 export async function processScheduledCampaigns(): Promise<{ sent: number }> {
   const db = getSupabaseAdmin()
   const { data } = await db.from('comm_campaigns').select('id').eq('status', 'scheduled').lte('scheduled_at', new Date().toISOString()).limit(10)

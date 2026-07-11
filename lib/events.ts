@@ -193,6 +193,10 @@ export async function emitEvent(type: string, data: Ctx = {}): Promise<void> {
       // Also dispatch to the Automation Studio (3I.6) graph workflows. Dynamic
       // import breaks the events↔engine↔crm load cycle.
       try { const { dispatchEvent } = await import('@/lib/automation/engine'); await dispatchEvent(type, ctx) } catch (e) { console.error('studio dispatch failed', e) }
+      // Smart stop rules (3I.8A.3): booked/purchased/unsubscribed → stop drips.
+      if (['appointment_booked', 'purchase_recorded', 'opportunity_won', 'revenue_recorded'].includes(type) && ctx.email) {
+        try { const { stopSequencesFor } = await import('@/lib/comm/campaigns'); await stopSequencesFor(String(ctx.email)) } catch (e) { console.error('smart-stop failed', e) }
+      }
     } catch (e) {
       console.error('emitEvent failed', type, e)
     }

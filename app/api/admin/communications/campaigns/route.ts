@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { sanitizeText } from '@/lib/validation'
-import { countAudience, sendCampaign, enrollContact, type Audience } from '@/lib/comm/campaigns'
+import { countAudience, sendCampaign, enrollContact, reviewCampaign, campaignStats, campaignChecklist, type Audience } from '@/lib/comm/campaigns'
+import { processQueue } from '@/lib/comm/engine'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -21,6 +22,8 @@ export async function GET(req: NextRequest) {
     ])
     return NextResponse.json({ sequence: seq, steps: steps || [], enrolled: enrolled || 0 })
   }
+  if (view === 'review') return NextResponse.json({ review: await reviewCampaign(sp.get('id') || '') })
+  if (view === 'stats') return NextResponse.json({ stats: await campaignStats(sp.get('id') || ''), checklist: await campaignChecklist(sp.get('id') || '') })
   const [campaigns, sequences, templates] = await Promise.all([
     db.from('comm_campaigns').select('*').order('created_at', { ascending: false }),
     db.from('comm_sequences').select('*').order('created_at', { ascending: false }),
@@ -44,7 +47,14 @@ export async function POST(req: NextRequest) {
     const { data } = await db.from('comm_campaigns').insert({ ...row, created_by: actor }).select('id').single()
     return NextResponse.json({ ok: true, id: data?.id })
   }
-  if (action === 'send_campaign') { await db.from('comm_campaigns').update({ status: 'sending' }).eq('id', b?.id); const r = await sendCampaign(String(b?.id)); return NextResponse.json({ ok: true, ...r }) }
+  if (action === 'send_campaign') {
+    if (b?.require_ready) { const cl = await campaignChecklist(String(b?.id)); if (!cl.filter((x) => x.critical).every((x) => x.ok)) return NextResponse.json({ error: 'Pre-launch checks failed', checklist: cl }, { status: 400 }) }
+    await db.from('comm_campaigns').update({ status: 'sending' }).eq('id', b?.id)
+    const r = await sendCampaign(String(b?.id))
+    // Immediate send for small campaigns (don't wait for the daily cron).
+    if (r.queued > 0 && r.queued <= 300) await processQueue(r.queued).catch(() => {})
+    return NextResponse.json({ ok: true, ...r })
+  }
   if (action === 'delete_campaign') { await db.from('comm_campaigns').delete().eq('id', b?.id); return NextResponse.json({ ok: true }) }
 
   if (action === 'save_sequence') {

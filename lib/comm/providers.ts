@@ -27,6 +27,16 @@ const EVENT_MAP: Record<string, string> = {
 }
 export const canonicalEvent = (e: string) => EVENT_MAP[e] || e
 
+// Extract the bare email from a "Name <email>" string.
+function fromEmail(from: string): string { const m = /<([^>]+)>/.exec(from); return (m ? m[1] : from).trim() }
+// Reasonable plain-text fallback from HTML (spam filters penalize HTML-only).
+function htmlToText(html: string): string {
+  return html.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<\/(p|div|tr|h[1-6]|li)>/gi, '\n').replace(/<br\s*\/?>(?!\n)/gi, '\n').replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/\n{3,}/g, '\n\n').replace(/[ \t]{2,}/g, ' ').trim().slice(0, 20000)
+}
+
 // ── Resend (transactional email) ──
 const resend: Provider = {
   slug: 'resend', name: 'Resend', kind: 'email', requiredSecrets: ['RESEND_API_KEY'],
@@ -36,7 +46,16 @@ const resend: Provider = {
     try {
       const key = await getSecret('RESEND_API_KEY'); if (!key) return { ok: false, error: 'RESEND_API_KEY not set' }
       const client = new Resend(key)
-      const r = await client.emails.send({ from: i.from, to: i.to, subject: i.subject || '', html: i.html || i.text || '', replyTo: i.replyTo, tags: (i.tags || []).map((t) => ({ name: 'tag', value: t })) })
+      // Deliverability: always include a plain-text part + a List-Unsubscribe
+      // header (Gmail/Yahoo weigh both heavily for inbox placement).
+      const html = i.html || i.text || ''
+      const text = i.text && i.text !== i.html ? i.text : htmlToText(html)
+      const unsub = `mailto:${fromEmail(i.from)}?subject=unsubscribe`
+      const r = await client.emails.send({
+        from: i.from, to: i.to, subject: i.subject || '', html, text, replyTo: i.replyTo,
+        headers: { 'List-Unsubscribe': `<${unsub}>` },
+        tags: (i.tags || []).map((t) => ({ name: 'tag', value: t })),
+      })
       if (r.error) return { ok: false, error: r.error.message }
       return { ok: true, id: r.data?.id }
     } catch (e) { return { ok: false, error: String(e) } }

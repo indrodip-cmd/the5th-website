@@ -4,21 +4,69 @@
    event bus (analytics_events) + comms + CRM; grounds Command AI's get_journey. */
 import { useState } from 'react'
 import Link from 'next/link'
-import { T, Card, Button, PageHeader, EmptyState, useAdminFetch, fmtDate } from '@/components/admin/ui'
+import { T, Card, Button, PageHeader, EmptyState, useAdminFetch, adminSend, fmtDate } from '@/components/admin/ui'
 
 type Row = Record<string, unknown>
 const SEG: Record<string, string> = { 'Cold Visitor': '#9ca3af', Researching: '#0369a1', 'Warm Lead': '#d97706', 'High Intent': '#c026d3', 'Ready to Buy': '#16a34a', Customer: '#16a34a', 'At Risk': '#dc2626' }
 const kindColor: Record<string, string> = { web: '#0369a1', comm: '#7c3aed', reply: '#16a34a', crm: '#C9A84C' }
 
 export default function Journeys() {
-  const [tab, setTab] = useState<'Live' | 'Explorer'>('Live')
+  const [tab, setTab] = useState<'Intelligence' | 'Live' | 'Explorer'>('Intelligence')
   return (
     <>
       <PageHeader title="Customer Journeys" subtitle="Who's here, what they want, and what to do next" />
       <div style={{ display: 'flex', gap: 6, marginBottom: 18 }}>
-        {(['Live', 'Explorer'] as const).map((t) => <button key={t} className="tab-btn" onClick={() => setTab(t)} style={{ background: tab === t ? T.green2 : '#fff', color: tab === t ? '#fff' : T.sub, border: `1px solid ${tab === t ? T.green2 : T.border}` }}>{t}</button>)}
+        {(['Intelligence', 'Live', 'Explorer'] as const).map((t) => <button key={t} className="tab-btn" onClick={() => setTab(t)} style={{ background: tab === t ? T.green2 : '#fff', color: tab === t ? '#fff' : T.sub, border: `1px solid ${tab === t ? T.green2 : T.border}` }}>{t}</button>)}
       </div>
-      {tab === 'Live' ? <Live /> : <Explorer />}
+      {tab === 'Intelligence' && <Intelligence />}
+      {tab === 'Live' && <Live />}
+      {tab === 'Explorer' && <Explorer />}
+    </>
+  )
+}
+
+function Intelligence() {
+  const { data, loading, reload } = useAdminFetch<{ dashboard: Row; recommendations: Row[] }>('/api/admin/journeys?view=intelligence')
+  const [busy, setBusy] = useState(false)
+  const refresh = async () => { setBusy(true); try { await adminSend('/api/admin/journeys', 'POST', { action: 'refresh' }); reload() } finally { setBusy(false) } }
+  const decide = async (id: string, status: string) => { await adminSend('/api/admin/journeys', 'POST', { action: 'decide', id, status }); reload() }
+  if (loading && !data) return <div className="skeleton" style={{ height: 240, borderRadius: 14 }} />
+  const d = (data?.dashboard || {}) as Row
+  const recs = data?.recommendations || []
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 12, marginBottom: 16 }}>
+        {[['Recommended actions', d.open], ['High-intent leads', d.highIntent], ['Customers at risk', d.atRisk], ['Open opportunities', d.openOpportunities]].map(([k, v]) => (
+          <Card key={k as string} pad={16}><div style={{ fontSize: 22, fontWeight: 800, color: T.ink }}>{Number(v || 0)}</div><div style={{ fontSize: 12, color: T.sub }}>{k as string}</div></Card>
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 16 }}>
+        <Card pad={0}>
+          <div style={{ display: 'flex', alignItems: 'center', padding: '14px 16px 8px' }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: T.ink, flex: 1 }}>Next best actions</span>
+            <Button variant="ghost" disabled={busy} onClick={refresh}>{busy ? 'Analyzing…' : 'Refresh'}</Button>
+          </div>
+          {recs.length === 0 ? <EmptyState title="No open recommendations" hint="Hit Refresh to have the AI evaluate your contacts." /> : recs.map((r) => (
+            <div key={r.id as string} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', borderTop: `1px solid ${T.border}` }}>
+              <span style={{ width: 34, textAlign: 'center', fontSize: 13, fontWeight: 800, color: Number(r.priority) >= 84 ? '#dc2626' : Number(r.priority) >= 60 ? '#d97706' : '#6b7280' }}>{r.priority as number}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{r.action as string} <span className="a-pill" style={{ background: `${SEG[r.segment as string] || '#6b7280'}1a`, color: SEG[r.segment as string] || '#6b7280' }}>{r.segment as string}</span></div>
+                <div style={{ fontSize: 12, color: T.muted }}><Link href={`/admin/crm/${r.contact_id}`} style={{ color: T.green, textDecoration: 'none' }}>{(r.contact_name as string) || (r.contact_email as string)}</Link> · {r.reason as string}</div>
+              </div>
+              <Button variant="ghost" onClick={() => decide(r.id as string, 'done')}>Done</Button>
+              <button className="a-pill" style={{ cursor: 'pointer', border: 'none', background: '#eef2f0', color: T.muted }} onClick={() => decide(r.id as string, 'dismissed')}>Dismiss</button>
+            </div>
+          ))}
+        </Card>
+        <Card>
+          <div style={{ fontSize: 13, fontWeight: 700, color: T.ink, marginBottom: 10 }}>Lifecycle distribution</div>
+          {((d.lifecycle as Row[]) || []).map((l) => (
+            <div key={l.stage as string} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0' }}>
+              <span style={{ flex: 1, fontSize: 13, color: T.text, textTransform: 'capitalize' }}>{(l.stage as string).replace(/_/g, ' ')}</span><b style={{ color: T.ink }}>{l.count as number}</b>
+            </div>
+          ))}
+        </Card>
+      </div>
     </>
   )
 }

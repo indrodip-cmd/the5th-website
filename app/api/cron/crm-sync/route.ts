@@ -8,6 +8,7 @@ import { processScheduledRuns } from '@/lib/automation/engine'
 import { syncMemory, summarizeMonth } from '@/lib/memory/ingest'
 import { processQueue } from '@/lib/comm/engine'
 import { processScheduledCampaigns, processSequences } from '@/lib/comm/campaigns'
+import { refreshRecommendations } from '@/lib/journey/decisions'
 import { runHealthAlerts } from '@/lib/alerts'
 
 export const dynamic = 'force-dynamic'
@@ -40,6 +41,8 @@ export async function GET(req: NextRequest) {
   const campaigns = await processScheduledCampaigns().catch((e) => ({ error: String(e) }))
   const sequences = await processSequences(80).catch((e) => ({ error: String(e) }))
   const comms = await processQueue(120).catch((e) => ({ error: String(e) }))
+  // AI Decision Engine: refresh Next-Best-Action recommendations.
+  const decisions = await refreshRecommendations(50).catch((e) => ({ error: String(e) }))
   const alerts = await runHealthAlerts().catch((e) => ({ error: String(e) }))
-  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, campaigns, sequences, comms, alerts })
+  return NextResponse.json({ ok: true, calcom, fathom, integrations, whopProducts, whopMembers, content, coaching, automation, memory, memorySummary, campaigns, sequences, comms, decisions, alerts })
 }

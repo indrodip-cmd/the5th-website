@@ -126,6 +126,10 @@ export const TOOLS: Tool[] = [
     run: async (i) => j(await searchMemories({ from: String(i.from), to: i.to ? String(i.to) : undefined, type: i.memory_type ? String(i.memory_type) : undefined, limit: 80 })),
   },
   {
+    def: { name: 'next_best_actions', description: "The AI Decision Engine's prioritized to-do list: which contacts to act on next and how (call today, send a case study, win back an at-risk customer, prep a booked call), each with a reason and urgency. Use to answer 'who should I follow up with today' or 'what are my priorities'.", input_schema: { type: 'object', properties: {} } },
+    run: async () => { const { topRecommendations } = await import('@/lib/journey/decisions'); return j(await topRecommendations('open', 25)) },
+  },
+  {
     def: { name: 'get_journey', description: "A contact's Customer Journey Intelligence: live intent scores (buying intent, engagement, trust, readiness, health), segment, lifecycle, behavioral signals, conversion confidence and the recommended next best action. Use to answer how interested/ready someone is or what to do next. Give id_or_email.", input_schema: { type: 'object', properties: { id_or_email: { type: 'string' } }, required: ['id_or_email'] } },
     run: async (i) => {
       const { computeJourney } = await import('@/lib/journey/intent')

@@ -37,6 +37,17 @@ export default function ChoseYourTime() {
     })()
   }, [])
 
+  // Keep this page distraction-free: stop the Carolina widget mounting, and
+  // remove it if it already did. (CSS above also hides it as a fallback.)
+  useEffect(() => {
+    try { (window as unknown as { __carolinaLoaded?: boolean }).__carolinaLoaded = true } catch {}
+    const strip = () => document.querySelectorAll('.cw-launcher,.cw-win,.cw-toast,.cw-mclose').forEach((n) => n.remove())
+    strip()
+    const t = setInterval(strip, 500)
+    const stop = setTimeout(() => clearInterval(t), 6000)
+    return () => { clearInterval(t); clearTimeout(stop) }
+  }, [])
+
   const when = info.start ? new Date(info.start).toLocaleString([], { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''
 
   return (
@@ -46,7 +57,9 @@ export default function ChoseYourTime() {
         @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
         .cyt-grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:40px;align-items:start}
         .cyt-cal{position:sticky;top:24px;height:720px}
-        @media(max-width:880px){.cyt-grid{grid-template-columns:1fr;gap:24px}.cyt-cal{position:static;height:640px}}`}</style>
+        @media(max-width:880px){.cyt-grid{grid-template-columns:1fr;gap:24px}.cyt-cal{position:static;height:640px}}
+        /* Keep this page distraction-free — hide the Carolina concierge widget here. */
+        .cw-launcher,.cw-win,.cw-toast,.cw-mclose{display:none!important}`}</style>
 
       <header style={{ padding: '26px 28px', display: 'flex', justifyContent: 'center' }}>
         <a href="/"><img src="/public/images/logo.png" alt="The5th Consulting" style={{ height: 40, width: 'auto' }} /></a>
@@ -97,22 +110,50 @@ export default function ChoseYourTime() {
           </div>
         ) : (
           <div style={{ animation: 'rise .5s ease' }}>
-            {/* Compact confirmation banner */}
-            <div style={{ maxWidth: 720, margin: '2vh auto 0', display: 'flex', alignItems: 'center', gap: 18, background: '#fff', border: '1px solid #ece7f0', borderRadius: 18, padding: '18px 22px', boxShadow: '0 10px 34px rgba(40,20,50,.06)', flexWrap: 'wrap' }}>
-              <div style={{ width: 54, height: 54, borderRadius: '50%', flexShrink: 0, background: 'linear-gradient(160deg,#1C4A32,#2d6a4f)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 28px rgba(28,74,50,.35)', animation: 'pop .5s cubic-bezier(.22,1.4,.4,1)' }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            {/* Extraordinary confirmation moment */}
+            <div style={{ maxWidth: 640, margin: '3vh auto 0', textAlign: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: -30, left: '50%', transform: 'translateX(-50%)', width: 260, height: 260, background: 'radial-gradient(circle, rgba(201,168,76,.20), transparent 70%)', filter: 'blur(6px)', pointerEvents: 'none' }} />
+              <div style={{ position: 'relative', width: 96, height: 96, borderRadius: '50%', margin: '0 auto 22px', background: 'linear-gradient(160deg,#1C4A32,#2d6a4f)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 18px 50px rgba(28,74,50,.42)', animation: 'pop .6s cubic-bezier(.22,1.4,.4,1)' }}>
+                <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
               </div>
-              <div style={{ flex: 1, minWidth: 220 }}>
-                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.01em', color: '#2a2233' }}>You’re all set{info.name ? `, ${info.name.split(' ')[0]}` : ''} ✦</div>
-                <div style={{ fontSize: 14, color: '#57505f', lineHeight: 1.55, marginTop: 3 }}>
-                  {when ? <><b style={{ color: '#3D2645' }}>{when}.</b> </> : ''}A calendar invite is on the way to your inbox.
+              <div style={{ display: 'inline-block', fontSize: 11.5, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#a9862f', marginBottom: 12 }}>Your seat is locked in</div>
+              <h1 style={{ fontFamily: 'Gelica, Georgia, serif', fontSize: 'clamp(30px,5.2vw,46px)', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.06, color: '#2a2233', margin: 0 }}>
+                You’re all set{info.name ? `, ${info.name.split(' ')[0]}` : ''} <span style={{ color: '#C9A84C' }}>✦</span>
+              </h1>
+              <p style={{ fontSize: 17, color: '#57505f', lineHeight: 1.6, marginTop: 14, maxWidth: 480, marginLeft: 'auto', marginRight: 'auto' }}>
+                This is the decision most people put off for years. You just made it in a minute — and that tells me everything about how this call is going to go.
+              </p>
+
+              {when && (
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14, background: '#fff', border: '1px solid #ece7f0', borderRadius: 16, padding: '16px 24px', marginTop: 22, boxShadow: '0 12px 34px rgba(40,20,50,.07)' }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: '#f2f8f4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C4A32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a8380' }}>Your call with Indrodip</div>
+                    <div style={{ fontSize: 17.5, fontWeight: 800, color: '#3D2645', marginTop: 2 }}>{when}</div>
+                  </div>
                 </div>
+              )}
+
+              <p style={{ fontSize: 14, color: '#57505f', lineHeight: 1.6, marginTop: 16 }}>
+                A calendar invite is on its way to your inbox — add it, and protect that time. It’s yours.
+              </p>
+              {info.meetingUrl && (
+                <div style={{ marginTop: 18 }}>
+                  <a href={info.meetingUrl} target="_blank" rel="noopener" style={gold}>Save your join link</a>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, maxWidth: 420, margin: '34px auto 0' }}>
+                <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,transparent,#e2dbe8)' }} />
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b3abbb' }}>One more thing</div>
+                <div style={{ flex: 1, height: 1, background: 'linear-gradient(270deg,transparent,#e2dbe8)' }} />
               </div>
-              {info.meetingUrl && <a href={info.meetingUrl} target="_blank" rel="noopener" style={gold}>Join link</a>}
             </div>
 
             {/* $1 book offer */}
-            <div style={{ marginTop: 34 }}>
+            <div style={{ marginTop: 28 }}>
               <BookOffer firstName={info.name ? info.name.split(' ')[0] : undefined} />
             </div>
           </div>

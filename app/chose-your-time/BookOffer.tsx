@@ -54,7 +54,7 @@ export default function BookOffer({ firstName }: { firstName?: string }) {
 
       {/* Bridge from the confirmation into the offer */}
       <p style={{ textAlign: 'center', fontSize: 15, color: MUTE, lineHeight: 1.6, maxWidth: 620, margin: '0 auto 10px' }}>
-        <b style={{ color: PLUM }}>Before our call — read this.</b> It’ll make our 20 minutes worth 10x more.
+        <b style={{ color: PLUM }}>You took the seat. Now take the head start.</b> This is where your next chapter actually begins.
       </p>
 
       {/* ---- HERO ------------------------------------------------------- */}
@@ -157,8 +157,8 @@ export default function BookOffer({ firstName }: { firstName?: string }) {
           ))}
         </div>
         <p className="bo-exclude">
-          Your 7-day trial unlocks <b>The5th AI only</b>. Vega and other platform features aren’t included in
-          the trial.
+          For the next 7 days, <b>The5th AI is yours to command</b> — your ideas, your audience, your launch,
+          thought through in real time.
         </p>
       </section>
 
@@ -190,11 +190,10 @@ export default function BookOffer({ firstName }: { firstName?: string }) {
         <div className="bo-disclosure">
           <div className="bo-disclosure-h">Please read before you buy</div>
           <p>
-            Your <b>$1 today</b> unlocks the book, all 3 bonuses, and <b>7 days of free access to The5th AI</b>{' '}
-            (Vega and other platform features aren’t included in the trial). <b>On day 7, unless you cancel,
-            your card will be automatically charged $47 and billed monthly</b> until you cancel — no long-term
-            commitment. You can cancel anytime, self-serve, from your membership dashboard. The book itself is
-            still backed by the 365-day money-back guarantee.
+            Your <b>$1 today</b> unlocks the book, all 3 bonuses, and <b>7 full days of The5th AI</b>. <b>On
+            day 7, unless you cancel, your card will be charged $47 and billed monthly</b> until you cancel —
+            no long-term commitment, and you’re always in control. Cancel anytime, self-serve, from your
+            membership dashboard. The book is yours to keep, backed by the 365-day money-back guarantee.
           </p>
         </div>
 

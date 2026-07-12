@@ -40,13 +40,14 @@
   var AGENT_DEFAULTS = {
     carolina: { name: 'Carolina', role: 'Sales concierge' },
     natasha: { name: 'Natasha', role: 'Customer success' },
-    benjamin: { name: 'Benjamin', role: 'Support specialist' }
+    benjamin: { name: 'Benjamin', role: 'Support specialist' },
+    indrodip: { name: 'Indrodip', role: 'Founder · here with you', avatar: '/images/founder.png' }
   };
   function agentInfo(key) {
     key = key || 'carolina';
     var c = (cfg.agents && cfg.agents[key]) || {};
     var d = AGENT_DEFAULTS[key] || AGENT_DEFAULTS.carolina;
-    return { key: key, name: c.name || d.name, role: c.role || d.role, avatar: c.avatar || null };
+    return { key: key, name: c.name || d.name, role: c.role || d.role, avatar: c.avatar || d.avatar || null };
   }
   function agentAva(key) {
     var a = agentInfo(key);
@@ -2271,6 +2272,36 @@
     els.msgs.appendChild(row); lastMsgKey = null;
     if (!noScroll) maybeScroll(false);
   }
+  // ── Live human takeover — Indrodip can jump into any conversation ──
+  function addTakeoverSeparator() {
+    var row = document.createElement('div'); row.className = 'cw-join';
+    row.innerHTML = '<span class="cw-join-ava">' + agentAva('indrodip') + '</span><span class="cw-join-tx"><b>Indrodip</b> took over — you’re in good hands 🤝</span>';
+    els.msgs.appendChild(row); lastMsgKey = null; maybeScroll(false);
+  }
+  var livePollTimer = null, livePolling = false;
+  async function pollLive() {
+    if (livePolling) return;
+    var conv = activeConv(); if (!conv || !conv.id) return;
+    livePolling = true;
+    try {
+      var after = conv.lastHumanId || 0;
+      var r = await fetch('/api/carolina/live?conversationId=' + encodeURIComponent(conv.id) + '&after=' + after);
+      var d = await r.json().catch(function () { return {}; });
+      if (d.status === 'human' && !conv.humanMode) { conv.humanMode = true; updateChatHeader('indrodip'); addTakeoverSeparator(); saveStore(); }
+      else if (d.status === 'bot' && conv.humanMode) { conv.humanMode = false; updateChatHeader(conv.agent || 'carolina'); saveStore(); }
+      if (d.messages && d.messages.length) {
+        d.messages.forEach(function (m) {
+          addBotMsg(m.text, false, 'indrodip');
+          conv.messages.push({ role: 'assistant', content: m.text, agent: 'indrodip' });
+          conv.lastHumanId = m.id;
+        });
+        conv.updatedAt = Date.now(); saveStore();
+      }
+    } catch (e) {}
+    livePolling = false;
+  }
+  function startLivePoll() { if (livePollTimer) return; pollLive(); livePollTimer = setInterval(pollLive, 4000); }
+  function stopLivePoll() { if (livePollTimer) { clearInterval(livePollTimer); livePollTimer = null; } }
   function addSuccessCheck() {
     var row = document.createElement('div'); row.className = 'cw-success';
     row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
@@ -2464,6 +2495,10 @@
     if (!res || res.error) {
       addErrorCard(function () { respond(conv, atts); });
       shake(els.win.querySelector('.cw-comp-row'));
+    } else if (res.humanControlled) {
+      // Indrodip has taken this chat over — go quiet and let his replies stream in.
+      if (!conv.humanMode) { conv.humanMode = true; updateChatHeader('indrodip'); addTakeoverSeparator(); saveStore(); }
+      startLivePoll();
     } else if (res.transfer && res.transfer.to) {
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
       await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
@@ -2559,8 +2594,8 @@
     els.launcher.classList.toggle('cw-open', isOpen);
     if (els.mclose) els.mclose.classList.toggle('cw-mshow', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
-    if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); }
-    else { clearHomeTimers(); clearPh(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
+    if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); startLivePoll(); }
+    else { clearHomeTimers(); clearPh(); stopLivePoll(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
   }
 
   // ── Soft notification chime (WebAudio; no asset). Only after a real user

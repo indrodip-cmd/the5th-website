@@ -14,6 +14,7 @@ import { identify } from '@/lib/identity'
 import { logAiEvent } from '@/lib/ai-usage'
 import { checkAiAllowed } from '@/lib/cost-guard'
 import { emitEvent } from '@/lib/events'
+import { getChatStatus, logMessage } from '@/lib/carolina-live'
 
 export const maxDuration = 45
 
@@ -461,6 +462,14 @@ export async function POST(req: NextRequest) {
     const conversationId = sanitizeText(body?.conversationId, 80) || `ip:${ip}`
     const lastUser = incoming.filter((m) => m.role === 'user').pop()
     const lastText = lastUser ? sanitizeText(lastUser.content, 500) : ''
+
+    // ── Live human takeover ──────────────────────────────────────
+    // Log the visitor's message, and if Indrodip has taken this conversation
+    // over, stay quiet — his replies reach the widget via /api/carolina/live.
+    if (lastText) logMessage(conversationId, 'visitor', lastText)
+    if ((await getChatStatus(conversationId)) === 'human') {
+      return NextResponse.json({ reply: '', agent: 'indrodip', humanControlled: true })
+    }
     let sources: Source[] = []
     let brainIntent = 'general', brainState = 'general', brainScore = 0
     try {
@@ -526,7 +535,9 @@ export async function POST(req: NextRequest) {
 
       if (toolUses.length === 0 || res.stop_reason !== 'tool_use') {
         finishTurn()
-        return NextResponse.json({ reply: text || "I'm here — how can I help you today?", agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards, sources })
+        const reply = text || "I'm here — how can I help you today?"
+        logMessage(conversationId, 'ai', reply, { email: ctx.email.v || undefined })
+        return NextResponse.json({ reply, agent: agentKey, booked: ctx.booked.v, actions: ctx.actions, cards: ctx.cards, sources })
       }
 
       messages.push({ role: 'assistant', content: res.content })

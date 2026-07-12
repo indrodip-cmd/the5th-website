@@ -4,7 +4,7 @@
    On success Whop redirects to the plan's return URL; the Whop webhook on the
    platform provisions the member + tier automatically. Keying the checkout div
    by plan id remounts it when the billing toggle flips. */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const FOREST = '#1C4A32'
 const FOREST_2 = '#2d6a4f'
@@ -30,6 +30,19 @@ export type CheckoutConfig = {
 export default function CheckoutView({ config }: { config: CheckoutConfig }) {
   const [planKey, setPlanKey] = useState(config.plans[0]?.key)
   const plan = config.plans.find((p) => p.key === planKey) || config.plans[0]
+
+  // Ensure the Whop embedded-checkout loader is present on this route (it lives
+  // in the root layout too, but re-adding it here guarantees it runs even on
+  // client-side SPA navigation, so the checkout always mounts).
+  useEffect(() => {
+    const SRC = 'https://js.whop.com/static/checkout/loader.js'
+    if (!document.querySelector(`script[src="${SRC}"]`)) {
+      const s = document.createElement('script')
+      s.src = SRC
+      s.async = true
+      document.body.appendChild(s)
+    }
+  }, [])
 
   return (
     <div style={{ minHeight: '100dvh', background: 'radial-gradient(120% 80% at 50% -10%, #f3ecfa 0%, #faf8fc 55%)', fontFamily: 'Inter, system-ui, sans-serif', color: INK }}>

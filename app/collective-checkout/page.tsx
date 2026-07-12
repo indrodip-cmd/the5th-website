@@ -19,8 +19,8 @@ const config: CheckoutConfig = {
     'Instant platform access · cancel anytime',
   ],
   plans: [
-    { key: 'yearly', label: 'Yearly · best value', price: '$1,970', cadence: '/year', note: '$164/month · 2 months free', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID || 'plan_YEARLY_REPLACE_ME' },
-    { key: 'monthly', label: 'Monthly', price: '$197', cadence: '/month', note: 'Instant access · cancel anytime', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_MONTHLY_PLAN_ID || 'plan_MONTHLY_REPLACE_ME' },
+    { key: 'yearly', label: 'Yearly · best value', price: '$1,970', cadence: '/year', note: '$164/month · 2 months free', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID || 'plan_1q6y2XxrF9C0w' },
+    { key: 'monthly', label: 'Monthly', price: '$197', cadence: '/month', note: 'Instant access · cancel anytime', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_MONTHLY_PLAN_ID || 'plan_8iKDrh6vc0Anu' },
   ],
   returnUrl: 'https://the5th.consulting/checkout/complete?type=collective',
   guarantee: 'Cancel anytime, self-serve, right from your membership dashboard.',

@@ -67,6 +67,8 @@ export default function RootLayout({
         <Script src="/cookie-consent.js" strategy="afterInteractive" />
         {/* Carolina — concierge chat widget (sales + booking) */}
         <Script src="/carolina.js" strategy="afterInteractive" />
+        {/* Whop embedded checkout loader — powers the $1 trial checkout on the offer page */}
+        <Script src="https://js.whop.com/static/checkout/loader.js" strategy="afterInteractive" />
       </head>
       <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>

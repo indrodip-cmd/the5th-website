@@ -5,6 +5,7 @@
    pulled from the Cal.com API. */
 import { useEffect, useState } from 'react'
 import Cal, { getCalApi } from '@calcom/embed-react'
+import BookOffer from './BookOffer'
 
 const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie', 'toril']
 
@@ -24,9 +25,13 @@ export default function ChoseYourTime() {
           const att = ((b.attendees as Array<Record<string, unknown>>)?.[0]) || {}
           const start = String(b.startTime || d.date || b.start || '')
           const email = String(att.email || '').toLowerCase()
-          setInfo({ name: String(att.name || ''), start }); setBooked(true)
+          const nm = String(att.name || '')
+          setInfo({ name: nm, start }); setBooked(true)
           window.scrollTo({ top: 0, behavior: 'smooth' })
-          if (email) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(email)}`).then((r) => r.json()).then((j) => { if (j?.booking) setInfo((c) => ({ name: j.booking.name || c.name, start: j.booking.start || c.start, meetingUrl: j.booking.meetingUrl })) }).catch(() => {})
+          // Relay the booking to the platform so the $1-trial fulfilment email
+          // can include the member's call date/time. Idempotent (upsert by email).
+          if (email) relayBooking(email, nm, start, null)
+          if (email) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(email)}`).then((r) => r.json()).then((j) => { if (j?.booking) { setInfo((c) => ({ name: j.booking.name || c.name, start: j.booking.start || c.start, meetingUrl: j.booking.meetingUrl })); relayBooking(email, j.booking.name || nm, j.booking.start || start, j.booking.meetingUrl || null) } }).catch(() => {})
         },
       })
     })()
@@ -91,16 +96,24 @@ export default function ChoseYourTime() {
             </div>
           </div>
         ) : (
-          <div style={{ maxWidth: 560, margin: '4vh auto 0', textAlign: 'center', animation: 'rise .5s ease' }}>
-            <div style={{ width: 88, height: 88, borderRadius: '50%', margin: '0 auto 24px', background: 'linear-gradient(160deg,#1C4A32,#2d6a4f)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 14px 44px rgba(28,74,50,.4)', animation: 'pop .5s cubic-bezier(.22,1.4,.4,1)' }}>
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-            </div>
-            <h1 style={{ fontSize: 'clamp(28px,5vw,40px)', fontWeight: 800, letterSpacing: '-.02em', color: '#2a2233', margin: 0 }}>You’re all set{info.name ? `, ${info.name.split(' ')[0]}` : ''} ✦</h1>
-            {when && <p style={{ fontSize: 17.5, color: '#3D2645', fontWeight: 700, marginTop: 14 }}>{when}</p>}
-            <p style={{ fontSize: 15, color: '#57505f', lineHeight: 1.65, marginTop: 10 }}>A calendar invite and confirmation are on their way to your inbox. Add it to your calendar so you don’t miss it — this is your time.</p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginTop: 24 }}>
+          <div style={{ animation: 'rise .5s ease' }}>
+            {/* Compact confirmation banner */}
+            <div style={{ maxWidth: 720, margin: '2vh auto 0', display: 'flex', alignItems: 'center', gap: 18, background: '#fff', border: '1px solid #ece7f0', borderRadius: 18, padding: '18px 22px', boxShadow: '0 10px 34px rgba(40,20,50,.06)', flexWrap: 'wrap' }}>
+              <div style={{ width: 54, height: 54, borderRadius: '50%', flexShrink: 0, background: 'linear-gradient(160deg,#1C4A32,#2d6a4f)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 28px rgba(28,74,50,.35)', animation: 'pop .5s cubic-bezier(.22,1.4,.4,1)' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+              </div>
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ fontSize: 19, fontWeight: 800, letterSpacing: '-.01em', color: '#2a2233' }}>You’re all set{info.name ? `, ${info.name.split(' ')[0]}` : ''} ✦</div>
+                <div style={{ fontSize: 14, color: '#57505f', lineHeight: 1.55, marginTop: 3 }}>
+                  {when ? <><b style={{ color: '#3D2645' }}>{when}.</b> </> : ''}A calendar invite is on the way to your inbox.
+                </div>
+              </div>
               {info.meetingUrl && <a href={info.meetingUrl} target="_blank" rel="noopener" style={gold}>Join link</a>}
-              <a href="/results" style={ghost}>See client results while you wait →</a>
+            </div>
+
+            {/* $1 book offer */}
+            <div style={{ marginTop: 34 }}>
+              <BookOffer firstName={info.name ? info.name.split(' ')[0] : undefined} />
             </div>
           </div>
         )}
@@ -111,4 +124,17 @@ export default function ChoseYourTime() {
 }
 
 const gold: React.CSSProperties = { display: 'inline-block', background: 'linear-gradient(145deg,#C9A84C,#a9862f)', color: '#1a1206', fontWeight: 700, fontSize: 14.5, padding: '12px 24px', borderRadius: 12, textDecoration: 'none' }
-const ghost: React.CSSProperties = { display: 'inline-block', background: '#fff', border: '1px solid #e7e2ec', color: '#3D2645', fontWeight: 600, fontSize: 14.5, padding: '12px 22px', borderRadius: 12, textDecoration: 'none' }
+
+// Fire-and-forget relay of the booking to the platform, so the $1-trial
+// fulfilment email can greet the member with their real call date/time.
+const PLATFORM_ORIGIN = process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5th.consulting'
+function relayBooking(email: string, name: string, start: string, meetingUrl: string | null) {
+  try {
+    fetch(`${PLATFORM_ORIGIN}/api/trial-booking`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name, start, meetingUrl }),
+      keepalive: true,
+    }).catch(() => {})
+  } catch {}
+}

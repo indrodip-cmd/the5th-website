@@ -2234,6 +2234,37 @@
   }
 
   // Inline rich cards returned by the AI (show_card tool).
+  // Real side-by-side comparison of the three programs (rendered in-chat).
+  function comparisonTable() {
+    var COLS = [
+      { slug: 'fastforward', name: 'Fast Forward', emoji: '🚀', acc: '#C9A84C' },
+      { slug: 'ai', name: 'The5th AI', emoji: '🤖', acc: '#B98CD9' },
+      { slug: 'collective', name: 'The Collective', emoji: '✨', acc: '#5FA97E' }
+    ];
+    var ROWS = [
+      { k: 'Best for', v: ['Structure &amp; accountability to your first consistent months', 'Moving fast — an AI strategist does the heavy lifting', 'Ongoing community &amp; live coaching as you scale'] },
+      { k: 'Format', v: ['1:1 + group coaching', 'Self-serve AI platform', 'Group coaching + community'] },
+      { k: 'You get', v: ['Coaching, sales systems, funnels, AI tools', 'The5th AI + Vega + My Journey', 'Weekly calls, AI, Vega, courses, community'] },
+      { k: 'Pace', v: ['Guided, step-by-step', 'As fast as you want', 'Steady, with the room'] },
+      { k: 'Guarantee', v: ['100% money-back', '3-day free trial', 'Cancel anytime'] },
+      { k: 'Investment', v: ['$1,850/mo × 3', '$47/mo or $470/yr', '$197/mo or $1,970/yr'] }
+    ];
+    var th = '<th style="position:sticky;left:0;background:#fff;z-index:1"></th>' + COLS.map(function (c) {
+      return '<th style="padding:9px 10px;text-align:left;font-size:12px;color:#1a1a2e;border-bottom:2px solid ' + c.acc + '"><span style="font-size:14px">' + c.emoji + '</span> ' + c.name + '</th>';
+    }).join('');
+    var rows = ROWS.map(function (r) {
+      var cells = r.v.map(function (v) { return '<td style="padding:8px 10px;font-size:11.5px;color:#4a4440;line-height:1.4;vertical-align:top;border-top:1px solid #f1ece3">' + v + '</td>'; }).join('');
+      return '<tr><td style="position:sticky;left:0;background:#faf7f2;padding:8px 10px;font-size:10.5px;font-weight:700;color:#8a8075;text-transform:uppercase;letter-spacing:.03em;border-top:1px solid #f1ece3;white-space:nowrap">' + r.k + '</td>' + cells + '</tr>';
+    }).join('');
+    var btns = COLS.map(function (c) {
+      return '<button class="cw-btn cw-btn-ghost" data-ak="article" data-av="' + esc(c.slug) + '" style="flex:1;min-width:96px">' + c.name + ' →</button>';
+    }).join('');
+    return '<div class="cw-incard" style="padding:0;overflow:hidden">'
+      + '<div style="padding:12px 14px 4px;font-size:13px;font-weight:700;color:#1a1a2e">Side-by-side: which fits you</div>'
+      + '<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;min-width:420px"><thead><tr>' + th + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
+      + '<div style="display:flex;gap:6px;padding:10px 12px;flex-wrap:wrap">' + btns + '</div></div>';
+  }
+
   function renderInlineCards(cards) {
     cards.forEach(function (c) {
       var block = document.createElement('div'); block.className = 'cw-incard-wrap';
@@ -2248,6 +2279,8 @@
         block.innerHTML = '<div class="cw-incard cw-incard-book"><div class="cw-incard-b"><h5>' + ICON.phone + ' Free strategy call</h5>'
           + '<p>A no-pressure 1:1 to map your next step.</p>'
           + '<div class="cw-incard-btns"><button class="cw-btn cw-btn-primary" data-ak="book" data-av="1">Find a time</button></div></div></div>';
+      } else if (c.type === 'compare') {
+        block.innerHTML = comparisonTable();
       }
       if (block.firstChild) { els.msgs.appendChild(block); wireActions(block); }
     });

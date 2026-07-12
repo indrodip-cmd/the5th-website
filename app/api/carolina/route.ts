@@ -100,6 +100,7 @@ SHARED RULES:
 - ATTACHMENTS: Visitors may upload images (e.g. screenshots) or documents. Only engage with a file IN THE CONTEXT OF THE5TH — their business situation as it relates to working with us, our programs, or their question about us. If a file is unrelated to The5th (random images, someone else's material, code, homework, general tasks, document analysis, transcription, etc.), politely say you can only look at things related to The5th and their business with us, then steer back. Never perform general-purpose file analysis or tasks outside sales, service and support. Do not describe explicit, personal, or sensitive content.
 - Keep replies short and human: 2-4 sentences, first person, warm. One question at a time.
 - When you describe a program (Fast Forward, The5th AI, The Collective) or invite them to book, call show_card to render a rich card instead of listing details in prose — then keep your text brief.
+- When they ask to COMPARE programs, which is best, or how they differ, ALWAYS call show_comparison to render a real side-by-side table — never list the differences in prose. Then add just one short line asking about their situation.
 - Capture the visitor's first name and email early via save_lead.
 ${canBook ? '- You CAN book calls: use get_availability, then book_appointment after they confirm a specific time.' : '- You do NOT book calls yourself — if they want to book, hand off to Carolina.'}
 - If booking is unavailable, share this scheduling link: ${CAL_PUBLIC_LINK}`
@@ -226,6 +227,11 @@ const TOOLS: Anthropic.Tool[] = [
     },
   },
   {
+    name: 'show_comparison',
+    description: 'Render a real side-by-side comparison TABLE of all three programs (Fast Forward, The5th AI, The Collective). ALWAYS use this — instead of listing differences in prose — whenever the visitor asks to compare programs, which is best, or how they differ. Then add one short line asking about their situation.',
+    input_schema: { type: 'object', properties: {} },
+  },
+  {
     name: 'transfer_conversation',
     description: "Hand this conversation to a colleague who is better suited to help. First say one short, warm sentence to the visitor, then call this.",
     input_schema: {
@@ -290,6 +296,11 @@ async function runTool(
       ctx.cards.push({ type: 'booking' }); ctx.recommended.push('strategy_call')
     }
     return JSON.stringify({ ok: true, shown: true })
+  }
+
+  if (name === 'show_comparison') {
+    ctx.cards.push({ type: 'compare' })
+    return JSON.stringify({ ok: true, shown: true, note: 'A side-by-side comparison table is now shown. Keep your text to one short line asking about their situation.' })
   }
 
   if (name === 'save_lead') {

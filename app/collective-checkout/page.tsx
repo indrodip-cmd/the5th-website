@@ -22,7 +22,7 @@ const config: CheckoutConfig = {
     { key: 'yearly', label: 'Yearly · best value', price: '$1,970', cadence: '/year', note: '$164/month · 2 months free', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID || 'plan_YEARLY_REPLACE_ME' },
     { key: 'monthly', label: 'Monthly', price: '$197', cadence: '/month', note: 'Instant access · cancel anytime', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_MONTHLY_PLAN_ID || 'plan_MONTHLY_REPLACE_ME' },
   ],
-  returnUrl: (process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5th.consulting') + '/?joined=1',
+  returnUrl: 'https://the5th.consulting/checkout/complete?type=collective',
   guarantee: 'Cancel anytime, self-serve, right from your membership dashboard.',
   backHref: '/collective',
   backLabel: 'Back to The Collective',

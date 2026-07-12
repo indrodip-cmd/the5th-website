@@ -17,9 +17,9 @@ const config: CheckoutConfig = {
     'Backed by the $10K/month guarantee',
   ],
   plans: [
-    { key: 'plan', label: 'Payment plan', price: '$1,850', cadence: '/mo × 3', note: '3 monthly instalments · full access from day one', planId: process.env.NEXT_PUBLIC_WHOP_FASTFORWARD_PLAN_PLAN_ID || 'plan_FF_PLAN_REPLACE_ME' },
+    { key: 'plan', label: 'Payment plan', price: '$1,850', cadence: '/mo × 3', note: '3 monthly instalments · full access from day one', planId: process.env.NEXT_PUBLIC_WHOP_FASTFORWARD_PLAN_PLAN_ID || 'plan_TMxdlGR3FTwvp' },
   ],
-  returnUrl: (process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5th.consulting') + '/?joined=1',
+  returnUrl: 'https://the5th.consulting/checkout/complete?type=fast-forward',
   guarantee: 'Backed by our 365-day money-back guarantee — a full year to put it to work.',
   backHref: '/fast-forward',
   backLabel: 'Back to Fast Forward',

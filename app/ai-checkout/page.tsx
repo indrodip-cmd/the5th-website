@@ -19,7 +19,7 @@ const config: CheckoutConfig = {
     { key: 'monthly', label: 'Monthly', price: '$47', cadence: '/month', note: 'Instant access · cancel anytime', planId: process.env.NEXT_PUBLIC_WHOP_AI_MONTHLY_PLAN_ID || 'plan_3j4lU1rGraSsI' },
     { key: 'yearly', label: 'Yearly · save', price: '$470', cadence: '/year', note: '3-day free trial · card required, nothing charged until day 4', planId: process.env.NEXT_PUBLIC_WHOP_AI_YEARLY_PLAN_ID || 'plan_WcN3LXNivkAss' },
   ],
-  returnUrl: process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5th.consulting',
+  returnUrl: 'https://the5th.consulting/checkout/complete?type=ai',
   backHref: '/ai',
   backLabel: 'Back to The5th AI',
 }

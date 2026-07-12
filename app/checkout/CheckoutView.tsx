@@ -89,7 +89,7 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
               </div>
 
               {/* Whop embedded checkout — remounts on plan change via key */}
-              <div key={plan.planId} data-whop-checkout-plan-id={plan.planId} data-whop-checkout-return-url={config.returnUrl} style={{ height: 'fit-content', overflow: 'hidden', maxWidth: 500, margin: '10px auto 0', width: '100%', minHeight: 70 }} />
+              <div key={plan.planId} data-whop-checkout-plan-id={plan.planId} data-whop-checkout-theme="light" data-whop-checkout-redirect-url={config.returnUrl} style={{ height: 'fit-content', overflow: 'hidden', maxWidth: 500, margin: '10px auto 0', width: '100%', minHeight: 70 }} />
 
               <p style={{ textAlign: 'center', fontSize: 11.5, color: '#a99fb2', marginTop: 12, lineHeight: 1.5 }}>
                 Secure checkout · Powered by Whop · Instant platform access · Cancel anytime

@@ -23,15 +23,36 @@ function anthropic() {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 }
 
-/* Pages Carolina may guide visitors to. */
+/* Pages Carolina may guide visitors to (navigate_user's enum derives from these). */
 const PAGES: Record<string, string> = {
+  home: '/',
+  demo: '/demo',
+  ai: '/ai',
   quiz: '/quiz',
   fast_forward: '/fast-forward',
   collective: '/collective',
-  ai: '/ai',
   call: '/call',
-  home: '/',
+  results: '/results',
+  about: '/about',
+  ai_checkout: '/ai-checkout',
+  collective_checkout: '/collective-checkout',
+  fast_forward_checkout: '/fast-forward-checkout',
 }
+
+/* One-line description of each page so the AI knows where to send visitors. */
+const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user (use the key in parentheses):
+- Home (home) — The5th overview: helping women 40+ turn expertise into income.
+- Live AI Demo (demo) — a FREE, no-signup interactive demo of The5th AI they can try right now. Send anyone who wants to SEE, TRY, or "get a demo of" the AI here.
+- The5th AI (ai) — the AI product page: The5th AI coaching + Vega. $47/mo, or $470/yr with a 3-day free trial.
+- Free Assessment (quiz) — the free AI business quiz: Business Health Score, biggest opportunity, and a personalised 90-day roadmap.
+- Fast Forward (fast_forward) — group coaching program to reach $10K months ($1,850/mo × 3).
+- The Collective (collective) — full membership: weekly live calls, The5th AI, Vega, community ($197/mo or $1,970/yr).
+- Book a Call (call) — book a free strategy call.
+- Client Results (results) — real client outcomes and stories.
+- About (about) — Indrodip's story and what The5th is about.
+- Checkout pages (ai_checkout, collective_checkout, fast_forward_checkout) — direct checkout; only open these when the visitor is ready to buy that specific thing.
+
+NAVIGATION: You can and SHOULD take visitors to the most useful page with navigate_user whenever it clearly helps — briefly tell them what you're opening ("I'll open the live demo for you"). Especially: if someone wants to SEE, TRY, or get a DEMO of The5th AI, immediately open the Live AI Demo (demo) — don't just describe it, let them experience it. For pricing/fit conversations still prefer a card or a call, but never leave a demo/try request unanswered — always open (demo).`
 
 export const AGENT_KEYS = ['carolina', 'natasha', 'benjamin'] as const
 type AgentKey = (typeof AGENT_KEYS)[number]
@@ -102,9 +123,10 @@ function buildSystem(opts: {
   parts.push(`YOUR ROLE: ${a.scope}`)
   if (persona) parts.push(`PERSONA: ${persona}`)
   parts.push(
-    `SALES-CONCIERGE FRAMEWORK: Guide every conversation through — understand their situation → educate → build trust (the guarantee and real client outcomes, never fabricated) → recommend the right fit → invite the natural next step (usually the free assessment or a strategy call) → keep helping. Discover their business, goal and where they are now conversationally (never a form) and save it with save_lead as you learn it. Only suggest a call at genuine high-intent moments (comparing options, fit/implementation questions, ready to move) — never pushy, never mid-thought. Keep everything INSIDE this chat: use show_card for programs and booking rather than sending them to the website.`
+    `SALES-CONCIERGE FRAMEWORK: Guide every conversation through — understand their situation → educate → build trust (the guarantee and real client outcomes, never fabricated) → recommend the right fit → invite the natural next step (usually the free assessment or a strategy call) → keep helping. Discover their business, goal and where they are now conversationally (never a form) and save it with save_lead as you learn it. Only suggest a call at genuine high-intent moments (comparing options, fit/implementation questions, ready to move) — never pushy, never mid-thought. Keep the conversation flowing inside this chat and use show_card for programs and booking — but you MAY open a page with navigate_user when it genuinely helps the visitor (see the PAGE DIRECTORY), and you SHOULD open the live demo whenever someone wants to see or try The5th AI.`
   )
   parts.push(MASTER_PLAYBOOK)
+  parts.push(PAGE_DIRECTORY)
   if (opts.context) parts.push(`CURRENT CONTEXT: The visitor is viewing "${opts.context}" inside the chat. Answer questions about it directly without asking what they're referring to.`)
   if (opts.kb) parts.push(opts.kb)
   if (opts.magnet && a.canBook) {

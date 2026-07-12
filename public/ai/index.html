@@ -733,7 +733,7 @@ h2.H.lime-em em{color:var(--lime);}
     </ul>
     <div class="gn__ctas">
       <a href="https://platform.the5th.consulting" class="gn__login">Log In</a>
-      <a href="#" class="gn__start" onclick="openCheckout('monthly');return false;">Start Free Trial</a>
+      <a href="#" class="gn__start" onclick="openCheckout('yearly');return false;">Start Free Trial</a>
     </div>
     <button class="gn__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
@@ -751,7 +751,7 @@ h2.H.lime-em em{color:var(--lime);}
   </nav>
   <div class="mobileMenu__ctas">
     <a href="https://platform.the5th.consulting" class="gn__login mobileMenu__login">Log In</a>
-    <a href="#" class="gn__start mobileMenu__start" onclick="openCheckout('monthly');return false;">Start Free Trial</a>
+    <a href="#" class="gn__start mobileMenu__start" onclick="openCheckout('yearly');return false;">Start Free Trial</a>
   </div>
 </div>
 <div class="mobileMenu__backdrop" id="menuBackdrop"></div>
@@ -768,7 +768,7 @@ h2.H.lime-em em{color:var(--lime);}
       <p class="hero-sub">One who writes your content, closes your clients, plans your strategy and <strong>follows up with you every single day.</strong></p>
       <p class="hero-intro">Ask it anything strategy, copy, launches, sales, mindset and get instant, specific answers built around your business. Not generic advice. Not templates. Real coaching.</p>
       <div class="hero-cta-wrap">
-        <button class="btn-hero" onclick="openCheckout('monthly')">Try The5th AI Free 3 Days, No Charge <span style="font-size:18px;margin-left:4px;">→</span></button>
+        <button class="btn-hero" onclick="openCheckout('yearly')">Try The5th AI Free 3 Days, No Charge <span style="font-size:18px;margin-left:4px;">→</span></button>
         <a href="/demo" style="font-size:14px;font-weight:600;color:#C9A84C;text-decoration:none;">Or try the live demo — no signup →</a>
         <div class="hero-note">3-day free trial · Instant access · No contracts</div>
       </div>
@@ -1316,7 +1316,7 @@ h2.H.lime-em em{color:var(--lime);}
     <div class="ct-bottom reveal">
       <h4>The verdict based on the facts.</h4>
       <p>BossBabe has better funnel data. GG has bigger names behind it. ChatGPT has broader capability. We're not pretending otherwise. But if you're a woman 40+ building a high-ticket coaching business from your expertise not launching a digital product to millions, not building a course empire The5th AI is the only tool trained for exactly your situation, that follows up with you, knows your business, and gives you real closing frameworks. At $47/month versus $997+ from the alternatives.</p>
-      <button class="btn-hero" style="margin:0 auto;font-size:15px;padding:14px 32px;" onclick="openCheckout('monthly')">Start 3-Day Free Trial Yearly Plan →</button>
+      <button class="btn-hero" style="margin:0 auto;font-size:15px;padding:14px 32px;" onclick="openCheckout('yearly')">Start 3-Day Free Trial Yearly Plan →</button>
     </div>
   </div>
 </div>
@@ -1611,14 +1611,11 @@ const PLANS = {
 };
 
 function openCheckout(type){
-  const plan = PLANS[type] || PLANS.monthly;
-  const returnUrl = encodeURIComponent('https://platform.the5th.consulting');
-  const url = 'https://whop.com/checkout/' + plan.id + '/?embed=true&return_url=' + returnUrl;
-  document.getElementById('whopFrame').src = url;
-  document.getElementById('modal-plan-label').textContent = plan.label;
-  document.getElementById('modal-plan-strip').innerHTML = plan.strip;
-  document.getElementById('payModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  // Send buyers to the dedicated /ai-checkout page (working Whop embedded
+  // checkout), with the right plan preselected. The old in-page iframe embed
+  // (whop.com/checkout/...?embed=true) is deprecated.
+  var plan = (type === 'yearly') ? 'yearly' : 'monthly';
+  window.location.href = '/ai-checkout?plan=' + plan;
 }
 
 // Legacy openModal support

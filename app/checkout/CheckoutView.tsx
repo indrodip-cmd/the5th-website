@@ -33,7 +33,8 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
 
   // Ensure the Whop embedded-checkout loader is present on this route (it lives
   // in the root layout too, but re-adding it here guarantees it runs even on
-  // client-side SPA navigation, so the checkout always mounts).
+  // client-side SPA navigation, so the checkout always mounts). Also honour a
+  // ?plan= param so other pages can deep-link to a preselected plan.
   useEffect(() => {
     const SRC = 'https://js.whop.com/static/checkout/loader.js'
     if (!document.querySelector(`script[src="${SRC}"]`)) {
@@ -42,7 +43,9 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
       s.async = true
       document.body.appendChild(s)
     }
-  }, [])
+    const p = new URLSearchParams(window.location.search).get('plan')
+    if (p && config.plans.some((pl) => pl.key === p)) setPlanKey(p)
+  }, [config.plans])
 
   return (
     <div style={{ minHeight: '100dvh', background: 'radial-gradient(120% 80% at 50% -10%, #f3ecfa 0%, #faf8fc 55%)', fontFamily: 'Inter, system-ui, sans-serif', color: INK }}>

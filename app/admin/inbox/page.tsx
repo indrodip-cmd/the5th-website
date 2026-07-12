@@ -16,6 +16,23 @@ export default function AdminInbox() {
   const [status, setStatus] = useState<'bot' | 'human'>('bot')
   const [text, setText] = useState('')
   const scroller = useRef<HTMLDivElement>(null)
+  const lastVisitorId = useRef(0)
+  const lastTyping = useRef(0)
+  const actx = useRef<AudioContext | null>(null)
+
+  function ding() {
+    try {
+      if (!actx.current) actx.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+      const c = actx.current!
+      ;[784, 1046].forEach((f, i) => { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.value = 0.06; o.connect(g); g.connect(c.destination); const t = c.currentTime + i * 0.1; o.start(t); g.gain.setValueAtTime(0.06, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25); o.stop(t + 0.27) })
+    } catch {}
+  }
+  function sendTyping() {
+    const now = Date.now()
+    if (!active || status !== 'human' || now - lastTyping.current < 1500) return
+    lastTyping.current = now
+    fetch('/api/admin/carolina/live', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ conversationId: active, action: 'typing' }) }).catch(() => {})
+  }
 
   async function loadChats() {
     try { const r = await fetch('/api/admin/carolina/live'); const j = await r.json(); setChats(j.chats || []) } catch {}
@@ -23,7 +40,11 @@ export default function AdminInbox() {
   async function loadThread(id: string) {
     try {
       const r = await fetch('/api/admin/carolina/live?conversationId=' + encodeURIComponent(id))
-      const j = await r.json(); setMsgs(j.messages || []); setStatus(j.chat?.status === 'human' ? 'human' : 'bot')
+      const j = await r.json(); const m: Msg[] = j.messages || []
+      const maxV = m.filter((x) => x.sender === 'visitor').reduce((a, x) => Math.max(a, x.id), 0)
+      if (lastVisitorId.current && maxV > lastVisitorId.current) ding()  // new visitor message → notify
+      lastVisitorId.current = maxV
+      setMsgs(m); setStatus(j.chat?.status === 'human' ? 'human' : 'bot')
     } catch {}
   }
   async function control(action: string, extra?: Record<string, unknown>) {
@@ -33,7 +54,7 @@ export default function AdminInbox() {
   }
 
   useEffect(() => { loadChats(); const t = setInterval(loadChats, 5000); return () => clearInterval(t) }, [])
-  useEffect(() => { if (!active) return; loadThread(active); const t = setInterval(() => loadThread(active), 3000); return () => clearInterval(t) }, [active])
+  useEffect(() => { if (!active) return; lastVisitorId.current = 0; loadThread(active); const t = setInterval(() => loadThread(active), 3000); return () => clearInterval(t) }, [active])
   useEffect(() => { scroller.current?.scrollTo({ top: scroller.current.scrollHeight }) }, [msgs])
 
   async function send() {
@@ -85,7 +106,7 @@ export default function AdminInbox() {
 
             <div style={{ padding: 14, borderTop: '1px solid #e8e3dc', background: '#fff' }}>
               <div style={{ display: 'flex', gap: 8 }}>
-                <input value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') send() }} placeholder={status === 'human' ? 'Reply as Indrodip…' : 'Take over to reply…'} style={{ flex: 1, padding: '11px 14px', borderRadius: 12, border: '1px solid #e2dcd2', fontSize: 14, fontFamily: 'inherit', outline: 'none' }} />
+                <input value={text} onChange={(e) => { setText(e.target.value); sendTyping() }} onKeyDown={(e) => { if (e.key === 'Enter') send() }} placeholder={status === 'human' ? 'Reply as Indrodip…' : 'Take over to reply…'} style={{ flex: 1, padding: '11px 14px', borderRadius: 12, border: '1px solid #e2dcd2', fontSize: 14, fontFamily: 'inherit', outline: 'none' }} />
                 <button onClick={send} disabled={!text.trim()} style={{ padding: '0 20px', borderRadius: 12, border: 'none', background: text.trim() ? GREEN : '#e2dcd2', color: '#fff', fontSize: 14, fontWeight: 700, cursor: text.trim() ? 'pointer' : 'default' }}>Send</button>
               </div>
               <p style={{ fontSize: 11, color: MUTE, margin: '8px 0 0' }}>Sending a message takes over automatically — the visitor sees “Indrodip took over.”</p>

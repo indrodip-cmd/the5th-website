@@ -13,6 +13,9 @@ export async function GET(req: NextRequest) {
   const conversationId = sanitizeText(new URL(req.url).searchParams.get('conversationId') || '', 80)
 
   if (conversationId) {
+    // Viewing the thread marks the visitor's messages as read (drives the
+    // "read" tick in their widget).
+    await db.from('carolina_chats').update({ read_at: new Date().toISOString() }).eq('conversation_id', conversationId)
     const { data: chat } = await db.from('carolina_chats').select('*').eq('conversation_id', conversationId).maybeSingle()
     const { data: messages } = await db
       .from('carolina_messages').select('id, sender, text, created_at')
@@ -39,6 +42,10 @@ export async function POST(req: NextRequest) {
     await db.from('carolina_chats').upsert({ conversation_id: conversationId, status: 'human', taken_over_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'conversation_id' })
     return NextResponse.json({ ok: true, status: 'human' })
   }
+  if (action === 'typing') {
+    await db.from('carolina_chats').upsert({ conversation_id: conversationId, status: 'human', human_typing_at: new Date().toISOString() }, { onConflict: 'conversation_id' })
+    return NextResponse.json({ ok: true })
+  }
   if (action === 'release') {
     await db.from('carolina_chats').update({ status: 'bot', updated_at: new Date().toISOString() }).eq('conversation_id', conversationId)
     return NextResponse.json({ ok: true, status: 'bot' })
@@ -47,7 +54,7 @@ export async function POST(req: NextRequest) {
     const text = sanitizeText(body?.text || '', 4000)
     if (!text) return NextResponse.json({ error: 'Empty message' }, { status: 400 })
     await db.from('carolina_messages').insert({ conversation_id: conversationId, sender: 'human', text })
-    await db.from('carolina_chats').upsert({ conversation_id: conversationId, status: 'human', last_message: text.slice(0, 200), updated_at: new Date().toISOString() }, { onConflict: 'conversation_id' })
+    await db.from('carolina_chats').upsert({ conversation_id: conversationId, status: 'human', last_message: text.slice(0, 200), human_typing_at: null, read_at: new Date().toISOString(), updated_at: new Date().toISOString() }, { onConflict: 'conversation_id' })
     return NextResponse.json({ ok: true })
   }
   return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

@@ -14,8 +14,10 @@ export async function GET(req: NextRequest) {
 
   try {
     const db = getSupabaseAdmin()
-    const { data: chat } = await db.from('carolina_chats').select('status').eq('conversation_id', conversationId).maybeSingle()
+    const { data: chat } = await db.from('carolina_chats').select('status, read_at, human_typing_at').eq('conversation_id', conversationId).maybeSingle()
     const status = chat?.status === 'human' ? 'human' : 'bot'
+    // Indrodip counts as "typing" for ~6s after his last keystroke ping.
+    const typing = !!chat?.human_typing_at && (Date.now() - new Date(chat.human_typing_at).getTime() < 6000)
 
     // Only deliver Indrodip's (human) messages to the widget.
     const { data: msgs } = await db
@@ -30,6 +32,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status,
       agent: status === 'human' ? 'indrodip' : null,
+      typing,
+      readAt: chat?.read_at || null,
       messages: (msgs || []).map((m) => ({ id: m.id, text: m.text })),
     })
   } catch {

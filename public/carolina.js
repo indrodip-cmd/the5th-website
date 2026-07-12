@@ -2278,6 +2278,76 @@
     row.innerHTML = '<span class="cw-join-ava">' + agentAva('indrodip') + '</span><span class="cw-join-tx"><b>Indrodip</b> took over — you’re in good hands 🤝</span>';
     els.msgs.appendChild(row); lastMsgKey = null; maybeScroll(false);
   }
+
+  // ── Sound (subtle, generated — no assets) ──
+  var _actx = null;
+  function _audio() { try { if (!_actx) _actx = new (window.AudioContext || window.webkitAudioContext)(); if (_actx.state === 'suspended') _actx.resume(); } catch (e) {} return _actx; }
+  function _tick() { var c = _actx; if (!c) return; try { var o = c.createOscillator(), g = c.createGain(); o.type = 'square'; o.frequency.value = 140 + Math.random() * 90; g.gain.value = 0.016; o.connect(g); g.connect(c.destination); var t = c.currentTime; o.start(t); g.gain.setValueAtTime(0.016, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.03); o.stop(t + 0.05); } catch (e) {} }
+  var _typeSnd = null;
+  function startTypeSound() { if (_typeSnd || !_actx) return; _typeSnd = setInterval(function () { if (Math.random() > 0.28) _tick(); }, 125); }
+  function stopTypeSound() { if (_typeSnd) { clearInterval(_typeSnd); _typeSnd = null; } }
+  function playReceive() { var c = _actx; if (!c) return; try {[588, 784].forEach(function (f, i) { var o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.value = 0.05; o.connect(g); g.connect(c.destination); var t = c.currentTime + i * 0.085; o.start(t); g.gain.setValueAtTime(0.05, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2); o.stop(t + 0.22); }); } catch (e) {} }
+
+  // Human-style typing bubble (dots only, Indrodip's face, keyboard sound).
+  function showHumanTyping() {
+    if (els.win.querySelector('#cw-typing')) return;
+    var t = document.createElement('div'); t.className = 'cw-m bot'; t.id = 'cw-typing';
+    t.innerHTML = '<div class="cw-m-ava">' + agentAva('indrodip') + '</div><div class="cw-typing"><span></span><span></span><span></span></div>';
+    els.msgs.appendChild(t); maybeScroll(false); startTypeSound();
+  }
+
+  // Read receipt under the visitor's last message (✓ Delivered → ✓✓ Read, purple).
+  var lastReadEl = null, lastUserAt = 0;
+  function markUserDelivered() {
+    try {
+      var users = els.msgs.querySelectorAll('.cw-m.user .cw-mcol'); if (!users.length) return;
+      var col = users[users.length - 1]; var ex = col.querySelector('.cw-read'); if (ex) ex.remove();
+      var s = document.createElement('div'); s.className = 'cw-read'; s.style.cssText = 'font-size:10.5px;color:#a29aa8;text-align:right;margin-top:3px;font-weight:600;';
+      s.textContent = '✓ Delivered'; col.appendChild(s); lastReadEl = s; lastUserAt = Date.now();
+    } catch (e) {}
+  }
+  function updateReadTick(readAt) {
+    if (!lastReadEl || !readAt) return;
+    if (new Date(readAt).getTime() >= lastUserAt - 1500) { lastReadEl.textContent = '✓✓ Read'; lastReadEl.style.color = '#7c3aed'; }
+  }
+
+  // Speak as Indrodip — types for a human-realistic beat (longer = longer), then lands.
+  function humanSay(conv, text) {
+    return new Promise(function (res) {
+      var delay = Math.min(4800, Math.max(900, 620 + text.length * 24));
+      showHumanTyping();
+      setTimeout(function () {
+        hideTyping();
+        addBotMsg(text, false, 'indrodip'); playReceive();
+        conv.messages.push({ role: 'assistant', content: text, agent: 'indrodip' }); conv.updatedAt = Date.now(); saveStore();
+        res();
+      }, delay);
+    });
+  }
+  async function revealHumanQueue(conv, msgs) {
+    conv._revealQ = (conv._revealQ || []).concat(msgs.map(function (m) { conv.lastHumanId = Math.max(conv.lastHumanId || 0, m.id); return m; }));
+    if (conv._revealing) return;
+    conv._revealing = true; clearIdle();
+    while (conv._revealQ.length) { var m = conv._revealQ.shift(); await humanSay(conv, m.text); }
+    conv._revealing = false; resetIdle();
+  }
+
+  // Gentle idle care during a human chat — "still there?" then a warm sign-off.
+  var idleT1 = null, idleT2 = null;
+  function clearIdle() { if (idleT1) clearTimeout(idleT1); if (idleT2) clearTimeout(idleT2); idleT1 = idleT2 = null; }
+  function resetIdle() {
+    clearIdle(); var conv = activeConv(); if (!conv || !conv.humanMode) return;
+    idleT1 = setTimeout(function () {
+      var c = activeConv(); if (!c || !c.humanMode || c._revealing) return;
+      humanSay(c, "Are we still connected? 😊 No rush — I'm right here whenever you're ready.").then(function () {
+        idleT2 = setTimeout(function () {
+          var c2 = activeConv(); if (!c2 || !c2.humanMode || c2._revealing) return;
+          humanSay(c2, "I'll close our chat for now — but I'm always right here. Message me anytime you need a hand. 🤝");
+        }, 150000);
+      });
+    }, 180000);
+  }
+
   var livePollTimer = null, livePolling = false;
   async function pollLive() {
     if (livePolling) return;
@@ -2287,21 +2357,19 @@
       var after = conv.lastHumanId || 0;
       var r = await fetch('/api/carolina/live?conversationId=' + encodeURIComponent(conv.id) + '&after=' + after);
       var d = await r.json().catch(function () { return {}; });
-      if (d.status === 'human' && !conv.humanMode) { conv.humanMode = true; updateChatHeader('indrodip'); addTakeoverSeparator(); saveStore(); }
-      else if (d.status === 'bot' && conv.humanMode) { conv.humanMode = false; updateChatHeader(conv.agent || 'carolina'); saveStore(); }
-      if (d.messages && d.messages.length) {
-        d.messages.forEach(function (m) {
-          addBotMsg(m.text, false, 'indrodip');
-          conv.messages.push({ role: 'assistant', content: m.text, agent: 'indrodip' });
-          conv.lastHumanId = m.id;
-        });
-        conv.updatedAt = Date.now(); saveStore();
+      if (d.status === 'human' && !conv.humanMode) { conv.humanMode = true; updateChatHeader('indrodip'); addTakeoverSeparator(); markUserDelivered(); resetIdle(); saveStore(); }
+      else if (d.status === 'bot' && conv.humanMode) { conv.humanMode = false; clearIdle(); hideTyping(); updateChatHeader(conv.agent || 'carolina'); saveStore(); }
+      if (conv.humanMode) {
+        updateReadTick(d.readAt);
+        if (d.messages && d.messages.length) { revealHumanQueue(conv, d.messages); }
+        else if (d.typing && !conv._revealing) { showHumanTyping(); }
+        else if (!d.typing && !conv._revealing) { var tp = els.win.querySelector('#cw-typing'); if (tp) hideTyping(); }
       }
     } catch (e) {}
     livePolling = false;
   }
-  function startLivePoll() { if (livePollTimer) return; pollLive(); livePollTimer = setInterval(pollLive, 4000); }
-  function stopLivePoll() { if (livePollTimer) { clearInterval(livePollTimer); livePollTimer = null; } }
+  function startLivePoll() { _audio(); if (livePollTimer) return; pollLive(); livePollTimer = setInterval(pollLive, 4000); }
+  function stopLivePoll() { if (livePollTimer) { clearInterval(livePollTimer); livePollTimer = null; } clearIdle(); stopTypeSound(); }
   function addSuccessCheck() {
     var row = document.createElement('div'); row.className = 'cw-success';
     row.innerHTML = '<svg class="cw-check" viewBox="0 0 52 52"><circle class="cw-check-c" cx="26" cy="26" r="23"/><path class="cw-check-p" d="M15 27l7.5 7.5L37 19"/></svg><span>Booked &amp; confirmed</span>';
@@ -2392,7 +2460,7 @@
     var cap = t.querySelector('.cw-think'); var i = 0; cap.textContent = THINK_MSGS[0];
     clearThink(); thinkTimer = setInterval(function () { i = (i + 1) % THINK_MSGS.length; cap.textContent = THINK_MSGS[i]; }, 1500);
   }
-  function hideTyping() { clearThink(); var t = els.win.querySelector('#cw-typing'); if (t) t.remove(); }
+  function hideTyping() { clearThink(); stopTypeSound(); var t = els.win.querySelector('#cw-typing'); if (t) t.remove(); }
 
   // ── Conversation flow ──
   function ensureActiveConv() {
@@ -2498,7 +2566,7 @@
     } else if (res.humanControlled) {
       // Indrodip has taken this chat over — go quiet and let his replies stream in.
       if (!conv.humanMode) { conv.humanMode = true; updateChatHeader('indrodip'); addTakeoverSeparator(); saveStore(); }
-      startLivePoll();
+      markUserDelivered(); resetIdle(); startLivePoll();
     } else if (res.transfer && res.transfer.to) {
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
       await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();

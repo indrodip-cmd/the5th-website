@@ -26,7 +26,11 @@ export async function GET(req: NextRequest) {
   const { data: chats } = await db
     .from('carolina_chats').select('conversation_id, name, email, status, last_message, updated_at')
     .order('updated_at', { ascending: false }).limit(60)
-  return NextResponse.json({ chats: chats || [] })
+  // Newest visitor message across all chats — a global "someone just messaged" signal.
+  const { data: lv } = await db
+    .from('carolina_messages').select('id, text, conversation_id')
+    .eq('sender', 'visitor').order('id', { ascending: false }).limit(1)
+  return NextResponse.json({ chats: chats || [], latestVisitor: lv?.[0] || null })
 }
 
 export async function POST(req: NextRequest) {

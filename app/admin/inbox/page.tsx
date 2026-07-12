@@ -19,6 +19,33 @@ export default function AdminInbox() {
   const lastVisitorId = useRef(0)
   const lastTyping = useRef(0)
   const actx = useRef<AudioContext | null>(null)
+  const notifSeen = useRef(0)
+  const [alerts, setAlerts] = useState(false)
+
+  // Desktop + title-bar alert when a visitor messages while the tab is away.
+  function notifyVisitor(text: string, conversationId: string) {
+    if (document.hidden) {
+      document.title = '🔴 New message • Live Inbox'
+      if (alerts && 'Notification' in window && Notification.permission === 'granted') {
+        try {
+          const n = new Notification('New message from a visitor', { body: (text || '').slice(0, 120), tag: 'carolina-inbox', icon: '/images/founder.png' })
+          n.onclick = () => { window.focus(); setActive(conversationId); n.close() }
+        } catch {}
+      }
+    }
+    ding()
+  }
+  async function enableAlerts() {
+    setAlerts(true)
+    try { if ('Notification' in window && Notification.permission !== 'granted') await Notification.requestPermission() } catch {}
+    try { if (!actx.current) actx.current = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)() } catch {}
+  }
+
+  useEffect(() => {
+    const restore = () => { if (!document.hidden) document.title = 'Live Inbox' }
+    document.addEventListener('visibilitychange', restore)
+    return () => document.removeEventListener('visibilitychange', restore)
+  }, [])
 
   function ding() {
     try {
@@ -35,7 +62,14 @@ export default function AdminInbox() {
   }
 
   async function loadChats() {
-    try { const r = await fetch('/api/admin/carolina/live'); const j = await r.json(); setChats(j.chats || []) } catch {}
+    try {
+      const r = await fetch('/api/admin/carolina/live'); const j = await r.json(); setChats(j.chats || [])
+      const lv = j.latestVisitor
+      if (lv && lv.id > notifSeen.current) {
+        if (notifSeen.current) notifyVisitor(lv.text, lv.conversation_id)  // skip the very first load
+        notifSeen.current = lv.id
+      }
+    } catch {}
   }
   async function loadThread(id: string) {
     try {
@@ -68,7 +102,10 @@ export default function AdminInbox() {
       <div style={{ width: 320, borderRight: '1px solid #e8e3dc', overflowY: 'auto', flexShrink: 0 }}>
         <div style={{ padding: '18px 18px 12px' }}>
           <h1 style={{ fontFamily: 'Georgia,serif', fontSize: 22, fontWeight: 700, margin: 0, color: INK }}>Live Inbox</h1>
-          <p style={{ fontSize: 12.5, color: MUTE, margin: '4px 0 0' }}>Watch chats and take charge anytime.</p>
+          <p style={{ fontSize: 12.5, color: MUTE, margin: '4px 0 8px' }}>Watch chats and take charge anytime.</p>
+          <button onClick={enableAlerts} style={{ fontSize: 11.5, fontWeight: 700, padding: '6px 12px', borderRadius: 999, border: '1px solid ' + (alerts ? GREEN : '#e2dcd2'), background: alerts ? GREEN : '#fff', color: alerts ? '#fff' : MUTE, cursor: 'pointer' }}>
+            {alerts ? '🔔 Alerts on' : '🔕 Enable desktop alerts'}
+          </button>
         </div>
         {chats.length === 0 && <p style={{ padding: 18, fontSize: 13, color: MUTE }}>No conversations yet.</p>}
         {chats.map((c) => (

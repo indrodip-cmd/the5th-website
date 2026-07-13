@@ -60,6 +60,11 @@ export default function Demo() {
     setVid(v)
     const SRC = 'https://js.whop.com/static/checkout/loader.js'
     if (!document.querySelector(`script[src="${SRC}"]`)) { const s = document.createElement('script'); s.src = SRC; s.async = true; document.body.appendChild(s) }
+    // This page IS the AI — suppress the floating Carolina widget here.
+    try { (window as unknown as { __carolinaLoaded?: boolean }).__carolinaLoaded = true } catch {}
+    const strip = () => document.querySelectorAll('.cw-launcher,.cw-win,.cw-toast,.cw-mclose').forEach((n) => n.remove())
+    strip(); const t = setInterval(strip, 800); const stop = setTimeout(() => clearInterval(t), 6000)
+    return () => { clearInterval(t); clearTimeout(stop) }
   }, [])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, busy])
 
@@ -87,6 +92,7 @@ export default function Demo() {
         .d-proj{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;cursor:pointer;font-size:13.5px;color:${INK};transition:background .15s}
         .d-proj:hover{background:#fff}
         .d-burger{display:none}
+        .cw-launcher,.cw-win,.cw-toast,.cw-mclose{display:none!important}
         @media(max-width:820px){.d-side{position:fixed;inset:0 auto 0 0;z-index:60;transform:translateX(-100%);box-shadow:0 0 60px rgba(0,0,0,.2)}.d-side.open{transform:none}.d-burger{display:block!important}}`}</style>
 
       {sidebar && <div onClick={() => setSidebar(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(20,10,30,.35)', zIndex: 55 }} />}

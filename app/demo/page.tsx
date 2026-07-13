@@ -7,7 +7,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface Msg { role: 'user' | 'assistant'; content: string }
 
-const CREAM = '#FAF6F0', FOREST = '#1C4A32', GOLD = '#C9A84C', GOLD_DK = '#a9862f', PLUM = '#3D2645', INK = '#1f1a24', MUTE = '#6b6470'
+const CREAM = '#FAF6F0', SIDE = '#F3ECE2', CARD = '#FFFDFA', LINE = '#EAE1D6'
+const FOREST = '#1C4A32', GOLD = '#C9A84C', GOLD_DK = '#a9862f', PLUM = '#3D2645', INK = '#2a2233', MUTE = '#57505f'
 const PLATFORM = 'https://platform.the5th.consulting'
 
 const PRESETS = ['Check my content', 'Plan my next $10K month', 'Fix my funnel leaks', 'Write a warm outreach', 'Package my offer']
@@ -82,27 +83,26 @@ export default function Demo() {
   const openSignup = () => { setPayReason('signup'); setPlan(PLANS[0]); setShowPay(true) }
 
   return (
-    <div style={{ height: '100dvh', display: 'flex', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif', color: INK, overflow: 'hidden' }}>
+    <div style={{ height: '100dvh', display: 'flex', background: CREAM, fontFamily: 'Inter, system-ui, sans-serif', color: INK, overflow: 'hidden' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');*{box-sizing:border-box}
         @keyframes dot{0%,60%,100%{opacity:.25}30%{opacity:1}}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-        .d-side{width:264px;flex-shrink:0;background:${CREAM};border-right:1px solid #ece7f0;display:flex;flex-direction:column;transition:transform .25s ease}
-        .d-scroll::-webkit-scrollbar{width:6px}.d-scroll::-webkit-scrollbar-thumb{background:#e2dbe8;border-radius:8px}
-        .d-chip{border:1px solid #e7e1ec;background:#fff;color:${INK};border-radius:999px;padding:9px 15px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s}
+        .d-side{width:264px;flex-shrink:0;background:${SIDE};border-right:1px solid ${LINE};display:flex;flex-direction:column;transition:transform .25s ease}
+        .d-scroll::-webkit-scrollbar{width:6px}.d-scroll::-webkit-scrollbar-thumb{background:#e2dbc9;border-radius:8px}
+        .d-chip{border:1px solid ${LINE};background:${CARD};color:${INK};border-radius:999px;padding:9px 15px;font-size:13.5px;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s}
         .d-chip:hover{border-color:${GOLD};transform:translateY(-1px)}
         .d-proj{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;cursor:pointer;font-size:13.5px;color:${INK};transition:background .15s}
-        .d-proj:hover{background:#fff}
+        .d-proj:hover{background:${CARD}}
         .d-burger{display:none}
         .cw-launcher,.cw-win,.cw-toast,.cw-mclose{display:none!important}
         @media(max-width:820px){.d-side{position:fixed;inset:0 auto 0 0;z-index:60;transform:translateX(-100%);box-shadow:0 0 60px rgba(0,0,0,.2)}.d-side.open{transform:none}.d-burger{display:block!important}}`}</style>
 
       {sidebar && <div onClick={() => setSidebar(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(20,10,30,.35)', zIndex: 55 }} />}
       <aside className={'d-side' + (sidebar ? ' open' : '')}>
-        <div style={{ padding: '18px 16px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: PLUM, fontWeight: 800, fontFamily: 'Georgia,serif' }}>5</div>
-          <div style={{ fontWeight: 800, fontSize: 15.5 }}>The5th AI</div>
+        <div style={{ padding: '20px 18px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a href="/"><img src="/images/logo.png" alt="The5th Consulting" style={{ height: 30, width: 'auto' }} /></a>
         </div>
         <div style={{ padding: '4px 12px 10px' }}>
-          <button onClick={() => { setMessages([]); setSidebar(false) }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', borderRadius: 11, border: '1px solid #e7e1ec', background: '#fff', color: INK, fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+          <button onClick={() => { setMessages([]); setSidebar(false) }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', borderRadius: 11, border: `1px solid ${LINE}`, background: CARD, color: INK, fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             <span style={{ fontSize: 16 }}>✎</span> New chat
           </button>
         </div>
@@ -110,17 +110,17 @@ export default function Demo() {
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: MUTE, padding: '8px 8px 6px' }}>Projects</div>
           {PROJECTS.map((p) => (<div key={p.name} className="d-proj" onClick={() => send(p.seed)}><span>{p.icon}</span><span>{p.name}</span></div>))}
         </div>
-        <div style={{ padding: 12, borderTop: '1px solid #ece7f0' }}>
+        <div style={{ padding: 12, borderTop: '1px solid #EAE1D6' }}>
           <button onClick={openSignup} style={{ width: '100%', padding: '11px', borderRadius: 11, border: 'none', background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: '#1a1206', fontWeight: 800, fontSize: 13.5, cursor: 'pointer', fontFamily: 'inherit' }}>Start for $1 — get the ebook</button>
         </div>
       </aside>
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: '1px solid #f0ecf3' }}>
+        <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', borderBottom: '1px solid #EAE1D6' }}>
           <button onClick={() => setSidebar(true)} className="d-burger" style={{ border: 'none', background: 'transparent', fontSize: 20, cursor: 'pointer' }}>☰</button>
           <div style={{ fontSize: 13.5, color: MUTE }}>{started ? `${remaining} free ${remaining === 1 ? 'reply' : 'replies'} left` : 'The5th AI — live demo'}</div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <a href={PLATFORM} style={{ padding: '8px 15px', borderRadius: 10, border: '1px solid #e7e1ec', color: INK, fontSize: 13.5, fontWeight: 600, textDecoration: 'none' }}>Log in</a>
+            <a href={PLATFORM} style={{ padding: '8px 15px', borderRadius: 10, border: '1px solid #EAE1D6', color: INK, fontSize: 13.5, fontWeight: 600, textDecoration: 'none' }}>Log in</a>
             <button onClick={openSignup} style={{ padding: '8px 16px', borderRadius: 10, border: 'none', background: FOREST, color: '#fff', fontSize: 13.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Sign up</button>
           </div>
         </header>
@@ -143,7 +143,7 @@ export default function Demo() {
             <div style={{ maxWidth: 720, margin: '0 auto', padding: '22px 20px 12px' }}>
               {messages.map((m, i) => (
                 <div key={i} style={{ display: 'flex', gap: 13, margin: '18px 0', animation: 'rise .3s ease' }}>
-                  <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, background: m.role === 'user' ? '#ece7f0' : `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: m.role === 'user' ? PLUM : '#1a1206', fontFamily: 'Georgia,serif' }}>{m.role === 'user' ? 'You' : '5'}</div>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, background: m.role === 'user' ? '#EAE1D6' : `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: m.role === 'user' ? PLUM : '#1a1206', fontFamily: 'Georgia,serif' }}>{m.role === 'user' ? 'You' : '5'}</div>
                   <div style={{ flex: 1, fontSize: 15.5, lineHeight: 1.72, color: INK, paddingTop: 3 }}>{md(m.content)}</div>
                 </div>
               ))}
@@ -154,7 +154,7 @@ export default function Demo() {
         </div>
 
         {started && (
-          <div style={{ borderTop: '1px solid #f0ecf3', padding: '12px 20px 6px' }}>
+          <div style={{ borderTop: '1px solid #EAE1D6', padding: '12px 20px 6px' }}>
             <div style={{ maxWidth: 720, margin: '0 auto' }}><Composer input={input} setInput={setInput} onSend={() => send()} busy={busy} /></div>
           </div>
         )}
@@ -170,10 +170,10 @@ export default function Demo() {
 
 function Composer({ input, setInput, onSend, busy, big }: { input: string; setInput: (v: string) => void; onSend: () => void; busy: boolean; big?: boolean }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, background: '#fff', border: '1px solid #e2dbe8', borderRadius: 16, padding: '8px 8px 8px 16px', boxShadow: big ? '0 10px 34px rgba(40,20,50,.06)' : 'none' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, background: CARD, border: '1px solid #EAE1D6', borderRadius: 16, padding: '8px 8px 8px 16px', boxShadow: big ? '0 10px 34px rgba(40,20,50,.06)' : 'none' }}>
       <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend() } }} rows={1} placeholder="Message The5th AI…"
         style={{ flex: 1, resize: 'none', border: 'none', outline: 'none', fontSize: 15.5, fontFamily: 'inherit', color: INK, maxHeight: 160, padding: big ? '10px 0' : '8px 0', background: 'transparent' }} />
-      <button onClick={onSend} disabled={busy || !input.trim()} aria-label="Send" style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 11, border: 'none', cursor: busy || !input.trim() ? 'default' : 'pointer', background: input.trim() ? FOREST : '#ece7f0', color: input.trim() ? '#fff' : '#b3abbb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <button onClick={onSend} disabled={busy || !input.trim()} aria-label="Send" style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 11, border: 'none', cursor: busy || !input.trim() ? 'default' : 'pointer', background: input.trim() ? FOREST : '#EAE1D6', color: input.trim() ? '#fff' : '#b8ad9e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></svg>
       </button>
     </div>
@@ -185,7 +185,7 @@ function PayModal({ reason, plan, setPlan, onClose }: { reason: 'signup' | 'limi
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={onClose}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(28,20,40,.5)', backdropFilter: 'blur(6px)' }} />
-      <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative', background: CREAM, borderRadius: 22, width: '100%', maxWidth: 540, maxHeight: '92vh', overflow: 'auto', boxShadow: '0 30px 90px rgba(20,10,30,.4)', border: '1px solid #ece7f0' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative', background: CREAM, borderRadius: 22, width: '100%', maxWidth: 540, maxHeight: '92vh', overflow: 'auto', boxShadow: '0 30px 90px rgba(20,10,30,.4)', border: '1px solid #EAE1D6' }}>
         <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 14, right: 16, width: 32, height: 32, borderRadius: '50%', border: 'none', background: '#fff', color: MUTE, cursor: 'pointer', fontSize: 15 }}>✕</button>
         <div style={{ padding: '26px 24px 6px', textAlign: 'center' }}>
           <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: FOREST }}>{reason === 'limit' ? 'You’re out of free replies' : 'Start with The5th'}</div>
@@ -194,7 +194,7 @@ function PayModal({ reason, plan, setPlan, onClose }: { reason: 'signup' | 'limi
         </div>
         <div style={{ padding: '16px 20px 4px', display: 'grid', gap: 10 }}>
           {PLANS.map((p) => (
-            <button key={p.key} onClick={() => setPlan(p)} style={{ textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 15px', borderRadius: 14, cursor: 'pointer', fontFamily: 'inherit', background: '#fff', border: `2px solid ${plan.key === p.key ? FOREST : '#ece7f0'}` }}>
+            <button key={p.key} onClick={() => setPlan(p)} style={{ textAlign: 'left', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 15px', borderRadius: 14, cursor: 'pointer', fontFamily: 'inherit', background: '#fff', border: `2px solid ${plan.key === p.key ? FOREST : '#EAE1D6'}` }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontSize: 15, fontWeight: 700, color: INK }}>{p.title}</span>

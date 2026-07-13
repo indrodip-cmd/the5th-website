@@ -48,8 +48,13 @@ export default function Demo() {
   const [remaining, setRemaining] = useState(7)
   const [showPay, setShowPay] = useState(false)
   const [payReason, setPayReason] = useState<'signup' | 'limit'>('signup')
+  const [blocked, setBlocked] = useState(false)
   const [plan, setPlan] = useState(PLANS[0])
   const [sidebar, setSidebar] = useState(false)
+  const [gate, setGate] = useState(false)
+  const [gName, setGName] = useState('')
+  const [gEmail, setGEmail] = useState('')
+  const [gErr, setGErr] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
   const started = messages.length > 0
   const greeting = useMemo(() => greetingFor(new Date().getHours()), [])
@@ -69,18 +74,31 @@ export default function Demo() {
   }, [])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, busy])
 
-  async function ask(text: string) {
-    const history = [...messages, { role: 'user' as const, content: text }]
-    setMessages(history); setBusy(true)
+  async function run(history: Msg[], contact?: { name: string; email: string }) {
+    setBusy(true)
     try {
-      const r = await fetch('/api/demo/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitor_id: vid, messages: history }) }).then((x) => x.json())
+      const r = await fetch('/api/demo/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ visitor_id: vid, messages: history, name: contact?.name, email: contact?.email }) }).then((x) => x.json())
+      if (r.needsContact) { setGate(true); return }
+      if (r.emailBlocked) { setGate(false); setBlocked(true); setPayReason('limit'); setShowPay(true); return }
       if (r.limitReached) { setPayReason('limit'); setShowPay(true); return }
       if (r.reply) { setMessages((m) => [...m, { role: 'assistant', content: r.reply }]); setRemaining(r.remaining ?? remaining) }
     } catch { setMessages((m) => [...m, { role: 'assistant', content: 'Something went wrong — please try again.' }]) }
     finally { setBusy(false) }
   }
-  const send = (t?: string) => { const msg = (t ?? input).trim(); if (!msg || busy) return; if (remaining <= 0) { setPayReason('limit'); setShowPay(true); return } setInput(''); setSidebar(false); ask(msg) }
-  const openSignup = () => { setPayReason('signup'); setPlan(PLANS[0]); setShowPay(true) }
+  const send = (t?: string) => {
+    const msg = (t ?? input).trim(); if (!msg || busy) return
+    if (remaining <= 0) { setPayReason('limit'); setShowPay(true); return }
+    setInput(''); setSidebar(false)
+    const history = [...messages, { role: 'user' as const, content: msg }]
+    setMessages(history); run(history)
+  }
+  function submitGate() {
+    if (!gName.trim()) { setGErr('Please add your name.'); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(gEmail.trim())) { setGErr('Please enter a valid email.'); return }
+    setGErr(''); setGate(false)
+    run(messages, { name: gName.trim(), email: gEmail.trim().toLowerCase() })  // resend the held prompt, now unlocked
+  }
+  const openSignup = () => { setPayReason('signup'); setBlocked(false); setPlan(PLANS[0]); setShowPay(true) }
 
   return (
     <div style={{ height: '100dvh', display: 'flex', background: CREAM, fontFamily: 'Inter, system-ui, sans-serif', color: INK, overflow: 'hidden' }}>
@@ -163,10 +181,40 @@ export default function Demo() {
         </footer>
       </main>
 
-      {showPay && <PayModal reason={payReason} plan={plan} setPlan={setPlan} onClose={() => setShowPay(false)} />}
+      {gate && <GateModal name={gName} setName={setGName} email={gEmail} setEmail={setGEmail} err={gErr} busy={busy} onSubmit={submitGate} onClose={() => setGate(false)} />}
+      {showPay && <PayModal reason={payReason} blocked={blocked} plan={plan} setPlan={setPlan} onClose={() => setShowPay(false)} />}
     </div>
   )
 }
+
+function GateModal({ name, setName, email, setEmail, err, busy, onSubmit, onClose }: { name: string; setName: (v: string) => void; email: string; setEmail: (v: string) => void; err: string; busy: boolean; onSubmit: () => void; onClose: () => void }) {
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={onClose}>
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(28,20,40,.5)', backdropFilter: 'blur(7px)' }} />
+      <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative', background: CARD, borderRadius: 22, width: '100%', maxWidth: 420, boxShadow: '0 30px 90px rgba(20,10,30,.4)', border: `1px solid ${LINE}`, overflow: 'hidden', animation: 'rise .35s ease' }}>
+        <div style={{ background: `linear-gradient(150deg,${PLUM},#241428)`, padding: '26px 26px 22px', textAlign: 'center', color: '#fff' }}>
+          <div style={{ width: 52, height: 52, borderRadius: 15, margin: '0 auto 14px', background: 'rgba(201,168,76,.18)', border: '1px solid rgba(201,168,76,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+          </div>
+          <h2 style={{ fontFamily: 'Gelica, Georgia, serif', fontSize: 23, fontWeight: 700, margin: 0 }}>Let’s keep going</h2>
+          <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,.72)', margin: '8px 0 0', lineHeight: 1.55 }}>Pop in your name and email and I’ll answer right away — plus 7 free replies to explore The5th AI.</p>
+        </div>
+        <div style={{ padding: '20px 24px 24px' }}>
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" style={gInput} />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') onSubmit() }} placeholder="you@email.com" type="email" style={{ ...gInput, marginTop: 10 }} />
+          {err && <div style={{ fontSize: 12.5, color: '#c0392b', marginTop: 8 }}>{err}</div>}
+          <button onClick={onSubmit} disabled={busy} style={{ width: '100%', marginTop: 14, padding: '13px', borderRadius: 12, border: 'none', background: FOREST, color: '#fff', fontSize: 14.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Continue →</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, justifyContent: 'center', marginTop: 14, fontSize: 11.5, color: MUTE }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={FOREST} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            No spam, ever. Unsubscribe anytime.
+          </div>
+          <p style={{ textAlign: 'center', fontSize: 11, color: '#a99fb2', margin: '8px 0 0', lineHeight: 1.5 }}>By continuing you agree to our <a href="/terms" style={{ color: '#a99fb2' }}>Terms</a> &amp; <a href="/privacy" style={{ color: '#a99fb2' }}>Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+const gInput: React.CSSProperties = { width: '100%', padding: '13px 15px', borderRadius: 12, border: `1px solid ${LINE}`, fontSize: 15, fontFamily: 'inherit', color: INK, outline: 'none', background: '#fff' }
 
 function Composer({ input, setInput, onSend, busy, big }: { input: string; setInput: (v: string) => void; onSend: () => void; busy: boolean; big?: boolean }) {
   return (
@@ -180,7 +228,7 @@ function Composer({ input, setInput, onSend, busy, big }: { input: string; setIn
   )
 }
 
-function PayModal({ reason, plan, setPlan, onClose }: { reason: 'signup' | 'limit'; plan: typeof PLANS[number]; setPlan: (p: typeof PLANS[number]) => void; onClose: () => void }) {
+function PayModal({ reason, blocked, plan, setPlan, onClose }: { reason: 'signup' | 'limit'; blocked?: boolean; plan: typeof PLANS[number]; setPlan: (p: typeof PLANS[number]) => void; onClose: () => void }) {
   const redirect = `https://the5th.consulting/checkout/complete?type=${plan.type}`
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={onClose}>
@@ -188,9 +236,9 @@ function PayModal({ reason, plan, setPlan, onClose }: { reason: 'signup' | 'limi
       <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative', background: CREAM, borderRadius: 22, width: '100%', maxWidth: 540, maxHeight: '92vh', overflow: 'auto', boxShadow: '0 30px 90px rgba(20,10,30,.4)', border: '1px solid #EAE1D6' }}>
         <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 14, right: 16, width: 32, height: 32, borderRadius: '50%', border: 'none', background: '#fff', color: MUTE, cursor: 'pointer', fontSize: 15 }}>✕</button>
         <div style={{ padding: '26px 24px 6px', textAlign: 'center' }}>
-          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: FOREST }}>{reason === 'limit' ? 'You’re out of free replies' : 'Start with The5th'}</div>
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: FOREST }}>{reason === 'limit' ? (blocked ? 'This email’s free preview is used' : 'You’re out of free replies') : 'Start with The5th'}</div>
           <h2 style={{ fontFamily: 'Gelica, Georgia, serif', fontSize: 25, fontWeight: 700, color: INK, margin: '8px 0 4px' }}>{reason === 'limit' ? 'Loved it? Keep going.' : 'Pick your plan'}</h2>
-          <p style={{ fontSize: 13.5, color: MUTE, margin: 0 }}>Start for $1 today — includes the free ebook and 7 days of The5th AI.</p>
+          <p style={{ fontSize: 13.5, color: MUTE, margin: 0 }}>{blocked ? 'You’ve used your free preview. Start for $1 to unlock the full The5th AI — plus the free ebook.' : 'Start for $1 today — includes the free ebook and 7 days of The5th AI.'}</p>
         </div>
         <div style={{ padding: '16px 20px 4px', display: 'grid', gap: 10 }}>
           {PLANS.map((p) => (

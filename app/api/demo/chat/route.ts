@@ -36,8 +36,14 @@ export async function POST(req: NextRequest) {
   const email = clean(body.email, 200).toLowerCase()
   const name = clean(body.name, 120)
   if (email && !sess.email) {
-    await db.from('demo_sessions').update({ email, name: name || null, lead_saved: true, updated_at: new Date().toISOString() }).eq('id', sess.id)
-    sess.email = email
+    // Enforce the free preview PER EMAIL (so it can't be reset by clearing the
+    // browser). If this email already used its 7 prompts anywhere, it's locked.
+    const { data: prior } = await db.from('demo_sessions').select('message_count').eq('email', email).order('message_count', { ascending: false }).limit(1)
+    const priorCount = Number(prior?.[0]?.message_count || 0)
+    if (priorCount >= FREE) return NextResponse.json({ emailBlocked: true })
+    const carried = Math.max(Number(sess.message_count || 0), priorCount)
+    await db.from('demo_sessions').update({ email, name: name || null, lead_saved: true, message_count: carried, updated_at: new Date().toISOString() }).eq('id', sess.id)
+    sess.email = email; sess.message_count = carried
     try {
       await db.from('crm_contacts').upsert({ email, name: name || null, source: 'the5th-ai-demo', lifecycle_stage: 'lead' }, { onConflict: 'email', ignoreDuplicates: false })
       emitEvent('lead_captured', { email, name, source: 'the5th-ai-demo' })
@@ -45,6 +51,8 @@ export async function POST(req: NextRequest) {
   }
 
   const count = Number(sess.message_count || 0)
+  // Must give name + email before the very first reply.
+  if (!sess.email) return NextResponse.json({ needsContact: true })
   if (count >= FREE) return NextResponse.json({ limitReached: true, used: count })
 
   const ai = anthropic()

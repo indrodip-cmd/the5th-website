@@ -54,18 +54,19 @@
     return a.avatar ? '<img src="' + esc(a.avatar) + '" alt="' + esc(a.name) + '">' : '<span>' + esc(a.name.charAt(0)) + '</span>';
   }
   // Overlapping cluster of the whole team (Intercom-style faces).
+  // Indrodip (founder) leads the cluster so visitors see a real person is here.
   function teamCluster(big) {
     var html = '<div class="cw-team' + (big ? ' cw-team-lg' : '') + '" aria-label="The5th team — online">';
-    ['carolina', 'natasha', 'benjamin'].forEach(function (k) {
-      html += '<span class="cw-tm" title="' + esc(agentInfo(k).name) + '">' + agentAva(k) + '</span>';
+    ['indrodip', 'carolina', 'natasha', 'benjamin'].forEach(function (k) {
+      html += '<span class="cw-tm" title="' + esc(agentInfo(k).name) + (k === 'indrodip' ? ' · Founder' : '') + '">' + agentAva(k) + '</span>';
     });
     return html + '<span class="cw-team-dot"></span></div>';
   }
   // Team faces + an AI badge — "both AI and humans are available".
   function heroStack() {
     var html = '<div class="cw-hstack">';
-    ['carolina', 'natasha', 'benjamin'].forEach(function (k) {
-      html += '<span class="cw-hs-face">' + agentAva(k) + '</span>';
+    ['indrodip', 'carolina', 'natasha', 'benjamin'].forEach(function (k) {
+      html += '<span class="cw-hs-face" title="' + esc(agentInfo(k).name) + '">' + agentAva(k) + '</span>';
     });
     return html + '<span class="cw-hs-ai" title="The5th AI">' + ICON.spark + '</span></div>';
   }
@@ -260,8 +261,105 @@
     down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3v9zM17 13l-4 8a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 7.2 4H17"/></svg>',
     clip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.6 1.6 0 0 1-2.3-2.3l7.8-7.8"/></svg>',
     doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
-    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/></svg>'
+    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6"/></svg>',
+    volume: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a4 4 0 0 1 0 7M18.6 6a7.5 7.5 0 0 1 0 12"/></svg>',
+    volumeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9.5l4 5M21 9.5l-4 5"/></svg>'
   };
+
+  // ── Voice module — British speech in & out ──
+  // Anthropic ships no speech API, so voice chat is powered by the browser's
+  // built-in Web Speech API: SpeechRecognition (dictation) + speechSynthesis
+  // (a UK English voice). Works offline-ish, no keys, no extra cost.
+  var VOICE = (function () {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var synth = window.speechSynthesis || null;
+    var canListen = !!SR, canSpeak = !!synth;
+    var rec = null, listening = false, ukVoice = null;
+    var PREF = 'the5th_carolina_voice';   // '1' = read replies aloud
+    var autoSpeak = false;
+    try { autoSpeak = localStorage.getItem(PREF) === '1'; } catch (e) {}
+
+    // Prefer a warm British *female* voice (matches Carolina), then any en-GB.
+    function pickVoice() {
+      if (!canSpeak) return null;
+      var vs = (synth.getVoices && synth.getVoices()) || [];
+      if (!vs.length) return null;
+      var gb = vs.filter(function (v) { return /en[-_]GB/i.test(v.lang); });
+      var pref = /(Serena|Kate|Stephanie|Hazel|Libby|Sonia|Martha|Amelie|Google UK English Female)/i;
+      ukVoice = (gb.filter(function (v) { return pref.test(v.name); })[0])
+        || (gb.filter(function (v) { return /female/i.test(v.name); })[0])
+        || gb[0]
+        || vs.filter(function (v) { return /Daniel|Google UK English Male/i.test(v.name); })[0]
+        || vs.filter(function (v) { return /^en/i.test(v.lang); })[0]
+        || vs[0];
+      return ukVoice;
+    }
+    if (canSpeak) { pickVoice(); try { synth.onvoiceschanged = pickVoice; } catch (e) {} }
+
+    // Strip markdown / links / emoji so the spoken version sounds natural.
+    function plain(t) {
+      return String(t || '')
+        .replace(/```[\s\S]*?```/g, ' code snippet ')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/https?:\/\/\S+/g, '')
+        .replace(/[*_#>~|]/g, '')
+        .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
+        .replace(/\s+/g, ' ').trim();
+    }
+    function stopSpeak() { if (canSpeak) { try { synth.cancel(); } catch (e) {} } }
+    function speak(text) {
+      if (!canSpeak || !autoSpeak) return;
+      var msg = plain(text); if (!msg) return;
+      if (!ukVoice) pickVoice();
+      stopSpeak();
+      try {
+        var u = new SpeechSynthesisUtterance(msg);
+        if (ukVoice) { u.voice = ukVoice; u.lang = ukVoice.lang || 'en-GB'; } else { u.lang = 'en-GB'; }
+        u.rate = 1.0; u.pitch = 1.02;
+        synth.speak(u);
+      } catch (e) {}
+    }
+    function setAutoSpeak(on) {
+      autoSpeak = !!on;
+      try { localStorage.setItem(PREF, autoSpeak ? '1' : '0'); } catch (e) {}
+      if (!autoSpeak) stopSpeak();
+    }
+    // onText(text): live transcript. onState(listening, finalText): UI + finish.
+    function listen(onText, onState) {
+      if (!canListen) return false;
+      if (listening) { try { rec.stop(); } catch (e) {} return false; }
+      try {
+        rec = new SR();
+        rec.lang = 'en-GB'; rec.interimResults = true; rec.maxAlternatives = 1; rec.continuous = false;
+        var finalTx = '';
+        rec.onstart = function () { listening = true; onState && onState(true); };
+        rec.onerror = function () { listening = false; onState && onState(false); };
+        rec.onend = function () { listening = false; onState && onState(false, finalTx.trim()); };
+        rec.onresult = function (e) {
+          var interim = '';
+          for (var i = e.resultIndex; i < e.results.length; i++) {
+            var r = e.results[i];
+            if (r.isFinal) finalTx += r[0].transcript; else interim += r[0].transcript;
+          }
+          onText && onText((finalTx + interim).trim());
+        };
+        rec.start();
+        return true;
+      } catch (e) { listening = false; onState && onState(false); return false; }
+    }
+    function stopListen() { if (listening && rec) { try { rec.stop(); } catch (e) {} } }
+
+    return {
+      canListen: canListen, canSpeak: canSpeak,
+      listen: listen, stopListen: stopListen,
+      speak: speak, stopSpeak: stopSpeak, setAutoSpeak: setAutoSpeak,
+      get autoSpeak() { return autoSpeak; },
+      isListening: function () { return listening; }
+    };
+  })();
 
   function avatarInner() {
     var a = agentInfo('carolina');
@@ -796,6 +894,26 @@
       '.cw-incard-btns{display:flex;gap:8px;flex-wrap:wrap;}',
       '.cw-incard-btns .cw-btn{padding:8px 14px;font-size:12.5px;border-radius:11px;}',
       '.cw-incard-book{cursor:default;}',
+      // ── comparison cards (card-per-program, mobile-friendly) ──
+      '.cw-cmp{display:block;cursor:default;padding:14px;}',
+      '.cw-cmp-title{font:700 14.5px "Inter";color:#fff;margin:0 0 12px;}',
+      '.cw-cmp-grid{display:flex;flex-direction:column;gap:10px;}',
+      '.cw-cmp-card{position:relative;background:var(--bg);border:1px solid var(--bd);border-radius:15px;padding:13px 14px;transition:transform .18s var(--sp),border-color .18s,box-shadow .18s;}',
+      '.cw-cmp-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--cmp) 55%,transparent);box-shadow:0 10px 26px rgba(0,0,0,.28);}',
+      '.cw-cmp-card[data-best]{border-color:color-mix(in srgb,var(--cmp) 60%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--cmp) 35%,transparent);}',
+      '.cw-cmp-badge{position:absolute;top:-9px;right:12px;background:var(--cmp);color:#1a1206;font:700 10px/1 "Inter";letter-spacing:.02em;padding:5px 9px;border-radius:8px;text-transform:uppercase;box-shadow:0 4px 12px rgba(0,0,0,.35);}',
+      '.cw-cmp-head{display:flex;align-items:center;gap:11px;}',
+      '.cw-cmp-emoji{width:40px;height:40px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;background:color-mix(in srgb,var(--cmp) 16%,transparent);}',
+      '.cw-cmp-h{min-width:0;}',
+      '.cw-cmp-h h6{font:700 15px "Inter";color:#fff;margin:0;}',
+      '.cw-cmp-h i{font:600 11.5px "Inter";font-style:normal;color:var(--cmp);}',
+      '.cw-cmp-price{font:700 13px "Inter";color:var(--tx2);margin:10px 0 2px;}',
+      '.cw-cmp-body{margin:8px 0 12px;border-top:1px solid var(--bd);padding-top:8px;}',
+      '.cw-cmp-row{display:flex;gap:10px;padding:4px 0;align-items:baseline;}',
+      '.cw-cmp-k{flex:0 0 76px;font:700 10px "Inter";text-transform:uppercase;letter-spacing:.04em;color:var(--mut);padding-top:1px;}',
+      '.cw-cmp-v{flex:1;min-width:0;font:400 12.5px/1.45 "Inter";color:var(--tx2);}',
+      '.cw-cmp-cta{width:100%;justify-content:center;padding:10px 14px;font-size:13px;border-radius:12px;background:var(--cmp);color:#1a1206;box-shadow:0 8px 20px color-mix(in srgb,var(--cmp) 30%,transparent);}',
+      '.cw-cmp-cta:hover{transform:translateY(-1px);filter:brightness(1.05);}',
       // ── Part 2B2 markdown + components ──
       '.cw-m-ava{width:30px;height:30px;}',
       '.cw-bub{border-radius:18px;padding:13px 16px;font-size:14.5px;line-height:1.68;}',
@@ -868,6 +986,10 @@
       // attach button
       '.cw-attach{flex-shrink:0;width:38px;height:38px;border-radius:11px;border:none;background:transparent;color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .16s,color .16s;align-self:flex-end;}',
       '.cw-attach:hover{background:var(--hover);color:#fff;}.cw-attach svg{width:19px;height:19px;}',
+      // voice controls (mic dictation + read-aloud toggle)
+      '.cw-spk.on,.cw-mic.cw-listening{color:var(--acc);background:rgba(201,168,76,.14);}',
+      '.cw-mic.cw-listening{animation:cwPulse 1.3s infinite;}',
+      '.cw-comp-row.cw-voice{border-color:rgba(201,168,76,.5);box-shadow:0 0 0 4px rgba(201,168,76,.12);}',
       // attachment preview chips (above composer)
       '.cw-atts{display:none;flex-wrap:wrap;gap:8px;padding:0 2px 10px;}',
       '.cw-att{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:7px 9px;max-width:220px;animation:cwRise .3s var(--sp);}',
@@ -1926,6 +2048,8 @@
       + (cfg.features.attachments ? '<button class="cw-attach" id="cw-attach" aria-label="Attach a file" title="Attach a screenshot or file">' + ICON.clip + '</button>'
         + '<input type="file" id="cw-file" multiple accept="image/png,image/jpeg,image/webp,image/gif,application/pdf" hidden />' : '')
       + '<textarea class="cw-in" id="cw-in" rows="1" aria-label="Message The5th AI" placeholder="' + esc(T('ph')) + '"></textarea>'
+      + (VOICE.canSpeak ? '<button class="cw-attach cw-spk' + (VOICE.autoSpeak ? ' on' : '') + '" id="cw-spk" aria-label="Read replies aloud" aria-pressed="' + (VOICE.autoSpeak ? 'true' : 'false') + '" title="Read replies aloud (British voice)">' + (VOICE.autoSpeak ? ICON.volume : ICON.volumeOff) + '</button>' : '')
+      + (VOICE.canListen ? '<button class="cw-attach cw-mic" id="cw-mic" aria-label="Speak your message" title="Speak to The5th AI (British voice chat)">' + ICON.mic + '</button>' : '')
       + '<button class="cw-send" id="cw-send" aria-label="Send" disabled>' + ICON.send + '</button></div>'
       + '<div class="cw-drop" id="cw-drop">' + ICON.clip + ' Drop files to attach</div>'
       + '<p class="cw-cred">Powered by <b>The5th AI</b> · type <b>/</b> for commands</p></div></div>';
@@ -2091,6 +2215,39 @@
       if (files.length) { e.preventDefault(); addFiles(files); }
     });
     renderAttChips();
+
+    // ── voice chat: dictation (mic) + read-aloud toggle (speaker) ──
+    var micBtn = els.win.querySelector('#cw-mic');
+    var spkBtn = els.win.querySelector('#cw-spk');
+    function paintSpk(on) {
+      if (!spkBtn) return;
+      spkBtn.classList.toggle('on', on);
+      spkBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      spkBtn.innerHTML = on ? ICON.volume : ICON.volumeOff;
+    }
+    if (spkBtn) spkBtn.addEventListener('click', function () {
+      var on = !VOICE.autoSpeak; VOICE.setAutoSpeak(on); paintSpk(on);
+      toast(on ? 'Voice on — replies read aloud' : 'Voice off');
+    });
+    if (micBtn) micBtn.addEventListener('click', function () {
+      if (VOICE.isListening()) { VOICE.stopListen(); return; }
+      VOICE.stopSpeak();
+      // Speaking a message implies you want to hear the answer back.
+      if (VOICE.canSpeak && !VOICE.autoSpeak) { VOICE.setAutoSpeak(true); paintSpk(true); }
+      var row = els.win.querySelector('#cw-comprow');
+      var ok = VOICE.listen(function (txt) {
+        ta.value = txt; autoGrow(); updateSend();
+      }, function (isListening, finalText) {
+        micBtn.classList.toggle('cw-listening', isListening);
+        if (row) row.classList.toggle('cw-voice', isListening);
+        if (!isListening) {
+          var v = (finalText || ta.value).trim();
+          if (v) sendMessage(v);
+        }
+      });
+      if (!ok && !VOICE.isListening()) toast('Allow microphone access to talk');
+    });
+
     function startPh() {
       clearPh(); if (REDUCE || lang !== 'en') return; var i = 0;
       phTimer = setInterval(function () {
@@ -2234,35 +2391,38 @@
   }
 
   // Inline rich cards returned by the AI (show_card tool).
-  // Real side-by-side comparison of the three programs (rendered in-chat).
+  // Side-by-side comparison of the three programs (rendered in-chat).
+  // Card-per-program layout — reads cleanly in a narrow widget / on mobile,
+  // instead of a cramped horizontally-scrolling table.
   function comparisonTable() {
     var COLS = [
-      { slug: 'fastforward', name: 'Fast Forward', emoji: '🚀', acc: '#C9A84C' },
-      { slug: 'ai', name: 'The5th AI', emoji: '🤖', acc: '#B98CD9' },
-      { slug: 'collective', name: 'The Collective', emoji: '✨', acc: '#5FA97E' }
+      { slug: 'fastforward', name: 'Fast Forward', emoji: '🚀', acc: '#C9A84C', tag: 'Guided 1:1', price: '$1,850/mo × 3' },
+      { slug: 'ai', name: 'The5th AI', emoji: '🤖', acc: '#B98CD9', tag: 'Move fast', price: '$47/mo · $470/yr', best: true },
+      { slug: 'collective', name: 'The Collective', emoji: '✨', acc: '#5FA97E', tag: 'Community', price: '$197/mo · $1,970/yr' }
     ];
     var ROWS = [
       { k: 'Best for', v: ['Structure &amp; accountability to your first consistent months', 'Moving fast — an AI strategist does the heavy lifting', 'Ongoing community &amp; live coaching as you scale'] },
       { k: 'Format', v: ['1:1 + group coaching', 'Self-serve AI platform', 'Group coaching + community'] },
       { k: 'You get', v: ['Coaching, sales systems, funnels, AI tools', 'The5th AI + Vega + My Journey', 'Weekly calls, AI, Vega, courses, community'] },
       { k: 'Pace', v: ['Guided, step-by-step', 'As fast as you want', 'Steady, with the room'] },
-      { k: 'Guarantee', v: ['100% money-back', '3-day free trial', 'Cancel anytime'] },
-      { k: 'Investment', v: ['$1,850/mo × 3', '$47/mo or $470/yr', '$197/mo or $1,970/yr'] }
+      { k: 'Guarantee', v: ['100% money-back', '3-day free trial', 'Cancel anytime'] }
     ];
-    var th = '<th style="position:sticky;left:0;background:#fff;z-index:1"></th>' + COLS.map(function (c) {
-      return '<th style="padding:9px 10px;text-align:left;font-size:12px;color:#1a1a2e;border-bottom:2px solid ' + c.acc + '"><span style="font-size:14px">' + c.emoji + '</span> ' + c.name + '</th>';
+    var cards = COLS.map(function (c, ci) {
+      var rows = ROWS.map(function (r) {
+        return '<div class="cw-cmp-row"><span class="cw-cmp-k">' + r.k + '</span><span class="cw-cmp-v">' + r.v[ci] + '</span></div>';
+      }).join('');
+      return '<div class="cw-cmp-card"' + (c.best ? ' data-best="1"' : '') + ' style="--cmp:' + c.acc + '">'
+        + (c.best ? '<span class="cw-cmp-badge">Most popular</span>' : '')
+        + '<div class="cw-cmp-head"><span class="cw-cmp-emoji">' + c.emoji + '</span>'
+        + '<div class="cw-cmp-h"><h6>' + c.name + '</h6><i>' + c.tag + '</i></div></div>'
+        + '<div class="cw-cmp-price">' + c.price + '</div>'
+        + '<div class="cw-cmp-body">' + rows + '</div>'
+        + '<button class="cw-btn cw-btn-primary cw-cmp-cta" data-ak="article" data-av="' + esc(c.slug) + '">Explore ' + c.name + ' →</button>'
+        + '</div>';
     }).join('');
-    var rows = ROWS.map(function (r) {
-      var cells = r.v.map(function (v) { return '<td style="padding:8px 10px;font-size:11.5px;color:#4a4440;line-height:1.4;vertical-align:top;border-top:1px solid #f1ece3">' + v + '</td>'; }).join('');
-      return '<tr><td style="position:sticky;left:0;background:#faf7f2;padding:8px 10px;font-size:10.5px;font-weight:700;color:#8a8075;text-transform:uppercase;letter-spacing:.03em;border-top:1px solid #f1ece3;white-space:nowrap">' + r.k + '</td>' + cells + '</tr>';
-    }).join('');
-    var btns = COLS.map(function (c) {
-      return '<button class="cw-btn cw-btn-ghost" data-ak="article" data-av="' + esc(c.slug) + '" style="flex:1;min-width:96px">' + c.name + ' →</button>';
-    }).join('');
-    return '<div class="cw-incard" style="padding:0;overflow:hidden">'
-      + '<div style="padding:12px 14px 4px;font-size:13px;font-weight:700;color:#1a1a2e">Side-by-side: which fits you</div>'
-      + '<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;min-width:420px"><thead><tr>' + th + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
-      + '<div style="display:flex;gap:6px;padding:10px 12px;flex-wrap:wrap">' + btns + '</div></div>';
+    return '<div class="cw-incard cw-cmp">'
+      + '<div class="cw-cmp-title">Which path fits you?</div>'
+      + '<div class="cw-cmp-grid">' + cards + '</div></div>';
   }
 
   function renderInlineCards(cards) {
@@ -2603,6 +2763,7 @@
     } else if (res.transfer && res.transfer.to) {
       var line = res.reply || ('Let me bring in a colleague who can help with this.');
       await streamBotMsg(line, conv.agent); conv.messages.push({ role: 'assistant', content: line, agent: conv.agent }); saveStore();
+      VOICE.speak(line);
       await doTransfer(conv, res.transfer);
       renderSuggestions('');
     } else {
@@ -2611,6 +2772,7 @@
       if (res.booked) addSuccessCheck();
       handleActions(res.actions);
       renderSuggestions(reply);
+      VOICE.speak(reply);
     }
     sending = false; updateSendState(); if (els.in) els.in.focus();
   }
@@ -2696,7 +2858,7 @@
     if (els.mclose) els.mclose.classList.toggle('cw-mshow', isOpen);
     var badge = els.launcher.querySelector('.cw-badge'); if (isOpen && badge) badge.remove();
     if (isOpen) { dismissPromo(); if (mode === 'panels' && !els.win.innerHTML) renderPanels(); startLivePoll(); }
-    else { clearHomeTimers(); clearPh(); stopLivePoll(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
+    else { clearHomeTimers(); clearPh(); stopLivePoll(); VOICE.stopListen(); VOICE.stopSpeak(); els.win.classList.remove('cw-wide'); try { document.documentElement.style.setProperty('--cw-kb', '0px'); } catch (e) {} }
   }
 
   // ── Soft notification chime (WebAudio; no asset). Only after a real user

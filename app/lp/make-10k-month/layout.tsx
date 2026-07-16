@@ -15,6 +15,20 @@ export const metadata: Metadata = {
   twitter: { title: SHARE_TITLE, description: SHARE_DESC },
 }
 
+/* Hide any third-party feedback / survey / toolbar widget that gets injected on
+   the funnel (Contentsquare VoC, Hotjar-style, Vercel toolbar, generic
+   "Feedback" buttons). Scoped to this route so the rest of the site keeps them. */
+const HIDE_FEEDBACK_CSS = `
+  #vercel-toolbar, vercel-live-feedback, [data-vercel-toolbar-root],
+  [aria-label="Feedback" i], [aria-label*="feedback" i], [title="Feedback" i],
+  iframe[title*="feedback" i], iframe[title*="survey" i],
+  .cs-voc-widget, [id*="voc" i][class*="cs" i], [class*="feedback-button" i],
+  [class*="feedbackButton" i], [id*="feedback" i][class*="widget" i],
+  #hotjar-survey, .hj-widget-container, ._hj_feedback_container {
+    display: none !important; visibility: hidden !important;
+  }
+`
+
 export default function Make10kLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -22,6 +36,7 @@ export default function Make10kLayout({ children }: { children: React.ReactNode 
           never mounts here even if a cached carolina.js (without the /lp/ path
           guard) is served from the edge. */}
       <script dangerouslySetInnerHTML={{ __html: 'window.__carolinaLoaded=true;' }} />
+      <style dangerouslySetInnerHTML={{ __html: HIDE_FEEDBACK_CSS }} />
       {children}
     </>
   )

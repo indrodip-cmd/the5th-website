@@ -154,10 +154,10 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         .playBtn{transition:transform .25s ease}
       `}</style>
 
-      {/* ── Top bar: real logo, centered, on parchment ── */}
-      <header style={{ padding: '16px 20px 15px', textAlign: 'center', borderBottom: `1px solid rgba(221,216,207,.8)`, background: 'rgba(250,246,240,.6)' }}>
+      {/* ── Top bar: brand logo, centered, on parchment ── */}
+      <header style={{ padding: '18px 20px 16px', textAlign: 'center', borderBottom: `1px solid rgba(221,216,207,.8)`, background: 'rgba(250,246,240,.6)' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo.png" alt="The5th Consulting" style={{ height: 38, width: 'auto', verticalAlign: 'middle' }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(40px,10vw,50px)', width: 'auto', verticalAlign: 'middle' }} />
       </header>
 
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '30px 18px 10px' }}>

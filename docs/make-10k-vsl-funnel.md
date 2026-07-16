@@ -3,26 +3,35 @@
 Cold-traffic opt-in → gated VSL → book-a-call funnel. Self-contained, no site
 nav (single conversion path), `noindex`.
 
-## Flow (single page, video-gated)
+## Flow (two pages: opt-in → training)
 
-1. **`/lp/make-10k-month`** — hero shows a video **poster**. Clicking it opens a
-   **modal** (first name + email) — no page redirect. On submit,
-   `POST /api/lp/opt-in` upserts a `vsl_leads` row (`status=opted_in`,
-   `source=make-10k-month`) and mirrors the contact into `crm_contacts`; the
-   modal closes and the VSL **plays in place with sound** (direct user gesture).
-   Closing the modal without submitting creates **no** lead; the poster stays
-   clickable. Returning opted-in visitors skip the gate (localStorage).
-   `/lp/make-10k-month/watch` now 301-redirects here (legacy URL).
-2. **Watch-time** — real cumulative seconds (survives pause/resume **and**
-   reload, seeded from `localStorage`), checkpointed to
-   `POST /api/lp/watch-progress` every 30s and on tab-close (`sendBeacon`). At
-   the reveal threshold the "Book a call" CTA unlocks and the lead flips to
-   `status=watched_10min`. Logic lives in `useVslWatch.ts`; player in `watch/VslPlayer.tsx`.
-3. **Book a call** — opens the Typeform in an embedded popup (no redirect) with
-   `email`/`name` passed as **hidden fields**.
-4. **`POST /api/webhooks/typeform`** — verifies the Typeform signature, logs the
-   raw payload to `integration_webhooks`, matches the lead by hidden `email`,
-   flips it to `status=call_booked`, stores the response, and emails the admin.
+1. **`/lp/make-10k-month`** (opt-in / sales) — hero video **poster** + CTAs. Any
+   CTA opens a **modal** capturing **first name + email + phone**. `POST
+   /api/lp/opt-in` validates a real, non-disposable email and a plausible phone
+   (8–15 digits), upserts a `vsl_leads` row (`status=opted_in`, with `phone`),
+   and mirrors the contact (incl. phone) into `crm_contacts`. On success it
+   routes to `…/watch?name=&email=` (identity in the URL).
+2. **`/lp/make-10k-month/watch`** (training) — reads identity from the URL
+   (email required) → **a visitor with no email is redirected back to the
+   opt-in**. The video **autoplays with sound and RESTARTS on every load**
+   (commitment device; a warning banner says "don't close or it starts over").
+   Watch-time is cumulative within the session but **not resumed across reloads**
+   (`useVslWatch` starts at 0). Progress is still checkpointed to
+   `POST /api/lp/watch-progress` every 30s + on tab-close. After the reveal
+   threshold (**default 5 min**) the private-call invitation unlocks (offer copy
+   from `/call`) and the lead flips to `status=watched_10min`.
+3. **Book a call** — Typeform embedded popup (no redirect) with `email`/`name`
+   hidden fields.
+4. **`POST /api/webhooks/typeform`** — verifies signature, logs the raw payload
+   to `integration_webhooks`, matches by hidden `email`, flips to
+   `status=call_booked`, stores the response, emails the admin.
+
+**Personalization:** name/email flow through the URL (`?name=&email=`, also
+accepts an emailed link). The first name is used in greetings and CTA buttons on
+both pages (e.g. "Watch Now, Sandra →", "Book My Free Call, Sandra →").
+
+Note: the `watched_10min` status label is historical — the actual threshold is
+`NEXT_PUBLIC_VSL_REVEAL_SECONDS` (default now 300s / 5 min).
 
 `segment` mirrors `status` (`opted_in | watched_10min | call_booked`). Leads that
 leave early stay at `opted_in` — visible in the CRM by the `vsl-opted-in` tag /

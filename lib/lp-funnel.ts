@@ -16,7 +16,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { normEmail, upsertContact, logActivity } from '@/lib/crm'
+import { normEmail, normPhone, upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
 export const FUNNEL_SOURCE = 'make-10k-month'
@@ -24,7 +24,7 @@ export const FUNNEL_SOURCE = 'make-10k-month'
 /* Seconds of real watch-time before the CTA + Book-a-call button unlock. */
 export function revealSeconds(): number {
   const v = Number(process.env.NEXT_PUBLIC_VSL_REVEAL_SECONDS)
-  return Number.isFinite(v) && v > 0 ? Math.floor(v) : 600 // 10:00
+  return Number.isFinite(v) && v > 0 ? Math.floor(v) : 300 // 5:00
 }
 
 type Segment = 'opted_in' | 'watched_10min' | 'call_booked'
@@ -53,6 +53,7 @@ async function mirrorToCrm(lead: Row, segment: Segment, detail: string) {
   try {
     await upsertContact(email, {
       name: (lead.name as string) || null,
+      phone: (lead.phone as string) || null,
       source: FUNNEL_SOURCE,
       pipeline_stage: SEGMENT_STAGE[segment],
       ...(segment === 'call_booked' ? { call_booked: true } : {}),
@@ -76,12 +77,14 @@ async function mirrorToCrm(lead: Row, segment: Segment, detail: string) {
 export async function optInLead(input: {
   name?: string
   email: string
+  phone?: string | null
   visitorId?: string | null
   utm?: Record<string, unknown>
 }): Promise<{ ok: boolean; lead?: Row; error?: string }> {
   const email = normEmail(input.email)
   if (!email) return { ok: false, error: 'invalid_email' }
   const name = (input.name || '').trim().slice(0, 120) || null
+  const phone = normPhone(input.phone)
   const db = getSupabaseAdmin()
 
   const { data: existing } = await db.from('vsl_leads').select('*').eq('email', email).maybeSingle()
@@ -93,6 +96,7 @@ export async function optInLead(input: {
       .insert({
         email,
         name,
+        phone,
         source: FUNNEL_SOURCE,
         status: 'opted_in',
         segment: 'opted_in',
@@ -110,14 +114,20 @@ export async function optInLead(input: {
     } else {
       lead = data
     }
-  } else if (name && !existing.name) {
-    const { data } = await db.from('vsl_leads').update({ name }).eq('email', email).select('*').single()
-    lead = data || existing
+  } else {
+    // Backfill name/phone if they were missing.
+    const patch: Record<string, unknown> = {}
+    if (name && !existing.name) patch.name = name
+    if (phone && !existing.phone) patch.phone = phone
+    if (Object.keys(patch).length) {
+      const { data } = await db.from('vsl_leads').update(patch).eq('email', email).select('*').single()
+      lead = data || existing
+    }
   }
 
   // Mirror into the CRM (only meaningful side-effect on first opt-in; upsert is
   // itself idempotent so repeat submits are harmless).
-  await mirrorToCrm(lead || { email, name }, 'opted_in', 'Opted in to the Make-$10k VSL funnel')
+  await mirrorToCrm(lead || { email, name, phone }, 'opted_in', 'Opted in to the Make-$10k VSL funnel')
   emitEvent('lead_captured', { email, name: name || undefined, source: FUNNEL_SOURCE }).catch(() => {})
   return { ok: true, lead: lead || undefined }
 }

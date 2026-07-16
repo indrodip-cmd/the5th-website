@@ -1,9 +1,11 @@
 'use client'
-/* Watch-time tracking + CTA reveal + Typeform booking, shared by the funnel
-   page. Cumulative watched seconds survive pause/resume AND reload (seeded from
-   localStorage). Progress is checkpointed to Supabase every 30s and on
-   tab-close (sendBeacon), so partial-watch data is never lost. Crossing the
-   reveal threshold unlocks the "Book a call" CTA. */
+/* Watch-time tracking + CTA reveal + Typeform booking for the video page.
+
+   Watch-time is cumulative real playback that survives pause/resume WITHIN the
+   session, but intentionally does NOT resume across reloads — closing the tab
+   restarts the training (a commitment device). Progress is still checkpointed
+   to Supabase every 30s and on tab-close (sendBeacon) so the CRM keeps the
+   furthest point reached. Crossing the reveal threshold unlocks "Book a call". */
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type Lead = { name: string; email: string }
@@ -16,7 +18,6 @@ function loadScript(src: string, id: string) {
 }
 
 export function useVslWatch(lead: Lead | null, revealSeconds: number, formId: string) {
-  const [seed, setSeed] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [booked, setBooked] = useState(false)
 
@@ -27,18 +28,9 @@ export function useVslWatch(lead: Lead | null, revealSeconds: number, formId: st
   const leadRef = useRef<Lead | null>(null)
   useEffect(() => { leadRef.current = lead })
 
-  // Seed prior watch-time when the lead becomes known; load the Typeform SDK.
+  // Load the Typeform SDK once we have a lead.
   useEffect(() => {
     if (!lead) return
-    try {
-      const w = JSON.parse(localStorage.getItem(`vsl_watch_${lead.email}`) || '{}')
-      const s = Number(w?.seconds) || 0
-      secondsRef.current = s
-      completedRef.current = Boolean(w?.completed)
-      setSeed(s)
-      if (s >= revealSeconds || w?.completed) { revealedRef.current = true; setRevealed(true) }
-    } catch { /* noop */ }
-
     loadScript('https://embed.typeform.com/next/embed.js', 'tf-embed-js')
     if (!document.getElementById('tf-embed-css')) {
       const link = document.createElement('link')
@@ -46,7 +38,7 @@ export function useVslWatch(lead: Lead | null, revealSeconds: number, formId: st
       link.href = 'https://embed.typeform.com/next/css/popup.css'
       document.head.appendChild(link)
     }
-  }, [lead, revealSeconds])
+  }, [lead])
 
   const sync = useCallback((opts: { force?: boolean } = {}) => {
     const l = leadRef.current
@@ -68,13 +60,11 @@ export function useVslWatch(lead: Lead | null, revealSeconds: number, formId: st
   const onWatched = useCallback((cumulative: number, meta: { completed: boolean }) => {
     secondsRef.current = cumulative
     if (meta.completed) completedRef.current = true
-    const l = leadRef.current
-    if (l) { try { localStorage.setItem(`vsl_watch_${l.email}`, JSON.stringify({ seconds: cumulative, completed: completedRef.current })) } catch { /* noop */ } }
 
     if (!revealedRef.current && (cumulative >= revealSeconds || completedRef.current)) {
       revealedRef.current = true
       setRevealed(true)
-      sync({ force: true }) // record watched_10min immediately
+      sync({ force: true }) // record the threshold crossing immediately
     } else {
       sync()
     }
@@ -103,5 +93,5 @@ export function useVslWatch(lead: Lead | null, revealSeconds: number, formId: st
     }
   }, [formId])
 
-  return { seed, revealed, booked, onWatched, bookCall }
+  return { revealed, booked, onWatched, bookCall }
 }

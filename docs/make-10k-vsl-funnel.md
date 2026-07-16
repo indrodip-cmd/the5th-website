@@ -3,16 +3,21 @@
 Cold-traffic opt-in → gated VSL → book-a-call funnel. Self-contained, no site
 nav (single conversion path), `noindex`.
 
-## Flow
+## Flow (single page, video-gated)
 
-1. **`/lp/make-10k-month`** — opt-in (first name + email). `POST /api/lp/opt-in`
-   upserts a `vsl_leads` row (`status=opted_in`, `source=make-10k-month`) and
-   mirrors the contact into `crm_contacts`. Redirects to `/watch`.
-2. **`/lp/make-10k-month/watch`** — VSL. Player is lazy-mounted on scroll.
-   Real cumulative watch-time (survives pause/resume **and** reload — seeded
-   from `localStorage`) is checkpointed to `POST /api/lp/watch-progress` every
-   30s and on tab-close (`sendBeacon`). At the reveal threshold the CTA +
-   "Book a call" unlock and the lead flips to `status=watched_10min`.
+1. **`/lp/make-10k-month`** — hero shows a video **poster**. Clicking it opens a
+   **modal** (first name + email) — no page redirect. On submit,
+   `POST /api/lp/opt-in` upserts a `vsl_leads` row (`status=opted_in`,
+   `source=make-10k-month`) and mirrors the contact into `crm_contacts`; the
+   modal closes and the VSL **plays in place with sound** (direct user gesture).
+   Closing the modal without submitting creates **no** lead; the poster stays
+   clickable. Returning opted-in visitors skip the gate (localStorage).
+   `/lp/make-10k-month/watch` now 301-redirects here (legacy URL).
+2. **Watch-time** — real cumulative seconds (survives pause/resume **and**
+   reload, seeded from `localStorage`), checkpointed to
+   `POST /api/lp/watch-progress` every 30s and on tab-close (`sendBeacon`). At
+   the reveal threshold the "Book a call" CTA unlocks and the lead flips to
+   `status=watched_10min`. Logic lives in `useVslWatch.ts`; player in `watch/VslPlayer.tsx`.
 3. **Book a call** — opens the Typeform in an embedded popup (no redirect) with
    `email`/`name` passed as **hidden fields**.
 4. **`POST /api/webhooks/typeform`** — verifies the Typeform signature, logs the
@@ -56,6 +61,33 @@ tags to see each segment.
 1. In the form, add two **hidden fields**: `email` and `name`.
 2. Connect → Webhooks → add endpoint `https://the5th.consulting/api/webhooks/typeform`,
    set the secret to match `TYPEFORM_WEBHOOK_SECRET`.
+
+## Social proof (real, from existing repo content)
+
+The proof cards on the landing page live in `REAL_PROOF` in `config.ts`. Every
+entry is pulled verbatim from case studies **already published publicly** on
+the5th.consulting, so no new consent is required:
+
+- `public/call/index.html` — detailed case-study cards: **Torill** ($210k single
+  launch), **Laurie** ($14,193 / 60 days), **Gurpreet** ($18k / 3 months from $0).
+- `public/index.html` — homepage testimonial ticker: **Angela** ($12k / 9 weeks),
+  **Jeanne** ($8k / 8 weeks). Also available but unused: Seth, Hayley, Gabe,
+  Laurie ($8,900), Toril, Abbas, and the homepage case-study tile (Susan, Shayma
+  → $180k / 5 months).
+
+First names only (matches the live site). **Flags to reconcile before scaling
+spend — I did not guess:**
+- **Laurie** appears twice with different figures — `$14,193 in 60 days`
+  (call page, used) vs `$8,900 in 5 weeks` (homepage ticker). Confirm which is
+  current.
+- **Angela** appears twice — `$12,000 / 9 weeks` (ticker, used) vs `$2,500 /
+  6 weeks` (homepage case-study tile). Likely different milestones or two people.
+- Spelling **Torill** (call page) vs **Toril** (ticker).
+- Avatar mismatch: headline targets "women 40+", but several real testimonials
+  are men (Seth, Gabe, Abbas). The 5 selected are all women; broaden the
+  headline if you want to feature the male results too.
+
+Do not invent numbers/ratings — edit `REAL_PROOF` to swap in different real ones.
 
 ## Data model — `public.vsl_leads`
 

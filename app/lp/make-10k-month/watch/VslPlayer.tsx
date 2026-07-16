@@ -66,10 +66,12 @@ export default function VslPlayer({
   videoUrl,
   initialSeconds,
   onWatched,
+  autoplay = false,
 }: {
   videoUrl: string
   initialSeconds: number
   onWatched: (cumulativeSeconds: number, meta: { completed: boolean }) => void
+  autoplay?: boolean
 }) {
   const mountRef = useRef<HTMLDivElement>(null)
   const accumRef = useRef(initialSeconds || 0)
@@ -103,7 +105,7 @@ export default function VslPlayer({
         if (cancelled || !mountRef.current || !w.YT?.Player) return
         const player = new w.YT.Player(mountRef.current, {
           videoId: parsed.id,
-          playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+          playerVars: { rel: 0, modestbranding: 1, playsinline: 1, autoplay: autoplay ? 1 : 0 },
           events: {
             onStateChange: (e: { data: number }) => {
               // 1 = playing, 0 = ended
@@ -129,7 +131,7 @@ export default function VslPlayer({
       loadScript('https://player.vimeo.com/api/player.js', 'vimeo-player-api').then(() => {
         if (cancelled || !mountRef.current || !w.Vimeo?.Player) return
         const player = new w.Vimeo.Player(mountRef.current, {
-          id: parsed.id, responsive: true, dnt: true, playsinline: true,
+          id: parsed.id, responsive: true, dnt: true, playsinline: true, autoplay,
         })
         player.on('timeupdate', (d: { seconds: number }) => sample(d.seconds, true))
         player.on('pause', () => { playingRef.current = false; lastPosRef.current = null })

@@ -1,7 +1,7 @@
-import WatchView from './WatchView'
-import { videoConfig, revealSecondsClient, typeformFormId } from '../config'
+import { redirect } from 'next/navigation'
 
-export default function Make10kWatchPage() {
-  const { url } = videoConfig()
-  return <WatchView videoUrl={url} revealSeconds={revealSecondsClient()} formId={typeformFormId()} />
+/* The funnel is now a single video-gated page. Anyone landing on the old
+   /watch URL (bookmarks, prior links) is sent to it. */
+export default function Make10kWatchRedirect() {
+  redirect('/lp/make-10k-month')
 }

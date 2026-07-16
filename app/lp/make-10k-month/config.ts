@@ -1,5 +1,5 @@
 /* Copy + integration config for the Make-$10k VSL funnel. Kept in one place so
-   the opt-in and watch pages stay in sync and non-devs can tune the offer.
+   the page stays in sync and non-devs can tune the offer.
 
    Video + Typeform are env-driven so they can change without a code deploy:
      NEXT_PUBLIC_VSL_VIDEO_URL      YouTube or Vimeo URL/ID for the VSL
@@ -8,22 +8,31 @@
 */
 
 export const OPT_IN = {
-  eyebrow: 'FREE TRAINING · FOR EXPERTS, COACHES & CONSULTANTS 40+',
-  headline: 'How Women Over 40 Are Turning Decades of Expertise Into a Predictable $10K a Month',
-  sub: 'Watch the free training and get the exact 3-part system — no cold DMs, no funnel-hacking, no chasing. Just your experience, packaged and priced so the right clients say yes.',
+  // Kept short so the video (the primary CTA) sits above the fold on mobile.
+  eyebrow: 'FREE TRAINING · EXPERTS & COACHES 40+',
+  headline: 'Turn Decades of Expertise Into a Predictable $10K a Month',
+  sub: 'Press play for the free training — no cost, no cold DMs, no chasing.',
+  // Overlay label on the video thumbnail (the primary conversion element).
+  playLabel: 'Watch the Free Training',
+  // Secondary — de-emphasised below the fold.
+  checklistTitle: 'Inside the free training',
   bullets: [
     'The offer structure that makes a $10K month feel inevitable — not lucky',
-    'Why “post more content” keeps you invisible (and what actually fills your calendar)',
-    'The simple daily rhythm that fits around your real life, not the other way around',
+    'Why “post more content” keeps you invisible — and what fills your calendar',
+    'The simple daily rhythm that fits around your real life',
   ],
-  ctaLabel: 'Watch the Free Training →',
+}
+
+/* The click-to-play gate: shown as a popup when the visitor clicks the video. */
+export const MODAL = {
+  eyebrow: 'ONE STEP TO WATCH',
+  title: 'Where should we send your training?',
+  sub: 'Enter your details and the training starts playing right away.',
+  cta: 'Play the Training →',
   microtrust: 'Instant access. No spam, ever. Your details stay private.',
 }
 
 export const WATCH = {
-  eyebrow: 'YOUR FREE TRAINING IS READY',
-  headline: 'Watch This Before We Speak',
-  sub: 'Give it your full attention — everything you need to see how a $10K month works for someone with your experience is in here.',
   // Copy revealed once the reveal threshold of watch-time is reached.
   reveal: {
     eyebrow: 'YOU’RE READY FOR THE NEXT STEP',
@@ -40,6 +49,49 @@ export const WATCH = {
   // Shown before the CTA unlocks, so visitors know the button is coming.
   lockedHint: 'Stay with the training — your invitation to book a call will appear here shortly.',
 }
+
+/* ── REAL social proof ──────────────────────────────────────────────────────
+   Every entry below is pulled verbatim from case studies ALREADY published
+   publicly on the5th.consulting:
+     • public/call/index.html   (detailed case-study cards — Torill, Laurie, Gurpreet)
+     • public/index.html        (homepage testimonial ticker — Jeanne, Angela)
+   First names only (consent already exercised on the live site). No numbers,
+   ratings or names have been invented. See docs/make-10k-vsl-funnel.md for the
+   flagged cross-page discrepancies (Laurie / Angela figures) to reconcile. */
+export type Proof = { name: string; role: string; result: string; quote: string }
+
+export const REAL_PROOF: Proof[] = [
+  {
+    name: 'Torill',
+    role: 'Leadership Coach · returned after a 15-year absence',
+    result: '$210,000 from a single launch',
+    quote: 'Came back with no current audience — we structured a $7,000 program and turned her reputation into revenue.',
+  },
+  {
+    name: 'Gurpreet',
+    role: 'Coach · started from $0',
+    result: '$18,000 in 3 months, from nothing',
+    quote: 'Arrived close to giving up after $16,000 spent elsewhere. We stripped it back to a clear offer and a simple system.',
+  },
+  {
+    name: 'Laurie',
+    role: 'Dating Coach · TEDx speaker, women over 50',
+    result: '$14,193 in her first 60 days',
+    quote: 'Repositioned from $79 to $249 — 57 buyers and a 600-strong community within two months.',
+  },
+  {
+    name: 'Angela',
+    role: '10K Roadmap Accelerator',
+    result: '$12,000 in 9 weeks',
+    quote: '“I had never earned that from my own business in my life. The framework works if you work it.”',
+  },
+  {
+    name: 'Jeanne',
+    role: '10K Roadmap Accelerator',
+    result: '$8,000 in 8 weeks',
+    quote: '“Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible.”',
+  },
+]
 
 export function videoConfig() {
   const url = process.env.NEXT_PUBLIC_VSL_VIDEO_URL || ''

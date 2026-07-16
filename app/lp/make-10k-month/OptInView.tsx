@@ -53,12 +53,15 @@ function ytPoster(url: string): string {
 
 function readVisitorId(): string | null {
   try {
-    const ls = localStorage.getItem('t5_visitor_id') || localStorage.getItem('visitor_id')
+    const w = window as unknown as { __a5vid?: string }
+    const ls = w.__a5vid || localStorage.getItem('a5_vid') || localStorage.getItem('t5_visitor_id') || localStorage.getItem('visitor_id')
     if (ls) return ls
-    const m = document.cookie.match(/(?:^|;\s*)(?:t5_vid|visitor_id)=([^;]+)/)
+    const m = document.cookie.match(/(?:^|;\s*)(?:a5_vid|t5_vid|visitor_id)=([^;]+)/)
     return m ? decodeURIComponent(m[1]) : null
   } catch { return null }
 }
+
+const CLIENT_AVATARS = Array.from({ length: 12 }, (_, i) => `/clients/c${i + 1}.jpg`)
 function readUtm(): Record<string, string> {
   const out: Record<string, string> = {}
   try {
@@ -216,6 +219,35 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
           </div>
         </div>
 
+        {/* ── Primary CTA button + client social proof (mirrors /quiz) ── */}
+        {!lead && (
+          <div className="rise" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 24 }}>
+            <button onClick={openGate} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 470, padding: '19px 26px', borderRadius: 9, fontSize: 15.5, animation: 'glow 3s ease-in-out infinite' }}>
+              {OPT_IN.ctaButton}
+            </button>
+            <p style={{ fontFamily: SANS, fontSize: 12.5, color: MUTE, marginTop: 13, letterSpacing: '.02em', display: 'flex', alignItems: 'center', gap: 7 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              {OPT_IN.ctaMicro}
+            </p>
+
+            {/* Client avatar strip + rating */}
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: 22 }}>
+              {CLIENT_AVATARS.map((src, i) => (
+                <span key={src} style={{ width: 'clamp(34px,8.5vw,42px)', height: 'clamp(34px,8.5vw,42px)', borderRadius: '50%', overflow: 'hidden', border: '2px solid #FBF8F3', boxShadow: '0 2px 6px rgba(46,26,53,.18)', marginLeft: i === 0 ? 0 : -11, zIndex: 12 - i, position: 'relative', flexShrink: 0, background: '#EAE3D8' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                </span>
+              ))}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 12 }}>
+              <span style={{ color: GOLD, fontSize: 17, letterSpacing: 1 }}>★★★★<span style={{ opacity: .45 }}>★</span></span>
+              <span style={{ fontFamily: SANS, fontSize: 13.5, color: '#5f574c' }}>
+                <strong style={{ color: INK, fontWeight: 700 }}>{OPT_IN.rating.score} stars</strong> {OPT_IN.rating.text}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* ── Locked hint OR revealed invitation ── */}
         {lead && (revealed ? (
           <div className="rise" style={{ marginTop: 30, background: '#fff', border: `1px solid ${BORDER}`, borderTop: `3px solid ${GOLD}`, borderRadius: 14, boxShadow: '0 30px 70px -40px rgba(46,26,53,.5)', padding: 'clamp(26px,6vw,40px)', textAlign: 'center' }}>
@@ -262,7 +294,14 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
             {REAL_PROOF.map((p) => (
               <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px', boxShadow: '0 18px 44px -34px rgba(46,26,53,.55)' }}>
                 <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 12 }}>
-                  <span style={{ width: 46, height: 46, flexShrink: 0, borderRadius: '50%', background: `linear-gradient(160deg,${PLUM_MID},${PLUM})`, border: `2px solid rgba(201,168,76,.4)`, color: GOLD, fontFamily: SERIF, fontSize: 22, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{p.name.charAt(0)}</span>
+                  {p.photo ? (
+                    <span style={{ width: 50, height: 50, flexShrink: 0, borderRadius: '50%', overflow: 'hidden', border: `2px solid rgba(201,168,76,.45)`, boxShadow: '0 4px 12px rgba(46,26,53,.18)' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.photo} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                    </span>
+                  ) : (
+                    <span style={{ width: 50, height: 50, flexShrink: 0, borderRadius: '50%', background: `linear-gradient(160deg,${PLUM_MID},${PLUM})`, border: `2px solid rgba(201,168,76,.4)`, color: GOLD, fontFamily: SERIF, fontSize: 24, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{p.name.charAt(0)}</span>
+                  )}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 600, lineHeight: 1.1, color: INK }}>{p.name}</div>
                     <div style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 500, letterSpacing: '.04em', color: MUTE, marginTop: 2 }}>{p.role}</div>
@@ -296,7 +335,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', opacity: .95 }} />
         <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 14, lineHeight: 1.6 }}>
-          Helping women 40+ turn decades of expertise into income.
+          Helping experts 40+ turn decades of expertise into income.
         </p>
         <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 6 }}>© {new Date().getFullYear()} The5th Consulting. All rights reserved.</p>
       </footer>

@@ -6,6 +6,9 @@
    ════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
+  // Distraction-free funnel pages: never mount the chat widget on /lp/* landing
+  // pages (single conversion path, no exits).
+  try { if (location.pathname.indexOf('/lp/') === 0) return; } catch (e) {}
   if (window.__carolinaLoaded) return;
   window.__carolinaLoaded = true;
 

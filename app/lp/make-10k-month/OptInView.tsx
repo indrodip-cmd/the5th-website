@@ -10,7 +10,7 @@
    place with sound. Closing without submitting creates no lead; the poster stays
    clickable. Watch-time + 10-min "Book a call" reveal come from useVslWatch. */
 import { useEffect, useRef, useState } from 'react'
-import { OPT_IN, MODAL, WATCH, REAL_PROOF } from './config'
+import { OPT_IN, MODAL, WATCH, REAL_PROOF, LEGAL } from './config'
 import { useVslWatch } from './useVslWatch'
 import VslPlayer from './watch/VslPlayer'
 
@@ -222,7 +222,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         {/* ── Primary CTA button + client social proof (mirrors /quiz) ── */}
         {!lead && (
           <div className="rise" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 24 }}>
-            <button onClick={openGate} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 470, padding: '19px 26px', borderRadius: 9, fontSize: 15.5, animation: 'glow 3s ease-in-out infinite' }}>
+            <button onClick={openGate} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 470, padding: '19px 26px', borderRadius: 9, fontSize: 15.5 }}>
               {OPT_IN.ctaButton}
             </button>
             <p style={{ fontFamily: SANS, fontSize: 12.5, color: MUTE, marginTop: 13, letterSpacing: '.02em', display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -272,7 +272,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
                     </div>
                   ))}
                 </div>
-                <button onClick={bookCall} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 440, padding: '18px 26px', borderRadius: 8, fontSize: 15, animation: 'glow 3s ease-in-out infinite' }}>{WATCH.reveal.ctaLabel}</button>
+                <button onClick={bookCall} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 440, padding: '18px 26px', borderRadius: 8, fontSize: 15 }}>{WATCH.reveal.ctaLabel}</button>
                 <p style={{ fontFamily: SANS, fontSize: 13, color: MUTE, marginTop: 14, letterSpacing: '.02em' }}>{WATCH.reveal.reassure}</p>
               </>
             )}
@@ -323,12 +323,12 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
           <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '.2em', textTransform: 'uppercase', color: MUTE }}>Is This For You?</span>
           <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,rgba(201,168,76,.5),transparent)' }} />
         </div>
-        <section style={{ maxWidth: 600, margin: '0 auto' }}>
+        <section style={{ maxWidth: 560, margin: '0 auto' }}>
           {OPT_IN.narrative.map((line, i) => (
-            <p key={i} style={{ fontFamily: SANS, fontSize: i === 0 ? 16.5 : 15, fontWeight: i === 0 ? 500 : 300, color: i === 0 ? INK : '#5f574c', lineHeight: 1.65, textAlign: 'center', margin: i === 0 ? '0 0 12px' : '0 0 12px' }}>{line}</p>
+            <p key={i} style={{ fontFamily: i === 0 ? SERIF : SANS, fontSize: i === 0 ? 'clamp(20px,4.6vw,26px)' : 15.5, fontWeight: i === 0 ? 500 : 300, color: i === 0 ? INK : '#544c42', lineHeight: i === 0 ? 1.3 : 1.7, margin: i === 0 ? '0 0 16px' : '0 0 14px' }}>{line}</p>
           ))}
 
-          <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD_DK, textAlign: 'center', margin: '26px 0 16px' }}>{OPT_IN.checklistTitle}</p>
+          <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD_DK, margin: '28px 0 16px' }}>{OPT_IN.checklistTitle}</p>
           <div style={{ display: 'grid', gap: 12 }}>
             {OPT_IN.bullets.map((b) => (
               <div key={b} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
@@ -347,14 +347,29 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         </section>
       </div>
 
-      {/* ── Footer ── */}
-      <footer style={{ marginTop: 50, background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, padding: '30px 20px 34px', textAlign: 'center' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', opacity: .95 }} />
-        <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 14, lineHeight: 1.6 }}>
-          Helping experts 40+ turn decades of expertise into income.
-        </p>
-        <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 6 }}>© {new Date().getFullYear()} The5th Consulting. All rights reserved.</p>
+      {/* ── Footer (brand + legal / compliance) ── */}
+      <footer style={{ marginTop: 50, background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, padding: '34px 20px 40px' }}>
+        <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', opacity: .95 }} />
+          <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 14, lineHeight: 1.6 }}>
+            Helping experts turn decades of expertise into income.
+          </p>
+
+          {/* Legal links (Privacy is required for lead-gen on Meta) */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '6px 18px', marginTop: 18 }}>
+            {LEGAL.links.map((l) => (
+              <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.6)', textDecoration: 'none' }}>{l.label}</a>
+            ))}
+          </div>
+
+          <div style={{ height: 1, background: 'rgba(255,255,255,.12)', margin: '20px 0' }} />
+
+          {/* Earnings + Meta non-affiliation disclaimers */}
+          <p style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,.42)', lineHeight: 1.7, margin: 0 }}>{LEGAL.earnings}</p>
+          <p style={{ fontFamily: SANS, fontSize: 10.5, color: 'rgba(255,255,255,.42)', lineHeight: 1.7, margin: '12px 0 0' }}>{LEGAL.meta}</p>
+          <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 18 }}>© {new Date().getFullYear()} The5th Consulting. All rights reserved.</p>
+        </div>
       </footer>
 
       {/* ── Opt-in modal (the gate) ── */}
@@ -381,6 +396,11 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
                 <p style={{ fontFamily: SANS, textAlign: 'center', fontSize: 12, color: MUTE, marginTop: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={MUTE} strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                   {MODAL.microtrust}
+                </p>
+                <p style={{ fontFamily: SANS, textAlign: 'center', fontSize: 11, color: '#a79e90', marginTop: 8, lineHeight: 1.5 }}>
+                  By continuing you agree to our{' '}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: GOLD_DK, textDecoration: 'underline' }}>Privacy Policy</a>{' '}and{' '}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: GOLD_DK, textDecoration: 'underline' }}>Terms</a>.
                 </p>
               </form>
             </div>

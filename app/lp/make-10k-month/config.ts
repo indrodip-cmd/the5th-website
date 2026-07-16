@@ -9,8 +9,10 @@
 
 export const OPT_IN = {
   eyebrow: 'A Free 12-Minute Training · For Coaches & Consultants',
-  headline: 'The Exact System 76 Coaches Used to Turn Expertise Into Their First $10K, $50K, Even $210K Months',
-  sub: 'The same 3-part framework behind Torill’s $210K launch, Laurie’s $14,193 in 60 days, and Gurpreet’s $18K turnaround — built for coaches and consultants who already have the expertise, just not the system to price and sell it.',
+  headline: 'The 12-Minute Training That Changes How You See Your Own Coaching Business',
+  // Ad-facing copy: the "internal-shift" mechanism, no income claims / no
+  // viewer-status language (keeps the Meta ad + landing page review-safe).
+  sub: 'It’s not a new niche or a new offer. It’s a shift in how you see the business you already have — the same reframe behind how our clients price their work, talk about what they do, and get the right people to say yes.',
   // Overlay label on the video poster (the primary conversion element).
   playLabel: 'Watch the Free Training',
   playNote: '12 minutes · Free · Watch instantly',
@@ -35,6 +37,20 @@ export const OPT_IN = {
     'What changes the moment you see your business the way your best clients already do',
   ],
   narrativeClose: '12 minutes. Free. Watch instantly.',
+}
+
+/* Legal / compliance copy (earnings disclaimer + Meta non-affiliation). Shown
+   in the footer so the funnel is safe to run on Meta ads. */
+export const LEGAL = {
+  earnings:
+    'This training is educational and makes no guarantee of income or results. The case studies shown are the real experiences of specific clients — they are not a promise or representation that you will achieve the same or similar outcomes. Most people who watch a free training take no action; results depend on your experience, effort, offer, market and factors outside our control.',
+  meta:
+    'This site is not a part of the Facebook or Instagram website or Meta Platforms, Inc. Additionally, this site is not endorsed by Meta in any way. FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.',
+  links: [
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms', href: '/terms' },
+    { label: 'Disclaimer', href: '/disclaimer' },
+  ],
 }
 
 /* The click-to-play gate: shown as a popup when the visitor clicks the video. */

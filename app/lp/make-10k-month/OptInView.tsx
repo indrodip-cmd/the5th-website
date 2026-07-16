@@ -351,7 +351,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
       <footer style={{ marginTop: 50, background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, padding: '34px 20px 40px' }}>
         <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', opacity: .95 }} />
+          <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 'clamp(42px,11vw,56px)', width: 'auto', opacity: .95 }} />
           <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 14, lineHeight: 1.6 }}>
             Helping experts turn decades of expertise into income.
           </p>

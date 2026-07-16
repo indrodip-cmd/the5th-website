@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { OPT_IN, MODAL, REAL_PROOF, LEGAL } from './config'
+import ProofPopups from './ProofPopups'
 
 const SERIF = "'Cormorant Garamond', Georgia, serif"
 const SANS = "'DM Sans', system-ui, -apple-system, sans-serif"
@@ -114,6 +115,15 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
       ? `Resume the Training${firstName ? `, ${firstName}` : ''} →`
       : firstName ? `Watch Now, ${firstName} →` : OPT_IN.ctaButton
 
+  // Opt-in progress: 20% on open → 90% once they enter a name → the last 10%
+  // across email/phone and the redirect. No number shown — the bar tells the
+  // story (near-completion nudge).
+  const progress = loading ? 100
+    : phone.replace(/\D/g, '').length >= 6 ? 97
+      : email.trim() ? 94
+        : name.trim() ? 90
+          : 20
+
   useEffect(() => {
     meta.current = { visitor_id: readVisitorId(), utm: readUtm() }
     router.prefetch(WATCH_URL)
@@ -178,6 +188,9 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
         @keyframes fade{from{opacity:0}to{opacity:1}}
         @keyframes halo{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+        @keyframes barSheen{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        .pb-track{position:relative;height:7px;width:100%;background:#ece2d4;border-radius:99px;overflow:hidden}
+        .pb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#35213c 0%,#4E3158 45%,#7a5b86 55%,#35213c 100%);background-size:220% 100%;animation:barSheen 2.2s linear infinite;box-shadow:0 0 10px rgba(53,33,60,.45);transition:width .75s cubic-bezier(.22,1,.36,1)}
         .rise{animation:rise .6s ease both}
         .lp-input{width:100%;padding:15px 16px;font-size:16px;border-radius:8px;border:1.5px solid ${BORDER};background:#fff;color:${INK};font-family:${SANS};transition:border-color .15s,box-shadow .15s}
         .lp-input::placeholder{color:#b3aca0}
@@ -328,14 +341,21 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         </div>
       </footer>
 
+      {/* Live demand — social-proof activity popups (bottom-left) */}
+      <ProofPopups />
+
       {/* Opt-in modal (the gate) */}
       {modalOpen && (
         <div role="dialog" aria-modal="true" onClick={(e) => { if (e.target === e.currentTarget && !loading) setModalOpen(false) }}
           style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(24,12,26,.62)', backdropFilter: 'blur(5px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, animation: 'fade .2s ease' }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: 430, background: PARCH, borderRadius: 16, boxShadow: '0 40px 90px rgba(20,8,22,.5)', overflow: 'hidden', animation: 'rise .35s ease both' }}>
             <div style={{ background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, height: 4 }} />
+            {/* Opt-in progress bar (no number — smooth near-completion nudge) */}
+            <div style={{ padding: '14px 18px 0' }}>
+              <div className="pb-track"><div className="pb-fill" style={{ width: `${progress}%` }} /></div>
+            </div>
             <button onClick={() => !loading && setModalOpen(false)} aria-label="Close" style={{ position: 'absolute', top: 14, right: 14, width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'rgba(46,26,53,.06)', color: '#8a8075', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}>×</button>
-            <div style={{ padding: 'clamp(24px,6vw,34px)' }}>
+            <div style={{ padding: 'clamp(20px,5vw,30px) clamp(24px,6vw,34px) clamp(24px,6vw,34px)' }}>
               <Eyebrow>{MODAL.eyebrow}</Eyebrow>
               <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,6vw,30px)', fontWeight: 500, lineHeight: 1.14, margin: '0 0 8px', textAlign: 'center', color: INK }}>{MODAL.title}</h2>
               <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: '#5f574c', lineHeight: 1.55, margin: '0 0 20px', textAlign: 'center' }}>{MODAL.sub}</p>

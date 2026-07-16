@@ -8,7 +8,7 @@
    No navigation, no exit links (except required legal). Mobile-first. */
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { OPT_IN, MODAL, REAL_PROOF, LEGAL } from './config'
+import { OPT_IN, MODAL, REAL_PROOF, LEGAL, PRESS } from './config'
 import ProofPopups from './ProofPopups'
 
 const SERIF = "'Cormorant Garamond', Georgia, serif"
@@ -190,6 +190,11 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         @keyframes fade{from{opacity:0}to{opacity:1}}
         @keyframes halo{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
         @keyframes barSheen{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        .marq-wrap{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+        .marq-track{display:flex;align-items:center;gap:clamp(30px,7vw,60px);width:max-content;animation:marq 24s linear infinite}
+        .marq-wrap:hover .marq-track{animation-play-state:paused}
+        .marq-track span{font-family:${SERIF};font-size:clamp(17px,4.4vw,24px);font-weight:500;color:#b3a99c;letter-spacing:.01em;white-space:nowrap}
         .pb-track{position:relative;height:7px;width:100%;background:#ece2d4;border-radius:99px;overflow:hidden}
         .pb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#35213c 0%,#4E3158 45%,#7a5b86 55%,#35213c 100%);background-size:220% 100%;animation:barSheen 2.2s linear infinite;box-shadow:0 0 10px rgba(53,33,60,.45);transition:width .75s cubic-bezier(.22,1,.36,1)}
         .rise{animation:rise .6s ease both}
@@ -266,6 +271,18 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
             <span style={{ fontFamily: SANS, fontSize: 13.5, color: '#5f574c' }}><strong style={{ color: INK, fontWeight: 700 }}>{OPT_IN.rating.score} stars</strong> {OPT_IN.rating.text}</span>
           </div>
         </div>
+
+        {/* As featured in — running marquee (just below the fold) */}
+        <section style={{ marginTop: 38 }}>
+          <p style={{ textAlign: 'center', fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: MUTE, marginBottom: 18 }}>{PRESS.label}</p>
+          <div className="marq-wrap">
+            <div className="marq-track">
+              {[...PRESS.items, ...PRESS.items].map((n, i) => (
+                <span key={i} aria-hidden={i >= PRESS.items.length}>{n}</span>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Real social proof */}
         <section id="proof" style={{ marginTop: 46 }}>

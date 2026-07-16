@@ -39,6 +39,12 @@ export const OPT_IN = {
   narrativeClose: '12 minutes. Free. Watch instantly.',
 }
 
+/* "As featured in" press strip (mirrors the /call page — styled wordmarks). */
+export const PRESS = {
+  label: 'Our clients have been featured in',
+  items: ['Forbes', 'The New York Times', 'HuffPost', 'TEDx', 'The Guardian', 'Yahoo Finance'],
+}
+
 /* Legal / compliance copy (earnings disclaimer + Meta non-affiliation). Shown
    in the footer so the funnel is safe to run on Meta ads. */
 export const LEGAL = {

@@ -32,10 +32,8 @@ const HIDE_FEEDBACK_CSS = `
 export default function Make10kLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* Belt-and-suspenders: pre-set the widget's own load guard so the chat
-          never mounts here even if a cached carolina.js (without the /lp/ path
-          guard) is served from the edge. */}
-      <script dangerouslySetInnerHTML={{ __html: 'window.__carolinaLoaded=true;' }} />
+      {/* Carolina runs here and is scoped to promote the free training only
+          (see PAGE_CTX/'training' in public/carolina.js). */}
       <style dangerouslySetInnerHTML={{ __html: HIDE_FEEDBACK_CSS }} />
       {children}
     </>

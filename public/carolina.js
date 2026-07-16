@@ -6,9 +6,6 @@
    ════════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
-  // Distraction-free funnel pages: never mount the chat widget on /lp/* landing
-  // pages (single conversion path, no exits).
-  try { if (location.pathname.indexOf('/lp/') === 0) return; } catch (e) {}
   if (window.__carolinaLoaded) return;
   window.__carolinaLoaded = true;
 
@@ -37,6 +34,12 @@
     proactive: { enabled: true, delay: 10 },   // context-aware greetings on; admin can set enabled:false to opt out
     agents: {},
     features: { attachments: true, booking: true }
+  };
+
+  // Per-page AI context — keeps Carolina on-topic without a server change.
+  // (Injected into her system prompt via body.context; server caps it at 300 chars.)
+  var PAGE_CTX = {
+    training: 'the free 12-minute training on turning expertise into a $10K-a-month business. Your ONLY goal: get them to start the free training and opt in. Answer questions about it briefly, then guide them to press play. Do not pitch other programs, books, or calls here.'
   };
 
   // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
@@ -2685,6 +2688,7 @@
         .map(function (m) { return { role: m.role, content: m.content }; });
       var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid() };
       if (viewContext) body.context = viewContext;
+      else if (PAGE_CTX[pageContext()]) body.context = PAGE_CTX[pageContext()];   // keep the AI on-topic per page
       if (lang && lang !== 'en') body.lang = lang;
       // Attachments apply to the current turn only (never on the handoff request).
       if (!handoff && atts && atts.length) body.attachments = atts.map(function (a) { return { kind: a.kind, media_type: a.media_type, data: a.data }; });
@@ -2891,6 +2895,9 @@
   // Per-page greetings — curiosity-first, never pushy. Admin can override any of
   // these via config (cfg.proactive.pages[<ctx>] = {msgs,cta,seed,agent}).
   var GREETINGS = {
+    training: { agent: 'carolina', cta: 'Watch the free training', seed: "I'd like to watch the free 12-minute training — what's inside, and how do I start?",
+      returning: 'Welcome back 👋 Ready to jump back into the free training?',
+      msgs: ['Want the free 12-minute training? I can tell you what’s inside and get you started.', 'Curious what’s in the free training before you watch? Ask me anything.', 'Two minutes in and it clicks — want me to get you into the free training?'] },
     home: { agent: 'carolina', cta: 'Show me', seed: "I'd love to know what's quietly holding my business back — can you help?",
       returning: 'Welcome back 👋 Want to pick up where you left off, or see your fastest path to the next $10K month?',
       msgs: ["Want to discover what's quietly capping your business growth?", 'Can I show you the fastest path to your next $10K month?', "Curious what your biggest growth bottleneck is?"] },
@@ -2915,6 +2922,7 @@
   function hasBooked() { try { return localStorage.getItem('cw_booked') === '1'; } catch (e) { return false; } }
   function pageContext() {
     var p = (location.pathname || '/').toLowerCase();
+    if (/lp\/make-10k-month/.test(p)) return 'training';   // VSL funnel — promote the free training only
     if (hasBooked()) return 'booked';
     if (/quiz\/(results|thank)/.test(p) || /\/results/.test(p)) return 'quizdone';
     if (/quiz/.test(p)) return 'quiz';

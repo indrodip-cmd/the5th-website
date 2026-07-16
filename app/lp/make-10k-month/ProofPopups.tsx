@@ -143,7 +143,7 @@ export default function ProofPopups() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3, fontSize: 10.5, color: GOLD_DK }}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z" /><path d="m9 12 2 2 4-4" /></svg>
-            Verified by The5th Data server
+            Verified by The5th Cloud Server
           </div>
         </div>
       </div>

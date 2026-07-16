@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
-export const dynamic = 'force-dynamic'
+/* Cached for 60s across ALL visitors (Next data cache) — the DB is queried at
+   most ~once/minute regardless of traffic, so ad spikes don't load the server. */
+export const revalidate = 60
 
 /* Recent REAL opt-ins for the social-proof popups — first name + city/country
    only (no email/phone). Woven into the simulated feed on the landing page. */

@@ -9,26 +9,29 @@
 
 export const OPT_IN = {
   // Kept short so the video (the primary CTA) sits above the fold on mobile.
-  eyebrow: 'FREE TRAINING · EXPERTS & COACHES 40+',
-  headline: 'Turn Decades of Expertise Into a Predictable $10K a Month',
-  sub: 'Press play for the free training — no cost, no cold DMs, no chasing.',
-  // Overlay label on the video thumbnail (the primary conversion element).
-  playLabel: 'Watch the Free Training',
+  eyebrow: 'A Free Masterclass · For Experts & Coaches Over 40',
+  headline: 'Turn Decades of Expertise Into a Predictable $10,000 a Month',
+  sub: 'Press play for the masterclass — the exact system our clients use to build a premium offer and fill their calendar, without cold outreach or chasing.',
+  // Overlay label on the video poster (the primary conversion element).
+  playLabel: 'Watch the Free Masterclass',
+  playNote: 'No cost · Begins the moment you press play',
+  proofEyebrow: 'Results From the 10K Roadmap',
+  proofHeading: 'Real women. Real expertise. Real revenue.',
   // Secondary — de-emphasised below the fold.
-  checklistTitle: 'Inside the free training',
+  checklistTitle: 'Inside the masterclass',
   bullets: [
     'The offer structure that makes a $10K month feel inevitable — not lucky',
-    'Why “post more content” keeps you invisible — and what fills your calendar',
-    'The simple daily rhythm that fits around your real life',
+    'Why “post more content” keeps you invisible — and what actually fills your calendar',
+    'The simple daily rhythm that fits around your real life, not the other way around',
   ],
 }
 
 /* The click-to-play gate: shown as a popup when the visitor clicks the video. */
 export const MODAL = {
-  eyebrow: 'ONE STEP TO WATCH',
-  title: 'Where should we send your training?',
-  sub: 'Enter your details and the training starts playing right away.',
-  cta: 'Play the Training →',
+  eyebrow: 'One Step to Begin',
+  title: 'Where should we send your masterclass?',
+  sub: 'Enter your details and the masterclass begins playing right away.',
+  cta: 'Watch the Masterclass →',
   microtrust: 'Instant access. No spam, ever. Your details stay private.',
 }
 

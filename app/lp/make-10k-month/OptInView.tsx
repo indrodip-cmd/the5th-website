@@ -1,27 +1,40 @@
 'use client'
-/* Single-page, video-gated cold-traffic funnel.
+/* Single-page, video-gated cold-traffic funnel — built to the5th.consulting's
+   premium standard (Cormorant Garamond + DM Sans, plum/gold/parchment, real
+   logo). Designed for experts & coaches over 40: elegant, warm, high-contrast,
+   generous type, calm luxury — not hype.
 
-   Gate: the hero shows a video poster. Clicking it opens a modal asking for
-   first name + email (no page redirect). On submit we create the lead
-   (opted_in → vsl_leads + mirrored into crm_contacts), close the modal, and the
-   VSL starts playing in the same spot with sound (a direct user gesture, not
-   page-load autoplay). Closing the modal without submitting creates NO lead and
-   the poster stays clickable to retry.
-
-   Watch-time tracking + 10-min "Book a call" reveal come from useVslWatch.
-   No navigation, no exit links. Mobile-first: the video sits above the fold. */
+   Gate: hero shows a framed video poster. Clicking it opens a modal (first name
+   + email, no redirect). On submit the lead is created (opted_in → vsl_leads +
+   mirrored into crm_contacts), the modal closes, and the masterclass plays in
+   place with sound. Closing without submitting creates no lead; the poster stays
+   clickable. Watch-time + 10-min "Book a call" reveal come from useVslWatch. */
 import { useEffect, useRef, useState } from 'react'
 import { OPT_IN, MODAL, WATCH, REAL_PROOF } from './config'
 import { useVslWatch } from './useVslWatch'
 import VslPlayer from './watch/VslPlayer'
 
-const CREAM = '#FAF6F0'
+// ── Brand tokens (from public/index.html :root) ──
+const SERIF = "'Cormorant Garamond', Georgia, serif"
+const SANS = "'DM Sans', system-ui, -apple-system, sans-serif"
 const PLUM = '#2E1A35'
+const PLUM_2 = '#3D2645'
+const PLUM_MID = '#4E3158'
 const GOLD = '#C9A84C'
-const GOLD_SOFT = '#E4C879'
-const GOLD_DK = '#a9862f'
-const INK = '#2a2233'
-const MUTE = '#57505f'
+const GOLD_L = '#E4C879'
+const GOLD_DK = '#B0902F'
+const GREEN = '#1C4A32'
+const PARCH = '#FAF6F0'
+const INK = '#1A1A2E'
+const MUTE = '#8A8075'
+const BORDER = '#DDD8CF'
+
+const goldBtn: React.CSSProperties = {
+  background: `linear-gradient(180deg,${GOLD_L} 0%,${GOLD} 55%,#B8983F 100%)`,
+  color: PLUM, fontFamily: SANS, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase',
+  boxShadow: '0 12px 28px rgba(201,168,76,.32), inset 0 1px 0 rgba(255,255,255,.5)',
+  border: 'none', cursor: 'pointer',
+}
 
 type Lead = { name: string; email: string }
 
@@ -57,6 +70,19 @@ function readUtm(): Record<string, string> {
   return out
 }
 
+// Small letter-spaced eyebrow with flanking gold hairlines.
+function Eyebrow({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+  const c = light ? 'rgba(201,168,76,.95)' : GOLD_DK
+  const line = light ? 'rgba(201,168,76,.5)' : 'rgba(201,168,76,.55)'
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 16 }}>
+      <span style={{ width: 26, height: 1, background: line }} />
+      <span style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 600, letterSpacing: '.2em', textTransform: 'uppercase', color: c }}>{children}</span>
+      <span style={{ width: 26, height: 1, background: line }} />
+    </div>
+  )
+}
+
 export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoUrl: string; revealSeconds: number; formId: string }) {
   const [lead, setLead] = useState<Lead | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
@@ -68,7 +94,6 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
 
   const { seed, revealed, booked, onWatched, bookCall } = useVslWatch(lead, revealSeconds, formId)
 
-  // Returning visitor: if they already opted in, skip the gate and play.
   useEffect(() => {
     meta.current = { visitor_id: readVisitorId(), utm: readUtm() }
     try {
@@ -95,7 +120,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
       if (!res.ok) { setError(data?.error || 'Something went wrong. Please try again.'); setLoading(false); return }
       try { localStorage.setItem('vsl_make10k', JSON.stringify({ name: data.name, email: data.email, t: Date.now() })) } catch { /* noop */ }
       setModalOpen(false)
-      setLead({ name: data.name || name.trim(), email: data.email }) // → player mounts + autoplays
+      setLead({ name: data.name || name.trim(), email: data.email })
     } catch {
       setError('Network error. Please try again.'); setLoading(false)
     }
@@ -105,180 +130,207 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
   const firstName = lead?.name?.split(' ')[0] || ''
 
   return (
-    <main style={{ minHeight: '100dvh', background: `radial-gradient(120% 60% at 50% -8%, #f7efe4 0%, ${CREAM} 55%)`, color: INK }}>
+    <main style={{ minHeight: '100dvh', background: `radial-gradient(140% 90% at 50% -20%, #FBF8F3 0%, ${PARCH} 45%, #F3ECE2 100%)`, color: INK, fontFamily: SANS }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        .lp{font-family:Inter,system-ui,sans-serif}
-        .lp-h{font-family:Gelica,Georgia,serif}
-        @keyframes lpRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-        .lp-rise{animation:lpRise .5s ease both}
-        .lp-input:focus{outline:none;border-color:${GOLD}!important;box-shadow:0 0 0 3px rgba(201,168,76,.2)!important}
-        .lp-cta{transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
-        .lp-cta:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.05)}
-        .lp-cta:active:not(:disabled){transform:translateY(0)}
-        .lp-play{transition:transform .18s ease}
-        .lp-poster:hover .lp-play{transform:scale(1.08)}
-        .lp-pulse{animation:lpPulse 2.4s ease-in-out infinite}
-        @keyframes lpPulse{0%,100%{box-shadow:0 12px 30px rgba(201,168,76,.4)}50%{box-shadow:0 12px 46px rgba(201,168,76,.7)}}
-        @keyframes lpFade{from{opacity:0}to{opacity:1}}
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+        *{box-sizing:border-box}
+        @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+        @keyframes fade{from{opacity:0}to{opacity:1}}
+        @keyframes halo{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+        @keyframes glow{0%,100%{box-shadow:0 12px 28px rgba(201,168,76,.30),inset 0 1px 0 rgba(255,255,255,.5)}50%{box-shadow:0 12px 40px rgba(201,168,76,.55),inset 0 1px 0 rgba(255,255,255,.5)}}
+        .rise{animation:rise .6s ease both}
+        .lp-input{width:100%;padding:15px 16px;font-size:16px;border-radius:8px;border:1.5px solid ${BORDER};background:#fff;color:${INK};font-family:${SANS};transition:border-color .15s,box-shadow .15s}
+        .lp-input::placeholder{color:#b3aca0}
+        .lp-input:focus{outline:none;border-color:${GOLD};box-shadow:0 0 0 3px rgba(201,168,76,.18)}
+        .cta{transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
+        .cta:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.03)}
+        .cta:active:not(:disabled){transform:translateY(0)}
+        .poster{transition:transform .3s ease}
+        .posterWrap:hover .poster{transform:scale(1.03)}
+        .posterWrap:hover .playBtn{transform:scale(1.06)}
+        .playBtn{transition:transform .25s ease}
       `}</style>
 
-      <div className="lp" style={{ maxWidth: 780, margin: '0 auto', padding: '18px 16px 60px' }}>
-        {/* Brand mark (not a link — no funnel exits) */}
-        <div style={{ textAlign: 'center', marginBottom: 14 }}>
-          <span style={{ fontWeight: 800, letterSpacing: 3, fontSize: 11, color: PLUM }}>THE5TH CONSULTING</span>
-        </div>
+      {/* ── Top bar: real logo, centered, on parchment ── */}
+      <header style={{ padding: '16px 20px 15px', textAlign: 'center', borderBottom: `1px solid rgba(221,216,207,.8)`, background: 'rgba(250,246,240,.6)' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/logo.png" alt="The5th Consulting" style={{ height: 38, width: 'auto', verticalAlign: 'middle' }} />
+      </header>
 
-        {/* Hero — kept compact so the video is above the fold on mobile */}
-        <div className="lp-rise" style={{ textAlign: 'center', marginBottom: 16 }}>
-          <div style={{ display: 'inline-block', fontSize: 10.5, fontWeight: 800, letterSpacing: 1.4, color: GOLD_DK, background: '#fff7e6', border: '1px solid #f0e2bd', borderRadius: 999, padding: '6px 13px', marginBottom: 12 }}>
-            {OPT_IN.eyebrow}
-          </div>
-          <h1 className="lp-h" style={{ fontSize: 'clamp(25px,6vw,40px)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-.02em', margin: '0 auto 8px', maxWidth: 600 }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '30px 18px 10px' }}>
+        {/* ── Hero (compact so the video sits above the fold on mobile) ── */}
+        <div className="rise" style={{ textAlign: 'center' }}>
+          <Eyebrow>{OPT_IN.eyebrow}</Eyebrow>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(30px,7vw,52px)', fontWeight: 500, lineHeight: 1.08, letterSpacing: '-.01em', margin: '0 auto', maxWidth: 620, color: INK }}>
             {firstName ? `${firstName}, ${OPT_IN.headline.charAt(0).toLowerCase() + OPT_IN.headline.slice(1)}` : OPT_IN.headline}
           </h1>
-          <p style={{ fontSize: 'clamp(14px,3.4vw,16px)', color: MUTE, lineHeight: 1.5, margin: '0 auto', maxWidth: 440 }}>{OPT_IN.sub}</p>
+          <p style={{ fontFamily: SANS, fontSize: 'clamp(15px,3.4vw,17px)', fontWeight: 300, color: '#5f574c', lineHeight: 1.6, margin: '16px auto 0', maxWidth: 480 }}>
+            {OPT_IN.sub}
+          </p>
         </div>
 
-        {/* Video area — poster (gate) OR live player */}
-        <div style={{ borderRadius: 16, boxShadow: '0 22px 55px rgba(46,26,53,.22)', overflow: 'hidden', background: '#120912' }}>
-          {lead ? (
-            videoUrl ? (
-              <div style={{ animation: 'lpFade .4s ease' }}>
-                <VslPlayer videoUrl={videoUrl} initialSeconds={seed} onWatched={onWatched} autoplay />
-              </div>
+        {/* ── Cinema-framed video ── */}
+        <div className="rise" style={{ marginTop: 26, padding: 8, borderRadius: 16, background: `linear-gradient(160deg, rgba(201,168,76,.28), rgba(201,168,76,.06))`, boxShadow: '0 34px 80px -30px rgba(46,26,53,.55)' }}>
+          <div style={{ borderRadius: 11, overflow: 'hidden', background: '#120912', border: '1px solid rgba(255,255,255,.06)' }}>
+            {lead ? (
+              videoUrl ? (
+                <div style={{ animation: 'fade .5s ease' }}>
+                  <VslPlayer videoUrl={videoUrl} initialSeconds={seed} onWatched={onWatched} autoplay />
+                </div>
+              ) : (
+                <div style={{ width: '100%', aspectRatio: '16 / 9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e9dcc4', fontFamily: SANS, fontSize: 14, textAlign: 'center', padding: 20 }}>
+                  Set NEXT_PUBLIC_VSL_VIDEO_URL to your masterclass (YouTube or Vimeo) to play it here.
+                </div>
+              )
             ) : (
-              <div style={{ width: '100%', aspectRatio: '16 / 9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e9dcc4', fontSize: 14, textAlign: 'center', padding: 20 }}>
-                Set NEXT_PUBLIC_VSL_VIDEO_URL to your VSL (YouTube or Vimeo) to play it here.
-              </div>
-            )
-          ) : (
-            <button
-              onClick={openGate}
-              className="lp-poster"
-              aria-label={OPT_IN.playLabel}
-              style={{
-                position: 'relative', width: '100%', aspectRatio: '16 / 9', border: 'none', cursor: 'pointer', padding: 0,
-                background: poster ? `#120912 url(${poster}) center/cover` : `linear-gradient(150deg, #3D2645 0%, ${PLUM} 55%, #1C4A32 130%)`,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              }}
-            >
-              <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(18,9,18,.28), rgba(18,9,18,.62))' }} />
-              <span className="lp-play lp-pulse" style={{ position: 'relative', width: 78, height: 78, borderRadius: '50%', background: `linear-gradient(180deg, ${GOLD_SOFT}, ${GOLD_DK})`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="30" height="30" viewBox="0 0 24 24" fill={PLUM}><path d="M8 5v14l11-7z" /></svg>
-              </span>
-              <span style={{ position: 'relative', marginTop: 16, color: '#fff', fontWeight: 800, fontSize: 'clamp(15px,3.6vw,18px)', letterSpacing: '.01em', textShadow: '0 2px 12px rgba(0,0,0,.4)' }}>
-                {OPT_IN.playLabel}
-              </span>
-              <span style={{ position: 'relative', marginTop: 4, color: 'rgba(255,255,255,.75)', fontSize: 12.5 }}>Free · Tap to watch now</span>
-            </button>
-          )}
+              <button
+                onClick={openGate}
+                className="posterWrap"
+                aria-label={OPT_IN.playLabel}
+                style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '16 / 9', border: 'none', cursor: 'pointer', padding: 0, background: '#120912', overflow: 'hidden' }}
+              >
+                <span
+                  className="poster"
+                  style={{
+                    position: 'absolute', inset: 0,
+                    background: poster ? `#120912 url(${poster}) center/cover` : `linear-gradient(155deg, ${PLUM_MID} 0%, ${PLUM} 55%, ${GREEN} 135%)`,
+                  }}
+                />
+                <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(18,9,18,.32) 0%, rgba(18,9,18,.30) 40%, rgba(18,9,18,.68) 100%)' }} />
+                {/* gold "FREE MASTERCLASS" tab */}
+                <span style={{ position: 'absolute', top: 14, left: 14, fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: PLUM, background: `linear-gradient(180deg,${GOLD_L},${GOLD})`, padding: '5px 11px', borderRadius: 3, boxShadow: '0 4px 12px rgba(0,0,0,.25)' }}>Free Masterclass</span>
+                {/* play button with halo */}
+                <span style={{ position: 'absolute', left: '50%', top: '46%', transform: 'translate(-50%,-50%)', width: 88, height: 88 }}>
+                  <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1.5px solid rgba(201,168,76,.6)`, animation: 'halo 2.4s ease-out infinite' }} />
+                  <span className="playBtn" style={{ position: 'absolute', inset: 6, borderRadius: '50%', background: `linear-gradient(180deg,${GOLD_L},#B8983F)`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.6)' }}>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill={PLUM} style={{ marginLeft: 4 }}><path d="M8 5v14l11-7z" /></svg>
+                  </span>
+                </span>
+                {/* label */}
+                <span style={{ position: 'absolute', left: 0, right: 0, bottom: 20, textAlign: 'center' }}>
+                  <span style={{ display: 'block', fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(19px,4.4vw,25px)', color: '#fff', letterSpacing: '.01em', textShadow: '0 2px 16px rgba(0,0,0,.5)' }}>{OPT_IN.playLabel}</span>
+                  <span style={{ display: 'block', fontFamily: SANS, fontSize: 12.5, color: 'rgba(255,255,255,.82)', marginTop: 5, letterSpacing: '.02em' }}>{OPT_IN.playNote}</span>
+                </span>
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Locked hint OR revealed CTA */}
+        {/* ── Locked hint OR revealed invitation ── */}
         {lead && (revealed ? (
-          <div className="lp-rise" style={{ marginTop: 26, background: '#fff', border: '1px solid #efe7db', borderRadius: 20, boxShadow: '0 22px 55px rgba(46,26,53,.14)', padding: 'clamp(22px,5vw,32px)', textAlign: 'center' }}>
+          <div className="rise" style={{ marginTop: 30, background: '#fff', border: `1px solid ${BORDER}`, borderTop: `3px solid ${GOLD}`, borderRadius: 14, boxShadow: '0 30px 70px -40px rgba(46,26,53,.5)', padding: 'clamp(26px,6vw,40px)', textAlign: 'center' }}>
             {booked ? (
               <>
-                <div style={{ fontSize: 40, marginBottom: 8 }}>🎉</div>
-                <h2 className="lp-h" style={{ fontSize: 'clamp(22px,5vw,30px)', fontWeight: 700, margin: '0 0 10px' }}>You’re booked{firstName ? `, ${firstName}` : ''}!</h2>
-                <p style={{ color: MUTE, fontSize: 15.5, lineHeight: 1.6, maxWidth: 460, margin: '0 auto' }}>Check your email for the details. We can’t wait to map your path to $10K months with you.</p>
+                <div style={{ fontSize: 40, marginBottom: 10 }}>🕊️</div>
+                <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px,5.6vw,36px)', fontWeight: 500, margin: '0 0 12px', color: INK }}>You’re booked{firstName ? `, ${firstName}` : ''}.</h2>
+                <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 300, color: '#5f574c', lineHeight: 1.7, maxWidth: 460, margin: '0 auto' }}>Check your email for the details. We can’t wait to map your path to $10K months with you.</p>
               </>
             ) : (
               <>
-                <div style={{ display: 'inline-block', fontSize: 10.5, fontWeight: 800, letterSpacing: 1.5, color: GOLD_DK, marginBottom: 12 }}>{WATCH.reveal.eyebrow}</div>
-                <h2 className="lp-h" style={{ fontSize: 'clamp(23px,5.4vw,34px)', fontWeight: 700, lineHeight: 1.12, letterSpacing: '-.02em', margin: '0 auto 14px', maxWidth: 560 }}>{WATCH.reveal.headline}</h2>
-                <p style={{ color: MUTE, fontSize: 'clamp(15px,3.4vw,16.5px)', lineHeight: 1.6, maxWidth: 500, margin: '0 auto 20px' }}>{WATCH.reveal.body}</p>
-                <div style={{ display: 'grid', gap: 10, maxWidth: 460, margin: '0 auto 24px', textAlign: 'left' }}>
+                <Eyebrow>{WATCH.reveal.eyebrow}</Eyebrow>
+                <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(27px,5.8vw,40px)', fontWeight: 500, lineHeight: 1.1, letterSpacing: '-.01em', margin: '0 auto 16px', maxWidth: 560, color: INK }}>{WATCH.reveal.headline}</h2>
+                <p style={{ fontFamily: SANS, fontSize: 'clamp(15px,3.4vw,17px)', fontWeight: 300, color: '#5f574c', lineHeight: 1.7, maxWidth: 500, margin: '0 auto 24px' }}>{WATCH.reveal.body}</p>
+                <div style={{ display: 'grid', gap: 12, maxWidth: 440, margin: '0 auto 28px', textAlign: 'left' }}>
                   {WATCH.reveal.points.map((p) => (
-                    <div key={p} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
-                      <span style={{ width: 22, height: 22, flexShrink: 0, borderRadius: '50%', background: PLUM, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 1 }}>
+                    <div key={p} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                      <span style={{ width: 24, height: 24, flexShrink: 0, borderRadius: '50%', background: `linear-gradient(160deg,${PLUM_MID},${PLUM})`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 1 }}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                       </span>
-                      <span style={{ fontSize: 15, lineHeight: 1.5, color: INK }}>{p}</span>
+                      <span style={{ fontFamily: SANS, fontSize: 15.5, lineHeight: 1.5, color: '#403b3b' }}>{p}</span>
                     </div>
                   ))}
                 </div>
-                <button onClick={bookCall} className="lp-cta lp-pulse" style={{ width: '100%', maxWidth: 460, padding: '18px 24px', border: 'none', borderRadius: 14, background: `linear-gradient(180deg, ${GOLD_SOFT}, ${GOLD_DK})`, color: PLUM, fontWeight: 800, fontSize: 18, cursor: 'pointer' }}>{WATCH.reveal.ctaLabel}</button>
-                <p style={{ fontSize: 13, color: MUTE, marginTop: 13 }}>{WATCH.reveal.reassure}</p>
+                <button onClick={bookCall} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 440, padding: '18px 26px', borderRadius: 8, fontSize: 15, animation: 'glow 3s ease-in-out infinite' }}>{WATCH.reveal.ctaLabel}</button>
+                <p style={{ fontFamily: SANS, fontSize: 13, color: MUTE, marginTop: 14, letterSpacing: '.02em' }}>{WATCH.reveal.reassure}</p>
               </>
             )}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', marginTop: 18, color: MUTE, fontSize: 13.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <div style={{ textAlign: 'center', marginTop: 20, fontFamily: SANS, color: MUTE, fontSize: 13.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, letterSpacing: '.02em' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
             {WATCH.lockedHint}
           </div>
         ))}
 
-        {/* ── Real social proof (near the CTA) ── */}
-        <section style={{ marginTop: 34 }}>
-          <p style={{ textAlign: 'center', fontSize: 12, fontWeight: 800, letterSpacing: 1.6, color: GOLD_DK, marginBottom: 16 }}>
-            REAL RESULTS FROM THE 10K ROADMAP
-          </p>
-          <div style={{ display: 'grid', gap: 12 }}>
+        {/* ── Real social proof ── */}
+        <section style={{ marginTop: 46 }}>
+          <div style={{ textAlign: 'center', marginBottom: 22 }}>
+            <Eyebrow>{OPT_IN.proofEyebrow}</Eyebrow>
+            <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,5vw,34px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: 0, color: INK }}>{OPT_IN.proofHeading}</h2>
+          </div>
+          <div style={{ display: 'grid', gap: 14 }}>
             {REAL_PROOF.map((p) => (
-              <div key={p.name} style={{ background: '#fff', border: '1px solid #efe7db', borderRadius: 14, padding: '16px 18px', boxShadow: '0 8px 22px rgba(46,26,53,.05)' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                  <span className="lp-h" style={{ fontSize: 17, fontWeight: 700, color: INK }}>{p.name}</span>
-                  <span style={{ fontSize: 14.5, fontWeight: 800, color: '#1C4A32' }}>{p.result}</span>
+              <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px', boxShadow: '0 18px 44px -34px rgba(46,26,53,.55)' }}>
+                <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 12 }}>
+                  <span style={{ width: 46, height: 46, flexShrink: 0, borderRadius: '50%', background: `linear-gradient(160deg,${PLUM_MID},${PLUM})`, border: `2px solid rgba(201,168,76,.4)`, color: GOLD, fontFamily: SERIF, fontSize: 22, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{p.name.charAt(0)}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 600, lineHeight: 1.1, color: INK }}>{p.name}</div>
+                    <div style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 500, letterSpacing: '.04em', color: MUTE, marginTop: 2 }}>{p.role}</div>
+                  </div>
+                  <span style={{ fontFamily: SANS, fontSize: 14, fontWeight: 700, color: GREEN, textAlign: 'right', flexShrink: 0 }}>{p.result}</span>
                 </div>
-                <div style={{ fontSize: 11.5, color: GOLD_DK, fontWeight: 700, letterSpacing: .3, margin: '3px 0 8px' }}>{p.role}</div>
-                <p style={{ fontSize: 13.5, color: MUTE, lineHeight: 1.55, margin: 0 }}>{p.quote}</p>
-              </div>
+                <blockquote style={{ margin: 0, fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: '#5f574c', lineHeight: 1.65 }}>{p.quote}</blockquote>
+              </figure>
             ))}
           </div>
         </section>
 
-        {/* ── Secondary: what's inside (clearly below the fold, de-emphasised) ── */}
-        <hr style={{ border: 0, borderTop: '1px solid #e7ddcf', margin: '34px 0 22px' }} />
-        <section>
-          <p style={{ textAlign: 'center', fontSize: 11.5, fontWeight: 700, letterSpacing: 1.2, color: '#9a8f80', marginBottom: 14 }}>{OPT_IN.checklistTitle.toUpperCase()}</p>
-          <div style={{ display: 'grid', gap: 8, maxWidth: 560, margin: '0 auto' }}>
-            {OPT_IN.bullets.map((b) => (
-              <div key={b} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b6a98f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }}><polyline points="20 6 9 17 4 12" /></svg>
-                <span style={{ fontSize: 13.5, lineHeight: 1.5, color: '#7c7367', fontWeight: 400 }}>{b}</span>
-              </div>
-            ))}
-          </div>
+        {/* ── Secondary: what's inside (below a gold hairline, clearly secondary) ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '40px 0 22px' }}>
+          <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,transparent,rgba(201,168,76,.5))' }} />
+          <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '.2em', textTransform: 'uppercase', color: MUTE }}>{OPT_IN.checklistTitle}</span>
+          <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,rgba(201,168,76,.5),transparent)' }} />
+        </div>
+        <section style={{ display: 'grid', gap: 10, maxWidth: 580, margin: '0 auto' }}>
+          {OPT_IN.bullets.map((b) => (
+            <div key={b} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3, opacity: .8 }}><polyline points="20 6 9 17 4 12" /></svg>
+              <span style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, lineHeight: 1.55, color: '#6b6357' }}>{b}</span>
+            </div>
+          ))}
         </section>
       </div>
+
+      {/* ── Footer ── */}
+      <footer style={{ marginTop: 50, background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, padding: '30px 20px 34px', textAlign: 'center' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', opacity: .95 }} />
+        <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(255,255,255,.55)', marginTop: 14, lineHeight: 1.6 }}>
+          Helping women 40+ turn decades of expertise into income.
+        </p>
+        <p style={{ fontFamily: SANS, fontSize: 11, color: 'rgba(255,255,255,.32)', marginTop: 6 }}>© {new Date().getFullYear()} The5th Consulting. All rights reserved.</p>
+      </footer>
 
       {/* ── Opt-in modal (the gate) ── */}
       {modalOpen && (
         <div
-          role="dialog"
-          aria-modal="true"
+          role="dialog" aria-modal="true"
           onClick={(e) => { if (e.target === e.currentTarget && !loading) setModalOpen(false) }}
-          style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(24,12,26,.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, animation: 'lpFade .2s ease' }}
+          style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(24,12,26,.62)', backdropFilter: 'blur(5px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, animation: 'fade .2s ease' }}
         >
-          <div className="lp" style={{ position: 'relative', width: '100%', maxWidth: 420, background: '#fff', borderRadius: 20, boxShadow: '0 30px 70px rgba(20,8,22,.4)', padding: 'clamp(22px,5vw,30px)', animation: 'lpRise .3s ease both' }}>
-            <button onClick={() => !loading && setModalOpen(false)} aria-label="Close" style={{ position: 'absolute', top: 12, right: 12, width: 32, height: 32, borderRadius: '50%', border: 'none', background: '#f2ece3', color: '#7c7367', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}>×</button>
-            <div style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: 1.4, color: GOLD_DK, marginBottom: 8 }}>{MODAL.eyebrow}</div>
-            <h2 className="lp-h" style={{ fontSize: 'clamp(21px,5vw,26px)', fontWeight: 700, lineHeight: 1.15, margin: '0 0 8px' }}>{MODAL.title}</h2>
-            <p style={{ fontSize: 14, color: MUTE, lineHeight: 1.5, margin: '0 0 18px' }}>{MODAL.sub}</p>
-            <form onSubmit={submit}>
-              <input className="lp-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="First name" autoComplete="given-name" autoFocus enterKeyHint="next" style={inputStyle} />
-              <input className="lp-input" type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" autoComplete="email" enterKeyHint="go" style={{ ...inputStyle, marginTop: 12 }} />
-              {error && <div style={{ marginTop: 11, color: '#a3341f', background: '#fdeee9', border: '1px solid #f6cabb', borderRadius: 10, padding: '9px 12px', fontSize: 13 }}>{error}</div>}
-              <button type="submit" disabled={loading} className="lp-cta" style={{ width: '100%', marginTop: 15, padding: '16px 22px', border: 'none', borderRadius: 12, background: loading ? '#c9b98a' : `linear-gradient(180deg, ${GOLD_SOFT}, ${GOLD_DK})`, color: PLUM, fontWeight: 800, fontSize: 16.5, cursor: loading ? 'wait' : 'pointer', boxShadow: '0 10px 24px rgba(201,168,76,.4)' }}>
-                {loading ? 'Starting your training…' : MODAL.cta}
-              </button>
-              <p style={{ textAlign: 'center', fontSize: 12, color: '#8a8075', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a8075" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                {MODAL.microtrust}
-              </p>
-            </form>
+          <div style={{ position: 'relative', width: '100%', maxWidth: 430, background: PARCH, borderRadius: 16, boxShadow: '0 40px 90px rgba(20,8,22,.5)', overflow: 'hidden', animation: 'rise .35s ease both' }}>
+            <div style={{ background: `linear-gradient(180deg,${PLUM_2},${PLUM})`, height: 4 }} />
+            <button onClick={() => !loading && setModalOpen(false)} aria-label="Close" style={{ position: 'absolute', top: 14, right: 14, width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'rgba(46,26,53,.06)', color: '#8a8075', fontSize: 18, cursor: 'pointer', lineHeight: 1 }}>×</button>
+            <div style={{ padding: 'clamp(24px,6vw,34px)' }}>
+              <Eyebrow>{MODAL.eyebrow}</Eyebrow>
+              <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,6vw,30px)', fontWeight: 500, lineHeight: 1.14, margin: '0 0 8px', textAlign: 'center', color: INK }}>{MODAL.title}</h2>
+              <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: '#5f574c', lineHeight: 1.55, margin: '0 0 20px', textAlign: 'center' }}>{MODAL.sub}</p>
+              <form onSubmit={submit}>
+                <input className="lp-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="First name" autoComplete="given-name" autoFocus enterKeyHint="next" />
+                <input className="lp-input" style={{ marginTop: 12 }} type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" autoComplete="email" enterKeyHint="go" />
+                {error && <div style={{ marginTop: 12, fontFamily: SANS, color: '#a3341f', background: '#fdeee9', border: '1px solid #f6cabb', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>{error}</div>}
+                <button type="submit" disabled={loading} className="cta" style={{ ...goldBtn, width: '100%', marginTop: 16, padding: '17px 22px', borderRadius: 8, fontSize: 14 }}>
+                  {loading ? 'Starting…' : MODAL.cta}
+                </button>
+                <p style={{ fontFamily: SANS, textAlign: 'center', fontSize: 12, color: MUTE, marginTop: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={MUTE} strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                  {MODAL.microtrust}
+                </p>
+              </form>
+            </div>
           </div>
         </div>
       )}
     </main>
   )
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '14px 16px', fontSize: 16, borderRadius: 12,
-  border: '1.5px solid #e3d9cb', background: '#fffdfa', color: '#2a2233',
-  fontFamily: 'Inter,sans-serif', transition: 'border-color .12s ease, box-shadow .12s ease',
 }

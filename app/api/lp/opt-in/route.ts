@@ -97,9 +97,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'That email domain can’t receive mail. Please enter a real email address.' }, { status: 400 })
     }
 
-    const phone = validPhone(phoneRaw)
-    if (!phone) {
-      return NextResponse.json({ error: 'Please enter a valid phone number (with country code).' }, { status: 400 })
+    // Phone is optional. Only validate when one is actually provided.
+    let phone: string | null = null
+    if (phoneRaw.trim()) {
+      phone = validPhone(phoneRaw)
+      if (!phone) {
+        return NextResponse.json({ error: 'Please enter a valid phone number, or leave it blank.' }, { status: 400 })
+      }
     }
 
     // Approximate location from Vercel's edge geo headers (we don't ask for it).

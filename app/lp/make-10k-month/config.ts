@@ -60,7 +60,7 @@ export const MODAL = {
   sub: 'Enter your details and we’ll take you straight to the training.',
   cta: 'Take Me to the Training →',
   microtrust: 'Instant access. No spam, ever. Your details stay private.',
-  phoneNote: 'We’ll only call if you book — never spam.',
+  phoneNote: 'Optional — add it with your country code and we’ll only call if you book.',
 }
 
 export const WATCH = {

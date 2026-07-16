@@ -11,18 +11,26 @@ export const OPT_IN = {
   // Kept short so the video (the primary CTA) sits above the fold on mobile.
   eyebrow: 'A Free Masterclass · For Experts & Coaches Over 40',
   // Strong curiosity-gap headline — specific, gender-neutral, opens a loop.
-  headline: 'There’s a $10,000-a-Month Business Hiding Inside the Expertise You Already Have',
-  sub: 'This free masterclass reveals the exact 3-step system our clients use to package what they already know — and get paid premium for it. No audience. No cold outreach. No chasing.',
+  // "a business capable of $10K months" is the destination; the proof below
+  // shows the real range of results on the way there.
+  headline: 'There’s a $10K-a-Month Business Hiding Inside the Expertise You Already Have',
+  sub: 'This free masterclass reveals the exact system behind the results below — how experts package what they already know into a premium offer, from their first paying clients to six-figure launches.',
+  // A single real result, surfaced in the hero (above the CTA).
+  heroBadgeResult: '$210,000 from a single launch',
+  heroBadgeName: 'Torill',
+  heroBadgeNote: 'see how ↓',
   // Overlay label on the video poster (the primary conversion element).
   playLabel: 'Watch the Free Masterclass',
   playNote: 'Begins the moment you press play',
   // Explicit CTA button below the video (also opens the gate).
-  ctaButton: 'Show Me the $10K Method →',
+  ctaButton: 'Show Me How It Works →',
   ctaMicro: 'Free instant access · No credit card · Watch on any device',
   // Social-proof strip (mirrors /quiz — real client photos + rating).
   rating: { score: '4.8', text: 'from 76 coaches & experts across 12 nations' },
   proofEyebrow: 'Results From the 10K Roadmap',
   proofHeading: 'Real experts. Real expertise. Real revenue.',
+  // Honest qualifier so the promise and the proof tell the same story.
+  proofDisclaimer: 'Real 10K Roadmap clients. These are individual results over varying timeframes — your outcome depends on your expertise, offer and effort.',
   // Secondary — de-emphasised below the fold.
   checklistTitle: 'Inside the masterclass',
   bullets: [

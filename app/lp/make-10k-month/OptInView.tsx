@@ -94,6 +94,8 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const meta = useRef<{ visitor_id: string | null; utm: Record<string, string> }>({ visitor_id: null, utm: {} })
+  const proofRef = useRef<HTMLElement>(null)
+  const scrollToProof = () => proofRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   const { seed, revealed, booked, onWatched, bookCall } = useVslWatch(lead, revealSeconds, formId)
 
@@ -170,6 +172,21 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
           <p style={{ fontFamily: SANS, fontSize: 'clamp(15px,3.4vw,17px)', fontWeight: 300, color: '#5f574c', lineHeight: 1.6, margin: '16px auto 0', maxWidth: 480 }}>
             {OPT_IN.sub}
           </p>
+
+          {/* Strongest real result, surfaced above the CTA */}
+          <button
+            onClick={scrollToProof}
+            className="cta"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, margin: '18px auto 0', padding: '9px 16px 9px 10px', background: '#fff', border: `1px solid rgba(201,168,76,.5)`, borderRadius: 999, cursor: 'pointer', boxShadow: '0 8px 22px -12px rgba(46,26,53,.45)' }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/clients/toril.jpg" alt="Torill" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', objectPosition: 'top center', border: `2px solid rgba(201,168,76,.5)` }} />
+            <span style={{ fontFamily: SANS, fontSize: 13, color: '#403b3b', textAlign: 'left', lineHeight: 1.25 }}>
+              <strong style={{ color: GREEN, fontWeight: 700 }}>{OPT_IN.heroBadgeResult}</strong>
+              <span style={{ color: MUTE }}> — {OPT_IN.heroBadgeName}. </span>
+              <span style={{ color: GOLD_DK, fontWeight: 600 }}>{OPT_IN.heroBadgeNote}</span>
+            </span>
+          </button>
         </div>
 
         {/* ── Cinema-framed video ── */}
@@ -285,7 +302,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         ))}
 
         {/* ── Real social proof ── */}
-        <section style={{ marginTop: 46 }}>
+        <section ref={proofRef} id="proof" style={{ marginTop: 46, scrollMarginTop: 20 }}>
           <div style={{ textAlign: 'center', marginBottom: 22 }}>
             <Eyebrow>{OPT_IN.proofEyebrow}</Eyebrow>
             <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,5vw,34px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: 0, color: INK }}>{OPT_IN.proofHeading}</h2>
@@ -312,6 +329,9 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
               </figure>
             ))}
           </div>
+          <p style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 300, color: MUTE, lineHeight: 1.55, textAlign: 'center', margin: '16px auto 0', maxWidth: 520 }}>
+            {OPT_IN.proofDisclaimer}
+          </p>
         </section>
 
         {/* ── Secondary: what's inside (below a gold hairline, clearly secondary) ── */}

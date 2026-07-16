@@ -8,44 +8,41 @@
 */
 
 export const OPT_IN = {
-  // Kept short so the video (the primary CTA) sits above the fold on mobile.
-  eyebrow: 'A Free Masterclass · For Experts & Coaches Over 40',
-  // Strong curiosity-gap headline — specific, gender-neutral, opens a loop.
-  // "a business capable of $10K months" is the destination; the proof below
-  // shows the real range of results on the way there.
-  headline: 'There’s a $10K-a-Month Business Hiding Inside the Expertise You Already Have',
-  sub: 'This free masterclass reveals the exact system behind the results below — how experts package what they already know into a premium offer, from their first paying clients to six-figure launches.',
-  // A single real result, surfaced in the hero (above the CTA).
-  heroBadgeResult: '$210,000 from a single launch',
-  heroBadgeName: 'Torill',
-  heroBadgeNote: 'see how ↓',
+  eyebrow: 'A Free 12-Minute Training · For Coaches & Consultants',
+  headline: 'The Exact System 76 Coaches Used to Turn Expertise Into Their First $10K, $50K, Even $210K Months',
+  sub: 'The same 3-part framework behind Torill’s $210K launch, Laurie’s $14,193 in 60 days, and Gurpreet’s $18K turnaround — built for coaches and consultants who already have the expertise, just not the system to price and sell it.',
   // Overlay label on the video poster (the primary conversion element).
-  playLabel: 'Watch the Free Masterclass',
-  playNote: 'Begins the moment you press play',
+  playLabel: 'Watch the Free Training',
+  playNote: '12 minutes · Free · Watch instantly',
   // Explicit CTA button below the video (also opens the gate).
-  ctaButton: 'Show Me How It Works →',
-  ctaMicro: 'Free instant access · No credit card · Watch on any device',
+  ctaButton: 'Watch the 12-Minute Training →',
+  ctaMicro: '12 minutes · Free · No credit card · Watch instantly',
   // Social-proof strip (mirrors /quiz — real client photos + rating).
   rating: { score: '4.8', text: 'from 76 coaches & experts across 12 nations' },
   proofEyebrow: 'Results From the 10K Roadmap',
   proofHeading: 'Real experts. Real expertise. Real revenue.',
-  // Honest qualifier so the promise and the proof tell the same story.
-  proofDisclaimer: 'Real 10K Roadmap clients. These are individual results over varying timeframes — your outcome depends on your expertise, offer and effort.',
-  // Secondary — de-emphasised below the fold.
-  checklistTitle: 'Inside the masterclass',
-  bullets: [
-    'The offer structure that makes a $10K month feel inevitable — not lucky',
-    'Why “post more content” keeps you invisible — and what actually fills your calendar',
-    'The one shift that lets people with deep expertise finally charge what they’re worth',
+  proofDisclaimer: 'Case studies shown reflect real client outcomes; individual results are not typical.',
+  // Narrative "what this is" block (secondary, below the proof).
+  narrative: [
+    'There’s a specific moment when a coaching business stops feeling like guesswork.',
+    'It’s not a new niche. It’s not a new offer. It’s a shift in how you see the business you already have.',
+    'This 12-minute training walks through the exact reframe our clients go through — the one that changes how they price, how they talk about what they do, and how prospects respond to them.',
   ],
+  checklistTitle: 'Inside the training',
+  bullets: [
+    'Why most coaching businesses are one repositioning shift away from feeling completely different',
+    'The invisible mistake keeping experts stuck explaining instead of selling',
+    'What changes the moment you see your business the way your best clients already do',
+  ],
+  narrativeClose: '12 minutes. Free. Watch instantly.',
 }
 
 /* The click-to-play gate: shown as a popup when the visitor clicks the video. */
 export const MODAL = {
   eyebrow: 'One Step to Begin',
-  title: 'Where should we send your masterclass?',
-  sub: 'Enter your details and the masterclass begins playing right away.',
-  cta: 'Watch the Masterclass →',
+  title: 'Where should we send your training?',
+  sub: 'Enter your details and the training begins playing right away.',
+  cta: 'Watch the Training →',
   microtrust: 'Instant access. No spam, ever. Your details stay private.',
 }
 

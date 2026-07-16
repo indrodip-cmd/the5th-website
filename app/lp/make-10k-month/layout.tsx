@@ -4,21 +4,15 @@ import type { Metadata } from 'next'
    No site navigation is rendered anywhere in this route so paid traffic has a
    single path: watch → book. Gender-neutral share copy (overrides the site
    default). */
+const SHARE_TITLE = 'Free 12-Minute Training for Coaches & Consultants | The5th'
+const SHARE_DESC = '12 minutes that change how you see your coaching business. Watch free.'
+
 export const metadata: Metadata = {
-  title: 'Free Masterclass: Your First $10K Month | The5th Consulting',
-  description:
-    'A free masterclass for experts, coaches and consultants over 40 on turning decades of expertise into a predictable $10K a month.',
+  title: SHARE_TITLE,
+  description: SHARE_DESC,
   robots: { index: false, follow: false },
-  openGraph: {
-    title: 'Free Masterclass: Your First $10K Month | The5th Consulting',
-    description:
-      'The exact system experts and coaches over 40 use to turn what they already know into a predictable $10K a month.',
-  },
-  twitter: {
-    title: 'Free Masterclass: Your First $10K Month | The5th Consulting',
-    description:
-      'The exact system experts and coaches over 40 use to turn what they already know into a predictable $10K a month.',
-  },
+  openGraph: { title: SHARE_TITLE, description: SHARE_DESC },
+  twitter: { title: SHARE_TITLE, description: SHARE_DESC },
 }
 
 export default function Make10kLayout({ children }: { children: React.ReactNode }) {

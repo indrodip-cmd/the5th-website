@@ -94,8 +94,6 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const meta = useRef<{ visitor_id: string | null; utm: Record<string, string> }>({ visitor_id: null, utm: {} })
-  const proofRef = useRef<HTMLElement>(null)
-  const scrollToProof = () => proofRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   const { seed, revealed, booked, onWatched, bookCall } = useVslWatch(lead, revealSeconds, formId)
 
@@ -166,27 +164,12 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         {/* ── Hero (compact so the video sits above the fold on mobile) ── */}
         <div className="rise" style={{ textAlign: 'center' }}>
           <Eyebrow>{OPT_IN.eyebrow}</Eyebrow>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(30px,7vw,52px)', fontWeight: 500, lineHeight: 1.08, letterSpacing: '-.01em', margin: '0 auto', maxWidth: 620, color: INK }}>
-            {firstName ? `${firstName}, ${OPT_IN.headline.charAt(0).toLowerCase() + OPT_IN.headline.slice(1)}` : OPT_IN.headline}
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(27px,6vw,46px)', fontWeight: 500, lineHeight: 1.12, letterSpacing: '-.01em', margin: '0 auto', maxWidth: 640, color: INK }}>
+            {OPT_IN.headline}
           </h1>
-          <p style={{ fontFamily: SANS, fontSize: 'clamp(15px,3.4vw,17px)', fontWeight: 300, color: '#5f574c', lineHeight: 1.6, margin: '16px auto 0', maxWidth: 480 }}>
+          <p style={{ fontFamily: SANS, fontSize: 'clamp(14.5px,3.3vw,16.5px)', fontWeight: 300, color: '#5f574c', lineHeight: 1.6, margin: '16px auto 0', maxWidth: 560 }}>
             {OPT_IN.sub}
           </p>
-
-          {/* Strongest real result, surfaced above the CTA */}
-          <button
-            onClick={scrollToProof}
-            className="cta"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, margin: '18px auto 0', padding: '9px 16px 9px 10px', background: '#fff', border: `1px solid rgba(201,168,76,.5)`, borderRadius: 999, cursor: 'pointer', boxShadow: '0 8px 22px -12px rgba(46,26,53,.45)' }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/clients/toril.jpg" alt="Torill" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover', objectPosition: 'top center', border: `2px solid rgba(201,168,76,.5)` }} />
-            <span style={{ fontFamily: SANS, fontSize: 13, color: '#403b3b', textAlign: 'left', lineHeight: 1.25 }}>
-              <strong style={{ color: GREEN, fontWeight: 700 }}>{OPT_IN.heroBadgeResult}</strong>
-              <span style={{ color: MUTE }}> — {OPT_IN.heroBadgeName}. </span>
-              <span style={{ color: GOLD_DK, fontWeight: 600 }}>{OPT_IN.heroBadgeNote}</span>
-            </span>
-          </button>
         </div>
 
         {/* ── Cinema-framed video ── */}
@@ -302,7 +285,7 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
         ))}
 
         {/* ── Real social proof ── */}
-        <section ref={proofRef} id="proof" style={{ marginTop: 46, scrollMarginTop: 20 }}>
+        <section id="proof" style={{ marginTop: 46, scrollMarginTop: 20 }}>
           <div style={{ textAlign: 'center', marginBottom: 22 }}>
             <Eyebrow>{OPT_IN.proofEyebrow}</Eyebrow>
             <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,5vw,34px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: 0, color: INK }}>{OPT_IN.proofHeading}</h2>
@@ -334,19 +317,33 @@ export default function FunnelView({ videoUrl, revealSeconds, formId }: { videoU
           </p>
         </section>
 
-        {/* ── Secondary: what's inside (below a gold hairline, clearly secondary) ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '40px 0 22px' }}>
+        {/* ── Secondary: the story + what's inside (de-weighted, after the proof) ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '44px 0 24px' }}>
           <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,transparent,rgba(201,168,76,.5))' }} />
-          <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '.2em', textTransform: 'uppercase', color: MUTE }}>{OPT_IN.checklistTitle}</span>
+          <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 600, letterSpacing: '.2em', textTransform: 'uppercase', color: MUTE }}>Is This For You?</span>
           <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,rgba(201,168,76,.5),transparent)' }} />
         </div>
-        <section style={{ display: 'grid', gap: 10, maxWidth: 580, margin: '0 auto' }}>
-          {OPT_IN.bullets.map((b) => (
-            <div key={b} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3, opacity: .8 }}><polyline points="20 6 9 17 4 12" /></svg>
-              <span style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, lineHeight: 1.55, color: '#6b6357' }}>{b}</span>
-            </div>
+        <section style={{ maxWidth: 600, margin: '0 auto' }}>
+          {OPT_IN.narrative.map((line, i) => (
+            <p key={i} style={{ fontFamily: SANS, fontSize: i === 0 ? 16.5 : 15, fontWeight: i === 0 ? 500 : 300, color: i === 0 ? INK : '#5f574c', lineHeight: 1.65, textAlign: 'center', margin: i === 0 ? '0 0 12px' : '0 0 12px' }}>{line}</p>
           ))}
+
+          <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD_DK, textAlign: 'center', margin: '26px 0 16px' }}>{OPT_IN.checklistTitle}</p>
+          <div style={{ display: 'grid', gap: 12 }}>
+            {OPT_IN.bullets.map((b) => (
+              <div key={b} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
+                <span style={{ color: GOLD_DK, fontFamily: SANS, fontSize: 16, fontWeight: 700, lineHeight: 1.4, flexShrink: 0 }}>→</span>
+                <span style={{ fontFamily: SANS, fontSize: 15, fontWeight: 400, lineHeight: 1.55, color: '#4a4238' }}>{b}</span>
+              </div>
+            ))}
+          </div>
+
+          <p style={{ fontFamily: SERIF, fontSize: 'clamp(19px,4.4vw,24px)', fontWeight: 500, color: INK, textAlign: 'center', margin: '28px 0 20px' }}>{OPT_IN.narrativeClose}</p>
+          {!lead && (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <button onClick={openGate} className="cta" style={{ ...goldBtn, width: '100%', maxWidth: 440, padding: '17px 26px', borderRadius: 9, fontSize: 14.5 }}>{OPT_IN.ctaButton}</button>
+            </div>
+          )}
         </section>
       </div>
 

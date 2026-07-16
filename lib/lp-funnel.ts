@@ -133,6 +133,8 @@ export async function optInLead(input: {
         status: 'opted_in',
         segment: 'opted_in',
         opted_in_at: new Date().toISOString(),
+        watch_sessions: 1,
+        last_watch_at: new Date().toISOString(),
         visitor_id: input.visitorId || null,
         utm: input.utm || {},
       })
@@ -162,6 +164,29 @@ export async function optInLead(input: {
   await mirrorToCrm(lead || { email, name, phone }, 'opted_in', 'Opted in to the Make-$10k VSL funnel')
   emitEvent('lead_captured', { email, name: name || undefined, source: FUNNEL_SOURCE }).catch(() => {})
   return { ok: true, lead: lead || undefined }
+}
+
+/* ── 1b. Resume ────────────────────────────────────────────────────────────
+   A returning visitor whose browser remembers them (localStorage) but whose
+   pass cookie is gone/expired: re-grant access WITHOUT a second opt-in, and
+   record the re-watch in the CRM. Only works for an email that actually opted
+   in — an unknown email is refused (so it can't be used to bypass the gate). */
+export async function resumeLead(email: string): Promise<{ ok: boolean; name: string; email: string; sessions: number } | null> {
+  const e = normEmail(email)
+  if (!e) return null
+  const db = getSupabaseAdmin()
+  const { data: lead } = await db.from('vsl_leads').select('*').eq('email', e).maybeSingle()
+  if (!lead) return null
+
+  const sessions = Number(lead.watch_sessions || 1) + 1
+  await db.from('vsl_leads').update({ watch_sessions: sessions, last_watch_at: new Date().toISOString() }).eq('email', e)
+
+  // Log the re-watch on the CRM timeline (2nd time onward).
+  await logActivity(e, 'engagement', `Started the training again — session #${sessions}`, undefined, { funnel: FUNNEL_SOURCE, sessions })
+    .catch(() => {})
+  emitEvent('vsl_rewatch', { email: e, source: FUNNEL_SOURCE, sessions }).catch(() => {})
+
+  return { ok: true, name: String(lead.name || ''), email: e, sessions }
 }
 
 /* ── 2. Watch progress ─────────────────────────────────────────────────────

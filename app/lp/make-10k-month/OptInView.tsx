@@ -106,10 +106,13 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
   const meta = useRef<{ visitor_id: string | null; utm: Record<string, string> }>({ visitor_id: null, utm: {} })
 
   const [identity, setIdentity] = useState<{ name: string; email: string } | null>(null)
+  const [resuming, setResuming] = useState(false)
   const firstName = (identity?.name || lead?.name || '').split(' ')[0] || ''
-  const ctaLabel = lead
-    ? `Resume the Training${firstName ? `, ${firstName}` : ''} →`
-    : firstName ? `Watch Now, ${firstName} →` : OPT_IN.ctaButton
+  const ctaLabel = resuming
+    ? 'One moment…'
+    : lead
+      ? `Resume the Training${firstName ? `, ${firstName}` : ''} →`
+      : firstName ? `Watch Now, ${firstName} →` : OPT_IN.ctaButton
 
   useEffect(() => {
     meta.current = { visitor_id: readVisitorId(), utm: readUtm() }
@@ -124,10 +127,21 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
 
   // Poster / CTA: returning opted-in visitors go straight to the training
   // (carrying identity in the URL); everyone else opens the opt-in gate.
-  function primaryAction() {
-    // Returning visitor: try the training (server redirects back if the pass
-    // cookie has expired). Otherwise open the opt-in gate.
-    if (lead?.email) { router.push(WATCH_URL); return }
+  async function primaryAction() {
+    // Returning visitor: re-issue the session pass (no second opt-in) and go
+    // straight to the training. If the email isn't recognised, fall through to
+    // the opt-in gate.
+    if (lead?.email && !resuming) {
+      setResuming(true)
+      try {
+        const res = await fetch('/api/lp/resume', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: lead.email }),
+        })
+        if (res.ok) { router.push(WATCH_URL); return }
+      } catch { /* noop */ }
+      setResuming(false)
+    }
     setError(''); setModalOpen(true)
   }
 

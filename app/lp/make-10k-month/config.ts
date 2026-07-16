@@ -69,7 +69,7 @@ export const WATCH = {
   // Commitment device — leaving restarts the training.
   warning: 'Please don’t close or refresh this tab — if you leave, the training starts over from the beginning.',
   // Shown before the CTA unlocks, so visitors know the button is coming.
-  lockedHint: 'Keep watching — your private invitation will appear here in a few minutes.',
+  lockedHint: 'Stay with it — the part that makes everything click is coming up.',
   // Copy revealed once the reveal threshold of watch-time is reached. Content
   // adapted from the /call page offer.
   reveal: {

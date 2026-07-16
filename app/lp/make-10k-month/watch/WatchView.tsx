@@ -4,8 +4,6 @@
    the warning banner makes explicit. After the reveal threshold of real
    watch-time (default 5 min), the private-call invitation unlocks with the
    offer copy adapted from /call. No navigation, no exit links (except legal). */
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { WATCH, LEGAL } from '../config'
 import { useVslWatch } from '../useVslWatch'
 import VslPlayer from './VslPlayer'
@@ -42,36 +40,10 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function WatchView({ videoUrl, revealSeconds, formId }: { videoUrl: string; revealSeconds: number; formId: string }) {
-  const router = useRouter()
-  const [lead, setLead] = useState<Lead | null>(null)
-  const [ready, setReady] = useState(false)
-
+export default function WatchView({ videoUrl, revealSeconds, formId, lead }: { videoUrl: string; revealSeconds: number; formId: string; lead: Lead }) {
+  // `lead` is verified server-side (HttpOnly pass cookie) before this renders,
+  // so access can't be forged via URL params.
   const { revealed, booked, onWatched, bookCall } = useVslWatch(lead, revealSeconds, formId)
-
-  // Identity comes from the URL (?name=&email=) first, then the stored lead.
-  // A visitor with NO email (a random person opening /watch directly) is
-  // redirected to the opt-in — the training is only for people who signed up.
-  useEffect(() => {
-    let l: Lead | null = null
-    try {
-      const p = new URLSearchParams(window.location.search)
-      const un = p.get('name') || p.get('n') || ''
-      const ue = (p.get('email') || p.get('e') || '').trim().toLowerCase()
-      if (ue && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ue)) {
-        l = { name: un.slice(0, 120), email: ue }
-      } else {
-        const raw = localStorage.getItem('vsl_make10k')
-        if (raw) { const j = JSON.parse(raw); if (j?.email) l = { name: j.name || '', email: j.email } }
-      }
-    } catch { /* noop */ }
-    if (!l) { router.replace('/lp/make-10k-month'); return }
-    // Keep it available for a refresh + downstream steps.
-    try { localStorage.setItem('vsl_make10k', JSON.stringify({ name: l.name, email: l.email, t: Date.now() })) } catch { /* noop */ }
-    setLead(l); setReady(true)
-  }, [router])
-
-  if (!ready || !lead) return <main style={{ minHeight: '100dvh', background: PARCH }} />
 
   const firstName = lead.name?.split(' ')[0] || ''
   const r = WATCH.reveal

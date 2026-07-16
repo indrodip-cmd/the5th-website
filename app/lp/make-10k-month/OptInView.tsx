@@ -33,12 +33,10 @@ const goldBtn: React.CSSProperties = {
 
 type Lead = { name: string; email: string }
 const WATCH_URL = '/lp/make-10k-month/watch'
-const watchUrl = (name: string, email: string) =>
-  `${WATCH_URL}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`
 
-/* Identity for personalization: URL params (?name=&email=) first, then the
-   stored lead. Lets an emailed link (…?name=Sandra&email=…) personalize the
-   page and carry identity through to the training. */
+/* Identity for on-page personalization only: URL params (?name=) first, then
+   the stored lead. Access to the training itself is gated server-side by an
+   HttpOnly cookie, NOT by these values. */
 function readIdentity(): { name: string; email: string } | null {
   try {
     const p = new URLSearchParams(window.location.search)
@@ -127,7 +125,9 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
   // Poster / CTA: returning opted-in visitors go straight to the training
   // (carrying identity in the URL); everyone else opens the opt-in gate.
   function primaryAction() {
-    if (lead?.email) { router.push(watchUrl(lead.name || '', lead.email)); return }
+    // Returning visitor: try the training (server redirects back if the pass
+    // cookie has expired). Otherwise open the opt-in gate.
+    if (lead?.email) { router.push(WATCH_URL); return }
     setError(''); setModalOpen(true)
   }
 
@@ -148,7 +148,7 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
       const data = await res.json().catch(() => ({}))
       if (!res.ok) { setError(data?.error || 'Something went wrong. Please try again.'); setLoading(false); return }
       try { localStorage.setItem('vsl_make10k', JSON.stringify({ name: data.name, email: data.email, t: Date.now() })) } catch { /* noop */ }
-      router.push(watchUrl(data.name || name.trim(), data.email || email.trim()))
+      router.push(WATCH_URL)
     } catch {
       setError('Network error. Please try again.'); setLoading(false)
     }

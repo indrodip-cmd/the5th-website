@@ -14,12 +14,44 @@
    unique key; conditional UPDATEs guarantee a transition fires at most once.
    Fails soft — funnel plumbing never blocks a visitor-facing request.
    ───────────────────────────────────────────────────────────────────────── */
+import crypto from 'crypto'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { normEmail, normPhone, upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
 export const FUNNEL_SOURCE = 'make-10k-month'
+
+/* ── Session pass ────────────────────────────────────────────────────────────
+   Access to the /watch training page is granted by an HttpOnly, signed cookie
+   set at opt-in — NOT by URL params. This binds the training to the browser
+   session that actually signed up: a crafted/shared link (or incognito) has no
+   cookie and is bounced back to the opt-in. */
+export const VSL_PASS_COOKIE = 'vsl_pass'
+const PASS_SECRET = process.env.VSL_SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || 'dev-secret'
+const PASS_MAX_AGE_MS = 12 * 60 * 60 * 1000 // 12h
+
+export function signVslPass(name: string, email: string): string {
+  const payload = Buffer.from(JSON.stringify({ n: name || '', e: email, t: Date.now() })).toString('base64url')
+  const sig = crypto.createHmac('sha256', PASS_SECRET).update(payload).digest('base64url')
+  return `${payload}.${sig}`
+}
+
+export function verifyVslPass(token?: string | null): { name: string; email: string } | null {
+  if (!token) return null
+  const [payload, sig] = token.split('.')
+  if (!payload || !sig) return null
+  const expected = crypto.createHmac('sha256', PASS_SECRET).update(payload).digest('base64url')
+  try {
+    if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null
+  } catch { return null }
+  try {
+    const j = JSON.parse(Buffer.from(payload, 'base64url').toString())
+    if (!j?.e || typeof j.e !== 'string') return null
+    if (Date.now() - Number(j.t || 0) > PASS_MAX_AGE_MS) return null
+    return { name: String(j.n || ''), email: String(j.e) }
+  } catch { return null }
+}
 
 /* Seconds of real watch-time before the CTA + Book-a-call button unlock. */
 export function revealSeconds(): number {

@@ -11,9 +11,12 @@ nav (single conversion path), `noindex`.
    (8–15 digits), upserts a `vsl_leads` row (`status=opted_in`, with `phone`),
    and mirrors the contact (incl. phone) into `crm_contacts`. On success it
    routes to `…/watch?name=&email=` (identity in the URL).
-2. **`/lp/make-10k-month/watch`** (training) — reads identity from the URL
-   (email required) → **a visitor with no email is redirected back to the
-   opt-in**. The video **autoplays with sound and RESTARTS on every load**
+2. **`/lp/make-10k-month/watch`** (training) — a **server component gated by an
+   HttpOnly signed cookie** (`vsl_pass`, set at opt-in, 12h, HMAC-signed). No
+   valid cookie — a shared/crafted link, another browser, or incognito — is
+   redirected to the opt-in. Identity (name/email) comes from the verified
+   cookie, **not** URL params. The video **autoplays with sound and RESTARTS on
+   every load**
    (commitment device; a warning banner says "don't close or it starts over").
    Watch-time is cumulative within the session but **not resumed across reloads**
    (`useVslWatch` starts at 0). Progress is still checkpointed to

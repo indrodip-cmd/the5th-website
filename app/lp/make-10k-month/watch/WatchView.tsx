@@ -119,8 +119,9 @@ export default function WatchView({ videoUrl, revealSeconds, formId }: { videoUr
           </div>
         </div>
 
-        {/* Locked hint OR the private-call invitation */}
-        {revealed ? (
+        {/* The private-call invitation appears automatically once the reveal
+            threshold of watch-time is reached. Nothing is shown before then. */}
+        {revealed && (
           <div className="rise" style={{ marginTop: 30, background: '#fff', border: `1px solid ${BORDER}`, borderTop: `3px solid ${GOLD}`, borderRadius: 14, boxShadow: '0 30px 70px -40px rgba(46,26,53,.5)', padding: 'clamp(26px,6vw,42px)' }}>
             {booked ? (
               <div style={{ textAlign: 'center' }}>
@@ -165,11 +166,6 @@ export default function WatchView({ videoUrl, revealSeconds, formId }: { videoUr
                 <p style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 300, color: MUTE, lineHeight: 1.6, textAlign: 'center', margin: '22px auto 0', maxWidth: 540, borderTop: `1px solid ${BORDER}`, paddingTop: 18 }}>{r.host}</p>
               </>
             )}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', marginTop: 20, fontFamily: SANS, color: MUTE, fontSize: 13.5, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, letterSpacing: '.02em' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GOLD_DK} strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-            {WATCH.lockedHint}
           </div>
         )}
       </div>

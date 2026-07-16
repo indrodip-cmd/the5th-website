@@ -110,6 +110,8 @@ export async function optInLead(input: {
   name?: string
   email: string
   phone?: string | null
+  city?: string | null
+  country?: string | null
   visitorId?: string | null
   utm?: Record<string, unknown>
 }): Promise<{ ok: boolean; lead?: Row; error?: string }> {
@@ -117,6 +119,8 @@ export async function optInLead(input: {
   if (!email) return { ok: false, error: 'invalid_email' }
   const name = (input.name || '').trim().slice(0, 120) || null
   const phone = normPhone(input.phone)
+  const city = (input.city || '').trim().slice(0, 80) || null
+  const country = (input.country || '').trim().slice(0, 2).toUpperCase() || null
   const db = getSupabaseAdmin()
 
   const { data: existing } = await db.from('vsl_leads').select('*').eq('email', email).maybeSingle()
@@ -129,6 +133,8 @@ export async function optInLead(input: {
         email,
         name,
         phone,
+        city,
+        country,
         source: FUNNEL_SOURCE,
         status: 'opted_in',
         segment: 'opted_in',

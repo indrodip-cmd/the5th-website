@@ -102,10 +102,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Please enter a valid phone number (with country code).' }, { status: 400 })
     }
 
+    // Approximate location from Vercel's edge geo headers (we don't ask for it).
+    let city: string | null = null
+    try { city = decodeURIComponent(req.headers.get('x-vercel-ip-city') || '') || null } catch { city = req.headers.get('x-vercel-ip-city') }
+    const country = req.headers.get('x-vercel-ip-country') || null
+
     const res = await optInLead({
       name,
       email,
       phone,
+      city,
+      country,
       visitorId: typeof body?.visitor_id === 'string' ? body.visitor_id : null,
       utm: body?.utm && typeof body.utm === 'object' ? body.utm : {},
     })

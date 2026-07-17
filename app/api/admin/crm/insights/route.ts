@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   const msg = await client.messages.create({
     model: 'claude-sonnet-4-6', max_tokens: 700,
     system:
-      'You are a sales analyst for The5th (helps women 40+ turn expertise into income via Fast Forward coaching and The5th AI). Analyse one CRM contact and return ONLY minified JSON with keys: ' +
+      'You are a sales analyst for The5th (helps professionals 40+ turn expertise into income via Fast Forward coaching and The5th AI). Analyse one CRM contact and return ONLY minified JSON with keys: ' +
       '"summary" (2-3 sentence factual summary), "signals" (array of 2-4 short buying-signal or risk bullets), "next_action" (one specific recommended next step), "email_draft" ({"subject","body"} a short, warm, non-pushy follow-up email; plain text, no placeholders you can\'t fill). Never invent facts, pricing, or results.',
     messages: [{ role: 'user', content: `Contact: ${JSON.stringify(contact)}\nActivity (newest first): ${JSON.stringify(acts)}\nNotes: ${JSON.stringify(notes)}` }],
   })

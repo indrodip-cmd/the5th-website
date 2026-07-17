@@ -88,12 +88,12 @@ export default function ChoseYourTime() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#fff', border: '1px solid #ece7f0', borderRadius: 16, padding: 16, boxShadow: '0 8px 30px rgba(40,20,50,.05)' }}>
                 <img src="/public/images/founder.png" alt="Indrodip Ghosh" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                <div style={{ fontSize: 13.5, color: '#57505f', lineHeight: 1.5 }}><b style={{ color: '#2a2233' }}>You’ll speak with Indrodip personally.</b><br />He’s helped 76+ women turn expertise into income.</div>
+                <div style={{ fontSize: 13.5, color: '#57505f', lineHeight: 1.5 }}><b style={{ color: '#2a2233' }}>You’ll speak with Indrodip personally.</b><br />He’s helped 76+ professionals turn expertise into income.</div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 20 }}>
                 <div style={{ display: 'flex' }}>{AVATARS.map((a, i) => <img key={a} src={`/public/clients/${a}.jpg`} alt="" style={{ width: 34, height: 34, borderRadius: '50%', border: '2px solid #faf8fc', marginLeft: i ? -10 : 0, objectFit: 'cover' }} />)}</div>
-                <div style={{ fontSize: 13, color: '#57505f' }}><span style={{ color: '#C9A84C', letterSpacing: 1 }}>★★★★★</span><br /><b style={{ color: '#2a2233' }}>Join 76+ women</b> who already booked their call.</div>
+                <div style={{ fontSize: 13, color: '#57505f' }}><span style={{ color: '#C9A84C', letterSpacing: 1 }}>★★★★★</span><br /><b style={{ color: '#2a2233' }}>Join 76+ professionals</b> who already booked their call.</div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 22, fontSize: 13, color: '#a1451f', fontWeight: 600 }}>

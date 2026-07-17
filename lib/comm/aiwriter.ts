@@ -10,7 +10,7 @@ function extract(t: string): Row | null { try { return JSON.parse(t) } catch {};
 async function ctxFor(contactId: string): Promise<string> { try { return JSON.stringify(await contactContext(contactId)).slice(0, 6000) } catch { return '' } }
 const text = (m: { content: Array<{ type: string }> }) => { const b = m.content.find((x) => x.type === 'text') as { text?: string } | undefined; return b?.text || '' }
 
-const BRAND = 'The5th helps women 40+ turn their expertise into income. Voice: calm, confident, warm, specific — never hypey, never pushy, never fabricate results.'
+const BRAND = 'The5th helps professionals 40+ turn their expertise into income. Voice: calm, confident, warm, specific — never hypey, never pushy, never fabricate results.'
 
 export async function writeEmail(contactId: string, brief: string, actor?: string): Promise<Row> {
   const ai = anthropic(); if (!ai) return { ok: false, error: 'AI not configured' }

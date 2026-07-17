@@ -61,11 +61,11 @@ const STUDIES: Study[] = [
     name: 'Laurie Gerber',
     image: '/clients/laurie.jpg',
     category: 'Relationships',
-    niche: 'Dating coach for women 50+',
+    niche: 'Dating coach for professionals 50+',
     location: 'USA',
     tagline: 'Relaunching a Stalled Course into a Profitable, Community-Led Program',
     background:
-      'Laurie is a dating coach with 20 years of experience and a TEDx talk, helping women over 50 find meaningful relationships. Despite her credibility, a previous course launch had underperformed.',
+      'Laurie is a dating coach with 20 years of experience and a TEDx talk, helping professionals over 50 find meaningful relationships. Despite her credibility, a previous course launch had underperformed.',
     challenge:
       'She needed to relaunch with a strategy that matched her authority and justified a higher price. The previous launch at $79 did not reflect the true value of her offer.',
     whatWeDid:
@@ -76,7 +76,7 @@ const STUDIES: Study[] = [
       { v: '57', l: 'enrolled at $249' },
       { v: '$79→$249', l: 'price repositioned' },
     ],
-    tags: ['webinar', 'course', 'community', 'dating', 'women over 50', 'tedx', 'facebook'],
+    tags: ['webinar', 'course', 'community', 'dating', 'professionals over 50', 'tedx', 'facebook'],
   },
   {
     slug: 'bharti-chauhan',

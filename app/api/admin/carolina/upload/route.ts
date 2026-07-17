@@ -22,7 +22,7 @@ async function analyzePdf(base64: string, title: string) {
     model: 'claude-sonnet-4-6',
     max_tokens: 900,
     system:
-      'You write concise, on-brand sales copy for The5th Consulting (helps women 40+ turn expertise into income; calm, confident, never hypey, never guarantees income). ' +
+      'You write concise, on-brand sales copy for The5th Consulting (helps professionals 40+ turn expertise into income; calm, confident, never hypey, never guarantees income). ' +
       'You are given a free lead-magnet PDF. Respond ONLY with minified JSON, no prose.',
     messages: [
       {

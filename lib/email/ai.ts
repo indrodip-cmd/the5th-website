@@ -10,7 +10,7 @@ function extract(text: string): Row | null { try { return JSON.parse(text) } cat
 
 const TYPES = BLOCK_DEFS.map((b) => `${b.type}(${Object.keys(b.defaults).join(',') || 'no props'})`).join('; ')
 
-const GEN_SYSTEM = `You design marketing/lifecycle emails for The5th (helps women 40+ turn expertise into income; calm, confident, premium, never hypey). Return ONLY minified JSON:
+const GEN_SYSTEM = `You design marketing/lifecycle emails for The5th (helps professionals 40+ turn expertise into income; calm, confident, premium, never hypey). Return ONLY minified JSON:
 {"name":"template name","subject":"subject line (may use {{first_name}})","design":{"blocks":[{"type":"...","props":{...}}]}}
 Valid block types and their prop keys: ${TYPES}.
 Rules: open with a heading, keep it skimmable, one clear primary CTA (button or cta block), personalize with {{first_name}}. 6-12 blocks. Use premium blocks (cta, pricing, testimonial, guarantee, product) where they fit. Copy must be specific and on-brand, never placeholder lorem.`

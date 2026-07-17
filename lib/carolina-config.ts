@@ -38,7 +38,7 @@ export function aiConfig(s: CarolinaSettings): AiConfig {
 }
 
 const DEFAULT_GREETING =
-  "Hi, I'm Carolina 👋 I help women 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?"
+  "Hi, I'm Carolina 👋 I help professionals 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?"
 
 export async function loadSettings(): Promise<CarolinaSettings> {
   try {

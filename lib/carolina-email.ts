@@ -58,7 +58,7 @@ export async function sendAppointmentEmail(opts: {
     <p style="color:#5a5550;font-size:14px;line-height:1.7;margin:22px 0 0;">Talk soon,<br><strong style="color:#1A1A2E;">Carolina &amp; the The5th team</strong></p>
   </td></tr>
   <tr><td style="padding:24px 40px 34px;border-top:1px solid #eee;">
-    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting &middot; Helping women 40+ turn expertise into income.</p>
+    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting &middot; Helping professionals 40+ turn expertise into income.</p>
   </td></tr>
 </table></td></tr></table></body></html>`
 

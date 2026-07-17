@@ -271,7 +271,7 @@ export default function ResultsPage() {
           </div>
           <p style={{ fontSize: 12.5, color: slow ? C.goldSoft : 'rgba(255,255,255,.4)', marginTop: 22, lineHeight: 1.6, transition: 'color .4s' }}>
             {slow
-              ? "We're so sorry, we're seeing a sudden rush of women taking the assessment right now, so this is taking a little longer than usual. Please hold on, yours is worth the wait."
+              ? "We're so sorry, we're seeing a sudden rush of professionals taking the assessment right now, so this is taking a little longer than usual. Please hold on, yours is worth the wait."
               : 'Building something genuinely personal to you.'}
           </p>
         </div>
@@ -468,7 +468,7 @@ export default function ResultsPage() {
             You&apos;ve seen half of it. The other half, your offer, your pricing, and your full 90-day roadmap, is the half that actually changes your income. And right now it&apos;s sitting unopened.
           </p>
           <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 30px', lineHeight: 1.75 }}>
-            On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> The women who book leave knowing precisely what&apos;s been holding them back. The ones who don&apos;t are usually in the same place a year from now.
+            On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> The professionals who book leave knowing precisely what&apos;s been holding them back. The ones who don&apos;t are usually in the same place a year from now.
           </p>
           <a href="/call" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 17, fontWeight: 700, padding: '20px 48px', borderRadius: 6, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
             Yes, Unlock My Full Report &amp; Plan →
@@ -489,7 +489,7 @@ export default function ResultsPage() {
 
       {/* testimonials */}
       <section className="rwrap" style={{ padding: '48px 24px 20px' }}>
-        <p style={{ textAlign: 'center', ...eyebrow, color: C.muted, marginBottom: 26 }}>Women who took this step</p>
+        <p style={{ textAlign: 'center', ...eyebrow, color: C.muted, marginBottom: 26 }}>Professionals who took this step</p>
         <div className="rtesti">
           {TESTIMONIALS.map((t, i) => (
             <div key={i} style={{ background: C.ivory, border: `1px solid ${C.border}`, borderRadius: 12, padding: '24px 24px' }}>

@@ -9,7 +9,7 @@ import { logAiEvent } from '@/lib/ai-usage'
 
 type Row = Record<string, unknown>
 
-const EXTRACT_SYSTEM = `You analyze a coaching/sales call transcript for a business coaching company (The5th) that helps women 40+ turn expertise into income. Extract STRICTLY from the transcript — never invent. Return ONLY minified JSON with this shape:
+const EXTRACT_SYSTEM = `You analyze a coaching/sales call transcript for a business coaching company (The5th) that helps professionals 40+ turn expertise into income. Extract STRICTLY from the transcript — never invent. Return ONLY minified JSON with this shape:
 {"call_type":"discovery|sales|coaching|strategy|group|other",
  "quality_score":<1-10 coaching quality, or null>,
  "sales_score":<1-10 sales execution if it's a sales/discovery call, else null>,

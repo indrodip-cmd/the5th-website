@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
   </td></tr>
   <tr><td style="padding:8px 40px 20px;"><table width="100%" cellpadding="0" cellspacing="0">${rows}</table></td></tr>
   <tr><td style="padding:22px 40px 34px;border-top:1px solid #eee;">
-    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting &middot; Helping women 40+ turn expertise into income.</p>
+    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting &middot; Helping professionals 40+ turn expertise into income.</p>
   </td></tr>
 </table></td></tr></table></body></html>`
 

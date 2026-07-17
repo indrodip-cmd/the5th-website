@@ -42,7 +42,7 @@ const PAGES: Record<string, string> = {
 
 /* One-line description of each page so the AI knows where to send visitors. */
 const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user (use the key in parentheses):
-- Home (home) — The5th overview: helping women 40+ turn expertise into income.
+- Home (home) — The5th overview: helping professionals 40+ turn expertise into income.
 - Live AI Demo (demo) — a FREE, no-signup interactive demo of The5th AI they can try right now. Send anyone who wants to SEE, TRY, or "get a demo of" the AI here.
 - The5th AI (ai) — the AI product page: The5th AI coaching + Vega. $47/mo, or $470/yr with a 3-day free trial.
 - Free Assessment (quiz) — the free AI business quiz: Business Health Score, biggest opportunity, and a personalised 90-day roadmap.
@@ -120,7 +120,7 @@ function buildSystem(opts: {
   const parts: string[] = []
   parts.push(CONSTITUTION)   // highest authority — always first
   parts.push(
-    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Consulting, a company that helps women over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
+    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Consulting, a company that helps professionals over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
   )
   parts.push(`YOUR ROLE: ${a.scope}`)
   if (persona) parts.push(`PERSONA: ${persona}`)

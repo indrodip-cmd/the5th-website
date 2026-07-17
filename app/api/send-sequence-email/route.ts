@@ -197,7 +197,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p><strong>It's not that you don't know enough.</strong></p>
         <p>You have decades of professional experience. You know more than most people will ever know in your field.</p>
         <p><strong>It's not that you don't have something valuable to offer.</strong></p>
-        <p>You do. The women I've worked with who felt exactly like you — HR consultants, nurses, educators, operations leaders — all had something real. The problem was never the value. It was the identity.</p>
+        <p>You do. The professionals I've worked with who felt exactly like you — HR consultants, nurses, educators, operations leaders — all had something real. The problem was never the value. It was the identity.</p>
         <p>You are still operating as someone who earns by doing work for others. An employee. A contractor. A professional in someone else's system.</p>
         <p>To build income from your expertise, you have to make one shift before anything else:</p>
         <p><strong>You have to start seeing yourself as someone whose knowledge is worth paying for directly.</strong></p>
@@ -223,7 +223,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>Good morning.</p>
         <p>Yesterday you did the identity work. Or you didn't, in which case go back and do it before reading this.</p>
         <p>Today we answer the question that keeps most beginners broke for months: <strong>"What exactly am I selling?"</strong></p>
-        <p>Most people in your position say things like: "I help women find their confidence." "I support people through transitions." "I coach around mindset and clarity."</p>
+        <p>Most people in your position say things like: "I help professionals find their confidence." "I support people through transitions." "I coach around mindset and clarity."</p>
         <p>That is not an offer. That is a description of a feeling.</p>
         <p>No one wakes up and thinks, "I need to buy some confidence today."</p>
         <p>They wake up thinking: "I've been trying to get my first client for six months and I still don't have one and I don't understand what I'm doing wrong."</p>
@@ -234,7 +234,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
           <p style="margin:8px 0 0;color:#3d3d3d;">Complete this sentence:</p>
           <p style="margin:12px 0;color:#0a0a0a;font-style:italic;background:#fff;padding:12px 16px;border-radius:6px;">"I help [specific person] who [specific problem they feel right now] to [specific result] in [timeframe]."</p>
           <p style="margin:8px 0 0;color:#3d3d3d;"><strong>Rules:</strong></p>
-          <p style="margin:4px 0;color:#3d3d3d;">Specific person = not "women." A type of woman. Her age, her background, her situation.</p>
+          <p style="margin:4px 0;color:#3d3d3d;">Specific person = not "professionals." A type of professional. Her age, her background, her situation.</p>
           <p style="margin:4px 0;color:#3d3d3d;">Specific problem = not "lack confidence." What does that actually look like in her day? What does she stress about?</p>
           <p style="margin:4px 0;color:#3d3d3d;">Specific result = not "feel empowered." What tangible thing changes? What does she have or do differently?</p>
           <p style="margin:4px 0;color:#3d3d3d;">Timeframe = give it one. 30 days. 90 days. 6 weeks. It creates urgency.</p>
@@ -277,7 +277,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>Good morning.</p>
         <p>Some of you got responses yesterday. Some of you got nothing. Both are fine.</p>
         <p>If you got responses: today's email tells you exactly what to do next.</p>
-        <p>If you got nothing: send 5 more messages today with clearer targeting. Are you messaging people who actually know your ideal client? If you help women over 40 with corporate backgrounds and you're messaging your 25-year-old gym friends — adjust.</p>
+        <p>If you got nothing: send 5 more messages today with clearer targeting. Are you messaging people who actually know your ideal client? If you help professionals over 40 with corporate backgrounds and you're messaging your 25-year-old gym friends — adjust.</p>
         <p><strong>For those who got responses:</strong></p>
         <p>When someone says "I might know someone" or "actually I might be interested myself" — most beginners either immediately pitch their offer or freeze and don't reply at all.</p>
         <p>Both are wrong. The right move is simple. Book a 15-minute call. Nothing more.</p>
@@ -321,7 +321,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>Reply with: <strong>"Day 5 — Done."</strong></p>
         <p>If you'd rather go through the exact framework with me first in a strategy session — book here.</p>
         ${ctaButton("Book Your Free Strategy Call", CAL_LINK)}
-        <p style="color:#888;font-size:13px;margin-top:24px;">P.S. The women who close their first client fast are not the ones who have the most polished offer. They're the ones who had the most real conversations. Volume beats perfection every time at this stage.</p>
+        <p style="color:#888;font-size:13px;margin-top:24px;">P.S. The professionals who close their first client fast are not the ones who have the most polished offer. They're the ones who had the most real conversations. Volume beats perfection every time at this stage.</p>
       `)
     },
     6: {
@@ -374,7 +374,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
           <p style="margin:8px 0 0;color:#3d3d3d;">Then send 5 messages today.</p>
         `)}
         <p><strong>Win condition:</strong> Commitment written. Five messages sent.</p>
-        <p>One final thing. I work with a small number of women every month at a deeper level — inside the 10K Roadmap Accelerator. We map out your entire business, build your offer, sharpen your messaging, and I personally coach you through every call until you're consistently closing.</p>
+        <p>One final thing. I work with a small number of professionals every month at a deeper level — inside the 10K Roadmap Accelerator. We map out your entire business, build your offer, sharpen your messaging, and I personally coach you through every call until you're consistently closing.</p>
         <p>If you've done the work this week and you're serious about making this income real — book a strategy call. Let's see if we're a fit.</p>
         <p>Here's what that call includes: your expertise identified, your first offer built, your 90-day roadmap created, your biggest block removed, your exact next three steps. In 60 minutes. Free.</p>
         ${ctaButton("Book Your Free 60-Minute Strategy Call", CAL_LINK)}
@@ -421,7 +421,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
       html: (name, _videoUrl) => buildEmail(name, `
         <p>Good morning.</p>
         <p>Yesterday you looked at your pipeline. Today we look at your offer.</p>
-        <p>Here's a pattern I see constantly with women in your position.</p>
+        <p>Here's a pattern I see constantly with professionals in your position.</p>
         <p>They started with something simple. "I'll coach people through [problem] for [price]." And it worked — a few clients said yes.</p>
         <p>Then they started adding. More sessions. Bonus calls. An email support thread. A workbook. A private community. A second offer. A lower-tier option.</p>
         <p>And now their offer does everything and converts nobody.</p>
@@ -452,7 +452,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>Think about the last three people who got on a call with you and didn't buy. What happened after the call?</p>
         <p>Did you follow up with them?</p>
         <p>If yes — how? When? What did you say?</p>
-        <p>Most women in your position either don't follow up at all (because it feels pushy) or follow up with something like "just checking in to see if you've made a decision" — which adds zero value and gets no response.</p>
+        <p>Most professionals in your position either don't follow up at all (because it feels pushy) or follow up with something like "just checking in to see if you've made a decision" — which adds zero value and gets no response.</p>
         <p><strong>Follow-up is not chasing. Follow-up is service.</strong></p>
         <p>When someone gets off a call with you and doesn't buy, they're not saying no to you. They're usually stuck in one of three places: they don't understand the full value, they have an objection they didn't say out loud, or the timing is slightly off.</p>
         <p>The right follow-up addresses one of those three things. It's not a reminder that you exist. It's a piece of value that moves them forward.</p>
@@ -732,7 +732,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>Here's where you are: you have everything you need to break your current ceiling. The question is whether you'll execute alone or with support.</p>
         <p>Going alone is slower. Not because the strategy is wrong, but because you'll hit moments of doubt, resistance, and confusion — and without someone who has seen this pattern dozens of times, those moments turn into months.</p>
         <p>Going with support compresses the timeline. Dramatically.</p>
-        <p>The 10K Roadmap Accelerator is built for exactly where you are. Twelve months. Live coaching. A framework that has taken women from stuck at £4K–£6K months to consistently hitting £10K–£15K. Not by working harder. By building smarter.</p>
+        <p>The 10K Roadmap Accelerator is built for exactly where you are. Twelve months. Live coaching. A framework that has taken professionals from stuck at £4K–£6K months to consistently hitting £10K–£15K. Not by working harder. By building smarter.</p>
         <p>Before you decide if it's right for you — book the free strategy call. I will show you exactly where your ceiling is and what breaks it. No pressure, no pitch unless we both agree it makes sense.</p>
         ${ctaButton("Book Your Free 60-Minute Strategy Call", CAL_LINK)}
         <p>Execute the first action on the structural decision you made yesterday. One concrete step. Today.</p>
@@ -801,7 +801,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
       html: (name, _videoUrl) => buildEmail(name, `
         <p>Good morning.</p>
         <p>At your stage, there should be at least one offer in your business that feels almost uncomfortable to charge for. Not because it's wrong — because it's genuinely premium and you're still working up to owning that.</p>
-        <p>The market for high-ticket coaching — £5,000 to £25,000 per client — is real. It's not for everyone. But for a woman with your level of experience and a track record of results, it is absolutely accessible.</p>
+        <p>The market for high-ticket coaching — £5,000 to £25,000 per client — is real. It's not for everyone. But for a professional with your level of experience and a track record of results, it is absolutely accessible.</p>
         <p>The question is whether you have an offer designed for that market.</p>
         <p>Most established coaches don't. They have good offers at good prices. But they don't have a flagship, premium, invitation-only, result-guaranteed offer that signals to a senior, experienced, financially capable client: "This is for you."</p>
         ${taskBox("My Flagship Offer", `
@@ -874,7 +874,7 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>I want to tell you about Laurie.</p>
         <p>Laurie had been coaching for years. She was good. She had clients. She had revenue. And she had hit the invisible ceiling that every established coach eventually hits.</p>
         <p>The shift for Laurie wasn't a new tactic. It was a new model.</p>
-        <p>She stopped thinking about her business as "I coach clients." She started thinking about it as "I run a platform for women who want [specific transformation]." The platform had multiple entry points: a flagship high-ticket offer, a group program, a digital course, and a membership.</p>
+        <p>She stopped thinking about her business as "I coach clients." She started thinking about it as "I run a platform for professionals who want [specific transformation]." The platform had multiple entry points: a flagship high-ticket offer, a group program, a digital course, and a membership.</p>
         <p>Each level fed the next. Entry clients became group clients. Group clients became high-ticket clients. High-ticket clients became advocates and referral sources.</p>
         <p>The revenue didn't double because she worked harder. It doubled because the architecture changed.</p>
         ${taskBox("My Platform Vision", `
@@ -903,8 +903,8 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
         <p>That is not small work. That is the roadmap.</p>
         <p>Here's the honest truth about where you are now.</p>
         <p>Everything you mapped this week can be executed alone. Slowly. With trial and error. Making the mistakes that cost you 6–12 months of time and energy at every turn.</p>
-        <p>Or you can work with someone who has watched women at exactly your stage make this transition, who can shortcut the learning curve, and who can hold you to the standard your vision requires.</p>
-        <p>That's what the 10K Roadmap Accelerator does for women at your level. Not basics. Not beginner frameworks. A sophisticated, personalised approach to building the next chapter of your business — with direct access, live coaching, and a proven architecture.</p>
+        <p>Or you can work with someone who has watched professionals at exactly your stage make this transition, who can shortcut the learning curve, and who can hold you to the standard your vision requires.</p>
+        <p>That's what the 10K Roadmap Accelerator does for professionals at your level. Not basics. Not beginner frameworks. A sophisticated, personalised approach to building the next chapter of your business — with direct access, live coaching, and a proven architecture.</p>
         <p>Before you decide if it's right — book the free strategy call. 60 minutes. I'll show you exactly which piece of the architecture to build first for maximum impact.</p>
         ${ctaButton("Book Your Free 60-Minute Strategy Call", CAL_LINK)}
         <p>Take the platform vision you wrote yesterday and share it with one person — your partner, a close friend, a trusted colleague — out loud. Saying it to someone makes it real. Then book the call if you're serious about making it happen.</p>

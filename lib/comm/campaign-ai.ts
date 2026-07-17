@@ -15,7 +15,7 @@ async function getBrand(): Promise<Brand> {
   return (data as unknown as Brand) || ({ company_name: 'The5th', primary_color: '#3D2645', secondary_color: '#160D1A', accent_color: '#C9A84C', text_color: '#2b2530', bg_color: '#f4f2f6', radius: 12, font: 'Inter, Arial, sans-serif', width: 600 } as Brand)
 }
 
-const PLAN_SYSTEM = `You are a senior lifecycle-marketing strategist for The5th (helps women 40+ turn expertise into income; calm, confident, premium). Turn the brief into an email nurture sequence. Return ONLY minified JSON:
+const PLAN_SYSTEM = `You are a senior lifecycle-marketing strategist for The5th (helps professionals 40+ turn expertise into income; calm, confident, premium). Turn the brief into an email nurture sequence. Return ONLY minified JSON:
 {"name":"campaign name","goal":"the objective","audience":{"tags":[],"lifecycle_stage":"","pipeline_stage":"","min_score":0},"steps":[{"delay_hours":<wait before THIS email>,"subject":"subject line","brief":"exactly what this email should say and its CTA"}]}
 Rules: 3-6 steps spread across the timeframe in the brief (delay_hours is the wait before each step; step 1 is usually 0). Omit audience fields you can't infer. Each step has a distinct purpose (welcome → value → proof → objection → offer). Briefs are specific and on-brand — no lorem.`
 

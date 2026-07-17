@@ -30,7 +30,7 @@
   // ── Config (admin-driven) ──
   var cfg = {
     avatar: null,
-    greeting: "Hi, I'm Carolina 👋 I help women 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?",
+    greeting: "Hi, I'm Carolina 👋 I help professionals 40+ turn their expertise into income with The5th. Curious about our programs, or want to book a quick call with the team?",
     proactive: { enabled: true, delay: 10 },   // context-aware greetings on; admin can set enabled:false to opt out
     agents: {},
     features: { attachments: true, booking: true }
@@ -1275,7 +1275,7 @@
       id: 'the-collective', type: 'promotion', emoji: '✨', badge: 'COMMUNITY', category: 'Program',
       cover: 'linear-gradient(158deg,#14231D 0%,#2A1830 52%,#0D0D0D 100%)', coverImage: null, accent: '#C9A84C',
       title: 'The Collective', sub: 'Scale toward and past $10K/month',
-      desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by women building on their own terms.',
+      desc: 'The ongoing community and coaching that takes you toward — and beyond — consistent $10K months, surrounded by professionals building on their own terms.',
       features: ['Group Coaching', 'Community 40+', 'Accountability', 'Live Sessions'],
       url: '/collective',
       primaryAction: { label: 'Learn More', kind: 'article', value: 'the-collective' },
@@ -1594,7 +1594,7 @@
     return '<div class="cw-community" data-ak="article" data-av="collective" tabindex="0" role="button">'
       + art
       + '<div class="cw-cm-head"><div class="cw-card-ic">' + ICON.users + '</div>'
-      + '<div><h5>The Collective</h5><p>Women 40+ building on their own terms</p></div></div>'
+      + '<div><h5>The Collective</h5><p>Professionals 40+ building on their own terms</p></div></div>'
       + '<p class="cw-cm-desc">Ongoing coaching, accountability and a community that takes you toward — and past — consistent $10K months.</p>'
       + '<div class="cw-cm-foot"><div class="cw-cm-faces">' + faces + '</div>'
       + '<button class="cw-btn cw-btn-primary" data-ak="article" data-av="collective">Join the community</button></div></div>';
@@ -1677,7 +1677,7 @@
     var success = '<div class="cw-sect">' + sectionTitle('Client success')
       + (STORIES.length
         ? '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">' + STORIES.map(function (s) { s.type = 'casestudy'; return renderCard(s); }).join('') + '</div><div class="cw-dots" id="cw-dots"></div></div>'
-        : emptyState(ICON.spark, 'Client stories coming soon', 'Real results from women building with The5th, shared here shortly.'))
+        : emptyState(ICON.spark, 'Client stories coming soon', 'Real results from professionals building with The5th, shared here shortly.'))
       + '</div>';
 
     // 8) Upcoming Events (data-driven)

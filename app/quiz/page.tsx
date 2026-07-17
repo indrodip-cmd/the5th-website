@@ -62,7 +62,7 @@ const questionPool: Question[] = [
     sub: 'Choose the description that best fits the person you most want to serve.',
     type: 'select',
     options: [
-      { value: 'transitions', emoji: '🌀', label: 'Women going through major life transitions', sub: 'Divorce, career change, empty nest, reinvention' },
+      { value: 'transitions', emoji: '🌀', label: 'Professionals going through major life transitions', sub: 'Divorce, career change, empty nest, reinvention' },
       { value: 'career', emoji: '💼', label: 'Professionals seeking career change', sub: 'Corporate escapees, burnout recovery, new direction' },
       { value: 'entrepreneurs', emoji: '🏢', label: 'Entrepreneurs and business owners', sub: 'Growing revenue, scaling, leadership' },
       { value: 'wellness', emoji: '💚', label: 'Health and wellness seekers', sub: 'Body transformation, energy, holistic health' },
@@ -98,7 +98,7 @@ const questionPool: Question[] = [
     id: 'q5', num: 5, title: 'What is your zone of genius?',
     sub: 'Your answer directly shapes the quality of your blueprint. Think of this as briefing a world-class strategist — the more specific you are, the more precise and valuable your personalised growth plan becomes.',
     type: 'textarea',
-    placeholder: 'e.g. I have a gift for helping women identify their unique story and turn decades of experience into a focused, premium coaching offer…'
+    placeholder: 'e.g. I have a gift for helping professionals identify their unique story and turn decades of experience into a focused, premium coaching offer…'
   },
   {
     id: 'q6', num: 6, title: 'Do you have a personal transformation story connected to your niche?',
@@ -2078,11 +2078,11 @@ function LandingPage({ onStart }: { onStart: () => void }) {
               Built using real-world coaching, consulting, messaging, sales, and client acquisition data from businesses responsible for over $15M in revenue.
             </p>
 
-            {/* Founder credibility — answers "who is behind this?" (key trust for 45+ professional women) */}
+            {/* Founder credibility — answers "who is behind this?" (key trust for 45+ professionals) */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, margin: '32px auto 0', maxWidth: 480, paddingTop: 26, borderTop: '1px solid rgba(255,255,255,0.12)' }}>
               <img src="/images/live-coaching.png" alt="Indrodip Ghosh, founder of The5th" width={52} height={52} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(201,168,76,0.45)', flexShrink: 0 }} />
               <span style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.72)', textAlign: 'left', lineHeight: 1.55 }}>
-                Designed by <b style={{ color: '#fff', fontWeight: 600 }}>Indrodip Ghosh</b>, who has advised Fortune 500 leaders, celebrity coaches, and governments, applied here for women building their own businesses.
+                Designed by <b style={{ color: '#fff', fontWeight: 600 }}>Indrodip Ghosh</b>, who has advised Fortune 500 leaders, celebrity coaches, and governments, applied here for professionals building their own businesses.
               </span>
             </div>
 

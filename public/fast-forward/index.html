@@ -559,6 +559,69 @@ ul{list-style:none}
   </div>
 </section>
 
+<!-- FOUNDER / PERSONAL BRAND -->
+<section class="sec sec--warm" id="founder">
+  <style>
+    .fndr{display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(24px,4vw,56px);align-items:center;max-width:1080px;margin:0 auto}
+    .fndr__portrait{position:relative}
+    .fndr__portrait img{width:100%;border-radius:16px;display:block;object-fit:cover;object-position:top center;box-shadow:0 40px 80px -40px rgba(46,26,53,.6);border:1px solid var(--gold-line)}
+    .fndr__badge{position:absolute;left:16px;bottom:16px;background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:var(--plum-dark);font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 13px;border-radius:6px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+    .fndr__body p{font-size:1.06rem;line-height:1.75;color:var(--ink-soft,#4a4038);margin:0 0 16px;font-weight:300}
+    .fndr__body p b{font-weight:600;color:var(--ink)}
+    .fndr__stats{display:flex;flex-wrap:wrap;gap:10px 26px;margin:22px 0 18px}
+    .fndr__stat b{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--green);display:block;line-height:1}
+    .fndr__stat span{font-size:.72rem;letter-spacing:.06em;color:var(--ink-muted,#8A8075)}
+    .fndr__sign{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--plum);margin-top:4px}
+    .fndrGal{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1080px;margin:44px auto 0}
+    .fndrGal .ph{position:relative;aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:linear-gradient(160deg,var(--plum-mid),var(--plum-deep));border:1px dashed var(--gold-line);display:flex;align-items:center;justify-content:center}
+    .fndrGal .ph::before{content:'＋ Add photo';color:var(--gold);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;opacity:.7}
+    .fndrGal .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
+    .fndrGal .ph figcaption{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 12px 10px;font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:#fff;background:linear-gradient(0deg,rgba(20,8,22,.78),transparent)}
+    .fndrCta{text-align:center;margin-top:40px}
+    .fndrPress{max-width:1080px;margin:38px auto 0;text-align:center}
+    .fndrPress__lab{font-size:.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted,#8A8075);display:block;margin-bottom:14px}
+    .fndrPress__row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 32px}
+    .fndrPress__row span{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#b3a99c;letter-spacing:.01em}
+    @media(max-width:760px){.fndr{grid-template-columns:1fr;max-width:460px}.fndrGal{grid-template-columns:repeat(2,1fr)}}
+  </style>
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Who's Behind Fast Forward</span>
+      <h2 class="h2">Hi, I'm <em>Indrodip Ghosh.</em></h2>
+    </div>
+    <div class="fndr" data-reveal>
+      <div class="fndr__portrait">
+        <img src="/public/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" loading="lazy">
+        <span class="fndr__badge">Founder · The5th &amp; the 10K Roadmap</span>
+      </div>
+      <div class="fndr__body">
+        <p>For over a decade I've advised Fortune 500 executives, billion-dollar companies, celebrity coaches and governments on the three things most experts are never taught — <b>positioning, marketing and sales</b>.</p>
+        <p>I built Fast Forward to put that exact system in your hands, so a lifetime of expertise finally pays what it's worth. The title I'm proudest of isn't "consultant" — it's being the person who helps experienced professionals turn what they already know into a business that <b>changes their family for generations</b>.</p>
+        <div class="fndr__stats">
+          <div class="fndr__stat"><b>$15M+</b><span>Client revenue</span></div>
+          <div class="fndr__stat"><b>76+</b><span>Professionals coached</span></div>
+          <div class="fndr__stat"><b>12</b><span>Nations</span></div>
+          <div class="fndr__stat"><b>~90 days</b><span>Avg. to first client</span></div>
+        </div>
+        <div class="fndr__sign">— Indrodip</div>
+      </div>
+    </div>
+    <!-- As featured in — founder authority -->
+    <div class="fndrPress" data-reveal>
+      <span class="fndrPress__lab">As featured in</span>
+      <div class="fndrPress__row"><span>Forbes</span><span>The New York Times</span><span>HuffPost</span><span>TEDx</span><span>The Guardian</span><span>Yahoo Finance</span></div>
+    </div>
+    <!-- Personal-brand photo gallery — drop real photos at these paths to replace the placeholders -->
+    <div class="fndrGal" data-reveal>
+      <figure class="ph"><img src="/public/images/ff-founder-stage.jpg" alt="Indrodip Ghosh on stage" loading="lazy" onerror="this.remove()"><figcaption>On stage</figcaption></figure>
+      <figure class="ph"><img src="/public/images/ff-founder-client.jpg" alt="Indrodip Ghosh with a client" loading="lazy" onerror="this.remove()"><figcaption>With a client</figcaption></figure>
+      <figure class="ph"><img src="/public/images/ff-founder-work.jpg" alt="Behind the scenes" loading="lazy" onerror="this.remove()"><figcaption>Behind the scenes</figcaption></figure>
+      <figure class="ph"><img src="/public/images/ff-founder-podcast.jpg" alt="The5th Podcast" loading="lazy" onerror="this.remove()"><figcaption>The5th Podcast</figcaption></figure>
+    </div>
+    <div class="fndrCta" data-reveal><a href="/call" class="btnGold">Work With Me — Apply for a Seat →</a></div>
+  </div>
+</section>
+
 <!-- GUARANTEE -->
 <section class="sec sec--dark grain guar" id="guarantee">
   <div class="layout">

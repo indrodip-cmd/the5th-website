@@ -30,14 +30,6 @@ const BLOCKED_DOMAINS = new Set([
 
 const FAKE_LOCAL = new Set(['test', 'testing', 'fake', 'asdf', 'asdfasdf', 'qwerty', 'abc', 'abcd', 'noemail', 'none', 'nomail', 'xxx'])
 
-function validPhone(raw: string): string | null {
-  const digits = raw.replace(/\D/g, '')
-  if (digits.length < 8 || digits.length > 15) return null
-  if (/^(\d)\1+$/.test(digits)) return null
-  if (/^(0123456789|1234567890|12345678)/.test(digits)) return null
-  return raw.trim()
-}
-
 /* Confirm the domain can actually receive mail. Blocks fake/random domains
    with no mail server; fails open on transient DNS errors so real users aren't
    punished for a flaky lookup. */
@@ -71,7 +63,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}))
     const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
     const name = sanitizeName(body?.name)
-    const phoneRaw = typeof body?.phone === 'string' ? body.phone : ''
     const domain = email.split('@')[1] || ''
     const local = email.split('@')[0] || ''
 
@@ -92,18 +83,9 @@ export async function POST(req: NextRequest) {
       }, { status: 403 })
     }
 
-    // Real, reachable domain?
+    // Real, reachable domain? (email validation without OTP — MX/DNS check)
     if (!(await domainCanReceiveMail(domain))) {
       return NextResponse.json({ error: 'That email domain can’t receive mail. Please enter a real email address.' }, { status: 400 })
-    }
-
-    // Phone is optional. Only validate when one is actually provided.
-    let phone: string | null = null
-    if (phoneRaw.trim()) {
-      phone = validPhone(phoneRaw)
-      if (!phone) {
-        return NextResponse.json({ error: 'Please enter a valid phone number, or leave it blank.' }, { status: 400 })
-      }
     }
 
     // Approximate location from Vercel's edge geo headers (we don't ask for it).
@@ -114,7 +96,6 @@ export async function POST(req: NextRequest) {
     const res = await optInLead({
       name,
       email,
-      phone,
       city,
       country,
       visitorId: typeof body?.visitor_id === 'string' ? body.visitor_id : null,

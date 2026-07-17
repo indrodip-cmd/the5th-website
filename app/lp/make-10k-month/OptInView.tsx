@@ -101,7 +101,6 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const meta = useRef<{ visitor_id: string | null; utm: Record<string, string> }>({ visitor_id: null, utm: {} })
@@ -116,13 +115,12 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
       : firstName ? `Watch Now, ${firstName} →` : OPT_IN.ctaButton
 
   // Opt-in progress: 20% on open → 90% once they enter a name → the last 10%
-  // across email/phone and the redirect. No number shown — the bar tells the
-  // story (near-completion nudge).
+  // across email and the redirect. No number shown — the bar tells the story
+  // (near-completion nudge).
   const progress = loading ? 100
-    : phone.replace(/\D/g, '').length >= 6 ? 97
-      : email.trim() ? 94
-        : name.trim() ? 90
-          : 20
+    : email.trim() ? 95
+      : name.trim() ? 90
+        : 20
 
   useEffect(() => {
     meta.current = { visitor_id: readVisitorId(), utm: readUtm() }
@@ -161,14 +159,11 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
     setError('')
     if (!name.trim()) return setError('Please enter your first name.')
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) return setError('Please enter a valid email.')
-    // Phone is optional — only validate if they actually typed one.
-    const digits = phone.replace(/\D/g, '')
-    if (digits.length > 0 && digits.length < 8) return setError('Please enter a valid phone number, or leave it blank.')
     setLoading(true)
     try {
       const res = await fetch('/api/lp/opt-in', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), phone: phone.trim(), visitor_id: meta.current.visitor_id, utm: meta.current.utm }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), visitor_id: meta.current.visitor_id, utm: meta.current.utm }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) { setError(data?.error || 'Something went wrong. Please try again.'); setLoading(false); return }
@@ -410,9 +405,7 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
               <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: '#5f574c', lineHeight: 1.55, margin: '0 0 20px', textAlign: 'center' }}>{MODAL.sub}</p>
               <form onSubmit={submit}>
                 <input className="lp-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="First name" autoComplete="given-name" autoFocus enterKeyHint="next" />
-                <input className="lp-input" style={{ marginTop: 12 }} type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" autoComplete="email" enterKeyHint="next" />
-                <input className="lp-input" style={{ marginTop: 12 }} type="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (optional)" autoComplete="tel" enterKeyHint="go" />
-                <p style={{ fontFamily: SANS, fontSize: 11.5, color: MUTE, margin: '7px 2px 0' }}>{MODAL.phoneNote}</p>
+                <input className="lp-input" style={{ marginTop: 12 }} type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" autoComplete="email" enterKeyHint="go" />
                 {error && <div style={{ marginTop: 12, fontFamily: SANS, color: '#a3341f', background: '#fdeee9', border: '1px solid #f6cabb', borderRadius: 8, padding: '10px 12px', fontSize: 13 }}>{error}</div>}
                 <button type="submit" disabled={loading} className="cta" style={{ ...goldBtn, width: '100%', marginTop: 16, padding: '17px 22px', borderRadius: 8, fontSize: 14 }}>{loading ? 'Taking you in…' : MODAL.cta}</button>
                 <p style={{ fontFamily: SANS, textAlign: 'center', fontSize: 12, color: MUTE, marginTop: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>

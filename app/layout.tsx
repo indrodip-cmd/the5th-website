@@ -3,7 +3,51 @@ import { Analytics } from "@vercel/analytics/next";
 import Script from 'next/script';
 import PageTracker from './PageTracker';
 
+const SITE_JSONLD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://the5th.consulting/#organization",
+      name: "The5th Consulting",
+      alternateName: "The5th",
+      url: "https://the5th.consulting/",
+      logo: { "@type": "ImageObject", url: "https://the5th.consulting/images/logo.png" },
+      founder: { "@id": "https://the5th.consulting/#indrodip" },
+      sameAs: [
+        "https://www.instagram.com/the5thconsulting/",
+        "https://open.spotify.com/show/033AYgOaBgPXGTAlNfLJfn",
+        "https://www.facebook.com/withindrodip",
+        "https://www.linkedin.com/in/marketing-growth-consultant/",
+      ],
+    },
+    {
+      "@type": "Person",
+      "@id": "https://the5th.consulting/#indrodip",
+      name: "Indrodip Ghosh",
+      jobTitle: "Founder & Marketing Growth Consultant",
+      worksFor: { "@id": "https://the5th.consulting/#organization" },
+      url: "https://the5th.consulting/about",
+      image: "https://the5th.consulting/images/founder.png",
+      sameAs: [
+        "https://www.facebook.com/withindrodip",
+        "https://www.linkedin.com/in/marketing-growth-consultant/",
+        "https://www.instagram.com/the5thconsulting/",
+        "https://open.spotify.com/show/033AYgOaBgPXGTAlNfLJfn",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://the5th.consulting/#website",
+      url: "https://the5th.consulting/",
+      name: "The5th Consulting",
+      publisher: { "@id": "https://the5th.consulting/#organization" },
+    },
+  ],
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://the5th.consulting"),
   title: "The5th AI Business Assessment | The5th Consulting",
   description: "A premium AI assessment that reads your coaching or consulting business, gives you a Business Health Score, names your biggest opportunity, and builds your personalised 90-day roadmap. Built for women over 40.",
   openGraph: {
@@ -73,6 +117,8 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
           <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="afterInteractive" />
         )}
+        {/* Structured data: Organization + Person (Indrodip Ghosh) + WebSite with sameAs */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_JSONLD) }} />
       </head>
       <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>

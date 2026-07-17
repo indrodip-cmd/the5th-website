@@ -195,6 +195,8 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         .marq-track{display:flex;align-items:center;gap:clamp(30px,7vw,60px);width:max-content;animation:marq 24s linear infinite}
         .marq-wrap:hover .marq-track{animation-play-state:paused}
         .marq-track span{font-family:${SERIF};font-size:clamp(17px,4.4vw,24px);font-weight:500;color:#b3a99c;letter-spacing:.01em;white-space:nowrap}
+        .bio-row{display:flex;gap:22px;align-items:center}
+        @media(max-width:560px){.bio-row{flex-direction:column;text-align:center;gap:16px}}
         .pb-track{position:relative;height:7px;width:100%;background:#ece2d4;border-radius:99px;overflow:hidden}
         .pb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#35213c 0%,#4E3158 45%,#7a5b86 55%,#35213c 100%);background-size:220% 100%;animation:barSheen 2.2s linear infinite;box-shadow:0 0 10px rgba(53,33,60,.45);transition:width .75s cubic-bezier(.22,1,.36,1)}
         .rise{animation:rise .6s ease both}
@@ -313,6 +315,35 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
             ))}
           </div>
           <p style={{ fontFamily: SANS, fontSize: 11.5, fontWeight: 300, color: MUTE, lineHeight: 1.55, textAlign: 'center', margin: '16px auto 0', maxWidth: 520 }}>{OPT_IN.proofDisclaimer}</p>
+        </section>
+
+        {/* Founder bio — who's behind the training */}
+        <section style={{ marginTop: 46 }}>
+          <div style={{ textAlign: 'center', marginBottom: 22 }}>
+            <Eyebrow>Who’s Behind the Training</Eyebrow>
+            <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(23px,5vw,32px)', fontWeight: 500, lineHeight: 1.15, letterSpacing: '-.01em', margin: 0, color: INK }}>Strategy that’s advised billion-dollar companies.</h2>
+          </div>
+          <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, boxShadow: '0 22px 55px -34px rgba(46,26,53,.5)', padding: 'clamp(20px,5vw,30px)' }}>
+            <div className="bio-row">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" style={{ width: 'clamp(110px,30vw,140px)', aspectRatio: '3 / 3.6', objectFit: 'cover', objectPosition: 'top center', borderRadius: 14, border: `2px solid rgba(201,168,76,.4)`, flexShrink: 0 }} />
+              <div>
+                <p style={{ fontFamily: SANS, fontSize: 'clamp(14.5px,3.3vw,16px)', fontWeight: 300, color: '#544c42', lineHeight: 1.7, margin: 0 }}>
+                  I’ve spent my career advising Fortune 500 executives, billion-dollar companies, celebrity coaches and governments on the exact things most experts are never taught: <strong style={{ fontWeight: 600, color: INK }}>positioning, marketing and sales</strong>. The title I’m proudest of isn’t “consultant” — it’s helping experienced experts turn what they already know into a business that creates real freedom.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 20px', margin: '16px 0 14px', justifyContent: 'inherit' }}>
+                  {[['$15M+', 'client revenue'], ['12', 'nations'], ['76+', 'experts coached']].map(([n, l]) => (
+                    <div key={l as string} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                      <span style={{ fontFamily: SERIF, fontSize: 20, fontWeight: 600, color: GREEN }}>{n}</span>
+                      <span style={{ fontFamily: SANS, fontSize: 11.5, color: MUTE, letterSpacing: '.02em' }}>{l}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontFamily: SERIF, fontSize: 19, fontWeight: 600, color: INK }}>Indrodip Ghosh</div>
+                <div style={{ fontFamily: SANS, fontSize: 12, color: GOLD_DK, fontWeight: 600, letterSpacing: '.04em' }}>Founder · The5th &amp; the 10K Roadmap</div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Secondary: the story + what's inside */}

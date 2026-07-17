@@ -2895,9 +2895,9 @@
   // Per-page greetings — curiosity-first, never pushy. Admin can override any of
   // these via config (cfg.proactive.pages[<ctx>] = {msgs,cta,seed,agent}).
   var GREETINGS = {
-    training: { agent: 'carolina', cta: 'Watch the free training', seed: "I'd like to watch the free 12-minute training — what's inside, and how do I start?",
-      returning: 'Welcome back 👋 Ready to jump back into the free training?',
-      msgs: ['Want the free 12-minute training? I can tell you what’s inside and get you started.', 'Curious what’s in the free training before you watch? Ask me anything.', 'Two minutes in and it clicks — want me to get you into the free training?'] },
+    training: { agent: 'carolina', cta: 'Start the free training', seed: "I'd like to watch the free 12-minute training — what's inside, and how do I start?",
+      returning: 'Welcome back 👋 Want me to drop you straight back into the free training?',
+      msgs: ['Want the free 12-minute training? Tap here and I’ll get you straight in.', 'Before you go — this free training shows the exact shift. Want me to start it for you?', 'Two minutes in and it clicks. Ready to start the free training now?'] },
     home: { agent: 'carolina', cta: 'Show me', seed: "I'd love to know what's quietly holding my business back — can you help?",
       returning: 'Welcome back 👋 Want to pick up where you left off, or see your fastest path to the next $10K month?',
       msgs: ["Want to discover what's quietly capping your business growth?", 'Can I show you the fastest path to your next $10K month?', "Curious what your biggest growth bottleneck is?"] },
@@ -2991,6 +2991,7 @@
 
     var MIN = 2500, fired = false, startedAt = Date.now();
     var baseDelay = Math.max(4000, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 9) * 1000));
+    if (pageContext() === 'training') baseDelay = 6000;   // funnel: nudge people to act sooner
     function fire() { if (fired || isOpen) return; fired = true; cleanup(); showPromoBubble(g, dkey); }
     function cleanup() { clearTimeout(baseT); clearTimeout(idleT); window.removeEventListener('scroll', onScroll); document.removeEventListener('mousemove', onAct); document.removeEventListener('keydown', onAct); document.removeEventListener('touchstart', onAct); }
     var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay (fallback)

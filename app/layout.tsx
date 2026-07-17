@@ -43,6 +43,13 @@ const SITE_JSONLD = {
       name: "The5th Consulting",
       publisher: { "@id": "https://the5th.consulting/#organization" },
     },
+    {
+      "@type": "WebSite",
+      "@id": "https://the5th.consulting/#platform",
+      url: "https://platform.the5th.consulting/",
+      name: "The5th Platform",
+      publisher: { "@id": "https://the5th.consulting/#organization" },
+    },
   ],
 }
 

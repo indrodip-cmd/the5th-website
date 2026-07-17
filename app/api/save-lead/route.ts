@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { verifyRecaptcha } from '@/lib/recaptcha'
 import { upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 import { identify } from '@/lib/identity'
@@ -41,6 +42,12 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     if (!(await verifyTurnstile(body?.turnstileToken, ip))) {
       return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
+    }
+    // Additional Google reCAPTCHA v3 check when the client provides a token
+    // (additive — existing Turnstile-only callers are unaffected).
+    if (body?.recaptchaToken) {
+      const rc = await verifyRecaptcha(body.recaptchaToken, { action: 'lead', ip })
+      if (!rc.ok) return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
     }
     const { name, email, quiz_answers, video_assigned, video_requested, no_video } = body
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { promises as dns } from 'dns'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeName } from '@/lib/validation'
+import { verifyRecaptcha } from '@/lib/recaptcha'
 import { optInLead, signVslPass, VSL_PASS_COOKIE } from '@/lib/lp-funnel'
 
 export const runtime = 'nodejs'
@@ -61,6 +62,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json().catch(() => ({}))
+
+    // Bot protection — Google reCAPTCHA v3 (fails open until keys are configured).
+    const rc = await verifyRecaptcha(body?.recaptchaToken, { action: 'optin', ip })
+    if (!rc.ok) {
+      return NextResponse.json({ error: 'Verification failed. Please reload the page and try again.' }, { status: 403 })
+    }
+
     const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
     const name = sanitizeName(body?.name)
     const domain = email.split('@')[1] || ''

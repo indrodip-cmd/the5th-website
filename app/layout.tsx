@@ -69,6 +69,10 @@ export default function RootLayout({
         <Script src="/carolina.js" strategy="afterInteractive" />
         {/* Whop embedded checkout loader — powers the $1 trial checkout on the offer page */}
         <Script src="https://js.whop.com/static/checkout/loader.js" strategy="afterInteractive" />
+        {/* Google reCAPTCHA v3 — invisible bot protection on lead forms (loads only when configured) */}
+        {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+          <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="afterInteractive" />
+        )}
       </head>
       <body style={{ margin: 0, padding: 0, background: '#FAF6F0' }}>{children}<PageTracker /><Analytics /></body>
     </html>

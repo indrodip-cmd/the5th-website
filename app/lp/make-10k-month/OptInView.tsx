@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { OPT_IN, MODAL, REAL_PROOF, LEGAL, PRESS } from './config'
 import ProofPopups from './ProofPopups'
+import { getRecaptchaToken } from '@/lib/recaptcha-client'
 
 const SERIF = "'Cormorant Garamond', Georgia, serif"
 const SANS = "'DM Sans', system-ui, -apple-system, sans-serif"
@@ -161,9 +162,10 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) return setError('Please enter a valid email.')
     setLoading(true)
     try {
+      const recaptchaToken = await getRecaptchaToken('optin')
       const res = await fetch('/api/lp/opt-in', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), visitor_id: meta.current.visitor_id, utm: meta.current.utm }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), recaptchaToken, visitor_id: meta.current.visitor_id, utm: meta.current.utm }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) { setError(data?.error || 'Something went wrong. Please try again.'); setLoading(false); return }

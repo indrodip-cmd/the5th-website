@@ -12,9 +12,12 @@
 (function () {
   'use strict';
 
-  // Distraction-free funnel pages: don't show the consent banner on /lp/*
-  // landing pages (keeps the single conversion path clean).
-  try { if (location.pathname.indexOf('/lp/') === 0) return; } catch (e) {}
+  // Distraction-free funnel pages: don't show the consent banner on /lp/* or
+  // /event/* landing pages (keeps the single conversion path clean).
+  try {
+    var _p = location.pathname;
+    if (_p.indexOf('/lp/') === 0 || _p.indexOf('/event/') === 0) return;
+  } catch (e) {}
 
   var STORAGE_KEY = 'the5th_cookie_consent_v1';
   var CONSENT_VERSION = 1;

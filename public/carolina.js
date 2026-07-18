@@ -7,6 +7,12 @@
 (function () {
   'use strict';
   if (window.__carolinaLoaded) return;
+  // Distraction-free funnel pages: no chat widget on /lp/* or /event/* pages
+  // (keeps the single conversion path clean).
+  try {
+    var _cp = location.pathname;
+    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0) return;
+  } catch (e) {}
   window.__carolinaLoaded = true;
 
   // ── Keys ──

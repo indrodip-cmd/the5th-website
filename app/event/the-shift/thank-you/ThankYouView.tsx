@@ -16,12 +16,15 @@ const INK = '#1A1A2E'
 const MUTE = '#8A8075'
 const BORDER = '#E7E0D6'
 
-/* UTC times. 11:00 AM–12:30 PM ET during August (EDT = UTC-4) → 15:00–16:30 UTC. */
+/* UTC times. 11:00 AM–12:30 PM PT during August (PDT = UTC-7) → 18:00–19:30 UTC.
+   Calendar apps convert these Z times to each attendee's local zone. */
 const SESSIONS = [
-  { label: 'Day 1 — Overcome Your Mental & Money Blocks', date: 'Thursday, August 7, 2026', start: '20260807T150000Z', end: '20260807T163000Z' },
-  { label: 'Day 2 — Create Your Offer', date: 'Friday, August 8, 2026', start: '20260808T150000Z', end: '20260808T163000Z' },
-  { label: 'Day 3 — Get Better at Sales & Close With Confidence', date: 'Saturday, August 9, 2026', start: '20260809T150000Z', end: '20260809T163000Z' },
+  { label: 'Day 1 — Overcome Your Mental & Money Blocks', date: 'Thursday, August 7, 2026', start: '20260807T180000Z', end: '20260807T193000Z' },
+  { label: 'Day 2 — Create Your Offer', date: 'Friday, August 8, 2026', start: '20260808T180000Z', end: '20260808T193000Z' },
+  { label: 'Day 3 — Get Better at Sales & Close With Confidence', date: 'Saturday, August 9, 2026', start: '20260809T180000Z', end: '20260809T193000Z' },
 ]
+
+const TIME_LINE = '11:00 AM PT · 12:00 PM MT · 1:00 PM CT · 2:00 PM ET · 6:00 PM GMT'
 
 const EVENT_DESC =
   'The Shift — 3-Day Breakthrough Intensive with Indrodip Ghosh. The joining link will be emailed to you before we go live. Bring a pen — you will be writing, not just listening.'
@@ -147,7 +150,8 @@ export default function ThankYouView() {
           {SESSIONS.map((s) => (
             <div key={s.start} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 18, padding: '20px 22px' }}>
               <div style={{ fontFamily: SERIF, fontSize: 21, color: PLUM, lineHeight: 1.2 }}>{s.label}</div>
-              <div style={{ fontSize: 13.5, color: MUTE, margin: '6px 0 14px' }}>{s.date} · 11:00 AM ET</div>
+              <div style={{ fontSize: 13.5, color: INK, fontWeight: 600, margin: '6px 0 2px' }}>{s.date}</div>
+              <div style={{ fontSize: 12.5, color: MUTE, margin: '0 0 14px' }}>{TIME_LINE}</div>
               <div className="ty-row">
                 <a href={googleUrl(s)} target="_blank" rel="noopener noreferrer" style={{ ...goldBtn, background: '#fff', color: PLUM, border: `1px solid ${BORDER}` }}>
                   Add to Google

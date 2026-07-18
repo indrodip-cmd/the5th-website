@@ -19,15 +19,15 @@ const BORDER = '#E7E0D6'
 /* UTC times. 11:00 AM–12:30 PM PT during August (PDT = UTC-7) → 18:00–19:30 UTC.
    Calendar apps convert these Z times to each attendee's local zone. */
 const SESSIONS = [
-  { label: 'Day 1 — Overcome Your Mental & Money Blocks', date: 'Thursday, August 7, 2026', start: '20260807T180000Z', end: '20260807T193000Z' },
-  { label: 'Day 2 — Create Your Offer', date: 'Friday, August 8, 2026', start: '20260808T180000Z', end: '20260808T193000Z' },
-  { label: 'Day 3 — Get Better at Sales & Close With Confidence', date: 'Saturday, August 9, 2026', start: '20260809T180000Z', end: '20260809T193000Z' },
+  { label: 'Day 1 · Overcome Your Mental & Money Blocks', date: 'Thursday, August 7, 2026', start: '20260807T180000Z', end: '20260807T193000Z' },
+  { label: 'Day 2 · Create Your Offer', date: 'Friday, August 8, 2026', start: '20260808T180000Z', end: '20260808T193000Z' },
+  { label: 'Day 3 · Get Better at Sales & Close With Confidence', date: 'Saturday, August 9, 2026', start: '20260809T180000Z', end: '20260809T193000Z' },
 ]
 
 const TIME_LINE = '11:00 AM PT · 12:00 PM MT · 1:00 PM CT · 2:00 PM ET · 6:00 PM GMT'
 
 const EVENT_DESC =
-  'The Shift — 3-Day Breakthrough Intensive with Indrodip Ghosh. The joining link will be emailed to you before we go live. Bring a pen — you will be writing, not just listening.'
+  'The 3-Day Breakthrough Intensive with Indrodip Ghosh. The joining link will be emailed to you before we go live. Bring a pen, you will be writing, not just listening.'
 const LOCATION = 'Online (link emailed before the session)'
 
 const goldBtn: React.CSSProperties = {
@@ -49,7 +49,7 @@ const goldBtn: React.CSSProperties = {
 function googleUrl(s: (typeof SESSIONS)[number]) {
   const p = new URLSearchParams({
     action: 'TEMPLATE',
-    text: `The Shift · ${s.label}`,
+    text: `Breakthrough Intensive · ${s.label}`,
     dates: `${s.start}/${s.end}`,
     details: EVENT_DESC,
     location: LOCATION,
@@ -73,7 +73,7 @@ function icsFor(sessions: typeof SESSIONS) {
       `DTSTAMP:${stamp}`,
       `DTSTART:${s.start}`,
       `DTEND:${s.end}`,
-      `SUMMARY:The Shift · ${s.label}`,
+      `SUMMARY:Breakthrough Intensive · ${s.label}`,
       `DESCRIPTION:${EVENT_DESC}`,
       `LOCATION:${LOCATION}`,
       'BEGIN:VALARM',
@@ -177,7 +177,7 @@ export default function ThankYouView() {
           }}
         >
           <strong style={{ color: PLUM }}>One small ask:</strong> show up live if you possibly can. The hot-seat
-          coaching — where your offer and your words get workshopped in real time — only happens live. Replays are
+          coaching, where your offer and your words get workshopped in real time, only happens live. Replays are
           included, but the breakthroughs happen in the room.
         </div>
 

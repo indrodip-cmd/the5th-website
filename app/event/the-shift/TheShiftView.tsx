@@ -75,14 +75,14 @@ const INCLUDES = [
 /* Itemised value stack. Prices are anchoring values (what each piece is worth
    sold separately); attendees get all of it for $27. */
 const VALUE_STACK = [
-  { item: 'The 3-Day Breakthrough Intensive', desc: '3 live sessions (blocks, offer & sales) with Indrodip', price: '$497' },
-  { item: 'Live Hot-Seat Coaching', desc: 'Your offer and your exact words, workshopped live in the room', price: '$300' },
-  { item: 'The Breakthrough Workbook', desc: 'Our printable, fill-in companion so every insight sticks', price: '$47' },
-  { item: 'Lifetime Session Recordings', desc: 'Every session, yours to re-watch whenever you need it', price: '$97' },
-  { item: '7 Days of The5th AI, Free', desc: 'Your AI business coach, on call the moment the event ends', price: '$47' },
-  { item: 'Bonus: The Offer & Sales Scripts', desc: 'The exact frameworks and objection responses from Days 2 & 3', price: '$37' },
+  { item: 'The 3-Day Breakthrough Intensive', desc: '3 live sessions (blocks, offer & sales) with Indrodip', price: '$97' },
+  { item: 'Live Hot-Seat Coaching', desc: 'Your offer and your exact words, workshopped live in the room', price: '$37' },
+  { item: 'The Breakthrough Workbook', desc: 'Our printable, fill-in companion so every insight sticks', price: '$19' },
+  { item: 'Lifetime Session Recordings', desc: 'Every session, yours to re-watch whenever you need it', price: '$19' },
+  { item: '7 Days of The5th AI, Free', desc: 'Your AI business coach, on call the moment the event ends', price: '$15' },
+  { item: 'Bonus: The Offer & Sales Scripts', desc: 'The exact frameworks and objection responses from Days 2 & 3', price: '$10' },
 ]
-const VALUE_TOTAL = '$1,025'
+const VALUE_TOTAL = '$197'
 
 const STEPS = [
   { n: '1', t: 'Clear the block', d: 'Name the fear or money story that’s quietly kept you small, and move past it on Day 1.' },
@@ -196,9 +196,6 @@ export default function TheShiftView() {
               Hosted by <strong>Indrodip Ghosh</strong> · trusted by coaches &amp; consultants worldwide
             </div>
           </div>
-          <p className="ts-disclaimer">
-            The $5,000 reflects what’s possible when you apply everything you learn. Results vary and aren’t guaranteed.
-          </p>
         </div>
       </header>
 

@@ -20,6 +20,11 @@ const WHOP_HOSTED_URL = 'https://whop.com/10kroadmap-org/the-shift-b0/'
 /* Live session time: 11:00 AM PT (PDT, UTC-7 in August). */
 const TIME_LINE = '11:00 AM PT · 12 PM MT · 1 PM CT · 2 PM ET · 6 PM GMT'
 
+/* Promo video. Paste a YouTube/Vimeo EMBED url here (e.g.
+   'https://www.youtube.com/embed/VIDEO_ID' or 'https://player.vimeo.com/video/ID').
+   Leave empty to show the branded placeholder until the video is ready. */
+const VIDEO_EMBED_URL = ''
+
 const CLIENT_AVATARS = Array.from({ length: 8 }, (_, i) => `/clients/c${i + 1}.jpg`)
 
 const DAYS = [
@@ -198,6 +203,36 @@ export default function TheShiftView() {
           </div>
         </div>
       </header>
+
+      {/* Video */}
+      <section className="ts-band ts-band--mid ts-video-band">
+        <div className="ts-sec ts-narrow">
+          <div className="ts-center ts-head">
+            <div className="ts-eyebrow">Watch this first</div>
+            <h2 className="ts-h2">See what these 3 days will do for you.</h2>
+          </div>
+          <div className="ts-video">
+            {VIDEO_EMBED_URL ? (
+              <iframe
+                src={VIDEO_EMBED_URL}
+                title="The 3-Day Breakthrough Intensive"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            ) : (
+              <div className="ts-video__ph" role="img" aria-label="Video coming soon">
+                <span className="ts-video__play">▶</span>
+                <span className="ts-video__phText">Your invitation video will play here</span>
+              </div>
+            )}
+          </div>
+          <div className="ts-center" style={{ marginTop: 28 }}>
+            <a href="#reserve" className="ts-btn ts-btn--green">
+              Save my seat · $27
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* Promise */}
       <section className="ts-band ts-band--parch">
@@ -557,8 +592,8 @@ const CSS = `
 
 /* Nav */
 .ts-nav{position:sticky;top:0;z-index:40;background:rgba(250,246,240,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.ts-nav__in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
-.ts-nav__logo{height:32px;width:auto;display:block}
+.ts-nav__in{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.ts-nav__logo{height:60px;width:auto;display:block}
 
 /* Buttons */
 .ts-btn{display:inline-block;font-family:var(--sans);font-weight:600;font-size:.9375rem;letter-spacing:.02em;padding:1.05rem 2.4rem;border:none;cursor:pointer;text-decoration:none;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}
@@ -670,6 +705,13 @@ const CSS = `
 .ts-stack__today{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-top:12px;background:var(--parch-mid);border:1.5px solid var(--gold);font-weight:600;color:var(--plum)}
 .ts-stack__todayVal{font-family:var(--serif);font-weight:600;font-size:2.1rem;color:var(--green)}
 
+/* Video */
+.ts-video{position:relative;aspect-ratio:16/9;width:100%;background:var(--plum-dark);border:1px solid rgba(201,168,76,.3);box-shadow:0 30px 70px rgba(46,26,53,.22);overflow:hidden}
+.ts-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ts-video__ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(120% 90% at 50% 20%,#4a2f57 0%,var(--plum-dark) 60%,#1f1128 100%);color:rgba(255,255,255,.75)}
+.ts-video__play{width:76px;height:76px;border-radius:50%;background:rgba(201,168,76,.16);border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.7rem;padding-left:6px}
+.ts-video__phText{font-size:.9rem;letter-spacing:.04em}
+
 /* Bio: light band so the white-walled portrait blends via multiply */
 .ts-bio-band{background:var(--parch);position:relative;overflow:hidden;padding-bottom:0}
 .ts-bio{display:grid;grid-template-columns:400px 1fr;gap:56px;align-items:end}
@@ -719,8 +761,8 @@ const CSS = `
 .ts-trustrow{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;padding-top:22px;border-top:1px solid var(--border);font-size:.82rem;color:var(--muted)}
 
 /* Final CTA + footer logos */
-.ts-final__logo{height:34px;width:auto;display:block;margin:0 auto 24px;opacity:.95}
-.ts-footer__logo{height:30px;width:auto;display:block;margin:0 auto 16px}
+.ts-final__logo{height:68px;width:auto;display:block;margin:0 auto 24px;opacity:.95}
+.ts-footer__logo{height:60px;width:auto;display:block;margin:0 auto 16px}
 
 /* FAQ */
 .ts-faq{display:grid;gap:0;border-top:1px solid var(--border)}

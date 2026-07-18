@@ -335,14 +335,14 @@ export default function TheShiftView() {
       </section>
 
       {/* Founder */}
-      <section className="ts-band ts-band--plum">
+      <section className="ts-band ts-bio-band">
         <div className="ts-sec ts-bio">
           <div className="ts-bio__portrait">
             <img src="/images/founder.png" alt="Indrodip Ghosh" />
           </div>
           <div className="ts-bio__text">
-            <div className="ts-eyebrow ts-eyebrow--gold">Your host</div>
-            <h2 className="ts-h2 ts-h2--onplum">Indrodip Ghosh</h2>
+            <div className="ts-eyebrow">Your host</div>
+            <h2 className="ts-h2">Indrodip Ghosh</h2>
             <p>
               I know what it feels like to believe in something completely and watch it fall apart anyway. I put close
               to <strong>$30,000</strong> into courses and masterminds looking for the piece I thought I was missing. I
@@ -635,6 +635,17 @@ const CSS = `
 .ts-stack__totalVal{font-family:var(--serif);font-size:1.5rem;color:var(--ink-mid);text-decoration:line-through;text-decoration-color:rgba(138,128,117,.7)}
 .ts-stack__today{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-top:12px;background:var(--parch-mid);border:1.5px solid var(--gold);font-weight:600;color:var(--plum)}
 .ts-stack__todayVal{font-family:var(--serif);font-weight:600;font-size:2.1rem;color:var(--green)}
+
+/* Bio: light band so the white-walled portrait blends via multiply */
+.ts-bio-band{background:var(--parch);position:relative;overflow:hidden;padding-bottom:0}
+.ts-bio{display:grid;grid-template-columns:400px 1fr;gap:56px;align-items:end}
+.ts-bio__portrait{align-self:end;position:relative}
+.ts-bio__portrait:after{content:'';position:absolute;left:8%;right:8%;bottom:3%;height:20px;background:radial-gradient(50% 100% at 50% 0,rgba(46,26,53,.18),transparent 72%);filter:blur(3px)}
+.ts-bio__portrait img{width:400px;max-width:82vw;display:block;margin:0 auto;mix-blend-mode:multiply}
+.ts-bio__text{padding-bottom:clamp(52px,7vw,88px)}
+.ts-bio__text p{font-size:1.0625rem;line-height:1.75;color:var(--ink-mid);margin:16px 0 0}
+.ts-bio__text strong{color:var(--plum);font-weight:600}
+.ts-bio__pull{font-family:var(--serif)!important;font-style:italic;font-size:1.5rem!important;line-height:1.4!important;color:var(--plum-mid)!important;margin-top:22px!important}
 
 /* Guarantee (oversized) */
 .ts-guarantee .ts-seal{width:118px;height:118px;border-radius:50%;margin:0 auto 22px;background:rgba(255,255,255,.06);border:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 8px rgba(201,168,76,.12)}

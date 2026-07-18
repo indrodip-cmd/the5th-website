@@ -36,6 +36,14 @@ const nextConfig: NextConfig = {
       { source: '/10k-coaching', destination: '/fast-forward', permanent: true },
       { source: '/community', destination: '/collective', permanent: true },
       { source: '/community/:path*', destination: '/collective/:path*', permanent: true },
+      // Collapse the directly-reachable static-file URLs onto their clean
+      // paths so Google never indexes both /about and /about/index.html.
+      { source: '/index.html', destination: '/', permanent: true },
+      ...MARKETING_PAGES.map((p) => ({
+        source: `/${p}/index.html`,
+        destination: `/${p}`,
+        permanent: true,
+      })),
     ];
   },
   async rewrites() {

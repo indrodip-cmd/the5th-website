@@ -145,7 +145,7 @@ export default function TheShiftView() {
       <nav className="ts-nav">
         <div className="ts-nav__in">
           <a href="/" aria-label="The5th Consulting">
-            <img src="/images/logo.png" alt="The5th Consulting" className="ts-nav__logo" />
+            <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" className="ts-nav__logo" />
           </a>
           <a href="#reserve" className="ts-btn ts-btn--green ts-btn--sm">
             Save my seat · $27
@@ -407,6 +407,38 @@ export default function TheShiftView() {
                 </li>
               ))}
             </ul>
+
+            {/* Guarantee reassurance beside the form */}
+            <div className="ts-mini-guarantee">
+              <div className="ts-mini-seal">
+                <span>100%</span>
+                <small>SAFE</small>
+              </div>
+              <div>
+                <div className="ts-mini-guarantee__t">Your seat is 100% risk-free</div>
+                <div className="ts-mini-guarantee__d">
+                  If it’s not worth far more than $27, email us within 30 days and get every cent back. And if you don’t
+                  ask, your $27 funds <em className="ts-i-plum">The Shift</em>. You cannot lose.
+                </div>
+              </div>
+            </div>
+
+            {/* Social proof */}
+            <blockquote className="ts-quote">
+              <p>
+                “I’d spent over $10,000 on coaches before Indrodip. None gave me the clarity he did. Six weeks later I
+                closed my first client.”
+              </p>
+              <footer>
+                <span className="ts-quote__dot" /> Private coaching client
+              </footer>
+            </blockquote>
+
+            <div className="ts-trustrow">
+              <span>🔒 Secure checkout</span>
+              <span>⚡ Instant access</span>
+              <span>↩ 30-day guarantee</span>
+            </div>
           </div>
 
           <div className="ts-checkout__right">
@@ -459,6 +491,7 @@ export default function TheShiftView() {
       {/* Final CTA (plum) */}
       <section className="ts-band ts-band--plum ts-final">
         <div className="ts-sec ts-narrow ts-center">
+          <img src="/images/logo-white.png" alt="The5th Consulting" className="ts-final__logo" />
           <hr className="ts-rule" />
           <h2 className="ts-h1 ts-final__h">
             3 days from now, you could have your <em>why</em>, your offer, and your next $5,000 plan.
@@ -474,6 +507,7 @@ export default function TheShiftView() {
 
       {/* Footer */}
       <footer className="ts-footer">
+        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" className="ts-footer__logo" />
         <div className="ts-footer__links">
           <a href="/privacy">Privacy</a>
           <span>·</span>
@@ -670,6 +704,23 @@ const CSS = `
 .ts-whop{max-width:500px;width:100%;margin:14px auto 0;min-height:80px;overflow:hidden}
 .ts-price-card__secure{text-align:center;font-size:.72rem;color:rgba(255,255,255,.5);margin-top:12px;line-height:1.5}
 .ts-price-card__fallback{display:block;text-align:center;font-size:.76rem;color:var(--gold);text-decoration:underline;margin-top:8px}
+
+/* Checkout left: reassurance + proof (fills the column beside the tall form) */
+.ts-mini-guarantee{display:flex;gap:16px;align-items:flex-start;margin-top:32px;padding:20px 22px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--green)}
+.ts-mini-seal{width:56px;height:56px;border-radius:50%;flex-shrink:0;background:#eaf3ee;border:1.5px solid var(--green);color:var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.ts-mini-seal span{font-family:var(--serif);font-weight:700;font-size:1.15rem}
+.ts-mini-seal small{font-size:.5rem;letter-spacing:.18em;margin-top:2px}
+.ts-mini-guarantee__t{font-family:var(--serif);font-size:1.3rem;color:var(--plum)}
+.ts-mini-guarantee__d{font-size:.9rem;line-height:1.55;color:var(--ink-mid);margin-top:4px}
+.ts-quote{margin:24px 0 0;padding:2px 0 2px 22px;border-left:2px solid var(--gold)}
+.ts-quote p{font-family:var(--serif);font-style:italic;font-size:1.35rem;line-height:1.5;color:var(--plum);margin:0}
+.ts-quote footer{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);margin-top:12px;letter-spacing:.04em;text-transform:uppercase}
+.ts-quote__dot{width:6px;height:6px;border-radius:50%;background:var(--gold-dk)}
+.ts-trustrow{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;padding-top:22px;border-top:1px solid var(--border);font-size:.82rem;color:var(--muted)}
+
+/* Final CTA + footer logos */
+.ts-final__logo{height:34px;width:auto;display:block;margin:0 auto 24px;opacity:.95}
+.ts-footer__logo{height:30px;width:auto;display:block;margin:0 auto 16px}
 
 /* FAQ */
 .ts-faq{display:grid;gap:0;border-top:1px solid var(--border)}

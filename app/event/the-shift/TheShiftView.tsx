@@ -80,14 +80,14 @@ const INCLUDES = [
 /* Itemised value stack. Prices are anchoring values (what each piece is worth
    sold separately); attendees get all of it for $27. */
 const VALUE_STACK = [
-  { item: 'The 3-Day Breakthrough Intensive', desc: '3 live sessions (blocks, offer & sales) with Indrodip', price: '$97' },
-  { item: 'Live Hot-Seat Coaching', desc: 'Your offer and your exact words, workshopped live in the room', price: '$37' },
+  { item: 'The 3-Day Breakthrough Intensive', desc: '3 live sessions (blocks, offer & sales) with Indrodip', price: '$297' },
+  { item: 'Live Hot-Seat Coaching', desc: 'Your offer and your exact words, workshopped live in the room', price: '$200' },
+  { item: 'Bonus: The Offer & Sales Scripts', desc: 'The exact frameworks and objection responses from Days 2 & 3', price: '$100' },
+  { item: 'Lifetime Session Recordings', desc: 'Every session, yours to re-watch whenever you need it', price: '$97' },
+  { item: '7 Days of The5th AI, Free', desc: 'Your AI business coach, on call the moment the event ends', price: '$47' },
   { item: 'The Breakthrough Workbook', desc: 'Our printable, fill-in companion so every insight sticks', price: '$19' },
-  { item: 'Lifetime Session Recordings', desc: 'Every session, yours to re-watch whenever you need it', price: '$19' },
-  { item: '7 Days of The5th AI, Free', desc: 'Your AI business coach, on call the moment the event ends', price: '$15' },
-  { item: 'Bonus: The Offer & Sales Scripts', desc: 'The exact frameworks and objection responses from Days 2 & 3', price: '$10' },
 ]
-const VALUE_TOTAL = '$197'
+const VALUE_TOTAL = '$760'
 
 const STEPS = [
   { n: '1', t: 'Clear the block', d: 'Name the fear or money story that’s quietly kept you small, and move past it on Day 1.' },
@@ -787,23 +787,69 @@ const CSS = `
 .ts-mcta__was{font-size:.68rem;color:rgba(255,255,255,.5);text-decoration:line-through}
 .ts-mcta__now{font-family:var(--serif);font-size:1.2rem;color:var(--gold);font-weight:600}
 
-/* Responsive */
-@media(max-width:860px){
-  .ts-steps{grid-template-columns:1fr;gap:30px;max-width:420px}
-  .ts-days{grid-template-columns:1fr}
-  .ts-walk{grid-template-columns:1fr;gap:28px}
-  .ts-bio{grid-template-columns:1fr;gap:26px;text-align:center}
+/* ── Responsive ──
+   Tuned for phones (portrait/landscape) and iPad (portrait ~768-834,
+   landscape ~1024-1194) in both orientations. */
+
+/* Small laptops / iPad landscape: tighten the two-column blocks */
+@media(max-width:1080px){
+  .ts-checkout{gap:40px}
+  .ts-walk{gap:44px}
+  .ts-bio{grid-template-columns:360px 1fr;gap:44px}
+  .ts-bio__portrait img{width:360px}
+}
+
+/* iPad portrait & below: stack the side-by-side sections */
+@media(max-width:900px){
+  .ts-days{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+  .ts-walk{grid-template-columns:1fr;gap:30px}
+  .ts-walk__intro .ts-rule--left{margin-left:auto;margin-right:auto}
+  .ts-walk,.ts-walk__intro{text-align:center}
+  .ts-checklist{max-width:520px;margin-left:auto;margin-right:auto;text-align:left}
+  .ts-bio{grid-template-columns:1fr;gap:20px;text-align:center;align-items:center}
+  .ts-bio__text{padding-bottom:0}
   .ts-bio__pull{text-align:center}
-  .ts-checkout{grid-template-columns:1fr;gap:30px}
-  .ts-checkout__right{position:static}
+  .ts-bio-band{padding-bottom:clamp(56px,8vw,92px)}
+  .ts-bio__portrait img{width:320px}
+  .ts-checkout{grid-template-columns:1fr;gap:34px}
+  .ts-checkout__right{position:static;max-width:460px;width:100%;margin:0 auto}
+  .ts-checkout__left{max-width:560px;margin:0 auto}
+  .ts-mcta{display:flex}
+  .ts-footer{padding-bottom:90px}
+}
+
+/* Large phones landscape / small tablets */
+@media(max-width:680px){
+  .ts-steps{grid-template-columns:1fr;gap:28px;max-width:340px;margin:0 auto}
   .ts-pains{grid-template-columns:1fr;gap:0}
   .ts-guarantee__box{text-align:left}
-  .ts-mcta{display:flex}
-  .ts-footer{padding-bottom:88px}
+  .ts-sec{padding:0 20px}
 }
+
+/* Phones portrait */
 @media(max-width:520px){
-  .ts-nav__in{padding:10px 16px}
-  .ts-hero__cta{flex-direction:column;gap:16px}
+  .ts-ribbon{font-size:.68rem;padding:8px 12px}
+  .ts-nav__in{padding:11px 16px}
+  .ts-nav__logo{height:46px}
+  .ts-btn--sm{padding:.6rem 1rem;font-size:.78rem}
+  .ts-hero__cta{flex-direction:column;gap:14px}
   .ts-hero__cta .ts-btn{width:100%;text-align:center}
+  .ts-time-chip{font-size:.72rem;padding:.5rem .85rem;letter-spacing:0}
+  .ts-stack{padding:20px 18px}
+  .ts-stack__item{font-size:1.15rem}
+  .ts-stack__price{font-size:.95rem}
+  .ts-stack__todayVal{font-size:1.75rem}
+  .ts-final__logo{height:52px}
+  .ts-footer__logo{height:48px}
+  .ts-mini-guarantee{flex-direction:column;gap:12px}
+  .ts-quote p{font-size:1.2rem}
+  .ts-trustrow{gap:12px;font-size:.76rem}
+}
+
+/* Very small phones */
+@media(max-width:380px){
+  .ts-hero__in{padding-left:18px;padding-right:18px}
+  .ts-time-chip{white-space:normal;text-align:center;line-height:1.5}
+  .ts-mcta__now{font-size:1.05rem}
 }
 `

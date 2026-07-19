@@ -109,6 +109,15 @@
       if (d.email) { leadEmail = String(d.email).trim(); try { localStorage.setItem('cw_lead_email', leadEmail); } catch (x) {} }
       try { if (typeof isOpen !== 'undefined' && isOpen && typeof tab !== 'undefined' && tab === 'home' && typeof renderPanels === 'function') renderPanels(); } catch (x) {}
     });
+    // Open Carolina with a contextual message from anywhere on the site
+    // (e.g. the personalized "pick up where we left off" ribbon). Two-way by design.
+    window.addEventListener('the5th:invite', function (e) {
+      try {
+        var d = (e && e.detail) || {};
+        toggle(true);
+        if (d.seed) startNewChat(String(d.seed), d.ctx ? String(d.ctx) : '');
+      } catch (x) {}
+    });
   } catch (e) {}
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   // Respect the OS "reduce motion" setting — disables scale/slide/streaming.

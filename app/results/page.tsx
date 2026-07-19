@@ -424,12 +424,14 @@ export default function ResultsPage() {
       {/* closing CTA */}
       <section className="rwrap" style={{ padding: '8px 24px 8px' }}>
         <div style={{ background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', borderRadius: 20, padding: 'clamp(36px,5vw,60px) clamp(28px,5vw,52px)', textAlign: 'center' }}>
-          <span style={{ ...eyebrow, color: C.gold, marginBottom: 12 }}>Your story could be next</span>
+          <span style={{ ...eyebrow, color: C.gold, marginBottom: 12 }}>{firstName ? `${firstName}, your story could be next` : 'Your story could be next'}</span>
           <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(26px,4vw,42px)', fontWeight: 500, color: '#fff', lineHeight: 1.1, maxWidth: 600, margin: '0 auto 16px' }}>
-            Find the next move for <em style={{ fontStyle: 'italic', color: C.gold }}>your</em> business.
+            Find the next move for <em style={{ fontStyle: 'italic', color: C.gold }}>{firstName ? `${firstName}'s` : 'your'}</em> business.
           </h2>
           <p style={{ fontSize: 16, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            Take the free assessment to discover your Expert Income Archetype and the exact next step, then we map your roadmap together.
+            {firstName
+              ? `We've mapped 15+ businesses like yours, ${firstName}. Take the free assessment to find your Expert Income Archetype and exact next step — then we map your roadmap together.`
+              : 'Take the free assessment to discover your Expert Income Archetype and the exact next step, then we map your roadmap together.'}
           </p>
           <a href="/quiz" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 38px', borderRadius: 7, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
             Take the free assessment →

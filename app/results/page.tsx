@@ -38,7 +38,7 @@ const STUDIES: Study[] = [
   {
     slug: 'abbas-jamie',
     name: 'Abbas Jamie',
-    image: '/clients/abbas.jpg',
+    image: '/clients/cases/abbas-jamie.jpeg',
     category: 'Leadership & Executive',
     niche: 'Executive & conscious-living coaching',
     location: 'Indonesia',
@@ -61,7 +61,7 @@ const STUDIES: Study[] = [
   {
     slug: 'laurie-gerber',
     name: 'Laurie Gerber',
-    image: '/clients/laurie.jpg',
+    image: '/clients/cases/laurie-gerber.png',
     category: 'Relationships',
     niche: 'Dating coach for professionals 50+',
     location: 'USA',
@@ -83,7 +83,7 @@ const STUDIES: Study[] = [
   {
     slug: 'bharti-chauhan',
     name: 'Bharti Chauhan',
-    image: '/clients/c3.jpg',
+    image: '/clients/cases/bharti-chauhan.png',
     category: 'Relationships',
     niche: 'Marriage & couples retreats',
     location: 'India',
@@ -105,7 +105,7 @@ const STUDIES: Study[] = [
   {
     slug: 'gurpreet',
     name: 'Gurpreet',
-    image: '/clients/c4.jpg',
+    image: '/clients/cases/gurpreet.png',
     category: 'Business & Consulting',
     niche: 'Coaching business, from zero',
     location: '',
@@ -171,7 +171,7 @@ const STUDIES: Study[] = [
   {
     slug: 'amalia',
     name: 'Amalia',
-    image: '/clients/c7.jpg',
+    image: '/clients/cases/amalia.png',
     category: 'Health & Fitness',
     niche: 'Fitness coaching',
     location: 'Canada',
@@ -193,7 +193,7 @@ const STUDIES: Study[] = [
   {
     slug: 'girish',
     name: 'Girish',
-    image: '/clients/c8.jpg',
+    image: '/clients/cases/girish.png',
     category: 'Mindset',
     niche: 'Celebrity Law of Attraction coaching',
     location: 'India',
@@ -215,7 +215,7 @@ const STUDIES: Study[] = [
   {
     slug: 'max',
     name: 'Max',
-    image: '/clients/c9.jpg',
+    image: '/clients/cases/max.jpg',
     category: 'Relationships',
     niche: 'Divorce coaching for men',
     location: 'USA',
@@ -237,6 +237,7 @@ const STUDIES: Study[] = [
   {
     slug: 'maham-kabani',
     name: 'Maham Kabani',
+    image: '/clients/cases/maham-kabani.png',
     category: 'Personal Branding',
     niche: 'Social media & personal branding',
     location: 'Dubai',
@@ -258,7 +259,7 @@ const STUDIES: Study[] = [
   {
     slug: 'angela',
     name: 'Angela',
-    image: '/clients/angela.jpg',
+    image: '/clients/cases/angela.png',
     category: 'Career Coaching',
     niche: 'Career coaching',
     location: 'UK',
@@ -280,7 +281,7 @@ const STUDIES: Study[] = [
   {
     slug: 'gabe',
     name: 'Gabe',
-    image: '/clients/gabe.jpg',
+    image: '/clients/cases/gabe.png',
     category: 'Health & Fitness',
     niche: 'Fitness coaching for men 40+',
     location: '',
@@ -302,6 +303,7 @@ const STUDIES: Study[] = [
   {
     slug: 'kate-winchester',
     name: 'Kate Winchester',
+    image: '/clients/cases/kate-winchester.png',
     category: 'Health & Fitness',
     niche: "Women's wellness coaching",
     location: 'New Zealand',
@@ -323,6 +325,7 @@ const STUDIES: Study[] = [
   {
     slug: 'milesa-arjoon-greene',
     name: 'Milesa Arjoon Greene',
+    image: '/clients/cases/milesa-arjoon-greene.png',
     category: 'Mindset',
     niche: 'EFT & anxiety coaching',
     location: '',
@@ -344,6 +347,7 @@ const STUDIES: Study[] = [
   {
     slug: 'susan-taylor',
     name: 'Susan Taylor',
+    image: '/clients/cases/susan-taylor.jpg',
     category: 'Personal Finance Coaching',
     niche: 'Personal finance coaching for homemakers',
     location: '',

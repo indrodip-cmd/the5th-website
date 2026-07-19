@@ -13,6 +13,7 @@
     <script defer src="/carolina.js"></script>
   <script defer src="/personalize.js"></script>
   <script defer src="/testimonials.js"></script>
+  <script defer src="/story-scroll.js"></script>
     <!-- Homepage promotions (CMS-driven premium product cards) -->
     <script defer src="/promos.js"></script>
 
@@ -1869,6 +1870,72 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
       </div>
 
     </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     THE JOURNEY — scroll-driven emotional story (SVG face)
+     A cinematic scrollytelling scene: as you scroll, the face shifts gaze
+     and expression from "stuck, looking away" to "relieved, looking up",
+     the world warms from cool to gold, and aspiration words drift in.
+     The #tsx-face SVG is swappable for AI-rendered face frames later.
+====================================================== -->
+<section class="tsx-story" id="t5-story" aria-label="Your journey with The5th">
+  <style>
+    .tsx-story{position:relative;height:340vh}
+    .tsx-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .tsx-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#EAE7EC,#D2CDD8)}
+    .tsx-vign{position:absolute;inset:0;z-index:1;background:radial-gradient(120% 90% at 50% 32%,transparent 42%,rgba(46,26,53,.16));pointer-events:none}
+    .tsx-words{position:absolute;inset:0;z-index:2;pointer-events:none}
+    .tsx-word{position:absolute;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:#B0902F;opacity:0;white-space:nowrap;text-shadow:0 2px 24px rgba(255,255,255,.55);will-change:transform,opacity}
+    .tsx-face{position:relative;z-index:3;width:min(46vh,360px);height:auto;filter:drop-shadow(0 26px 54px rgba(46,26,53,.2))}
+    .tsx-copy{position:relative;z-index:3;margin-top:2.4vh;width:100%;max-width:640px;min-height:170px}
+    .tsx-beat{position:absolute;left:0;right:0;top:0;opacity:0;padding:0 24px;text-align:center;will-change:opacity}
+    .tsx-beat h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(25px,4.6vw,46px);line-height:1.08;letter-spacing:-.02em;color:#2E1A35;margin:0 0 10px}
+    .tsx-beat p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(15px,2vw,18px);line-height:1.6;color:#4a4550;margin:0 auto;max-width:520px}
+    .tsx-cta{position:absolute;z-index:4;bottom:7.5vh;opacity:0;transition:opacity .25s}
+    .tsx-cta a{display:inline-block;background:linear-gradient(180deg,#E4C879,#C9A84C 60%,#B0902F);color:#2E1A35;font:700 16px/1 'Inter',system-ui,sans-serif;padding:16px 34px;border-radius:8px;text-decoration:none;box-shadow:0 16px 40px rgba(201,168,76,.34)}
+    .tsx-hint{position:absolute;z-index:4;bottom:4.5vh;font:600 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8A8075}
+    .tsx-hint span{display:inline-block;animation:tsxbob 1.6s ease-in-out infinite}
+    @keyframes tsxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+    @media(max-width:640px){.tsx-story{height:300vh}.tsx-face{width:min(38vh,240px)}.tsx-copy{min-height:200px}}
+    @media(prefers-reduced-motion:reduce){.tsx-hint span{animation:none}}
+  </style>
+  <div class="tsx-stage">
+    <div class="tsx-bg" id="tsx-bg"></div>
+    <div class="tsx-vign"></div>
+    <div class="tsx-words" id="tsx-words">
+      <span class="tsx-word" data-p="0.58" style="left:11%;top:29%;font-size:clamp(20px,3vw,36px)">freedom</span>
+      <span class="tsx-word" data-p="0.66" style="right:13%;top:25%;font-size:clamp(18px,2.6vw,30px)">travel</span>
+      <span class="tsx-word" data-p="0.74" style="left:15%;bottom:31%;font-size:clamp(18px,2.6vw,30px)">independence</span>
+      <span class="tsx-word" data-p="0.82" style="right:11%;bottom:33%;font-size:clamp(20px,3vw,34px)">$10K months</span>
+      <span class="tsx-word" data-p="0.90" style="left:45%;top:15%;font-size:clamp(16px,2.2vw,26px)">time</span>
+    </div>
+
+    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A face reflecting your journey">
+      <g id="tsx-head">
+        <circle cx="220" cy="215" r="150" fill="rgba(255,255,255,.07)" stroke="#2E1A35" stroke-width="2.4"/>
+        <ellipse id="tsx-eyeLs" cx="175" cy="198" rx="27" ry="16" fill="#FBF8F2" stroke="#2E1A35" stroke-width="2.4"/>
+        <ellipse id="tsx-eyeRs" cx="265" cy="198" rx="27" ry="16" fill="#FBF8F2" stroke="#2E1A35" stroke-width="2.4"/>
+        <circle id="tsx-pupilL" cx="175" cy="198" r="8.5" fill="#2E1A35"/>
+        <circle id="tsx-pupilR" cx="265" cy="198" r="8.5" fill="#2E1A35"/>
+        <path id="tsx-browL" d="M148 166 Q175 160 202 166" fill="none" stroke="#2E1A35" stroke-width="3.4" stroke-linecap="round"/>
+        <path id="tsx-browR" d="M238 166 Q265 160 292 166" fill="none" stroke="#2E1A35" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M220 210 L214 246 Q220 252 226 246" fill="none" stroke="#2E1A35" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+        <path id="tsx-mouth" d="M180 288 Q220 288 260 288" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
+      </g>
+    </svg>
+
+    <div class="tsx-copy">
+      <div class="tsx-beat" data-c="0.08"><h3>Right now, it's all still inside you.</h3><p>Decades of expertise, skill, and hard-won judgement — with nowhere to go.</p></div>
+      <div class="tsx-beat" data-c="0.29"><h3>You've tried everything. Alone.</h3><p>The courses, the coaches, the content. Still stuck, still trading hours for far too little.</p></div>
+      <div class="tsx-beat" data-c="0.50"><h3>Then something finally fits.</h3><p>A proven system — and someone who sees exactly what your experience is worth.</p></div>
+      <div class="tsx-beat" data-c="0.72"><h3>The first client. The first real income.</h3><p>The knot in your chest loosens. It's working. It's actually working.</p></div>
+      <div class="tsx-beat" data-c="0.92"><h3>Freedom, on your terms.</h3><p>Time. Travel. Independence. Income that never asks permission — the life your expertise was always meant to buy.</p></div>
+    </div>
+
+    <div class="tsx-cta" id="tsx-cta"><a href="https://the5th.consulting/quiz">Start your story →</a></div>
+    <div class="tsx-hint" id="tsx-hint"><span>Scroll to begin ↓</span></div>
   </div>
 </section>
 

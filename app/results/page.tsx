@@ -505,29 +505,19 @@ function StudyCard({ study, onOpen }: { study: Study; onOpen: () => void }) {
   )
 }
 
-/* ════════ Video review card (lazy — loads the embed only on click) ════════ */
+/* ════════ Video review card ════════ */
 function VideoReviewCard({ review, index }: { review: VideoReview; index: number }) {
-  const [playing, setPlaying] = useState(false)
   return (
-    <figure className="vcard" style={{ breakInside: 'avoid', marginBottom: 20, background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, overflow: 'hidden', boxShadow: '0 14px 34px -30px rgba(46,26,53,.6)' }}>
-      <div style={{ position: 'relative', width: '100%', aspectRatio: `${review.w} / ${review.h}`, background: `linear-gradient(150deg,${C.plum},${C.plumDark} 55%,${C.plumDeep})` }}>
-        {playing ? (
-          <iframe
-            src={`${review.src}&autoplay=true`}
-            title={`Client review ${index + 1}`}
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            allowFullScreen
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
-          />
-        ) : (
-          <button onClick={() => setPlaying(true)} aria-label={`Play client review ${index + 1}`}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: 20 }}>
-            <span style={{ width: 62, height: 62, borderRadius: '50%', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(201,168,76,.4)' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill={C.plumDark} style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z"/></svg>
-            </span>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>Watch review</span>
-          </button>
-        )}
+    <figure className="vcard" style={{ breakInside: 'avoid', marginBottom: 20, background: C.plumDeep, borderRadius: 16, overflow: 'hidden', boxShadow: '0 14px 34px -30px rgba(46,26,53,.6)' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: `${review.w} / ${review.h}` }}>
+        <iframe
+          src={review.src}
+          title={`Client review ${index + 1}`}
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          allowFullScreen
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+        />
       </div>
     </figure>
   )

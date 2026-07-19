@@ -258,6 +258,7 @@ const STUDIES: Study[] = [
   {
     slug: 'angela',
     name: 'Angela',
+    image: '/clients/angela.jpg',
     category: 'Career Coaching',
     niche: 'Career coaching',
     location: 'UK',
@@ -279,6 +280,7 @@ const STUDIES: Study[] = [
   {
     slug: 'gabe',
     name: 'Gabe',
+    image: '/clients/gabe.jpg',
     category: 'Health & Fitness',
     niche: 'Fitness coaching for men 40+',
     location: '',
@@ -338,6 +340,26 @@ const STUDIES: Study[] = [
       'Channel-specific messaging strategy in place',
     ],
     tags: ['eft', 'anxiety', 'women', 'corporate', 'tapping', 'content strategy', 'messaging', 'emotional freedom technique'],
+  },
+  {
+    slug: 'susan-taylor',
+    name: 'Susan Taylor',
+    category: 'Personal Finance Coaching',
+    niche: 'Personal finance coaching for homemakers',
+    location: '',
+    tagline: 'A Finance-Degree Housewife Turns Decades of Support Into Her Own Business',
+    background:
+      "Susan spent her life supporting her entrepreneur husband. She holds a finance degree and had learned personal finance deeply through years of managing her household's financial decisions, but had never built anything of her own.",
+    challenge:
+      'She wanted to help other homemakers build something of their own. She invested more than $20,000 across different programs trying to launch, and failed every time.',
+    whatWeDid:
+      'Inside the 10K Roadmap program, we taught her how to create content, sell, and pitch without overwhelming herself. She built real confidence in the process.',
+    headline: { v: '$8,000', period: 'in 3 months' },
+    bullets: [
+      '$8,000 in revenue in 3 months',
+      'Confidence and a repeatable sales process built from scratch',
+    ],
+    tags: ['personal finance', 'finance', 'homemaker', 'housewife', 'content', 'sales', 'confidence', 'women'],
   },
 ]
 

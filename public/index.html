@@ -1885,12 +1885,12 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     .tsx-story{position:relative;height:340vh}
     .tsx-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
     .tsx-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#EAE7EC,#D2CDD8)}
-    .tsx-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;pointer-events:none}
-    .tsx-scrim{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(250,246,240,.46),rgba(250,246,240,.30));pointer-events:none}
+    .tsx-glow{position:absolute;z-index:1;left:50%;top:42%;width:min(74vh,620px);height:min(74vh,620px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.55),rgba(201,168,76,0) 62%);opacity:0;filter:blur(4px);pointer-events:none}
     .tsx-vign{position:absolute;inset:0;z-index:2;background:radial-gradient(120% 90% at 50% 32%,transparent 42%,rgba(46,26,53,.16));pointer-events:none}
     .tsx-words{position:absolute;inset:0;z-index:3;pointer-events:none}
     .tsx-word{position:absolute;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:#B0902F;opacity:0;white-space:nowrap;text-shadow:0 2px 24px rgba(255,255,255,.55);will-change:transform,opacity}
-    .tsx-face{position:relative;z-index:4;width:min(46vh,360px);height:auto;filter:drop-shadow(0 26px 54px rgba(46,26,53,.2))}
+    .tsx-face{position:relative;z-index:4;width:min(48vh,380px);height:auto;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));animation:tsxFloat 5.5s ease-in-out infinite;will-change:transform}
+    @keyframes tsxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
     .tsx-copy{position:relative;z-index:4;margin-top:2.4vh;width:100%;max-width:640px;min-height:170px}
     .tsx-beat{position:absolute;left:0;right:0;top:0;opacity:0;padding:0 24px;text-align:center;will-change:opacity}
     .tsx-beat h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(25px,4.6vw,46px);line-height:1.08;letter-spacing:-.02em;color:#2E1A35;margin:0 0 10px}
@@ -1900,15 +1900,14 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     .tsx-hint{position:absolute;z-index:5;bottom:4.5vh;font:600 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8A8075}
     .tsx-hint span{display:inline-block;animation:tsxbob 1.6s ease-in-out infinite}
     @keyframes tsxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+    .tsx-prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:5;background:rgba(46,26,53,.09)}
+    .tsx-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E4C879,#C9A84C 60%,#B0902F)}
     @media(max-width:640px){.tsx-story{height:300vh}.tsx-face{width:min(38vh,240px)}.tsx-copy{min-height:200px}}
-    @media(prefers-reduced-motion:reduce){.tsx-hint span{animation:none}}
+    @media(prefers-reduced-motion:reduce){.tsx-hint span,.tsx-face{animation:none}}
   </style>
   <div class="tsx-stage">
     <div class="tsx-bg" id="tsx-bg"></div>
-    <!-- Cinematic mood footage (Pexels, free license): rainy glass fades out as a golden horizon fades in. Loaded on capable devices only; gradient is the fallback. -->
-    <video class="tsx-vid" id="tsx-vidStruggle" muted loop playsinline preload="none" data-src="/images/story/struggle.mp4" aria-hidden="true"></video>
-    <video class="tsx-vid" id="tsx-vidFreedom" muted loop playsinline preload="none" data-src="/images/story/freedom.mp4" aria-hidden="true"></video>
-    <div class="tsx-scrim"></div>
+    <div class="tsx-glow" id="tsx-glow"></div>
     <div class="tsx-vign"></div>
     <div class="tsx-words" id="tsx-words">
       <span class="tsx-word" data-p="0.58" style="left:11%;top:29%;font-size:clamp(20px,3vw,36px)">freedom</span>
@@ -1918,17 +1917,41 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
       <span class="tsx-word" data-p="0.90" style="left:45%;top:15%;font-size:clamp(16px,2.2vw,26px)">time</span>
     </div>
 
-    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A face reflecting your journey">
+    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Quinn, your guide through the journey">
+      <defs>
+        <radialGradient id="tsxHeadG" cx="42%" cy="34%" r="72%">
+          <stop offset="0%" stop-color="#FFFDF8"/>
+          <stop offset="60%" stop-color="#FBF3E4"/>
+          <stop offset="100%" stop-color="#F2E4C9"/>
+        </radialGradient>
+        <linearGradient id="tsxBodyG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4E3158"/>
+          <stop offset="100%" stop-color="#2E1A35"/>
+        </linearGradient>
+      </defs>
       <g id="tsx-head">
-        <circle cx="220" cy="215" r="150" fill="rgba(255,255,255,.07)" stroke="#2E1A35" stroke-width="2.4"/>
-        <ellipse id="tsx-eyeLs" cx="175" cy="198" rx="27" ry="16" fill="#FBF8F2" stroke="#2E1A35" stroke-width="2.4"/>
-        <ellipse id="tsx-eyeRs" cx="265" cy="198" rx="27" ry="16" fill="#FBF8F2" stroke="#2E1A35" stroke-width="2.4"/>
-        <circle id="tsx-pupilL" cx="175" cy="198" r="8.5" fill="#2E1A35"/>
-        <circle id="tsx-pupilR" cx="265" cy="198" r="8.5" fill="#2E1A35"/>
-        <path id="tsx-browL" d="M148 166 Q175 160 202 166" fill="none" stroke="#2E1A35" stroke-width="3.4" stroke-linecap="round"/>
-        <path id="tsx-browR" d="M238 166 Q265 160 292 166" fill="none" stroke="#2E1A35" stroke-width="3.4" stroke-linecap="round"/>
-        <path d="M220 210 L214 246 Q220 252 226 246" fill="none" stroke="#2E1A35" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
-        <path id="tsx-mouth" d="M180 288 Q220 288 260 288" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
+        <!-- little shoulders / body so it reads as a character -->
+        <path d="M112 452 Q120 372 220 372 Q320 372 328 452 Z" fill="url(#tsxBodyG)"/>
+        <circle cx="220" cy="430" r="9" fill="#C9A84C"/>
+        <!-- head -->
+        <circle cx="220" cy="212" r="150" fill="url(#tsxHeadG)" stroke="#2E1A35" stroke-width="2.6"/>
+        <!-- top sparkle (brightens at the summit) -->
+        <path id="tsx-spark" d="M312 96 l7 17 17 7 -17 7 -7 17 -7 -17 -17 -7 17 -7 z" fill="#C9A84C" opacity="0"/>
+        <!-- blush -->
+        <ellipse id="tsx-blushL" cx="150" cy="250" rx="24" ry="13" fill="#E8A07A" opacity="0"/>
+        <ellipse id="tsx-blushR" cx="290" cy="250" rx="24" ry="13" fill="#E8A07A" opacity="0"/>
+        <!-- eyes -->
+        <ellipse id="tsx-eyeLs" cx="175" cy="196" rx="28" ry="17" fill="#fff" stroke="#2E1A35" stroke-width="2.4"/>
+        <ellipse id="tsx-eyeRs" cx="265" cy="196" rx="28" ry="17" fill="#fff" stroke="#2E1A35" stroke-width="2.4"/>
+        <g id="tsx-pupilL"><circle cx="175" cy="196" r="9" fill="#2E1A35"/><circle cx="171.5" cy="192" r="3" fill="#fff"/></g>
+        <g id="tsx-pupilR"><circle cx="265" cy="196" r="9" fill="#2E1A35"/><circle cx="261.5" cy="192" r="3" fill="#fff"/></g>
+        <!-- brows -->
+        <path id="tsx-browL" d="M148 162 Q175 156 202 162" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
+        <path id="tsx-browR" d="M238 162 Q265 156 292 162" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
+        <!-- nose -->
+        <path d="M220 208 L214 244 Q220 250 226 244" fill="none" stroke="#2E1A35" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+        <!-- mouth -->
+        <path id="tsx-mouth" d="M182 286 Q220 286 258 286" fill="none" stroke="#2E1A35" stroke-width="3.8" stroke-linecap="round"/>
       </g>
     </svg>
 
@@ -1942,6 +1965,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 
     <div class="tsx-cta" id="tsx-cta"><a href="https://the5th.consulting/quiz">Start your story →</a></div>
     <div class="tsx-hint" id="tsx-hint"><span>Scroll to begin ↓</span></div>
+    <div class="tsx-prog"><i id="tsx-progfill"></i></div>
   </div>
 </section>
 

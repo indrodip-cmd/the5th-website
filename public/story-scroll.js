@@ -24,10 +24,13 @@
   var browR = document.getElementById('tsx-browR');
   var mouth = document.getElementById('tsx-mouth');
   var bg = document.getElementById('tsx-bg');
+  var glow = document.getElementById('tsx-glow');
+  var spark = document.getElementById('tsx-spark');
+  var blushL = document.getElementById('tsx-blushL');
+  var blushR = document.getElementById('tsx-blushR');
   var cta = document.getElementById('tsx-cta');
   var hint = document.getElementById('tsx-hint');
-  var vidS = document.getElementById('tsx-vidStruggle');
-  var vidF = document.getElementById('tsx-vidFreedom');
+  var prog = document.getElementById('tsx-progfill');
   var beats = [].slice.call(section.querySelectorAll('.tsx-beat'));
   var words = [].slice.call(section.querySelectorAll('.tsx-word'));
 
@@ -74,19 +77,25 @@
     pupilR.setAttribute('transform', 'translate(' + dx + ' ' + dy + ')');
 
     // eyes narrow into a smile / widen when tense
-    var ry = s.e > 0 ? (16 - s.e * 6.5) : (16 - s.e * 1.6);
+    var ry = s.e > 0 ? (17 - s.e * 7) : (17 - s.e * 1.7);
     eyeL.setAttribute('ry', ry.toFixed(1));
     eyeR.setAttribute('ry', ry.toFixed(1));
 
     // brows + mouth carry the emotion
     browL.setAttribute('d', brow(148, 175, 202, s.e));
     browR.setAttribute('d', brow(292, 265, 238, s.e));
-    var endY = 288 - s.e * 6, cy = 288 + s.e * 34;
-    mouth.setAttribute('d', 'M 180 ' + endY.toFixed(1) + ' Q 220 ' + cy.toFixed(1) + ' 260 ' + endY.toFixed(1));
+    var endY = 286 - s.e * 6, cy = 286 + s.e * 34;
+    mouth.setAttribute('d', 'M 182 ' + endY.toFixed(1) + ' Q 220 ' + cy.toFixed(1) + ' 258 ' + endY.toFixed(1));
+
+    // mascot warmth: aura glow, cheek blush, and the summit sparkle
+    var hap = clamp(s.e, 0, 1);
+    if (glow) glow.style.opacity = (clamp((s.e + 0.15) / 1.15, 0, 1) * 0.9).toFixed(3);
+    if (blushL) { blushL.setAttribute('opacity', hap.toFixed(3)); blushR.setAttribute('opacity', hap.toFixed(3)); }
+    if (spark) spark.setAttribute('opacity', clamp((s.e - 0.35) / 0.65, 0, 1).toFixed(3));
 
     // head drifts left→right and tilts toward the gaze
     var tx = lerp(-26, 26, p), ang = s.gx * 5;
-    head.setAttribute('transform', 'translate(' + tx.toFixed(1) + ' 0) rotate(' + ang.toFixed(2) + ' 220 215)');
+    head.setAttribute('transform', 'translate(' + tx.toFixed(1) + ' 0) rotate(' + ang.toFixed(2) + ' 220 212)');
 
     // world warms from cool to gold
     var w = smooth(clamp((p - 0.32) / 0.55, 0, 1));
@@ -104,44 +113,12 @@
       words[j].style.opacity = (o * 0.92).toFixed(3);
       words[j].style.transform = 'translateY(' + ((1 - o) * 22).toFixed(1) + 'px)';
     }
-    // cinematic mood footage (when enabled): rain fades out, gold fades in
-    if (videosOn) {
-      if (vidS) vidS.style.opacity = (clamp(1 - p / 0.5, 0, 1) * 0.9).toFixed(3);
-      if (vidF) vidF.style.opacity = (clamp((p - 0.45) / 0.25, 0, 1) * 0.95).toFixed(3);
-    }
-
     // CTA at the summit, hint fades quickly
     cta.style.opacity = clamp((p - 0.9) / 0.06, 0, 1);
     cta.style.pointerEvents = p > 0.92 ? 'auto' : 'none';
     if (hint) hint.style.opacity = clamp(1 - p * 12, 0, 1).toFixed(2);
+    if (prog) prog.style.width = (p * 100).toFixed(2) + '%';
   }
-
-  // Load the mood videos only on capable devices; gradient is the fallback.
-  var videosOn = false;
-  function enableVideos() {
-    if (videosOn) return;
-    try {
-      if (window.matchMedia) {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        if (window.matchMedia('(max-width:640px)').matches) return; // keep mobile light
-      }
-      var c = navigator.connection;
-      if (c && (c.saveData || /(^|-)2g/.test(c.effectiveType || ''))) return;
-    } catch (e) {}
-    videosOn = true;
-    [vidS, vidF].forEach(function (v) {
-      if (v && v.getAttribute('data-src') && !v.src) {
-        v.src = v.getAttribute('data-src');
-        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
-      }
-    });
-  }
-  try {
-    var io = new IntersectionObserver(function (ents) {
-      ents.forEach(function (e) { if (e.isIntersecting) enableVideos(); });
-    }, { rootMargin: '700px 0px' });
-    io.observe(section);
-  } catch (e) { enableVideos(); }
 
   var ticking = false;
   function calc() {

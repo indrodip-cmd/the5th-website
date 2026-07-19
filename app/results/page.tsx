@@ -550,7 +550,7 @@ export default function ResultsPage() {
 
       {/* top bar */}
       <header ref={headerRef} style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, background: C.ivory, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)' }}>
-        <a href="/"><Image src="/logo-the5th.png" alt="The5th Consulting" width={150} height={38} style={{ objectFit: 'contain' }} /></a>
+        <a href="/"><Image src="/images/the5th-logo-purple.png" alt="The5th Consulting" width={220} height={86} priority style={{ objectFit: 'contain', height: 'auto' }} /></a>
         <a href="/quiz" style={{ fontSize: 13, fontWeight: 600, color: C.plum, textDecoration: 'none', border: `1px solid ${C.goldLine}`, padding: '9px 18px', borderRadius: 50 }}>
           Take the assessment →
         </a>

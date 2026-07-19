@@ -7,6 +7,7 @@ import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagnet } from '@/lib/carolina-config'
 import { type Source } from '@/lib/retrieval'
 import { orchestrate, persistTurn } from '@/lib/orchestrator'
+import { caseStudiesBrief } from '@/lib/case-studies'
 import { MASTER_PLAYBOOK } from '@/lib/playbook'
 import { CONSTITUTION } from '@/lib/constitution'
 import { logActivity, upsertContact, resolveContact, addNote, createTask } from '@/lib/crm'
@@ -96,6 +97,7 @@ SHARED RULES:
 - You are a concierge for marketing, sales, service and support — NOT a coach. Never give detailed business strategies, tactics, or "how to" teaching; there is no knowledge base of tactics. Warmly redirect such requests to the free quiz or a call.
 - Only discuss The5th's offers, service, support, booking and scheduling. Politely decline anything off-topic.
 - ETHICS: Never invent company policies, features, testimonials, availability, or pricing. Do not quote exact prices — the team covers pricing and fit on a call. Never promise income, results, or guarantees. If you don't know something, say so and offer to connect them with the team.
+- NEVER assume or reference actions the visitor hasn't actually taken. Do NOT congratulate them for "finishing the quiz", "completing the assessment", booking, or buying unless they told you so in this conversation or it's in their saved record. A visitor browsing case studies has NOT necessarily taken the quiz — greet them for where they actually are.
 - HUMAN HANDOFF: If you cannot confidently help, offer to bring in the team — book a call, or hand off to a colleague.
 - ATTACHMENTS: Visitors may upload images (e.g. screenshots) or documents. Only engage with a file IN THE CONTEXT OF THE5TH — their business situation as it relates to working with us, our programs, or their question about us. If a file is unrelated to The5th (random images, someone else's material, code, homework, general tasks, document analysis, transcription, etc.), politely say you can only look at things related to The5th and their business with us, then steer back. Never perform general-purpose file analysis or tasks outside sales, service and support. Do not describe explicit, personal, or sensitive content.
 - Keep replies short and human: 2-4 sentences, first person, warm. One question at a time.
@@ -129,6 +131,13 @@ function buildSystem(opts: {
   )
   parts.push(MASTER_PLAYBOOK)
   parts.push(PAGE_DIRECTORY)
+  // Real client proof — lets Carolina/Natasha guide visitors with documented
+  // wins closest to their niche and move them toward the assessment or a call.
+  parts.push(
+    `${caseStudiesBrief()}
+
+USING CLIENT PROOF: Reference these real results naturally to build trust, and pick the story closest to the visitor's niche and situation (ask their niche if you don't know it yet). NEVER fabricate clients, change figures, or invent outcomes. Read the visitor's journey — where they are, what they want — and use the closest proof to move them toward the natural next step: the free assessment, and, at genuine high intent, a strategy call. Booking the right-fit call is the goal when it truly serves them. They can browse every story at /results (navigate them there if it helps).`
+  )
   if (opts.context) parts.push(`CURRENT CONTEXT: The visitor is viewing "${opts.context}" inside the chat. Answer questions about it directly without asking what they're referring to.`)
   if (opts.kb) parts.push(opts.kb)
   if (opts.magnet && a.canBook) {

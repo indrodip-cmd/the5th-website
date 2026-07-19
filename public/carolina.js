@@ -45,7 +45,8 @@
   // Per-page AI context — keeps Carolina on-topic without a server change.
   // (Injected into her system prompt via body.context; server caps it at 300 chars.)
   var PAGE_CTX = {
-    training: 'the free 12-minute training on turning expertise into a $10K-a-month business. Your ONLY goal: get them to start the free training and opt in. Answer questions about it briefly, then guide them to press play. Do not pitch other programs, books, or calls here.'
+    training: 'the free 12-minute training on turning expertise into a $10K-a-month business. Your ONLY goal: get them to start the free training and opt in. Answer questions about it briefly, then guide them to press play. Do not pitch other programs, books, or calls here.',
+    casestudies: 'the Client Case Studies page — real, documented client wins across many niches. The visitor wants proof this works for someone like them. Learn their niche, point them to the closest real story, then guide them to the free assessment or a strategy call. Never assume they took the quiz.'
   };
 
   // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
@@ -2919,8 +2920,9 @@
       msgs: ['Want to try The5th AI live, right now? I can open the demo for you — no signup needed.', 'Curious what The5th AI actually feels like? Let me open the live demo for you.'] },
     collective: { agent: 'carolina', cta: 'Explore The Collective', seed: "Tell me about The Collective — what's inside and who it's for.",
       msgs: ["Curious about The Collective? I can show you what's inside and who it's for."] },
-    casestudies: { agent: 'natasha', cta: 'Show me similar wins', seed: 'Show me success stories similar to my business, and how an assessment works.',
-      msgs: ['Want to see success stories similar to your business — or get a quick assessment?'] },
+    casestudies: { agent: 'carolina', cta: 'Find my closest win', seed: "I'm browsing your client results — can you show me the story closest to my situation and what my next step would be?",
+      returning: 'Welcome back 👋 Want me to pull up the client win closest to your business — and map your next step?',
+      msgs: ['Want me to find the client result closest to your niche — and show you how they did it?', "Tell me your niche and I'll pull up the most similar client win, then map your next step.", 'Curious if we’ve done this in your space? Tell me your business and I’ll show you the closest real result.'] },
     booked: { agent: 'natasha', cta: 'Help me prep', seed: 'I have a call booked — can you help me prepare and make the most of it?',
       msgs: ["You're all set for your call 🎉 Anything I can help you prep in the meantime?"] }
   };
@@ -2930,12 +2932,14 @@
     var p = (location.pathname || '/').toLowerCase();
     if (/lp\/make-10k-month/.test(p)) return 'training';   // VSL funnel — promote the free training only
     if (hasBooked()) return 'booked';
-    if (/quiz\/(results|thank)/.test(p) || /\/results/.test(p)) return 'quizdone';
+    // Only the quiz's OWN result/thank-you pages count as "quiz done".
+    if (/quiz\/(results|thank)/.test(p)) return 'quizdone';
     if (/quiz/.test(p)) return 'quiz';
     if (/fast-forward/.test(p)) return 'fastforward';
     if (/\/ai(\/|$)/.test(p)) return 'ai';
     if (/collective/.test(p)) return 'collective';
-    if (/clients|testimonials|case|success/.test(p)) return 'casestudies';
+    // /results is the PUBLIC case-study library — proof, not a personal quiz result.
+    if (/\/results|clients|testimonials|case|success/.test(p)) return 'casestudies';
     if (/blog|article|post|downloads/.test(p)) return 'blog';
     return 'home';
   }

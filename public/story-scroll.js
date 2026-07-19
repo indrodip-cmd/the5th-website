@@ -38,13 +38,23 @@
   function lerp(a, b, t) { return a + (b - a) * t; }
   function smooth(t) { return t * t * (3 - 2 * t); }
 
-  // gaze + emotion keyframes across the scroll
+  // gaze + emotion keyframes across Lauren's story arc
   var KF = [
-    { p: 0.00, gx: -0.55, gy: -0.62, e: -0.95 }, // up-left, pensive
-    { p: 0.29, gx: -0.85, gy: 0.10, e: -0.85 },  // left, anxious
-    { p: 0.50, gx: 0.00, gy: 0.00, e: 0.05 },    // center, hopeful
-    { p: 0.72, gx: 0.72, gy: 0.10, e: 0.72 },    // right, relieved
-    { p: 1.00, gx: 0.50, gy: -0.58, e: 1.00 }    // up-right, radiant
+    { p: 0.00, gx: -0.40, gy: -0.50, e: -0.30 }, // dreamy — meet Lauren
+    { p: 0.09, gx: -0.30, gy: -0.35, e: -0.20 }, // wistful — something bigger
+    { p: 0.15, gx: 0.15, gy: -0.42, e: 0.35 },   // hopeful — 6:30 AM, a call booked
+    { p: 0.21, gx: -0.55, gy: 0.42, e: -0.55 },  // frustrated — 9 AM content chaos
+    { p: 0.28, gx: 0.25, gy: 0.10, e: -0.30 },   // masking — "it's getting there"
+    { p: 0.35, gx: 0.15, gy: 0.45, e: -0.60 },   // deflated — the offer stalls
+    { p: 0.42, gx: -0.15, gy: 0.55, e: -0.78 },  // low — inbox nothing, $0
+    { p: 0.485, gx: -0.10, gy: 0.62, e: -0.97 }, // despair — "not cut out for this"
+    { p: 0.55, gx: 0.10, gy: 0.35, e: -0.70 },   // heavy — dinner, mind drifting
+    { p: 0.62, gx: -0.05, gy: 0.22, e: -0.28 },  // bittersweet — the notebook, not giving up
+    { p: 0.70, gx: 0.00, gy: -0.10, e: 0.22 },   // the turn — found The5th
+    { p: 0.78, gx: 0.45, gy: 0.00, e: 0.55 },    // rising — dashboard, clarity
+    { p: 0.85, gx: 0.55, gy: -0.10, e: 0.75 },   // confident — leads, calm selling
+    { p: 0.91, gx: 0.35, gy: -0.35, e: 0.90 },   // bright — one system, predictable
+    { p: 1.00, gx: 0.48, gy: -0.55, e: 1.00 }    // radiant — freedom, on her terms
   ];
   function sample(p) {
     var i = 0;
@@ -93,18 +103,19 @@
     if (blushL) { blushL.setAttribute('opacity', hap.toFixed(3)); blushR.setAttribute('opacity', hap.toFixed(3)); }
     if (spark) spark.setAttribute('opacity', clamp((s.e - 0.35) / 0.65, 0, 1).toFixed(3));
 
-    // head drifts left→right and tilts toward the gaze
-    var tx = lerp(-26, 26, p), ang = s.gx * 5;
+    // head drifts left→right and turns toward the gaze
+    var tx = lerp(-24, 24, p), ang = s.gx * 6;
     head.setAttribute('transform', 'translate(' + tx.toFixed(1) + ' 0) rotate(' + ang.toFixed(2) + ' 220 212)');
 
-    // world warms from cool to gold
-    var w = smooth(clamp((p - 0.32) / 0.55, 0, 1));
+    // world stays cool grey through the struggle, then warms to gold at the turn
+    var w = smooth(clamp((p - 0.64) / 0.30, 0, 1));
     bg.style.background = 'linear-gradient(180deg,' + rgb(COOL_T, WARM_T, w) + ',' + rgb(COOL_B, WARM_B, w) + ')';
 
-    // narrative beats crossfade
+    // narrative beats crossfade — short plateau at full, then a quick fade so
+    // only one beat holds the stage at a time across the dense arc
     for (var i = 0; i < beats.length; i++) {
       var c = parseFloat(beats[i].getAttribute('data-c'));
-      beats[i].style.opacity = clamp(1 - Math.abs(p - c) / 0.12, 0, 1);
+      beats[i].style.opacity = clamp(1 - (Math.abs(p - c) - 0.010) / 0.020, 0, 1);
     }
     // aspiration words drift in
     for (var j = 0; j < words.length; j++) {

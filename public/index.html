@@ -1874,27 +1874,29 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 </section>
 
 <!-- ======================================================
-     THE JOURNEY — scroll-driven emotional story (SVG face)
-     A cinematic scrollytelling scene: as you scroll, the face shifts gaze
-     and expression from "stuck, looking away" to "relieved, looking up",
-     the world warms from cool to gold, and aspiration words drift in.
-     The #tsx-face SVG is swappable for AI-rendered face frames later.
+     MEET LAUREN — scroll-driven emotional story (SVG face)
+     A cinematic scrollytelling scene: as you scroll through Lauren's day,
+     her face turns and her expression shifts from hopeful → frustrated →
+     despair → the turn (she finds The5th) → radiant. The world stays cool
+     grey through the struggle, then warms to gold, and aspiration words drift
+     in. The #tsx-face SVG is swappable for AI-rendered face frames later.
 ====================================================== -->
 <section class="tsx-story" id="t5-story" aria-label="Your journey with The5th">
   <style>
-    .tsx-story{position:relative;height:340vh}
+    .tsx-story{position:relative;height:620vh}
     .tsx-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
     .tsx-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#EAE7EC,#D2CDD8)}
     .tsx-glow{position:absolute;z-index:1;left:50%;top:42%;width:min(74vh,620px);height:min(74vh,620px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.55),rgba(201,168,76,0) 62%);opacity:0;filter:blur(4px);pointer-events:none}
     .tsx-vign{position:absolute;inset:0;z-index:2;background:radial-gradient(120% 90% at 50% 32%,transparent 42%,rgba(46,26,53,.16));pointer-events:none}
     .tsx-words{position:absolute;inset:0;z-index:3;pointer-events:none}
     .tsx-word{position:absolute;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:#B0902F;opacity:0;white-space:nowrap;text-shadow:0 2px 24px rgba(255,255,255,.55);will-change:transform,opacity}
-    .tsx-face{position:relative;z-index:4;width:min(48vh,380px);height:auto;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));animation:tsxFloat 5.5s ease-in-out infinite;will-change:transform}
+    .tsx-face{position:relative;z-index:4;width:min(40vh,320px);height:auto;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));animation:tsxFloat 5.5s ease-in-out infinite;will-change:transform}
     @keyframes tsxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
-    .tsx-copy{position:relative;z-index:4;margin-top:2.4vh;width:100%;max-width:640px;min-height:170px}
+    .tsx-copy{position:relative;z-index:4;margin-top:2.2vh;width:100%;max-width:660px;min-height:220px}
     .tsx-beat{position:absolute;left:0;right:0;top:0;opacity:0;padding:0 24px;text-align:center;will-change:opacity}
-    .tsx-beat h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(25px,4.6vw,46px);line-height:1.08;letter-spacing:-.02em;color:#2E1A35;margin:0 0 10px}
-    .tsx-beat p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(15px,2vw,18px);line-height:1.6;color:#4a4550;margin:0 auto;max-width:520px}
+    .tsx-time{display:inline-block;font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#B0902F;margin:0 0 12px}
+    .tsx-beat h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(24px,4.3vw,44px);line-height:1.1;letter-spacing:-.02em;color:#2E1A35;margin:0 0 10px}
+    .tsx-beat p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(15px,2vw,18px);line-height:1.6;color:#4a4550;margin:0 auto;max-width:540px}
     .tsx-cta{position:absolute;z-index:5;bottom:7.5vh;opacity:0;transition:opacity .25s}
     .tsx-cta a{display:inline-block;background:linear-gradient(180deg,#E4C879,#C9A84C 60%,#B0902F);color:#2E1A35;font:700 16px/1 'Inter',system-ui,sans-serif;padding:16px 34px;border-radius:8px;text-decoration:none;box-shadow:0 16px 40px rgba(201,168,76,.34)}
     .tsx-hint{position:absolute;z-index:5;bottom:4.5vh;font:600 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8A8075}
@@ -1902,7 +1904,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     @keyframes tsxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
     .tsx-prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:5;background:rgba(46,26,53,.09)}
     .tsx-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E4C879,#C9A84C 60%,#B0902F)}
-    @media(max-width:640px){.tsx-story{height:300vh}.tsx-face{width:min(38vh,240px)}.tsx-copy{min-height:200px}}
+    @media(max-width:640px){.tsx-story{height:560vh}.tsx-face{width:min(26vh,180px)}.tsx-copy{min-height:270px}}
     @media(prefers-reduced-motion:reduce){.tsx-hint span,.tsx-face{animation:none}}
   </style>
   <div class="tsx-stage">
@@ -1910,14 +1912,15 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     <div class="tsx-glow" id="tsx-glow"></div>
     <div class="tsx-vign"></div>
     <div class="tsx-words" id="tsx-words">
-      <span class="tsx-word" data-p="0.58" style="left:11%;top:29%;font-size:clamp(20px,3vw,36px)">freedom</span>
-      <span class="tsx-word" data-p="0.66" style="right:13%;top:25%;font-size:clamp(18px,2.6vw,30px)">travel</span>
-      <span class="tsx-word" data-p="0.74" style="left:15%;bottom:31%;font-size:clamp(18px,2.6vw,30px)">independence</span>
-      <span class="tsx-word" data-p="0.82" style="right:11%;bottom:33%;font-size:clamp(20px,3vw,34px)">$10K months</span>
-      <span class="tsx-word" data-p="0.90" style="left:45%;top:15%;font-size:clamp(16px,2.2vw,26px)">time</span>
+      <span class="tsx-word" data-p="0.74" style="left:11%;top:29%;font-size:clamp(20px,3vw,36px)">clarity</span>
+      <span class="tsx-word" data-p="0.79" style="right:12%;top:24%;font-size:clamp(18px,2.6vw,30px)">confidence</span>
+      <span class="tsx-word" data-p="0.84" style="left:14%;bottom:31%;font-size:clamp(18px,2.6vw,30px)">predictable income</span>
+      <span class="tsx-word" data-p="0.89" style="right:10%;bottom:33%;font-size:clamp(20px,3vw,34px)">$10K months</span>
+      <span class="tsx-word" data-p="0.93" style="left:16%;top:16%;font-size:clamp(16px,2.2vw,26px)">time with family</span>
+      <span class="tsx-word" data-p="0.97" style="right:15%;bottom:22%;font-size:clamp(20px,3vw,34px)">freedom</span>
     </div>
 
-    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Quinn, your guide through the journey">
+    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lauren, on her journey with The5th">
       <defs>
         <radialGradient id="tsxHeadG" cx="42%" cy="34%" r="72%">
           <stop offset="0%" stop-color="#FFFDF8"/>
@@ -1928,11 +1931,19 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
           <stop offset="0%" stop-color="#4E3158"/>
           <stop offset="100%" stop-color="#2E1A35"/>
         </linearGradient>
+        <linearGradient id="tsxHairG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7A5636"/>
+          <stop offset="100%" stop-color="#5A3D28"/>
+        </linearGradient>
       </defs>
       <g id="tsx-head">
         <!-- little shoulders / body so it reads as a character -->
         <path d="M112 452 Q120 372 220 372 Q320 372 328 452 Z" fill="url(#tsxBodyG)"/>
         <circle cx="220" cy="430" r="9" fill="#C9A84C"/>
+        <!-- hair framing the face so it reads as Lauren (behind the head) -->
+        <ellipse cx="220" cy="196" rx="172" ry="176" fill="url(#tsxHairG)"/>
+        <path d="M64 214 C34 268 40 350 80 408 L134 408 C104 344 108 262 120 220 Z" fill="url(#tsxHairG)"/>
+        <path d="M376 214 C406 268 400 350 360 408 L306 408 C336 344 332 262 320 220 Z" fill="url(#tsxHairG)"/>
         <!-- head -->
         <circle cx="220" cy="212" r="150" fill="url(#tsxHeadG)" stroke="#2E1A35" stroke-width="2.6"/>
         <!-- top sparkle (brightens at the summit) -->
@@ -1956,11 +1967,21 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     </svg>
 
     <div class="tsx-copy">
-      <div class="tsx-beat" data-c="0.08"><h3>Right now, it's all still inside you.</h3><p>Decades of expertise, skill, and hard-won judgement — with nowhere to go.</p></div>
-      <div class="tsx-beat" data-c="0.29"><h3>You've tried everything. Alone.</h3><p>The courses, the coaches, the content. Still stuck, still trading hours for far too little.</p></div>
-      <div class="tsx-beat" data-c="0.50"><h3>Then something finally fits.</h3><p>A proven system — and someone who sees exactly what your experience is worth.</p></div>
-      <div class="tsx-beat" data-c="0.72"><h3>The first client. The first real income.</h3><p>The knot in your chest loosens. It's working. It's actually working.</p></div>
-      <div class="tsx-beat" data-c="0.92"><h3>Freedom, on your terms.</h3><p>Time. Travel. Independence. Income that never asks permission — the life your expertise was always meant to buy.</p></div>
+      <div class="tsx-beat" data-c="0.03"><h3>Meet Lauren.</h3><p>She's 47. A loving mother, a caring friend — the woman who always puts everyone else first.</p></div>
+      <div class="tsx-beat" data-c="0.09"><h3>She knows she's here for something bigger.</h3><p>She wants to help women rediscover themselves and build a life they love. She knows she can change lives. She just can't seem to grow her own business.</p></div>
+      <div class="tsx-beat" data-c="0.15"><span class="tsx-time">6:30 AM</span><h3>Today feels different.</h3><p>Coffee. A few messages to women she met yesterday. Then a notification — "I'd love to chat." A discovery call, booked. "Maybe this is finally my breakthrough."</p></div>
+      <div class="tsx-beat" data-c="0.21"><span class="tsx-time">9:00 AM</span><h3>Three hours gone. Nothing published.</h3><p>ChatGPT, Canva, Instagram, YouTube. Three videos on "the perfect hook," each one contradicting the last. She writes, deletes, starts again. "Why is this so hard?"</p></div>
+      <div class="tsx-beat" data-c="0.28"><span class="tsx-time">12:30 PM</span><h3>"It's getting there."</h3><p>Her family asks how the business is going. She smiles and says it's getting there. Inside, she isn't sure anymore.</p></div>
+      <div class="tsx-beat" data-c="0.35"><span class="tsx-time">2:00 PM</span><h3>The call goes beautifully — until the offer.</h3><p>The prospect cries. Lauren listens, supports, encourages. Then she names the price, and her voice wavers. "I need to think about it." She knows what that means.</p></div>
+      <div class="tsx-beat" data-c="0.42"><span class="tsx-time">3:30 PM</span><h3>Inbox: nothing. Stripe: $0.</h3><p>She refreshes her email. Nothing. Instagram — nothing. Stripe — zero. Again.</p></div>
+      <div class="tsx-beat" data-c="0.485"><span class="tsx-time">5:00 PM</span><h3>"Am I just not cut out for this?"</h3><p>Instead of recording, she scrolls. A $50K launch. Six figures in a weekend. "10 clients in 30 days." The doubt settles in.</p></div>
+      <div class="tsx-beat" data-c="0.55"><span class="tsx-time">7:00 PM</span><h3>Present with them — but not really.</h3><p>Dinner with her children. She tries to stay in the moment, but her mind keeps drifting. Bills. Clients. Self-doubt.</p></div>
+      <div class="tsx-beat" data-c="0.62"><span class="tsx-time">10:30 PM</span><h3>The goals are still there. So is she.</h3><p>Her notebook. Help thousands of women. Replace her income. Travel with her family. She hasn't given up — she's just exhausted. Tomorrow, she'll try again.</p></div>
+      <div class="tsx-beat" data-c="0.70"><h3>Then Lauren found The5th.</h3><p>Not another course. Not another pile of motivational videos. A complete business operating system.</p></div>
+      <div class="tsx-beat" data-c="0.78"><h3>Instead of wondering what to do — she opens her dashboard.</h3><p>Today's priorities are already waiting. One proven framework turns three hours of content into one.</p></div>
+      <div class="tsx-beat" data-c="0.85"><h3>Instead of hoping for a call — qualified leads arrive.</h3><p>Consistently. She knows exactly where they come from. And selling becomes a calm, simple conversation — no pressure, no chasing.</p></div>
+      <div class="tsx-beat" data-c="0.91"><h3>Instead of ten disconnected tools — one system.</h3><p>Content, CRM, follow-up, AI, coaching, community. All in one place. Her business becomes predictable. Her confidence comes back.</p></div>
+      <div class="tsx-beat" data-c="1.00"><h3>She never lacked passion. She lacked a system.</h3><p>More time with her family. Better sleep. And every week, more women get the transformation she always knew she could deliver.</p></div>
     </div>
 
     <div class="tsx-cta" id="tsx-cta"><a href="https://the5th.consulting/quiz">Start your story →</a></div>

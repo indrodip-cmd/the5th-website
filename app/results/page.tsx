@@ -159,7 +159,7 @@ function StudyCard({ study, onOpen }: { study: Study; onOpen: () => void }) {
 }
 
 /* ════════ Access gate — name + email to unlock the library ════════ */
-function AccessGate({ onUnlock }: { onUnlock: (firstName: string) => void }) {
+function AccessGate({ onUnlock, onClose }: { onUnlock: (firstName: string) => void; onClose: () => void }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [err, setErr] = useState('')
@@ -168,8 +168,10 @@ function AccessGate({ onUnlock }: { onUnlock: (firstName: string) => void }) {
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = prev }
-  }, [])
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => { document.body.style.overflow = prev; document.removeEventListener('keydown', onKey) }
+  }, [onClose])
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -198,18 +200,23 @@ function AccessGate({ onUnlock }: { onUnlock: (firstName: string) => void }) {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
+      onClick={onClose}
       style={{ position: 'fixed', inset: 0, zIndex: 210, background: 'rgba(35,16,41,.42)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(18px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))', overflowY: 'auto' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 26, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+        onClick={e => e.stopPropagation()}
         role="dialog" aria-modal="true" aria-label="Unlock the case study library"
         style={{ position: 'relative', width: '100%', maxWidth: 460, margin: 'auto', background: C.cream, borderRadius: 22, border: `1px solid ${C.border}`, boxShadow: '0 50px 110px -30px rgba(35,16,41,.7)', overflow: 'hidden' }}
       >
+        {/* close */}
+        <button onClick={onClose} aria-label="Close" style={{ position: 'absolute', top: 12, right: 12, zIndex: 4, width: 34, height: 34, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,.92)', color: C.plum, fontSize: 20, lineHeight: 1, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(46,26,53,.2)' }}>×</button>
+
         {/* branded top */}
         <div style={{ background: `linear-gradient(165deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', padding: '30px 30px 26px', textAlign: 'center' }}>
           <span style={{ ...eyebrow, color: C.goldSoft, marginBottom: 12 }}>Client Case Study Library</span>
           <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(26px,4.4vw,34px)', fontWeight: 600, lineHeight: 1.12, letterSpacing: '-.01em' }}>
-            See the real numbers behind <em style={{ fontStyle: 'italic', color: C.gold }}>15+ client wins.</em>
+            See the real numbers behind <em style={{ fontStyle: 'italic', color: C.gold }}>real client wins.</em>
           </h2>
         </div>
 
@@ -222,7 +229,7 @@ function AccessGate({ onUnlock }: { onUnlock: (firstName: string) => void }) {
           {/* why it matters */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9, background: C.white, border: `1px solid ${C.border}`, borderRadius: 12, padding: '14px 16px', marginBottom: 18 }}>
             {[
-              'Unlock all 15+ documented case studies + video reviews',
+              'Unlock every documented case study + video reviews',
               'Get the wins closest to your business, not random ones',
               'Your concierge greets you by name and remembers you',
             ].map(t => (
@@ -260,18 +267,24 @@ export default function ResultsPage() {
   const [active, setActive] = useState<Study | null>(null)
 
   // Access gate — visitors enter name + email to unlock the library. Returning
-  // visitors (email already stored on this device) skip straight in.
+  // visitors (email already stored on this device) skip straight in. If a
+  // visitor closes the gate without unlocking, the page stays fully rendered
+  // but blurred (they can see it's all there, just not read it) with a button
+  // to reopen the gate.
   const [gateOpen, setGateOpen] = useState(false)
   const [gateReady, setGateReady] = useState(false)
+  const [unlocked, setUnlocked] = useState(false)
   useEffect(() => {
     const check = () => {
       let hasEmail = false
       try { hasEmail = !!localStorage.getItem('cw_lead_email') } catch {}
+      setUnlocked(hasEmail)
       setGateOpen(!hasEmail)
       setGateReady(true)
     }
     check()
   }, [])
+  const locked = gateReady && !unlocked
 
   // Personalization — if Carolina knows the visitor's name, this page greets
   // them by it (and updates live the moment she learns it).
@@ -332,6 +345,10 @@ export default function ResultsPage() {
         @media(max-height:520px) and (orientation:landscape){.rhero{padding-top:26px!important;padding-bottom:16px!important}}
       `}</style>
 
+      {/* Everything below blurs (visible but unreadable) until the gate is
+          unlocked — the page is all there, just gated. */}
+      <div aria-hidden={locked || undefined} style={{ filter: locked ? 'blur(10px)' : 'none', pointerEvents: locked ? 'none' : undefined, userSelect: locked ? 'none' : undefined, transition: 'filter .45s ease' }}>
+
       {/* top bar — stays fixed at the top while the page scrolls */}
       <header className="rhead" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, borderBottom: `1px solid ${C.border}`, background: 'rgba(251,248,242,.92)', position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)' }}>
         <a href="/" style={{ display: 'inline-flex', flexShrink: 1, minWidth: 0 }}><Image src="/images/the5th-logo-purple.png" alt="The5th Consulting" width={212} height={83} priority className="rlogo" style={{ objectFit: 'contain' }} /></a>
@@ -372,7 +389,7 @@ export default function ResultsPage() {
             </div>
             {/* count */}
             <span style={{ fontSize: 12.5, color: C.muted, whiteSpace: 'nowrap', flexShrink: 0 }}>
-              {filtered.length === STUDIES.length ? `${STUDIES.length} stories` : `${filtered.length} of ${STUDIES.length}`}
+              {filtered.length === STUDIES.length ? 'All stories' : `${filtered.length} shown`}
             </span>
           </div>
           {/* niche chips */}
@@ -430,7 +447,7 @@ export default function ResultsPage() {
           </h2>
           <p style={{ fontSize: 16, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
             {firstName
-              ? `We've mapped 15+ businesses like yours, ${firstName}. Take the free assessment to find your Expert Income Archetype and exact next step — then we map your roadmap together.`
+              ? `We've mapped businesses like yours, ${firstName}. Take the free assessment to find your Expert Income Archetype and exact next step — then we map your roadmap together.`
               : 'Take the free assessment to discover your Expert Income Archetype and the exact next step, then we map your roadmap together.'}
           </p>
           <a href="/quiz" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 38px', borderRadius: 7, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
@@ -446,6 +463,24 @@ export default function ResultsPage() {
         </p>
       </footer>
 
+      </div>{/* /blur wrapper */}
+
+      {/* reopen affordance — shown while the page is locked and the gate is
+          dismissed, so a visitor is never stranded on a blurred page */}
+      <AnimatePresence>
+        {locked && !gateOpen && (
+          <motion.button
+            key="reopen"
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            onClick={() => setGateOpen(true)}
+            style={{ position: 'fixed', left: '50%', bottom: 'max(clamp(20px,5vh,40px),env(safe-area-inset-bottom))', transform: 'translateX(-50%)', zIndex: 120, display: 'inline-flex', alignItems: 'center', gap: 9, background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 15, fontWeight: 700, padding: '14px 26px', borderRadius: 50, border: 'none', cursor: 'pointer', boxShadow: '0 18px 44px rgba(35,16,41,.42)', whiteSpace: 'nowrap' }}
+          >
+            <span aria-hidden="true">🔒</span> Unlock the case studies →
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* modal */}
       <AnimatePresence>
         {active && <StudyModal key={active.slug} study={active} onClose={() => setActive(null)} />}
@@ -454,7 +489,7 @@ export default function ResultsPage() {
       {/* access gate */}
       <AnimatePresence>
         {gateReady && gateOpen && (
-          <AccessGate key="gate" onUnlock={(n) => { setFirstName(n); setGateOpen(false) }} />
+          <AccessGate key="gate" onUnlock={(n) => { setUnlocked(true); setFirstName(n); setGateOpen(false) }} onClose={() => setGateOpen(false)} />
         )}
       </AnimatePresence>
     </div>

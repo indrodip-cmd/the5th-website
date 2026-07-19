@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
    links (WhatsApp, iMessage, etc.). og:image comes from opengraph-image.tsx. */
 const title = 'Client Case Studies & Results | The5th Consulting'
 const description =
-  'Real coaches and consultants, real revenue. Browse 15+ documented case studies — from a first $2,500 to $210,000 — showing exactly what we built and what it produced.'
+  'Real coaches and consultants, real revenue. Browse documented case studies — from a first $2,500 to $210,000 — showing exactly what we built and what it produced.'
 
 export const metadata: Metadata = {
   title,

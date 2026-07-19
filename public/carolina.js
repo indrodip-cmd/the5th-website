@@ -100,6 +100,16 @@
     }
   }
   var viewContext = '';   // what content the visitor is viewing, for AI context awareness
+  // Pick up identity captured elsewhere (e.g. the /results access gate) so
+  // Carolina immediately knows the visitor's name/email this session.
+  try {
+    window.addEventListener('the5th:identified', function (e) {
+      var d = (e && e.detail) || {};
+      if (d.firstName) { leadName = String(d.firstName).split(' ')[0]; try { localStorage.setItem('cw_lead_name', leadName); } catch (x) {} }
+      if (d.email) { leadEmail = String(d.email).trim(); try { localStorage.setItem('cw_lead_email', leadEmail); } catch (x) {} }
+      try { if (typeof isOpen !== 'undefined' && isOpen && typeof tab !== 'undefined' && tab === 'home' && typeof renderPanels === 'function') renderPanels(); } catch (x) {}
+    });
+  } catch (e) {}
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   // Respect the OS "reduce motion" setting — disables scale/slide/streaming.
   var REDUCE = false;
@@ -2707,6 +2717,9 @@
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
       var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid() };
+      // If we already know who this is (e.g. from the /results access gate),
+      // tell the server so Carolina greets and personalizes from the first turn.
+      if (leadName || leadEmail) body.lead = { name: leadName || null, email: leadEmail || null };
       if (viewContext) body.context = viewContext;
       else if (PAGE_CTX[pageContext()]) body.context = PAGE_CTX[pageContext()];   // keep the AI on-topic per page
       if (lang && lang !== 'en') body.lang = lang;

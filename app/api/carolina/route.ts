@@ -472,6 +472,17 @@ export async function POST(req: NextRequest) {
     const cfg = aiConfig(settings)
     let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
 
+    // Known identity (e.g. captured by the /results access gate) — so Carolina
+    // uses their name from the first turn and the CRM stays linked.
+    const leadName = sanitizeText(body?.lead?.name, 80) || null
+    const leadEmail = isValidEmail(body?.lead?.email) ? String(body.lead.email).toLowerCase() : null
+    if (leadName || leadEmail) {
+      system += `\n\nVISITOR IDENTITY: You already know this visitor${leadName ? ` — their name is ${leadName}` : ''}${leadEmail ? ` (${leadEmail})` : ''}. Greet and refer to them by name naturally; never ask for a name or email you already have. Do NOT assume any action (quiz, purchase, booking) you haven't verified.`
+      if (leadEmail && body?.visitor_id) {
+        identify({ visitorId: String(body.visitor_id), email: leadEmail, name: leadName || undefined, source: 'results_page' }).catch(() => {})
+      }
+    }
+
     // Respond in the visitor's chosen language.
     const LANGS: Record<string, string> = { fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch' }
     const langName = LANGS[sanitizeText(body?.lang, 6)]

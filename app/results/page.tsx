@@ -158,11 +158,120 @@ function StudyCard({ study, onOpen }: { study: Study; onOpen: () => void }) {
   )
 }
 
+/* ════════ Access gate — name + email to unlock the library ════════ */
+function AccessGate({ onUnlock }: { onUnlock: (firstName: string) => void }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const nm = name.trim()
+    const em = email.trim()
+    if (nm.length < 2) { setErr('Please enter your first name.'); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setErr('Please enter a valid email address.'); return }
+    setErr(''); setBusy(true)
+    const first = nm.split(' ')[0]
+    try {
+      localStorage.setItem('the5th_first_name', first)
+      localStorage.setItem('cw_lead_name', first)
+      localStorage.setItem('cw_lead_email', em)
+    } catch {}
+    let visitorId = ''
+    try { visitorId = (window as unknown as { __a5vid?: string }).__a5vid || localStorage.getItem('a5_vid') || '' } catch {}
+    // Let Carolina + the personalization layer know instantly.
+    try { window.dispatchEvent(new CustomEvent('the5th:identified', { detail: { firstName: first, email: em } })) } catch {}
+    // Report to the CRM as a Results-page visitor (fire-and-forget).
+    fetch('/api/results/access', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nm, email: em, visitor_id: visitorId }) }).catch(() => {})
+    onUnlock(first)
+  }
+
+  const field: React.CSSProperties = { width: '100%', border: `1px solid ${C.border}`, background: C.white, borderRadius: 11, padding: '13px 15px', fontSize: 15, fontFamily: 'inherit', color: C.ink, outline: 'none' }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
+      style={{ position: 'fixed', inset: 0, zIndex: 210, background: 'rgba(35,16,41,.42)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'max(18px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))', overflowY: 'auto' }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 26, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+        role="dialog" aria-modal="true" aria-label="Unlock the case study library"
+        style={{ position: 'relative', width: '100%', maxWidth: 460, margin: 'auto', background: C.cream, borderRadius: 22, border: `1px solid ${C.border}`, boxShadow: '0 50px 110px -30px rgba(35,16,41,.7)', overflow: 'hidden' }}
+      >
+        {/* branded top */}
+        <div style={{ background: `linear-gradient(165deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', padding: '30px 30px 26px', textAlign: 'center' }}>
+          <span style={{ ...eyebrow, color: C.goldSoft, marginBottom: 12 }}>Client Case Study Library</span>
+          <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(26px,4.4vw,34px)', fontWeight: 600, lineHeight: 1.12, letterSpacing: '-.01em' }}>
+            See the real numbers behind <em style={{ fontStyle: 'italic', color: C.gold }}>15+ client wins.</em>
+          </h2>
+        </div>
+
+        {/* body */}
+        <form onSubmit={submit} style={{ padding: '24px 30px 28px' }}>
+          <p style={{ fontSize: 14.5, color: C.inkSoft, lineHeight: 1.6, fontWeight: 300, marginBottom: 18, textAlign: 'center' }}>
+            Tell us who you are and we&rsquo;ll open the full library — then tailor the stories and your next step to <b style={{ fontWeight: 600, color: C.ink }}>your</b> niche. It&rsquo;s free.
+          </p>
+
+          {/* why it matters */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 9, background: C.white, border: `1px solid ${C.border}`, borderRadius: 12, padding: '14px 16px', marginBottom: 18 }}>
+            {[
+              'Unlock all 15+ documented case studies + video reviews',
+              'Get the wins closest to your business, not random ones',
+              'Your concierge greets you by name and remembers you',
+            ].map(t => (
+              <div key={t} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
+                <span style={{ color: C.goldDeep, fontWeight: 700, flexShrink: 0, lineHeight: 1.5 }}>✓</span>
+                <span style={{ fontSize: 13, color: C.inkSoft, lineHeight: 1.5 }}>{t}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="First name" autoComplete="given-name" style={field} />
+            <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" type="email" autoComplete="email" inputMode="email" style={field} />
+          </div>
+
+          {err && <p style={{ fontSize: 12.5, color: '#a1451f', marginTop: 10 }}>{err}</p>}
+
+          <button type="submit" disabled={busy}
+            style={{ width: '100%', marginTop: 16, background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 15.5, fontWeight: 700, padding: '15px 24px', borderRadius: 10, border: 'none', cursor: busy ? 'default' : 'pointer', opacity: busy ? 0.7 : 1, fontFamily: 'inherit', boxShadow: '0 14px 34px rgba(201,168,76,.32)' }}>
+            {busy ? 'Opening…' : 'Show me the results →'}
+          </button>
+          <p style={{ fontSize: 11.5, color: C.muted, marginTop: 12, textAlign: 'center', lineHeight: 1.5 }}>
+            No spam — just your results library and the occasional useful email. Unsubscribe anytime.
+          </p>
+        </form>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 /* ════════ Page ════════ */
 export default function ResultsPage() {
   const [query, setQuery] = useState('')
   const [cat, setCat] = useState('All')
   const [active, setActive] = useState<Study | null>(null)
+
+  // Access gate — visitors enter name + email to unlock the library. Returning
+  // visitors (email already stored on this device) skip straight in.
+  const [gateOpen, setGateOpen] = useState(false)
+  const [gateReady, setGateReady] = useState(false)
+  useEffect(() => {
+    const check = () => {
+      let hasEmail = false
+      try { hasEmail = !!localStorage.getItem('cw_lead_email') } catch {}
+      setGateOpen(!hasEmail)
+      setGateReady(true)
+    }
+    check()
+  }, [])
 
   // Personalization — if Carolina knows the visitor's name, this page greets
   // them by it (and updates live the moment she learns it).
@@ -338,6 +447,13 @@ export default function ResultsPage() {
       {/* modal */}
       <AnimatePresence>
         {active && <StudyModal key={active.slug} study={active} onClose={() => setActive(null)} />}
+      </AnimatePresence>
+
+      {/* access gate */}
+      <AnimatePresence>
+        {gateReady && gateOpen && (
+          <AccessGate key="gate" onUnlock={(n) => { setFirstName(n); setGateOpen(false) }} />
+        )}
       </AnimatePresence>
     </div>
   )

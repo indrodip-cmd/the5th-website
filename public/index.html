@@ -11,6 +11,7 @@
     <script defer src="/cookie-consent.js"></script>
     <!-- Carolina concierge chat widget -->
     <script defer src="/carolina.js"></script>
+  <script defer src="/personalize.js"></script>
     <!-- Homepage promotions (CMS-driven premium product cards) -->
     <script defer src="/promos.js"></script>
 
@@ -478,6 +479,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
   font-style:italic;font-weight:300;
   color:var(--gold);
 }
+/* Personalized greeting — revealed only when we know the visitor (personalize.js). */
+.hero__hi{display:none;font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:12px;line-height:1;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
+@keyframes heroHiIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){html[data-known="yes"] .hero__hi{animation:none}}
 .hero__copy{
   font-family:'DM Sans',sans-serif;
   font-size:clamp(1rem,2vw,1.25rem);
@@ -1820,6 +1826,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;appearance
     <div class="hero__content flex">
 
       <div class="hero__copyContainer cell">
+        <p class="hero__hi" data-p-tpl="Welcome back, {name} — this one's for you." data-p-anon=""></p>
         <h1 class="hero__title">
           Turn your experience into<br><em>a $10,000/month coaching business</em>
         </h1>

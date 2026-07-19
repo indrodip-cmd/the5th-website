@@ -127,7 +127,7 @@ const STUDIES: Study[] = [
   {
     slug: 'shyama-prasad-goswami',
     name: 'Shyama Prasad Goswami',
-    image: '/clients/c5.jpg',
+    image: '/clients/cases/shyama-prasad-goswami.jpg',
     category: 'Business & Consulting',
     niche: 'B2B growth consulting',
     location: '',

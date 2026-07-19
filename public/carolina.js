@@ -87,8 +87,17 @@
   var leadEmail = '';
   try { leadEmail = localStorage.getItem('cw_lead_email') || ''; leadName = leadName || localStorage.getItem('cw_lead_name') || ''; } catch (e) {}
   function setLead(name, email) {
-    if (name) { leadName = String(name).split(' ')[0]; try { localStorage.setItem('cw_lead_name', leadName); } catch (e) {} }
-    if (email) { leadEmail = String(email).trim(); try { localStorage.setItem('cw_lead_email', leadEmail); } catch (e) {} }
+    var changed = false;
+    if (name) { leadName = String(name).split(' ')[0]; try { localStorage.setItem('cw_lead_name', leadName); localStorage.setItem('the5th_first_name', leadName); } catch (e) {} changed = true; }
+    if (email) { leadEmail = String(email).trim(); try { localStorage.setItem('cw_lead_email', leadEmail); } catch (e) {} changed = true; }
+    // Broadcast identity so the website can personalize in real time — the
+    // moment Carolina learns who they are, pages can greet them by name.
+    if (changed) {
+      try {
+        window.The5thVisitor = Object.assign(window.The5thVisitor || {}, { firstName: leadName || null, email: leadEmail || null });
+        window.dispatchEvent(new CustomEvent('the5th:identified', { detail: { firstName: leadName || null, email: leadEmail || null } }));
+      } catch (e) {}
+    }
   }
   var viewContext = '';   // what content the visitor is viewing, for AI context awareness
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -1632,7 +1641,11 @@
       + '<div class="cw-tb-right">' + teamCluster(true)
       + '<button class="cw-iconbtn cw-hero-x" id="cw-home-close" aria-label="Close">' + ICON.close + '</button></div></div>';
 
-    var greet = '<div class="cw-hgreet"><span class="cw-hg1">' + esc(T('hi')) + '</span><span class="cw-hg2">' + esc(T('help')) + '</span></div>';
+    // Personalized welcome for returning, known visitors — "remember me".
+    var known = leadName && !isFirstTime();
+    var hg1 = known ? ('Welcome back, ' + leadName + ' 👋') : T('hi');
+    var hg2 = known ? 'Good to see you again — want to pick up where we left off?' : T('help');
+    var greet = '<div class="cw-hgreet"><span class="cw-hg1">' + esc(hg1) + '</span><span class="cw-hg2">' + esc(hg2) + '</span></div>';
 
     var searchCard = '<button class="cw-searchcard" id="cw-searchcard">'
       + '<span class="cw-sc-ic">' + ICON.search + '</span>'
@@ -2949,6 +2962,8 @@
     var msgs = G.msgs || []; if (!msgs.length && !G.returning) return null;
     var idx = 0; try { var k = 'cw_pg_' + ctx, s = sessionStorage.getItem(k); if (s != null) idx = parseInt(s, 10) || 0; else { idx = Math.floor(Math.random() * msgs.length); sessionStorage.setItem(k, String(idx)); } } catch (e) {}
     var msg = (!isFirstTime() && G.returning) ? G.returning : (msgs[idx % msgs.length] || G.returning);
+    // Greet returning, known visitors by name so it feels personal, not generic.
+    if (leadName && /welcome back/i.test(msg)) msg = msg.replace(/welcome back/i, 'Welcome back, ' + leadName);
     return { ctx: ctx, msg: msg, cta: G.cta || 'Show me', seed: G.seed || '', agent: G.agent || 'carolina' };
   }
 

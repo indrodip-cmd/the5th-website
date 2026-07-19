@@ -118,6 +118,8 @@ export default function RootLayout({
         <Script src="/cookie-consent.js" strategy="afterInteractive" />
         {/* Carolina — concierge chat widget (sales + booking) */}
         <Script src="/carolina.js" strategy="afterInteractive" />
+        {/* Personalization layer — greets known visitors by name site-wide */}
+        <Script src="/personalize.js" strategy="afterInteractive" />
         {/* Whop embedded checkout loader — powers the $1 trial checkout on the offer page */}
         <Script src="https://js.whop.com/static/checkout/loader.js" strategy="afterInteractive" />
         {/* Google reCAPTCHA v3 — invisible bot protection on lead forms (loads only when configured) */}

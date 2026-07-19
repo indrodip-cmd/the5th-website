@@ -164,6 +164,26 @@ export default function ResultsPage() {
   const [cat, setCat] = useState('All')
   const [active, setActive] = useState<Study | null>(null)
 
+  // Personalization — if Carolina knows the visitor's name, this page greets
+  // them by it (and updates live the moment she learns it).
+  const [firstName, setFirstName] = useState('')
+  useEffect(() => {
+    const read = () => {
+      try {
+        const w = (window as unknown as { The5thVisitor?: { firstName?: string } }).The5thVisitor?.firstName
+        const n = w || localStorage.getItem('the5th_first_name') || localStorage.getItem('cw_lead_name') || ''
+        setFirstName(n ? String(n).split(' ')[0] : '')
+      } catch {}
+    }
+    read()
+    const onId = (e: Event) => {
+      const n = (e as CustomEvent<{ firstName?: string }>).detail?.firstName
+      if (n) setFirstName(String(n).split(' ')[0])
+    }
+    window.addEventListener('the5th:identified', onId)
+    return () => window.removeEventListener('the5th:identified', onId)
+  }, [])
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return STUDIES.filter(s => {
@@ -211,14 +231,17 @@ export default function ResultsPage() {
         </a>
       </header>
 
-      {/* hero */}
+      {/* hero — personalized by name when Carolina knows the visitor */}
       <section className="rwrap rhero" style={{ textAlign: 'center', paddingTop: 'clamp(38px,7vw,60px)', paddingBottom: 'clamp(20px,4vw,30px)' }}>
-        <span style={{ ...eyebrow, marginBottom: 14 }}>The 10K Roadmap Program · Case Study Library</span>
+        <span style={{ ...eyebrow, marginBottom: 14 }}>{firstName ? `Curated for ${firstName} · Case Study Library` : 'The 10K Roadmap Program · Case Study Library'}</span>
         <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px,5.6vw,58px)', fontWeight: 500, color: C.ink, lineHeight: 1.05, letterSpacing: '-.02em', maxWidth: 760, margin: '0 auto' }}>
-          Real coaches. Real revenue. <em style={{ fontStyle: 'italic', color: C.goldDeep }}>Browse the proof.</em>
+          Real coaches. Real revenue.{' '}
+          <em style={{ fontStyle: 'italic', color: C.goldDeep }}>{firstName ? `${firstName}, yours is next.` : 'Browse the proof.'}</em>
         </h1>
         <p style={{ fontSize: 'clamp(15px,1.8vw,16.5px)', fontWeight: 300, color: C.inkSoft, maxWidth: 560, margin: '18px auto 0', lineHeight: 1.7 }}>
-          Every win in one place — search a niche or filter, then open a story to see exactly what we built and what it produced.
+          {firstName
+            ? `Hand-picked wins across every niche, ${firstName} — search yours, then open a story to see exactly what we built and what it produced.`
+            : 'Every win in one place — search a niche or filter, then open a story to see exactly what we built and what it produced.'}
         </p>
       </section>
 

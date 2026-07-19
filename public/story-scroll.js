@@ -34,6 +34,52 @@
   var beats = [].slice.call(section.querySelectorAll('.tsx-beat'));
   var words = [].slice.call(section.querySelectorAll('.tsx-word'));
 
+  // ── Cinematic real-face frames (optional) ──────────────────────────────
+  // Drop lauren-001..NN.webp into /public/story-frames/ and the engine scrubs
+  // them onto the canvas with scroll instead of animating the SVG. If the
+  // frames are absent, the procedural SVG above stays as the fallback.
+  var svgFace = document.getElementById('tsx-face');
+  var canvas = document.getElementById('tsx-canvas');
+  var cctx = canvas ? canvas.getContext('2d') : null;
+  var FRAMES = { base: '/story-frames/lauren-', pad: 3, ext: '.webp', count: 48 };
+  var imgs = [], framesReady = false, reduceMotion = false;
+  try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  function frameURL(n) { var s = '' + n; while (s.length < FRAMES.pad) s = '0' + s; return FRAMES.base + s + FRAMES.ext; }
+  // nearest already-loaded frame, so scrubbing never blanks while preloading
+  function nearestLoaded(idx) {
+    if (imgs[idx] && imgs[idx].complete && imgs[idx].naturalWidth) return imgs[idx];
+    for (var d = 1; d < FRAMES.count; d++) {
+      var a = idx - d, b = idx + d;
+      if (a >= 0 && imgs[a] && imgs[a].complete && imgs[a].naturalWidth) return imgs[a];
+      if (b < FRAMES.count && imgs[b] && imgs[b].complete && imgs[b].naturalWidth) return imgs[b];
+    }
+    return null;
+  }
+  function drawFrame(p) {
+    if (!cctx) return;
+    var idx = reduceMotion ? (FRAMES.count - 1) : clamp(Math.round(p * (FRAMES.count - 1)), 0, FRAMES.count - 1);
+    var im = nearestLoaded(idx);
+    if (!im) return;
+    cctx.clearRect(0, 0, canvas.width, canvas.height);
+    cctx.drawImage(im, 0, 0, canvas.width, canvas.height);
+  }
+  function activateFrames(first) {
+    canvas.width = first.naturalWidth || 640;   // buffer = frame native px; CSS scales it
+    canvas.height = first.naturalHeight || 800;
+    imgs[0] = first;
+    framesReady = true;
+    if (svgFace) svgFace.style.display = 'none';
+    canvas.style.display = 'block';
+    for (var i = 1; i < FRAMES.count; i++) { var im = new Image(); im.src = frameURL(i + 1); imgs[i] = im; }
+    calc();
+  }
+  function setupFrames() {
+    if (!canvas || !cctx) return;
+    var probe = new Image();
+    probe.onload = function () { activateFrames(probe); };  // frames exist → switch on
+    probe.src = frameURL(1);                                // onerror (404) → keep SVG
+  }
+
   function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
   function lerp(a, b, t) { return a + (b - a) * t; }
   function smooth(t) { return t * t * (3 - 2 * t); }
@@ -79,6 +125,10 @@
   var WARM_T = [252, 246, 232], WARM_B = [241, 216, 152];
 
   function render(p) {
+    // Face: scrub real frames when present, otherwise animate the procedural SVG.
+    if (framesReady) {
+      drawFrame(p);
+    } else {
     var s = sample(p);
 
     // pupils follow the gaze
@@ -106,6 +156,7 @@
     // head drifts left→right and turns toward the gaze
     var tx = lerp(-24, 24, p), ang = s.gx * 6;
     head.setAttribute('transform', 'translate(' + tx.toFixed(1) + ' 0) rotate(' + ang.toFixed(2) + ' 220 212)');
+    }
 
     // world stays cool grey through the struggle, then warms to gold at the turn
     var w = smooth(clamp((p - 0.64) / 0.30, 0, 1));
@@ -144,4 +195,5 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   calc();
+  setupFrames();
 })();

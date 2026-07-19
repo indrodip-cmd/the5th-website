@@ -1972,6 +1972,9 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     .tsx-word{position:absolute;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:#B0902F;opacity:0;white-space:nowrap;text-shadow:0 2px 24px rgba(255,255,255,.55);will-change:transform,opacity}
     .tsx-face{position:relative;z-index:4;width:min(40vh,320px);height:auto;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));animation:tsxFloat 5.5s ease-in-out infinite;will-change:transform}
     @keyframes tsxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+    /* Cinematic real-face frames: a <canvas> the scroll engine scrubs. Hidden
+       until story-scroll.js detects frames in /public/story-frames/. */
+    .tsx-frames{position:relative;z-index:4;width:min(40vh,320px);height:auto;display:none;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));will-change:contents}
     .tsx-copy{position:relative;z-index:4;margin-top:2.2vh;width:100%;max-width:660px;min-height:220px}
     .tsx-beat{position:absolute;left:0;right:0;top:0;opacity:0;padding:0 24px;text-align:center;will-change:opacity}
     .tsx-time{display:inline-block;font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#B0902F;margin:0 0 12px}
@@ -1984,7 +1987,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     @keyframes tsxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
     .tsx-prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:5;background:rgba(46,26,53,.09)}
     .tsx-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E4C879,#C9A84C 60%,#B0902F)}
-    @media(max-width:640px){.tsx-story{height:560vh}.tsx-face{width:min(26vh,180px)}.tsx-copy{min-height:270px}}
+    @media(max-width:640px){.tsx-story{height:560vh}.tsx-face,.tsx-frames{width:min(26vh,180px)}.tsx-copy{min-height:270px}}
     @media(prefers-reduced-motion:reduce){.tsx-hint span,.tsx-face{animation:none}}
   </style>
   <div class="tsx-stage">
@@ -2045,6 +2048,10 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
         <path id="tsx-mouth" d="M182 286 Q220 286 258 286" fill="none" stroke="#2E1A35" stroke-width="3.8" stroke-linecap="round"/>
       </g>
     </svg>
+    <!-- Cinematic real-face morph. story-scroll.js scrubs frames from
+         /public/story-frames/ onto this canvas and hides the SVG above when
+         those frames are present; otherwise the SVG remains the fallback. -->
+    <canvas class="tsx-frames" id="tsx-canvas" aria-hidden="true"></canvas>
 
     <div class="tsx-copy">
       <div class="tsx-beat" data-c="0.03"><h3>Meet Lauren.</h3><p>She's 47. A loving mother, a caring friend, the woman who always puts everyone else first.</p></div>

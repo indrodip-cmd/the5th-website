@@ -346,6 +346,12 @@ const CATEGORIES = ['All', ...Array.from(new Set(STUDIES.map(s => s.category)))]
 interface VideoReview { src: string; w: number; h: number }
 const VIDEO_REVIEWS: VideoReview[] = [
   { src: 'https://fast.wistia.net/embed/iframe/5yh07cwlui?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/tnorqgs7dj?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/yz9coq1jwd?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/ukn3ruu2nr?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/tikovukneu?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/oni4jy3cuf?seo=true&videoFoam=false', w: 560, h: 315 },
+  { src: 'https://fast.wistia.net/embed/iframe/tcqebjpgyk?seo=true&videoFoam=false', w: 560, h: 315 },
   { src: 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1628699258559837%2F&show_text=false&width=560&t=0', w: 560, h: 314 },
   { src: 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F2068186330612350%2F&show_text=false&width=560&t=0', w: 560, h: 314 },
   { src: 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fthinkwithindrodip%2Fvideos%2F1041170600725458%2F&show_text=false&width=560&t=0', w: 560, h: 314 },

@@ -26,6 +26,8 @@
   var bg = document.getElementById('tsx-bg');
   var cta = document.getElementById('tsx-cta');
   var hint = document.getElementById('tsx-hint');
+  var vidS = document.getElementById('tsx-vidStruggle');
+  var vidF = document.getElementById('tsx-vidFreedom');
   var beats = [].slice.call(section.querySelectorAll('.tsx-beat'));
   var words = [].slice.call(section.querySelectorAll('.tsx-word'));
 
@@ -102,11 +104,44 @@
       words[j].style.opacity = (o * 0.92).toFixed(3);
       words[j].style.transform = 'translateY(' + ((1 - o) * 22).toFixed(1) + 'px)';
     }
+    // cinematic mood footage (when enabled): rain fades out, gold fades in
+    if (videosOn) {
+      if (vidS) vidS.style.opacity = (clamp(1 - p / 0.5, 0, 1) * 0.9).toFixed(3);
+      if (vidF) vidF.style.opacity = (clamp((p - 0.45) / 0.25, 0, 1) * 0.95).toFixed(3);
+    }
+
     // CTA at the summit, hint fades quickly
     cta.style.opacity = clamp((p - 0.9) / 0.06, 0, 1);
     cta.style.pointerEvents = p > 0.92 ? 'auto' : 'none';
     if (hint) hint.style.opacity = clamp(1 - p * 12, 0, 1).toFixed(2);
   }
+
+  // Load the mood videos only on capable devices; gradient is the fallback.
+  var videosOn = false;
+  function enableVideos() {
+    if (videosOn) return;
+    try {
+      if (window.matchMedia) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (window.matchMedia('(max-width:640px)').matches) return; // keep mobile light
+      }
+      var c = navigator.connection;
+      if (c && (c.saveData || /(^|-)2g/.test(c.effectiveType || ''))) return;
+    } catch (e) {}
+    videosOn = true;
+    [vidS, vidF].forEach(function (v) {
+      if (v && v.getAttribute('data-src') && !v.src) {
+        v.src = v.getAttribute('data-src');
+        var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      }
+    });
+  }
+  try {
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (e) { if (e.isIntersecting) enableVideos(); });
+    }, { rootMargin: '700px 0px' });
+    io.observe(section);
+  } catch (e) { enableVideos(); }
 
   var ticking = false;
   function calc() {

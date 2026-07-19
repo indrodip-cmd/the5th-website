@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import VideoWall from '@/components/VideoWall'
@@ -106,8 +106,8 @@ const STUDIES: Study[] = [
     slug: 'gurpreet',
     name: 'Gurpreet',
     image: '/clients/cases/gurpreet.png',
-    category: 'Business & Consulting',
-    niche: 'Coaching business, from zero',
+    category: 'Self Development',
+    niche: 'Law of Attraction & self development',
     location: '',
     tagline: 'From Zero Revenue to $18,000 in 3 Months',
     background:
@@ -122,7 +122,7 @@ const STUDIES: Study[] = [
       'Built a repeatable client-acquisition process from scratch',
       'Revenue on a business that had previously produced nothing',
     ],
-    tags: ['outreach', 'from zero', 'first clients', 'offer clarity', 'overwhelm'],
+    tags: ['law of attraction', 'self development', 'manifestation', 'mindset', 'outreach', 'from zero', 'first clients', 'offer clarity', 'overwhelm'],
   },
   {
     slug: 'shyama-prasad-goswami',
@@ -149,7 +149,7 @@ const STUDIES: Study[] = [
   {
     slug: 'torill',
     name: 'Torill',
-    image: '/clients/toril.jpg',
+    // Photo removed at Torill's request — no consent to use her image.
     category: 'Leadership & Executive',
     niche: 'Leadership coaching',
     location: 'Norway',
@@ -194,7 +194,7 @@ const STUDIES: Study[] = [
     slug: 'girish',
     name: 'Girish',
     image: '/clients/cases/girish.png',
-    category: 'Mindset',
+    category: 'Self Development',
     niche: 'Celebrity Law of Attraction coaching',
     location: 'India',
     tagline: "A Celebrity Law of Attraction Coach's Comeback",
@@ -326,7 +326,7 @@ const STUDIES: Study[] = [
     slug: 'milesa-arjoon-greene',
     name: 'Milesa Arjoon Greene',
     image: '/clients/cases/milesa-arjoon-greene.png',
-    category: 'Mindset',
+    category: 'Self Development',
     niche: 'EFT & anxiety coaching',
     location: '',
     tagline: '20 Years in Corporate, Rebuilt Into an EFT Coaching Business',
@@ -405,7 +405,7 @@ function StudyModal({ study, onClose }: { study: Study; onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
       onClick={onClose}
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(35,16,41,.55)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(35,16,41,.55)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 'max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -517,20 +517,6 @@ export default function ResultsPage() {
   const [cat, setCat] = useState('All')
   const [active, setActive] = useState<Study | null>(null)
 
-  // Dock the filter toolbar flush under the (variable-height) header.
-  const headerRef = useRef<HTMLElement>(null)
-  const [headerH, setHeaderH] = useState(74)
-  useEffect(() => {
-    const el = headerRef.current
-    if (!el) return
-    const update = () => setHeaderH(el.offsetHeight)
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
-
-  const searching = query.trim().length > 0
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return STUDIES.filter(s => {
@@ -541,61 +527,57 @@ export default function ResultsPage() {
     })
   }, [query, cat])
 
-  // Library "shelves": browse mode groups by niche/category; search collapses to a flat result set.
-  const shelves = useMemo(() => {
-    if (searching) return null
-    const cats = cat === 'All' ? CATEGORIES.filter(c => c !== 'All') : [cat]
-    return cats
-      .map(c => ({ category: c, items: filtered.filter(s => s.category === c) }))
-      .filter(shelf => shelf.items.length > 0)
-  }, [searching, cat, filtered])
-
-  const cardsGrid = (items: Study[]) => (
-    <div className="cs-cards">
-      {items.map(s => <StudyCard key={s.slug} study={s} onOpen={() => setActive(s)} />)}
-    </div>
-  )
-
   return (
     <div style={{ minHeight: '100vh', background: C.cream, fontFamily: "'DM Sans', system-ui, sans-serif", color: C.ink }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        body{-webkit-font-smoothing:antialiased}
-        .rwrap{max-width:1120px;margin:0 auto;padding:0 24px}
-        .cs-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+        html,body{max-width:100%;overflow-x:hidden}
+        body{-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+        img,iframe{max-width:100%}
+        /* content wrapper: fluid gutters that also respect notch safe-areas */
+        .rwrap{max-width:1120px;margin:0 auto;padding-left:max(clamp(16px,4vw,24px),env(safe-area-inset-left));padding-right:max(clamp(16px,4vw,24px),env(safe-area-inset-right))}
+        /* card grid: min() keeps a single card from ever overflowing a narrow phone */
+        .cs-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:clamp(14px,2.4vw,22px)}
         .cs-card{transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
-        .cs-card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -34px rgba(46,26,53,.55);border-color:${C.goldLine}}
+        @media(hover:hover){.cs-card:hover{transform:translateY(-4px);box-shadow:0 24px 50px -34px rgba(46,26,53,.55);border-color:${C.goldLine}}}
+        .cs-card:active{transform:translateY(-1px)}
         .chip{transition:all .18s ease;white-space:nowrap;flex:0 0 auto}
-        .chiprow{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+        .chiprow{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;scroll-snap-type:x proximity;-ms-overflow-style:none}
+        .chiprow>*{scroll-snap-align:start}
         .chiprow::-webkit-scrollbar{display:none}
         .toolbar-inner{display:flex;align-items:center;gap:16px}
+        .rhead{padding:12px clamp(16px,4vw,28px);padding-left:max(clamp(16px,4vw,28px),env(safe-area-inset-left));padding-right:max(clamp(16px,4vw,28px),env(safe-area-inset-right))}
+        .rlogo{width:clamp(148px,42vw,212px);height:auto}
+        .rcta{font-size:13px;padding:9px 18px;white-space:nowrap}
         @media(max-width:640px){.toolbar-inner{flex-direction:column;align-items:stretch;gap:10px}}
-        @media(max-width:560px){.cs-cards{grid-template-columns:1fr}}
+        @media(max-width:420px){.rcta{font-size:12px;padding:8px 13px}}
+        /* short landscape phones: tighten vertical rhythm so cards show sooner */
+        @media(max-height:520px) and (orientation:landscape){.rhero{padding-top:26px!important;padding-bottom:16px!important}}
       `}</style>
 
-      {/* top bar */}
-      <header ref={headerRef} style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, background: C.ivory, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)' }}>
-        <a href="/"><Image src="/images/the5th-logo-purple.png" alt="The5th Consulting" width={220} height={86} priority style={{ objectFit: 'contain', height: 'auto' }} /></a>
-        <a href="/quiz" style={{ fontSize: 13, fontWeight: 600, color: C.plum, textDecoration: 'none', border: `1px solid ${C.goldLine}`, padding: '9px 18px', borderRadius: 50 }}>
+      {/* top bar — stays fixed at the top while the page scrolls */}
+      <header className="rhead" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, borderBottom: `1px solid ${C.border}`, background: 'rgba(251,248,242,.92)', position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)' }}>
+        <a href="/" style={{ display: 'inline-flex', flexShrink: 1, minWidth: 0 }}><Image src="/images/the5th-logo-purple.png" alt="The5th Consulting" width={212} height={83} priority className="rlogo" style={{ objectFit: 'contain' }} /></a>
+        <a href="/quiz" className="rcta" style={{ fontWeight: 600, color: C.plum, textDecoration: 'none', border: `1px solid ${C.goldLine}`, borderRadius: 50, flexShrink: 0 }}>
           Take the assessment →
         </a>
       </header>
 
       {/* hero */}
-      <section className="rwrap" style={{ textAlign: 'center', padding: '60px 24px 30px' }}>
+      <section className="rwrap rhero" style={{ textAlign: 'center', paddingTop: 'clamp(38px,7vw,60px)', paddingBottom: 'clamp(20px,4vw,30px)' }}>
         <span style={{ ...eyebrow, marginBottom: 14 }}>The 10K Roadmap Program · Case Study Library</span>
-        <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(34px,5.6vw,58px)', fontWeight: 500, color: C.ink, lineHeight: 1.04, letterSpacing: '-.02em', maxWidth: 760, margin: '0 auto' }}>
+        <h1 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(30px,5.6vw,58px)', fontWeight: 500, color: C.ink, lineHeight: 1.05, letterSpacing: '-.02em', maxWidth: 760, margin: '0 auto' }}>
           Real coaches. Real revenue. <em style={{ fontStyle: 'italic', color: C.goldDeep }}>Browse the proof.</em>
         </h1>
-        <p style={{ fontSize: 16.5, fontWeight: 300, color: C.inkSoft, maxWidth: 560, margin: '18px auto 0', lineHeight: 1.7 }}>
-          A library of wins across every niche — pick a shelf or search yours, then open a story to see exactly what we built and what it produced.
+        <p style={{ fontSize: 'clamp(15px,1.8vw,16.5px)', fontWeight: 300, color: C.inkSoft, maxWidth: 560, margin: '18px auto 0', lineHeight: 1.7 }}>
+          Every win in one place — search a niche or filter, then open a story to see exactly what we built and what it produced.
         </p>
       </section>
 
-      {/* sticky filter toolbar — docks flush under the header */}
-      <div style={{ position: 'sticky', top: headerH, zIndex: 40, background: 'rgba(251,248,242,.92)', backdropFilter: 'blur(10px)', borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
-        <div className="rwrap" style={{ padding: '12px 24px' }}>
+      {/* filter toolbar — scrolls with the page (only the header stays fixed) */}
+      <div style={{ background: C.ivory, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
+        <div className="rwrap" style={{ paddingTop: 12, paddingBottom: 12 }}>
           <div className="toolbar-inner">
             {/* search */}
             <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
@@ -629,36 +611,20 @@ export default function ResultsPage() {
         </div>
       </div>
 
-      {/* library */}
-      <section className="rwrap" style={{ padding: '30px 24px 40px' }}>
+      {/* library — all case studies together in one grid */}
+      <section className="rwrap" style={{ paddingTop: 'clamp(22px,4vw,30px)', paddingBottom: 'clamp(30px,5vw,40px)' }}>
         {filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '70px 24px', color: C.muted }}>
+          <div style={{ textAlign: 'center', padding: '70px 12px', color: C.muted }}>
             <p style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26, color: C.ink, marginBottom: 10 }}>No case studies match that search.</p>
             <p style={{ fontSize: 15, fontWeight: 300, marginBottom: 20 }}>Try a broader term, or clear your filters.</p>
             <button onClick={() => { setQuery(''); setCat('All') }} style={{ border: `1px solid ${C.goldLine}`, background: 'none', color: C.goldDeep, fontWeight: 600, fontSize: 14, padding: '11px 24px', borderRadius: 50, cursor: 'pointer' }}>
               Clear filters
             </button>
           </div>
-        ) : searching ? (
-          <>
-            <div style={{ marginBottom: 18, display: 'flex', alignItems: 'baseline', gap: 10 }}>
-              <span style={{ ...eyebrow, color: C.muted, fontSize: 10 }}>Search results</span>
-              <span style={{ fontSize: 13, color: C.muted }}>“{query.trim()}”</span>
-            </div>
-            {cardsGrid(filtered)}
-          </>
         ) : (
-          shelves!.map(shelf => (
-            <div key={shelf.category} style={{ marginBottom: 44 }}>
-              {/* shelf header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
-                <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(22px,3vw,30px)', fontWeight: 600, color: C.ink, lineHeight: 1, whiteSpace: 'nowrap' }}>{shelf.category}</h2>
-                <span style={{ fontSize: 11, fontWeight: 700, color: C.goldDeep, background: 'rgba(201,168,76,.12)', border: `1px solid ${C.goldLine}`, borderRadius: 50, padding: '3px 10px' }}>{shelf.items.length}</span>
-                <span style={{ flex: 1, height: 1, background: C.border }} />
-              </div>
-              {cardsGrid(shelf.items)}
-            </div>
-          ))
+          <div className="cs-cards">
+            {filtered.map(s => <StudyCard key={s.slug} study={s} onOpen={() => setActive(s)} />)}
+          </div>
         )}
       </section>
 

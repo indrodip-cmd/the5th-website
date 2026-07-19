@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react'
 import Cal, { getCalApi } from '@calcom/embed-react'
 import BookOffer from './BookOffer'
+import VideoWall from '@/components/VideoWall'
 
 const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie', 'toril']
 
@@ -67,6 +68,7 @@ export default function ChoseYourTime() {
 
       <main style={{ width: '100%', maxWidth: 1080, margin: '0 auto', padding: '0 24px 70px' }}>
         {!booked ? (
+          <>
           <div className="cyt-grid">
             <div style={{ animation: 'rise .4s ease' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#eaf7ef', color: '#1C4A32', fontWeight: 700, fontSize: 12.5, padding: '6px 12px', borderRadius: 999, marginBottom: 18 }}>
@@ -108,6 +110,21 @@ export default function ChoseYourTime() {
               </div>
             </div>
           </div>
+
+          {/* Video testimonials — reassurance while they pick a time */}
+          <section style={{ marginTop: 56 }}>
+            <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 30px' }}>
+              <div style={{ display: 'inline-block', fontSize: 11.5, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase', color: '#a9862f', marginBottom: 10 }}>Real clients · Real results</div>
+              <h2 style={{ fontSize: 'clamp(24px,3.6vw,34px)', fontWeight: 800, letterSpacing: '-.02em', lineHeight: 1.12, color: '#2a2233', margin: 0 }}>
+                See what happens <span style={{ color: '#C9A84C' }}>after the call.</span>
+              </h2>
+              <p style={{ fontSize: 15.5, color: '#57505f', lineHeight: 1.6, marginTop: 12 }}>
+                Unscripted reactions from professionals who booked exactly the call you&rsquo;re booking now. Tap any clip to play.
+              </p>
+            </div>
+            <VideoWall />
+          </section>
+          </>
         ) : (
           <div style={{ animation: 'rise .5s ease' }}>
             {/* Extraordinary confirmation moment */}

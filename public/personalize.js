@@ -105,7 +105,7 @@
     if (document.getElementById('t5-rib')) return;
     ensureStyle();
 
-    var sub = daysAway >= 1 ? ("It's been " + daysAway + (daysAway === 1 ? ' day' : ' days') + ' — welcome back.') : 'Good to see you again.';
+    var sub = daysAway >= 1 ? ("It's been " + daysAway + (daysAway === 1 ? ' day' : ' days') + '. Welcome back.') : 'Good to see you again.';
     var rib = document.createElement('div');
     rib.id = 't5-rib'; rib.setAttribute('role', 'status');
     rib.innerHTML =
@@ -121,7 +121,7 @@
     rib.querySelector('.t5-x').addEventListener('click', hide);
     rib.querySelector('.t5-go').addEventListener('click', function () {
       hide();
-      var seed = "Hi, I'm back — can we pick up where we left off?";
+      var seed = "Hi, I'm back. Can we pick up where we left off?";
       try { window.dispatchEvent(new CustomEvent('the5th:invite', { detail: { seed: seed } })); } catch (e) {}
     });
   }

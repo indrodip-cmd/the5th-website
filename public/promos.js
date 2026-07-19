@@ -98,7 +98,7 @@
     injectCSS();
     var head = '<div class="t5-promos__head"><span class="t5-eyebrow">Explore The5th</span>'
       + '<h2 class="t5-promos__title">Everything you need to turn your expertise into income</h2>'
-      + '<p class="t5-promos__sub">Choose the path that fits where you are — each one is built to get you to paying clients faster.</p></div>';
+      + '<p class="t5-promos__sub">Choose the path that fits where you are. Each one is built to get you to paying clients faster.</p></div>';
     container.className = 't5-promos';
     container.innerHTML = head + '<div class="t5-grid">' + products.map(card).join('') + '</div>';
     var cs = container.querySelectorAll('.t5-card'); for (var i = 0; i < cs.length; i++) cs[i].setAttribute('data-i', i);

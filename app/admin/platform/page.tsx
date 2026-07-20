@@ -532,25 +532,27 @@ function FlowsPanel({ flows, reload }: { flows: Row[]; reload: () => void }) {
     <Card pad={0}>
       <div style={{ padding: '14px 16px 8px', fontSize: 13, fontWeight: 700, color: T.ink }}>Automated emails <span style={{ fontWeight: 400, color: T.muted, fontSize: 12 }}>· pause, go live, suspend, or edit content</span></div>
       {flows.map((fl) => {
-        const key = fl.key as string, status = fl.status as string
+        const key = fl.key as string, status = fl.status as string, isSystem = fl.kind === 'system'
         return (
           <div key={key} style={{ borderTop: `1px solid ${T.border}`, padding: '11px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{fl.name as string} <span style={pill(statusColor(status))}>{status}</span> <span style={{ ...pill(T.muted), background: '#eef2f0', color: T.sub }}>{fl.provider as string}</span></div>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{fl.name as string} {isSystem ? <span style={{ ...pill(T.muted), background: '#eef2f0', color: T.sub }}>system · always on</span> : <span style={pill(statusColor(status))}>{status}</span>} <span style={{ ...pill(T.muted), background: '#eef2f0', color: T.sub }}>{fl.provider as string}</span></div>
                 <div style={{ fontSize: 12, color: T.muted }}>{(fl.category as string) || ''}{fl.cadence ? ` · ${fl.cadence}` : ''}{fl.description ? ` — ${fl.description}` : ''}</div>
               </div>
-              <div style={{ display: 'flex', gap: 4 }}>
-                {(['live', 'paused', 'suspended'] as const).map((st) => (
-                  <button key={st} disabled={busy === key || status === st} onClick={() => setStatus(key, st)}
-                    style={{ fontSize: 11.5, fontWeight: 600, padding: '5px 9px', borderRadius: 7, cursor: status === st ? 'default' : 'pointer', border: `1px solid ${status === st ? statusColor(st) : T.border}`, background: status === st ? statusColor(st) : '#fff', color: status === st ? '#fff' : T.sub }}>
-                    {st === 'live' ? 'Live' : st === 'paused' ? 'Pause' : 'Suspend'}
-                  </button>
-                ))}
-                <button onClick={() => setOpen(open === key ? null : key)} style={linkBtn}>{open === key ? 'Close' : 'Edit'}</button>
-              </div>
+              {isSystem ? <span style={{ fontSize: 11.5, color: T.muted }}>transactional</span> : (
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {(['live', 'paused', 'suspended'] as const).map((st) => (
+                    <button key={st} disabled={busy === key || status === st} onClick={() => setStatus(key, st)}
+                      style={{ fontSize: 11.5, fontWeight: 600, padding: '5px 9px', borderRadius: 7, cursor: status === st ? 'default' : 'pointer', border: `1px solid ${status === st ? statusColor(st) : T.border}`, background: status === st ? statusColor(st) : '#fff', color: status === st ? '#fff' : T.sub }}>
+                      {st === 'live' ? 'Live' : st === 'paused' ? 'Pause' : 'Suspend'}
+                    </button>
+                  ))}
+                  <button onClick={() => setOpen(open === key ? null : key)} style={linkBtn}>{open === key ? 'Close' : 'Edit'}</button>
+                </div>
+              )}
             </div>
-            {open === key && <FlowEditor flow={fl} onSaved={() => { setOpen(null); reload() }} />}
+            {open === key && !isSystem && <FlowEditor flow={fl} onSaved={() => { setOpen(null); reload() }} />}
           </div>
         )
       })}
@@ -569,10 +571,10 @@ function FlowEditor({ flow, onSaved }: { flow: Row; onSaved: () => void }) {
   }
   return (
     <div style={{ marginTop: 10, padding: 12, background: T.bg, borderRadius: 10 }}>
-      <div style={{ fontSize: 11.5, color: T.muted, marginBottom: 8 }}>Overrides the default content when set. Leave blank to keep the platform&apos;s built-in copy.</div>
-      <Field label="Subject override"><Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="(default)" /></Field>
+      <div style={{ fontSize: 11.5, color: T.muted, marginBottom: 8 }}>Applied live to this flow&apos;s next sends. <b>Subject</b> replaces the default subject. <b>Body</b> is appended as an announcement block to every email in this flow (keeps personalised content intact). Leave blank to keep the built-in copy.</div>
+      <Field label="Subject override"><Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="(keep default subject)" /></Field>
       <div style={{ height: 8 }} />
-      <Field label="Body override (HTML)"><Textarea rows={5} value={body} onChange={(e) => setBody(e.target.value)} placeholder="(default)" /></Field>
+      <Field label="Announcement to append (HTML)"><Textarea rows={5} value={body} onChange={(e) => setBody(e.target.value)} placeholder="(none)" /></Field>
       <div style={{ marginTop: 10 }}><Button disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save override'}</Button></div>
       <Msg text={msg} />
     </div>

@@ -432,10 +432,11 @@ export default function TheShiftView() {
             <strong>30 days</strong> for a full refund. No questions. No forms. No hoops. You even keep the workbook.
           </p>
           <div className="ts-guarantee__box">
-            And here’s what makes this different: <strong>if you don’t ask for a refund</strong>, we donate your entire
-            registration to <em className="ts-i-gold">The Shift</em>, a children’s wellness program supporting kids in
-            war-affected countries. So your $27 either transforms your business, or changes a child’s week. There is no
-            version of this where you lose.
+            <strong>If you don’t ask for a refund, we donate your entire registration to{' '}
+            <em className="ts-i-gold">The Shift</em></strong> — a children’s wellness program supporting kids in
+            war-affected countries. So your $27 either <strong>transforms your business</strong>, or{' '}
+            <strong>changes a child’s week</strong>. <span className="ts-guarantee__punch">There is no version of
+            this where you lose.</span>
           </div>
           <a href="#reserve" className="ts-btn ts-btn--light ts-btn--lg" style={{ marginTop: 30 }}>
             Claim my risk-free seat · $27
@@ -751,8 +752,10 @@ const CSS = `
 .ts-guarantee__h{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,4.2vw,3.1rem);line-height:1.12;color:#fff;margin:12px auto 0;max-width:720px}
 .ts-guarantee__h em{color:var(--gold);font-style:italic}
 .ts-guarantee__p{font-size:1.12rem;line-height:1.7;color:#DCEAE0;max-width:600px;margin:18px auto 0}
-.ts-guarantee__box{margin:24px auto 0;padding:24px 26px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);font-size:1.05rem;line-height:1.7;color:#F1F8F3;max-width:660px;text-align:left}
+.ts-guarantee__box{margin:30px auto 0;padding:30px 34px;border:1.5px solid rgba(201,168,76,.55);background:rgba(0,0,0,.16);border-radius:14px;font-size:1.5rem;font-weight:600;line-height:1.55;color:#FFFFFF;max-width:720px;text-align:center;box-shadow:0 24px 60px -34px rgba(0,0,0,.55)}
+.ts-guarantee__box strong{font-weight:800;color:#FFFFFF}
 .ts-guarantee__box .ts-i-gold{color:var(--gold);font-style:italic}
+.ts-guarantee__punch{display:block;margin-top:14px;font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.85rem;color:var(--gold)}
 
 /* Reserve / checkout */
 .ts-checkout{display:grid;grid-template-columns:1fr minmax(0,430px);gap:56px;align-items:start}
@@ -843,7 +846,8 @@ const CSS = `
 @media(max-width:680px){
   .ts-steps{grid-template-columns:1fr;gap:28px;max-width:340px;margin:0 auto}
   .ts-pains{grid-template-columns:1fr;gap:0}
-  .ts-guarantee__box{text-align:left}
+  .ts-guarantee__box{font-size:1.25rem;padding:24px 22px}
+  .ts-guarantee__punch{font-size:1.5rem}
   .ts-sec{padding:0 20px}
 }
 

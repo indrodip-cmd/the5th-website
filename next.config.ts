@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
    These rewrites give them clean URLs and resolve their /public/* asset
    references. The Next app owns /quiz, /admin, and /api. */
 const MARKETING_PAGES = [
-  'about', 'call', 'fast-forward', 'collective', 'ai',
+  'about', 'call', 'fast-forward', 'collective', 'ai', 'start',
   'privacy', 'terms', 'refund', 'disclaimer', 'data', 'california',
 ];
 

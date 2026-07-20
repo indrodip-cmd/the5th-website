@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import { createHmac } from 'node:crypto'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { EMAIL_BY_KEY, FROM } from '@/lib/event-campaign'
+import { EMAIL_BY_KEY, FROM, REPLY_TO } from '@/lib/event-campaign'
 
 const SITE = 'https://the5th.consulting'
 
@@ -44,6 +44,7 @@ export async function sendCampaignEmail(opts: {
   const { data, error } = await resend.emails.send({
     from: FROM,
     to: opts.to,
+    replyTo: REPLY_TO,
     subject: def.subject,
     html,
     text: def.preview,

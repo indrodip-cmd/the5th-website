@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { Resend } from 'resend'
-import { SCHEDULE, EMAIL_BY_KEY, FROM } from '@/lib/event-campaign'
-import { unsubUrlFor } from '@/lib/event-enroll'
+import { SCHEDULE, EMAIL_BY_KEY } from '@/lib/event-campaign'
+import { sendCampaignEmail, unsubUrlFor } from '@/lib/event-enroll'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -17,8 +16,6 @@ export const maxDuration = 60
    SAFETY: does nothing unless EVENT_CAMPAIGN_LIVE === 'true'. That gate lets
    us build + test the whole campaign without a single real send. */
 
-const getResend = () => new Resend(process.env.RESEND_API_KEY!)
-
 export async function GET(req: NextRequest) {
   if (req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
@@ -32,7 +29,6 @@ export async function GET(req: NextRequest) {
   if (!due.length) return NextResponse.json({ ok: true, due: 0 })
 
   const db = getSupabaseAdmin()
-  const resend = getResend()
   const summary: Record<string, { sent: number; skipped: number; errors: number }> = {}
 
   for (const item of due) {
@@ -57,18 +53,9 @@ export async function GET(req: NextRequest) {
         summary[item.key].skipped++
         continue
       }
-      try {
-        const html = def.build({ name: person.name || undefined, unsubUrl: unsubUrlFor(email) })
-        const { data, error } = await resend.emails.send({ from: FROM, to: email, subject: def.subject, html, text: def.preview })
-        if (error) {
-          summary[item.key].errors++
-          continue
-        }
-        await db.from('event_email_log').insert({ email, email_key: item.key, provider_id: data?.id || null }).then(() => {}, () => {})
-        summary[item.key].sent++
-      } catch {
-        summary[item.key].errors++
-      }
+      const r = await sendCampaignEmail({ key: item.key, to: email, name: person.name || undefined, log: true, unsubUrl: unsubUrlFor(email) })
+      if (r.ok) summary[item.key].sent++
+      else summary[item.key].errors++
     }
   }
 

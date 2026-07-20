@@ -381,8 +381,8 @@ export default function TheShiftView() {
       <section className="ts-band ts-band--parch">
         <div className="ts-sec">
           <div className="ts-center ts-head">
-            <div className="ts-eyebrow">In their own words</div>
-            <h2 className="ts-h2">Real messages from real clients.</h2>
+            <div className="ts-eyebrow">After the last challenge</div>
+            <h2 className="ts-h2">See what others are saying.</h2>
           </div>
           <div className="ts-shots">
             {[1, 2, 3, 4, 5, 6, 7].map((n) => (

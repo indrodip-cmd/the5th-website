@@ -13,6 +13,7 @@ interface NavItem { href: string; label: string; icon: string; match: (p: string
 const NAV: Array<{ section?: string; items: NavItem[] }> = [
   { items: [
     { href: '/admin/executive', label: 'Command Center', icon: '◈', match: (p) => p.startsWith('/admin/executive') || p.startsWith('/admin/launch') },
+    { href: '/admin/hq', label: 'Business HQ', icon: '◈', match: (p) => p.startsWith('/admin/hq') },
     { href: '/admin', label: 'Dashboard', icon: '◉', match: (p) => p === '/admin' },
     { href: '/admin/ai', label: 'Command AI', icon: '🤖', match: (p) => p === '/admin/ai' || p.startsWith('/admin/ai/'), flag: 'command_ai' },
     { href: '/admin/agents', label: 'Agent Platform', icon: '⚙︎', match: (p) => p.startsWith('/admin/agents'), flag: 'agent_platform' },

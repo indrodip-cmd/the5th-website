@@ -9,16 +9,60 @@ import { T } from './theme'
 interface Item { id: string; group: string; icon: string; label: string; sub?: string; run: () => void }
 type Row = Record<string, unknown>
 
-const NAV_ACTIONS: Array<{ icon: string; label: string; href: string; keywords: string }> = [
-  { icon: '◉', label: 'Dashboard', href: '/admin', keywords: 'home command center' },
-  { icon: '⧉', label: 'Contacts', href: '/admin/crm', keywords: 'crm people leads' },
-  { icon: '▤', label: 'Pipeline', href: '/admin/crm/pipeline', keywords: 'deals opportunities kanban' },
-  { icon: '◷', label: 'Meetings', href: '/admin/crm/meetings', keywords: 'calls zoom fathom' },
-  { icon: '✓', label: 'Tasks', href: '/admin/crm/tasks', keywords: 'todo follow up' },
-  { icon: '＄', label: 'Revenue', href: '/admin/revenue', keywords: 'money sales whop balance' },
-  { icon: '📈', label: 'Analytics', href: '/admin/analytics', keywords: 'stats reports' },
-  { icon: '🔌', label: 'Integrations', href: '/admin/integrations', keywords: 'whop clarity connect events' },
-  { icon: '⚙', label: 'Settings', href: '/admin/settings', keywords: 'config' },
+// Every admin destination — including each Platform Control sub-tab (deep-linked
+// via ?tab=) — so anything, however small, is one search away.
+const NAV_ACTIONS: Array<{ icon: string; label: string; href: string; keywords: string; group: string }> = [
+  // ── Command ──
+  { icon: '◈', label: 'Command Center', href: '/admin/executive', keywords: 'overview kpis dashboard briefing priorities home', group: 'Command' },
+  { icon: '◈', label: 'Business HQ', href: '/admin/hq', keywords: 'founder revenue mrr arr cash wise whop cal.com bookings brief coo vitals', group: 'Command' },
+  { icon: '◉', label: 'Dashboard', href: '/admin', keywords: 'home', group: 'Command' },
+  { icon: '🤖', label: 'Command AI', href: '/admin/ai', keywords: 'assistant chat ask question', group: 'Command' },
+  { icon: '🚀', label: 'Launch readiness', href: '/admin/launch', keywords: 'checklist go live', group: 'Command' },
+  { icon: '⚙︎', label: 'Agent Platform', href: '/admin/agents', keywords: 'agents automation specialists tools registry approvals', group: 'Command' },
+  { icon: '⚡', label: 'Automation', href: '/admin/automation', keywords: 'workflows graph triggers studio', group: 'Command' },
+  { icon: '🧠', label: 'Business Memory', href: '/admin/memory', keywords: 'organizational knowledge graph decisions experiments', group: 'Command' },
+  // ── CRM ──
+  { icon: '⧉', label: 'Contacts', href: '/admin/crm', keywords: 'crm people leads', group: 'CRM' },
+  { icon: '▤', label: 'Pipeline', href: '/admin/crm/pipeline', keywords: 'deals opportunities kanban', group: 'CRM' },
+  { icon: '◷', label: 'Meetings', href: '/admin/crm/meetings', keywords: 'calls fathom recordings', group: 'CRM' },
+  { icon: '✓', label: 'Tasks', href: '/admin/crm/tasks', keywords: 'todo follow up', group: 'CRM' },
+  { icon: '👥', label: 'CRM Members', href: '/admin/crm/members', keywords: 'contacts customers', group: 'CRM' },
+  { icon: '📦', label: 'Products', href: '/admin/crm/products', keywords: 'catalog offers', group: 'CRM' },
+  // ── Communications ──
+  { icon: '✉', label: 'Communications', href: '/admin/communications', keywords: 'email sms broadcast provider resend brevo twilio', group: 'Communications' },
+  { icon: '🎨', label: 'Email Studio', href: '/admin/communications/designer', keywords: 'email builder designer template brand visual', group: 'Communications' },
+  { icon: '📣', label: 'Campaigns', href: '/admin/communications/campaigns', keywords: 'sequence drip campaign', group: 'Communications' },
+  { icon: '💬', label: 'Live Inbox', href: '/admin/inbox', keywords: 'chat carolina takeover support', group: 'Communications' },
+  // ── Growth ──
+  { icon: '＄', label: 'Revenue', href: '/admin/revenue', keywords: 'money sales whop balance', group: 'Growth' },
+  { icon: '🎟', label: 'Event Campaign', href: '/admin/events', keywords: 'breakthrough event presale', group: 'Growth' },
+  { icon: '🧭', label: 'Journeys', href: '/admin/journeys', keywords: 'intent segments visitors journey intelligence', group: 'Growth' },
+  { icon: '📈', label: 'Analytics', href: '/admin/analytics', keywords: 'stats reports traffic', group: 'Growth' },
+  // ── Content ──
+  { icon: '▦', label: 'CMS', href: '/admin/cms', keywords: 'content pages', group: 'Content' },
+  { icon: '✦', label: 'Homepage Promos', href: '/admin/cms/promos', keywords: 'promotions banner homepage artwork', group: 'Content' },
+  { icon: '📚', label: 'Knowledge', href: '/admin/knowledge', keywords: 'brain coaching knowledge base fathom', group: 'Content' },
+  // ── Platform Control (member platform) ──
+  { icon: '⚙', label: 'Platform Control', href: '/admin/platform', keywords: 'super admin member platform product control', group: 'Platform' },
+  { icon: '👤', label: 'Platform · Members', href: '/admin/platform?tab=members', keywords: 'member tier deactivate add subscription upgrade downgrade', group: 'Platform' },
+  { icon: '🪙', label: 'Platform · Credits', href: '/admin/platform?tab=credits', keywords: 'ai credits grant top up balance deduct', group: 'Platform' },
+  { icon: '📞', label: 'Platform · Weekly Call', href: '/admin/platform?tab=calls', keywords: 'weekly coaching community call zoom schedule time timing reschedule cancel remove pause meeting', group: 'Platform' },
+  { icon: '✉', label: 'Platform · Emails', href: '/admin/platform?tab=emails', keywords: 'email center broadcast send schedule pause live suspend resend automated flows drip pulse newsletter', group: 'Platform' },
+  { icon: '🎓', label: 'Platform · Courses', href: '/admin/platform?tab=courses', keywords: 'course cms lessons modules publish curriculum', group: 'Platform' },
+  { icon: '💲', label: 'Platform · Pricing', href: '/admin/platform?tab=pricing', keywords: 'plan price monthly yearly ai cost', group: 'Platform' },
+  { icon: '🎥', label: 'Platform · Zoom settings', href: '/admin/platform?tab=zoom', keywords: 'zoom settings link passcode host meeting call', group: 'Platform' },
+  { icon: '🧩', label: 'Platform · Onboarding', href: '/admin/platform?tab=onboarding', keywords: 'onboarding flow new member setup', group: 'Platform' },
+  { icon: '🛡', label: 'Platform · Security', href: '/admin/platform?tab=security', keywords: 'blocked accounts unblock security events login', group: 'Platform' },
+  { icon: '🧠', label: 'Platform · AI Training', href: '/admin/platform?tab=training', keywords: 'train brain transcript coaching calls prompt version fathom', group: 'Platform' },
+  { icon: '🛒', label: 'Platform · Whop', href: '/admin/platform?tab=whop', keywords: 'whop billing webhook integration checkout', group: 'Platform' },
+  { icon: '📐', label: 'Platform · Blueprints', href: '/admin/platform?tab=blueprints', keywords: 'member blueprint overview tiers', group: 'Platform' },
+  // ── System ──
+  { icon: '🔌', label: 'Integrations', href: '/admin/integrations', keywords: 'whop clarity connect events api keys', group: 'System' },
+  { icon: '＄', label: 'Costs', href: '/admin/costs', keywords: 'ai cost spend usage', group: 'System' },
+  { icon: '❤', label: 'System', href: '/admin/system', keywords: 'health status uptime', group: 'System' },
+  { icon: '⚑', label: 'Feature Flags', href: '/admin/flags', keywords: 'flags toggles enable disable', group: 'System' },
+  { icon: '⚙', label: 'Settings', href: '/admin/settings', keywords: 'config preferences', group: 'System' },
+  { icon: '◲', label: 'Legacy tools', href: '/admin/legacy', keywords: 'old', group: 'System' },
 ]
 
 export default function CommandPalette() {
@@ -34,7 +78,11 @@ export default function CommandPalette() {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setOpen((o) => !o) }
       if (e.key === 'Escape') setOpen(false)
     }
-    window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
+    // Also open when the topbar search box (or anything) requests it.
+    const onOpen = () => setOpen(true)
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('admin:open-search', onOpen)
+    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('admin:open-search', onOpen) }
   }, [])
   useEffect(() => { if (open) { setQ(''); setSel(0); setTimeout(() => inputRef.current?.focus(), 30) } }, [open])
 
@@ -43,7 +91,7 @@ export default function CommandPalette() {
   useEffect(() => {
     const nav: Item[] = NAV_ACTIONS
       .filter((a) => !q || (a.label + ' ' + a.keywords).toLowerCase().includes(q.toLowerCase()))
-      .map((a) => ({ id: 'nav-' + a.href, group: 'Go to', icon: a.icon, label: a.label, run: () => go(a.href) }))
+      .map((a) => ({ id: 'nav-' + a.href, group: a.group, icon: a.icon, label: a.label, run: () => go(a.href) }))
     if (!q.trim()) { setResults(nav); setSel(0); return }
     let alive = true
     const t = setTimeout(async () => {

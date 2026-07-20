@@ -113,20 +113,18 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   )
 }
 
-/* Global search — jumps to CRM search results. */
+/* Global search — opens the ⌘K command palette so everything (every module and
+   every Platform Control setting) is one search away. */
 function GlobalSearch() {
-  const [q, setQ] = useState('')
+  const openPalette = () => window.dispatchEvent(new CustomEvent('admin:open-search'))
   return (
-    <form
-      onSubmit={(e) => { e.preventDefault(); if (q.trim()) window.location.href = `/admin/crm?q=${encodeURIComponent(q.trim())}` }}
-      style={{ flex: 1, maxWidth: 460 }}
-    >
+    <div style={{ flex: 1, maxWidth: 460 }}>
       <input
-        value={q} onChange={(e) => setQ(e.target.value)}
-        placeholder="Search contacts, notes, tasks…"
-        className="a-input" style={{ background: '#f6f7f6' }}
+        readOnly onFocus={openPalette} onClick={openPalette}
+        placeholder="Search everything…  ⌘K"
+        className="a-input" style={{ background: '#f6f7f6', cursor: 'pointer' }}
       />
-    </form>
+    </div>
   )
 }
 

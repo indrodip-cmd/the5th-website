@@ -3,7 +3,7 @@
    Ten tabs of platform product control — members, credits, courses, pricing,
    zoom, onboarding, security, training, whop, blueprints — all backed by
    cookie-gated /api/admin/platform/* routes writing the shared Supabase DB. */
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { T, Card, Button, Input, Select, Textarea, Field, PageHeader, EmptyState, useAdminFetch, adminSend, fmtDate } from '@/components/admin/ui'
 
 type Row = Record<string, unknown>
@@ -23,12 +23,21 @@ const DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', '
 
 export default function PlatformAdmin() {
   const [tab, setTab] = useState<Tab>('members')
+  // Deep-linkable: /admin/platform?tab=zoom (used by the global command palette).
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get('tab')
+    if (t && (TABS as readonly string[]).includes(t)) setTab(t as Tab) // eslint-disable-line react-hooks/set-state-in-effect
+  }, [])
+  const selectTab = (t: Tab) => {
+    setTab(t)
+    const u = new URL(window.location.href); u.searchParams.set('tab', t); window.history.replaceState({}, '', u)
+  }
   return (
     <>
       <PageHeader title="Platform Control" subtitle="Super-admin control of the member platform — product, members, and the AI brain" />
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
         {TABS.map((t) => (
-          <button key={t} onClick={() => setTab(t)}
+          <button key={t} onClick={() => selectTab(t)}
             style={{ padding: '7px 14px', borderRadius: 9, border: `1px solid ${tab === t ? T.green : T.border}`, background: tab === t ? T.green : '#fff', color: tab === t ? '#fff' : T.sub, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
             {TAB_LABEL[t]}
           </button>

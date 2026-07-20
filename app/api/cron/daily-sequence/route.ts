@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { dispatchScheduled } from '@/lib/platform/email'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,6 +42,10 @@ export async function GET(req: NextRequest) {
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  // Hobby plan has no sub-daily cron, so dispatch any due platform broadcasts
+  // on this daily run. Non-fatal so it never blocks the quiz sequence.
+  try { await dispatchScheduled() } catch (e) { console.error('platform broadcast dispatch failed', e) }
 
   try {
     const now = new Date()

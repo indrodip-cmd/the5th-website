@@ -11,6 +11,9 @@ export const maxDuration = 60
 
 export async function GET(req: NextRequest) {
   if (!adminEmail(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Opportunistic: fire any scheduled broadcasts that are due when the founder
+  // opens the center (Hobby plan has no sub-daily cron). Non-fatal.
+  try { await dispatchScheduled() } catch { /* ignore */ }
   const [flows, broadcasts] = await Promise.all([listFlows(), listBroadcasts()])
   return NextResponse.json({ flows, broadcasts, audiences: AUDIENCES })
 }

@@ -9,7 +9,7 @@
    survive client-side navigation. "The Shift" is the donation program tied to
    the guarantee, not the event name. */
 import { useEffect } from 'react'
-import VideoWall from '@/components/VideoWall'
+import { VIDEO_REVIEWS } from '@/components/VideoWall'
 
 /* Whop checkout config */
 const WHOP_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
@@ -22,6 +22,27 @@ const WHOP_HOSTED_URL = 'https://whop.com/10kroadmap-org/the-shift-b0/'
 const TIME_LINE = '11:00 AM PT · 12 PM MT · 1 PM CT · 2 PM ET · 6 PM GMT'
 
 const CLIENT_AVATARS = Array.from({ length: 8 }, (_, i) => `/clients/c${i + 1}.jpg`)
+
+/* Combined testimonial wall: on-camera video reviews + screenshot messages,
+   mixed into one masonry. Screenshot #6 (wide desktop grab) is intentionally
+   omitted. Images are interleaved every few videos so both kinds spread across
+   all columns. */
+type WallItem =
+  | { kind: 'video'; src: string; w: number; h: number }
+  | { kind: 'image'; n: number }
+
+const TESTIMONIAL_WALL: WallItem[] = (() => {
+  const videos: WallItem[] = VIDEO_REVIEWS.map((v) => ({ kind: 'video', ...v }))
+  const images: WallItem[] = [1, 2, 3, 4, 5, 7].map((n) => ({ kind: 'image', n }))
+  const out: WallItem[] = []
+  let vi = 0
+  let ii = 0
+  while (vi < videos.length || ii < images.length) {
+    for (let k = 0; k < 3 && vi < videos.length; k++) out.push(videos[vi++])
+    if (ii < images.length) out.push(images[ii++])
+  }
+  return out
+})()
 
 const DAYS = [
   {
@@ -363,37 +384,34 @@ export default function TheShiftView() {
         </div>
       </section>
 
-      {/* Video testimonials — on-camera client reviews (shared with /results) */}
+      {/* Social proof — mixed wall of video reviews + screenshot messages */}
       <section className="ts-band ts-band--mid">
         <div className="ts-sec">
           <div className="ts-center ts-head">
-            <div className="ts-eyebrow">On-camera · Paid consultation reviews</div>
-            <h2 className="ts-h2">Hear it from them directly.</h2>
+            <div className="ts-eyebrow">On-camera reviews &amp; real messages</div>
+            <h2 className="ts-h2">See what people think about The5th.</h2>
             <p className="ts-sub">
-              Unscripted reactions from clients after their paid strategy consultations. Tap any clip to play.
+              Unscripted reactions and messages from clients after completing the challenge. Tap any clip to play.
             </p>
           </div>
-          <VideoWall />
-        </div>
-      </section>
-
-      {/* Written testimonials — screenshot reviews */}
-      <section className="ts-band ts-band--parch">
-        <div className="ts-sec">
-          <div className="ts-center ts-head">
-            <div className="ts-eyebrow">After the last challenge</div>
-            <h2 className="ts-h2">See what others are saying.</h2>
-          </div>
           <div className="ts-shots">
-            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-              <figure key={n} className="ts-shot">
-                <img
-                  src={`/images/Testmonial ${n}.png`}
-                  alt={`Client testimonial ${n}`}
-                  loading="lazy"
-                />
-              </figure>
-            ))}
+            {TESTIMONIAL_WALL.map((item, i) =>
+              item.kind === 'video' ? (
+                <figure key={`v${i}`} className="ts-shot ts-shot--video" style={{ aspectRatio: `${item.w} / ${item.h}` }}>
+                  <iframe
+                    src={item.src}
+                    title={`Client video review ${i + 1}`}
+                    loading="lazy"
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </figure>
+              ) : (
+                <figure key={`i${item.n}`} className="ts-shot">
+                  <img src={`/images/Testmonial ${item.n}.png`} alt={`Client message ${item.n}`} loading="lazy" />
+                </figure>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -718,11 +736,12 @@ const CSS = `
 .ts-bio__pull{font-family:var(--serif)!important;font-style:italic;font-size:1.5rem!important;line-height:1.4!important;color:var(--plum-mid)!important;margin-top:22px!important}
 
 /* Written testimonials — screenshot masonry */
-.ts-shots{column-count:3;column-gap:20px;margin-top:8px}
-.ts-shot{break-inside:avoid;margin:0 0 20px;background:#fff;border:1px solid rgba(201,168,76,.25);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(46,26,53,.5);transition:transform .2s ease,box-shadow .2s ease}
+.ts-shots{column-count:2;column-gap:24px;margin-top:8px}
+.ts-shot{break-inside:avoid;margin:0 0 24px;background:#fff;border:1px solid rgba(201,168,76,.25);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(46,26,53,.5);transition:transform .2s ease,box-shadow .2s ease}
 .ts-shot:hover{transform:translateY(-3px);box-shadow:0 24px 50px -30px rgba(46,26,53,.55)}
 .ts-shot img{width:100%;height:auto;display:block}
-@media(max-width:900px){.ts-shots{column-count:2}}
+.ts-shot--video{position:relative;background:#231029}
+.ts-shot--video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 @media(max-width:560px){.ts-shots{column-count:1}}
 
 /* Guarantee (oversized) */

@@ -8,7 +8,7 @@
    js.whop.com loader lives in the root layout and we re-inject it here to
    survive client-side navigation. "The Shift" is the donation program tied to
    the guarantee, not the event name. */
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { VIDEO_REVIEWS } from '@/components/VideoWall'
 
 /* Whop checkout config */
@@ -43,6 +43,44 @@ const TESTIMONIAL_WALL: WallItem[] = (() => {
   }
   return out
 })()
+
+/* Defer the heavy third-party video embeds: only mount the iframe once the card
+   is about to enter the viewport, so the initial page load stays light. */
+function LazyVideo({ src, index }: { src: string; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || show) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShow(true)
+          io.disconnect()
+        }
+      },
+      { rootMargin: '500px 0px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [show])
+  return (
+    <div ref={ref} className="ts-shot__fill">
+      {show ? (
+        <iframe
+          src={src}
+          title={`Client video review ${index + 1}`}
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      ) : (
+        <div className="ts-shot__ph" aria-hidden="true">
+          <span className="ts-shot__play">▶</span>
+        </div>
+      )}
+    </div>
+  )
+}
 
 const DAYS = [
   {
@@ -398,20 +436,24 @@ export default function TheShiftView() {
             {TESTIMONIAL_WALL.map((item, i) =>
               item.kind === 'video' ? (
                 <figure key={`v${i}`} className="ts-shot ts-shot--video" style={{ aspectRatio: `${item.w} / ${item.h}` }}>
-                  <iframe
-                    src={item.src}
-                    title={`Client video review ${i + 1}`}
-                    loading="lazy"
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
+                  <LazyVideo src={item.src} index={i} />
                 </figure>
               ) : (
                 <figure key={`i${item.n}`} className="ts-shot">
-                  <img src={`/images/Testmonial ${item.n}.png`} alt={`Client message ${item.n}`} loading="lazy" />
+                  <img
+                    src={`/images/Testmonial ${item.n}.png`}
+                    alt={`Client message ${item.n}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </figure>
               ),
             )}
+          </div>
+          <div className="ts-center" style={{ marginTop: 36 }}>
+            <a href="#reserve" className="ts-btn ts-btn--green ts-btn--lg">
+              I want results like these · $27
+            </a>
           </div>
         </div>
       </section>
@@ -742,7 +784,10 @@ const CSS = `
 .ts-shot:hover{transform:translateY(-3px);box-shadow:0 24px 50px -30px rgba(46,26,53,.55)}
 .ts-shot img{width:100%;height:auto;display:block}
 .ts-shot--video{position:relative;background:#231029}
-.ts-shot--video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ts-shot__fill{position:absolute;inset:0}
+.ts-shot__fill iframe{width:100%;height:100%;border:0;display:block}
+.ts-shot__ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 90% at 50% 30%,#4a2f57 0%,#231029 70%)}
+.ts-shot__play{width:58px;height:58px;border-radius:50%;background:rgba(201,168,76,.16);border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.3rem;padding-left:4px}
 @media(max-width:560px){.ts-shots{column-count:1}}
 
 /* Guarantee (oversized) */

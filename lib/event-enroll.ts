@@ -5,6 +5,32 @@ import { EMAIL_BY_KEY, FROM, REPLY_TO } from '@/lib/event-campaign'
 
 const SITE = 'https://the5th.consulting'
 
+/** Build a genuine plain-text version from the email HTML. A full text/plain
+    alternative (not just a preview) is a strong "personal message" signal for
+    Gmail inbox placement. */
+function htmlToText(html: string): string {
+  return html
+    .replace(/<!DOCTYPE[^>]*>/gi, '')
+    .replace(/<head[\s\S]*?<\/head>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<div[^>]*display:none[\s\S]*?<\/div>/gi, '') // hidden preheader
+    .replace(/<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, (_m, href, txt) => {
+      const t = txt.replace(/<[^>]+>/g, '').trim()
+      return t && !href.includes(t) ? `${t}: ${href}` : href
+    })
+    .replace(/<(br|\/p|\/div|\/tr|\/li|\/h[1-6])[^>]*>/gi, '\n')
+    .replace(/<li[^>]*>/gi, '- ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&copy;/gi, '(c)')
+    .replace(/&[a-z]+;/gi, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .split('\n').map((l) => l.trim()).join('\n')
+    .trim()
+}
+
 /** One-click unsubscribe link signed with CRON_SECRET (tamper-proof). */
 export function unsubUrlFor(email: string) {
   const e = email.trim().toLowerCase()
@@ -47,7 +73,7 @@ export async function sendCampaignEmail(opts: {
     replyTo: REPLY_TO,
     subject: def.subject,
     html,
-    text: def.preview,
+    text: htmlToText(html),
     headers,
     tags: [
       { name: 'campaign', value: 'breakthrough' },

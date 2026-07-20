@@ -4,8 +4,13 @@ import { verifyWhopWebhook, normalizeWhopEvent, whopConfigured, whopSyncBalances
 import { recordRevenueEvent } from '@/lib/revenue'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
+import { enrollBuyer } from '@/lib/event-enroll'
 
 export const dynamic = 'force-dynamic'
+
+// Whop plan id for The 3-Day Breakthrough Intensive ($27) — buyers get the
+// welcome + are enrolled into the event campaign.
+const BREAKTHROUGH_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
 
 /* Whop payment webhook (Svix). Verifies the signature over the RAW body,
    dedups by Svix message id, stores every payload for audit, then dispatches.
@@ -62,6 +67,21 @@ export async function POST(req: NextRequest) {
       }
     }
     await finish('processed')
+
+    // Enroll Breakthrough Intensive buyers → welcome email + campaign list.
+    // Guarded: never let this break the core webhook. Matches the plan id
+    // anywhere in the payload (Whop nests it differently across events).
+    if (action === 'payment.succeeded' && raw.includes(BREAKTHROUGH_PLAN_ID)) {
+      try {
+        const d = (body.data as Record<string, unknown>) || {}
+        const user = (d.user as Record<string, unknown>) || {}
+        const email = String(user.email || d.email || '')
+        const name = String(user.name || user.username || d.name || '') || null
+        if (email) await enrollBuyer(email, name, 'whop')
+      } catch (e) {
+        emitEvent('event_enroll_failed', { provider: 'whop', error: String(e) })
+      }
+    }
 
     // Keep the multi-currency balance cache + affected member fresh (fees/FX
     // make manual math unreliable — always re-fetch from Whop).

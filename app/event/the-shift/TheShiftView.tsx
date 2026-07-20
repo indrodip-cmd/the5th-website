@@ -6,8 +6,8 @@
    headline, value stack, scarcity, oversized guarantee, sticky mobile CTA.
    Payment via the Whop EMBEDDED checkout (dark theme, gold accent); the
    js.whop.com loader lives in the root layout and we re-inject it here to
-   survive client-side navigation. "The Shift" is the donation program tied to
-   the guarantee, not the event name. */
+   survive client-side navigation. The program is named "the Breakthrough
+   Intensive" throughout (the /event/the-shift URL slug is kept for stability). */
 import { useEffect, useRef, useState } from 'react'
 import { VIDEO_REVIEWS } from '@/components/VideoWall'
 
@@ -475,7 +475,7 @@ export default function TheShiftView() {
           </p>
           <div className="ts-guarantee__box">
             <strong>If you don’t ask for a refund, we donate your entire registration to{' '}
-            <em className="ts-i-gold">The Shift</em></strong> — a children’s wellness program supporting kids in
+            <em className="ts-i-gold">the Breakthrough Intensive</em></strong> — a children’s wellness program supporting kids in
             war-affected countries. So your $27 either <strong>transforms your business</strong>, or{' '}
             <strong>changes a child’s week</strong>. <span className="ts-guarantee__punch">There is no version of
             this where you lose.</span>
@@ -515,7 +515,7 @@ export default function TheShiftView() {
                 <div className="ts-mini-guarantee__t">Your seat is 100% risk-free</div>
                 <div className="ts-mini-guarantee__d">
                   If it’s not worth far more than $27, email us within 30 days and get every cent back. And if you don’t
-                  ask, your $27 funds <em className="ts-i-plum">The Shift</em>. You cannot lose.
+                  ask, your $27 funds <em className="ts-i-plum">the Breakthrough Intensive</em>. You cannot lose.
                 </div>
               </div>
             </div>

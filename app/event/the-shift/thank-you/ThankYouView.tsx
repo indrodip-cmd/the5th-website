@@ -1,5 +1,5 @@
 'use client'
-/* Confirmation page after a successful $27 Whop checkout for The Shift.
+/* Confirmation page after a successful $27 Whop checkout for the Breakthrough Intensive.
    Lets attendees add each of the 3 live sessions to Google / Apple / Outlook.
    Times default to 11:00 AM ET (EDT, UTC-4 in August). Adjust SESSIONS if the
    real session time differs — the ICS + Google links derive from it. */
@@ -62,7 +62,7 @@ function icsFor(sessions: typeof SESSIONS) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//The5th Consulting//The Shift//EN',
+    'PRODID:-//The5th Consulting//Breakthrough Intensive//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
   ]
@@ -79,7 +79,7 @@ function icsFor(sessions: typeof SESSIONS) {
       'BEGIN:VALARM',
       'TRIGGER:-PT30M',
       'ACTION:DISPLAY',
-      'DESCRIPTION:The Shift starts in 30 minutes',
+      'DESCRIPTION:The Breakthrough Intensive starts in 30 minutes',
       'END:VALARM',
       'END:VEVENT',
     )
@@ -130,7 +130,7 @@ export default function ThankYouView() {
             You’re in
           </div>
           <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(30px,6vw,44px)', color: PLUM, margin: '10px 0 0', lineHeight: 1.08 }}>
-            Your seat for The Shift is confirmed.
+            Your seat for the Breakthrough Intensive is confirmed.
           </h1>
           <p style={{ fontSize: 16.5, color: '#5a5248', lineHeight: 1.65, marginTop: 16 }}>
             A confirmation email is on its way with your joining link. The most important next step:{' '}

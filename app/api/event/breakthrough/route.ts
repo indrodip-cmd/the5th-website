@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EMAILS } from '@/lib/event-campaign'
-import { sendCampaignEmail, enrollBuyer, importRegistrants } from '@/lib/event-enroll'
+import { sendCampaignEmail, enrollBuyer, importRegistrants, unsubUrlFor } from '@/lib/event-enroll'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       const keys = body.key ? [String(body.key)] : EMAILS.map((e) => e.key)
       const results: Record<string, unknown> = {}
       for (const key of keys) {
-        results[key] = await sendCampaignEmail({ key, to, name, log: false, unsubUrl: '#' })
+        results[key] = await sendCampaignEmail({ key, to, name, log: false, unsubUrl: unsubUrlFor(to) })
       }
       return NextResponse.json({ ok: true, sentTo: to, results })
     }

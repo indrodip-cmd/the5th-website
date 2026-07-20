@@ -1,6 +1,21 @@
 import { Resend } from 'resend'
+import { createHmac } from 'node:crypto'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { EMAIL_BY_KEY, FROM } from '@/lib/event-campaign'
+
+const SITE = 'https://the5th.consulting'
+
+/** One-click unsubscribe link signed with CRON_SECRET (tamper-proof). */
+export function unsubUrlFor(email: string) {
+  const e = email.trim().toLowerCase()
+  const sig = createHmac('sha256', process.env.CRON_SECRET || 'x').update(e).digest('hex').slice(0, 16)
+  return `${SITE}/api/event/unsubscribe?e=${encodeURIComponent(e)}&k=${sig}`
+}
+
+export function verifyUnsub(email: string, sig: string) {
+  const expected = createHmac('sha256', process.env.CRON_SECRET || 'x').update(email.trim().toLowerCase()).digest('hex').slice(0, 16)
+  return sig === expected
+}
 
 /* Server-side send + enrollment helpers for the Breakthrough Intensive.
    Shared by the campaign API route and the Whop payment webhook. Every real
@@ -48,6 +63,29 @@ export async function enrollBuyer(email: string, name?: string | null, source = 
     .then(() => {}, () => {})
   const { data: seen } = await db.from('event_email_log').select('id').eq('email', e).eq('email_key', 'welcome').maybeSingle()
   if (seen) return { ok: true, welcome: 'already_sent' as const }
-  const r = await sendCampaignEmail({ key: 'welcome', to: e, name: name || undefined, log: true })
+  const r = await sendCampaignEmail({ key: 'welcome', to: e, name: name || undefined, log: true, unsubUrl: unsubUrlFor(e) })
   return { ok: r.ok, welcome: r }
+}
+
+/** Bulk-add presale leads (or buyers) into event_registrants. Idempotent. */
+export async function importRegistrants(
+  people: Array<{ email: string; name?: string | null }>,
+  list: 'lead' | 'buyer' = 'lead',
+  source = 'import',
+): Promise<{ imported: number; skipped: number }> {
+  const db = getSupabaseAdmin()
+  const seen = new Set<string>()
+  const rows = people
+    .map((p) => ({ email: String(p.email || '').trim().toLowerCase(), name: p.name || null }))
+    .filter((p) => {
+      if (!p.email || !p.email.includes('@') || seen.has(p.email)) return false
+      seen.add(p.email)
+      return true
+    })
+    .map((p) => ({ email: p.email, name: p.name, list, source, event_key: 'breakthrough' }))
+  if (!rows.length) return { imported: 0, skipped: people.length }
+  // ignoreDuplicates keeps an existing buyer from being downgraded to a lead.
+  const { error } = await db.from('event_registrants').upsert(rows, { onConflict: 'email', ignoreDuplicates: true })
+  if (error) return { imported: 0, skipped: people.length }
+  return { imported: rows.length, skipped: people.length - rows.length }
 }

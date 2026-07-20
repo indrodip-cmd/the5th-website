@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { Resend } from 'resend'
 import { SCHEDULE, EMAIL_BY_KEY, FROM } from '@/lib/event-campaign'
+import { unsubUrlFor } from '@/lib/event-enroll'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -57,7 +58,7 @@ export async function GET(req: NextRequest) {
         continue
       }
       try {
-        const html = def.build({ name: person.name || undefined, unsubUrl: '{{unsubscribe}}' })
+        const html = def.build({ name: person.name || undefined, unsubUrl: unsubUrlFor(email) })
         const { data, error } = await resend.emails.send({ from: FROM, to: email, subject: def.subject, html, text: def.preview })
         if (error) {
           summary[item.key].errors++

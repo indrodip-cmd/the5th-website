@@ -34,12 +34,24 @@ export async function sendCampaignEmail(opts: {
   if (!key) return { ok: false, error: 'RESEND_API_KEY missing' }
   const resend = new Resend(key)
   const html = def.build({ name: opts.name, unsubUrl: opts.unsubUrl })
+  // RFC 8058 one-click unsubscribe: improves Gmail/Yahoo placement + reputation.
+  const headers: Record<string, string> = {
+    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+  }
+  if (opts.unsubUrl && opts.unsubUrl !== '#') {
+    headers['List-Unsubscribe'] = `<${opts.unsubUrl}>, <mailto:Indrodip@10kroadmap.org?subject=unsubscribe>`
+  }
   const { data, error } = await resend.emails.send({
     from: FROM,
     to: opts.to,
     subject: def.subject,
     html,
     text: def.preview,
+    headers,
+    tags: [
+      { name: 'campaign', value: 'breakthrough' },
+      { name: 'email_key', value: opts.key },
+    ],
   })
   if (error) return { ok: false, error: String((error as { message?: string }).message || error) }
   if (opts.log) {
@@ -65,6 +77,40 @@ export async function enrollBuyer(email: string, name?: string | null, source = 
   if (seen) return { ok: true, welcome: 'already_sent' as const }
   const r = await sendCampaignEmail({ key: 'welcome', to: e, name: name || undefined, log: true, unsubUrl: unsubUrlFor(e) })
   return { ok: r.ok, welcome: r }
+}
+
+/** Apply a Resend webhook event (delivered/opened/clicked/bounced/complained)
+    to the campaign send log. Matches on the Resend email id, so events for any
+    non-campaign email simply update 0 rows and are ignored. */
+export async function applyResendEventToCampaign(body: unknown): Promise<{ matched: boolean }> {
+  const b = body as { type?: string; data?: { email_id?: string } }
+  const type = b?.type
+  const emailId = b?.data?.email_id
+  if (!type || !emailId) return { matched: false }
+  const db = getSupabaseAdmin()
+  const { data: row } = await db
+    .from('event_email_log')
+    .select('id,email,open_count,click_count')
+    .eq('provider_id', emailId)
+    .maybeSingle()
+  if (!row) return { matched: false }
+
+  const now = new Date().toISOString()
+  const patch: Record<string, unknown> = {}
+  switch (type) {
+    case 'email.delivered': patch.delivered_at = now; break
+    case 'email.opened': patch.opened_at = now; patch.open_count = (row.open_count || 0) + 1; break
+    case 'email.clicked': patch.clicked_at = now; patch.click_count = (row.click_count || 0) + 1; break
+    case 'email.bounced': patch.bounced_at = now; break
+    case 'email.complained': patch.complained_at = now; break
+    default: return { matched: true }
+  }
+  await db.from('event_email_log').update(patch).eq('id', row.id)
+  // A spam complaint or hard bounce should stop all future sends to them.
+  if (type === 'email.complained' || type === 'email.bounced') {
+    await db.from('event_registrants').update({ unsubscribed: true }).eq('email', row.email).then(() => {}, () => {})
+  }
+  return { matched: true }
 }
 
 /** Bulk-add presale leads (or buyers) into event_registrants. Idempotent. */

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getProvider } from '@/lib/comm/providers'
 import { applyWebhookEvents } from '@/lib/comm/engine'
+import { applyResendEventToCampaign } from '@/lib/event-enroll'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,6 +26,10 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ provider: 
   const events = signatureValid && adapter?.parseWebhook ? adapter.parseWebhook(body) : []
   let applied = 0
   if (events.length) applied = await applyWebhookEvents(events).catch(() => 0)
+
+  // Also feed Resend events into the Breakthrough campaign stats (no-op for
+  // non-campaign emails, so it's safe to run on every resend event).
+  if (signatureValid && provider === 'resend') await applyResendEventToCampaign(body).catch(() => ({ matched: false }))
 
   try {
     await db.from('integration_webhooks').insert({

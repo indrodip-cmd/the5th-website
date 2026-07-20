@@ -31,6 +31,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/communications', label: 'Communications', icon: '✉', match: (p) => p.startsWith('/admin/communications'), flag: 'communication_os' },
     { href: '/admin/inbox', label: 'Live Inbox', icon: '💬', match: (p) => p.startsWith('/admin/inbox') },
     { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },
+    { href: '/admin/events', label: 'Event Campaign', icon: '🎟', match: (p) => p.startsWith('/admin/events') },
     { href: '/admin/journeys', label: 'Journeys', icon: '🧭', match: (p) => p.startsWith('/admin/journeys'), flag: 'journey_engine' },
     { href: '/admin/analytics', label: 'Analytics', icon: '📈', match: (p) => p.startsWith('/admin/analytics') },
     { href: '/admin/cms', label: 'CMS', icon: '▦', match: (p) => p.startsWith('/admin/cms') },

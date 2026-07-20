@@ -39,6 +39,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/knowledge', label: 'Knowledge', icon: '📚', match: (p) => p.startsWith('/admin/knowledge') },
   ] },
   { section: 'Platform', items: [
+    { href: '/admin/platform', label: 'Platform Control', icon: '⚙', match: (p) => p.startsWith('/admin/platform') },
     { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
     { href: '/admin/costs', label: 'Costs', icon: '＄', match: (p) => p.startsWith('/admin/costs'), flag: 'cost_center' },
     { href: '/admin/system', label: 'System', icon: '❤', match: (p) => p.startsWith('/admin/system') },

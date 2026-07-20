@@ -377,6 +377,27 @@ export default function TheShiftView() {
         </div>
       </section>
 
+      {/* Written testimonials — screenshot reviews */}
+      <section className="ts-band ts-band--parch">
+        <div className="ts-sec">
+          <div className="ts-center ts-head">
+            <div className="ts-eyebrow">In their own words</div>
+            <h2 className="ts-h2">Real messages from real clients.</h2>
+          </div>
+          <div className="ts-shots">
+            {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+              <figure key={n} className="ts-shot">
+                <img
+                  src={`/images/Testmonial ${n}.png`}
+                  alt={`Client testimonial ${n}`}
+                  loading="lazy"
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Guarantee (oversized) */}
       <section className="ts-band ts-band--green ts-guarantee">
         <div className="ts-sec ts-narrow ts-center">
@@ -695,6 +716,14 @@ const CSS = `
 .ts-bio__text p{font-size:1.0625rem;line-height:1.75;color:var(--ink-mid);margin:16px 0 0}
 .ts-bio__text strong{color:var(--plum);font-weight:600}
 .ts-bio__pull{font-family:var(--serif)!important;font-style:italic;font-size:1.5rem!important;line-height:1.4!important;color:var(--plum-mid)!important;margin-top:22px!important}
+
+/* Written testimonials — screenshot masonry */
+.ts-shots{column-count:3;column-gap:20px;margin-top:8px}
+.ts-shot{break-inside:avoid;margin:0 0 20px;background:#fff;border:1px solid rgba(201,168,76,.25);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -30px rgba(46,26,53,.5);transition:transform .2s ease,box-shadow .2s ease}
+.ts-shot:hover{transform:translateY(-3px);box-shadow:0 24px 50px -30px rgba(46,26,53,.55)}
+.ts-shot img{width:100%;height:auto;display:block}
+@media(max-width:900px){.ts-shots{column-count:2}}
+@media(max-width:560px){.ts-shots{column-count:1}}
 
 /* Guarantee (oversized) */
 .ts-guarantee .ts-seal{width:118px;height:118px;border-radius:50%;margin:0 auto 22px;background:rgba(255,255,255,.06);border:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 8px rgba(201,168,76,.12)}

@@ -9,6 +9,7 @@
    survive client-side navigation. "The Shift" is the donation program tied to
    the guarantee, not the event name. */
 import { useEffect } from 'react'
+import VideoWall from '@/components/VideoWall'
 
 /* Whop checkout config */
 const WHOP_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
@@ -19,11 +20,6 @@ const WHOP_HOSTED_URL = 'https://whop.com/10kroadmap-org/the-shift-b0/'
 
 /* Live session time: 11:00 AM PT (PDT, UTC-7 in August). */
 const TIME_LINE = '11:00 AM PT · 12 PM MT · 1 PM CT · 2 PM ET · 6 PM GMT'
-
-/* Promo video. Paste a YouTube/Vimeo EMBED url here (e.g.
-   'https://www.youtube.com/embed/VIDEO_ID' or 'https://player.vimeo.com/video/ID').
-   Leave empty to show the branded placeholder until the video is ready. */
-const VIDEO_EMBED_URL = ''
 
 const CLIENT_AVATARS = Array.from({ length: 8 }, (_, i) => `/clients/c${i + 1}.jpg`)
 
@@ -204,36 +200,6 @@ export default function TheShiftView() {
         </div>
       </header>
 
-      {/* Video */}
-      <section className="ts-band ts-band--mid ts-video-band">
-        <div className="ts-sec ts-narrow">
-          <div className="ts-center ts-head">
-            <div className="ts-eyebrow">Watch this first</div>
-            <h2 className="ts-h2">See what these 3 days will do for you.</h2>
-          </div>
-          <div className="ts-video">
-            {VIDEO_EMBED_URL ? (
-              <iframe
-                src={VIDEO_EMBED_URL}
-                title="The 3-Day Breakthrough Intensive"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
-            ) : (
-              <div className="ts-video__ph" role="img" aria-label="Video coming soon">
-                <span className="ts-video__play">▶</span>
-                <span className="ts-video__phText">Your invitation video will play here</span>
-              </div>
-            )}
-          </div>
-          <div className="ts-center" style={{ marginTop: 28 }}>
-            <a href="#reserve" className="ts-btn ts-btn--green">
-              Save my seat · $27
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Promise */}
       <section className="ts-band ts-band--parch">
         <div className="ts-sec ts-narrow ts-center">
@@ -394,6 +360,20 @@ export default function TheShiftView() {
               These 3 days are the exact process I wish someone had walked me through years ago.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Video testimonials — on-camera client reviews (shared with /results) */}
+      <section className="ts-band ts-band--mid">
+        <div className="ts-sec">
+          <div className="ts-center ts-head">
+            <div className="ts-eyebrow">On-camera · Paid consultation reviews</div>
+            <h2 className="ts-h2">Hear it from them directly.</h2>
+            <p className="ts-sub">
+              Unscripted reactions from clients after their paid strategy consultations. Tap any clip to play.
+            </p>
+          </div>
+          <VideoWall />
         </div>
       </section>
 
@@ -704,13 +684,6 @@ const CSS = `
 .ts-stack__totalVal{font-family:var(--serif);font-size:1.5rem;color:var(--ink-mid);text-decoration:line-through;text-decoration-color:rgba(138,128,117,.7)}
 .ts-stack__today{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-top:12px;background:var(--parch-mid);border:1.5px solid var(--gold);font-weight:600;color:var(--plum)}
 .ts-stack__todayVal{font-family:var(--serif);font-weight:600;font-size:2.1rem;color:var(--green)}
-
-/* Video */
-.ts-video{position:relative;aspect-ratio:16/9;width:100%;background:var(--plum-dark);border:1px solid rgba(201,168,76,.3);box-shadow:0 30px 70px rgba(46,26,53,.22);overflow:hidden}
-.ts-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.ts-video__ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(120% 90% at 50% 20%,#4a2f57 0%,var(--plum-dark) 60%,#1f1128 100%);color:rgba(255,255,255,.75)}
-.ts-video__play{width:76px;height:76px;border-radius:50%;background:rgba(201,168,76,.16);border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.7rem;padding-left:6px}
-.ts-video__phText{font-size:.9rem;letter-spacing:.04em}
 
 /* Bio: light band so the white-walled portrait blends via multiply */
 .ts-bio-band{background:var(--parch);position:relative;overflow:hidden;padding-bottom:0}

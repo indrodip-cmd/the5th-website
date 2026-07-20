@@ -18,11 +18,15 @@ export const dynamic = 'force-dynamic'
    is logged in event_email_log with a unique(email,key) guard so nobody is
    double-emailed even if the cron runs twice. */
 
-const authed = (req: NextRequest, bodySecret?: string) => {
+// 'full' = CRON_SECRET (all actions). 'test' = EVENT_TEST_TOKEN (test sends only).
+function authLevel(req: NextRequest, bodySecret?: string): 'full' | 'test' | null {
+  const header = req.headers.get('authorization') || ''
+  const bearer = header.startsWith('Bearer ') ? header.slice(7) : ''
   const secret = process.env.CRON_SECRET
-  if (!secret) return false
-  const header = req.headers.get('authorization')
-  return header === `Bearer ${secret}` || bodySecret === secret
+  if (secret && (bearer === secret || bodySecret === secret)) return 'full'
+  const testTok = process.env.EVENT_TEST_TOKEN
+  if (testTok && (bearer === testTok || bodySecret === testTok)) return 'test'
+  return null
 }
 
 export async function POST(req: NextRequest) {
@@ -33,8 +37,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid json' }, { status: 400 })
   }
   const action = String(body.action || '')
-  if (!authed(req, typeof body.secret === 'string' ? body.secret : undefined)) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  const level = authLevel(req, typeof body.secret === 'string' ? body.secret : undefined)
+  if (!level) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  if (level === 'test' && action !== 'test') {
+    return NextResponse.json({ error: 'this token can only run the "test" action' }, { status: 403 })
   }
 
   try {

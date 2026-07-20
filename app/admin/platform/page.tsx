@@ -13,12 +13,13 @@ const TIER_LABEL: Record<string, string> = {
   member_monthly: 'Monthly Member', member_yearly: 'Yearly Member', admin: 'Admin',
   ai_only: 'The5th AI', ai_trial: 'Free Trial',
 }
-const TABS = ['members', 'credits', 'courses', 'pricing', 'zoom', 'onboarding', 'security', 'training', 'whop', 'blueprints'] as const
+const TABS = ['members', 'credits', 'calls', 'emails', 'courses', 'pricing', 'zoom', 'onboarding', 'security', 'training', 'whop', 'blueprints'] as const
 type Tab = typeof TABS[number]
 const TAB_LABEL: Record<Tab, string> = {
-  members: 'Members', credits: 'Credits', courses: 'Courses', pricing: 'Pricing', zoom: 'Zoom',
+  members: 'Members', credits: 'Credits', calls: 'Weekly Call', emails: 'Emails', courses: 'Courses', pricing: 'Pricing', zoom: 'Zoom',
   onboarding: 'Onboarding', security: 'Security', training: 'AI Training', whop: 'Whop', blueprints: 'Blueprints',
 }
+const DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 export default function PlatformAdmin() {
   const [tab, setTab] = useState<Tab>('members')
@@ -35,6 +36,8 @@ export default function PlatformAdmin() {
       </div>
       {tab === 'members' && <MembersTab />}
       {tab === 'credits' && <CreditsTab />}
+      {tab === 'calls' && <CallsTab />}
+      {tab === 'emails' && <EmailsTab />}
       {tab === 'courses' && <CoursesTab />}
       {tab === 'pricing' && <PricingTab />}
       {tab === 'zoom' && <JsonSettingTab settingKey="zoom" title="Zoom settings" hint="Coaching-call Zoom configuration (link, passcode, host key, etc.)." />}
@@ -376,10 +379,228 @@ function BlueprintsTab() {
   )
 }
 
+// ── Weekly Call ──────────────────────────────────────────────────────
+function CallsTab() {
+  const { data, loading, reload } = useAdminFetch<{ settings: Row; dowLabel: string | null; upcoming: Row[] }>('/api/admin/platform/calls')
+  if (loading && !data) return <div className="skeleton" style={{ height: 220 }} />
+  const s = (data?.settings || {}) as Row
+  return <CallsInner initial={s} dowLabel={data?.dowLabel || null} upcoming={data?.upcoming || []} reload={reload} />
+}
+function CallsInner({ initial, dowLabel, upcoming, reload }: { initial: Row; dowLabel: string | null; upcoming: Row[]; reload: () => void }) {
+  const [f, setF] = useState({
+    label: String(initial.label ?? 'Weekly Coaching Call'), link: String(initial.link ?? ''),
+    day_of_week: Number(initial.day_of_week ?? 2), hour: Number(initial.hour ?? 10), minute: Number(initial.minute ?? 0),
+    timezone: String(initial.timezone ?? 'America/New_York'),
+  })
+  const active = initial.active !== false
+  const [busy, setBusy] = useState('')
+  const [msg, setMsg] = useState('')
+  const [rs, setRs] = useState<{ date: string; nd: string; nh: number; nm: number } | null>(null)
+  const call = async (body: Record<string, unknown>, tag: string) => {
+    setBusy(tag); setMsg('')
+    try { await adminSend('/api/admin/platform/calls', 'POST', body); setMsg('Saved.'); reload() }
+    catch (e) { setMsg(e instanceof Error ? e.message : 'error') } finally { setBusy('') }
+  }
+  return (
+    <>
+      <Card style={{ marginBottom: 14, ...(active ? {} : { opacity: 0.75 }) }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: T.ink, flex: 1 }}>Weekly call schedule {active ? <span style={pill('#1C4A32')}>Live</span> : <span style={pill(T.danger)}>Paused</span>}</div>
+          <Button variant="ghost" disabled={busy === 'active'} onClick={() => call({ action: 'set_active', active: !active }, 'active')}>{active ? 'Pause / remove weekly call' : 'Resume weekly call'}</Button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <Field label="Label"><Input value={f.label} onChange={(e) => setF({ ...f, label: e.target.value })} /></Field>
+          <Field label="Zoom / meeting link"><Input value={f.link} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="https://zoom.us/j/…" /></Field>
+          <Field label="Day"><Select value={f.day_of_week} onChange={(e) => setF({ ...f, day_of_week: Number(e.target.value) })}>{DOW.map((d, i) => <option key={d} value={i}>{d}</option>)}</Select></Field>
+          <Field label="Time"><div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <Input type="number" min={0} max={23} value={f.hour} onChange={(e) => setF({ ...f, hour: Number(e.target.value) })} style={{ width: 70 }} />
+            <span style={{ color: T.muted }}>:</span>
+            <Input type="number" min={0} max={59} value={f.minute} onChange={(e) => setF({ ...f, minute: Number(e.target.value) })} style={{ width: 70 }} />
+          </div></Field>
+          <Field label="Timezone"><Input value={f.timezone} onChange={(e) => setF({ ...f, timezone: e.target.value })} placeholder="America/New_York" /></Field>
+        </div>
+        <div style={{ marginTop: 14 }}><Button disabled={busy === 'save'} onClick={() => call({ action: 'save_settings', ...f }, 'save')}>{busy === 'save' ? 'Saving…' : 'Save schedule'}</Button></div>
+        <Msg text={msg} />
+      </Card>
+
+      <Card pad={0}>
+        <div style={{ padding: '14px 16px 8px', fontSize: 13, fontWeight: 700, color: T.ink }}>Upcoming calls {dowLabel ? `· ${dowLabel}s` : ''}</div>
+        {!active ? <div style={{ padding: 16, fontSize: 13, color: T.muted }}>The weekly call is paused — no upcoming occurrences.</div>
+          : upcoming.length === 0 ? <div style={{ padding: 16, fontSize: 13, color: T.muted }}>Set a day to see upcoming calls.</div>
+          : upcoming.map((o) => {
+            const d = o.original_date as string
+            const cancelled = o.status === 'cancelled', resched = o.status === 'rescheduled'
+            return (
+              <div key={d} style={{ padding: '11px 16px', borderTop: `1px solid ${T.border}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <span style={{ fontSize: 13.5, color: T.ink, textDecoration: cancelled ? 'line-through' : 'none' }}>{fmtDate(d)}</span>
+                    {cancelled && <span style={pill(T.danger)}>Cancelled</span>}
+                    {resched && <span style={pill('#b8890c')}>Moved → {fmtDate(o.new_date as string)}</span>}
+                  </div>
+                  {(cancelled || resched) ? <button onClick={() => call({ action: 'restore', originalDate: d }, d)} style={linkBtn}>Restore</button> : (
+                    <>
+                      <button onClick={() => setRs({ date: d, nd: d, nh: Number(o.hour ?? 10), nm: Number(o.minute ?? 0) })} style={linkBtn}>Reschedule</button>
+                      <button onClick={() => call({ action: 'cancel', originalDate: d }, d)} style={{ ...linkBtn, color: T.danger }}>Cancel</button>
+                    </>
+                  )}
+                </div>
+                {rs?.date === d && (
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 10, flexWrap: 'wrap' }}>
+                    <Input type="date" value={rs.nd} onChange={(e) => setRs({ ...rs, nd: e.target.value })} style={{ width: 160 }} />
+                    <Input type="number" min={0} max={23} value={rs.nh} onChange={(e) => setRs({ ...rs, nh: Number(e.target.value) })} style={{ width: 64 }} />
+                    <span style={{ color: T.muted }}>:</span>
+                    <Input type="number" min={0} max={59} value={rs.nm} onChange={(e) => setRs({ ...rs, nm: Number(e.target.value) })} style={{ width: 64 }} />
+                    <Button onClick={() => { call({ action: 'reschedule', originalDate: d, newDate: rs.nd, newHour: rs.nh, newMinute: rs.nm }, d); setRs(null) }}>Save</Button>
+                    <Button variant="ghost" onClick={() => setRs(null)}>Cancel</Button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+      </Card>
+    </>
+  )
+}
+
+// ── Emails ───────────────────────────────────────────────────────────
+function EmailsTab() {
+  const { data, loading, reload } = useAdminFetch<{ flows: Row[]; broadcasts: Row[]; audiences: string[] }>('/api/admin/platform/emails')
+  if (loading && !data) return <div className="skeleton" style={{ height: 260 }} />
+  return (
+    <div style={{ display: 'grid', gap: 16 }}>
+      <BroadcastComposer audiences={data?.audiences || ['all']} reload={reload} />
+      <FlowsPanel flows={data?.flows || []} reload={reload} />
+      <BroadcastHistory broadcasts={data?.broadcasts || []} reload={reload} />
+    </div>
+  )
+}
+
+function BroadcastComposer({ audiences, reload }: { audiences: string[]; reload: () => void }) {
+  const [f, setF] = useState({ subject: '', body: '', audience: 'all', schedule: '', testTo: '' })
+  const [count, setCount] = useState<number | null>(null)
+  const [busy, setBusy] = useState('')
+  const [msg, setMsg] = useState('')
+  const previewCount = async (aud: string) => { try { const r = await adminSend('/api/admin/platform/emails', 'POST', { action: 'audience_count', audience: aud }) as Row; setCount(Number(r.count)) } catch { setCount(null) } }
+  const act = async (payload: Record<string, unknown>, tag: string, okMsg: string) => {
+    if (!f.subject || !f.body) { setMsg('Subject and body are required.'); return }
+    setBusy(tag); setMsg('')
+    try { await adminSend('/api/admin/platform/emails', 'POST', payload); setMsg(okMsg); reload() }
+    catch (e) { setMsg(e instanceof Error ? e.message : 'error') } finally { setBusy('') }
+  }
+  return (
+    <Card>
+      <div style={{ fontSize: 13, fontWeight: 700, color: T.ink, marginBottom: 12 }}>Broadcast to members <span style={{ fontWeight: 400, color: T.muted, fontSize: 12 }}>· sent via Resend</span></div>
+      <Field label="Subject"><Input value={f.subject} onChange={(e) => setF({ ...f, subject: e.target.value })} /></Field>
+      <div style={{ height: 10 }} />
+      <Field label="Body (HTML allowed)"><Textarea rows={8} value={f.body} onChange={(e) => setF({ ...f, body: e.target.value })} placeholder="Write your email… basic HTML supported." /></Field>
+      <div style={{ display: 'flex', gap: 10, alignItems: 'end', marginTop: 10, flexWrap: 'wrap' }}>
+        <Field label="Audience"><Select value={f.audience} onChange={(e) => { setF({ ...f, audience: e.target.value }); previewCount(e.target.value) }}>{audiences.map((a) => <option key={a} value={a}>{a}</option>)}</Select></Field>
+        <Button variant="ghost" onClick={() => previewCount(f.audience)}>{count == null ? 'Preview reach' : `${count} recipients`}</Button>
+        <Field label="Schedule (optional)"><Input type="datetime-local" value={f.schedule} onChange={(e) => setF({ ...f, schedule: e.target.value })} /></Field>
+      </div>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'end', marginTop: 12, flexWrap: 'wrap' }}>
+        <Field label="Send test to"><Input value={f.testTo} onChange={(e) => setF({ ...f, testTo: e.target.value })} placeholder="you@email.com" style={{ width: 200 }} /></Field>
+        <Button variant="ghost" disabled={busy === 'test'} onClick={() => act({ action: 'send_test', to: f.testTo, subject: f.subject, body: f.body }, 'test', 'Test sent.')}>Send test</Button>
+        <div style={{ flex: 1 }} />
+        {f.schedule
+          ? <Button disabled={busy === 'sched'} onClick={() => act({ action: 'create_broadcast', subject: f.subject, body: f.body, audience: f.audience, scheduled_at: new Date(f.schedule).toISOString() }, 'sched', 'Scheduled.')}>{busy === 'sched' ? 'Scheduling…' : 'Schedule'}</Button>
+          : <Button disabled={busy === 'now'} onClick={() => { if (confirm('Send this broadcast now?')) act({ action: 'create_broadcast', subject: f.subject, body: f.body, audience: f.audience, send_now: true }, 'now', 'Sending…') }}>{busy === 'now' ? 'Sending…' : 'Send now'}</Button>}
+      </div>
+      <Msg text={msg} />
+    </Card>
+  )
+}
+
+function FlowsPanel({ flows, reload }: { flows: Row[]; reload: () => void }) {
+  const [open, setOpen] = useState<string | null>(null)
+  const [busy, setBusy] = useState('')
+  const setStatus = async (key: string, status: string) => {
+    setBusy(key); try { await adminSend('/api/admin/platform/emails', 'POST', { action: 'set_flow_status', key, status }); reload() } finally { setBusy('') }
+  }
+  const statusColor = (s: string) => s === 'live' ? '#1C4A32' : s === 'paused' ? '#b8890c' : T.danger
+  return (
+    <Card pad={0}>
+      <div style={{ padding: '14px 16px 8px', fontSize: 13, fontWeight: 700, color: T.ink }}>Automated emails <span style={{ fontWeight: 400, color: T.muted, fontSize: 12 }}>· pause, go live, suspend, or edit content</span></div>
+      {flows.map((fl) => {
+        const key = fl.key as string, status = fl.status as string
+        return (
+          <div key={key} style={{ borderTop: `1px solid ${T.border}`, padding: '11px 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{fl.name as string} <span style={pill(statusColor(status))}>{status}</span> <span style={{ ...pill(T.muted), background: '#eef2f0', color: T.sub }}>{fl.provider as string}</span></div>
+                <div style={{ fontSize: 12, color: T.muted }}>{(fl.category as string) || ''}{fl.cadence ? ` · ${fl.cadence}` : ''}{fl.description ? ` — ${fl.description}` : ''}</div>
+              </div>
+              <div style={{ display: 'flex', gap: 4 }}>
+                {(['live', 'paused', 'suspended'] as const).map((st) => (
+                  <button key={st} disabled={busy === key || status === st} onClick={() => setStatus(key, st)}
+                    style={{ fontSize: 11.5, fontWeight: 600, padding: '5px 9px', borderRadius: 7, cursor: status === st ? 'default' : 'pointer', border: `1px solid ${status === st ? statusColor(st) : T.border}`, background: status === st ? statusColor(st) : '#fff', color: status === st ? '#fff' : T.sub }}>
+                    {st === 'live' ? 'Live' : st === 'paused' ? 'Pause' : 'Suspend'}
+                  </button>
+                ))}
+                <button onClick={() => setOpen(open === key ? null : key)} style={linkBtn}>{open === key ? 'Close' : 'Edit'}</button>
+              </div>
+            </div>
+            {open === key && <FlowEditor flow={fl} onSaved={() => { setOpen(null); reload() }} />}
+          </div>
+        )
+      })}
+    </Card>
+  )
+}
+function FlowEditor({ flow, onSaved }: { flow: Row; onSaved: () => void }) {
+  const [subject, setSubject] = useState(String(flow.subject_override ?? ''))
+  const [body, setBody] = useState(String(flow.body_override ?? ''))
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+  const save = async () => {
+    setBusy(true); setMsg('')
+    try { await adminSend('/api/admin/platform/emails', 'POST', { action: 'save_flow_override', key: flow.key, subject_override: subject, body_override: body }); onSaved() }
+    catch (e) { setMsg(e instanceof Error ? e.message : 'error'); setBusy(false) }
+  }
+  return (
+    <div style={{ marginTop: 10, padding: 12, background: T.bg, borderRadius: 10 }}>
+      <div style={{ fontSize: 11.5, color: T.muted, marginBottom: 8 }}>Overrides the default content when set. Leave blank to keep the platform&apos;s built-in copy.</div>
+      <Field label="Subject override"><Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="(default)" /></Field>
+      <div style={{ height: 8 }} />
+      <Field label="Body override (HTML)"><Textarea rows={5} value={body} onChange={(e) => setBody(e.target.value)} placeholder="(default)" /></Field>
+      <div style={{ marginTop: 10 }}><Button disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save override'}</Button></div>
+      <Msg text={msg} />
+    </div>
+  )
+}
+
+function BroadcastHistory({ broadcasts, reload }: { broadcasts: Row[]; reload: () => void }) {
+  const [busy, setBusy] = useState('')
+  const act = async (action: string, id: string) => { setBusy(id); try { await adminSend('/api/admin/platform/emails', 'POST', { action, id }); reload() } finally { setBusy('') } }
+  const color = (s: string) => s === 'sent' ? '#1C4A32' : s === 'sending' ? '#b8890c' : s === 'scheduled' ? '#6c5fc7' : s === 'paused' ? '#b8890c' : s === 'canceled' ? T.danger : T.muted
+  if (broadcasts.length === 0) return null
+  return (
+    <Card pad={0}>
+      <div style={{ padding: '14px 16px 8px', fontSize: 13, fontWeight: 700, color: T.ink }}>Broadcasts</div>
+      {broadcasts.map((b) => {
+        const id = b.id as string, status = b.status as string
+        return (
+          <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderTop: `1px solid ${T.border}` }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, color: T.ink }}>{b.subject as string} <span style={pill(color(status))}>{status}</span></div>
+              <div style={{ fontSize: 12, color: T.muted }}>{b.audience as string}{b.scheduled_at ? ` · scheduled ${fmtDate(b.scheduled_at as string)}` : ''}{status === 'sent' ? ` · ${Number(b.sent_count || 0)}/${Number(b.total || 0)} sent` : ''}</div>
+            </div>
+            {status === 'scheduled' && <><button onClick={() => act('pause_broadcast', id)} style={linkBtn}>Pause</button><button onClick={() => act('send_broadcast', id)} style={linkBtn}>Send now</button></>}
+            {status === 'paused' && <button onClick={() => act('resume_broadcast', id)} style={linkBtn}>Resume</button>}
+            {['scheduled', 'paused', 'draft'].includes(status) && <button disabled={busy === id} onClick={() => act('cancel_broadcast', id)} style={{ ...linkBtn, color: T.danger }}>Cancel</button>}
+          </div>
+        )
+      })}
+    </Card>
+  )
+}
+
 // ── shared bits ──────────────────────────────────────────────────────
 const th: React.CSSProperties = { padding: '10px 14px', fontWeight: 600 }
 const td: React.CSSProperties = { padding: '9px 14px', verticalAlign: 'middle' }
 const code: React.CSSProperties = { fontSize: 12, fontFamily: 'ui-monospace,Menlo,monospace', background: '#f4f5f4', padding: '2px 6px', borderRadius: 5, color: T.ink }
+const linkBtn: React.CSSProperties = { fontSize: 12.5, fontWeight: 600, color: T.green, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px' }
 const pill = (c: string): React.CSSProperties => ({ fontSize: 10.5, fontWeight: 700, color: '#fff', background: c, padding: '2px 8px', borderRadius: 20, marginLeft: 8 })
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return <Card pad={16}><div style={{ fontSize: 22, fontWeight: 800, color: T.ink }}>{value}</div><div style={{ fontSize: 11.5, color: T.sub }}>{label}</div></Card>

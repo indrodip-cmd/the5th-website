@@ -432,7 +432,7 @@ export const SCHEDULE: ScheduledSend[] = [
   { date: '2026-08-09', key: 'reminder_day3' },
 ]
 
-// Sent from the dedicated the5th.10kroadmap.org subdomain (better deliverability,
-// isolated sending reputation). Replies route back to the main inbox.
-export const FROM = 'Indrodip at The5th <Indrodip@the5th.10kroadmap.org>'
+// Verified sending domain. (Subdomain sending needs a second Resend domain,
+// which the current plan doesn't allow, so we send from the main domain.)
+export const FROM = 'Indrodip at The5th <Indrodip@10kroadmap.org>'
 export const REPLY_TO = 'Indrodip@10kroadmap.org'

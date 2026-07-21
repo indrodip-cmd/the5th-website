@@ -13,7 +13,6 @@
     <script defer src="/carolina.js"></script>
   <script defer src="/personalize.js"></script>
   <script defer src="/testimonials.js"></script>
-  <script defer src="/story-scroll.js"></script>
     <!-- Homepage promotions (CMS-driven premium product cards) -->
     <script defer src="/promos.js"></script>
 
@@ -1821,7 +1820,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 <main id="content">
 
 <!-- ======================================================
-     HERO - "Meet Lauren" story title card
+     HERO - headline + above-the-fold proof
 ====================================================== -->
 <section class="hero">
   <style>
@@ -1842,20 +1841,22 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 
       <div class="hero__copyContainer cell">
         <p class="hero__hi" data-p-tpl="Welcome back, {name}. This one's for you." data-p-anon=""></p>
-        <span class="hero__chapter">Why The5th exists</span>
+        <span class="hero__chapter">For experienced coaches, 45+</span>
         <h1 class="hero__title">
-          <strong class="hero__meet">Meet Lauren.</strong><br>One chapter from her first <em>$10,000 month.</em>
+          Get Your First Paying Coaching Clients in 90 Days<br><em>using the wisdom you already have.</em>
         </h1>
-        <p class="hero__copy"><strong style="color:#fff;font-weight:600;">Lauren isn't one person. She's every expert The5th was built for.</strong> Fifty-something. Decades of hard-won wisdom, a real gift for changing lives, and a business that just won't grow. Scroll down and live one day with her, then watch it change. Her story might feel a lot like yours.</p>
+        <p class="hero__copy"><strong style="color:#fff;font-weight:600;">You already have the expertise. We give you the system.</strong> The5th hands experienced coaches a proven, step-by-step path — plus AI coaching that guides you every day — to land paying clients without paid ads, funnels, or tech overwhelm.</p>
 
         <div class="hero__cta">
           <a href="https://the5th.consulting/quiz" class="btn-quiz-gold">
-            Start your story →
+            Find your fastest path →
           </a>
 
           <p class="hero__subtext">
-            Takes 5 Minutes &nbsp;•&nbsp; 20 Questions &nbsp;•&nbsp; Instant Results
+            Takes 5 Minutes &nbsp;•&nbsp; 20 Questions &nbsp;•&nbsp; Your Instant Plan
           </p>
+
+          <a href="/call" style="display:inline-block;margin-top:0.85rem;font-size:14px;font-weight:600;color:rgba(255,255,255,0.85);text-decoration:underline;text-underline-offset:3px;">or book a free strategy call →</a>
 
           <span style="display:inline-block;margin-top:1rem;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);background:var(--gold-light);border:1px solid rgba(201,168,76,0.35);border-radius:100px;padding:5px 16px;">
             + FREE 7-DAY AI COACHING INCLUDED
@@ -1873,7 +1874,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="stars">★★★★</span><span class="stars" style="opacity:0.5;">★</span>
-              <span style="font-size:16px;color:rgba(255,255,255,0.85);font-weight:500;"><strong style="color:#fff;">4.8 stars</strong> from 76 coaches across 12 nations</span>
+              <span style="font-size:16px;color:rgba(255,255,255,0.85);font-weight:500;"><strong style="color:#fff;">4.8 stars</strong> from 76 coaches across 12 nations · <strong style="color:#fff;">$15M+</strong> in client revenue</span>
             </div>
           </div>
         </div>
@@ -1886,7 +1887,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
              - the frame already crops and styles it. -->
         <figure class="hero-portrait">
           <div class="hero-portrait__frame">
-            <svg class="hero-portrait__face" viewBox="0 0 440 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated portrait of Lauren">
+            <svg class="hero-portrait__face" viewBox="0 0 440 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated portrait of an experienced coach">
               <defs>
                 <radialGradient id="hpHead" cx="42%" cy="34%" r="72%">
                   <stop offset="0%" stop-color="#FFFDF8"/><stop offset="60%" stop-color="#FBF3E4"/><stop offset="100%" stop-color="#F2E4C9"/>
@@ -1922,233 +1923,12 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
               <path d="M180 262 Q220 300 260 262" fill="none" stroke="#2E1A35" stroke-width="3.8" stroke-linecap="round"/>
             </svg>
           </div>
-          <figcaption class="hero-portrait__cap"><strong>Lauren</strong> · 47 · coach &amp; mother</figcaption>
+          <figcaption class="hero-portrait__cap"><strong>76 coaches</strong> · 12 nations · $15M+ earned</figcaption>
         </figure>
       </div>
 
     </div>
   </div>
-</section>
-
-<!-- ======================================================
-     MEET LAUREN - scroll-driven emotional story (SVG face)
-     A cinematic scrollytelling scene: as you scroll through Lauren's day,
-     her face turns and her expression shifts from hopeful → frustrated →
-     despair → the turn (she finds The5th) → radiant. The world stays cool
-     grey through the struggle, then warms to gold, and aspiration words drift
-     in. The #tsx-face SVG is swappable for AI-rendered face frames later.
-====================================================== -->
-<!-- ======================================================
-     LAUREN STORY INTRO - title card that leads into the scroll scene
-====================================================== -->
-<section class="lauren-intro">
-  <style>
-    .lauren-intro{background:var(--plum-dark);color:#fff;text-align:center;padding:clamp(4rem,10vh,7rem) 24px clamp(3.5rem,8vh,6rem)}
-    .lauren-intro__eyebrow{display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
-    .lauren-intro__title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2rem,5.5vw,3.75rem);line-height:1.04;letter-spacing:-0.02em;color:#fff;margin:0 auto 1.1rem;max-width:14ch}
-    .lauren-intro__title em{font-style:italic;color:var(--gold)}
-    .lauren-intro__sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(1rem,2vw,1.2rem);line-height:1.6;color:rgba(255,255,255,0.78);max-width:540px;margin:0 auto 2rem}
-    .lauren-intro__cue{display:inline-flex;flex-direction:column;align-items:center;gap:8px;font:700 11px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.55)}
-    .lauren-intro__cue span{font-size:20px;color:var(--gold);animation:lintroBob 1.7s ease-in-out infinite}
-    @keyframes lintroBob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-    @media(prefers-reduced-motion:reduce){.lauren-intro__cue span{animation:none}}
-  </style>
-  <div class="layout">
-    <span class="lauren-intro__eyebrow">Chapter one · in her own words</span>
-    <h2 class="lauren-intro__title">This is one day in <em>Lauren's</em> life.</h2>
-    <p class="lauren-intro__sub">Lauren stands for every expert we coach. Before The5th, her days all looked like this one. Scroll slowly, and live one with her, hour by hour.</p>
-    <span class="lauren-intro__cue">Scroll to begin<span>↓</span></span>
-  </div>
-</section>
-
-<section class="tsx-story" id="t5-story" aria-label="Lauren's day, hour by hour">
-  <style>
-    .tsx-story{position:relative;height:620vh}
-    .tsx-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .tsx-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#EAE7EC,#D2CDD8)}
-    .tsx-glow{position:absolute;z-index:1;left:50%;top:42%;width:min(74vh,620px);height:min(74vh,620px);transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.55),rgba(201,168,76,0) 62%);opacity:0;filter:blur(4px);pointer-events:none}
-    .tsx-vign{position:absolute;inset:0;z-index:2;background:radial-gradient(120% 90% at 50% 32%,transparent 42%,rgba(46,26,53,.16));pointer-events:none}
-    .tsx-words{position:absolute;inset:0;z-index:3;pointer-events:none}
-    .tsx-word{position:absolute;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;color:#B0902F;opacity:0;white-space:nowrap;text-shadow:0 2px 24px rgba(255,255,255,.55);will-change:transform,opacity}
-    .tsx-face{position:relative;z-index:4;width:min(40vh,320px);height:auto;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));animation:tsxFloat 5.5s ease-in-out infinite;will-change:transform}
-    @keyframes tsxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
-    /* Cinematic real-face frames: a <canvas> the scroll engine scrubs. Hidden
-       until story-scroll.js detects frames in /public/story-frames/. */
-    .tsx-frames{position:relative;z-index:4;width:min(40vh,320px);height:auto;display:none;filter:drop-shadow(0 30px 60px rgba(46,26,53,.22));will-change:contents}
-    .tsx-copy{position:relative;z-index:4;margin-top:2.2vh;width:100%;max-width:660px;min-height:220px}
-    .tsx-beat{position:absolute;left:0;right:0;top:0;opacity:0;padding:0 24px;text-align:center;will-change:opacity}
-    .tsx-time{display:inline-block;font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#B0902F;margin:0 0 12px}
-    .tsx-beat h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(24px,4.3vw,44px);line-height:1.1;letter-spacing:-.02em;color:#2E1A35;margin:0 0 10px}
-    .tsx-beat p{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(15px,2vw,18px);line-height:1.6;color:#4a4550;margin:0 auto;max-width:540px}
-    .tsx-cta{position:absolute;z-index:5;bottom:7.5vh;opacity:0;transition:opacity .25s}
-    .tsx-cta a{display:inline-block;background:linear-gradient(180deg,#E4C879,#C9A84C 60%,#B0902F);color:#2E1A35;font:700 16px/1 'Inter',system-ui,sans-serif;padding:16px 34px;border-radius:8px;text-decoration:none;box-shadow:0 16px 40px rgba(201,168,76,.34)}
-    .tsx-hint{position:absolute;z-index:5;bottom:4.5vh;font:600 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#8A8075}
-    .tsx-hint span{display:inline-block;animation:tsxbob 1.6s ease-in-out infinite}
-    @keyframes tsxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-    .tsx-prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:5;background:rgba(46,26,53,.09)}
-    .tsx-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#E4C879,#C9A84C 60%,#B0902F)}
-    /* Mobile: the scattered gold words collided with the face, so on small
-       screens they drop out and the radiant face + beat copy carry the moment. */
-    @media(max-width:640px){.tsx-story{height:560vh}.tsx-face,.tsx-frames{width:min(30vh,190px)}.tsx-copy{min-height:290px}.tsx-word{display:none!important}}
-    @media(prefers-reduced-motion:reduce){.tsx-hint span,.tsx-face{animation:none}}
-  </style>
-  <div class="tsx-stage">
-    <div class="tsx-bg" id="tsx-bg"></div>
-    <div class="tsx-glow" id="tsx-glow"></div>
-    <div class="tsx-vign"></div>
-    <div class="tsx-words" id="tsx-words">
-      <span class="tsx-word" data-p="0.74" style="left:11%;top:29%;font-size:clamp(20px,3vw,36px)">clarity</span>
-      <span class="tsx-word" data-p="0.79" style="right:12%;top:24%;font-size:clamp(18px,2.6vw,30px)">confidence</span>
-      <span class="tsx-word" data-p="0.84" style="left:14%;bottom:31%;font-size:clamp(18px,2.6vw,30px)">predictable income</span>
-      <span class="tsx-word" data-p="0.89" style="right:10%;bottom:33%;font-size:clamp(20px,3vw,34px)">$10K months</span>
-      <span class="tsx-word" data-p="0.93" style="left:16%;top:16%;font-size:clamp(16px,2.2vw,26px)">time with family</span>
-      <span class="tsx-word" data-p="0.97" style="right:15%;bottom:22%;font-size:clamp(20px,3vw,34px)">freedom</span>
-    </div>
-
-    <svg class="tsx-face" id="tsx-face" viewBox="0 0 440 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lauren, on her journey with The5th">
-      <defs>
-        <radialGradient id="tsxHeadG" cx="42%" cy="34%" r="72%">
-          <stop offset="0%" stop-color="#FFFDF8"/>
-          <stop offset="60%" stop-color="#FBF3E4"/>
-          <stop offset="100%" stop-color="#F2E4C9"/>
-        </radialGradient>
-        <linearGradient id="tsxBodyG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#4E3158"/>
-          <stop offset="100%" stop-color="#2E1A35"/>
-        </linearGradient>
-        <linearGradient id="tsxHairG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#7A5636"/>
-          <stop offset="100%" stop-color="#5A3D28"/>
-        </linearGradient>
-      </defs>
-      <g id="tsx-head">
-        <!-- little shoulders / body so it reads as a character -->
-        <path d="M112 452 Q120 372 220 372 Q320 372 328 452 Z" fill="url(#tsxBodyG)"/>
-        <circle cx="220" cy="430" r="9" fill="#C9A84C"/>
-        <!-- hair framing the face so it reads as Lauren (behind the head) -->
-        <ellipse cx="220" cy="196" rx="172" ry="176" fill="url(#tsxHairG)"/>
-        <path d="M64 214 C34 268 40 350 80 408 L134 408 C104 344 108 262 120 220 Z" fill="url(#tsxHairG)"/>
-        <path d="M376 214 C406 268 400 350 360 408 L306 408 C336 344 332 262 320 220 Z" fill="url(#tsxHairG)"/>
-        <!-- head -->
-        <circle cx="220" cy="212" r="150" fill="url(#tsxHeadG)" stroke="#2E1A35" stroke-width="2.6"/>
-        <!-- top sparkle (brightens at the summit) -->
-        <path id="tsx-spark" d="M312 96 l7 17 17 7 -17 7 -7 17 -7 -17 -17 -7 17 -7 z" fill="#C9A84C" opacity="0"/>
-        <!-- blush -->
-        <ellipse id="tsx-blushL" cx="150" cy="250" rx="24" ry="13" fill="#E8A07A" opacity="0"/>
-        <ellipse id="tsx-blushR" cx="290" cy="250" rx="24" ry="13" fill="#E8A07A" opacity="0"/>
-        <!-- eyes -->
-        <ellipse id="tsx-eyeLs" cx="175" cy="196" rx="28" ry="17" fill="#fff" stroke="#2E1A35" stroke-width="2.4"/>
-        <ellipse id="tsx-eyeRs" cx="265" cy="196" rx="28" ry="17" fill="#fff" stroke="#2E1A35" stroke-width="2.4"/>
-        <g id="tsx-pupilL"><circle cx="175" cy="196" r="9" fill="#2E1A35"/><circle cx="171.5" cy="192" r="3" fill="#fff"/></g>
-        <g id="tsx-pupilR"><circle cx="265" cy="196" r="9" fill="#2E1A35"/><circle cx="261.5" cy="192" r="3" fill="#fff"/></g>
-        <!-- brows -->
-        <path id="tsx-browL" d="M148 162 Q175 156 202 162" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
-        <path id="tsx-browR" d="M238 162 Q265 156 292 162" fill="none" stroke="#2E1A35" stroke-width="3.6" stroke-linecap="round"/>
-        <!-- nose -->
-        <path d="M220 208 L214 244 Q220 250 226 244" fill="none" stroke="#2E1A35" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
-        <!-- mouth -->
-        <path id="tsx-mouth" d="M182 286 Q220 286 258 286" fill="none" stroke="#2E1A35" stroke-width="3.8" stroke-linecap="round"/>
-      </g>
-    </svg>
-    <!-- Cinematic real-face morph. story-scroll.js scrubs frames from
-         /public/story-frames/ onto this canvas and hides the SVG above when
-         those frames are present; otherwise the SVG remains the fallback. -->
-    <canvas class="tsx-frames" id="tsx-canvas" aria-hidden="true"></canvas>
-
-    <div class="tsx-copy">
-      <div class="tsx-beat" data-c="0.03"><h3>Meet Lauren.</h3><p>She's 47. A loving mother, a caring friend, the woman who always puts everyone else first.</p></div>
-      <div class="tsx-beat" data-c="0.09"><h3>She knows she's here for something bigger.</h3><p>She wants to help women rediscover themselves and build a life they love. She knows she can change lives. She just can't seem to grow her own business.</p></div>
-      <div class="tsx-beat" data-c="0.15"><span class="tsx-time">6:30 AM</span><h3>Today feels different.</h3><p>Coffee. A few messages to women she met yesterday. Then a notification. "I'd love to chat." A discovery call, booked. "Maybe this is finally my breakthrough."</p></div>
-      <div class="tsx-beat" data-c="0.21"><span class="tsx-time">9:00 AM</span><h3>Three hours gone. Nothing published.</h3><p>ChatGPT, Canva, Instagram, YouTube. Three videos on "the perfect hook," each one contradicting the last. She writes, deletes, starts again. "Why is this so hard?"</p></div>
-      <div class="tsx-beat" data-c="0.28"><span class="tsx-time">12:30 PM</span><h3>"It's getting there."</h3><p>Her family asks how the business is going. She smiles and says it's getting there. Inside, she isn't sure anymore.</p></div>
-      <div class="tsx-beat" data-c="0.35"><span class="tsx-time">2:00 PM</span><h3>The call goes beautifully. Until the offer.</h3><p>The prospect cries. Lauren listens, supports, encourages. Then she names the price, and her voice wavers. "I need to think about it." She knows what that means.</p></div>
-      <div class="tsx-beat" data-c="0.42"><span class="tsx-time">3:30 PM</span><h3>Inbox: nothing. Stripe: $0.</h3><p>She refreshes her email. Nothing. Instagram, nothing. Stripe, zero. Again.</p></div>
-      <div class="tsx-beat" data-c="0.485"><span class="tsx-time">5:00 PM</span><h3>"Am I just not cut out for this?"</h3><p>Instead of recording, she scrolls. A $50K launch. Six figures in a weekend. "10 clients in 30 days." The doubt settles in.</p></div>
-      <div class="tsx-beat" data-c="0.55"><span class="tsx-time">7:00 PM</span><h3>Present with them. But not really.</h3><p>Dinner with her children. She tries to stay in the moment, but her mind keeps drifting. Bills. Clients. Self-doubt.</p></div>
-      <div class="tsx-beat" data-c="0.62"><span class="tsx-time">10:30 PM</span><h3>The goals are still there. So is she.</h3><p>Her notebook. Help thousands of women. Replace her income. Travel with her family. She hasn't given up. She's just exhausted. Tomorrow, she'll try again.</p></div>
-      <div class="tsx-beat" data-c="0.70"><h3>Then Lauren found The5th.</h3><p>Not another course. Not another pile of motivational videos. A complete business operating system.</p></div>
-      <div class="tsx-beat" data-c="0.78"><h3>Instead of wondering what to do, she opens her dashboard.</h3><p>Today's priorities are already waiting. One proven framework turns three hours of content into one.</p></div>
-      <div class="tsx-beat" data-c="0.85"><h3>Instead of hoping for a call, qualified leads arrive.</h3><p>Consistently. She knows exactly where they come from. And selling becomes a calm, simple conversation. No pressure, no chasing.</p></div>
-      <div class="tsx-beat" data-c="0.91"><h3>Instead of ten disconnected tools, one system.</h3><p>Content, CRM, follow-up, AI, coaching, community. All in one place. Her business becomes predictable. Her confidence comes back.</p></div>
-      <div class="tsx-beat" data-c="1.00"><h3>She never lacked passion. She lacked a system.</h3><p>More time with her family. Better sleep. And every week, more women get the transformation she always knew she could deliver.</p></div>
-    </div>
-
-    <div class="tsx-cta" id="tsx-cta"><a href="https://the5th.consulting/quiz">Start your story →</a></div>
-    <div class="tsx-hint" id="tsx-hint"><span>Scroll to begin ↓</span></div>
-    <div class="tsx-prog"><i id="tsx-progfill"></i></div>
-  </div>
-</section>
-
-<!-- ======================================================
-     CHAPTER TWO - Ninety days later (continues Lauren's story)
-====================================================== -->
-<section class="ch2" aria-label="Chapter two, ninety days later">
-  <style>
-    .ch2{background:linear-gradient(180deg,#FBF3E4 0%,var(--parchment) 42%);padding:clamp(3.5rem,8vh,6rem) 0 clamp(3rem,7vh,5rem)}
-    .ch2__wrap{max-width:940px;margin:0 auto;padding:0 clamp(20px,5vw,32px)}
-    .ch2__head{text-align:center;max-width:660px;margin:0 auto clamp(2.4rem,5vw,3.4rem)}
-    .ch2__eyebrow{display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-    .ch2__title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(2rem,5vw,3.4rem);line-height:1.06;letter-spacing:-.02em;color:var(--ink);margin:0 0 14px}
-    .ch2__title em{font-style:italic;color:#B0902F}
-    .ch2__sub{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(15px,2vw,18px);line-height:1.65;color:var(--ink-mid);margin:0}
-    .ch2__rows{display:flex;flex-direction:column;gap:clamp(14px,2.4vw,18px)}
-    .ch2-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,18px);align-items:stretch;opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
-    .ch2-row.is-in{opacity:1;transform:none}
-    .ch2-cell{border-radius:16px;padding:clamp(18px,2.4vw,24px);display:flex;flex-direction:column;justify-content:center}
-    .ch2-then{background:#EFEAE1;border:1px solid #E2DCD2}
-    .ch2-now{background:linear-gradient(165deg,var(--plum),var(--plum-dark));box-shadow:0 24px 50px -30px rgba(46,26,53,.6)}
-    .ch2-when{display:block;font:700 11px/1 'Inter',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
-    .ch2-then .ch2-when{color:#a99f8f}
-    .ch2-now .ch2-when{color:var(--gold)}
-    .ch2-line{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(17px,2.2vw,21px);line-height:1.36;letter-spacing:-.01em;margin:0}
-    .ch2-then .ch2-line{color:#7a7266}
-    .ch2-now .ch2-line{color:#fff}
-    .ch2__close{text-align:center;max-width:640px;margin:clamp(2.4rem,5vw,3.4rem) auto 0}
-    .ch2__close p{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(19px,2.6vw,26px);line-height:1.4;color:var(--ink);margin:0 0 12px}
-    .ch2__close span{font-family:'Inter',system-ui,sans-serif;font-weight:300;font-size:clamp(14px,1.8vw,16px);line-height:1.6;color:var(--ink-mid)}
-    @media(max-width:640px){.ch2-row{grid-template-columns:1fr;gap:8px}.ch2-then{opacity:.9}}
-    @media(prefers-reduced-motion:reduce){.ch2-row{opacity:1;transform:none;transition:none}}
-  </style>
-  <div class="ch2__wrap">
-    <div class="ch2__head">
-      <span class="ch2__eyebrow">Chapter Two · Ninety days later</span>
-      <h2 class="ch2__title">Same person. Same expertise.<br><em>A completely different life.</em></h2>
-      <p class="ch2__sub">Nothing about what Lauren knows changed. Everything about how she works did. Here is that same day, ninety days on.</p>
-    </div>
-    <div class="ch2__rows">
-      <div class="ch2-row">
-        <div class="ch2-cell ch2-then"><span class="ch2-when">Before · 6:30 AM</span><p class="ch2-line">She woke with a knot in her chest and no idea what to do first.</p></div>
-        <div class="ch2-cell ch2-now"><span class="ch2-when">Now · 6:30 AM</span><p class="ch2-line">She opens a dashboard that already knows today's three priorities.</p></div>
-      </div>
-      <div class="ch2-row">
-        <div class="ch2-cell ch2-then"><span class="ch2-when">Before · the sales call</span><p class="ch2-line">She explained, she apologized, and she heard "I need to think about it."</p></div>
-        <div class="ch2-cell ch2-now"><span class="ch2-when">Now · the sales call</span><p class="ch2-line">She names her price without flinching. They say yes before she hangs up.</p></div>
-      </div>
-      <div class="ch2-row">
-        <div class="ch2-cell ch2-then"><span class="ch2-when">Before · 3:30 PM</span><p class="ch2-line">She refreshed Stripe. Zero. Again.</p></div>
-        <div class="ch2-cell ch2-now"><span class="ch2-when">Now · 3:30 PM</span><p class="ch2-line">A payment lands while she's making tea. She barely looks up.</p></div>
-      </div>
-      <div class="ch2-row">
-        <div class="ch2-cell ch2-then"><span class="ch2-when">Before · 10:30 PM</span><p class="ch2-line">Goals in a notebook, gathering dust, and one more quiet "tomorrow."</p></div>
-        <div class="ch2-cell ch2-now"><span class="ch2-when">Now · 10:30 PM</span><p class="ch2-line">Those same goals, half already crossed off, real dates beside the rest.</p></div>
-      </div>
-    </div>
-    <div class="ch2__close">
-      <p>"It was never about being younger, louder, or more technical. It was a system that finally fit."</p>
-      <span>And it fits whatever you have spent your life mastering, too. Whoever you are, at whatever age you begin.</span>
-    </div>
-  </div>
-  <script>
-  (function(){
-    var rows = [].slice.call(document.querySelectorAll('.ch2-row'));
-    if (!rows.length) return;
-    if (!('IntersectionObserver' in window)) { rows.forEach(function(r){ r.classList.add('is-in'); }); return; }
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
-    }, { threshold: 0.2 });
-    rows.forEach(function(r,i){ r.style.transitionDelay = (i*90)+'ms'; io.observe(r); });
-  })();
-  </script>
 </section>
 
 <!-- ======================================================
@@ -2219,7 +1999,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 </section>
 
 <div class="layout" style="text-align:center;max-width:720px;margin:0 auto;padding:1rem 24px 2.5rem">
-  <p class="copy copy--big" style="margin:0"><em style="font-style:italic">At 5PM, Lauren scrolled past wins like these and wondered if she'd ever have her own.</em> Now she's one of them. So are they.</p>
+  <p class="copy copy--big" style="margin:0"><em style="font-style:italic">Not long ago, every coach here was scrolling past wins like these, wondering if they'd ever have their own.</em> Now they're the ones being celebrated. You could be next.</p>
 </div>
 
 <section class="testimonial-strip">
@@ -2397,7 +2177,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
         <span class="eyebrow">The founder</span>
         <h2 class="founder__headline">
           Built by someone who watched<br>
-          <span class="gold-underline"><em>women like Lauren go unpaid</em></span><br>
+          <span class="gold-underline"><em>women like you go unpaid</em></span><br>
           for decades.
         </h2>
         <div class="founder__quote">
@@ -2439,9 +2219,9 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   <div class="layout" style="padding-bottom:4rem">
     <div class="content--10of16-large align--center" data-animate>
       <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
-      <span style="display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Her story is the rule, not the exception</span>
-      <h2 class="h2 margin--bottom-3">Lauren didn't come to The5th because she'd tried nothing. She came because she'd tried <em style="font-style:italic;color:var(--gold)">everything</em>. Alone.</h2>
-      <p class="copy copy--big">The courses. The coaches. The endless content. If you've lived Lauren's story, you already know: what was missing was never knowledge or capability. It was a proven system, and someone who finally sees the value in what she already knew.</p>
+      <span style="display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">If this sounds like you, you're in the right place</span>
+      <h2 class="h2 margin--bottom-3">You're not here because you've tried nothing. You're here because you've tried <em style="font-style:italic;color:var(--gold)">everything</em>. Alone.</h2>
+      <p class="copy copy--big">The courses. The coaches. The endless content. If that's you, you already know the truth: what's missing was never your knowledge or your talent. It's a proven system, and someone who finally sees the value in what you already know.</p>
     </div>
   </div>
 </section>
@@ -2453,7 +2233,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   <div class="align--center" data-animate style="max-width:740px;margin:0 auto 2.75rem;text-align:center">
     <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
     <span style="display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Unscripted · Real clients, real cameras</span>
-    <h2 class="h2 margin--bottom-3">Every one of them was once exactly where Lauren was. Then <em style="font-style:italic;color:var(--gold)">this</em> happened.</h2>
+    <h2 class="h2 margin--bottom-3">Every one of them was once exactly where you are now. Then <em style="font-style:italic;color:var(--gold)">this</em> happened.</h2>
     <p class="copy copy--big">Not written reviews you have to take on faith. Real professionals, on camera, at the exact moment it clicked for them. Press play on any story.</p>
   </div>
   <div data-t5-videos data-t5-limit="9" data-t5-more="/results"></div>
@@ -2466,9 +2246,9 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 
   <div class="align--center" data-animate style="max-width:760px;margin:0 auto 3rem;text-align:center">
     <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
-    <span style="display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Chapter Three · The system</span>
-    <h2 class="h2 margin--bottom-3">The day Lauren stopped guessing, and started following a system.</h2>
-    <p class="copy copy--big">Not another course. A complete business operating system: content, leads, sales, follow-up, AI, and community, all in one place. It's the same system Lauren runs her days on now. Here are the two ways it can work for you.</p>
+    <span style="display:block;font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">The system that gets you paid</span>
+    <h2 class="h2 margin--bottom-3">Stop guessing. Start following a system that gets you clients.</h2>
+    <p class="copy copy--big">Not another course. A complete business operating system: content, leads, sales, follow-up, AI, and community, all in one place, so you always know your next step. Here are the two ways it can work for you.</p>
   </div>
 
   <!-- Card 1 -->
@@ -2536,34 +2316,6 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
     </div>
   </div>
 
-</section>
-
-<!-- ======================================================
-     PULL QUOTE
-====================================================== -->
-<section class="backgroundJasmine layout--margin">
-  <div class="layout">
-    <div class="content--10of16-large align--center" style="margin:0 auto" data-animate>
-      <h2 class="h2 margin--bottom-3"><em>"I don't want the <span class="gold-underline">next 20 years</span> to look exactly like the last 20 years."</em></h2>
-      <p style="font:700 12px/1 'Inter',system-ui,sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin:0 0 1.75rem">Lauren, in her notebook at 10:30 PM</p>
-      <p class="copy margin--bottom-3">Like Lauren, you've spent decades becoming extraordinary at what you do. Download <em>What's Possible</em>, our free ebook featuring real professionals over 45 who turned their expertise into income. Their stories. Their numbers. Exactly how they did it.</p>
-      <a href="#ebook" class="ctaPrimary" style="display:inline-flex;align-items:center;gap:0.75rem;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download the Free Ebook
-      </a>
-      <p style="margin-top:1rem;font-size:0.8125rem;color:var(--ink-muted);letter-spacing:0.02em;">5 real professionals. 5 real results. Free.</p>
-    </div>
-
-    <!-- Typeform embed -->
-    <div id="ebook" class="tf-embed" style="max-width:760px;margin:3rem auto 0;scroll-margin-top:96px;" data-animate>
-      <div data-tf-live="01KVF94BFKB4SF5WBTJ2V5NYTS"
-           style="width:100%;height:clamp(520px,72vh,640px);min-height:520px;"></div>
-    </div>
-  </div>
 </section>
 
 <!-- ======================================================
@@ -2642,10 +2394,10 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
         <figure style="margin:0 auto 1.75rem;width:100%;max-width:200px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-01.png" alt="Private 1:1 coaching" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
-        <h3 class="horizontalGridItem__subheader">Private 1:1 coaching</h3>
+        <h3 class="horizontalGridItem__subheader">Never wonder what to do next</h3>
         <div class="horizontalGridItem__copyContainer">
-          <div class="horizontalGridItem__copy"><p>Direct weekly coaching with Indrodip personally, not a team member, not a recorded training. Real guidance, real accountability, every week.</p></div>
-          <a href="/fast-forward" class="cta margin--top-3" style="justify-content:center">Learn more</a>
+          <div class="horizontalGridItem__copy"><p>Private weekly coaching with Indrodip personally, not a team member, not a recorded training. You leave every week knowing your exact next move.</p></div>
+          <a href="/fast-forward" class="cta margin--top-3" style="justify-content:center">How the coaching works</a>
         </div>
       </div>
 
@@ -2653,9 +2405,9 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
         <figure style="margin:0 auto 1.75rem;width:100%;max-width:200px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-02.png" alt="Wisdom-to-Income Method" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
-        <h3 class="horizontalGridItem__subheader">The Wisdom-to-Income Method™</h3>
+        <h3 class="horizontalGridItem__subheader">Turn what you already know into income</h3>
         <div class="horizontalGridItem__copyContainer">
-          <div class="horizontalGridItem__copy"><p>A proven step-by-step framework to package your expertise, attract clients, and generate consistent income, built specifically for professionals 45+.</p></div>
+          <div class="horizontalGridItem__copy"><p>The proven Wisdom-to-Income Method™: a step-by-step path to package your expertise, attract clients, and earn consistently, built for professionals 45+.</p></div>
           <a href="/fast-forward" class="cta margin--top-3" style="justify-content:center">See the framework</a>
         </div>
       </div>
@@ -2664,366 +2416,13 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
         <figure style="margin:0 auto 1.75rem;width:100%;max-width:200px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;">
   <img src="/public/images/grid-03.png" alt="The5th AI 24/7" style="width:100%;height:100%;object-fit:contain;display:block;">
 </figure>
-        <h3 class="horizontalGridItem__subheader">The5th AI - 24/7</h3>
+        <h3 class="horizontalGridItem__subheader">Get expert help the moment you're stuck</h3>
         <div class="horizontalGridItem__copyContainer">
-          <div class="horizontalGridItem__copy"><p>Your personal business coach, copywriter, and strategist. Available the moment you need guidance, not at the next scheduled call.</p></div>
+          <div class="horizontalGridItem__copy"><p>The5th AI is your personal business coach, copywriter, and strategist, 24/7. Real answers the moment you need them, not at the next scheduled call.</p></div>
           <a href="/ai" class="cta margin--top-3" style="justify-content:center">Explore The5th AI</a>
         </div>
       </div>
 
-    </div>
-  </div>
-</section>
-
-<!-- ======================================================
-     HEADLINER, See how it comes together + HIGHLIGHT MODULES
-====================================================== -->
-<section class="backgroundJasmine layout--margin" style="padding-top:0">
-  <div class="layout">
-    <div class="content--8of16-large align--center" style="margin:0 auto;padding-bottom:2rem" data-animate>
-      <h2 class="h2">See how it all <em>comes together</em></h2>
-    </div>
-
-    <!-- Module 1, image left -->
-    <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
-      <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div style="overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);">
-  <img src="/public/images/highlight-content.png"
-       alt="Gurpreet - organic reach client result"
-       style="width:100%;height:auto;display:block;">
-  <div style="background:#3D2645;padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;">
-    <span style="font-size:11px;color:#C9A84C;font-weight:700;
-    letter-spacing:0.08em;text-transform:uppercase;">
-      ✦ 730 REACTIONS, ZERO AD SPEND
-    </span>
-    <span style="font-size:11px;color:rgba(255,255,255,0.5);">
-      Organic reach
-    </span>
-  </div>
-</div></div>
-      </div>
-      <div class="highlightModule__body cell">
-        <h2 class="highlightModule__header">Turn your content into clients</h2>
-        <div class="highlightModule__bodyCopy"><p>Connect your expertise to your audience with messaging that speaks directly to the professional you help most, and turns readers into booked discovery calls.</p></div>
-      </div>
-    </div>
-
-    <!-- Module 2, image right -->
-    <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border)" data-animate>
-      <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div style="overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);">
-  <img src="/public/images/highlight-sales.png"
-       alt="$18K revenue from $2K ad spend"
-       style="width:100%;height:auto;display:block;">
-  <div style="background:#3D2645;padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;">
-    <span style="font-size:11px;color:#C9A84C;font-weight:700;
-    letter-spacing:0.08em;text-transform:uppercase;">
-      ✦ $18K REVENUE FROM $2K AD SPEND
-    </span>
-    <span style="font-size:11px;color:rgba(255,255,255,0.5);">
-      9x ROI
-    </span>
-  </div>
-</div></div>
-      </div>
-      <div class="highlightModule__body cell">
-        <h2 class="highlightModule__header">A sales process that feels like a conversation</h2>
-        <div class="highlightModule__bodyCopy"><p>Our Diagnose-Prescribe-Close framework removes the pressure from selling. You ask the right questions, understand what your client needs, and present your offer as the natural solution.</p></div>
-      </div>
-    </div>
-
-    <!-- The5th AI module -->
-    <div class="flex flex--middle flex--columns-2-large highlightModule__grid--swap" style="padding:3rem 0;border-bottom:1px solid var(--border);align-items:flex-start" data-animate>
-      <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image">
-<style>
-  .ai-mock-browser-wrap, .ai-mock-browser-wrap * { margin: 0; padding: 0; box-sizing: border-box; }
-  .ai-mock-browser-wrap {
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 8px 32px rgba(0,0,0,0.5);
-  }
-  .ai-mock-chrome { background: #2b2b2b; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
-  .ai-mock-dots { display: flex; gap: 6px; }
-  .ai-mock-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .ai-mock-dot-r { background: #ff5f57; }
-  .ai-mock-dot-y { background: #febc2e; }
-  .ai-mock-dot-g { background: #28c840; }
-  .ai-mock-address-bar { flex: 1; background: #3a3a3a; border-radius: 6px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; max-width: 340px; margin: 0 auto; }
-  .ai-mock-ssl-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
-  .ai-mock-address-text { font-size: 12px; color: #b0b0b0; font-family: monospace; }
-  .ai-mock-content { background: #ffffff; display: grid; grid-template-columns: 1fr 1fr; }
-  .ai-mock-left-col { padding: 20px; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; gap: 14px; }
-  .ai-mock-right-col { padding: 20px; background: #fafafa; display: flex; flex-direction: column; gap: 14px; }
-  .ai-mock-chat-panel { background: #1a1a2e; border-radius: 10px; padding: 16px; color: white; }
-  .ai-mock-chat-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .ai-mock-avatar { width: 28px; height: 28px; border-radius: 50%; background: #3D2645; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
-  .ai-mock-avatar-green { background: #0f6e56; }
-  .ai-mock-avatar-label { font-size: 11px; font-weight: 600; color: #C9A84C; }
-  .ai-mock-avatar-sub { font-size: 9px; color: #8b7fcf; text-transform: uppercase; letter-spacing: 0.05em; }
-  .ai-mock-bubble-user { background: #3D2645; border-radius: 8px 8px 2px 8px; padding: 8px 10px; margin-bottom: 8px; font-size: 11px; color: white; max-width: 85%; margin-left: auto; line-height: 1.5; }
-  .ai-mock-bubble-ai { background: #241c15; border-radius: 2px 8px 8px 8px; padding: 8px 10px; margin-bottom: 8px; font-size: 11px; color: #e2e8f0; line-height: 1.6; }
-  .ai-mock-highlight-green { color: #4ade80; font-weight: 700; }
-  .ai-mock-highlight-purple { color: #C9A84C; }
-  .ai-mock-credit-bar { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-  .ai-mock-credit-label { font-size: 9px; color: #8b7fcf; }
-  .ai-mock-bar-track { width: 80px; height: 3px; background: #2E1A35; border-radius: 2px; overflow: hidden; }
-  .ai-mock-bar-fill { height: 100%; background: #3D2645; border-radius: 2px; }
-  .ai-mock-feature-card { border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; background: white; }
-  .ai-mock-tag { font-size: 9px; font-weight: 700; color: #3D2645; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-  .ai-mock-card-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; }
-  .ai-mock-card-body { font-size: 11px; color: #555; line-height: 1.6; }
-  .ai-mock-journey-card { background: #1a1a2e; border-radius: 10px; padding: 16px; color: white; }
-  .ai-mock-journey-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .ai-mock-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-  .ai-mock-stat { text-align: center; }
-  .ai-mock-stat-value { font-size: 15px; font-weight: 700; }
-  .ai-mock-stat-label { font-size: 8px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
-  .ai-mock-month-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
-  .ai-mock-tab-active { background: #3D2645; border-radius: 5px; padding: 4px 10px; font-size: 10px; color: white; font-weight: 600; }
-  .ai-mock-tab-locked { background: #241c15; border-radius: 5px; padding: 4px 10px; font-size: 10px; color: #64748b; }
-  .ai-mock-week-label { font-size: 10px; font-weight: 600; color: #C9A84C; margin-bottom: 8px; }
-  .ai-mock-task-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .ai-mock-checkbox-done { width: 14px; height: 14px; border-radius: 3px; background: #3D2645; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-  .ai-mock-checkbox-done::after { content: ''; width: 6px; height: 6px; background: white; border-radius: 1px; }
-  .ai-mock-checkbox-empty { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #2E1A35; flex-shrink: 0; }
-  .ai-mock-task-text { font-size: 10px; flex: 1; }
-  .ai-mock-task-done { color: #e2e8f0; }
-  .ai-mock-task-pending { color: #64748b; }
-  .ai-mock-pts-green { font-size: 9px; color: #4ade80; }
-  .ai-mock-pts-gray { font-size: 9px; color: #64748b; }
-  .ai-mock-quiz-card { background: white; border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; }
-  .ai-mock-quiz-header { font-size: 11px; font-weight: 600; color: #111; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; }
-  .ai-mock-quiz-meta { font-size: 10px; color: #888; font-weight: 400; }
-  .ai-mock-quiz-section-label { font-size: 9px; font-weight: 700; color: #3D2645; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-  .ai-mock-quiz-q { font-size: 12px; font-weight: 600; color: #111; margin-bottom: 10px; }
-  .ai-mock-option { border-radius: 7px; padding: 8px 10px; font-size: 11px; margin-bottom: 6px; }
-  .ai-mock-option-selected { border: 1.5px solid #3D2645; background: rgba(61,38,69,0.1); color: #3D2645; }
-  .ai-mock-option-plain { border: 1px solid #e8e8e8; color: #555; }
-  .ai-mock-lm-result { background: #241c15; border-radius: 2px 8px 8px 8px; padding: 12px; }
-  .ai-mock-lm-tag { font-size: 9px; color: #8b7fcf; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-  .ai-mock-lm-title { font-size: 12px; font-weight: 600; color: #e2e8f0; margin-bottom: 5px; }
-  .ai-mock-lm-desc { font-size: 10px; color: #94a3b8; margin-bottom: 8px; line-height: 1.5; }
-  .ai-mock-lm-day { font-size: 10px; color: #C9A84C; margin-bottom: 3px; }
-  .ai-mock-lm-day span { color: #3D2645; font-weight: 700; margin-right: 4px; }
-</style>
-<div style="width:100%;overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);max-height:520px;">
-  <div style="transform:scale(0.52);transform-origin:top left;width:192%;max-width:none;pointer-events:none;">
-  <div class="ai-mock-browser-wrap">
-    <div class="ai-mock-chrome">
-      <div class="ai-mock-dots">
-        <div class="ai-mock-dot ai-mock-dot-r"></div>
-        <div class="ai-mock-dot ai-mock-dot-y"></div>
-        <div class="ai-mock-dot ai-mock-dot-g"></div>
-      </div>
-      <div class="ai-mock-address-bar">
-        <div class="ai-mock-ssl-dot"></div>
-        <span class="ai-mock-address-text">platform.the5th.consulting</span>
-      </div>
-    </div>
-
-    <div class="ai-mock-content">
-      <div class="ai-mock-left-col">
-
-        <div class="ai-mock-chat-panel">
-          <div class="ai-mock-chat-header">
-            <div class="ai-mock-avatar">5</div>
-            <div>
-              <div class="ai-mock-avatar-label">The5th AI</div>
-              <div class="ai-mock-avatar-sub">Your Personal CMO</div>
-            </div>
-          </div>
-          <div class="ai-mock-bubble-user">I've been posting for 3 months and getting zero traction. I don't know what's wrong.</div>
-          <div class="ai-mock-bubble-ai">Before I tell you what to fix let me properly diagnose first.<br><br><span class="ai-mock-highlight-purple">1.</span> What does your content mostly talk about, process, results, or story?<br><span class="ai-mock-highlight-purple">2.</span> What's your current offer and price point?<br><br>Traction problems are almost always positioning problems, not consistency problems.</div>
-          <div class="ai-mock-bubble-user">I mostly talk about my process. I charge $2,400 for 3 months.</div>
-          <div class="ai-mock-bubble-ai"><span class="ai-mock-highlight-green">Found it.</span> You're selling the how when they need the who and the what. Professionals 40-60 don't buy a process, they buy proof that someone like them made it work. Here's what to post this week...</div>
-          <div class="ai-mock-credit-bar">
-            <span class="ai-mock-credit-label">Credits 45 / 100</span>
-            <div class="ai-mock-bar-track"><div class="ai-mock-bar-fill" style="width:45%"></div></div>
-          </div>
-        </div>
-
-        <div class="ai-mock-feature-card">
-          <div class="ai-mock-tag">Sales Coaching</div>
-          <div class="ai-mock-card-title">Diagnoses your real problem in seconds</div>
-          <div class="ai-mock-card-body">No generic advice. The5th AI asks the right questions, finds the actual problem, and gives you a specific plan. Just like a real CMO on speed dial.</div>
-        </div>
-
-        <div class="ai-mock-chat-panel">
-          <div class="ai-mock-chat-header">
-            <div class="ai-mock-avatar">5</div>
-            <div>
-              <div class="ai-mock-avatar-label" style="font-size:10px;">The5th AI</div>
-              <div class="ai-mock-avatar-sub">Building Your Lead Magnet...</div>
-            </div>
-          </div>
-          <div class="ai-mock-bubble-user">Build me a lead magnet for professionals 45-60 who want to start a coaching business from their corporate experience</div>
-          <div class="ai-mock-lm-result">
-            <div class="ai-mock-lm-tag">● Lead Magnet Ready To Use</div>
-            <div class="ai-mock-lm-title">"The 5-Day Clarity Challenge: From Corporate Expert to Confident Coach"</div>
-            <div class="ai-mock-lm-desc">A free 5-day email challenge for professionals 40+ to package their expertise into a profitable coaching offer without the overwhelm.</div>
-            <div class="ai-mock-lm-day"><span>1</span>Day 1: Define your transformation story</div>
-            <div class="ai-mock-lm-day"><span>2</span>Day 2: Identify your dream client in 10 questions</div>
-            <div class="ai-mock-lm-day"><span>3</span>Day 3: Build your first offer in 30 minutes</div>
-            <div class="ai-mock-lm-day"><span>4</span>Day 4: Set your price with confidence</div>
-            <div class="ai-mock-lm-day"><span>5</span>Day 5: Your first outreach, the exact DM to send today</div>
-          </div>
-          <div class="ai-mock-credit-bar" style="margin-top:10px;">
-            <span class="ai-mock-credit-label">Credits 100 / 100</span>
-            <div class="ai-mock-bar-track"><div class="ai-mock-bar-fill" style="width:100%"></div></div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="ai-mock-right-col">
-
-        <div class="ai-mock-journey-card">
-          <div class="ai-mock-journey-header">
-            <div class="ai-mock-avatar ai-mock-avatar-green">J</div>
-            <div>
-              <div style="font-size:11px; font-weight:600; color:white;">Jane's 90-Day Journey</div>
-              <div style="font-size:9px; color:#6ee7b7;">Month 1 · Building Your Foundation</div>
-            </div>
-          </div>
-          <div class="ai-mock-stats-grid">
-            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:white;">$0</div><div class="ai-mock-stat-label">Now</div></div>
-            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:#4ade80;">$5K</div><div class="ai-mock-stat-label">Target</div></div>
-            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:white;">24%</div><div class="ai-mock-stat-label">Done</div></div>
-            <div class="ai-mock-stat"><div class="ai-mock-stat-value" style="color:#fbbf24;">185</div><div class="ai-mock-stat-label">Points</div></div>
-          </div>
-          <div class="ai-mock-month-tabs">
-            <div class="ai-mock-tab-active">Month 1</div>
-            <div class="ai-mock-tab-locked">Month 2 🔒</div>
-            <div class="ai-mock-tab-locked">Month 3 🔒</div>
-          </div>
-          <div class="ai-mock-week-label">Week 2 · Your Offer and Positioning</div>
-          <div class="ai-mock-task-row">
-            <div class="ai-mock-checkbox-done"></div>
-            <span class="ai-mock-task-text ai-mock-task-done">Write your FROM → TO transformation statement</span>
-            <span class="ai-mock-pts-green">+75</span>
-          </div>
-          <div class="ai-mock-task-row">
-            <div class="ai-mock-checkbox-done"></div>
-            <span class="ai-mock-task-text ai-mock-task-done">Identify your ideal client avatar in detail</span>
-            <span class="ai-mock-pts-green">+50</span>
-          </div>
-          <div class="ai-mock-task-row">
-            <div class="ai-mock-checkbox-empty"></div>
-            <span class="ai-mock-task-text ai-mock-task-pending">Build your high-ticket offer using the DPC framework</span>
-            <span class="ai-mock-pts-gray">+100</span>
-          </div>
-          <div class="ai-mock-task-row">
-            <div class="ai-mock-checkbox-empty"></div>
-            <span class="ai-mock-task-text ai-mock-task-pending">Set your price with confidence post it publicly today</span>
-            <span class="ai-mock-pts-gray">+150</span>
-          </div>
-        </div>
-
-        <div class="ai-mock-quiz-card">
-          <div class="ai-mock-quiz-header">
-            Your Onboarding Journey
-            <span class="ai-mock-quiz-meta">Q10 of 22</span>
-          </div>
-          <div class="ai-mock-quiz-section-label">● Your Sales Reality</div>
-          <div class="ai-mock-quiz-q">Where in your sales process do you lose the most people?</div>
-          <div class="ai-mock-option ai-mock-option-selected">They get on the call but say they need to think about it</div>
-          <div class="ai-mock-option ai-mock-option-plain">They never respond to my first outreach message</div>
-          <div class="ai-mock-option ai-mock-option-plain">They say yes but ghost when I send the payment link</div>
-          <div class="ai-mock-option ai-mock-option-plain">I never actually ask for the sale directly</div>
-        </div>
-
-        <div class="ai-mock-feature-card">
-          <div class="ai-mock-tag">My Journey</div>
-          <div class="ai-mock-card-title">Personalised 90-Day Roadmap AI Generated For You</div>
-          <div class="ai-mock-card-body">After your onboarding quiz, The5th AI builds a week-by-week plan around your stage and revenue goal. Month 2 unlocks once Month 1 hits 50% completion.</div>
-        </div>
-
-        <div class="ai-mock-feature-card">
-          <div class="ai-mock-tag">Train Your CMO · 22 Deep Questions</div>
-          <div class="ai-mock-card-title">The5th AI Learns to Think Like You</div>
-          <div class="ai-mock-card-body">Your onboarding quiz teaches The5th AI your exact niche, offer, pricing, sales process, and 90-day goal. Every response is built around your specific situation.</div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
-        </div>
-      </div>
-      <div class="highlightModule__body cell">
-        <p class="eyebrow margin--bottom-2">The5th AI - Available 24/7</p>
-        <h2 class="highlightModule__header">Your personal business coach, copywriter, and strategist, available the moment you need them</h2>
-        <div class="highlightModule__bodyCopy margin--bottom-2"><p>The5th AI isn't ChatGPT with a different name. It's trained specifically on the frameworks and strategies that help experienced professionals build profitable coaching businesses. It knows your stage, your offer, and your goals, and it acts on them instantly.</p></div>
-        <div style="display:flex;flex-direction:column;gap:0.625rem;margin-bottom:1.75rem;">
-          <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="copy" style="font-size:1.0625rem;">Creates your coaching offer, pricing, and positioning</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="copy" style="font-size:1.0625rem;">Writes your emails, social content, and sales pages</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="copy" style="font-size:1.0625rem;">Builds your client outreach scripts and discovery call frameworks</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="copy" style="font-size:1.0625rem;">Coaches you through self-doubt, pricing decisions, and next steps</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-            <span style="color:var(--gold);font-size:1rem;flex-shrink:0;margin-top:1px;">→</span>
-            <span class="copy" style="font-size:1.0625rem;">Available 24/7, not at the next scheduled call</span>
-          </div>
-        </div>
-        <a href="/ai" class="cta">See The5th AI in action</a>
-      </div>
-    </div>
-
-    <!-- Module 3, image left -->
-    <div class="flex flex--middle flex--columns-2-large" style="padding:3rem 0 0" data-animate>
-      <div class="highlightModule__imageContainer cell">
-        <div class="highlightModule__image"><div style="overflow:hidden;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.12);">
-  <img src="/public/images/highlight-results.png"
-       alt="Client closed after one conversation"
-       style="width:100%;height:auto;display:block;">
-  <div style="background:#3D2645;padding:10px 16px;
-  display:flex;align-items:center;justify-content:space-between;">
-    <span style="font-size:11px;color:#C9A84C;font-weight:700;
-    letter-spacing:0.08em;text-transform:uppercase;">
-      ✦ CLOSED AFTER ONE CONVERSATION
-    </span>
-    <span style="font-size:11px;color:rgba(255,255,255,0.5);">
-      Diagnose-Prescribe-Close
-    </span>
-  </div>
-</div></div>
-      </div>
-      <div class="highlightModule__body cell">
-        <h2 class="highlightModule__header">Know exactly what's working</h2>
-        <div class="highlightModule__bodyCopy"><p>Track every client from first conversation to enrolled. Understand your numbers, refine your process, and build a business that grows with intention, not guesswork.</p></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ======================================================
-     STATS HEADLINER
-====================================================== -->
-<section class="headliner">
-  <div class="layout">
-    <div class="content--10of16-large align--center" data-animate>
-      <span class="gold-rule" style="margin-left:auto;margin-right:auto"></span>
-      <h2 class="h2 margin--bottom-3">Up to <em>6x more clients</em> with a proven system</h2>
-      <p class="copy copy--big margin--bottom-3">A structured business system generates up to 6 times more clients than trying to figure it out alone. We built that system specifically for professionals who are done waiting and ready to build.</p>
-      <a href="https://10kroadmap.org" class="ctaPrimary">See the 10K Roadmap</a>
     </div>
   </div>
 </section>
@@ -3115,243 +2514,6 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
       <h2 class="h2 margin--bottom-3">The5th has helped clients earn recognition and features in some of the world's <em>most respected publications.</em></h2>
       <a href="/results" class="ctaSecondary" target="_blank" rel="noopener noreferrer">See client results</a>
     </div>
-  </div>
-</section>
-
-<!-- ======================================================
-     RESOURCE TILE GRID
-====================================================== -->
-<section class="layout" style="padding:80px 48px;">
-
-  <div class="content--10of16-large align--center" style="text-align:center;max-width:700px;margin-left:auto;margin-right:auto;margin-bottom:3.5rem;" data-animate>
-    <h2 class="h2 margin--bottom-3">Resources to give you <em>the inside track</em></h2>
-    <p class="copy">Expert guidance, timely resources, and real stories from experienced professionals who built something remarkable, and the inside track on how they did it.</p>
-  </div>
-
-  <div class="contentTileGrid__grid flex">
-
-    <!-- Tile 1, featured -->
-    <div class="contentTileGridItem__tile-1 backgroundSquash" data-animate>
-      <div class="contentTileGridItem__tile-1_copyContainer">
-        <div style="margin-bottom:2rem;width:100%;">
-          <div style="background:var(--plum);
-          padding:2.5rem 2rem;
-          width:100%;
-          box-shadow:8px 8px 0 rgba(61,38,69,0.25);
-          position:relative;overflow:hidden;
-          text-align:left;">
-
-            <div style="position:absolute;top:0;right:0;
-            width:120px;height:120px;
-            background:rgba(255,255,255,0.03);
-            border-radius:0 0 0 120px;"></div>
-
-            <p style="font-size:0.625rem;font-weight:700;
-            letter-spacing:0.14em;text-transform:uppercase;
-            color:rgba(255,255,255,0.45);margin-bottom:1rem;">
-              GUIDE · VOL. 01 · 10K ROADMAP
-            </p>
-
-            <p style="font-family:'Cormorant Garamond',Georgia,serif;
-            font-size:clamp(1.375rem,3vw,1.75rem);font-weight:600;
-            color:#fff;line-height:1.15;letter-spacing:-0.02em;
-            margin-bottom:0.5rem;">
-              The Client-To-Cash Method™
-            </p>
-
-            <p style="font-family:'Cormorant Garamond',Georgia,serif;
-            font-size:1rem;font-weight:300;font-style:italic;
-            color:rgba(255,255,255,0.65);margin-bottom:1.5rem;
-            line-height:1.4;">
-              5 Steps Professionals Over 40 Use to Turn Life Experience
-              Into $5K-$10K Months
-            </p>
-
-            <div style="display:flex;gap:2rem;margin-bottom:1.5rem;
-            flex-wrap:wrap;">
-              <div>
-                <span style="font-family:'Cormorant Garamond',Georgia,serif;
-                font-size:1.75rem;font-weight:600;color:#C9A84C;
-                display:block;line-height:1;">60</span>
-                <span style="font-size:0.625rem;color:rgba(255,255,255,0.5);
-                text-transform:uppercase;letter-spacing:0.06em;">
-                  days to first client
-                </span>
-              </div>
-              <div>
-                <span style="font-family:'Cormorant Garamond',Georgia,serif;
-                font-size:1.75rem;font-weight:600;color:#C9A84C;
-                display:block;line-height:1;">5</span>
-                <span style="font-size:0.625rem;color:rgba(255,255,255,0.5);
-                text-transform:uppercase;letter-spacing:0.06em;">
-                  step method
-                </span>
-              </div>
-              <div>
-                <span style="font-family:'Cormorant Garamond',Georgia,serif;
-                font-size:1.75rem;font-weight:600;color:#C9A84C;
-                display:block;line-height:1;">17</span>
-                <span style="font-size:0.625rem;color:rgba(255,255,255,0.5);
-                text-transform:uppercase;letter-spacing:0.06em;">
-                  page guide
-                </span>
-              </div>
-            </div>
-
-            <div style="width:32px;height:1.5px;background:#C9A84C;
-            margin-bottom:1rem;"></div>
-
-            <p style="font-size:0.6875rem;color:rgba(255,255,255,0.4);
-            letter-spacing:0.04em;">
-              BY INDRODIP GHOSH · FOUNDER, 10K ROADMAP
-            </p>
-          </div>
-        </div>
-        <p class="eyebrow margin--bottom-2">Free Download</p>
-        <h2 class="h3">The Client-To-Cash Method™</h2>
-        <p class="copy margin--bottom-3">5 steps professionals over 40 use to turn life experience into $5K to $10K months. No audience. No ads. No complicated tech. Just a proven method and the clarity to use it.</p>
-        <div style="margin-bottom:1.5rem;">
-          <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
-            <div style="text-align:center;">
-              <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:600;color:var(--plum);display:block;line-height:1;">60</span>
-              <span style="font-size:0.75rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;">days to first client</span>
-            </div>
-            <div style="text-align:center;">
-              <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:600;color:var(--plum);display:block;line-height:1;">5</span>
-              <span style="font-size:0.75rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;">step method</span>
-            </div>
-            <div style="text-align:center;">
-              <span style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:600;color:var(--plum);display:block;line-height:1;">17</span>
-              <span style="font-size:0.75rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:0.06em;">page guide</span>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <div style="margin-bottom:0.75rem;">
-            <a href="/public/downloads/client-to-cash-method.pdf" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.75rem;background:var(--green);color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9375rem;padding:1.125rem 2rem;text-decoration:none;transition:background 0.2s ease;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Download Free, The Client-To-Cash Method™
-            </a>
-          </div>
-          <p style="font-size:0.75rem;color:var(--ink-muted);">17 pages · Instant download · No credit card</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tile 2, podcast -->
-    <div class="contentTileGridItem__tile-2 backgroundWhite" data-animate>
-      <div class="contentTileGridItem__tile-2__imageContainer">
-        <img src="/public/images/podcast-cover.png" alt="The5th Podcast" style="width:100%;height:220px;object-fit:cover;object-position:center top;display:block;">
-      </div>
-      <div class="contentTileGridItem__tile-2__copyContainer">
-        <div class="logo" style="font-family:'Cormorant Garamond',Georgia,Times,serif;font-weight:600;font-size:1.125rem;color:var(--plum);">The5th Presents</div>
-        <p class="eyebrow" style="margin-bottom:0.5rem">Podcast</p>
-        <h3 class="h5" style="margin-bottom:0.625rem">The Expertise Economy</h3>
-        <p class="copy" style="font-size:1rem">Real conversations with professionals who turned decades of experience into income, and exactly how they did it.</p>
-        <div style="margin-top:1rem;">
-          <a href="https://open.spotify.com/show/4Od8LRMQp3olecNHhZ55Gc"
-             target="_blank" rel="noopener"
-             style="display:inline-flex;align-items:center;
-             gap:0.625rem;background:#1DB954;color:#fff;
-             font-family:'DM Sans',sans-serif;font-weight:700;
-             font-size:0.8125rem;padding:0.75rem 1.25rem;
-             text-decoration:none;border-radius:2px;
-             letter-spacing:0.02em;transition:background 0.2s;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-            </svg>
-            Listen on Spotify
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tile 3, case studies -->
-    <article class="rtile-3 contentTileGridItem__tile-3 contentTileGridItem__with-bg-image" style="background-image:linear-gradient(135deg,#1C4A32 0%,#143826 100%);align-self:stretch;height:100%;" data-animate>
-      <div class="rtile-3__bg"></div>
-      <div class="rtile-3__copy">
-        <p class="t-eyebrow" style="color:rgba(255,255,255,0.6);margin-bottom:0.75rem;">Case Studies</p>
-        <div style="display:flex;flex-direction:column;gap:1.25rem;">
-          <div style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:1.25rem;">
-            <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.0625rem;font-weight:600;color:#fff;line-height:1.3;margin-bottom:0.5rem;">How Susan enrolled her first paying client within 60 days, starting from zero</p>
-            <a href="/results" class="cta" style="color:#C9A84C;font-size:0.875rem;">Read the story</a>
-          </div>
-          <div style="border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:1.25rem;">
-            <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.0625rem;font-weight:600;color:#fff;line-height:1.3;margin-bottom:0.5rem;">How Angela closed $2,500 in her first 6 weeks with zero audience</p>
-            <a href="/results" class="cta" style="color:#C9A84C;font-size:0.875rem;">Read the story</a>
-          </div>
-          <div>
-            <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.0625rem;font-weight:600;color:#fff;line-height:1.3;margin-bottom:0.5rem;">How Shayma went from Fortune 500 CEO to $180K in 5 months</p>
-            <a href="/results" class="cta" style="color:#C9A84C;font-size:0.875rem;">Read the story</a>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- Tile 4, expertise assessment -->
-    <article class="rtile-4 contentTileGridItem__tile-4" style="gap:0;align-items:stretch;padding:0;background:#fff;border:1px solid var(--border);">
-
-      <!-- Left visual panel -->
-      <a href="https://the5th.consulting/quiz" target="_blank" style="display:flex;text-decoration:none;color:inherit;">
-      <div style="flex:1;min-width:0;background:linear-gradient(160deg,#3D2645 0%,#2E1A35 60%,#1C4A32 100%);padding:2rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;min-height:280px;">
-
-        <!-- Decorative circles -->
-        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(201,168,76,0.08);pointer-events:none;"></div>
-        <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;"></div>
-
-        <div style="position:relative;z-index:1;">
-          <span style="font-size:0.5625rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:1.25rem;">Free Assessment</span>
-
-          <div style="display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1.75rem;">
-            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
-                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">01</span>
-              </div>
-              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Do you have a sellable expertise?</span>
-            </div>
-            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
-                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">02</span>
-              </div>
-              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Are you undercharging for your skills?</span>
-            </div>
-            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
-                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">03</span>
-              </div>
-              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">What is your fastest path to income?</span>
-            </div>
-            <div style="display:flex;align-items:flex-start;gap:0.75rem;">
-              <div style="width:20px;height:20px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
-                <span style="font-size:0.5rem;color:#C9A84C;font-weight:700;">04</span>
-              </div>
-              <span style="font-size:0.875rem;color:rgba(255,255,255,0.8);line-height:1.4;">Which offer type fits your lifestyle?</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom badge -->
-        <div style="position:relative;z-index:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:0.8125rem;color:rgba(255,255,255,0.5);">20 questions · 5 minutes</span>
-          <span style="font-size:0.75rem;color:#C9A84C;font-weight:700;letter-spacing:0.04em;">FREE</span>
-        </div>
-      </div>
-      </a>
-
-      <!-- Right copy panel -->
-      <div style="flex:1;min-width:0;padding:2rem;display:flex;flex-direction:column;justify-content:center;background:#fff;">
-        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.875rem;">Free Assessment</p>
-        <h4 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.25rem,2vw,1.625rem);font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem;">Is Your Expertise Ready to Become an Offer?</h4>
-        <p style="font-size:1rem;color:var(--ink-mid);line-height:1.7;margin-bottom:1.5rem;">10 questions. 3 minutes. Find out exactly what you should be selling, what to charge, and what is holding you back from your first paying client.</p>
-        <a href="https://the5th.consulting/quiz" target="_blank"
-           style="display:inline-flex;align-items:center;gap:0.5rem;color:var(--green);font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9375rem;transition:color 0.15s;">
-          Take the assessment
-          <span style="transition:transform 0.2s;">→</span>
-        </a>
-      </div>
-
-    </article>
-
   </div>
 </section>
 
@@ -3554,7 +2716,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   <div class="layout layout--padding">
     <span class="hero__chapter" style="margin-bottom:16px" data-animate>Chapter Four · Your turn</span>
     <h2 class="h1 margin--bottom-3" data-animate>Her story could be yours.<br><em>The next chapter starts with one decision.</em></h2>
-    <p class="h6 margin--bottom-6" style="max-width:560px;margin-left:auto;margin-right:auto" data-animate>Lauren stopped waiting and started building: a proven roadmap, real support, and people who finally see the value in what she already knew. The same is ready for you. The only question is whether this is your season.</p>
+    <p class="h6 margin--bottom-6" style="max-width:560px;margin-left:auto;margin-right:auto" data-animate>You have the expertise. We have the proven roadmap, the real support, and the people who finally see its value. Your first $10,000 month starts the moment you stop waiting and start building. The only question is whether this is your season.</p>
     <a href="/call" class="ctaPrimary" data-animate>Book Your Free Call →</a>
   </div>
 </section>

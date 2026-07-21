@@ -2,8 +2,43 @@ import { Resend } from 'resend'
 import { createHmac } from 'node:crypto'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { EMAIL_BY_KEY, FROM, REPLY_TO } from '@/lib/event-campaign'
+import { resolveOrCreateContact, addTag, logActivity } from '@/lib/crm'
 
 const SITE = 'https://the5th.consulting'
+
+/* Mirror an event registrant into the native CRM so The Shift (Breakthrough
+   Intensive) sign-ups show up alongside every other contact. Non-destructive:
+   creates the contact if missing, fills only empty fields, and ADDS event tags
+   (never replaces the tag set, so existing tags survive). Fully guarded — CRM
+   trouble must never break enrollment or the payment webhook. */
+async function syncRegistrantToCrm(
+  email: string,
+  name: string | null,
+  list: 'lead' | 'buyer',
+  source: string,
+) {
+  try {
+    const contact = await resolveOrCreateContact(
+      { email, ...(name ? { name } : {}), source },
+      { source, actor: 'event:the-shift' },
+    )
+    const id = contact?.id as string | undefined
+    if (!id) return
+    for (const tag of ['the-shift', 'breakthrough-intensive', 'event']) await addTag(id, tag)
+    await logActivity(
+      email,
+      'event',
+      list === 'buyer'
+        ? 'Registered for The Shift (Breakthrough Intensive)'
+        : 'Joined The Shift presale list',
+      `$27 3-Day Breakthrough Intensive · source: ${source}`,
+      { event_key: 'breakthrough', list },
+      'event:the-shift',
+    )
+  } catch (e) {
+    console.error('event → CRM sync failed', e)
+  }
+}
 
 /** Build a genuine plain-text version from the email HTML. A full text/plain
     alternative (not just a preview) is a strong "personal message" signal for
@@ -100,6 +135,7 @@ export async function enrollBuyer(email: string, name?: string | null, source = 
     .from('event_registrants')
     .upsert({ email: e, name: name || null, list: 'buyer', source, event_key: 'breakthrough' }, { onConflict: 'email' })
     .then(() => {}, () => {})
+  await syncRegistrantToCrm(e, name || null, 'buyer', source)
   const { data: seen } = await db.from('event_email_log').select('id').eq('email', e).eq('email_key', 'welcome').maybeSingle()
   if (seen) return { ok: true, welcome: 'already_sent' as const }
   const r = await sendCampaignEmail({ key: 'welcome', to: e, name: name || undefined, log: true, unsubUrl: unsubUrlFor(e) })
@@ -160,5 +196,7 @@ export async function importRegistrants(
   // ignoreDuplicates keeps an existing buyer from being downgraded to a lead.
   const { error } = await db.from('event_registrants').upsert(rows, { onConflict: 'email', ignoreDuplicates: true })
   if (error) return { imported: 0, skipped: people.length }
+  // Mirror each registrant into the CRM (idempotent; guarded per-row).
+  for (const r of rows) await syncRegistrantToCrm(r.email, r.name, list, source)
   return { imported: rows.length, skipped: people.length - rows.length }
 }

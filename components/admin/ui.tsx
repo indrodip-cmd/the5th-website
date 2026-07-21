@@ -140,7 +140,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
         <h1 style={{ fontSize: 24, fontWeight: 800, color: T.ink, letterSpacing: '-.01em' }}>{title}</h1>
         {subtitle && <p style={{ fontSize: 14, color: T.sub, marginTop: 4 }}>{subtitle}</p>}
       </div>
-      {actions && <div style={{ display: 'flex', gap: 10 }}>{actions}</div>}
+      {actions && <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{actions}</div>}
     </div>
   )
 }

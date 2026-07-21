@@ -99,4 +99,65 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .dash-cell.drop-target { outline: 2px dashed ${T.green2}; outline-offset: 3px; border-radius: 14px; }
 @media (max-width: 1080px) { .dash-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .dash-cell { grid-column: span 2 !important; } }
 @media (max-width: 620px) { .dash-grid { grid-template-columns: 1fr; } .dash-cell { grid-column: span 1 !important; } }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Mobile + iPad optimization — cascades to EVERY /admin module.
+   Modules are built with inline styles, so we reach their grids/rows with
+   [style*=…] attribute selectors. Verified safe: no admin chart uses CSS-grid
+   columns (the only chart is flex/width-based), so collapsing grids never
+   breaks a visualization.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Never let a module push the page into horizontal scroll on a touch device.
+   clip (not hidden) so overflow-y stays visible and the sticky topbar keeps working. */
+.ws-main { overflow-x: clip; }
+/* Any table becomes horizontally scrollable inside its own wrapper instead of
+   blowing out the card. Pair <table class="a-table"> with a parent .a-table-wrap. */
+.a-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* iPad (portrait + landscape ≤1024): thin the densest fixed grids so 3–4 column
+   layouts and fixed sidebars aren't cramped. Two-column stays two-column here. */
+@media (max-width: 1024px) {
+  .ws-content { max-width: 100%; }
+  [style*="grid-template-columns: repeat(4"],
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns: 1fr 1fr 1fr"],
+  [style*="grid-template-columns: 1fr 0.8fr 1fr auto"] { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+  [style*="grid-template-columns: 180px 1fr 300px"],
+  [style*="grid-template-columns: 260px 1fr"],
+  [style*="grid-template-columns: 2fr 1fr auto"] { grid-template-columns: 1fr !important; }
+}
+
+/* iOS: 16px form controls prevent Safari auto-zoom on focus; 44px min tap targets. */
+@media (max-width: 820px) {
+  .a-input, input, textarea, select { font-size: 16px; }
+  .a-btn, .admin-btn, .tab-btn, .ws-nav-item { min-height: 44px; }
+  .a-btn, .tab-btn { display: inline-flex; align-items: center; justify-content: center; }
+  .ws-nav-item { padding-top: 12px; padding-bottom: 12px; }
+  /* Horizontal pill/tab rows scroll instead of wrapping into a tall stack. */
+  .a-tabs { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
+  .a-tabs::-webkit-scrollbar { display: none; }
+  .a-tabs > * { flex-shrink: 0; }
+}
+
+/* Live Inbox — master/detail on phones + small tablets: show the conversation
+   list, then swap to the full-screen thread (with a back button) when one is open. */
+.inbox-back { display: none; }
+@media (max-width: 820px) {
+  .inbox-list { width: 100% !important; }
+  .inbox-root.has-active .inbox-list { display: none; }
+  .inbox-root:not(.has-active) .inbox-thread { display: none; }
+  .inbox-back { display: inline-flex; }
+  .inbox-root { height: calc(100dvh - 96px) !important; }
+}
+
+/* Phones (≤680): single-column everything + full-height sheets with safe areas. */
+@media (max-width: 680px) {
+  [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+  .ws-content { padding: 16px 13px calc(56px + env(safe-area-inset-bottom,0)); }
+  .a-table { min-width: 560px; }               /* keep columns legible; wrapper scrolls */
+  .a-drawer { width: 100vw; height: 100dvh; }
+  .a-modal { width: 96vw; max-height: 92dvh; }
+  .tab-btn { padding: 9px 15px; font-size: 13px; }
+}
 `

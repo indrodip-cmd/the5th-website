@@ -97,9 +97,9 @@ export default function AdminInbox() {
   }
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 20px)', fontFamily: "'Public Sans',system-ui,sans-serif", color: INK, background: '#faf8f4' }}>
+    <div className={`inbox-root${active ? ' has-active' : ''}`} style={{ display: 'flex', height: 'calc(100vh - 20px)', fontFamily: "'Public Sans',system-ui,sans-serif", color: INK, background: '#faf8f4' }}>
       {/* List */}
-      <div style={{ width: 320, borderRight: '1px solid #e8e3dc', overflowY: 'auto', flexShrink: 0 }}>
+      <div className="inbox-list" style={{ width: 320, borderRight: '1px solid #e8e3dc', overflowY: 'auto', flexShrink: 0 }}>
         <div style={{ padding: '18px 18px 12px' }}>
           <h1 style={{ fontFamily: 'Georgia,serif', fontSize: 22, fontWeight: 700, margin: 0, color: INK }}>Live Inbox</h1>
           <p style={{ fontSize: 12.5, color: MUTE, margin: '4px 0 8px' }}>Watch chats and take charge anytime.</p>
@@ -120,13 +120,16 @@ export default function AdminInbox() {
       </div>
 
       {/* Thread */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <div className="inbox-thread" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {!active ? (
           <div style={{ margin: 'auto', color: MUTE, fontSize: 14 }}>Select a conversation to view it.</div>
         ) : (
           <>
             <div style={{ padding: '14px 20px', borderBottom: '1px solid #e8e3dc', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#fff' }}>
-              <div style={{ fontSize: 13.5, color: MUTE }}>{status === 'human' ? '🟢 You are in control — Carolina is paused' : 'Carolina is handling this chat'}</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <button className="inbox-back" onClick={() => setActive(null)} aria-label="Back to conversations" style={{ border: '1px solid #e8e3dc', background: '#fff', borderRadius: 10, width: 38, height: 38, alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18, color: INK, flexShrink: 0 }}>←</button>
+                <div style={{ fontSize: 13.5, color: MUTE, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{status === 'human' ? '🟢 You are in control — Carolina is paused' : 'Carolina is handling this chat'}</div>
+              </div>
               {status === 'human'
                 ? <button onClick={() => control('release')} style={{ padding: '8px 16px', borderRadius: 10, border: '1px solid #e8e3dc', background: '#fff', color: MUTE, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Hand back to Carolina</button>
                 : <button onClick={() => control('takeover')} style={{ padding: '8px 18px', borderRadius: 10, border: 'none', background: GREEN, color: '#fff', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>Take over →</button>}

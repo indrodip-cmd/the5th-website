@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { resolveContact } from '@/lib/crm'
+import { sendTicketEmail } from '@/lib/carolina-email'
 
 // Support / bug tickets for the public website. Written from the /help page
 // ticket form and from Carolina (the AI concierge) via the report_issue tool.
@@ -90,7 +91,24 @@ export async function createTicket(input: NewTicket): Promise<{ id: string; ref:
       .select('id, ref')
       .single()
 
-    if (!error && data) return { id: data.id as string, ref: data.ref as string }
+    if (!error && data) {
+      // Email the team on every ticket (form + Carolina). Fail-soft.
+      try {
+        await sendTicketEmail({
+          ref: data.ref as string,
+          category,
+          name: input.name ? String(input.name) : null,
+          email,
+          subject: input.subject ? String(input.subject) : null,
+          message,
+          pageUrl: input.pageUrl ? String(input.pageUrl) : null,
+          source: input.source || 'website',
+        })
+      } catch {
+        /* non-blocking */
+      }
+      return { id: data.id as string, ref: data.ref as string }
+    }
     // 23505 = unique_violation on ref → try a new ref.
     if (error && (error as { code?: string }).code !== '23505') throw error
   }

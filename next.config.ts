@@ -34,6 +34,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: '/10k-coaching', destination: '/fast-forward', permanent: true },
+      { source: '/help', destination: '/support', permanent: true },
+      { source: '/code-of-ethics', destination: '/ethics', permanent: true },
       { source: '/community', destination: '/collective', permanent: true },
       { source: '/community/:path*', destination: '/collective/:path*', permanent: true },
       // Collapse the directly-reachable static-file URLs onto their clean

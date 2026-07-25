@@ -4,7 +4,7 @@ import PageShell, { prose } from '@/components/PageShell'
 export const metadata: Metadata = {
   title: 'Code of Ethics | The5th Consulting',
   description: 'The principles we hold ourselves to: honesty, respect for your autonomy, and no manipulation, false urgency, or exaggerated promises.',
-  alternates: { canonical: '/code-of-ethics' },
+  alternates: { canonical: '/ethics' },
 }
 
 export default function CodeOfEthicsPage() {
@@ -17,7 +17,7 @@ export default function CodeOfEthicsPage() {
       <p style={prose.p}>
         Confidence converts; pressure destroys trust. Everything below flows from that belief. If you ever feel
         we&apos;ve fallen short of it, tell us at <a href="mailto:support@10kroadmap.org" style={{ color: '#B0902F' }}>support@10kroadmap.org</a> or
-        through our <a href="/help" style={{ color: '#B0902F' }}>Help &amp; Support</a> page.
+        through our <a href="/support" style={{ color: '#B0902F' }}>Help &amp; Support</a> page.
       </p>
 
       <h2 style={prose.h2}>1. Honesty over hype</h2>
@@ -69,7 +69,7 @@ export default function CodeOfEthicsPage() {
       <div style={{ ...prose.card, marginTop: 30, background: 'rgba(201,168,76,0.06)', borderColor: 'rgba(201,168,76,0.32)' }}>
         <p style={{ ...prose.p, margin: 0 }}>
           Holding us accountable is part of the deal. If any interaction, human or AI, ever breaks one of these
-          principles, please <a href="/help" style={{ color: '#B0902F', fontWeight: 700 }}>let us know</a>. We take it seriously.
+          principles, please <a href="/support" style={{ color: '#B0902F', fontWeight: 700 }}>let us know</a>. We take it seriously.
         </p>
       </div>
     </PageShell>

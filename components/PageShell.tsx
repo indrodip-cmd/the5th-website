@@ -8,12 +8,12 @@ const C = {
 }
 
 const FOOTER_LINKS: { href: string; label: string }[] = [
-  { href: '/help', label: 'Help & Support' },
+  { href: '/support', label: 'Help & Support' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms of Use' },
   { href: '/refund', label: 'Refund Policy' },
   { href: '/data-usage', label: 'Data Usage' },
-  { href: '/code-of-ethics', label: 'Code of Ethics' },
+  { href: '/ethics', label: 'Code of Ethics' },
   { href: '/disclaimer', label: 'Earnings Disclaimer' },
   { href: '/california', label: 'California Privacy Rights' },
 ]
@@ -75,7 +75,7 @@ export default function PageShell({
   )
 }
 
-/* Shared content primitives for the legal/help pages. */
+/* Shared content primitives for the legal/support pages. */
 export const prose = {
   h2: { fontFamily: 'Georgia, serif', fontSize: 24, color: C.plumDark, margin: '38px 0 12px' } as React.CSSProperties,
   p: { fontSize: 16, lineHeight: 1.72, color: C.inkSoft, margin: '0 0 16px' } as React.CSSProperties,

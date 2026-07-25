@@ -5,7 +5,7 @@ import TicketForm from '@/components/TicketForm'
 export const metadata: Metadata = {
   title: 'Help & Support | The5th Consulting',
   description: 'Get help, find answers to common questions, or report a bug. Open a support ticket and a real person will get back to you.',
-  alternates: { canonical: '/help' },
+  alternates: { canonical: '/support' },
 }
 
 const C = { plumDark: '#2E1A35', gold: '#B0902F', inkSoft: '#4a4038', muted: '#8A8075', border: '#E2DCD2', white: '#fff' }

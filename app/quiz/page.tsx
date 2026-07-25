@@ -872,8 +872,8 @@ function Footer() {
           {[
             { label: 'Privacy Policy', href: '/privacy' },
             { label: 'Data Usage', href: '/data-usage' },
-            { label: 'Code of Ethics', href: '/code-of-ethics' },
-            { label: 'Help', href: '/help' },
+            { label: 'Code of Ethics', href: '/ethics' },
+            { label: 'Help', href: '/support' },
             { label: 'Contact', href: 'mailto:indrodip@10kroadmap.org' },
           ].map(link => (
             <a

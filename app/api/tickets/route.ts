@@ -6,7 +6,7 @@ import { createTicket, listTickets, updateTicket, TICKET_STATUSES } from '@/lib/
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
 
-// Public: file a support / bug ticket from the /help page.
+// Public: file a support / bug ticket from the /support page.
 export async function POST(req: NextRequest) {
   const ip = clientIp(req)
   const rl = await limit(`ticket:ip:${ip}`, 8, 600)

@@ -40,7 +40,7 @@ const PAGES: Record<string, string> = {
   ai_checkout: '/ai-checkout',
   collective_checkout: '/collective-checkout',
   fast_forward_checkout: '/fast-forward-checkout',
-  help: '/help',
+  support: '/support',
 }
 
 /* One-line description of each page so the AI knows where to send visitors. */
@@ -54,10 +54,10 @@ const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user
 - Book a Call (call) — book a free strategy call.
 - Client Results (results) — real client outcomes and stories.
 - About (about) — Indrodip's story and what The5th is about.
-- Help & Support (help) — the support centre: FAQs plus a ticket form to report a bug or ask for help. Send anyone with a problem, bug, or support question here.
+- Help & Support (support) — the support centre: FAQs plus a ticket form to report a bug or ask for help. Send anyone with a problem, bug, or support question here.
 - Checkout pages (ai_checkout, collective_checkout, fast_forward_checkout) — direct checkout; only open these when the visitor is ready to buy that specific thing.
 
-SUPPORT & BUGS: There is a ticket system behind the Help & Support page (help). If a visitor reports a bug, something broken, a billing/account problem, or any issue you cannot resolve yourself, DON'T just apologise — use report_issue to file a ticket (capture a clear summary in their words, the best-fit category, and their email if you have it). Then give them the ticket reference you get back and reassure them a real person will follow up. You can also open (help) so they can track it or add detail. Never invent a fix or a policy; when in doubt, file the ticket.
+SUPPORT & BUGS: There is a ticket system behind the Help & Support page (support). If a visitor reports a bug, something broken, a billing/account problem, or any issue you cannot resolve yourself, DON'T just apologise — use report_issue to file a ticket (capture a clear summary in their words, the best-fit category, and their email if you have it). Then give them the ticket reference you get back and reassure them a real person will follow up. You can also open (support) so they can track it or add detail. Never invent a fix or a policy; when in doubt, file the ticket.
 
 NAVIGATION: You can and SHOULD take visitors to the most useful page with navigate_user whenever it clearly helps — briefly tell them what you're opening ("I'll open the live demo for you"). Especially: if someone wants to SEE, TRY, or get a DEMO of The5th AI, immediately open the Live AI Demo (demo) — don't just describe it, let them experience it. For pricing/fit conversations still prefer a card or a call, but never leave a demo/try request unanswered — always open (demo).`
 
@@ -447,10 +447,10 @@ async function runTool(
       })
       return JSON.stringify({
         ok: true, ref,
-        note: `Ticket ${ref} created${email ? ` for ${email}` : ''}. Give the visitor this reference number and reassure them a real person from the team will follow up${email ? ' by email' : ' (offer to take their email so we can reply)'}. Point them to /help if they want to track or add more.`,
+        note: `Ticket ${ref} created${email ? ` for ${email}` : ''}. Give the visitor this reference number and reassure them a real person from the team will follow up${email ? ' by email' : ' (offer to take their email so we can reply)'}. Point them to /support if they want to track or add more.`,
       })
     } catch {
-      return JSON.stringify({ ok: false, error: 'Could not file the ticket. Ask them to email support@10kroadmap.org or visit /help.' })
+      return JSON.stringify({ ok: false, error: 'Could not file the ticket. Ask them to email support@10kroadmap.org or visit /support.' })
     }
   }
 

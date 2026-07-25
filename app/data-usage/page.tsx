@@ -41,7 +41,7 @@ export default function DataUsagePage() {
       <p style={prose.p}>
         When you chat with our AI concierge, your messages are processed to answer you and may be stored to improve
         our service and keep a record of your request. The AI is bound by our{' '}
-        <a href="/code-of-ethics" style={{ color: '#B0902F' }}>Code of Ethics</a>: it won&apos;t share one visitor&apos;s
+        <a href="/ethics" style={{ color: '#B0902F' }}>Code of Ethics</a>: it won&apos;t share one visitor&apos;s
         information with another, and it won&apos;t invent details about you.
       </p>
 
@@ -63,7 +63,7 @@ export default function DataUsagePage() {
         <p style={{ ...prose.p, margin: 0 }}>
           Questions about your data, or want to make a request? Email{' '}
           <a href="mailto:support@10kroadmap.org" style={{ color: '#B0902F', fontWeight: 700 }}>support@10kroadmap.org</a>{' '}
-          or open a ticket on our <a href="/help" style={{ color: '#B0902F', fontWeight: 700 }}>Help &amp; Support</a> page. For the
+          or open a ticket on our <a href="/support" style={{ color: '#B0902F', fontWeight: 700 }}>Help &amp; Support</a> page. For the
           complete legal detail, read our <a href="/privacy" style={{ color: '#B0902F', fontWeight: 700 }}>Privacy Policy</a>.
         </p>
       </div>

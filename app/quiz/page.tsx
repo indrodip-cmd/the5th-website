@@ -869,15 +869,21 @@ function Footer() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <span style={{ fontSize: 14, color: '#aaa' }}>© 2026 The5th Consulting. All rights reserved.</span>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          {['Privacy Policy', 'Data Usage', 'Contact'].map(link => (
+          {[
+            { label: 'Privacy Policy', href: '/privacy' },
+            { label: 'Data Usage', href: '/data-usage' },
+            { label: 'Code of Ethics', href: '/code-of-ethics' },
+            { label: 'Help', href: '/help' },
+            { label: 'Contact', href: 'mailto:indrodip@10kroadmap.org' },
+          ].map(link => (
             <a
-              key={link}
-              href="#"
+              key={link.label}
+              href={link.href}
               style={{ fontSize: 14, color: '#aaa', textDecoration: 'none', transition: 'color 0.2s ease' }}
               onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
               onMouseLeave={e => (e.currentTarget.style.color = '#aaa')}
             >
-              {link}
+              {link.label}
             </a>
           ))}
         </div>

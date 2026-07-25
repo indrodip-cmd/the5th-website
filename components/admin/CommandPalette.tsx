@@ -33,6 +33,7 @@ const NAV_ACTIONS: Array<{ icon: string; label: string; href: string; keywords: 
   { icon: '🎨', label: 'Email Studio', href: '/admin/communications/designer', keywords: 'email builder designer template brand visual', group: 'Communications' },
   { icon: '📣', label: 'Campaigns', href: '/admin/communications/campaigns', keywords: 'sequence drip campaign', group: 'Communications' },
   { icon: '💬', label: 'Live Inbox', href: '/admin/inbox', keywords: 'chat carolina takeover support', group: 'Communications' },
+  { icon: '🎫', label: 'Support Tickets', href: '/admin/tickets', keywords: 'bug report help ticket issue support', group: 'Communications' },
   // ── Growth ──
   { icon: '＄', label: 'Revenue', href: '/admin/revenue', keywords: 'money sales whop balance', group: 'Growth' },
   { icon: '🎟', label: 'Event Campaign', href: '/admin/events', keywords: 'breakthrough event presale', group: 'Growth' },

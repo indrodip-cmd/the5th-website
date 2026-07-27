@@ -19,6 +19,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/agents', label: 'Agent Platform', icon: '⚙︎', match: (p) => p.startsWith('/admin/agents'), flag: 'agent_platform' },
     { href: '/admin/automation', label: 'Automation', icon: '⚡', match: (p) => p.startsWith('/admin/automation'), flag: 'automation_studio' },
     { href: '/admin/memory', label: 'Business Memory', icon: '🧠', match: (p) => p.startsWith('/admin/memory'), flag: 'business_memory' },
+    { href: '/admin/coaching-intelligence', label: 'Coaching Intelligence', icon: '🎯', match: (p) => p.startsWith('/admin/coaching-intelligence'), flag: 'coaching_intelligence' },
   ] },
   { section: 'CRM', items: [
     { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },

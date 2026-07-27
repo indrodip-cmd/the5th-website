@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
   if (!verifyWhopWebhook(raw, svix)) {
     await db.from('integration_webhooks').insert({ provider: 'whop', status: 'error', signature_valid: false, error: 'invalid signature', payload: safeParse(raw) }).then(() => {}, () => {})
     emitEvent('webhook_failed', { provider: 'whop', reason: 'invalid_signature' })
+    notify('integration_error', 'Whop webhook rejected: bad signature', 'A Whop event failed signature verification. Sales, subscriptions and Breakthrough enrollments are being DROPPED until this is fixed. Check WHOP_WEBHOOK_SECRET matches the signing secret on the Whop endpoint.').catch(() => {})
     return NextResponse.json({ error: 'invalid signature' }, { status: 401 })
   }
 

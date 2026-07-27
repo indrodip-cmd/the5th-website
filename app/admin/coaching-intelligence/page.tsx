@@ -76,6 +76,20 @@ function Dashboard({ onCustomer }: { onCustomer: (k: string) => void }) {
         ))}
       </div>
       <ExecutiveInsights />
+      {data?.by_type && Object.keys(data.by_type).length > 0 && (
+        <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Meetings by type</div>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            {Object.entries(data.by_type).sort((a: any, b: any) => b[1] - a[1]).map(([k, v]: any) => (
+              <div key={k} style={{ textAlign: 'center', minWidth: 70 }}>
+                <div style={{ fontSize: 24, fontWeight: 800, color: T.green2 }}>{v}</div>
+                <div style={{ fontSize: 11.5, color: T.muted, marginTop: 2 }}>{TYPE_LABEL[k] || k}</div>
+              </div>
+            ))}
+            <div style={{ marginLeft: 'auto', textAlign: 'center' }}><div style={{ fontSize: 24, fontWeight: 800, color: '#16a34a' }}>{data?.won ?? 0}</div><div style={{ fontSize: 11.5, color: T.muted }}>Won</div></div>
+            <div style={{ textAlign: 'center' }}><div style={{ fontSize: 24, fontWeight: 800, color: '#dc2626' }}>{data?.lost ?? 0}</div><div style={{ fontSize: 11.5, color: T.muted }}>Lost</div></div>
+          </div>
+        </Card>
+      )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 14 }}>
         <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Average call scores</div>
           <Bar label="discovery" v={data?.avg_scores?.discovery} /><Bar label="listening" v={data?.avg_scores?.listening} />

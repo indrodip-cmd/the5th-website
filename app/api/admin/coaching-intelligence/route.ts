@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, sendFollowupFromMeeting, createTaskFromMeeting, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, renderMeetingMarkdown, renderCustomerMarkdown, sendFollowupFromMeeting, createTaskFromMeeting, importFireflies, MEETING_TYPES } from '@/lib/coaching-intelligence'
 import { roleOf, can, capsFor, audit, listRoles, setRole, removeRole, getSettings, updateSettings, applyRetention, listAudit, type Cap } from '@/lib/coaching-security'
 
 export const maxDuration = 120
@@ -64,10 +64,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(await buildTimeline(url.searchParams.get('key') || ''))
     }
     if (view === 'report') {
-      const kind = url.searchParams.get('kind')
-      const html = kind === 'customer'
-        ? await renderCustomerReport(url.searchParams.get('key') || '')
-        : await renderMeetingReport(url.searchParams.get('id') || '')
+      const kind = url.searchParams.get('kind'); const fmt = url.searchParams.get('format') || 'html'
+      const id = url.searchParams.get('id') || ''; const key = url.searchParams.get('key') || ''
+      if (fmt === 'md') {
+        const md = kind === 'customer' ? await renderCustomerMarkdown(key) : await renderMeetingMarkdown(id)
+        return new Response(md, { headers: { 'Content-Type': 'text/markdown; charset=utf-8', 'Content-Disposition': 'attachment; filename="coaching-report.md"' } })
+      }
+      const html = kind === 'customer' ? await renderCustomerReport(key) : await renderMeetingReport(id)
+      if (fmt === 'doc') return new Response(html, { headers: { 'Content-Type': 'application/msword; charset=utf-8', 'Content-Disposition': 'attachment; filename="coaching-report.doc"' } })
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
     }
     if (view === 'export_csv') {
@@ -130,7 +134,7 @@ export async function POST(req: NextRequest) {
     const role = await roleOf(actor)
     const CAP: Record<string, Cap> = {
       ingest: 'ingest', analyze: 'analyze', classify: 'analyze', add_document: 'ingest', rebuild_profile: 'analyze', ask: 'ask',
-      sync_fathom: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
+      sync_fathom: 'fathom', sync_fireflies: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
       roleplay_start: 'roleplay', roleplay_reply: 'roleplay', roleplay_score: 'roleplay', save_rubric: 'manage_content', delete_rubric: 'manage_content',
       send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention',
     }
@@ -201,6 +205,12 @@ export async function POST(req: NextRequest) {
 
     if (action === 'sync_fathom') {
       const r = await importFathom(Number(body?.since_days) || 30)
+      audit(actor, 'sync_fathom', 'provider', 'fathom', { imported: r.imported }).catch(() => {})
+      return NextResponse.json(r)
+    }
+    if (action === 'sync_fireflies') {
+      const r = await importFireflies(Number(body?.since_days) || 30)
+      audit(actor, 'sync_fireflies', 'provider', 'fireflies', { imported: r.imported }).catch(() => {})
       return NextResponse.json(r)
     }
 

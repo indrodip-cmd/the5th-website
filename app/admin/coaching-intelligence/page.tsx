@@ -210,7 +210,11 @@ function ReviewDetail({ id, onBack }: { id: string; onBack: () => void }) {
         <div style={{ fontWeight: 800, color: T.ink, fontSize: 18 }}>{m.title || TYPE_LABEL[m.meeting_type]}</div>
         <Badge text={TYPE_LABEL[m.meeting_type] || m.meeting_type} color={T.green2} />
         {typeof a.overall_score === 'number' && <span style={{ marginLeft: 'auto', fontWeight: 800, color: T.ink }}>Overall {a.overall_score}/100</span>}
-        <div style={{ maxWidth: 120, marginLeft: typeof a.overall_score === 'number' ? 0 : 'auto' }}><Button variant="ghost" onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=meeting&id=${id}`, '_blank')}>Export PDF</Button></div>
+        <div style={{ display: 'flex', gap: 6, marginLeft: typeof a.overall_score === 'number' ? 0 : 'auto' }}>
+          {[['PDF', ''], ['Word', '&format=doc'], ['MD', '&format=md']].map(([label, q]) => (
+            <button key={label} onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=meeting&id=${id}${q}`, '_blank')} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '7px 12px' }}>{label}</button>
+          ))}
+        </div>
         <div style={{ maxWidth: 130 }}><Button variant="ghost" onClick={reanalyze} disabled={busy}>{busy ? '…' : 'Re-analyze'}</Button></div>
       </div>
       {m.status === 'analyzed' && (
@@ -287,7 +291,11 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
         <div style={{ fontWeight: 800, color: T.ink, fontSize: 18 }}>{data?.profile?.name || ckey}</div>
         {data?.profile?.risk && <Badge text={data.profile.risk} color={RISK_COLOR[data.profile.risk] || T.muted} />}
         <span style={{ marginLeft: 'auto', fontSize: 13, color: T.sub }}>Health <b style={{ color: T.ink }}>{data?.profile?.health_score ?? '—'}</b> · Engagement <b style={{ color: T.ink }}>{data?.profile?.engagement_score ?? '—'}</b> · Success <b style={{ color: T.ink }}>{data?.profile?.success_probability ?? '—'}%</b></span>
-        <div style={{ maxWidth: 120 }}><Button variant="ghost" onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=customer&key=${encodeURIComponent(ckey)}`, '_blank')}>Export PDF</Button></div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {[['PDF', ''], ['Word', '&format=doc'], ['MD', '&format=md']].map(([label, q]) => (
+            <button key={label} onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=customer&key=${encodeURIComponent(ckey)}${q}`, '_blank')} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '7px 12px' }}>{label}</button>
+          ))}
+        </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 14 }}>
         <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Profile</div>
@@ -383,24 +391,31 @@ function Reports() {
 
 // ── Settings (providers + module) ──────────────────────────
 function SettingsTab() {
-  const providers = ['Fathom', 'Fireflies.ai', 'Grain', 'Otter.ai', 'Read.ai', 'Zoom Recording', 'Google Meet Recording', 'Manual / Video / Audio Upload']
+  const providers: [string, string][] = [['Fathom', 'available'], ['Fireflies.ai', 'available'], ['Manual / Video / Audio Upload', 'available'], ['Grain', 'via webhook'], ['Otter.ai', 'via webhook'], ['Read.ai', 'via webhook'], ['Zoom Recording', 'via webhook'], ['Google Meet Recording', 'via webhook']]
   const [busy, setBusy] = useState(false); const [msg, setMsg] = useState('')
-  const syncFathom = async () => {
-    setBusy(true); setMsg('Importing & analyzing recent Fathom calls…')
-    const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'sync_fathom', since_days: 30 })
+  const sync = async (provider: 'fathom' | 'fireflies') => {
+    setBusy(true); setMsg(`Importing & analyzing recent ${provider} calls…`)
+    const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: `sync_${provider}`, since_days: 30 })
     setBusy(false)
-    setMsg(r?.ok ? `Imported ${r.imported}, analyzed ${r.analyzed}.` : (r?.note || 'Fathom import failed.'))
+    setMsg(r?.ok ? `Imported ${r.imported}, analyzed ${r.analyzed}.` : (r?.note || `${provider} import failed.`))
   }
+  const webhookUrl = typeof window !== 'undefined' ? `${window.location.origin}/api/coaching-intelligence/webhook` : '/api/coaching-intelligence/webhook'
   return (
     <div style={{ display: 'grid', gap: 14 }}>
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Meeting providers</div>
         <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Connect one or more providers to auto-import transcripts. Fathom auto-import is live (needs FATHOM_API_KEY); others are on the roadmap. Manual transcript paste works today under Meeting Intelligence.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10 }}>
-          {providers.map((p) => <div key={p} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', border: `1px solid ${T.border}`, borderRadius: 12 }}><span style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{p}</span><Badge text={p === 'Fathom' ? 'available' : 'soon'} color={p === 'Fathom' ? '#16a34a' : T.muted} /></div>)}
+          {providers.map(([p, status]) => <div key={p} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', border: `1px solid ${T.border}`, borderRadius: 12 }}><span style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{p}</span><Badge text={status} color={status === 'available' ? '#16a34a' : T.green2} /></div>)}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 14 }}>
-          <div style={{ maxWidth: 220 }}><Button onClick={syncFathom} disabled={busy}>{busy ? 'Importing…' : 'Import from Fathom (30d)'}</Button></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
+          <div style={{ maxWidth: 200 }}><Button onClick={() => sync('fathom')} disabled={busy}>{busy ? 'Importing…' : 'Import from Fathom'}</Button></div>
+          <div style={{ maxWidth: 200 }}><Button variant="ghost" onClick={() => sync('fireflies')} disabled={busy}>Import from Fireflies</Button></div>
           {msg && <span style={{ fontSize: 13, color: T.sub }}>{msg}</span>}
+        </div>
+        <div style={{ marginTop: 14, padding: '12px 14px', background: '#f7f9f8', borderRadius: 12, border: `1px solid ${T.border}` }}>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: T.ink, marginBottom: 4 }}>Universal ingest webhook</div>
+          <p style={{ fontSize: 12.5, color: T.sub, margin: '0 0 6px' }}>Pipe any other provider (Zoom, Grain, Otter, Read.ai, Google Meet) in via native webhooks or Zapier/Make. POST JSON <code>{'{ transcript, title, contact_email, meeting_type, provider }'}</code> with header <code>x-ci-token</code> = your <code>CI_WEBHOOK_SECRET</code>.</p>
+          <code style={{ fontSize: 12, color: T.green2, wordBreak: 'break-all' }}>{webhookUrl}</code>
         </div>
       </Card>
       <Security />

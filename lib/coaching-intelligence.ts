@@ -358,6 +358,35 @@ export async function renderCustomerReport(key: string): Promise<string> {
     ${plan ? `<h2>Success plan</h2>${plan.north_star ? `<p><b>North star:</b> ${esc(plan.north_star)}</p>` : ''}${((plan.milestones as Array<{ horizon: string; goal: string; actions?: string[] }>) || []).map((m) => `<p><b>${esc(m.horizon)}:</b> ${esc(m.goal)}</p>${ul(m.actions)}`).join('')}` : ''}`
   return reportShell(String(prof.name || 'Customer profile'), inner)
 }
+function mdList(arr: unknown): string { return ((arr as unknown[]) || []).map((x) => `- ${typeof x === 'string' ? x : ((x as { point?: string }).point || JSON.stringify(x))}`).join('\n') }
+export async function renderMeetingMarkdown(id: string): Promise<string> {
+  const sb = getSupabaseAdmin()
+  const { data: m } = await sb.from('ci_meetings').select('*').eq('id', id).maybeSingle()
+  if (!m) return '# Not found'
+  const a = (m.analysis || {}) as Record<string, unknown>
+  return [
+    `# ${m.title || MEETING_TYPE_LABEL[m.meeting_type as string]}`,
+    `_${MEETING_TYPE_LABEL[m.meeting_type as string]} · ${m.contact_name || m.contact_email || 'Customer'} · ${m.meeting_date || ''}_`,
+    a.executive_summary ? `\n## Executive summary\n${a.executive_summary}` : '',
+    a.strengths ? `\n## Strengths\n${mdList(a.strengths)}` : '',
+    a.improvements ? `\n## Prioritized improvements\n${mdList(a.improvements)}` : '',
+    a.suggested_followup_email ? `\n## Suggested follow-up email\n${a.suggested_followup_email}` : '',
+  ].filter(Boolean).join('\n')
+}
+export async function renderCustomerMarkdown(key: string): Promise<string> {
+  const sb = getSupabaseAdmin()
+  const { data: prof } = await sb.from('ci_customer_profiles').select('*').eq('contact_key', key).maybeSingle()
+  if (!prof) return '# Not found'
+  const p = (prof.profile || {}) as Record<string, unknown>
+  return [
+    `# ${prof.name || key}`,
+    `_Health ${prof.health_score ?? '—'} · Engagement ${prof.engagement_score ?? '—'} · ${prof.risk || 'unknown'} risk_`,
+    p.summary ? `\n${p.summary}` : '',
+    (p.goals as unknown[])?.length ? `\n## Goals\n${mdList(p.goals)}` : '',
+    (p.challenges as unknown[])?.length ? `\n## Challenges\n${mdList(p.challenges)}` : '',
+    (p.next_best_actions as unknown[])?.length ? `\n## Next best actions\n${mdList(p.next_best_actions)}` : '',
+  ].filter(Boolean).join('\n')
+}
 
 // ── TRANSCRIPTION (audio/video → text via OpenAI Whisper) ──
 export async function transcribeAudio(file: Blob, filename: string): Promise<{ ok: boolean; text?: string; error?: string }> {
@@ -477,6 +506,68 @@ export async function importFathom(sinceDays = 30): Promise<{ ok: boolean; impor
       contact_key: key, contact_email: email || null, meeting_date: r.started_at ? r.started_at.slice(0, 10) : null,
       recording_url: r.recording_url || r.share_url || null, transcript: r.transcript, ai_summary: r.summary || null,
       action_items: r.action_items || null, created_by: 'fathom-sync',
+    }, { onConflict: 'provider,external_id' }).select('id, status').single()
+    if (error || !data) continue
+    imported++
+    if (data.status !== 'analyzed') { const a = await analyzeMeeting(data.id as string); if (a.ok) analyzed++ }
+  }
+  return { ok: true, imported, analyzed }
+}
+
+// Shared ingest used by the admin route, the universal webhook and providers.
+export async function ingestTranscript(input: {
+  title?: string; meeting_type?: string; provider?: string; contact_name?: string; contact_email?: string
+  meeting_date?: string; recording_url?: string; transcript: string; created_by?: string; external_id?: string; consent?: boolean
+}): Promise<{ ok: boolean; id?: string; error?: string }> {
+  const transcript = String(input.transcript || '').trim()
+  if (transcript.length < 40) return { ok: false, error: 'Transcript too short' }
+  const type = (MEETING_TYPES as readonly string[]).includes(String(input.meeting_type)) ? String(input.meeting_type) : 'other'
+  const sb = getSupabaseAdmin()
+  const row: Record<string, unknown> = {
+    title: input.title || null, meeting_type: type, provider: input.provider || 'webhook',
+    contact_key: contactKeyFrom(input.contact_email, input.contact_name), contact_name: input.contact_name || null,
+    contact_email: input.contact_email || null, meeting_date: input.meeting_date || null, recording_url: input.recording_url || null,
+    transcript, consent: input.consent !== false, created_by: input.created_by || 'webhook',
+  }
+  let id: string | undefined
+  if (input.external_id) {
+    const { data } = await sb.from('ci_meetings').upsert({ ...row, external_id: input.external_id }, { onConflict: 'provider,external_id' }).select('id').single()
+    id = data?.id as string
+  } else {
+    const { data, error } = await sb.from('ci_meetings').insert(row).select('id').single()
+    if (error) return { ok: false, error: error.message }
+    id = data?.id as string
+  }
+  if (id) analyzeMeeting(id).catch(() => {})
+  return { ok: true, id }
+}
+
+// Fireflies.ai auto-import (GraphQL). Mirrors the Fathom importer.
+export function firefliesConfigured(): boolean { return !!process.env.FIREFLIES_API_KEY }
+export async function importFireflies(sinceDays = 30): Promise<{ ok: boolean; imported: number; analyzed: number; note?: string }> {
+  const key = process.env.FIREFLIES_API_KEY
+  if (!key) return { ok: false, imported: 0, analyzed: 0, note: 'FIREFLIES_API_KEY is not configured.' }
+  const query = `query { transcripts(limit: 50) { id title date participants transcript_url sentences { speaker_name text } } }`
+  const r = await fetch('https://api.fireflies.ai/graphql', { method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ query }) })
+  if (!r.ok) return { ok: false, imported: 0, analyzed: 0, note: `Fireflies API error ${r.status}` }
+  const j = await r.json().catch(() => ({}))
+  const list = (j?.data?.transcripts || []) as Array<Record<string, unknown>>
+  const sb = getSupabaseAdmin()
+  const cutoff = Date.now() - sinceDays * 86400000
+  let imported = 0, analyzed = 0
+  for (const t of list) {
+    const dateMs = Number(t.date) || 0
+    if (dateMs && dateMs < cutoff) continue
+    const sentences = (t.sentences || []) as Array<{ speaker_name?: string; text?: string }>
+    const transcript = sentences.map((s) => `${s.speaker_name || 'Speaker'}: ${s.text || ''}`).join('\n').trim()
+    if (transcript.length < 40) continue
+    const emails = ((t.participants || []) as string[]).filter((p) => typeof p === 'string' && p.includes('@'))
+    const email = emails.find((e) => !e.endsWith('@10kroadmap.org')) || emails[0] || ''
+    const { data, error } = await sb.from('ci_meetings').upsert({
+      external_id: String(t.id), provider: 'fireflies', title: (t.title as string) || 'Fireflies meeting', meeting_type: 'sales_call',
+      contact_key: contactKeyFrom(email, t.title as string), contact_email: email || null,
+      meeting_date: dateMs ? new Date(dateMs).toISOString().slice(0, 10) : null, recording_url: (t.transcript_url as string) || null,
+      transcript, created_by: 'fireflies-sync',
     }, { onConflict: 'provider,external_id' }).select('id, status').single()
     if (error || !data) continue
     imported++

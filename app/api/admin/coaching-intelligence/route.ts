@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, MEETING_TYPES } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -33,6 +33,13 @@ export async function GET(req: NextRequest) {
     }
     if (view === 'insights') {
       return NextResponse.json(await executiveInsights())
+    }
+    if (view === 'trends') {
+      return NextResponse.json(await performanceTrends())
+    }
+    if (view === 'roleplays') {
+      const { data } = await sb.from('ci_roleplays').select('id, scenario, difficulty, score, created_at').eq('created_by', actor).order('created_at', { ascending: false }).limit(50)
+      return NextResponse.json({ roleplays: data || [] })
     }
     if (view === 'profiles') {
       const { data } = await sb.from('ci_customer_profiles').select('*').order('health_score', { ascending: true }).limit(300)
@@ -145,6 +152,18 @@ export async function POST(req: NextRequest) {
     }
     if (action === 'delete_framework') {
       return NextResponse.json(await deleteFramework(String(body?.id || '')))
+    }
+    if (action === 'success_plan') {
+      return NextResponse.json(await generateSuccessPlan(String(body?.key || '')))
+    }
+    if (action === 'roleplay_start') {
+      return NextResponse.json(await startRoleplay(String(body?.scenario || 'sales_call'), String(body?.difficulty || 'realistic'), actor))
+    }
+    if (action === 'roleplay_reply') {
+      return NextResponse.json(await roleplayReply(String(body?.id || ''), String(body?.message || '')))
+    }
+    if (action === 'roleplay_score') {
+      return NextResponse.json(await scoreRoleplay(String(body?.id || '')))
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

@@ -12,7 +12,7 @@ const TYPES = [
   ['team_meeting', 'Team Meeting'], ['internal_meeting', 'Internal Meeting'], ['other', 'Other'],
 ]
 const TYPE_LABEL: Record<string, string> = Object.fromEntries(TYPES)
-const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Frameworks', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
+const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Practice', 'Frameworks', 'Trends', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
 const RISK_COLOR: Record<string, string> = { high: '#dc2626', medium: '#d97706', low: '#16a34a' }
 
 function Badge({ text, color }: { text: string; color: string }) {
@@ -47,8 +47,10 @@ export default function CoachingIntelligence() {
       {tab === 'Meeting Intelligence' && <MeetingIntelligence onOpen={(id) => { setOpenMeeting(id); setTab('Call Reviews') }} />}
       {tab === 'Call Reviews' && <CallReviews openId={openMeeting} setOpenId={setOpenMeeting} />}
       {tab === 'Customer Intelligence' && <CustomerIntelligence openKey={openCustomer} setOpenKey={setOpenCustomer} />}
+      {tab === 'Practice' && <Practice />}
       {tab === 'Frameworks' && <FrameworkLibrary />}
-      {tab === 'Success Plans' && <Scaffold title="Success Plans" body="Per-customer 30/60/90-day success plans generated from their goals, health score and meeting history. Wired to the same profiles you see under Customer Intelligence." />}
+      {tab === 'Trends' && <Trends />}
+      {tab === 'Success Plans' && <Scaffold title="Success Plans" body="Open any customer under Customer Intelligence and click ‘Generate success plan’ — a 30/60/90-day plan (north star, milestones, homework, risks, next-meeting agenda) is built from their profile and meeting history and saved to their workspace." />}
       {tab === 'Knowledge Library' && <Scaffold title="Knowledge Library" body="A searchable library of winning calls, objection responses and coaching questions surfaced from analyzed meetings. Uploads already flow into each customer's Knowledge Vault under Customer Intelligence, and methodologies live under Frameworks." />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Settings' && <SettingsTab />}
@@ -224,6 +226,9 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
   const p = data?.profile?.profile || {}
   const ask = async () => { if (!q.trim()) return; setAsking(true); setAns(''); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'ask', key: ckey, question: q }); setAsking(false); setAns(r?.answer || 'No answer.') }
   const addDoc = async () => { if (!doc.text.trim()) return; setSavingDoc(true); await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'add_document', contact_key: ckey, name: doc.name || 'Note', doc_type: 'note', text: doc.text }); setSavingDoc(false); setDoc({ name: '', text: '' }); reload() }
+  const [planBusy, setPlanBusy] = useState(false)
+  const genPlan = async () => { setPlanBusy(true); await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'success_plan', key: ckey }); setPlanBusy(false); reload() }
+  const plan = data?.profile?.success_plan
   if (loading && !data) return <div className="skeleton" style={{ height: 300, borderRadius: 14 }} />
   return (
     <div style={{ display: 'grid', gap: 14 }}>
@@ -256,6 +261,32 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
           </Card>
         </div>
       </div>
+      <Card>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+          <div style={{ fontWeight: 800, color: T.ink }}>Success Workspace — 30/60/90 plan</div>
+          <div style={{ marginLeft: 'auto', maxWidth: 180 }}><Button variant="ghost" onClick={genPlan} disabled={planBusy}>{planBusy ? 'Building…' : plan ? 'Regenerate plan' : 'Generate success plan'}</Button></div>
+        </div>
+        {!plan ? <div style={{ color: T.muted, fontSize: 13.5 }}>Generate a living 30/60/90-day plan from this customer&apos;s profile and history.</div> : (
+          <div>
+            {plan.north_star && <p style={{ fontSize: 14, color: T.ink, fontWeight: 600, marginBottom: 12 }}>🎯 {plan.north_star}</p>}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12 }}>
+              {(plan.milestones || []).map((m: any, i: number) => (
+                <div key={i} style={{ border: `1px solid ${T.border}`, borderRadius: 12, padding: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: T.green2, textTransform: 'uppercase' }}>{m.horizon}</div>
+                  <div style={{ fontSize: 14, color: T.ink, fontWeight: 600, margin: '4px 0 6px' }}>{m.goal}</div>
+                  <ul style={{ paddingLeft: 16, margin: 0 }}>{(m.actions || []).map((a: string, j: number) => <li key={j} style={{ fontSize: 12.5, color: T.sub, marginBottom: 3 }}>{a}</li>)}</ul>
+                  {m.success_metric && <div style={{ fontSize: 12, color: T.muted, marginTop: 6 }}>✓ {m.success_metric}</div>}
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 14, marginTop: 12 }}>
+              {[['Assigned homework', plan.assigned_homework], ['Blockers', plan.blockers], ['Risks', plan.risks], ['Next-meeting agenda', plan.next_meeting_agenda]].filter(([, v]) => Array.isArray(v) && v.length).map(([label, arr]: any) => (
+                <div key={label}><div style={{ fontSize: 12.5, fontWeight: 700, color: T.ink, marginBottom: 4 }}>{label}</div><ul style={{ paddingLeft: 16, margin: 0 }}>{arr.map((x: string, i: number) => <li key={i} style={{ fontSize: 12.5, color: T.sub, marginBottom: 3 }}>{x}</li>)}</ul></div>
+              ))}
+            </div>
+          </div>
+        )}
+      </Card>
     </div>
   )
 }
@@ -381,6 +412,99 @@ function FrameworkLibrary() {
             </Card>
           ))}
         </div>}
+    </div>
+  )
+}
+
+// ── Practice & Roleplay Center ─────────────────────────────
+const SCENARIOS = [['sales_call', 'Sales Call'], ['discovery_call', 'Discovery Call'], ['objection_handling', 'Objection Handling'], ['coaching_session', 'Coaching Session'], ['difficult_conversation', 'Difficult Conversation'], ['renewal_call', 'Renewal Call']]
+function Practice() {
+  const [scenario, setScenario] = useState('sales_call'); const [difficulty, setDifficulty] = useState('realistic')
+  const [session, setSession] = useState<{ id: string; persona: string; msgs: { role: string; content: string }[] } | null>(null)
+  const [input, setInput] = useState(''); const [busy, setBusy] = useState(false)
+  const [fb, setFb] = useState<any | null>(null); const [score, setScore] = useState<number | null>(null)
+
+  const start = async () => { setBusy(true); setFb(null); setScore(null); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'roleplay_start', scenario, difficulty }); setBusy(false); if (r?.id) setSession({ id: r.id, persona: r.persona, msgs: [{ role: 'assistant', content: r.opening }] }) }
+  const send = async () => { if (!session || !input.trim()) return; const mine = input.trim(); setInput(''); setSession({ ...session, msgs: [...session.msgs, { role: 'user', content: mine }] }); setBusy(true); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'roleplay_reply', id: session.id, message: mine }); setBusy(false); setSession((s) => s ? { ...s, msgs: [...s.msgs, { role: 'assistant', content: r?.reply || '…' }] } : s) }
+  const finish = async () => { if (!session) return; setBusy(true); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'roleplay_score', id: session.id }); setBusy(false); if (r?.ok) { setScore(r.score ?? null); setFb(r.feedback) } }
+
+  if (!session) return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Practice & Roleplay Center</div>
+      <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 16 }}>Rehearse with a realistic AI prospect/client. Your frameworks shape the scoring. You get a full breakdown after.</p>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+        <div style={{ minWidth: 220 }}><Field label="Scenario"><Select value={scenario} onChange={(e) => setScenario(e.target.value)}>{SCENARIOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</Select></Field></div>
+        <div style={{ minWidth: 180 }}><Field label="Difficulty"><Select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>{['easy', 'realistic', 'hard', 'brutal'].map((d) => <option key={d} value={d}>{d}</option>)}</Select></Field></div>
+        <div style={{ maxWidth: 160 }}><Button onClick={start} disabled={busy}>{busy ? 'Setting up…' : 'Start roleplay'}</Button></div>
+      </div>
+    </Card>
+  )
+  return (
+    <div style={{ display: 'grid', gap: 14 }}>
+      <Card pad={16}><div style={{ fontSize: 12.5, color: T.muted, marginBottom: 4, fontWeight: 700, textTransform: 'uppercase' }}>Your prospect</div><div style={{ fontSize: 14, color: T.sub, lineHeight: 1.55 }}>{session.persona}</div></Card>
+      <Card>
+        <div style={{ display: 'grid', gap: 10, maxHeight: 380, overflowY: 'auto', marginBottom: 12 }}>
+          {session.msgs.map((m, i) => (
+            <div key={i} style={{ alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '80%', background: m.role === 'user' ? T.green2 : '#f2f4f2', color: m.role === 'user' ? '#fff' : T.ink, padding: '9px 13px', borderRadius: 14, fontSize: 14, lineHeight: 1.5 }}>{m.content}</div>
+          ))}
+        </div>
+        {score == null ? (
+          <div style={{ display: 'flex', gap: 10 }}>
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') send() }} placeholder="Your response…" style={{ flex: 1, padding: '11px 14px', borderRadius: 10, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit', outline: 'none' }} />
+            <div style={{ maxWidth: 90 }}><Button onClick={send} disabled={busy}>{busy ? '…' : 'Send'}</Button></div>
+            <div style={{ maxWidth: 130 }}><Button variant="ghost" onClick={finish} disabled={busy}>End & score</Button></div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: 10 }}><div style={{ maxWidth: 160 }}><Button onClick={() => setSession(null)}>New roleplay</Button></div></div>
+        )}
+      </Card>
+      {fb && (
+        <Card>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}><div style={{ fontWeight: 800, color: T.ink }}>Roleplay review</div>{score != null && <span style={{ marginLeft: 'auto', fontWeight: 800, fontSize: 18, color: score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#dc2626' }}>{score}/100</span>}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 14 }}>
+            {[['Strengths', fb.strengths], ['Weaknesses', fb.weaknesses], ['Missed opportunities', fb.missed_opportunities], ['Better questions', fb.better_questions], ['Alternative responses', fb.alternative_responses], ['Practice exercises', fb.practice_exercises]].filter(([, v]) => Array.isArray(v) && v.length).map(([label, arr]: any) => (
+              <div key={label}><div style={{ fontSize: 13, fontWeight: 700, color: T.ink, marginBottom: 5 }}>{label}</div><ul style={{ paddingLeft: 16, margin: 0 }}>{arr.map((x: string, i: number) => <li key={i} style={{ fontSize: 13, color: T.sub, marginBottom: 4, lineHeight: 1.5 }}>{x}</li>)}</ul></div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// ── Performance Trends ─────────────────────────────────────
+function Trends() {
+  const { data, loading } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=trends')
+  if (loading && !data) return <div className="skeleton" style={{ height: 240, borderRadius: 14 }} />
+  const series = data?.series || []
+  if (series.length === 0) return <EmptyState title="No trend data yet" hint="Analyze meetings over a few weeks to see performance trends." icon="📈" />
+  const maxOverall = 100
+  return (
+    <div style={{ display: 'grid', gap: 14 }}>
+      {data?.trend_note && <Card style={{ borderLeft: `3px solid ${T.green2}` }}><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>What the AI sees</div><p style={{ fontSize: 14, color: T.sub, lineHeight: 1.6 }}>{data.trend_note}</p></Card>}
+      <Card>
+        <div style={{ fontWeight: 800, color: T.ink, marginBottom: 14 }}>Overall call score by month</div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14, height: 180, overflowX: 'auto' }}>
+          {series.map((s: any) => (
+            <div key={s.month} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 54 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: T.ink }}>{s.overall ?? '—'}</div>
+              <div style={{ width: 30, height: `${((s.overall || 0) / maxOverall) * 130}px`, minHeight: 3, borderRadius: 6, background: `linear-gradient(180deg, ${T.green2}, ${T.green})` }} />
+              <div style={{ fontSize: 11, color: T.muted }}>{s.month.slice(2)}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card>
+        <div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Dimensions & win rate by month</div>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead><tr style={{ textAlign: 'left', color: T.muted }}>{['Month', 'Meetings', 'Discovery', 'Closing', 'Objection', 'Listening', 'Win %'].map((h) => <th key={h} style={{ padding: '6px 10px', borderBottom: `1px solid ${T.border}`, fontWeight: 700 }}>{h}</th>)}</tr></thead>
+            <tbody>{series.map((s: any) => (
+              <tr key={s.month}><td style={{ padding: '6px 10px', color: T.ink, fontWeight: 600 }}>{s.month}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.meetings}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.discovery ?? '—'}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.closing ?? '—'}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.objection ?? '—'}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.listening ?? '—'}</td><td style={{ padding: '6px 10px', color: T.sub }}>{s.win_rate == null ? '—' : `${s.win_rate}%`}</td></tr>
+            ))}</tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   )
 }

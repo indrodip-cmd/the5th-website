@@ -2,6 +2,8 @@ import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { recordMemory } from '@/lib/memory/store'
 import { fathomConfigured, listRecent } from '@/lib/fathom'
+import { notify } from '@/lib/notifications'
+import { emitEvent } from '@/lib/events'
 
 // AI Coaching Intelligence engine (admin-only). Evaluates meetings with a
 // meeting-type-specific lens, builds a living customer profile + health score,
@@ -351,8 +353,128 @@ export async function buildCustomerProfile(contactKey: string): Promise<{ ok: bo
     risk: (p.risk as string) || null,
     updated_at: new Date().toISOString(),
   }, { onConflict: 'contact_key' })
+
+  // Automation: proactively escalate churn risk to the admin feed + event bus.
+  const risk = (p.risk as string) || null
+  const health = Number(p.health_score)
+  if (risk === 'high' || (Number.isFinite(health) && health < 45)) {
+    const who = (first?.contact_name as string) || contactKey
+    const why = (p.risk_factors as string[] | undefined)?.slice(0, 2).join('; ') || 'declining engagement/health'
+    notify('coaching_risk', `Churn risk: ${who}`, `Health ${Number.isFinite(health) ? health : '—'} · ${why}`, { contact_key: contactKey, health, risk }).catch(() => {})
+    emitEvent('coaching_customer_at_risk', { contact_key: contactKey, health, risk, why }).catch(() => {})
+  }
   return { ok: true }
 }
+
+// ── PERFORMANCE TRENDS (long-term improvement over time) ───
+export async function performanceTrends(): Promise<Record<string, unknown>> {
+  const sb = getSupabaseAdmin()
+  const { data } = await sb.from('ci_meetings').select('meeting_date, created_at, meeting_type, outcome, scores, analysis').eq('status', 'analyzed').order('meeting_date', { ascending: true }).limit(1000)
+  const rows = data || []
+  const buckets: Record<string, { overall: number[]; discovery: number[]; closing: number[]; objection: number[]; listening: number[]; won: number; lost: number; n: number }> = {}
+  for (const m of rows) {
+    const d = (m.meeting_date || m.created_at || '').slice(0, 7) || 'unknown'
+    const b = (buckets[d] ||= { overall: [], discovery: [], closing: [], objection: [], listening: [], won: 0, lost: 0, n: 0 })
+    b.n++
+    const sc = (m.scores || {}) as Record<string, number>
+    const ov = Number((m.analysis as Record<string, unknown>)?.overall_score)
+    if (Number.isFinite(ov)) b.overall.push(ov)
+    if (Number.isFinite(Number(sc.discovery))) b.discovery.push(Number(sc.discovery))
+    if (Number.isFinite(Number(sc.closing))) b.closing.push(Number(sc.closing))
+    if (Number.isFinite(Number(sc.objection_handling))) b.objection.push(Number(sc.objection_handling))
+    const listen = Number(sc.active_listening ?? sc.listening)
+    if (Number.isFinite(listen)) b.listening.push(listen)
+    if (m.outcome === 'won') b.won++; if (m.outcome === 'lost') b.lost++
+  }
+  const avg = (a: number[]) => a.length ? Math.round((a.reduce((s, n) => s + n, 0) / a.length) * 10) / 10 : null
+  const series = Object.entries(buckets).sort((a, b) => a[0].localeCompare(b[0])).map(([month, b]) => ({
+    month, meetings: b.n, overall: avg(b.overall), discovery: avg(b.discovery), closing: avg(b.closing),
+    objection: avg(b.objection), listening: avg(b.listening),
+    win_rate: b.won + b.lost ? Math.round((b.won / (b.won + b.lost)) * 100) : null,
+  }))
+  let trend_note = ''
+  if (series.length >= 2) {
+    const res = await ai().messages.create({
+      model: MODEL, max_tokens: 400,
+      system: 'You analyze a coaching/sales performance time-series. In 2-3 sentences, call out the most meaningful improvement AND any regression, with the numbers. No fluff.',
+      messages: [{ role: 'user', content: `MONTHLY SERIES:\n${JSON.stringify(series)}` }],
+    })
+    trend_note = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  }
+  return { series, trend_note }
+}
+
+// ── CUSTOMER SUCCESS PLAN (30/60/90) ───────────────────────
+export async function generateSuccessPlan(contactKey: string): Promise<{ ok: boolean; plan?: unknown }> {
+  const sb = getSupabaseAdmin()
+  const [{ data: prof }, { data: meetings }] = await Promise.all([
+    sb.from('ci_customer_profiles').select('name, profile').eq('contact_key', contactKey).maybeSingle(),
+    sb.from('ci_meetings').select('meeting_type, meeting_date, ai_summary, outcome').eq('contact_key', contactKey).order('meeting_date', { ascending: false }).limit(20),
+  ])
+  if (!prof) return { ok: false }
+  const res = await ai().messages.create({
+    model: MODEL, max_tokens: 1600,
+    system: 'You are a Customer Success strategist. Build a concrete 30/60/90-day success plan for THIS customer grounded in their profile + history. Output valid JSON only.',
+    messages: [{ role: 'user', content: `PROFILE:\n${JSON.stringify(prof.profile).slice(0, 6000)}\n\nRECENT MEETINGS:\n${JSON.stringify(meetings || []).slice(0, 4000)}\n\nReturn ONLY:\n{"north_star":"the outcome we're driving to","milestones":[{"horizon":"30d|60d|90d","goal":"","actions":["..."],"success_metric":""}],"blockers":["..."],"assigned_homework":["..."],"risks":["..."],"next_meeting_agenda":["..."]}` }],
+  })
+  const text = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  const plan = parseJson<Record<string, unknown>>(text)
+  if (!plan) return { ok: false }
+  await sb.from('ci_customer_profiles').update({ success_plan: plan, updated_at: new Date().toISOString() }).eq('contact_key', contactKey)
+  return { ok: true, plan }
+}
+
+// ── PRACTICE & ROLEPLAY CENTER ─────────────────────────────
+const SCENARIO_LABEL: Record<string, string> = {
+  discovery_call: 'Discovery Call', sales_call: 'Sales Call', objection_handling: 'Objection Handling',
+  coaching_session: 'Coaching Session', difficult_conversation: 'Difficult Conversation', renewal_call: 'Renewal Call',
+}
+export async function startRoleplay(scenario: string, difficulty: string, createdBy: string): Promise<{ id: string; persona: string; opening: string }> {
+  const sb = getSupabaseAdmin()
+  const res = await ai().messages.create({
+    model: MODEL, max_tokens: 500,
+    system: `You run a sales/coaching PRACTICE simulator. Invent a realistic prospect/client persona for a "${SCENARIO_LABEL[scenario] || scenario}" at "${difficulty}" difficulty (name, role, company, situation, personality, hidden objection). Then write their OPENING line to start the roleplay. Output JSON only.`,
+    messages: [{ role: 'user', content: 'Return ONLY: {"persona":"2-3 sentence description of who they are and their hidden objection","opening":"their first line to the rep/coach"}' }],
+  })
+  const text = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  const p = parseJson<{ persona: string; opening: string }>(text) || { persona: 'A realistic prospect.', opening: 'Hi, thanks for hopping on. So what is this about?' }
+  const messages = [{ role: 'assistant', content: p.opening }]
+  const { data } = await sb.from('ci_roleplays').insert({ scenario, difficulty, persona: p.persona, messages, created_by: createdBy }).select('id').single()
+  return { id: (data?.id as string) || '', persona: p.persona, opening: p.opening }
+}
+export async function roleplayReply(id: string, userMessage: string): Promise<{ reply: string }> {
+  const sb = getSupabaseAdmin()
+  const { data: rp } = await sb.from('ci_roleplays').select('*').eq('id', id).maybeSingle()
+  if (!rp) return { reply: '' }
+  const history = [...((rp.messages as Array<{ role: string; content: string }>) || []), { role: 'user', content: userMessage }]
+  const res = await ai().messages.create({
+    model: MODEL, max_tokens: 500,
+    system: `You are role-playing a customer in a "${SCENARIO_LABEL[rp.scenario] || rp.scenario}" practice session. STAY IN CHARACTER as this persona: ${rp.persona}. Be realistic, not a pushover, raise natural objections, react to how well the rep/coach handles you. Never break character or coach them. Keep replies to 1-4 sentences.`,
+    messages: history.map((m) => ({ role: m.role === 'user' ? ('user' as const) : ('assistant' as const), content: m.content })),
+  })
+  const reply = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  await sb.from('ci_roleplays').update({ messages: [...history, { role: 'assistant', content: reply }], updated_at: new Date().toISOString() }).eq('id', id)
+  return { reply }
+}
+export async function scoreRoleplay(id: string): Promise<{ ok: boolean; score?: number; feedback?: unknown }> {
+  const sb = getSupabaseAdmin()
+  const { data: rp } = await sb.from('ci_roleplays').select('*').eq('id', id).maybeSingle()
+  if (!rp) return { ok: false }
+  const methodology = await frameworksFor(rp.scenario === 'objection_handling' ? 'sales_call' : rp.scenario)
+  const transcript = ((rp.messages as Array<{ role: string; content: string }>) || []).map((m) => `${m.role === 'user' ? 'REP/COACH' : 'CUSTOMER'}: ${m.content}`).join('\n')
+  const res = await ai().messages.create({
+    model: MODEL, max_tokens: 1400,
+    system: `You are an elite coach grading a PRACTICE roleplay. Grade the REP/COACH only.${methodology ? `\n\nPrioritize this methodology:\n${methodology}` : ''}\nOutput valid JSON only.`,
+    messages: [{ role: 'user', content: `TRANSCRIPT:\n${transcript}\n\nReturn ONLY:\n{"score":<0-100>,"strengths":["..."],"weaknesses":["..."],"missed_opportunities":["..."],"better_questions":["..."],"alternative_responses":["..."],"practice_exercises":["..."]}` }],
+  })
+  const text = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  const fb = parseJson<Record<string, unknown>>(text)
+  if (!fb) return { ok: false }
+  await sb.from('ci_roleplays').update({ score: Number(fb.score) || null, feedback: fb, updated_at: new Date().toISOString() }).eq('id', id)
+  return { ok: true, score: Number(fb.score) || undefined, feedback: fb }
+}
+
+// Portfolio-level aggregation that powers Command AI cross-customer questions
 
 // AI Success Coach: answer an admin's question, grounded in one customer's history.
 export async function askSuccessCoach(contactKey: string, question: string): Promise<string> {

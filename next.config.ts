@@ -20,8 +20,37 @@ const nextConfig: NextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },
           { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
+          // Isolate our browsing context but still allow the Cal.com / Whop
+          // checkout popups to talk back to us.
+          { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
+          // Content-Security-Policy. Deliberately allows https: broadly so the
+          // third-party embeds this site depends on (Cal.com, Whop, Wistia,
+          // Spotify, Google Fonts, GSAP CDN, analytics) keep working, while it
+          // still shuts down the common injection vectors: no plugins/objects,
+          // no <base> hijack, no framing by other origins, no mixed (http)
+          // content, and no form posts to non-https targets.
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "base-uri 'self'",
+              "object-src 'none'",
+              "frame-ancestors 'self'",
+              "form-action 'self' https:",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data: https:",
+              "style-src 'self' 'unsafe-inline' https:",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+              "connect-src 'self' https: wss:",
+              "frame-src 'self' https:",
+              "media-src 'self' blob: data: https:",
+              "worker-src 'self' blob:",
+              "manifest-src 'self'",
+              'upgrade-insecure-requests',
+            ].join('; '),
+          },
         ],
       },
       // Never let API responses be cached by the CDN/browser.

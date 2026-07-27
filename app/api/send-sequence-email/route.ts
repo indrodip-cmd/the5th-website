@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { limit, clientIp } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -917,6 +918,9 @@ const sequences: Record<string, Record<number, { subject: string; html: (name: s
 }
 
 export async function POST(req: NextRequest) {
+  // Sending mail is abuse-prone (spam relay / cost); cap per IP.
+  const rl = await limit(`seqmail:ip:${clientIp(req)}`, 20, 600)
+  if (!rl.ok) return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } })
   try {
     const body = await req.json()
     const { email, name, day, sequence, video_slug } = body

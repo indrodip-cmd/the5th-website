@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { limit, clientIp } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,6 +57,9 @@ const buildRoadmapHtml = (roadmap: string): string => {
 }
 
 export async function POST(req: NextRequest) {
+  // Generating + emailing a PDF is expensive; cap it hard per IP.
+  const rl = await limit(`genpdf:ip:${clientIp(req)}`, 8, 600)
+  if (!rl.ok) return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } })
   try {
     const body = await req.json()
     const { name, email, roadmap, stage, goal, hours, videoSlug, archetype, personality } = body

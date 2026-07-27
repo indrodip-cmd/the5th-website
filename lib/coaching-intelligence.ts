@@ -4,6 +4,8 @@ import { recordMemory } from '@/lib/memory/store'
 import { fathomConfigured, listRecent } from '@/lib/fathom'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
+import { resolveContact, createTask } from '@/lib/crm'
+import { sendMessage } from '@/lib/comm/engine'
 
 // AI Coaching Intelligence engine (admin-only). Evaluates meetings with a
 // meeting-type-specific lens, builds a living customer profile + health score,
@@ -355,6 +357,57 @@ export async function renderCustomerReport(key: string): Promise<string> {
     ${[['Goals', p.goals], ['Challenges', p.challenges], ['Risk factors', p.risk_factors], ['Wins', p.wins], ['Next best actions', p.next_best_actions]].map(([label, arr]) => (arr as unknown[])?.length ? `<h2>${label}</h2>${ul(arr)}` : '').join('')}
     ${plan ? `<h2>Success plan</h2>${plan.north_star ? `<p><b>North star:</b> ${esc(plan.north_star)}</p>` : ''}${((plan.milestones as Array<{ horizon: string; goal: string; actions?: string[] }>) || []).map((m) => `<p><b>${esc(m.horizon)}:</b> ${esc(m.goal)}</p>${ul(m.actions)}`).join('')}` : ''}`
   return reportShell(String(prof.name || 'Customer profile'), inner)
+}
+
+// ── TRANSCRIPTION (audio/video → text via OpenAI Whisper) ──
+export async function transcribeAudio(file: Blob, filename: string): Promise<{ ok: boolean; text?: string; error?: string }> {
+  if (!process.env.OPENAI_API_KEY) return { ok: false, error: 'Audio/video transcription needs OPENAI_API_KEY. Paste the transcript, or upload a .txt/.vtt/.srt file instead.' }
+  const fd = new FormData()
+  fd.append('file', file, filename)
+  fd.append('model', 'whisper-1')
+  const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    method: 'POST', headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` }, body: fd,
+  })
+  if (!r.ok) return { ok: false, error: `Transcription failed (${r.status}). Audio files must be under 25MB, try extracting the audio.` }
+  const d = await r.json().catch(() => ({}))
+  return { ok: true, text: (d.text as string) || '' }
+}
+
+// ── ONE-CLICK AUTOMATION ACTIONS (from a call review) ──────
+export async function sendFollowupFromMeeting(meetingId: string): Promise<{ ok: boolean; error?: string }> {
+  const sb = getSupabaseAdmin()
+  const { data: m } = await sb.from('ci_meetings').select('contact_email, contact_name, analysis, meeting_type').eq('id', meetingId).maybeSingle()
+  if (!m) return { ok: false, error: 'Meeting not found' }
+  if (!m.contact_email) return { ok: false, error: 'No customer email on this meeting.' }
+  const body = (m.analysis as Record<string, unknown> | null)?.suggested_followup_email as string | undefined
+  if (!body) return { ok: false, error: 'No suggested follow-up yet — analyze the meeting first.' }
+  const res = await sendMessage({
+    channel: 'email', to: String(m.contact_email), contactEmail: String(m.contact_email),
+    subject: `Following up on our ${MEETING_TYPE_LABEL[m.meeting_type as string] || 'conversation'}`,
+    text: body,
+  })
+  return res.status === 'failed' ? { ok: false, error: res.error || 'Send failed' } : { ok: true }
+}
+
+export async function createTaskFromMeeting(meetingId: string): Promise<{ ok: boolean; error?: string }> {
+  const sb = getSupabaseAdmin()
+  const { data: m } = await sb.from('ci_meetings').select('contact_email, contact_name, title, analysis, meeting_type').eq('id', meetingId).maybeSingle()
+  if (!m) return { ok: false, error: 'Meeting not found' }
+  const a = (m.analysis || {}) as Record<string, unknown>
+  const items = [
+    ...((a.action_items as string[]) || []),
+    ...(((a.improvements as Array<{ point?: string }>) || []).map((i) => i.point).filter(Boolean) as string[]),
+    ...((a.next_steps as string[]) || []),
+  ].slice(0, 10)
+  let contactId: string | null = null
+  if (m.contact_email) { try { const c = await resolveContact({ email: String(m.contact_email) }); contactId = (c?.id as string) || null } catch {} }
+  await createTask({
+    contactId,
+    title: `Follow up: ${m.contact_name || m.title || MEETING_TYPE_LABEL[m.meeting_type as string] || 'meeting'}`,
+    description: items.length ? 'From the AI call review:\n- ' + items.join('\n- ') : 'Follow up on this meeting.',
+    owner: 'coaching-intelligence', priority: 'normal', kind: 'coaching',
+  })
+  return { ok: true }
 }
 
 // ── EXECUTIVE INSIGHTS (proactive cross-customer briefing) ──

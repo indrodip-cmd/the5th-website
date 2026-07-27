@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, sendFollowupFromMeeting, createTaskFromMeeting, MEETING_TYPES } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -190,6 +190,14 @@ export async function POST(req: NextRequest) {
     }
     if (action === 'delete_rubric') {
       return NextResponse.json(await deleteRubric(String(body?.id || '')))
+    }
+    if (action === 'send_followup') {
+      const r = await sendFollowupFromMeeting(String(body?.id || ''))
+      return NextResponse.json(r, { status: r.ok ? 200 : 400 })
+    }
+    if (action === 'create_task') {
+      const r = await createTaskFromMeeting(String(body?.id || ''))
+      return NextResponse.json(r, { status: r.ok ? 200 : 400 })
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

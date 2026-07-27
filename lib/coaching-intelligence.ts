@@ -143,6 +143,10 @@ export async function analyzeMeeting(meetingId: string): Promise<{ ok: boolean; 
   const parsed = parseJson<Record<string, unknown>>(text)
   if (!parsed) return { ok: false, error: 'Could not parse analysis' }
 
+  // Custom rubric scorecard (weighted, gate-aware) if one applies to this type.
+  const rubric = await rubricFor(m.meeting_type)
+  if (rubric) { const rr = await scoreAgainstRubric(transcript, rubric); if (rr) parsed.rubric = rr }
+
   await sb.from('ci_meetings').update({
     analysis: parsed,
     scores: parsed.scores || null,
@@ -223,6 +227,134 @@ async function frameworksFor(type: string): Promise<string> {
     return mt.length === 0 || mt.includes('*') || mt.includes(type)
   })
   return rows.map((f) => `### ${f.name} (${f.kind})\n${f.body}`).join('\n\n').slice(0, 12000)
+}
+
+// ── CUSTOM RUBRIC SCORECARDS ───────────────────────────────
+export interface RubricCategory { name: string; weight: number; pass_fail?: boolean }
+export interface RubricInput { id?: string; name: string; meeting_types?: string[]; categories: RubricCategory[]; active?: boolean; created_by?: string }
+
+export async function listRubrics(activeOnly = false) {
+  const sb = getSupabaseAdmin()
+  let q = sb.from('ci_rubrics').select('*').order('updated_at', { ascending: false })
+  if (activeOnly) q = q.eq('active', true)
+  const { data } = await q
+  return data || []
+}
+export async function upsertRubric(r: RubricInput) {
+  const sb = getSupabaseAdmin()
+  const row: Record<string, unknown> = { name: r.name, meeting_types: r.meeting_types || [], categories: r.categories || [], active: r.active !== false, updated_at: new Date().toISOString() }
+  if (r.id) { await sb.from('ci_rubrics').update(row).eq('id', r.id); return { ok: true, id: r.id } }
+  row.created_by = r.created_by || null
+  const { data } = await sb.from('ci_rubrics').insert(row).select('id').single()
+  return { ok: true, id: data?.id as string }
+}
+export async function deleteRubric(id: string) {
+  await getSupabaseAdmin().from('ci_rubrics').update({ active: false, updated_at: new Date().toISOString() }).eq('id', id)
+  return { ok: true }
+}
+async function rubricFor(type: string): Promise<{ id: string; name: string; categories: RubricCategory[] } | null> {
+  const sb = getSupabaseAdmin()
+  const { data } = await sb.from('ci_rubrics').select('id, name, categories, meeting_types').eq('active', true)
+  const match = (data || []).find((r) => { const mt = (r.meeting_types || []) as string[]; return mt.length === 0 || mt.includes('*') || mt.includes(type) })
+  return match ? { id: match.id as string, name: match.name as string, categories: (match.categories || []) as RubricCategory[] } : null
+}
+// Score a transcript against a rubric. AI grades each category; the weighted
+// total is computed in code (never trust the model's arithmetic).
+async function scoreAgainstRubric(transcript: string, rubric: { name: string; categories: RubricCategory[] }): Promise<Record<string, unknown> | null> {
+  const cats = rubric.categories.map((c) => c.name).join(', ')
+  const res = await ai().messages.create({
+    model: MODEL, max_tokens: 800,
+    system: `Grade this transcript against the "${rubric.name}" scorecard. Score EACH category 0-10 (integer) and, where relevant, pass/fail. Ground each in the transcript. Output valid JSON only.`,
+    messages: [{ role: 'user', content: `CATEGORIES: ${cats}\n\nTRANSCRIPT:\n${transcript.slice(0, 40000)}\n\nReturn ONLY: {"categories":[{"name":"<exact category>","score":<0-10>,"pass":<true|false|null>,"note":"<one line>"}]}` }],
+  })
+  const text = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  const p = parseJson<{ categories: Array<{ name: string; score: number; pass?: boolean | null; note?: string }> }>(text)
+  if (!p?.categories) return null
+  const byName = new Map(p.categories.map((c) => [c.name.toLowerCase(), c]))
+  let wsum = 0, wtot = 0; let failedGate = false
+  const categories = rubric.categories.map((c) => {
+    const g = byName.get(c.name.toLowerCase())
+    const score = Math.max(0, Math.min(10, Number(g?.score) || 0))
+    const w = Number(c.weight) || 1
+    wsum += score * w; wtot += w
+    const pass = c.pass_fail ? (g?.pass !== false && score >= 6) : null
+    if (c.pass_fail && pass === false) failedGate = true
+    return { name: c.name, weight: w, score, pass, note: g?.note || '' }
+  })
+  return { name: rubric.name, categories, weighted_score: wtot ? Math.round((wsum / wtot) * 10) : null, passed: !failedGate }
+}
+
+// ── CUSTOMER TIMELINE (unified chronological history) ──────
+export async function buildTimeline(contactKey: string): Promise<{ events: Array<Record<string, unknown>> }> {
+  const sb = getSupabaseAdmin()
+  const [{ data: meetings }, { data: docs }, { data: prof }] = await Promise.all([
+    sb.from('ci_meetings').select('id, title, meeting_type, meeting_date, created_at, outcome, ai_summary, status').eq('contact_key', contactKey),
+    sb.from('ci_documents').select('id, name, doc_type, created_at').eq('contact_key', contactKey),
+    sb.from('ci_customer_profiles').select('updated_at, health_score, risk, success_plan').eq('contact_key', contactKey).maybeSingle(),
+  ])
+  const events: Array<Record<string, unknown>> = []
+  for (const m of meetings || []) events.push({ at: m.meeting_date || m.created_at, kind: 'meeting', icon: '🎧', title: `${MEETING_TYPE_LABEL[m.meeting_type] || m.meeting_type}${m.outcome && m.outcome !== 'n/a' ? ` · ${m.outcome}` : ''}`, detail: String(m.ai_summary || '').slice(0, 300), ref: m.id })
+  for (const d of docs || []) events.push({ at: d.created_at, kind: 'document', icon: '📄', title: `Added to vault: ${d.name}`, detail: d.doc_type })
+  if (prof?.success_plan) events.push({ at: prof.updated_at, kind: 'plan', icon: '🎯', title: 'Success plan updated', detail: (prof.success_plan as { north_star?: string })?.north_star || '' })
+  if (prof && (prof.risk === 'high')) events.push({ at: prof.updated_at, kind: 'risk', icon: '⚠️', title: 'Flagged at churn risk', detail: `Health ${prof.health_score ?? '—'}` })
+  events.sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')))
+  return { events }
+}
+
+// ── REPORT EXPORT (branded, printable → Save as PDF) ───────
+function esc(s: unknown): string { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+function reportShell(title: string, inner: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
+<style>
+  @page { margin: 20mm; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; max-width: 820px; margin: 0 auto; padding: 40px 28px; line-height: 1.6; }
+  .brand { font-family: system-ui, sans-serif; font-weight: 800; letter-spacing: .04em; color: #225840; font-size: 13px; text-transform: uppercase; }
+  h1 { font-size: 28px; margin: 6px 0 2px; } h2 { font-size: 18px; margin: 26px 0 8px; color: #225840; border-bottom: 1px solid #e6e9e6; padding-bottom: 4px; }
+  .muted { color: #6b7280; font-family: system-ui, sans-serif; font-size: 13px; }
+  ul { margin: 6px 0 6px 18px; } li { margin-bottom: 5px; }
+  .pill { display: inline-block; font-family: system-ui,sans-serif; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 6px; background: #eef7f1; color: #225840; }
+  .quote { border-left: 3px solid #e6e9e6; padding-left: 10px; color: #555; font-style: italic; }
+  @media print { .noprint { display: none } }
+</style></head><body onload="window.print&&setTimeout(()=>window.print(),350)">
+  <div class="noprint" style="text-align:right;font-family:system-ui,sans-serif;margin-bottom:12px"><button onclick="window.print()" style="padding:8px 16px;border:none;border-radius:8px;background:#225840;color:#fff;font-weight:700;cursor:pointer">Save as PDF</button></div>
+  <div class="brand">The5th · AI Coaching Intelligence</div>
+  ${inner}
+  <p class="muted" style="margin-top:32px">Generated ${new Date().toLocaleString()} · AI-generated insights are grounded in the source transcript/history.</p>
+</body></html>`
+}
+function ul(arr: unknown): string { const a = (arr as unknown[]) || []; return a.length ? `<ul>${a.map((x) => `<li>${typeof x === 'string' ? esc(x) : esc((x as { point?: string }).point || JSON.stringify(x))}</li>`).join('')}</ul>` : '<p class="muted">None.</p>' }
+
+export async function renderMeetingReport(id: string): Promise<string> {
+  const sb = getSupabaseAdmin()
+  const { data: m } = await sb.from('ci_meetings').select('*').eq('id', id).maybeSingle()
+  if (!m) return reportShell('Not found', '<h1>Meeting not found</h1>')
+  const a = (m.analysis || {}) as Record<string, unknown>
+  const sc = (m.scores || {}) as Record<string, number>
+  const inner = `
+    <h1>${esc(m.title || MEETING_TYPE_LABEL[m.meeting_type])}</h1>
+    <p class="muted">${esc(MEETING_TYPE_LABEL[m.meeting_type] || m.meeting_type)} · ${esc(m.contact_name || m.contact_email || 'Customer')} · ${esc(m.meeting_date || '')} ${typeof a.overall_score === 'number' ? `· <span class="pill">Overall ${a.overall_score}/100</span>` : ''}</p>
+    ${a.executive_summary ? `<h2>Executive summary</h2><p>${esc(a.executive_summary)}</p>` : ''}
+    ${a.dpc ? `<h2>DPC framework</h2>${['diagnose', 'prescribe', 'close'].map((k) => (a.dpc as Record<string, string>)[k] ? `<p><b>${k[0].toUpperCase() + k.slice(1)}:</b> ${esc((a.dpc as Record<string, string>)[k])}</p>` : '').join('')}` : ''}
+    ${Object.keys(sc).length ? `<h2>Scores</h2><p>${Object.entries(sc).map(([k, v]) => `${esc(k.replace(/_/g, ' '))}: <b>${v}/10</b>`).join(' &nbsp;·&nbsp; ')}</p>` : ''}
+    ${(a.rubric as { name?: string }) ? `<h2>${esc((a.rubric as { name?: string }).name)} — ${(a.rubric as { weighted_score?: number }).weighted_score ?? '—'}/100 ${(a.rubric as { passed?: boolean }).passed === false ? '(gate failed)' : ''}</h2><ul>${(((a.rubric as { categories?: Array<{ name: string; score: number; pass?: boolean }> }).categories) || []).map((c) => `<li>${esc(c.name)}: <b>${c.score}/10</b>${c.pass === false ? ' — <span style="color:#b4231f">fail</span>' : c.pass === true ? ' — pass' : ''}</li>`).join('')}</ul>` : ''}
+    <h2>Strengths</h2>${ul(a.strengths)}
+    <h2>Prioritized improvements</h2>${ul(a.improvements)}
+    ${a.suggested_followup_email ? `<h2>Suggested follow-up email</h2><p class="quote">${esc(a.suggested_followup_email).replace(/\n/g, '<br>')}</p>` : ''}`
+  return reportShell(String(m.title || 'Meeting review'), inner)
+}
+export async function renderCustomerReport(key: string): Promise<string> {
+  const sb = getSupabaseAdmin()
+  const { data: prof } = await sb.from('ci_customer_profiles').select('*').eq('contact_key', key).maybeSingle()
+  if (!prof) return reportShell('Not found', '<h1>Customer not found</h1>')
+  const p = (prof.profile || {}) as Record<string, unknown>
+  const plan = (prof.success_plan || null) as Record<string, unknown> | null
+  const inner = `
+    <h1>${esc(prof.name || key)}</h1>
+    <p class="muted">Health ${esc(prof.health_score ?? '—')} · Engagement ${esc(prof.engagement_score ?? '—')} · Success ${esc(prof.success_probability ?? '—')}% · <span class="pill">${esc(prof.risk || 'unknown')} risk</span></p>
+    ${p.summary ? `<h2>Profile</h2><p>${esc(p.summary)}</p>` : ''}
+    ${[['Goals', p.goals], ['Challenges', p.challenges], ['Risk factors', p.risk_factors], ['Wins', p.wins], ['Next best actions', p.next_best_actions]].map(([label, arr]) => (arr as unknown[])?.length ? `<h2>${label}</h2>${ul(arr)}` : '').join('')}
+    ${plan ? `<h2>Success plan</h2>${plan.north_star ? `<p><b>North star:</b> ${esc(plan.north_star)}</p>` : ''}${((plan.milestones as Array<{ horizon: string; goal: string; actions?: string[] }>) || []).map((m) => `<p><b>${esc(m.horizon)}:</b> ${esc(m.goal)}</p>${ul(m.actions)}`).join('')}` : ''}`
+  return reportShell(String(prof.name || 'Customer profile'), inner)
 }
 
 // ── EXECUTIVE INSIGHTS (proactive cross-customer briefing) ──

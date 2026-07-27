@@ -12,7 +12,7 @@ const TYPES = [
   ['team_meeting', 'Team Meeting'], ['internal_meeting', 'Internal Meeting'], ['other', 'Other'],
 ]
 const TYPE_LABEL: Record<string, string> = Object.fromEntries(TYPES)
-const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Practice', 'Frameworks', 'Trends', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
+const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Practice', 'Frameworks', 'Rubrics', 'Trends', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
 const RISK_COLOR: Record<string, string> = { high: '#dc2626', medium: '#d97706', low: '#16a34a' }
 
 function Badge({ text, color }: { text: string; color: string }) {
@@ -49,6 +49,7 @@ export default function CoachingIntelligence() {
       {tab === 'Customer Intelligence' && <CustomerIntelligence openKey={openCustomer} setOpenKey={setOpenCustomer} />}
       {tab === 'Practice' && <Practice />}
       {tab === 'Frameworks' && <FrameworkLibrary />}
+      {tab === 'Rubrics' && <Rubrics />}
       {tab === 'Trends' && <Trends />}
       {tab === 'Success Plans' && <Scaffold title="Success Plans" body="Open any customer under Customer Intelligence and click ‘Generate success plan’ — a 30/60/90-day plan (north star, milestones, homework, risks, next-meeting agenda) is built from their profile and meeting history and saved to their workspace." />}
       {tab === 'Knowledge Library' && <Scaffold title="Knowledge Library" body="A searchable library of winning calls, objection responses and coaching questions surfaced from analyzed meetings. Uploads already flow into each customer's Knowledge Vault under Customer Intelligence, and methodologies live under Frameworks." />}
@@ -130,7 +131,10 @@ function MeetingIntelligence({ onOpen }: { onOpen: (id: string) => void }) {
       </Card>
 
       <Card>
-        <div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Meetings</div>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+          <div style={{ fontWeight: 800, color: T.ink }}>Meetings</div>
+          <button onClick={() => window.open('/api/admin/coaching-intelligence?view=export_csv', '_blank')} className="tab-btn" style={{ marginLeft: 'auto', background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '6px 12px' }}>Export CSV</button>
+        </div>
         {loading && !data ? <div className="skeleton" style={{ height: 160, borderRadius: 12 }} /> :
           (data?.meetings || []).length === 0 ? <EmptyState title="No meetings yet" hint="Ingest a transcript above to get your first AI call review." icon="🎧" /> :
           <div style={{ display: 'grid', gap: 8 }}>
@@ -173,13 +177,18 @@ function ReviewDetail({ id, onBack }: { id: string; onBack: () => void }) {
         <div style={{ fontWeight: 800, color: T.ink, fontSize: 18 }}>{m.title || TYPE_LABEL[m.meeting_type]}</div>
         <Badge text={TYPE_LABEL[m.meeting_type] || m.meeting_type} color={T.green2} />
         {typeof a.overall_score === 'number' && <span style={{ marginLeft: 'auto', fontWeight: 800, color: T.ink }}>Overall {a.overall_score}/100</span>}
-        <div style={{ maxWidth: 150 }}><Button variant="ghost" onClick={reanalyze} disabled={busy}>{busy ? '…' : 'Re-analyze'}</Button></div>
+        <div style={{ maxWidth: 120, marginLeft: typeof a.overall_score === 'number' ? 0 : 'auto' }}><Button variant="ghost" onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=meeting&id=${id}`, '_blank')}>Export PDF</Button></div>
+        <div style={{ maxWidth: 130 }}><Button variant="ghost" onClick={reanalyze} disabled={busy}>{busy ? '…' : 'Re-analyze'}</Button></div>
       </div>
       {m.status !== 'analyzed' ? <EmptyState title="Not analyzed yet" hint="Click Re-analyze to run the AI review." icon="🧠" /> : (
         <>
           {a.executive_summary && <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Executive summary</div><p style={{ color: T.sub, lineHeight: 1.6, fontSize: 14.5 }}>{a.executive_summary}</p>{a.why_outcome && <p style={{ color: T.sub, lineHeight: 1.6, fontSize: 14, marginTop: 10 }}><b style={{ color: T.ink }}>Why this outcome: </b>{a.why_outcome}</p>}</Card>}
           {a.dpc && <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 10 }}>DPC framework</div>{['diagnose', 'prescribe', 'close'].map((k) => a.dpc[k] && <p key={k} style={{ fontSize: 14, color: T.sub, marginBottom: 8, lineHeight: 1.55 }}><b style={{ color: T.ink, textTransform: 'capitalize' }}>{k}: </b>{a.dpc[k]}</p>)}</Card>}
           {Object.keys(scores).length > 0 && <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Scores</div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '0 24px' }}>{Object.entries(scores).map(([k, v]) => <Bar key={k} label={k} v={v} />)}</div></Card>}
+          {a.rubric && <Card>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}><div style={{ fontWeight: 800, color: T.ink }}>{a.rubric.name}</div><span style={{ marginLeft: 'auto', fontWeight: 800, color: a.rubric.passed === false ? '#dc2626' : T.ink }}>{a.rubric.weighted_score ?? '—'}/100{a.rubric.passed === false ? ' · gate failed' : ''}</span></div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '0 24px' }}>{(a.rubric.categories || []).map((c: any) => <div key={c.name} style={{ marginBottom: 8 }}><div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, color: T.sub }}><span>{c.name}{c.pass === false ? ' ⚠️' : ''}</span><span style={{ fontWeight: 700, color: T.ink }}>{c.score}/10</span></div><div style={{ height: 6, borderRadius: 4, background: '#eef0ee', marginTop: 3 }}><div style={{ width: `${(c.score / 10) * 100}%`, height: '100%', borderRadius: 4, background: c.pass === false ? '#dc2626' : c.score >= 7 ? '#16a34a' : '#d97706' }} /></div></div>)}</div>
+          </Card>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 14 }}>
             {a.strengths?.length > 0 && <Card><div style={{ fontWeight: 800, color: '#16a34a', marginBottom: 10 }}>Strengths</div>{list(a.strengths, (s: any, i: number) => <div key={i} style={{ marginBottom: 12 }}><div style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{s.point || s}</div>{s.evidence && <div style={{ fontSize: 12.5, color: T.muted, fontStyle: 'italic', marginTop: 3, borderLeft: `2px solid ${T.border}`, paddingLeft: 8 }}>“{s.evidence}”</div>}</div>)}</Card>}
             {a.improvements?.length > 0 && <Card><div style={{ fontWeight: 800, color: '#d97706', marginBottom: 10 }}>Prioritized improvements</div>{list(a.improvements, (s: any, i: number) => <div key={i} style={{ marginBottom: 12 }}><div style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{s.priority && <span style={{ color: '#dc2626', fontWeight: 800, marginRight: 6 }}>{s.priority}</span>}{s.point || s}</div>{s.how && <div style={{ fontSize: 13, color: T.sub, marginTop: 3 }}>{s.how}</div>}{s.evidence && <div style={{ fontSize: 12.5, color: T.muted, fontStyle: 'italic', marginTop: 3, borderLeft: `2px solid ${T.border}`, paddingLeft: 8 }}>“{s.evidence}”</div>}</div>)}</Card>}
@@ -237,6 +246,7 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
         <div style={{ fontWeight: 800, color: T.ink, fontSize: 18 }}>{data?.profile?.name || ckey}</div>
         {data?.profile?.risk && <Badge text={data.profile.risk} color={RISK_COLOR[data.profile.risk] || T.muted} />}
         <span style={{ marginLeft: 'auto', fontSize: 13, color: T.sub }}>Health <b style={{ color: T.ink }}>{data?.profile?.health_score ?? '—'}</b> · Engagement <b style={{ color: T.ink }}>{data?.profile?.engagement_score ?? '—'}</b> · Success <b style={{ color: T.ink }}>{data?.profile?.success_probability ?? '—'}%</b></span>
+        <div style={{ maxWidth: 120 }}><Button variant="ghost" onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=customer&key=${encodeURIComponent(ckey)}`, '_blank')}>Export PDF</Button></div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 14 }}>
         <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Profile</div>
@@ -287,7 +297,32 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
           </div>
         )}
       </Card>
+      <CustomerTimeline ckey={ckey} />
     </div>
+  )
+}
+
+function CustomerTimeline({ ckey }: { ckey: string }) {
+  const { data, loading } = useAdminFetch<any>(`/api/admin/coaching-intelligence?view=timeline&key=${encodeURIComponent(ckey)}`, [ckey])
+  if (loading && !data) return <div className="skeleton" style={{ height: 120, borderRadius: 12 }} />
+  const events = data?.events || []
+  if (events.length === 0) return null
+  return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Timeline</div>
+      <div style={{ display: 'grid', gap: 0 }}>
+        {events.map((e: any, i: number) => (
+          <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: i < events.length - 1 ? `1px solid ${T.border}` : 'none' }}>
+            <div style={{ fontSize: 18, lineHeight: 1.2 }}>{e.icon}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink }}>{e.title}</div>
+              {e.detail && <div style={{ fontSize: 12.5, color: T.muted, marginTop: 2 }}>{e.detail}</div>}
+            </div>
+            <div style={{ fontSize: 12, color: T.muted, whiteSpace: 'nowrap' }}>{String(e.at || '').slice(0, 10)}</div>
+          </div>
+        ))}
+      </div>
+    </Card>
   )
 }
 
@@ -505,6 +540,74 @@ function Trends() {
           </table>
         </div>
       </Card>
+    </div>
+  )
+}
+
+// ── Custom Rubric Scorecards ───────────────────────────────
+function Rubrics() {
+  const { data, loading, reload } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=rubrics')
+  type Cat = { name: string; weight: number; pass_fail?: boolean }
+  const blank = { id: undefined as string | undefined, name: '', applies: '', active: true, categories: [{ name: '', weight: 1, pass_fail: false }] as Cat[] }
+  const [edit, setEdit] = useState<typeof blank | null>(null)
+  const [busy, setBusy] = useState(false)
+  const save = async () => {
+    if (!edit || !edit.name.trim()) return
+    setBusy(true)
+    await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'save_rubric', id: edit.id, name: edit.name, meeting_types: edit.applies.split(',').map((s) => s.trim()).filter(Boolean), categories: edit.categories.filter((c) => c.name.trim()), active: edit.active })
+    setBusy(false); setEdit(null); reload()
+  }
+  const archive = async (id: string) => { await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'delete_rubric', id }); reload() }
+  const setCat = (i: number, patch: Partial<Cat>) => edit && setEdit({ ...edit, categories: edit.categories.map((c, j) => j === i ? { ...c, ...patch } : c) })
+
+  if (edit) return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 14 }}>{edit.id ? 'Edit' : 'New'} scorecard</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+        <Field label="Name"><Input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} placeholder="e.g. Enterprise Sales Scorecard" /></Field>
+        <Field label="Applies to (comma-separated types, blank = all)"><Input value={edit.applies} onChange={(e) => setEdit({ ...edit, applies: e.target.value })} placeholder="sales_call, discovery_call" /></Field>
+      </div>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: T.ink, marginBottom: 6 }}>Categories (weight = relative importance; gate = pass/fail requirement)</div>
+      {edit.categories.map((c, i) => (
+        <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+          <input value={c.name} onChange={(e) => setCat(i, { name: e.target.value })} placeholder="Category" style={{ flex: 1, padding: '9px 12px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+          <input type="number" min={1} max={5} value={c.weight} onChange={(e) => setCat(i, { weight: Number(e.target.value) || 1 })} style={{ width: 70, padding: '9px 10px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+          <label style={{ fontSize: 12.5, color: T.sub, display: 'flex', alignItems: 'center', gap: 5 }}><input type="checkbox" checked={!!c.pass_fail} onChange={(e) => setCat(i, { pass_fail: e.target.checked })} />gate</label>
+          <button onClick={() => setEdit({ ...edit, categories: edit.categories.filter((_, j) => j !== i) })} style={{ border: 'none', background: 'none', color: '#dc2626', cursor: 'pointer', fontSize: 16 }}>×</button>
+        </div>
+      ))}
+      <button onClick={() => setEdit({ ...edit, categories: [...edit.categories, { name: '', weight: 1, pass_fail: false }] })} className="tab-btn" style={{ background: '#fff', border: `1px dashed ${T.border}`, color: T.sub, marginTop: 4 }}>+ Add category</button>
+      <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+        <div style={{ maxWidth: 150 }}><Button onClick={save} disabled={busy}>{busy ? 'Saving…' : 'Save scorecard'}</Button></div>
+        <div style={{ maxWidth: 110 }}><Button variant="ghost" onClick={() => setEdit(null)}>Cancel</Button></div>
+      </div>
+    </Card>
+  )
+  return (
+    <div style={{ display: 'grid', gap: 14 }}>
+      <Card>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div><div style={{ fontWeight: 800, color: T.ink }}>Custom Review Rubrics</div><p style={{ fontSize: 13.5, color: T.sub, margin: '4px 0 0' }}>Build your own weighted scorecards with pass/fail gates. Every matching call is scored against the rubric automatically.</p></div>
+          <div style={{ marginLeft: 'auto', maxWidth: 150 }}><Button onClick={() => setEdit(blank)}>+ New</Button></div>
+        </div>
+      </Card>
+      {loading && !data ? <div className="skeleton" style={{ height: 140, borderRadius: 12 }} /> :
+        (data?.rubrics || []).length === 0 ? <EmptyState title="No scorecards yet" hint="Create a Sales or Coaching scorecard." icon="📋" /> :
+        <div style={{ display: 'grid', gap: 8 }}>
+          {data.rubrics.map((r: any) => (
+            <Card key={r.id} pad={16}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, color: T.ink }}>{r.name}</div>
+                  <div style={{ fontSize: 12.5, color: T.muted, marginTop: 2 }}>{(r.categories || []).length} categories · {(r.meeting_types || []).length ? (r.meeting_types).map((t: string) => TYPE_LABEL[t] || t).join(', ') : 'all types'}</div>
+                </div>
+                <Badge text={r.active ? 'active' : 'archived'} color={r.active ? '#16a34a' : T.muted} />
+                <button onClick={() => setEdit({ id: r.id, name: r.name, applies: (r.meeting_types || []).join(', '), active: r.active, categories: (r.categories || []).length ? r.categories : [{ name: '', weight: 1 }] })} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '6px 12px' }}>Edit</button>
+                {r.active && <button onClick={() => archive(r.id)} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: '#dc2626', padding: '6px 12px' }}>Archive</button>}
+              </div>
+            </Card>
+          ))}
+        </div>}
     </div>
   )
 }

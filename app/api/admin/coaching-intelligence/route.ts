@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, MEETING_TYPES } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -36,6 +36,26 @@ export async function GET(req: NextRequest) {
     }
     if (view === 'trends') {
       return NextResponse.json(await performanceTrends())
+    }
+    if (view === 'rubrics') {
+      return NextResponse.json({ rubrics: await listRubrics(false) })
+    }
+    if (view === 'timeline') {
+      return NextResponse.json(await buildTimeline(url.searchParams.get('key') || ''))
+    }
+    if (view === 'report') {
+      const kind = url.searchParams.get('kind')
+      const html = kind === 'customer'
+        ? await renderCustomerReport(url.searchParams.get('key') || '')
+        : await renderMeetingReport(url.searchParams.get('id') || '')
+      return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
+    }
+    if (view === 'export_csv') {
+      const { data } = await sb.from('ci_meetings').select('created_at, meeting_type, contact_name, contact_email, outcome, status').order('created_at', { ascending: false }).limit(2000)
+      const rows = data || []
+      const header = 'date,type,customer,email,outcome,status'
+      const csv = [header, ...rows.map((r) => [r.created_at?.slice(0, 10), r.meeting_type, r.contact_name || '', r.contact_email || '', r.outcome || '', r.status].map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))].join('\n')
+      return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="coaching-meetings.csv"' } })
     }
     if (view === 'roleplays') {
       const { data } = await sb.from('ci_roleplays').select('id, scenario, difficulty, score, created_at').eq('created_by', actor).order('created_at', { ascending: false }).limit(50)
@@ -164,6 +184,12 @@ export async function POST(req: NextRequest) {
     }
     if (action === 'roleplay_score') {
       return NextResponse.json(await scoreRoleplay(String(body?.id || '')))
+    }
+    if (action === 'save_rubric') {
+      return NextResponse.json(await upsertRubric({ id: body?.id, name: body?.name, meeting_types: body?.meeting_types, categories: body?.categories || [], active: body?.active, created_by: actor }))
+    }
+    if (action === 'delete_rubric') {
+      return NextResponse.json(await deleteRubric(String(body?.id || '')))
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

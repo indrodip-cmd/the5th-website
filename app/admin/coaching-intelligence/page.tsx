@@ -12,7 +12,7 @@ const TYPES = [
   ['team_meeting', 'Team Meeting'], ['internal_meeting', 'Internal Meeting'], ['other', 'Other'],
 ]
 const TYPE_LABEL: Record<string, string> = Object.fromEntries(TYPES)
-const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
+const TABS = ['Dashboard', 'Meeting Intelligence', 'Call Reviews', 'Customer Intelligence', 'Frameworks', 'Success Plans', 'Knowledge Library', 'Reports', 'Settings']
 const RISK_COLOR: Record<string, string> = { high: '#dc2626', medium: '#d97706', low: '#16a34a' }
 
 function Badge({ text, color }: { text: string; color: string }) {
@@ -47,8 +47,9 @@ export default function CoachingIntelligence() {
       {tab === 'Meeting Intelligence' && <MeetingIntelligence onOpen={(id) => { setOpenMeeting(id); setTab('Call Reviews') }} />}
       {tab === 'Call Reviews' && <CallReviews openId={openMeeting} setOpenId={setOpenMeeting} />}
       {tab === 'Customer Intelligence' && <CustomerIntelligence openKey={openCustomer} setOpenKey={setOpenCustomer} />}
+      {tab === 'Frameworks' && <FrameworkLibrary />}
       {tab === 'Success Plans' && <Scaffold title="Success Plans" body="Per-customer 30/60/90-day success plans generated from their goals, health score and meeting history. Wired to the same profiles you see under Customer Intelligence." />}
-      {tab === 'Knowledge Library' && <Scaffold title="Knowledge Library" body="A searchable library of winning calls, objection responses and coaching questions surfaced from analyzed meetings. Uploads already flow into each customer's Knowledge Vault under Customer Intelligence." />}
+      {tab === 'Knowledge Library' && <Scaffold title="Knowledge Library" body="A searchable library of winning calls, objection responses and coaching questions surfaced from analyzed meetings. Uploads already flow into each customer's Knowledge Vault under Customer Intelligence, and methodologies live under Frameworks." />}
       {tab === 'Reports' && <Reports />}
       {tab === 'Settings' && <SettingsTab />}
     </>
@@ -71,6 +72,7 @@ function Dashboard({ onCustomer }: { onCustomer: (k: string) => void }) {
           <Card key={k.label} pad={18}><div style={{ fontSize: 12, color: T.muted, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em' }}>{k.label}</div><div style={{ fontSize: 30, fontWeight: 800, color: T.ink, marginTop: 4 }}>{k.v}</div></Card>
         ))}
       </div>
+      <ExecutiveInsights />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 14 }}>
         <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Average call scores</div>
           <Bar label="discovery" v={data?.avg_scores?.discovery} /><Bar label="listening" v={data?.avg_scores?.listening} />
@@ -297,6 +299,88 @@ function SettingsTab() {
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Security & access</div>
         <p style={{ fontSize: 13.5, color: T.sub, lineHeight: 1.6 }}>This module is admin-only and hidden behind the <b>coaching_intelligence</b> feature flag until you release it. All API routes are cookie-authed to admins, data is stored in your Supabase (encrypted at rest) and served over TLS. Consent and retention controls for imported recordings are on the roadmap.</p>
       </Card>
+    </div>
+  )
+}
+
+// ── Executive Insights (proactive AI briefing) ─────────────
+function ExecutiveInsights() {
+  const [ins, setIns] = useState<string[] | null>(null); const [busy, setBusy] = useState(false)
+  const gen = async () => {
+    setBusy(true)
+    try { const r = await fetch('/api/admin/coaching-intelligence?view=insights', { credentials: 'include' }); const d = await r.json(); setIns(d?.insights || []) } catch { setIns([]) }
+    setBusy(false)
+  }
+  return (
+    <Card>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+        <div style={{ fontWeight: 800, color: T.ink }}>Executive insights</div>
+        <div style={{ marginLeft: 'auto', maxWidth: 150 }}><Button variant="ghost" onClick={gen} disabled={busy}>{busy ? 'Generating…' : 'Generate'}</Button></div>
+      </div>
+      {ins == null ? <div style={{ color: T.muted, fontSize: 13.5 }}>An AI briefing across all analyzed meetings — churn signals, the most common missed questions, and what&apos;s driving better outcomes.</div>
+        : ins.length === 0 ? <div style={{ color: T.muted, fontSize: 13.5 }}>Not enough analyzed meetings yet — ingest a few calls first.</div>
+        : <ul style={{ paddingLeft: 18, margin: 0 }}>{ins.map((s, i) => <li key={i} style={{ fontSize: 14, color: T.sub, marginBottom: 8, lineHeight: 1.55 }}>{s}</li>)}</ul>}
+    </Card>
+  )
+}
+
+// ── Framework Library (AI Learning Engine) ─────────────────
+function FrameworkLibrary() {
+  const { data, loading, reload } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=frameworks')
+  const blank = { id: undefined as string | undefined, name: '', kind: 'framework', body: '', applies: '', active: true }
+  const [edit, setEdit] = useState<typeof blank | null>(null)
+  const [busy, setBusy] = useState(false)
+  const save = async () => {
+    if (!edit || !edit.name.trim() || edit.body.trim().length < 10) return
+    setBusy(true)
+    const meeting_types = edit.applies.split(',').map((s) => s.trim()).filter(Boolean)
+    await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'save_framework', id: edit.id, name: edit.name, kind: edit.kind, body: edit.body, meeting_types, active: edit.active })
+    setBusy(false); setEdit(null); reload()
+  }
+  const archive = async (id: string) => { await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'delete_framework', id }); reload() }
+
+  if (edit) return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 14 }}>{edit.id ? 'Edit' : 'New'} framework</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 200px', gap: 12, marginBottom: 12 }}>
+        <Field label="Name"><Input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} placeholder="e.g. MEDDICC, Our Discovery Script" /></Field>
+        <Field label="Kind"><Select value={edit.kind} onChange={(e) => setEdit({ ...edit, kind: e.target.value })}>{['framework', 'playbook', 'script', 'sop', 'rubric'].map((k) => <option key={k} value={k}>{k}</option>)}</Select></Field>
+      </div>
+      <Field label="Applies to (comma-separated meeting types, or * for all)"><Input value={edit.applies} onChange={(e) => setEdit({ ...edit, applies: e.target.value })} placeholder="sales_call, discovery_call  (leave blank = all)" /></Field>
+      <div style={{ height: 10 }} />
+      <Field label="Methodology (the AI prioritizes this over generic best practice)"><Textarea rows={10} value={edit.body} onChange={(e) => setEdit({ ...edit, body: e.target.value })} placeholder="Paste your playbook, framework, discovery script, objection guide, SOP…" /></Field>
+      <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+        <div style={{ maxWidth: 160 }}><Button onClick={save} disabled={busy}>{busy ? 'Saving…' : 'Save framework'}</Button></div>
+        <div style={{ maxWidth: 120 }}><Button variant="ghost" onClick={() => setEdit(null)}>Cancel</Button></div>
+      </div>
+    </Card>
+  )
+
+  return (
+    <div style={{ display: 'grid', gap: 14 }}>
+      <Card>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div><div style={{ fontWeight: 800, color: T.ink }}>Framework Library — AI Learning Engine</div><p style={{ fontSize: 13.5, color: T.sub, margin: '4px 0 0' }}>Teach the AI your methodology. Active frameworks are injected into every matching call review, so coaching is based on your business, not generic best practice.</p></div>
+          <div style={{ marginLeft: 'auto', maxWidth: 150 }}><Button onClick={() => setEdit(blank)}>+ New</Button></div>
+        </div>
+      </Card>
+      {loading && !data ? <div className="skeleton" style={{ height: 160, borderRadius: 12 }} /> :
+        (data?.frameworks || []).length === 0 ? <EmptyState title="No frameworks yet" hint="Add your DPC framework, playbooks, scripts and SOPs." icon="📚" /> :
+        <div style={{ display: 'grid', gap: 8 }}>
+          {data.frameworks.map((f: any) => (
+            <Card key={f.id} pad={16}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, color: T.ink }}>{f.name} <span style={{ fontSize: 11, color: T.muted, fontWeight: 600 }}>v{f.version}</span></div>
+                  <div style={{ fontSize: 12.5, color: T.muted, marginTop: 2 }}>{f.kind} · {(f.meeting_types || []).length ? (f.meeting_types).map((t: string) => TYPE_LABEL[t] || t).join(', ') : 'all meeting types'}</div>
+                </div>
+                <Badge text={f.active ? 'active' : 'archived'} color={f.active ? '#16a34a' : T.muted} />
+                <button onClick={() => setEdit({ id: f.id, name: f.name, kind: f.kind, body: f.body, applies: (f.meeting_types || []).join(', '), active: f.active })} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '6px 12px' }}>Edit</button>
+                {f.active && <button onClick={() => archive(f.id)} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: '#dc2626', padding: '6px 12px' }}>Archive</button>}
+              </div>
+            </Card>
+          ))}
+        </div>}
     </div>
   )
 }

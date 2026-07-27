@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, MEETING_TYPES } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -27,6 +27,12 @@ export async function GET(req: NextRequest) {
       const id = url.searchParams.get('id') || ''
       const { data } = await sb.from('ci_meetings').select('*').eq('id', id).maybeSingle()
       return NextResponse.json({ meeting: data })
+    }
+    if (view === 'frameworks') {
+      return NextResponse.json({ frameworks: await listFrameworks(false) })
+    }
+    if (view === 'insights') {
+      return NextResponse.json(await executiveInsights())
     }
     if (view === 'profiles') {
       const { data } = await sb.from('ci_customer_profiles').select('*').order('health_score', { ascending: true }).limit(300)
@@ -131,6 +137,14 @@ export async function POST(req: NextRequest) {
     if (action === 'sync_fathom') {
       const r = await importFathom(Number(body?.since_days) || 30)
       return NextResponse.json(r)
+    }
+
+    if (action === 'save_framework') {
+      const r = await upsertFramework({ id: body?.id, name: body?.name, kind: body?.kind, body: body?.body, meeting_types: body?.meeting_types, active: body?.active, created_by: actor })
+      return NextResponse.json(r)
+    }
+    if (action === 'delete_framework') {
+      return NextResponse.json(await deleteFramework(String(body?.id || '')))
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

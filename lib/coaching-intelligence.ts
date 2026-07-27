@@ -123,10 +123,15 @@ export async function analyzeMeeting(meetingId: string): Promise<{ ok: boolean; 
   if (transcript.length < 40) return { ok: false, error: 'Transcript is too short to analyze' }
 
   const { system, shape } = analysisPrompt(m.meeting_type)
+  // AI Learning Engine: prioritize the organization's own methodology.
+  const methodology = await frameworksFor(m.meeting_type)
+  const fullSystem = methodology
+    ? `${system}\n\n══ YOUR ORGANIZATION'S METHODOLOGY (AUTHORITATIVE — prioritize this over generic best practice, and name which framework informed each judgement) ══\n${methodology}`
+    : system
   const res = await ai().messages.create({
     model: MODEL,
     max_tokens: 3500,
-    system,
+    system: fullSystem,
     messages: [{
       role: 'user',
       content: `MEETING: ${m.title || MEETING_TYPE_LABEL[m.meeting_type]} · Customer: ${m.contact_name || m.contact_email || 'unknown'}\n\nTRANSCRIPT:\n${transcript.slice(0, 45000)}\n\nReturn ONLY valid JSON in exactly this shape (no markdown, no prose):\n${shape}`,
@@ -164,6 +169,73 @@ export async function analyzeMeeting(meetingId: string): Promise<{ ok: boolean; 
   // Keep the customer profile evolving as new analyzed calls land.
   if (m.contact_key) buildCustomerProfile(m.contact_key).catch(() => {})
   return { ok: true }
+}
+
+// ── AI LEARNING ENGINE / FRAMEWORK LIBRARY ─────────────────
+export interface FrameworkInput { id?: string; name: string; kind?: string; body: string; meeting_types?: string[]; active?: boolean; created_by?: string }
+
+export async function listFrameworks(activeOnly = false) {
+  const sb = getSupabaseAdmin()
+  let q = sb.from('ci_frameworks').select('*').order('updated_at', { ascending: false })
+  if (activeOnly) q = q.eq('active', true)
+  const { data } = await q
+  return data || []
+}
+
+export async function upsertFramework(f: FrameworkInput) {
+  const sb = getSupabaseAdmin()
+  const row: Record<string, unknown> = {
+    name: f.name, kind: f.kind || 'framework', body: f.body,
+    meeting_types: f.meeting_types || [], active: f.active !== false, updated_at: new Date().toISOString(),
+  }
+  let id = f.id
+  if (id) {
+    const { data: cur } = await sb.from('ci_frameworks').select('version').eq('id', id).maybeSingle()
+    row.version = (Number(cur?.version) || 1) + 1
+    await sb.from('ci_frameworks').update(row).eq('id', id)
+  } else {
+    row.created_by = f.created_by || null
+    const { data } = await sb.from('ci_frameworks').insert(row).select('id').single()
+    id = data?.id as string
+  }
+  // Index the methodology into Business Memory so Command AI knows it too.
+  recordMemory({
+    memory_type: 'playbook', title: `Methodology: ${f.name}`, summary: `${f.kind || 'framework'} used by AI Coaching Intelligence`,
+    content: f.body.slice(0, 8000), source: 'coaching_intelligence_framework', source_id: id,
+    topics: ['methodology', 'coaching_intelligence', ...(f.meeting_types || [])], importance: 4,
+  }).catch(() => {})
+  return { ok: true, id }
+}
+
+export async function deleteFramework(id: string) {
+  await getSupabaseAdmin().from('ci_frameworks').update({ active: false, updated_at: new Date().toISOString() }).eq('id', id)
+  return { ok: true }
+}
+
+// Concatenate the active frameworks that apply to a meeting type.
+async function frameworksFor(type: string): Promise<string> {
+  const sb = getSupabaseAdmin()
+  const { data } = await sb.from('ci_frameworks').select('name, kind, body, meeting_types').eq('active', true)
+  const rows = (data || []).filter((f) => {
+    const mt = (f.meeting_types || []) as string[]
+    return mt.length === 0 || mt.includes('*') || mt.includes(type)
+  })
+  return rows.map((f) => `### ${f.name} (${f.kind})\n${f.body}`).join('\n\n').slice(0, 12000)
+}
+
+// ── EXECUTIVE INSIGHTS (proactive cross-customer briefing) ──
+export async function executiveInsights(): Promise<{ insights: string[] }> {
+  const portfolio = await coachingPortfolio()
+  if ((portfolio.totals as { analyzed?: number })?.analyzed === 0) return { insights: [] }
+  const res = await ai().messages.create({
+    model: MODEL,
+    max_tokens: 900,
+    system: 'You are a Chief Revenue / Customer Success Officer writing this week\'s executive briefing for a coaching/consulting business. From the portfolio data, surface 4-6 ACTIONABLE, specific insights (not generic stats), each one sentence, in the style of: "Your discovery calls averaged 82/100 — the most common missed question was the decision timeline." Ground every insight in the numbers provided. Output valid JSON only.',
+    messages: [{ role: 'user', content: `PORTFOLIO DATA:\n${JSON.stringify(portfolio).slice(0, 12000)}\n\nReturn ONLY: {"insights": ["...", "..."]}` }],
+  })
+  const text = res.content[0]?.type === 'text' ? res.content[0].text : ''
+  const p = parseJson<{ insights: string[] }>(text)
+  return { insights: Array.isArray(p?.insights) ? p!.insights : [] }
 }
 
 // Portfolio-level aggregation that powers Command AI cross-customer questions

@@ -914,6 +914,11 @@ const CSS = `
   .ts-mini-guarantee{flex-direction:column;gap:12px}
   .ts-quote p{font-size:1.2rem}
   .ts-trustrow{gap:12px;font-size:.76rem}
+  /* Widen the checkout so card details are comfortable to enter on phones */
+  .ts-checkout{padding-left:14px;padding-right:14px}
+  .ts-checkout__right{max-width:none}
+  .ts-price-card{padding:24px 14px 20px}
+  .ts-whop{max-width:none}
 }
 
 /* Very small phones */

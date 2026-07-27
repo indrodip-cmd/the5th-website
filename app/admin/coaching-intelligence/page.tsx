@@ -98,9 +98,30 @@ function Dashboard({ onCustomer }: { onCustomer: (k: string) => void }) {
 // ── Meeting Intelligence (ingest + list) ───────────────────
 function MeetingIntelligence({ onOpen }: { onOpen: (id: string) => void }) {
   const { data, loading, reload } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=meetings')
-  const [f, setF] = useState({ title: '', meeting_type: 'sales_call', contact_name: '', contact_email: '', meeting_date: '', transcript: '' })
+  const [f, setF] = useState({ title: '', meeting_type: 'sales_call', contact_name: '', contact_email: '', meeting_date: '', transcript: '', consent: true })
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
+  const [uploading, setUploading] = useState(false)
+
+  const onFile = async (file: File) => {
+    const isText = /\.(txt|md|vtt|srt)$/i.test(file.name) || file.type.startsWith('text')
+    if (isText) {
+      const raw = await file.text()
+      const cleaned = raw.replace(/\r/g, '').replace(/^\d+\s*$/gm, '').replace(/^[\d:.,]+\s*-->\s*[\d:.,]+.*$/gm, '').replace(/^WEBVTT.*$/gm, '').replace(/\n{3,}/g, '\n\n').trim()
+      setF((p) => ({ ...p, transcript: cleaned, title: p.title || file.name.replace(/\.[^.]+$/, '') }))
+      setMsg('Loaded transcript — review and ingest.')
+      return
+    }
+    setUploading(true); setMsg('Transcribing recording (this can take a minute)…')
+    try {
+      const fd = new FormData(); fd.append('file', file)
+      const r = await fetch('/api/admin/coaching-intelligence/transcribe', { method: 'POST', credentials: 'include', body: fd })
+      const d = await r.json()
+      if (r.ok && d.text) { setF((p) => ({ ...p, transcript: d.text, title: p.title || file.name.replace(/\.[^.]+$/, '') })); setMsg('Transcribed — review and ingest.') }
+      else setMsg(d.error || 'Transcription failed.')
+    } catch { setMsg('Upload failed.') }
+    setUploading(false)
+  }
 
   const ingest = async () => {
     if (f.transcript.trim().length < 40) { setMsg('Paste a fuller transcript first.'); return }
@@ -122,7 +143,17 @@ function MeetingIntelligence({ onOpen }: { onOpen: (id: string) => void }) {
           <Field label="Customer email"><Input value={f.contact_email} onChange={(e) => setF({ ...f, contact_email: e.target.value })} placeholder="jane@co.com" /></Field>
           <Field label="Meeting date"><Input type="date" value={f.meeting_date} onChange={(e) => setF({ ...f, meeting_date: e.target.value })} /></Field>
         </div>
-        <Field label="Transcript"><Textarea rows={6} value={f.transcript} onChange={(e) => setF({ ...f, transcript: e.target.value })} placeholder="Paste the full transcript (from Fathom, Fireflies, Otter, Zoom, etc.)…" /></Field>
+        <Field label="Transcript"><Textarea rows={6} value={f.transcript} onChange={(e) => setF({ ...f, transcript: e.target.value })} placeholder="Paste the transcript, or upload a recording / transcript file below…" /></Field>
+        <div style={{ marginTop: 10 }}>
+          <label className="tab-btn" style={{ display: 'inline-block', background: '#fff', border: `1px dashed ${T.border}`, color: T.sub, cursor: 'pointer' }}>
+            {uploading ? 'Transcribing…' : '⬆ Upload recording (audio/video) or transcript file (.txt/.vtt/.srt)'}
+            <input type="file" accept="audio/*,video/*,.txt,.md,.vtt,.srt" disabled={uploading} style={{ display: 'none' }} onChange={(e) => { const file = e.target.files?.[0]; if (file) onFile(file); e.currentTarget.value = '' }} />
+          </label>
+        </div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: T.sub, marginTop: 12 }}>
+          <input type="checkbox" checked={f.consent} onChange={(e) => setF({ ...f, consent: e.target.checked })} />
+          I have consent to store and analyze this recording
+        </label>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12 }}>
           <div style={{ maxWidth: 220 }}><Button onClick={ingest} disabled={busy}>{busy ? 'Analyzing…' : 'Ingest & analyze'}</Button></div>
           {msg && <span style={{ fontSize: 13, color: T.sub }}>{msg}</span>}
@@ -166,6 +197,8 @@ function ReviewDetail({ id, onBack }: { id: string; onBack: () => void }) {
   const m = data?.meeting
   const a = m?.analysis || {}
   const reanalyze = async () => { setBusy(true); await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'analyze', id }); setBusy(false); reload() }
+  const [act, setAct] = useState('')
+  const doAction = async (action: string) => { setAct('Working…'); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action, id }); setAct(r?.ok ? (action === 'send_followup' ? 'Follow-up email sent ✓' : 'CRM task created ✓') : (r?.error || 'Failed')) }
   if (loading && !data) return <div className="skeleton" style={{ height: 300, borderRadius: 14 }} />
   if (!m) return <EmptyState title="Not found" icon="✦" />
   const scores = (m.scores || {}) as Record<string, number>
@@ -180,6 +213,14 @@ function ReviewDetail({ id, onBack }: { id: string; onBack: () => void }) {
         <div style={{ maxWidth: 120, marginLeft: typeof a.overall_score === 'number' ? 0 : 'auto' }}><Button variant="ghost" onClick={() => window.open(`/api/admin/coaching-intelligence?view=report&kind=meeting&id=${id}`, '_blank')}>Export PDF</Button></div>
         <div style={{ maxWidth: 130 }}><Button variant="ghost" onClick={reanalyze} disabled={busy}>{busy ? '…' : 'Re-analyze'}</Button></div>
       </div>
+      {m.status === 'analyzed' && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 12.5, fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em' }}>Actions</span>
+          <button onClick={() => doAction('create_task')} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '7px 14px' }}>✓ Create CRM task</button>
+          <button onClick={() => doAction('send_followup')} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: T.sub, padding: '7px 14px' }}>✉ Send follow-up email</button>
+          {act && <span style={{ fontSize: 13, color: act.includes('✓') ? '#16a34a' : T.sub }}>{act}</span>}
+        </div>
+      )}
       {m.status !== 'analyzed' ? <EmptyState title="Not analyzed yet" hint="Click Re-analyze to run the AI review." icon="🧠" /> : (
         <>
           {a.executive_summary && <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Executive summary</div><p style={{ color: T.sub, lineHeight: 1.6, fontSize: 14.5 }}>{a.executive_summary}</p>{a.why_outcome && <p style={{ color: T.sub, lineHeight: 1.6, fontSize: 14, marginTop: 10 }}><b style={{ color: T.ink }}>Why this outcome: </b>{a.why_outcome}</p>}</Card>}
@@ -362,8 +403,9 @@ function SettingsTab() {
           {msg && <span style={{ fontSize: 13, color: T.sub }}>{msg}</span>}
         </div>
       </Card>
+      <Security />
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Security & access</div>
-        <p style={{ fontSize: 13.5, color: T.sub, lineHeight: 1.6 }}>This module is admin-only and hidden behind the <b>coaching_intelligence</b> feature flag until you release it. All API routes are cookie-authed to admins, data is stored in your Supabase (encrypted at rest) and served over TLS. Consent and retention controls for imported recordings are on the roadmap.</p>
+        <p style={{ fontSize: 13.5, color: T.sub, lineHeight: 1.6 }}>This module is admin-only and hidden behind the <b>coaching_intelligence</b> feature flag until you release it. All API routes are cookie-authed to admins with role-based permissions (below), every meaningful action is audit-logged, data is stored in your Supabase (encrypted at rest) and served over TLS. AI-generated insights are labelled and always quote the source transcript as evidence.</p>
       </Card>
     </div>
   )
@@ -608,6 +650,80 @@ function Rubrics() {
             </Card>
           ))}
         </div>}
+    </div>
+  )
+}
+
+// ── Security & Governance (RBAC + audit + retention/consent) ──
+const ROLES = ['owner', 'manager', 'reviewer', 'viewer']
+function Security() {
+  const { data: me } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=me')
+  const caps: string[] = me?.caps || []
+  const role: string = me?.role || 'viewer'
+  const canRoles = caps.includes('manage_roles'); const canSettings = caps.includes('manage_settings')
+  const roles = useAdminFetch<any>(canRoles ? '/api/admin/coaching-intelligence?view=roles' : null)
+  const audit = useAdminFetch<any>(canSettings ? '/api/admin/coaching-intelligence?view=audit' : null)
+  const [nr, setNr] = useState({ email: '', role: 'reviewer' })
+  const [set, setSet] = useState<{ retention_days: number; consent_required: boolean } | null>(null)
+  const s = set || me?.settings || { retention_days: 0, consent_required: false }
+  const addRole = async () => { if (!nr.email.trim()) return; await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'set_role', email: nr.email, role: nr.role }); setNr({ email: '', role: 'reviewer' }); roles.reload() }
+  const rmRole = async (email: string) => { await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'remove_role', email }); roles.reload() }
+  const saveSettings = async (patch: any) => { const next = { ...s, ...patch }; setSet(next); await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'update_settings', ...next }) }
+  const purge = async () => { const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'apply_retention' }); alert(r?.ok ? `Purged ${r.purged} old records.` : 'Failed') }
+
+  return (
+    <div style={{ display: 'grid', gap: 14 }}>
+      <Card>
+        <div style={{ fontWeight: 800, color: T.ink, marginBottom: 4 }}>Access control</div>
+        <p style={{ fontSize: 13, color: T.sub, marginBottom: 12 }}>Your role: <b style={{ color: T.ink }}>{role}</b>. Roles: owner (full), manager (content, exports, actions), reviewer (analyze & practice), viewer (read-only).</p>
+        {canRoles ? (
+          <>
+            {(roles.data?.roles || []).map((r: any) => (
+              <div key={r.email} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: `1px solid ${T.border}` }}>
+                <span style={{ flex: 1, fontSize: 13.5, color: T.ink }}>{r.email}</span>
+                <Badge text={r.role} color={T.green2} />
+                <button onClick={() => rmRole(r.email)} style={{ border: 'none', background: 'none', color: '#dc2626', cursor: 'pointer', fontSize: 15 }}>×</button>
+              </div>
+            ))}
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <input value={nr.email} onChange={(e) => setNr({ ...nr, email: e.target.value })} placeholder="admin@email.com" style={{ flex: 1, padding: '9px 12px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+              <select value={nr.role} onChange={(e) => setNr({ ...nr, role: e.target.value })} style={{ padding: '9px 12px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }}>{ROLES.map((r) => <option key={r} value={r}>{r}</option>)}</select>
+              <div style={{ maxWidth: 110 }}><Button onClick={addRole}>Assign</Button></div>
+            </div>
+          </>
+        ) : <p style={{ fontSize: 13, color: T.muted }}>Only an owner can manage roles.</p>}
+      </Card>
+
+      {canSettings && (
+        <Card>
+          <div style={{ fontWeight: 800, color: T.ink, marginBottom: 10 }}>Data governance</div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: T.sub, marginBottom: 12 }}>
+            <input type="checkbox" checked={s.consent_required} onChange={(e) => saveSettings({ consent_required: e.target.checked })} />
+            Require consent confirmation before ingesting any recording
+          </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 14, color: T.sub }}>Retention: delete meetings older than</span>
+            <input type="number" min={0} value={s.retention_days} onChange={(e) => saveSettings({ retention_days: Number(e.target.value) || 0 })} style={{ width: 90, padding: '8px 10px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+            <span style={{ fontSize: 14, color: T.sub }}>days (0 = keep forever)</span>
+            <div style={{ maxWidth: 150 }}><Button variant="ghost" onClick={purge}>Apply retention now</Button></div>
+          </div>
+        </Card>
+      )}
+
+      {canSettings && (
+        <Card>
+          <div style={{ fontWeight: 800, color: T.ink, marginBottom: 10 }}>Audit log</div>
+          {(audit.data?.audit || []).length === 0 ? <div style={{ fontSize: 13, color: T.muted }}>No activity yet.</div> :
+            <div style={{ maxHeight: 300, overflowY: 'auto' }}>{audit.data.audit.map((a: any) => (
+              <div key={a.id} style={{ display: 'flex', gap: 10, fontSize: 12.5, color: T.sub, padding: '5px 0', borderBottom: `1px solid ${T.border}` }}>
+                <span style={{ color: T.muted, whiteSpace: 'nowrap' }}>{String(a.at).slice(0, 16).replace('T', ' ')}</span>
+                <span style={{ fontWeight: 700, color: T.ink }}>{a.action}</span>
+                <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.target_type || ''} {a.target_id || ''}</span>
+                <span style={{ color: T.muted }}>{a.actor}</span>
+              </div>
+            ))}</div>}
+        </Card>
+      )}
     </div>
   )
 }

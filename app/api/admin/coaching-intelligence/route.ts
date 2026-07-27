@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, sendFollowupFromMeeting, createTaskFromMeeting, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { roleOf, can, capsFor, audit, listRoles, setRole, removeRole, getSettings, updateSettings, applyRetention, listAudit, type Cap } from '@/lib/coaching-security'
 
 export const maxDuration = 120
 
@@ -12,8 +13,27 @@ export async function GET(req: NextRequest) {
   const sb = getSupabaseAdmin()
   const url = new URL(req.url)
   const view = url.searchParams.get('view') || 'dashboard'
+  const role = await roleOf(actor)
 
   try {
+    if (view === 'me') {
+      return NextResponse.json({ actor, role, caps: capsFor(role), settings: await getSettings() })
+    }
+    if (view === 'roles') {
+      if (!can(role, 'manage_roles')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return NextResponse.json({ roles: await listRoles() })
+    }
+    if (view === 'audit') {
+      if (!can(role, 'manage_settings')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      return NextResponse.json({ audit: await listAudit(300) })
+    }
+    if (view === 'settings') {
+      return NextResponse.json(await getSettings())
+    }
+    if ((view === 'report' || view === 'export_csv') && !can(role, 'export')) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (view === 'report') audit(actor, 'export_report', url.searchParams.get('kind') || 'meeting', url.searchParams.get('id') || url.searchParams.get('key') || '').catch(() => {})
     if (view === 'profile') {
       const key = url.searchParams.get('key') || ''
       const [{ data: profile }, { data: meetings }, { data: docs }] = await Promise.all([
@@ -107,10 +127,26 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}))
     const action = String(body?.action || '')
+    const role = await roleOf(actor)
+    const CAP: Record<string, Cap> = {
+      ingest: 'ingest', analyze: 'analyze', classify: 'analyze', add_document: 'ingest', rebuild_profile: 'analyze', ask: 'ask',
+      sync_fathom: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
+      roleplay_start: 'roleplay', roleplay_reply: 'roleplay', roleplay_score: 'roleplay', save_rubric: 'manage_content', delete_rubric: 'manage_content',
+      send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention',
+    }
+    const need = CAP[action]
+    if (need && !can(role, need)) return NextResponse.json({ error: `Your role (${role}) can't perform this action.` }, { status: 403 })
+
+    if (action === 'set_role') { const r = await setRole(String(body?.email || ''), body?.role, actor); await audit(actor, 'set_role', 'role', body?.email, { role: body?.role }); return NextResponse.json(r) }
+    if (action === 'remove_role') { const r = await removeRole(String(body?.email || '')); await audit(actor, 'remove_role', 'role', body?.email); return NextResponse.json(r) }
+    if (action === 'update_settings') { const r = await updateSettings({ retention_days: body?.retention_days, consent_required: body?.consent_required }, actor); await audit(actor, 'update_settings', 'settings', '1', body); return NextResponse.json(r) }
+    if (action === 'apply_retention') { const r = await applyRetention(); await audit(actor, 'apply_retention', 'settings', '1', { purged: r.purged }); return NextResponse.json(r) }
 
     if (action === 'ingest') {
       const transcript = String(body?.transcript || '').trim()
       if (transcript.length < 40) return NextResponse.json({ error: 'Paste a longer transcript.' }, { status: 400 })
+      const settings = await getSettings()
+      if (settings.consent_required && body?.consent === false) return NextResponse.json({ error: 'Consent is required to ingest recordings (governance policy). Confirm consent to proceed.' }, { status: 400 })
       const type = MEETING_TYPES.includes(body?.meeting_type) ? body.meeting_type : 'other'
       const key = contactKeyFrom(body?.contact_email, body?.contact_name)
       const { data, error } = await sb.from('ci_meetings').insert({
@@ -125,9 +161,11 @@ export async function POST(req: NextRequest) {
         participants: body?.participants || null,
         recording_url: body?.recording_url || null,
         transcript,
+        consent: body?.consent !== false,
         created_by: actor,
       }).select('id').single()
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      audit(actor, 'ingest', 'meeting', data.id as string, { type, provider: body?.provider || 'manual' }).catch(() => {})
       // Analyze immediately (best-effort; the row exists either way).
       const r = await analyzeMeeting(data.id as string)
       return NextResponse.json({ ok: true, id: data.id, analyzed: r.ok, analyzeError: r.error })

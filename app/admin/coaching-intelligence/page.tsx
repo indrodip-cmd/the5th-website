@@ -2,7 +2,7 @@
 /* AI Coaching Intelligence — admin-only Business Intelligence module.
    Connect meetings → ingest transcripts → classify → AI evaluation (DPC + type
    specific) → living customer profiles + health → AI Success Coach. */
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { T, Card, PageHeader, Button, Input, Textarea, Select, Field, EmptyState, useAdminFetch, adminSend } from '@/components/admin/ui'
 
 const TYPES = [
@@ -447,7 +447,8 @@ function SettingsTab() {
   const webhookUrl = typeof window !== 'undefined' ? `${window.location.origin}/api/coaching-intelligence/webhook` : '/api/coaching-intelligence/webhook'
   return (
     <div style={{ display: 'grid', gap: 14 }}>
-      <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Connect your apps</div>
+      <Connections />
+      <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Import your calls</div>
         <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Click a button to bring your calls in. We&apos;ll transcribe and analyze them for you automatically. You can also just paste or upload a recording under Meeting Intelligence, no setup needed.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10 }}>
           {providers.map(([p, status]) => <div key={p} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', border: `1px solid ${T.border}`, borderRadius: 12 }}><span style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{p}</span><Badge text={status} color={status === 'available' ? '#16a34a' : T.green2} /></div>)}
@@ -787,6 +788,66 @@ function Security() {
         </Card>
       )}
     </div>
+  )
+}
+
+// ── Connections hub (one-click connect apps) ───────────────
+const CAT_LABEL: Record<string, string> = { calls: 'Call recording', calendar: 'Calendars', payments: 'Payments' }
+const APP_ICON: Record<string, string> = { fathom: '🎧', fireflies: '🔥', zoom: '📹', google_calendar: '📆', calendly: '🗓️', cal_com: '📅', stripe: '💳', whop: '🛍️', paypal: '🅿️' }
+function Connections() {
+  const { data, loading, reload } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=connections')
+  const [keyFor, setKeyFor] = useState<string | null>(null); const [keyVal, setKeyVal] = useState(''); const [busy, setBusy] = useState('')
+  const [flash, setFlash] = useState('')
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('connected')) { setFlash(`Connected ${p.get('connected')} ✓`); reload() }
+    else if (p.get('connect_error')) setFlash(p.get('connect_error') || '')
+    if (p.get('connected') || p.get('connect_error')) window.history.replaceState({}, '', window.location.pathname)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const conns = (data?.connections || []) as any[]
+  const connect = (c: any) => { if (c.method === 'oauth') { window.location.href = `/api/admin/coaching-intelligence/oauth/${c.key}` } else { setKeyFor(c.key); setKeyVal('') } }
+  const saveKey = async (key: string) => { setBusy(key); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'save_connection', provider: key, api_key: keyVal }); setBusy(''); if (r?.ok) { setKeyFor(null); reload() } else setFlash(r?.error || 'Failed') }
+  const disc = async (key: string) => { await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'disconnect_app', provider: key }); reload() }
+
+  return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 4 }}>Connections</div>
+      <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 12 }}>Connect the apps you already use, one click each. Your calls, calendar and payments flow into Coaching Intelligence automatically.</p>
+      {flash && <div style={{ fontSize: 13, color: flash.includes('✓') ? '#16a34a' : '#dc2626', marginBottom: 12 }}>{flash}</div>}
+      {loading && !data ? <div className="skeleton" style={{ height: 180, borderRadius: 12 }} /> : (
+        ['calls', 'calendar', 'payments'].map((cat) => (
+          <div key={cat} style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11.5, fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8 }}>{CAT_LABEL[cat]}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 10 }}>
+              {conns.filter((c) => c.category === cat).map((c) => (
+                <div key={c.key} style={{ border: `1px solid ${T.border}`, borderRadius: 12, padding: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                    <span style={{ fontSize: 20 }}>{APP_ICON[c.key] || '🔌'}</span>
+                    <span style={{ fontWeight: 700, color: T.ink, flex: 1 }}>{c.label}</span>
+                    {c.status === 'connected'
+                      ? <Badge text="connected" color="#16a34a" />
+                      : c.method === 'oauth' && !c.configured ? <Badge text="setup needed" color={T.muted} /> : null}
+                  </div>
+                  {keyFor === c.key ? (
+                    <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+                      <input value={keyVal} onChange={(e) => setKeyVal(e.target.value)} placeholder={c.keyHint || 'Paste key'} style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: `1px solid ${T.border}`, fontSize: 13, fontFamily: 'inherit' }} />
+                      <button onClick={() => saveKey(c.key)} disabled={busy === c.key} className="tab-btn" style={{ background: T.green2, color: '#fff', border: 'none', padding: '7px 12px' }}>{busy === c.key ? '…' : 'Save'}</button>
+                    </div>
+                  ) : (
+                    <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                      {c.status === 'connected'
+                        ? <button onClick={() => disc(c.key)} className="tab-btn" style={{ background: '#fff', border: `1px solid ${T.border}`, color: '#dc2626', padding: '7px 14px' }}>Disconnect</button>
+                        : <button onClick={() => connect(c)} className="tab-btn" style={{ background: T.green2, color: '#fff', border: 'none', padding: '7px 16px' }}>Connect</button>}
+                    </div>
+                  )}
+                  {c.method === 'oauth' && !c.configured && c.status !== 'connected' && <div style={{ fontSize: 11, color: T.muted, marginTop: 6 }}>Your tech team adds this app&apos;s keys once, then it&apos;s one click.</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      )}
+    </Card>
   )
 }
 

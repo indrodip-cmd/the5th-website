@@ -3,6 +3,7 @@ import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, renderMeetingMarkdown, renderCustomerMarkdown, sendFollowupFromMeeting, createTaskFromMeeting, importFireflies, addClient, MEETING_TYPES } from '@/lib/coaching-intelligence'
 import { roleOf, can, capsFor, audit, listRoles, setRole, removeRole, getSettings, updateSettings, applyRetention, listAudit, type Cap } from '@/lib/coaching-security'
+import { listConnections, saveApiKey, disconnect } from '@/lib/coaching-connections'
 
 export const maxDuration = 120
 
@@ -29,6 +30,9 @@ export async function GET(req: NextRequest) {
     }
     if (view === 'settings') {
       return NextResponse.json(await getSettings())
+    }
+    if (view === 'connections') {
+      return NextResponse.json({ connections: await listConnections() })
     }
     if (view === 'file') {
       const { data: doc } = await sb.from('ci_documents').select('url, name').eq('id', url.searchParams.get('id') || '').maybeSingle()
@@ -144,6 +148,7 @@ export async function POST(req: NextRequest) {
       sync_fathom: 'fathom', sync_fireflies: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
       roleplay_start: 'roleplay', roleplay_reply: 'roleplay', roleplay_score: 'roleplay', save_rubric: 'manage_content', delete_rubric: 'manage_content',
       send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention', add_client: 'ingest',
+      save_connection: 'fathom', disconnect_app: 'fathom',
     }
     const need = CAP[action]
     if (need && !can(role, need)) return NextResponse.json({ error: `Your role (${role}) can't perform this action.` }, { status: 403 })
@@ -193,6 +198,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
+    if (action === 'save_connection') {
+      const r = await saveApiKey(String(body?.provider || ''), String(body?.api_key || ''), actor)
+      if (r.ok) audit(actor, 'connect_app', 'connection', body?.provider).catch(() => {})
+      return NextResponse.json(r, { status: r.ok ? 200 : 400 })
+    }
+    if (action === 'disconnect_app') {
+      const r = await disconnect(String(body?.provider || ''))
+      audit(actor, 'disconnect_app', 'connection', body?.provider).catch(() => {})
+      return NextResponse.json(r)
+    }
     if (action === 'add_client') {
       const r = await addClient(String(body?.name || ''), String(body?.email || ''))
       if (r.ok) audit(actor, 'add_client', 'client', r.key).catch(() => {})

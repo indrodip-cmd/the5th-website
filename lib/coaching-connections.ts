@@ -53,6 +53,54 @@ export async function disconnect(provider: string) {
   return { ok: true }
 }
 
+// Return a valid access token, refreshing it if expired.
+export async function getAccessToken(provider: string): Promise<string | null> {
+  const c = await getConnection(provider)
+  if (!c || c.method !== 'oauth' || c.status !== 'connected') return null
+  const fresh = !c.expires_at || new Date(c.expires_at as string).getTime() - 60000 > Date.now()
+  if (c.access_token && fresh) return c.access_token as string
+  if (!c.refresh_token) return (c.access_token as string) || null
+  const p = providerByKey(provider)
+  const clientId = p?.clientIdEnv ? process.env[p.clientIdEnv] : undefined
+  const clientSecret = p?.clientSecretEnv ? process.env[p.clientSecretEnv] : undefined
+  if (!p?.tokenUrl || !clientId || !clientSecret) return c.access_token as string
+  const res = await fetch(p.tokenUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}` },
+    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: c.refresh_token as string }),
+  })
+  const db = getSupabaseAdmin()
+  if (!res.ok) { await db.from('ci_connections').update({ status: 'error', updated_at: new Date().toISOString() }).eq('provider', provider); return null }
+  const t = await res.json().catch(() => ({}))
+  const expires = t.expires_in ? new Date(Date.now() + Number(t.expires_in) * 1000).toISOString() : null
+  await db.from('ci_connections').update({ access_token: t.access_token || c.access_token, refresh_token: t.refresh_token || c.refresh_token, expires_at: expires, updated_at: new Date().toISOString() }).eq('provider', provider)
+  return (t.access_token as string) || (c.access_token as string)
+}
+// Return a stored API key (falling back to an env var if given).
+export async function getApiKey(provider: string, envFallback?: string): Promise<string | null> {
+  const c = await getConnection(provider)
+  if (c?.api_key) return c.api_key as string
+  return envFallback ? process.env[envFallback] || null : null
+}
+
+// Live payments summary from connected payment providers (Stripe today).
+export async function paymentsSummary(): Promise<{ providers: Array<{ provider: string; count: number; total: number; currency: string }> }> {
+  const providers: Array<{ provider: string; count: number; total: number; currency: string }> = []
+  const stripeKey = await getApiKey('stripe', 'STRIPE_SECRET_KEY')
+  if (stripeKey) {
+    try {
+      const r = await fetch('https://api.stripe.com/v1/charges?limit=100', { headers: { Authorization: `Bearer ${stripeKey}` } })
+      if (r.ok) {
+        const d = await r.json()
+        const paid = (d.data || []).filter((c: Record<string, unknown>) => c.paid && !c.refunded)
+        const total = paid.reduce((s: number, c: Record<string, unknown>) => s + (Number(c.amount) || 0), 0)
+        providers.push({ provider: 'stripe', count: paid.length, total: Math.round(total) / 100, currency: (String(paid[0]?.currency || 'usd')).toUpperCase() })
+      }
+    } catch { /* best effort */ }
+  }
+  return { providers }
+}
+
 // OAuth: build the provider authorize URL.
 export function oauthAuthorizeUrl(provider: string, redirectUri: string, state: string): { url?: string; error?: string } {
   const p = providerByKey(provider)

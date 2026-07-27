@@ -6,6 +6,7 @@ import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
 import { resolveContact, createTask } from '@/lib/crm'
 import { sendMessage } from '@/lib/comm/engine'
+import { getAccessToken } from '@/lib/coaching-connections'
 
 // AI Coaching Intelligence engine (admin-only). Evaluates meetings with a
 // meeting-type-specific lens, builds a living customer profile + health score,
@@ -540,6 +541,32 @@ export async function ingestTranscript(input: {
   }
   if (id) analyzeMeeting(id).catch(() => {})
   return { ok: true, id }
+}
+
+// Zoom Cloud Recording auto-import. Uses the connected OAuth token, pulls
+// recordings + their transcript (VTT), and analyzes each.
+export async function importZoom(sinceDays = 30): Promise<{ ok: boolean; imported: number; analyzed: number; note?: string }> {
+  const token = await getAccessToken('zoom')
+  if (!token) return { ok: false, imported: 0, analyzed: 0, note: 'Connect Zoom first under Settings, Connections.' }
+  const from = new Date(Date.now() - sinceDays * 86400000).toISOString().slice(0, 10)
+  const r = await fetch(`https://api.zoom.us/v2/users/me/recordings?from=${from}&page_size=30`, { headers: { Authorization: `Bearer ${token}` } })
+  if (!r.ok) return { ok: false, imported: 0, analyzed: 0, note: `Zoom API error ${r.status}` }
+  const j = await r.json().catch(() => ({}))
+  const meetings = (j.meetings || []) as Array<Record<string, unknown>>
+  let imported = 0, analyzed = 0
+  for (const m of meetings) {
+    const files = (m.recording_files || []) as Array<Record<string, unknown>>
+    const tf = files.find((f) => f.file_type === 'TRANSCRIPT')
+    if (!tf?.download_url) continue
+    const dl = await fetch(`${tf.download_url}?access_token=${token}`)
+    if (!dl.ok) continue
+    const vtt = await dl.text()
+    const transcript = vtt.replace(/\r/g, '').replace(/^WEBVTT.*$/gm, '').replace(/^\d+\s*$/gm, '').replace(/^[\d:.]+\s*-->\s*[\d:.]+.*$/gm, '').replace(/\n{3,}/g, '\n\n').trim()
+    if (transcript.length < 40) continue
+    const res = await ingestTranscript({ transcript, title: (m.topic as string) || 'Zoom meeting', provider: 'zoom', external_id: String(m.uuid || m.id), meeting_date: m.start_time ? String(m.start_time).slice(0, 10) : undefined, meeting_type: 'sales_call', created_by: 'zoom-sync' })
+    if (res.ok) { imported++; analyzed++ }
+  }
+  return { ok: true, imported, analyzed }
 }
 
 // Fireflies.ai auto-import (GraphQL). Mirrors the Fathom importer.

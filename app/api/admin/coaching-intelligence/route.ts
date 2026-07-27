@@ -3,7 +3,8 @@ import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, renderMeetingMarkdown, renderCustomerMarkdown, sendFollowupFromMeeting, createTaskFromMeeting, importFireflies, addClient, MEETING_TYPES } from '@/lib/coaching-intelligence'
 import { roleOf, can, capsFor, audit, listRoles, setRole, removeRole, getSettings, updateSettings, applyRetention, listAudit, type Cap } from '@/lib/coaching-security'
-import { listConnections, saveApiKey, disconnect } from '@/lib/coaching-connections'
+import { listConnections, saveApiKey, disconnect, paymentsSummary } from '@/lib/coaching-connections'
+import { importZoom } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -33,6 +34,9 @@ export async function GET(req: NextRequest) {
     }
     if (view === 'connections') {
       return NextResponse.json({ connections: await listConnections() })
+    }
+    if (view === 'payments') {
+      return NextResponse.json(await paymentsSummary())
     }
     if (view === 'file') {
       const { data: doc } = await sb.from('ci_documents').select('url, name').eq('id', url.searchParams.get('id') || '').maybeSingle()
@@ -145,7 +149,7 @@ export async function POST(req: NextRequest) {
     const role = await roleOf(actor)
     const CAP: Record<string, Cap> = {
       ingest: 'ingest', analyze: 'analyze', classify: 'analyze', add_document: 'ingest', rebuild_profile: 'analyze', ask: 'ask',
-      sync_fathom: 'fathom', sync_fireflies: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
+      sync_fathom: 'fathom', sync_fireflies: 'fathom', sync_zoom: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
       roleplay_start: 'roleplay', roleplay_reply: 'roleplay', roleplay_score: 'roleplay', save_rubric: 'manage_content', delete_rubric: 'manage_content',
       send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention', add_client: 'ingest',
       save_connection: 'fathom', disconnect_app: 'fathom',
@@ -238,6 +242,11 @@ export async function POST(req: NextRequest) {
     if (action === 'sync_fireflies') {
       const r = await importFireflies(Number(body?.since_days) || 30)
       audit(actor, 'sync_fireflies', 'provider', 'fireflies', { imported: r.imported }).catch(() => {})
+      return NextResponse.json(r)
+    }
+    if (action === 'sync_zoom') {
+      const r = await importZoom(Number(body?.since_days) || 30)
+      audit(actor, 'sync_zoom', 'provider', 'zoom', { imported: r.imported }).catch(() => {})
       return NextResponse.json(r)
     }
 

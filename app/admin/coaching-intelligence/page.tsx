@@ -90,6 +90,7 @@ function Dashboard({ onCustomer }: { onCustomer: (k: string) => void }) {
           </div>
         </Card>
       )}
+      <PaymentsCard />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 14 }}>
         <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Average call scores</div>
           <Bar label="discovery" v={data?.avg_scores?.discovery} /><Bar label="listening" v={data?.avg_scores?.listening} />
@@ -474,6 +475,26 @@ function SettingsTab() {
   )
 }
 
+// ── Payments (live from connected Stripe) ──────────────────
+function PaymentsCard() {
+  const { data } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=payments')
+  const provs = data?.providers || []
+  if (provs.length === 0) return null
+  return (
+    <Card>
+      <div style={{ fontWeight: 800, color: T.ink, marginBottom: 12 }}>Payments (connected)</div>
+      <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
+        {provs.map((p: any) => (
+          <div key={p.provider}>
+            <div style={{ fontSize: 26, fontWeight: 800, color: '#16a34a' }}>{p.currency} {p.total.toLocaleString()}</div>
+            <div style={{ fontSize: 12, color: T.muted, textTransform: 'capitalize' }}>{p.provider} · {p.count} recent payments</div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  )
+}
+
 // ── Executive Insights (proactive AI briefing) ─────────────
 function ExecutiveInsights() {
   const [ins, setIns] = useState<string[] | null>(null); const [busy, setBusy] = useState(false)
@@ -805,7 +826,10 @@ function Connections() {
     if (p.get('connected') || p.get('connect_error')) window.history.replaceState({}, '', window.location.pathname)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const conns = (data?.connections || []) as any[]
+  const [syncing, setSyncing] = useState('')
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
   const connect = (c: any) => { if (c.method === 'oauth') { window.location.href = `/api/admin/coaching-intelligence/oauth/${c.key}` } else { setKeyFor(c.key); setKeyVal('') } }
+  const importCalls = async (key: string) => { const map: Record<string, string> = { fathom: 'sync_fathom', fireflies: 'sync_fireflies', zoom: 'sync_zoom' }; if (!map[key]) return; setSyncing(key); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: map[key], since_days: 30 }); setSyncing(''); setFlash(r?.ok ? `Imported ${r.imported} ${key} calls, analyzed ${r.analyzed}.` : (r?.note || 'Import failed.')) }
   const saveKey = async (key: string) => { setBusy(key); const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'save_connection', provider: key, api_key: keyVal }); setBusy(''); if (r?.ok) { setKeyFor(null); reload() } else setFlash(r?.error || 'Failed') }
   const disc = async (key: string) => { await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'disconnect_app', provider: key }); reload() }
 
@@ -840,7 +864,16 @@ function Connections() {
                         : <button onClick={() => connect(c)} className="tab-btn" style={{ background: T.green2, color: '#fff', border: 'none', padding: '7px 16px' }}>Connect</button>}
                     </div>
                   )}
-                  {c.method === 'oauth' && !c.configured && c.status !== 'connected' && <div style={{ fontSize: 11, color: T.muted, marginTop: 6 }}>Your tech team adds this app&apos;s keys once, then it&apos;s one click.</div>}
+                  {c.status === 'connected' && c.category === 'calls' && (
+                    <button onClick={() => importCalls(c.key)} disabled={syncing === c.key} className="tab-btn" style={{ marginTop: 8, background: '#fff', border: `1px solid ${T.border}`, color: T.green2, padding: '7px 14px' }}>{syncing === c.key ? 'Importing…' : 'Import calls'}</button>
+                  )}
+                  {c.method === 'oauth' && c.status !== 'connected' && (
+                    <div style={{ fontSize: 11, color: T.muted, marginTop: 8 }}>
+                      {!c.configured && <span>Your tech team adds this app&apos;s keys once. </span>}
+                      Redirect URL to allow in {c.label}:<br />
+                      <code style={{ color: T.green2, wordBreak: 'break-all' }}>{origin}/api/admin/coaching-intelligence/oauth/{c.key}/callback</code>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

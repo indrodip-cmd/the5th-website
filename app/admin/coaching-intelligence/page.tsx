@@ -275,12 +275,23 @@ function Reports() {
 // ── Settings (providers + module) ──────────────────────────
 function SettingsTab() {
   const providers = ['Fathom', 'Fireflies.ai', 'Grain', 'Otter.ai', 'Read.ai', 'Zoom Recording', 'Google Meet Recording', 'Manual / Video / Audio Upload']
+  const [busy, setBusy] = useState(false); const [msg, setMsg] = useState('')
+  const syncFathom = async () => {
+    setBusy(true); setMsg('Importing & analyzing recent Fathom calls…')
+    const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'sync_fathom', since_days: 30 })
+    setBusy(false)
+    setMsg(r?.ok ? `Imported ${r.imported}, analyzed ${r.analyzed}.` : (r?.note || 'Fathom import failed.'))
+  }
   return (
     <div style={{ display: 'grid', gap: 14 }}>
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Meeting providers</div>
-        <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Connect one or more providers to auto-import transcripts. Fathom uses the existing platform integration; others are on the roadmap. Manual transcript paste works today under Meeting Intelligence.</p>
+        <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Connect one or more providers to auto-import transcripts. Fathom auto-import is live (needs FATHOM_API_KEY); others are on the roadmap. Manual transcript paste works today under Meeting Intelligence.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10 }}>
           {providers.map((p) => <div key={p} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', border: `1px solid ${T.border}`, borderRadius: 12 }}><span style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{p}</span><Badge text={p === 'Fathom' ? 'available' : 'soon'} color={p === 'Fathom' ? '#16a34a' : T.muted} /></div>)}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 14 }}>
+          <div style={{ maxWidth: 220 }}><Button onClick={syncFathom} disabled={busy}>{busy ? 'Importing…' : 'Import from Fathom (30d)'}</Button></div>
+          {msg && <span style={{ fontSize: 13, color: T.sub }}>{msg}</span>}
         </div>
       </Card>
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Security & access</div>

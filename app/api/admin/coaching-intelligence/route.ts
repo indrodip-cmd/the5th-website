@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, MEETING_TYPES } from '@/lib/coaching-intelligence'
 
 export const maxDuration = 120
 
@@ -126,6 +126,11 @@ export async function POST(req: NextRequest) {
     if (action === 'ask') {
       const answer = await askSuccessCoach(String(body?.key || ''), String(body?.question || ''))
       return NextResponse.json({ answer })
+    }
+
+    if (action === 'sync_fathom') {
+      const r = await importFathom(Number(body?.since_days) || 30)
+      return NextResponse.json(r)
     }
 
     return NextResponse.json({ error: 'Unknown action' }, { status: 400 })

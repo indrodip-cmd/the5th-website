@@ -1,5 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { recordMemory } from '@/lib/memory/store'
+import { fathomConfigured, listRecent } from '@/lib/fathom'
 
 // AI Coaching Intelligence engine (admin-only). Evaluates meetings with a
 // meeting-type-specific lens, builds a living customer profile + health score,
@@ -143,9 +145,85 @@ export async function analyzeMeeting(meetingId: string): Promise<{ ok: boolean; 
     updated_at: new Date().toISOString(),
   }).eq('id', meetingId)
 
+  // Write the analysis through to Business Memory so Command AI can reason over
+  // it org-wide (idempotent via source + source_id).
+  const who = m.contact_name || m.contact_email || 'customer'
+  recordMemory({
+    memory_type: 'coaching',
+    title: `${MEETING_TYPE_LABEL[m.meeting_type] || 'Meeting'} — ${who}`,
+    summary: (parsed.executive_summary as string) || m.ai_summary || '',
+    content: JSON.stringify({ outcome: parsed.outcome, scores: parsed.scores, strengths: parsed.strengths, improvements: parsed.improvements }).slice(0, 8000),
+    source: 'coaching_intelligence',
+    source_id: meetingId,
+    entities: (m.contact_name || m.contact_email) ? [{ name: who, type: 'customer' }] : [],
+    topics: ['coaching_intelligence', m.meeting_type],
+    occurred_at: m.meeting_date || undefined,
+    importance: parsed.outcome === 'lost' ? 4 : 3,
+  }).catch(() => {})
+
   // Keep the customer profile evolving as new analyzed calls land.
   if (m.contact_key) buildCustomerProfile(m.contact_key).catch(() => {})
   return { ok: true }
+}
+
+// Portfolio-level aggregation that powers Command AI cross-customer questions
+// (churn risk, why discovery converts poorly, which techniques work, themes).
+export async function coachingPortfolio(): Promise<Record<string, unknown>> {
+  const sb = getSupabaseAdmin()
+  const [{ data: meetings }, { data: profiles }] = await Promise.all([
+    sb.from('ci_meetings').select('meeting_type, outcome, status, scores, analysis, contact_name, contact_key, meeting_date').eq('status', 'analyzed').order('meeting_date', { ascending: false }).limit(500),
+    sb.from('ci_customer_profiles').select('contact_key, name, health_score, engagement_score, success_probability, risk').limit(500),
+  ])
+  const mrows = meetings || []
+  const dims: Record<string, number[]> = {}
+  const improvementThemes: Record<string, number> = {}
+  let won = 0, lost = 0
+  const byType: Record<string, number> = {}
+  for (const m of mrows) {
+    byType[m.meeting_type] = (byType[m.meeting_type] || 0) + 1
+    if (m.outcome === 'won') won++; if (m.outcome === 'lost') lost++
+    const sc = (m.scores || {}) as Record<string, number>
+    for (const [k, v] of Object.entries(sc)) if (Number.isFinite(Number(v))) (dims[k] ||= []).push(Number(v))
+    const imps = ((m.analysis as Record<string, unknown>)?.improvements || []) as Array<{ point?: string }>
+    for (const im of imps.slice(0, 4)) { const key = (im.point || '').toLowerCase().slice(0, 60); if (key) improvementThemes[key] = (improvementThemes[key] || 0) + 1 }
+  }
+  const avg = (arr: number[]) => arr.length ? Math.round((arr.reduce((s, n) => s + n, 0) / arr.length) * 10) / 10 : null
+  const avg_scores = Object.fromEntries(Object.entries(dims).map(([k, v]) => [k, avg(v)]))
+  const topThemes = Object.entries(improvementThemes).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([point, n]) => ({ point, count: n }))
+  const atRisk = (profiles || []).filter((p) => p.risk === 'high' || (Number(p.health_score) || 100) < 45)
+    .map((p) => ({ customer: p.name || p.contact_key, health: p.health_score, risk: p.risk, success_probability: p.success_probability }))
+  return {
+    totals: { analyzed: mrows.length, customers: (profiles || []).length },
+    win_rate: won + lost ? Math.round((won / (won + lost)) * 100) : null, won, lost,
+    by_type: byType, avg_scores,
+    top_improvement_themes: topThemes,
+    customers_at_risk: atRisk,
+    recent: mrows.slice(0, 15).map((m) => ({ type: m.meeting_type, customer: m.contact_name || m.contact_key, outcome: m.outcome, date: m.meeting_date, summary: String((m.analysis as Record<string, unknown>)?.executive_summary || '').slice(0, 240) })),
+  }
+}
+
+// Auto-import recent Fathom recordings into the module and analyze them.
+export async function importFathom(sinceDays = 30): Promise<{ ok: boolean; imported: number; analyzed: number; note?: string }> {
+  if (!fathomConfigured()) return { ok: false, imported: 0, analyzed: 0, note: 'FATHOM_API_KEY is not configured.' }
+  const sb = getSupabaseAdmin()
+  const since = new Date(Date.now() - sinceDays * 86400000).toISOString()
+  const recordings = await listRecent(since)
+  let imported = 0, analyzed = 0
+  for (const r of recordings) {
+    if (!r.transcript || r.transcript.trim().length < 40) continue
+    const email = (r.attendee_emails || []).find((e) => e && !e.endsWith('@10kroadmap.org')) || r.attendee_emails?.[0] || ''
+    const key = contactKeyFrom(email, r.title)
+    const { data, error } = await sb.from('ci_meetings').upsert({
+      external_id: r.id, provider: 'fathom', title: r.title || 'Fathom recording', meeting_type: 'sales_call',
+      contact_key: key, contact_email: email || null, meeting_date: r.started_at ? r.started_at.slice(0, 10) : null,
+      recording_url: r.recording_url || r.share_url || null, transcript: r.transcript, ai_summary: r.summary || null,
+      action_items: r.action_items || null, created_by: 'fathom-sync',
+    }, { onConflict: 'provider,external_id' }).select('id, status').single()
+    if (error || !data) continue
+    imported++
+    if (data.status !== 'analyzed') { const a = await analyzeMeeting(data.id as string); if (a.ok) analyzed++ }
+  }
+  return { ok: true, imported, analyzed }
 }
 
 // Rebuild the living customer profile + health from all their meetings + docs.

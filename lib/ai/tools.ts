@@ -9,6 +9,7 @@ import { getRevenueSummary, getBalances } from '@/lib/revenue'
 import { listBoard } from '@/lib/sales'
 import { contactContext } from '@/lib/ai-coach'
 import { coachingTrends, recentCoachingIntel } from '@/lib/coaching-intel'
+import { coachingPortfolio } from '@/lib/coaching-intelligence'
 import { searchMemories, listDecisions, listExperiments } from '@/lib/memory/store'
 
 type Row = Record<string, unknown>
@@ -168,6 +169,10 @@ export const TOOLS: Tool[] = [
       const r = await runAgent(String(i.agent_key || ''), String(i.goal || ''), 'command-ai')
       return j({ agent: r.agent, status: r.status, summary: r.reply, tools_used: r.toolsUsed, pending_approvals: r.pendingApprovals, execution_id: r.executionId })
     },
+  },
+  {
+    def: { name: 'coaching_intelligence', description: "Cross-customer AI Coaching Intelligence over analyzed meetings: portfolio win-rate, average call scores by dimension (discovery, closing, objection handling, listening…), meetings by type, the most common improvement themes across calls, and customers flagged at churn risk. Use to answer 'which customers are likely to churn', 'why are discovery calls converting poorly', 'which coaching techniques/behaviours drive better outcomes', and 'what themes appeared across meetings'.", input_schema: { type: 'object', properties: {} } },
+    run: async () => j(await coachingPortfolio()),
   },
 ]
 

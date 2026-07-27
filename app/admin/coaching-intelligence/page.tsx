@@ -270,13 +270,36 @@ function CustomerIntelligence({ openKey, setOpenKey }: { openKey: string | null;
   return <CustomerList onOpen={setOpenKey} />
 }
 function CustomerList({ onOpen }: { onOpen: (k: string) => void }) {
-  const { data, loading } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=profiles')
-  if (loading && !data) return <div className="skeleton" style={{ height: 200, borderRadius: 14 }} />
+  const { data, loading, reload } = useAdminFetch<any>('/api/admin/coaching-intelligence?view=profiles')
+  const [adding, setAdding] = useState(false)
+  const [nc, setNc] = useState({ name: '', email: '' })
+  const [busy, setBusy] = useState(false)
   const rows = data?.profiles || []
-  if (rows.length === 0) return <EmptyState title="No customer profiles yet" hint="Profiles build automatically as you ingest and analyze meetings." icon="👤" />
+  const add = async () => {
+    if (!nc.name.trim() && !nc.email.trim()) return
+    setBusy(true)
+    const r = await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'add_client', name: nc.name, email: nc.email })
+    setBusy(false); setAdding(false); setNc({ name: '', email: '' })
+    if (r?.ok && r.key) { reload(); onOpen(r.key) }
+  }
   return (
-    <div style={{ display: 'grid', gap: 8 }}>
-      {rows.map((p: any) => (
+    <div style={{ display: 'grid', gap: 12 }}>
+      <Card pad={16}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div><div style={{ fontWeight: 800, color: T.ink }}>Your clients</div><p style={{ fontSize: 13, color: T.sub, margin: '3px 0 0' }}>Every client&apos;s calls, files and history in one place. Add a client, then drop in their files and recordings.</p></div>
+          <div style={{ marginLeft: 'auto', maxWidth: 150 }}><Button onClick={() => setAdding(!adding)}>{adding ? 'Close' : '+ Add a client'}</Button></div>
+        </div>
+        {adding && (
+          <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+            <input value={nc.name} onChange={(e) => setNc({ ...nc, name: e.target.value })} placeholder="Client name" style={{ flex: 1, minWidth: 160, padding: '10px 12px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+            <input value={nc.email} onChange={(e) => setNc({ ...nc, email: e.target.value })} placeholder="Email (optional)" style={{ flex: 1, minWidth: 160, padding: '10px 12px', borderRadius: 9, border: `1px solid ${T.border}`, fontSize: 14, fontFamily: 'inherit' }} />
+            <div style={{ maxWidth: 120 }}><Button onClick={add} disabled={busy}>{busy ? 'Adding…' : 'Add'}</Button></div>
+          </div>
+        )}
+      </Card>
+      {loading && !data ? <div className="skeleton" style={{ height: 160, borderRadius: 14 }} /> :
+        rows.length === 0 ? <EmptyState title="No clients yet" hint="Add your first client above, or import calls under Meeting Intelligence." icon="👤" /> :
+      rows.map((p: any) => (
         <button key={p.contact_key} onClick={() => onOpen(p.contact_key)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 15px', borderRadius: 12, border: `1px solid ${T.border}`, background: '#fff', cursor: 'pointer', textAlign: 'left', width: '100%' }}>
           <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontWeight: 700, color: T.ink }}>{p.name || p.contact_key}</div><div style={{ fontSize: 12.5, color: T.muted }}>{p.email || p.contact_key}</div></div>
           <span style={{ fontSize: 12.5, color: T.sub }}>Health <b style={{ color: T.ink }}>{p.health_score ?? '—'}</b></span>
@@ -297,6 +320,8 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
   const [planBusy, setPlanBusy] = useState(false)
   const genPlan = async () => { setPlanBusy(true); await adminSend('/api/admin/coaching-intelligence', 'POST', { action: 'success_plan', key: ckey }); setPlanBusy(false); reload() }
   const plan = data?.profile?.success_plan
+  const [upBusy, setUpBusy] = useState(false)
+  const onVaultFile = async (file: File) => { setUpBusy(true); const fd = new FormData(); fd.append('file', file); fd.append('contact_key', ckey); await fetch('/api/admin/coaching-intelligence/upload', { method: 'POST', credentials: 'include', body: fd }); setUpBusy(false); reload() }
   if (loading && !data) return <div className="skeleton" style={{ height: 300, borderRadius: 14 }} />
   return (
     <div style={{ display: 'grid', gap: 14 }}>
@@ -326,11 +351,17 @@ function CustomerDetail({ ckey, onBack }: { ckey: string; onBack: () => void }) 
           <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Meetings</div>
             {(data?.meetings || []).length === 0 ? <div style={{ color: T.muted, fontSize: 13 }}>No meetings.</div> : data.meetings.map((m: any) => <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: T.sub, padding: '6px 0', borderBottom: `1px solid ${T.border}` }}><span>{TYPE_LABEL[m.meeting_type] || m.meeting_type} · {m.meeting_date || ''}</span>{m.outcome && m.outcome !== 'n/a' && <Badge text={m.outcome} color={m.outcome === 'won' ? '#16a34a' : '#dc2626'} />}</div>)}
           </Card>
-          <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>Knowledge Vault</div>
-            <Input value={doc.name} onChange={(e) => setDoc({ ...doc, name: e.target.value })} placeholder="Document name" />
+          <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 8 }}>File space &amp; Knowledge Vault</div>
+            <label className="tab-btn" style={{ display: 'block', textAlign: 'center', background: '#f7f9f8', border: `1px dashed ${T.border}`, color: T.sub, cursor: 'pointer', marginBottom: 12 }}>
+              {upBusy ? 'Uploading…' : '⬆ Upload a file (PDF, image, doc, notes, contract…)'}
+              <input type="file" disabled={upBusy} style={{ display: 'none' }} onChange={(e) => { const file = e.target.files?.[0]; if (file) onVaultFile(file); e.currentTarget.value = '' }} />
+            </label>
+            <Input value={doc.name} onChange={(e) => setDoc({ ...doc, name: e.target.value })} placeholder="…or paste a note (name)" />
             <div style={{ height: 8 }} /><Textarea rows={3} value={doc.text} onChange={(e) => setDoc({ ...doc, text: e.target.value })} placeholder="Paste homework, notes, support chat, contract text…" />
-            <div style={{ maxWidth: 160, marginTop: 8 }}><Button variant="ghost" onClick={addDoc} disabled={savingDoc}>{savingDoc ? 'Saving…' : 'Add to vault'}</Button></div>
-            {(data?.docs || []).length > 0 && <div style={{ marginTop: 10 }}>{data.docs.map((d: any) => <div key={d.id} style={{ fontSize: 12.5, color: T.muted, padding: '3px 0' }}>📄 {d.name}</div>)}</div>}
+            <div style={{ maxWidth: 160, marginTop: 8 }}><Button variant="ghost" onClick={addDoc} disabled={savingDoc}>{savingDoc ? 'Saving…' : 'Add note'}</Button></div>
+            {(data?.docs || []).length > 0 && <div style={{ marginTop: 12, borderTop: `1px solid ${T.border}`, paddingTop: 10 }}>{data.docs.map((d: any) => d.doc_type === 'file'
+              ? <a key={d.id} href={`/api/admin/coaching-intelligence?view=file&id=${d.id}`} target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: 12.5, color: T.green2, padding: '3px 0', textDecoration: 'none' }}>📎 {d.name}</a>
+              : <div key={d.id} style={{ fontSize: 12.5, color: T.muted, padding: '3px 0' }}>📝 {d.name}</div>)}</div>}
           </Card>
         </div>
       </div>
@@ -416,8 +447,8 @@ function SettingsTab() {
   const webhookUrl = typeof window !== 'undefined' ? `${window.location.origin}/api/coaching-intelligence/webhook` : '/api/coaching-intelligence/webhook'
   return (
     <div style={{ display: 'grid', gap: 14 }}>
-      <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Meeting providers</div>
-        <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Connect one or more providers to auto-import transcripts. Fathom auto-import is live (needs FATHOM_API_KEY); others are on the roadmap. Manual transcript paste works today under Meeting Intelligence.</p>
+      <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Connect your apps</div>
+        <p style={{ fontSize: 13.5, color: T.sub, marginBottom: 14 }}>Click a button to bring your calls in. We&apos;ll transcribe and analyze them for you automatically. You can also just paste or upload a recording under Meeting Intelligence, no setup needed.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 10 }}>
           {providers.map(([p, status]) => <div key={p} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', border: `1px solid ${T.border}`, borderRadius: 12 }}><span style={{ fontSize: 14, color: T.ink, fontWeight: 600 }}>{p}</span><Badge text={status} color={status === 'available' ? '#16a34a' : T.green2} /></div>)}
         </div>
@@ -426,11 +457,13 @@ function SettingsTab() {
           <div style={{ maxWidth: 200 }}><Button variant="ghost" onClick={() => sync('fireflies')} disabled={busy}>Import from Fireflies</Button></div>
           {msg && <span style={{ fontSize: 13, color: T.sub }}>{msg}</span>}
         </div>
-        <div style={{ marginTop: 14, padding: '12px 14px', background: '#f7f9f8', borderRadius: 12, border: `1px solid ${T.border}` }}>
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: T.ink, marginBottom: 4 }}>Universal ingest webhook</div>
-          <p style={{ fontSize: 12.5, color: T.sub, margin: '0 0 6px' }}>Pipe any other provider (Zoom, Grain, Otter, Read.ai, Google Meet) in via native webhooks or Zapier/Make. POST JSON <code>{'{ transcript, title, contact_email, meeting_type, provider }'}</code> with header <code>x-ci-token</code> = your <code>CI_WEBHOOK_SECRET</code>.</p>
-          <code style={{ fontSize: 12, color: T.green2, wordBreak: 'break-all' }}>{webhookUrl}</code>
-        </div>
+        <details style={{ marginTop: 14 }}>
+          <summary style={{ cursor: 'pointer', fontSize: 12.5, color: T.muted, fontWeight: 600 }}>Advanced: connect other apps (for your tech team)</summary>
+          <div style={{ marginTop: 10, padding: '12px 14px', background: '#f7f9f8', borderRadius: 12, border: `1px solid ${T.border}` }}>
+            <p style={{ fontSize: 12.5, color: T.sub, margin: '0 0 6px' }}>Pipe any other provider (Zoom, Grain, Otter, Read.ai, Google Meet) in via native webhooks or Zapier/Make. POST JSON <code>{'{ transcript, title, contact_email, meeting_type, provider }'}</code> with header <code>x-ci-token</code> = your <code>CI_WEBHOOK_SECRET</code>.</p>
+            <code style={{ fontSize: 12, color: T.green2, wordBreak: 'break-all' }}>{webhookUrl}</code>
+          </div>
+        </details>
       </Card>
       <Security />
       <Card><div style={{ fontWeight: 800, color: T.ink, marginBottom: 6 }}>Security & access</div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getProvider } from '@/lib/comm/providers'
 import { applyResendEventToCampaign } from '@/lib/event-enroll'
+import { notify } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +18,10 @@ export async function POST(req: NextRequest) {
 
   const adapter = getProvider('resend')
   const valid = adapter?.verifyWebhook ? adapter.verifyWebhook(headers, raw) : true
-  if (!valid) return NextResponse.json({ error: 'invalid signature' }, { status: 401 })
+  if (!valid) {
+    notify('integration_error', 'Resend webhook rejected: bad signature', 'Email delivery/open/click/bounce tracking is being dropped. Check RESEND_WEBHOOK_SECRET matches the signing secret on the Resend webhook endpoint.').catch(() => {})
+    return NextResponse.json({ error: 'invalid signature' }, { status: 401 })
+  }
 
   let body: unknown = {}
   try { body = JSON.parse(raw) } catch { body = {} }

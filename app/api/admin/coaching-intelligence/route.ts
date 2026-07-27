@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminEmail } from '@/lib/session'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, renderMeetingMarkdown, renderCustomerMarkdown, sendFollowupFromMeeting, createTaskFromMeeting, importFireflies, MEETING_TYPES } from '@/lib/coaching-intelligence'
+import { analyzeMeeting, buildCustomerProfile, askSuccessCoach, contactKeyFrom, importFathom, listFrameworks, upsertFramework, deleteFramework, executiveInsights, performanceTrends, generateSuccessPlan, startRoleplay, roleplayReply, scoreRoleplay, listRubrics, upsertRubric, deleteRubric, buildTimeline, renderMeetingReport, renderCustomerReport, renderMeetingMarkdown, renderCustomerMarkdown, sendFollowupFromMeeting, createTaskFromMeeting, importFireflies, addClient, MEETING_TYPES } from '@/lib/coaching-intelligence'
 import { roleOf, can, capsFor, audit, listRoles, setRole, removeRole, getSettings, updateSettings, applyRetention, listAudit, type Cap } from '@/lib/coaching-security'
 
 export const maxDuration = 120
@@ -29,6 +29,13 @@ export async function GET(req: NextRequest) {
     }
     if (view === 'settings') {
       return NextResponse.json(await getSettings())
+    }
+    if (view === 'file') {
+      const { data: doc } = await sb.from('ci_documents').select('url, name').eq('id', url.searchParams.get('id') || '').maybeSingle()
+      if (!doc?.url) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      const { data: signed } = await sb.storage.from('crm').createSignedUrl(String(doc.url), 300)
+      if (!signed?.signedUrl) return NextResponse.json({ error: 'Unavailable' }, { status: 404 })
+      return NextResponse.redirect(signed.signedUrl)
     }
     if ((view === 'report' || view === 'export_csv') && !can(role, 'export')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -136,7 +143,7 @@ export async function POST(req: NextRequest) {
       ingest: 'ingest', analyze: 'analyze', classify: 'analyze', add_document: 'ingest', rebuild_profile: 'analyze', ask: 'ask',
       sync_fathom: 'fathom', sync_fireflies: 'fathom', save_framework: 'manage_content', delete_framework: 'manage_content', success_plan: 'success_plan',
       roleplay_start: 'roleplay', roleplay_reply: 'roleplay', roleplay_score: 'roleplay', save_rubric: 'manage_content', delete_rubric: 'manage_content',
-      send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention',
+      send_followup: 'actions', create_task: 'actions', set_role: 'manage_roles', remove_role: 'manage_roles', update_settings: 'manage_settings', apply_retention: 'retention', add_client: 'ingest',
     }
     const need = CAP[action]
     if (need && !can(role, need)) return NextResponse.json({ error: `Your role (${role}) can't perform this action.` }, { status: 403 })
@@ -186,6 +193,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
+    if (action === 'add_client') {
+      const r = await addClient(String(body?.name || ''), String(body?.email || ''))
+      if (r.ok) audit(actor, 'add_client', 'client', r.key).catch(() => {})
+      return NextResponse.json(r, { status: r.ok ? 200 : 400 })
+    }
     if (action === 'add_document') {
       const key = contactKeyFrom(body?.contact_email, body?.contact_name || body?.contact_key)
       await sb.from('ci_documents').insert({ contact_key: key, name: body?.name || 'Document', doc_type: body?.doc_type || 'note', text: String(body?.text || '').slice(0, 200000), url: body?.url || null })

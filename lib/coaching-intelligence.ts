@@ -642,6 +642,16 @@ export async function buildCustomerProfile(contactKey: string): Promise<{ ok: bo
   return { ok: true }
 }
 
+// Create a client manually (before any meeting exists) so files/notes can be
+// added to their space right away.
+export async function addClient(name: string, email: string): Promise<{ ok: boolean; key?: string; error?: string }> {
+  const key = contactKeyFrom(email, name)
+  if (!key || key === 'unknown') return { ok: false, error: 'Enter a name or email.' }
+  const sb = getSupabaseAdmin()
+  await sb.from('ci_customer_profiles').upsert({ contact_key: key, name: name || null, email: email || null, updated_at: new Date().toISOString() }, { onConflict: 'contact_key' })
+  return { ok: true, key }
+}
+
 // ── PERFORMANCE TRENDS (long-term improvement over time) ───
 export async function performanceTrends(): Promise<Record<string, unknown>> {
   const sb = getSupabaseAdmin()

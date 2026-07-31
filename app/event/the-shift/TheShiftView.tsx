@@ -658,7 +658,7 @@ const CSS = `
 .ts-nav__logo{height:60px;width:auto;display:block}
 
 /* Buttons */
-.ts-btn{display:inline-block;font-family:var(--sans);font-weight:600;font-size:.9375rem;letter-spacing:.02em;padding:1.05rem 2.4rem;border:none;cursor:pointer;text-decoration:none;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}
+.ts-btn{display:inline-block;box-sizing:border-box;font-family:var(--sans);font-weight:600;font-size:.9375rem;letter-spacing:.02em;padding:1.05rem 2.4rem;border:none;cursor:pointer;text-decoration:none;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}
 .ts-btn--sm{padding:.65rem 1.3rem;font-size:.82rem}
 .ts-btn--lg{padding:1.2rem 3rem;font-size:1.02rem}
 .ts-btn--green{background:var(--green);color:#fff}

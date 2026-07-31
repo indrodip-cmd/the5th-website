@@ -884,6 +884,10 @@ const CSS = `
   .ts-checkout__right{position:static;max-width:460px;width:100%;margin:0 auto}
   .ts-checkout__left{max-width:560px;margin:0 auto}
   .ts-mcta{display:flex}
+  /* Stack the hero CTA so the primary button is truly centered on tablets
+     (portrait + landscape) and phones, instead of being pushed off-center by
+     the trailing text link in the centered row. Desktop (>900px) keeps the row. */
+  .ts-hero__cta{flex-direction:column;align-items:center;gap:18px}
   .ts-footer{padding-bottom:90px}
 }
 

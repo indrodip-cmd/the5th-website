@@ -1532,7 +1532,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
                   color:'rgba(255,255,255,0.92)',
                   textAlign:'center',
                   maxWidth:'90vw',
-                }}>The5th AI Business Assessment · Results in 5 minutes</span>
+                }}>Free AI Business Assessment for coaches · Results in 5 minutes</span>
               </div>
             </div>
           </motion.div>
@@ -1548,7 +1548,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             maxWidth: '880px',
             fontFamily: "'Cormorant Garamond', Georgia, serif",
           }}>
-            What if you&apos;re not stuck because of your offer, but because you&apos;re following a business model that <em style={{ fontStyle: 'italic', color: '#C9A84C' }}>doesn&apos;t suit you?</em>
+            What a $2,000 strategist would tell you about your coaching business. <em style={{ fontStyle: 'italic', color: '#C9A84C' }}>Free, in 5 minutes.</em>
           </motion.h1>
 
           <motion.p className="qp-hero-sub" initial="hidden" animate="visible" variants={fadeUp} custom={2} style={{
@@ -1559,7 +1559,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             margin: '0 auto 40px',
             padding: '0 8px',
           }}>
-            Most coaches are following strategies built for someone else. In 5 minutes, this assessment identifies your Expert Income Archetype and shows you exactly what to do next.
+            It pinpoints the bottleneck holding your revenue down, where your messaging and pricing leak clients, and the one thing to focus on next. In a coach&apos;s words: <strong style={{ color: '#ffffff', fontWeight: 600 }}>&ldquo;like having a business strategist analyse my entire business.&rdquo;</strong>
           </motion.p>
 
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={3}>
@@ -1812,7 +1812,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
                 <path d="M14 2 C14 2 20 10 18 20 C17 26 10 28 10 28" stroke="#3D2645" strokeWidth="1.8" strokeLinecap="round"/>
                 <path d="M6 24 L10 29 L15 25" stroke="#3D2645" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <h2 className="qp-sect-h"><em style={{ fontStyle:'italic', color:'#1c4a32' }}>Four</em> archetypes. Four different ways to build a successful coaching business.</h2>
+              <h2 className="qp-sect-h"><em style={{ fontStyle:'italic', color:'#1c4a32' }}>Four</em> archetypes. Four different ways a coaching business grows. Only one is yours.</h2>
               <p className="qp-sect-sub">
                 Most coaches are following advice that works perfectly for someone else. This assessment helps you discover the growth model that aligns with your natural strengths.
               </p>
@@ -1860,8 +1860,8 @@ function LandingPage({ onStart }: { onStart: () => void }) {
             animate={aboutInView ? { opacity:1, y:0 } : {}}
             transition={tr(0)}
           >
-            <Annotation dark>see the methodology</Annotation>
-            <h2 className="qp-about-h">This is not another personality quiz</h2>
+            <Annotation dark>this is not another personality quiz</Annotation>
+            <h2 className="qp-about-h">You&apos;re not losing clients in one place. You&apos;re leaking them in 5.</h2>
           </motion.div>
 
           <div className="qp-about-cards">

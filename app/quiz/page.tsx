@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform, useInView, type Variants } from 'framer-motion'
 import Image from 'next/image'
+import { whopTrack } from '@/lib/whop'
 
 /* ─── Types ─── */
 type QuizAnswers = Record<string, string | string[]>
@@ -2475,6 +2476,9 @@ export default function Page() {
     sessionStorage.setItem('quiz_name', name)
     sessionStorage.setItem('quiz_email', emailValue)
     sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
+    // Whop Pixel: quiz finished + email captured — a lead (+ custom marker).
+    whopTrack('lead')
+    whopTrack('quiz_completed')
     // Legacy path (flag off): straight to the report, unchanged.
     if (!REQUIRE_OTP) { window.location.href = '/quiz/results'; return }
     // Secure path (flag on): verify ownership via emailed OTP, then continue.
@@ -2499,6 +2503,8 @@ export default function Page() {
       sessionStorage.setItem('quiz_email', email.trim().toLowerCase())
       sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
       setVerified(true)
+      // Whop Pixel: email verified + account created — a completed registration.
+      whopTrack('complete_registration')
       setTimeout(() => { window.location.href = '/quiz/results' }, 1100)
     } catch { setOtpError('Something went wrong. Please try again.'); setSubmitting(false) }
   }

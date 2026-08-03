@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { whopTrack } from '@/lib/whop'
 
 declare global {
   interface Window {
@@ -24,6 +25,9 @@ export default function PageTracker() {
     if (typeof window !== 'undefined' && typeof window.__a5trackPage === 'function') {
       window.__a5trackPage(pathname)
     }
+    // Whop Pixel: the inline snippet fires track("page") only on hard load,
+    // so re-fire it on each in-app (SPA) navigation for accurate attribution.
+    whopTrack('page')
   }, [pathname])
 
   return null

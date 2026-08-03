@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import Cal, { getCalApi } from '@calcom/embed-react'
 import BookOffer from './BookOffer'
 import VideoWall from '@/components/VideoWall'
+import { whopTrack } from '@/lib/whop'
 
 const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie', 'toril']
 
@@ -28,6 +29,8 @@ export default function ChoseYourTime() {
           const email = String(att.email || '').toLowerCase()
           const nm = String(att.name || '')
           setInfo({ name: nm, start }); setBooked(true)
+          // Whop Pixel: appointment booked — the core conversion for this funnel.
+          whopTrack('schedule')
           window.scrollTo({ top: 0, behavior: 'smooth' })
           // Relay the booking to the platform so the $1-trial fulfilment email
           // can include the member's call date/time. Idempotent (upsert by email).

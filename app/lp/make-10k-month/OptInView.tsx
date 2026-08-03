@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { OPT_IN, MODAL, REAL_PROOF, LEGAL, PRESS } from './config'
 import ProofPopups from './ProofPopups'
 import { getRecaptchaToken } from '@/lib/recaptcha-client'
+import { whopTrack } from '@/lib/whop'
 
 const SERIF = "'Cormorant Garamond', Georgia, serif"
 const SANS = "'DM Sans', system-ui, -apple-system, sans-serif"
@@ -170,6 +171,8 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
       const data = await res.json().catch(() => ({}))
       if (!res.ok) { setError(data?.error || 'Something went wrong. Please try again.'); setLoading(false); return }
       try { localStorage.setItem('vsl_make10k', JSON.stringify({ name: data.name, email: data.email, t: Date.now() })) } catch { /* noop */ }
+      // Whop Pixel: opt-in submitted — a lead.
+      whopTrack('lead')
       router.push(WATCH_URL)
     } catch {
       setError('Network error. Please try again.'); setLoading(false)

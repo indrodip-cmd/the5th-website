@@ -130,13 +130,11 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      try {
-        const { error: rmErr } = await getSupabaseAdmin().from('quiz_leads').update({ roadmap }).eq('email', email)
-        if (rmErr) console.error('send-otp: roadmap save failed', JSON.stringify({ code: rmErr.code, message: rmErr.message }))
-      } catch (e) {
-        console.error('send-otp: roadmap save threw', e)
-      }
-
+      // NOTE: do NOT persist this JSON roadmap to quiz_leads.roadmap — that column
+      // is owned by /api/generate-roadmap, which stores the full MARKDOWN report and
+      // reads it back as a cache. Writing a JSON object here overwrites that report
+      // and breaks the results page (cache miss → regenerate → rate-limit → "taking
+      // a little longer"). The email sequence uses this roadmap in-memory below.
       await triggerEmailSequence(email, firstName, roadmap, leadId)
     })
 

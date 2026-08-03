@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Cal, { getCalApi } from '@calcom/embed-react'
+import { whopTrack } from '@/lib/whop'
 
 /* ════════ Brand tokens ════════ */
 const C = {
@@ -117,6 +119,26 @@ const SESSION_INCLUDES = [
   'You leave with clarity, whether or not we work together',
 ]
 
+/* ════════ Add-to-calendar links (Google / Microsoft / Apple) ════════ */
+const CAL_TITLE = 'Private Strategy & Coaching Session · The5th Consulting'
+function pad(n: number) { return String(n).padStart(2, '0') }
+function toUTCStamp(d: Date) {
+  return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`
+}
+function buildCalendarLinks(startISO: string, meetingUrl?: string | null) {
+  const start = new Date(startISO)
+  if (isNaN(start.getTime())) return null
+  const end = new Date(start.getTime() + 60 * 60 * 1000) // 60-min session
+  const s = toUTCStamp(start), e = toUTCStamp(end)
+  const location = meetingUrl || 'Online — link in your confirmation email'
+  const details = `Your Private Strategy & Coaching Session with Indrodip Ghosh. We'll walk through your full report and map your next 14 days.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}`
+  const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${s}/${e}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
+  const outlook = `https://outlook.office.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=${encodeURIComponent(CAL_TITLE)}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5th.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const apple = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics)
+  return { google, outlook, apple }
+}
+
 /* ════════ Page ════════ */
 export default function ResultsPage() {
   const [name, setName]           = useState('')
@@ -129,6 +151,39 @@ export default function ResultsPage() {
   const [genFailed, setGenFailed] = useState(false)
   const [archetype, setArchetype] = useState('')
   const [personalityType, setPersonalityType] = useState('')
+  const [booked, setBooked]       = useState(false)
+  const [booking, setBooking]     = useState<{ name?: string; start?: string; timeZone?: string; meetingUrl?: string | null }>({})
+
+  /* Cal.com embed → capture a successful booking and show the thank-you. */
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const cal = await getCalApi({ namespace: '60min' })
+      cal('ui', { hideEventTypeDetails: true, layout: 'month_view' })
+      cal('on', {
+        action: 'bookingSuccessful',
+        callback: (e: unknown) => {
+          if (cancelled) return
+          const d = ((e as { detail?: { data?: Record<string, unknown> } })?.detail?.data) || {}
+          const b = (d.booking as Record<string, unknown>) || d
+          const att = ((b.attendees as Array<Record<string, unknown>>)?.[0]) || {}
+          const start = String(b.startTime || d.date || b.start || '')
+          const nm = String(att.name || sessionStorage.getItem('quiz_name') || '')
+          const em = String(att.email || sessionStorage.getItem('quiz_email') || '').toLowerCase()
+          setBooking({ name: nm, start })
+          setBooked(true)
+          whopTrack('schedule') // Whop Pixel: appointment booked
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+          // Enrich with the real start time / timezone / meeting link from Cal.
+          if (em) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(em)}`)
+            .then(r => r.json())
+            .then(j => { if (!cancelled && j?.booking) setBooking(c => ({ ...c, ...j.booking })) })
+            .catch(() => {})
+        },
+      })
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   useEffect(() => {
     if (!loading) return
@@ -459,31 +514,69 @@ export default function ResultsPage() {
         </div>
       </section>
 
-      {/* THE SESSION — booking (Step 2) */}
-      <section className="rwrap" style={{ padding: '20px 24px 8px' }}>
+      {/* THE SESSION — booking (Step 2): embedded scheduler + confirmation */}
+      <section className="rwrap" id="book" style={{ padding: '20px 24px 8px' }}>
         <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
-          <span style={{ ...eyebrow, color: C.gold }}>Your Next 14 Days</span>
-          <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want to understand your full report, and solve your biggest problem, <em style={{ fontStyle: 'italic', color: C.gold }}>within 14 days?</em></h2>
-          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 14px', lineHeight: 1.75 }}>
-            You&apos;ve seen half of it. The other half, your offer, your pricing, and your full 90-day roadmap, is the half that actually changes your income. And right now it&apos;s sitting unopened.
-          </p>
-          <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 30px', lineHeight: 1.75 }}>
-            On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> The professionals who book leave knowing precisely what&apos;s been holding them back. The ones who don&apos;t are usually in the same place a year from now.
-          </p>
-          <a href="/call" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 17, fontWeight: 700, padding: '20px 48px', borderRadius: 6, textDecoration: 'none', boxShadow: '0 16px 40px rgba(201,168,76,.34)' }}>
-            Yes, Unlock My Full Report &amp; Plan →
-          </a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · By application · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
+          {!booked ? (
+            <>
+              <span style={{ ...eyebrow, color: C.gold }}>Your Next 14 Days</span>
+              <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want to understand your full report, and solve your biggest problem, <em style={{ fontStyle: 'italic', color: C.gold }}>within 14 days?</em></h2>
+              <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 14px', lineHeight: 1.75 }}>
+                You&apos;ve seen half of it. The other half, your offer, your pricing, and your full 90-day roadmap, is the half that actually changes your income. And right now it&apos;s sitting unopened.
+              </p>
+              <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 26px', lineHeight: 1.75 }}>
+                On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> Pick a time that works for you below.
+              </p>
 
-          <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
-            <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>
-            {SESSION_INCLUDES.map((s, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
-                <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
-                <span style={{ fontSize: 15, color: 'rgba(255,255,255,.78)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
+              {/* Embedded Cal.com scheduler */}
+              <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', maxWidth: 900, margin: '0 auto', boxShadow: '0 20px 50px -30px rgba(0,0,0,.6)' }}>
+                <Cal namespace="60min" calLink="indrodip-ghosh-ut1vxh/60min" style={{ width: '100%', height: '660px', overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', name, email }} />
               </div>
-            ))}
-          </div>
+
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
+
+              <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
+                <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>
+                {SESSION_INCLUDES.map((s, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
+                    <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,.78)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (() => {
+            const firstName = (booking.name || name || '').split(' ')[0]
+            const when = booking.start ? new Date(booking.start).toLocaleString([], { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }) : ''
+            const links = booking.start ? buildCalendarLinks(booking.start, booking.meetingUrl) : null
+            const calBtn: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 9, background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#fff', fontSize: 14, fontWeight: 600, padding: '12px 20px', borderRadius: 8, textDecoration: 'none' }
+            return (
+              <>
+                <div style={{ width: 68, height: 68, borderRadius: '50%', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 34, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>✓</div>
+                <span style={{ ...eyebrow, color: C.gold }}>You&apos;re booked</span>
+                <h2 style={{ ...h2, color: '#fff', maxWidth: 620, margin: '0 auto 14px' }}>Your session is confirmed{firstName ? `, ${firstName}` : ''}.</h2>
+                {when && (
+                  <div style={{ display: 'inline-block', background: 'rgba(201,168,76,.12)', border: `1px solid ${C.goldLine}`, borderRadius: 12, padding: '16px 26px', margin: '6px auto 22px' }}>
+                    <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, fontWeight: 700, marginBottom: 6 }}>Your Session</div>
+                    <div style={{ fontSize: 20, fontWeight: 600, color: '#fff', fontFamily: "'Cormorant Garamond',serif" }}>{when}</div>
+                  </div>
+                )}
+                <p style={{ fontSize: 15.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
+                  A calendar invite{booking.meetingUrl ? ' and your meeting link' : ''} are on their way to your inbox. Add it to your calendar so it never slips:
+                </p>
+                {links && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: booking.meetingUrl ? 24 : 4 }}>
+                    <a href={links.google} target="_blank" rel="noopener noreferrer" style={calBtn}>📅 Google Calendar</a>
+                    <a href={links.apple} download="the5th-session.ics" style={calBtn}>🍎 Apple Calendar</a>
+                    <a href={links.outlook} target="_blank" rel="noopener noreferrer" style={calBtn}>🪟 Microsoft / Outlook</a>
+                  </div>
+                )}
+                {booking.meetingUrl && (
+                  <a href={booking.meetingUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 40px', borderRadius: 6, textDecoration: 'none', marginTop: 6 }}>Join Link →</a>
+                )}
+              </>
+            )
+          })()}
         </div>
       </section>
 

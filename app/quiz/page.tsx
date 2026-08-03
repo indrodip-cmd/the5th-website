@@ -2476,9 +2476,16 @@ export default function Page() {
     sessionStorage.setItem('quiz_name', name)
     sessionStorage.setItem('quiz_email', emailValue)
     sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
-    // Whop Pixel: quiz finished + email captured — a lead (+ custom marker).
-    whopTrack('lead')
-    whopTrack('quiz_completed')
+    // Whop Pixel: quiz finished + email captured. Fire the lead exactly ONCE per
+    // session — completing the whole quiz = 1 lead, even if they change their email
+    // and resubmit.
+    try {
+      if (!sessionStorage.getItem('whop_lead_fired')) {
+        sessionStorage.setItem('whop_lead_fired', '1')
+        whopTrack('lead')
+        whopTrack('quiz_completed')
+      }
+    } catch { whopTrack('lead'); whopTrack('quiz_completed') }
     // Legacy path (flag off): straight to the report, unchanged.
     if (!REQUIRE_OTP) { window.location.href = '/quiz/results'; return }
     // Secure path (flag on): verify ownership via emailed OTP, then continue.
@@ -2503,8 +2510,13 @@ export default function Page() {
       sessionStorage.setItem('quiz_email', email.trim().toLowerCase())
       sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
       setVerified(true)
-      // Whop Pixel: email verified + account created — a completed registration.
-      whopTrack('complete_registration')
+      // Whop Pixel: email verified + account created — a completed registration (once).
+      try {
+        if (!sessionStorage.getItem('whop_reg_fired')) {
+          sessionStorage.setItem('whop_reg_fired', '1')
+          whopTrack('complete_registration')
+        }
+      } catch { whopTrack('complete_registration') }
       setTimeout(() => { window.location.href = '/quiz/results' }, 1100)
     } catch { setOtpError('Something went wrong. Please try again.'); setSubmitting(false) }
   }

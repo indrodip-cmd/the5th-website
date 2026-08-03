@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
@@ -71,41 +71,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Database error saving lead' }, { status: 500 })
     }
 
-    // 2. Generate AI roadmap
-    let roadmap = null
-    try {
-      const profile = JSON.stringify(answers, null, 2)
-      const msg = await getAnthropicClient().messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
-        system: 'You are an expert business coach. Generate a personalized 15-day roadmap for someone wanting to make their first $5,000 online from their expertise. Profile: ' + profile + '. Return ONLY valid JSON, no markdown.',
-        messages: [{
-          role: 'user',
-          content: 'Generate a 15-day roadmap as JSON with this exact structure: {"days":[{"day":1,"title":"string","theme":"string","tasks":["task1","task2","task3"],"win_condition":"string","motivation":"string"}],"summary":"string","biggest_opportunity":"string","first_action":"string"}'
-        }]
-      })
-      const raw = msg.content[0].type === 'text' ? msg.content[0].text : ''
-      const jsonMatch = raw.match(/\{[\s\S]*\}/)
-      if (jsonMatch) roadmap = JSON.parse(jsonMatch[0])
-    } catch (e) {
-      console.error('send-otp: roadmap generation failed', e)
-      roadmap = {
-        days: [],
-        summary: 'Your personalized roadmap is being built.',
-        biggest_opportunity: 'Leverage your expertise into a premium offer.',
-        first_action: 'Define your ideal client and their #1 problem.'
-      }
-    }
-
-    // 3. Save roadmap
-    try {
-      const { error: rmErr } = await getSupabaseAdmin().from('quiz_leads').update({ roadmap }).eq('email', email)
-      if (rmErr) console.error('send-otp: roadmap save failed', JSON.stringify({ code: rmErr.code, message: rmErr.message }))
-    } catch (e) {
-      console.error('send-otp: roadmap save threw', e)
-    }
-
-    // 4. Generate OTP
+    // 2. Generate OTP + session — this is the ONLY thing on the critical path.
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString()
     try {
@@ -119,22 +85,60 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Database error creating session' }, { status: 500 })
     }
 
-    // 5. Send OTP email
-    const days3 = (roadmap?.days || []).slice(0, 3)
+    // 3. Send the OTP email IMMEDIATELY — code only. Previously this waited on a
+    //    multi-second Claude roadmap call before the code was even sent, which is
+    //    why codes were slow. The roadmap preview now rides along in email #1.
     try {
       await getResendClient().emails.send({
         from: FROM,
         to: email,
         subject: 'Your 6-digit code to unlock your roadmap',
-        html: otpEmail(firstName, otp, days3)
+        html: otpEmail(firstName, otp, [])
       })
     } catch (e) {
       console.error('send-otp: OTP email send failed', e)
       // Don't fail — OTP is saved, user can request resend
     }
 
-    // 6. Trigger email sequence (fire-and-forget)
-    triggerEmailSequence(email, firstName, roadmap, lead?.id ?? '')
+    // 4. Everything slow (AI roadmap → save → email sequence) runs AFTER the
+    //    response is sent, so neither the code email nor the client spinner waits
+    //    on it. after() keeps this alive on Vercel past the response.
+    const leadId = lead?.id ?? ''
+    after(async () => {
+      let roadmap: Record<string, unknown> | null = null
+      try {
+        const profile = JSON.stringify(answers, null, 2)
+        const msg = await getAnthropicClient().messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 4000,
+          system: 'You are an expert business coach. Generate a personalized 15-day roadmap for someone wanting to make their first $5,000 online from their expertise. Profile: ' + profile + '. Return ONLY valid JSON, no markdown.',
+          messages: [{
+            role: 'user',
+            content: 'Generate a 15-day roadmap as JSON with this exact structure: {"days":[{"day":1,"title":"string","theme":"string","tasks":["task1","task2","task3"],"win_condition":"string","motivation":"string"}],"summary":"string","biggest_opportunity":"string","first_action":"string"}'
+          }]
+        })
+        const raw = msg.content[0].type === 'text' ? msg.content[0].text : ''
+        const jsonMatch = raw.match(/\{[\s\S]*\}/)
+        if (jsonMatch) roadmap = JSON.parse(jsonMatch[0])
+      } catch (e) {
+        console.error('send-otp: roadmap generation failed', e)
+        roadmap = {
+          days: [],
+          summary: 'Your personalized roadmap is being built.',
+          biggest_opportunity: 'Leverage your expertise into a premium offer.',
+          first_action: 'Define your ideal client and their #1 problem.'
+        }
+      }
+
+      try {
+        const { error: rmErr } = await getSupabaseAdmin().from('quiz_leads').update({ roadmap }).eq('email', email)
+        if (rmErr) console.error('send-otp: roadmap save failed', JSON.stringify({ code: rmErr.code, message: rmErr.message }))
+      } catch (e) {
+        console.error('send-otp: roadmap save threw', e)
+      }
+
+      await triggerEmailSequence(email, firstName, roadmap, leadId)
+    })
 
     return NextResponse.json({ success: true })
   } catch (err) {

@@ -90,15 +90,30 @@ const questionPool: Question[] = [
   },
   {
     id: 'q4', num: 4, title: 'What is the #1 pain your ideal client wakes up feeling?',
-    sub: 'Your answer directly shapes the quality of your blueprint. Think of this as briefing a world-class strategist — the more specific you are, the more precise and valuable your personalised growth plan becomes.',
-    type: 'textarea',
-    placeholder: "e.g. They feel stuck and invisible — they have so much to offer but can't figure out how to turn their expertise into income…"
+    sub: 'Pick the one that fits best. This shapes the messaging in your blueprint.',
+    type: 'select',
+    options: [
+      { value: 'stuck and invisible, with so much to offer but no idea how to turn their expertise into income', emoji: '🌫️', label: 'Stuck and invisible', sub: 'So much to offer, no idea how to turn it into income' },
+      { value: 'overwhelmed by too many directions and no clear path forward', emoji: '🌀', label: 'Overwhelmed and scattered', sub: 'Too many directions, no clear path forward' },
+      { value: 'anxious about money and their financial future', emoji: '💸', label: 'Financial pressure', sub: 'Anxious about money and what comes next' },
+      { value: 'successful on paper but unfulfilled and craving something more meaningful', emoji: '💼', label: 'Successful but unfulfilled', sub: 'Good on paper, craving something more meaningful' },
+      { value: 'held back by fear, self-doubt and low confidence', emoji: '😔', label: 'Fear and self-doubt', sub: 'Held back by low confidence' },
+      { value: 'burned out, exhausted and running on empty', emoji: '🔥', label: 'Burned out', sub: 'Exhausted and running on empty' },
+    ]
   },
   {
     id: 'q5', num: 5, title: 'What is your zone of genius?',
-    sub: 'Your answer directly shapes the quality of your blueprint. Think of this as briefing a world-class strategist — the more specific you are, the more precise and valuable your personalised growth plan becomes.',
-    type: 'textarea',
-    placeholder: 'e.g. I have a gift for helping professionals identify their unique story and turn decades of experience into a focused, premium coaching offer…'
+    sub: 'The thing you do better than almost anyone. Choose what fits you most.',
+    type: 'select',
+    options: [
+      { value: 'helping people find clarity and direction when they feel lost', emoji: '🧭', label: 'Clarity and direction', sub: 'Helping people find their way when they feel lost' },
+      { value: 'turning experience and expertise into a clear, premium offer', emoji: '💎', label: 'Packaging expertise', sub: 'Turning experience into a clear, premium offer' },
+      { value: 'deep transformation and mindset work', emoji: '🦋', label: 'Deep transformation', sub: 'Mindset shifts and lasting inner change' },
+      { value: 'strategy, systems and getting real results', emoji: '⚙️', label: 'Strategy and results', sub: 'Systems, execution, and measurable outcomes' },
+      { value: 'storytelling, messaging and emotional connection', emoji: '✍️', label: 'Storytelling and messaging', sub: 'Words that connect and move people' },
+      { value: 'motivation, accountability and building momentum', emoji: '🔥', label: 'Motivation and momentum', sub: 'Getting people to follow through and act' },
+      { value: 'healing, energy and inner work', emoji: '🌙', label: 'Healing and energy', sub: 'Intuition, energy, and inner work' },
+    ]
   },
   {
     id: 'q6', num: 6, title: 'Do you have a personal transformation story connected to your niche?',
@@ -112,11 +127,17 @@ const questionPool: Question[] = [
     ]
   },
   {
-    id: 'q7', num: 7, title: 'Complete your client transformation statement.',
-    sub: 'Every powerful offer is built on a clear FROM → TO.',
-    type: 'fromto',
-    fromPlaceholder: 'e.g. feeling invisible with no clear offer…',
-    toPlaceholder: 'e.g. a confident coach with a $5K signature program…'
+    id: 'q7', num: 7, title: 'Which transformation do you create for your clients?',
+    sub: 'Every powerful offer is built on a clear FROM → TO. Pick the arc that fits yours.',
+    type: 'select',
+    options: [
+      { value: 'from invisible and unclear to a confident coach with a signature offer', emoji: '✨', label: 'Invisible → Confident with a signature offer', sub: 'From unclear to a clear, ownable offer' },
+      { value: 'from stuck and overwhelmed to focused with a clear plan', emoji: '🧭', label: 'Overwhelmed → Focused with a clear plan', sub: 'From scattered to a step-by-step path' },
+      { value: 'from undercharging to confidently charging premium prices', emoji: '💎', label: 'Undercharging → Charging premium', sub: 'From underpriced to premium and confident' },
+      { value: 'from inconsistent income to steady, predictable clients', emoji: '📈', label: 'Inconsistent → Predictable clients', sub: 'From feast-or-famine to steady income' },
+      { value: 'from self-doubt to showing up with real confidence', emoji: '💪', label: 'Self-doubt → Real confidence', sub: 'From hesitant to visible and self-assured' },
+      { value: 'from burnout to a business that finally feels sustainable', emoji: '🌿', label: 'Burnout → Sustainable business', sub: 'From exhausted to a pace that lasts' },
+    ]
   },
   {
     id: 'q8', num: 8, title: 'How would you prefer to deliver your coaching?',
@@ -313,9 +334,17 @@ const questionPool: Question[] = [
   },
   {
     id: 'qchallenge', num: 21, title: 'If we could solve just one challenge together, what would it be?',
-    sub: "Picture your Strategy Session is over and you leave thrilled. What did we solve? Your answer guides your report and our conversation.",
-    type: 'textarea',
-    placeholder: "e.g. I'd finally know exactly what to offer and how to price it with real confidence…"
+    sub: 'Choose the one that would change the most for you right now.',
+    type: 'select',
+    options: [
+      { value: 'knowing exactly what to offer and how to price it with confidence', emoji: '🎯', label: 'My offer and pricing', sub: 'Know exactly what to offer and what to charge' },
+      { value: 'getting a steady, predictable flow of clients', emoji: '🌊', label: 'A steady flow of clients', sub: 'Predictable leads instead of feast-or-famine' },
+      { value: 'nailing my messaging so the right people pay attention', emoji: '💬', label: 'My messaging', sub: 'Say it so the right people lean in' },
+      { value: 'selling with confidence without feeling pushy', emoji: '🤝', label: 'Selling with confidence', sub: 'Close clients without feeling pushy' },
+      { value: 'creating content consistently without burning out', emoji: '📱', label: 'Consistent content', sub: 'Show up regularly without burning out' },
+      { value: 'building systems so my business runs without me', emoji: '⚙️', label: 'Systems that scale', sub: 'A business that runs without me in everything' },
+      { value: 'finding the focus and follow-through to actually execute', emoji: '🧠', label: 'Focus and follow-through', sub: 'Stop overthinking and actually execute' },
+    ]
   },
 ]
 
@@ -450,8 +479,37 @@ body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1
   text-align: left; margin-bottom: 12px; font-family: inherit;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
-.qopt:hover { border-color: #1c4a32; box-shadow: 0 4px 18px rgba(0,0,0,0.1); }
+.qopt:hover { border-color: #1c4a32; box-shadow: 0 6px 22px rgba(28,74,50,0.14); transform: translateY(-1px); }
 .qopt.sel { background: #1c4a32; border-color: #1c4a32; }
+
+/* BetterMe-style option icon badge */
+.qopt-badge {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: #F4EEE4; display: flex; align-items: center; justify-content: center;
+  font-size: 23px; line-height: 1; margin-right: 16px; flex-shrink: 0;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.qopt:hover .qopt-badge { transform: scale(1.06); }
+.qopt.sel .qopt-badge { background: rgba(255,255,255,0.16); }
+
+/* Linear progress bar */
+.qprogress-track {
+  flex: 1; height: 8px; border-radius: 50px;
+  background: rgba(61,38,69,0.12); overflow: hidden;
+}
+.qprogress-fill {
+  height: 100%; border-radius: 50px;
+  background: linear-gradient(90deg, #3D2645 0%, #1C4A32 100%);
+  transition: width 0.5s cubic-bezier(0.2,0.7,0.2,1);
+}
+/* Encouragement pill */
+.q-encourage {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(184,150,12,0.10); border: 1px solid rgba(184,150,12,0.28);
+  color: #8a6d0f; font-size: 12.5px; font-weight: 700;
+  letter-spacing: 0.02em; padding: 7px 16px; border-radius: 50px;
+  animation: fadeUp 0.5s ease both;
+}
 
 .qinput {
   width: 100%; padding: 16px; border: 1.5px solid #E2DCD2;
@@ -2547,6 +2605,13 @@ export default function Page() {
     // Branched (visible) question set for progress + chapter logic.
     const visibleQs = questions.filter(qq => isVisible(qq, answers))
     const curVisIdx = visibleQs.findIndex(qq => qq.id === q.id)
+    const pct = Math.round(((curVisIdx + 1) / visibleQs.length) * 100)
+    const encourage =
+      pct >= 92 ? 'Last one — your blueprint is ready 🎉' :
+      pct >= 72 ? 'Almost there — keep going' :
+      pct >= 45 ? "You're halfway there — nicely done" :
+      pct >= 20 ? 'Great start — keep the momentum' :
+      "You've got this — let's begin"
 
     const GRAIN_URI = "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
     const StarSVG = ({ size = 28, style = {} }: { size?: number; style?: React.CSSProperties }) => (
@@ -2565,6 +2630,8 @@ export default function Page() {
     }
     if (showIntro) {
       const meta = SECTIONS[sec]
+      const partIdx = SECTION_KEYS.indexOf(sec) + 1
+      const ringC = 2 * Math.PI * 40
       return (
         <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#FBF8F2,#F4EEE4)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
           <div style={{ position:'fixed', inset:0, pointerEvents:'none', zIndex:0, opacity:.04, backgroundImage: GRAIN_URI }} />
@@ -2582,6 +2649,14 @@ export default function Page() {
           </div>
           <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', padding:'90px 28px 60px', position:'relative', zIndex:1 }}>
             <div key={cardKey} className={slideDir} style={{ maxWidth:560, textAlign:'center' }}>
+              {/* SVG progress-ring emblem */}
+              <svg width="96" height="96" viewBox="0 0 96 96" fill="none" style={{ display:'block', margin:'0 auto 22px' }} aria-hidden="true">
+                <circle cx="48" cy="48" r="40" fill="#fff" stroke="#E6DDCB" strokeWidth="1.5"/>
+                <circle cx="48" cy="48" r="40" fill="none" stroke="#1C4A32" strokeWidth="3.5" strokeLinecap="round"
+                  strokeDasharray={`${(partIdx / SECTION_KEYS.length) * ringC} ${ringC}`} transform="rotate(-90 48 48)"/>
+                <path d="M48 22l1.6 4.6L54 28l-4.4 1.4L48 34l-1.6-4.6L42 28l4.4-1.4L48 22z" fill="#B8960C"/>
+                <text x="48" y="60" textAnchor="middle" fontFamily="'Cormorant Garamond',serif" fontSize="34" fontWeight="600" fill="#3D2645">{partIdx}</text>
+              </svg>
               <div style={{ fontSize:12, letterSpacing:'.24em', textTransform:'uppercase', color:'#B0902F', fontWeight:700, marginBottom:20 }}>{meta.eyebrow}</div>
               <h2 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(34px,6.5vw,56px)', fontWeight:500, color:'#1A1A2E', lineHeight:1.04, letterSpacing:'-.02em', marginBottom:20 }}>{meta.name}</h2>
               <p style={{ fontSize:17, fontWeight:300, lineHeight:1.75, color:'#5a5550', marginBottom:38, maxWidth:480, marginLeft:'auto', marginRight:'auto' }}>{meta.intro}</p>
@@ -2606,14 +2681,12 @@ export default function Page() {
           <button onClick={goBack} aria-label="Go back"
             style={{ background:'none', border:'none', fontSize:22, color:'rgba(26,26,46,.45)',
               cursor:'pointer', lineHeight:1, padding:0, flexShrink:0 }}>←</button>
-          <div style={{ flex:1, display:'flex', justifyContent:'center', gap:6 }}>
-            {visibleQs.map((_, i) => (
-              <div key={i} style={{ width: i === curVisIdx ? 22 : 8, height:8, borderRadius:50,
-                background: i < curVisIdx ? '#1C4A32' : i === curVisIdx ? '#3D2645' : 'rgba(61,38,69,.16)',
-                transition:'all .35s cubic-bezier(.2,.7,.2,1)' }} />
-            ))}
+          <div className="qprogress-track">
+            <div className="qprogress-fill" style={{ width: `${pct}%` }} />
           </div>
-          <div style={{ width:22, flexShrink:0 }} />
+          <span style={{ fontSize:12.5, fontWeight:800, color:'#3D2645', flexShrink:0, minWidth:46, textAlign:'right', letterSpacing:'.02em' }}>
+            {curVisIdx + 1}<span style={{ color:'rgba(61,38,69,.4)', fontWeight:700 }}>/{visibleQs.length}</span>
+          </span>
         </div>
 
         {/* Decorative stars bottom corners */}
@@ -2631,8 +2704,17 @@ export default function Page() {
 
           {/* Animated question wrapper */}
           <div key={cardKey} className={slideDir}>
+            {/* Encouragement pill */}
+            <div key={`enc-${curVisIdx}`} style={{ textAlign: 'center', marginTop: 8, marginBottom: 4 }}>
+              <span className="q-encourage">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2l2.2 6.2L20 10l-5.8 1.8L12 18l-2.2-6.2L4 10l5.8-1.8L12 2z" fill="#B8960C"/>
+                </svg>
+                {encourage}
+              </span>
+            </div>
             {/* Chapter label */}
-            <p style={{ textAlign: 'center', fontSize: 11.5, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', fontWeight: 700, marginTop: 24 }}>
+            <p style={{ textAlign: 'center', fontSize: 11.5, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', fontWeight: 700, marginTop: 14 }}>
               {SECTIONS[sectionOf(q.id)].eyebrow} · {SECTIONS[sectionOf(q.id)].name}
             </p>
             {/* Question title */}
@@ -2658,6 +2740,7 @@ export default function Page() {
                         key={opt.value}
                         className={`qopt${sel ? ' sel' : ''}`}
                         onClick={() => handleSelectAnswer(q.id, opt.value)}>
+                        {opt.emoji && <span className="qopt-badge" aria-hidden="true">{opt.emoji}</span>}
                         <span style={{ flex: 1 }}>
                           <span style={{ display: 'block', fontSize: 17, fontWeight: 500, color: sel ? '#fff' : '#0a0a0a' }}>
                             {opt.label}
@@ -2753,6 +2836,7 @@ export default function Page() {
                             })
                             setError('')
                           }}>
+                          {opt.emoji && <span className="qopt-badge" aria-hidden="true">{opt.emoji}</span>}
                           <span style={{ flex: 1 }}>
                             <span style={{ display: 'block', fontSize: 17, fontWeight: 500, color: sel ? '#fff' : '#0a0a0a' }}>
                               {opt.label}

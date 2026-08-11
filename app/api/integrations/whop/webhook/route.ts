@@ -5,12 +5,19 @@ import { recordRevenueEvent } from '@/lib/revenue'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
 import { enrollBuyer } from '@/lib/event-enroll'
+import { resolveOrCreateContact, logActivity, addTag } from '@/lib/crm'
+import { recordPurchase } from '@/lib/purchases'
+import { Resend } from 'resend'
 
 export const dynamic = 'force-dynamic'
 
 // Whop plan id for The 3-Day Breakthrough Intensive ($27) — buyers get the
 // welcome + are enrolled into the event campaign.
 const BREAKTHROUGH_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
+
+// Whop plan id for the $27 Business Growth Diagnostic — buyers unlock the full
+// report on /quiz/results. Configure via env once the Whop product exists.
+const DIAGNOSTIC_PLAN_ID = process.env.WHOP_DIAGNOSTIC_PLAN_ID || ''
 
 /* Whop payment webhook (Svix). Verifies the signature over the RAW body,
    dedups by Svix message id, stores every payload for audit, then dispatches.
@@ -84,6 +91,21 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // $27 Business Growth Diagnostic → grant report entitlement + record the
+    // purchase in the CRM. Guarded so it can never break the core webhook.
+    if (action === 'payment.succeeded' && DIAGNOSTIC_PLAN_ID && raw.includes(DIAGNOSTIC_PLAN_ID)) {
+      try {
+        const d = (body.data as Record<string, unknown>) || {}
+        const user = (d.user as Record<string, unknown>) || {}
+        const email = String(user.email || d.email || '').toLowerCase()
+        const name = String(user.name || user.username || d.name || '') || null
+        const receiptId = String(d.id || d.receipt_id || d.payment_id || '')
+        if (email) await grantDiagnostic(email, name, receiptId)
+      } catch (e) {
+        emitEvent('diagnostic_grant_failed', { provider: 'whop', error: String(e) })
+      }
+    }
+
     // Keep the multi-currency balance cache + affected member fresh (fees/FX
     // make manual math unreliable — always re-fetch from Whop).
     const data = (body.data as Record<string, unknown>) || {}
@@ -100,4 +122,56 @@ export async function POST(req: NextRequest) {
 
 function safeParse(raw: string): Record<string, unknown> {
   try { return JSON.parse(raw) } catch { return {} }
+}
+
+/* Grant the $27 diagnostic: dedup the contact, record the purchase, flip the
+   entitlement on quiz_leads (the report gate), and email a confirmation. */
+async function grantDiagnostic(email: string, name: string | null, receiptId: string) {
+  const db = getSupabaseAdmin()
+  const contact = await resolveOrCreateContact(
+    { email, name, tags: ['quiz', 'diagnostic-buyer'] },
+    { source: 'whop', actor: 'whop-webhook' },
+  )
+  const contactId = contact?.id as string | undefined
+
+  let purchaseId: string | null = null
+  if (contactId) {
+    // recordPurchase also logs a "deal" activity + recomputes LTV + emits purchase_recorded.
+    const p = await recordPurchase(
+      { contactId, product: 'business_growth_diagnostic', amount: 27, currency: 'USD', provider: 'whop', externalId: receiptId || undefined },
+      'whop-webhook',
+    )
+    purchaseId = (p?.id as string) || null
+    await addTag(contactId, 'diagnostic-buyer').catch(() => {})
+  }
+
+  // Entitlement source of truth. Upsert so a buyer whose Whop email is not yet
+  // in quiz_leads still gets a paid row (report gate keys on this).
+  const patch: Record<string, unknown> = { email, paid: true, paid_at: new Date().toISOString(), purchase_id: purchaseId, report_tier: 'full' }
+  if (name) patch.name = name
+  await db.from('quiz_leads').upsert(patch, { onConflict: 'email' }).then(() => {}, () => {})
+
+  await logActivity(email, 'program_view', 'Unlocked the Business Growth Diagnostic').catch(() => {})
+  emitEvent('purchase_completed', { email, product: 'business_growth_diagnostic', amount: 27, contact_id: contactId })
+
+  // Confirmation email with a link back to the report.
+  try {
+    const key = process.env.RESEND_API_KEY
+    if (!key) return
+    const firstName = (name || '').split(' ')[0] || 'there'
+    await new Resend(key).emails.send({
+      from: 'Indrodip | The5th <noreply@10kroadmap.org>',
+      to: email,
+      subject: 'Your full Business Growth Diagnostic is unlocked',
+      html: `<div style="font-family:Inter,system-ui,sans-serif;max-width:520px;margin:0 auto;color:#1A1A2E">
+        <h1 style="font-size:22px;color:#1C4A32;margin:0 0 12px">You're all set, ${firstName}.</h1>
+        <p style="font-size:15px;line-height:1.6;color:#5a5550">Your full Business Growth Diagnostic is unlocked. It includes your complete diagnosis, your prioritised fixes, your personalised 30-day action plan, and a free 1:1 strategy call.</p>
+        <p style="margin:24px 0"><a href="https://the5th.consulting/quiz/results" style="display:inline-block;background:#C9A84C;color:#1a1206;font-weight:700;font-size:15px;padding:14px 30px;border-radius:10px;text-decoration:none">Open your full report →</a></p>
+        <p style="font-size:13px;line-height:1.6;color:#8A8075">Open it on the device you took the quiz on. Need help getting back in? Just reply to this email.</p>
+        <p style="font-size:12px;color:#b3abbb;margin-top:24px">© 2026 The5th Consulting</p>
+      </div>`,
+    })
+  } catch (e) {
+    console.error('diagnostic confirmation email failed', e)
+  }
 }

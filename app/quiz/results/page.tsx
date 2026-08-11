@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Cal, { getCalApi } from '@calcom/embed-react'
 import { whopTrack } from '@/lib/whop'
+import type { Diagnostic } from '@/lib/diagnostic'
 
 /* ════════ Brand tokens ════════ */
 const C = {
@@ -14,44 +15,18 @@ const C = {
   ink: '#1A1A2E', inkMid: '#403b3b', inkSoft: '#5a5550', muted: '#8A8075', border: '#E2DCD2', white: '#fff',
 }
 
+interface Snapshot {
+  health: string
+  strengths: string[]
+  biggest_gap: string
+  recommendation: string
+  next_step: string
+}
+
 /* ════════ Helpers (kept) ════════ */
 function formatStage(q1: string): string {
   const m: Record<string, string> = { starting: 'The Pioneer', idea: 'The Pioneer', launched: 'The Pathfinder', scaling: 'The Builder', established: 'The Luminary' }
   return m[q1] || q1 || 'The Pioneer'
-}
-
-/* Indicative health score derived from stage (a real proxy: earlier stages score lower). */
-function deriveScores(q1: string) {
-  const base: Record<string, { offer: number; positioning: number; pricing: number; momentum: number }> = {
-    idea:        { offer: 30, positioning: 34, pricing: 33, momentum: 26 },
-    starting:    { offer: 36, positioning: 40, pricing: 37, momentum: 32 },
-    launched:    { offer: 58, positioning: 56, pricing: 54, momentum: 55 },
-    scaling:     { offer: 74, positioning: 71, pricing: 69, momentum: 73 },
-    established: { offer: 85, positioning: 83, pricing: 81, momentum: 85 },
-  }
-  const s = base[q1] || base.starting
-  const overall = Math.round((s.offer + s.positioning + s.pricing + s.momentum) / 4)
-  return { ...s, overall }
-}
-
-/* The nine report dimensions, with the real AI scores parsed from the model's
-   ## SCORES block. Falls back to stage-derived values if the AI omits any. */
-const SCORE_DIMS: [string, string][] = [
-  ['Offer', 'offer'], ['Positioning', 'positioning'], ['Pricing', 'pricing'], ['Sales', 'sales'],
-  ['Content', 'content'], ['Marketing', 'marketing'], ['Automation', 'automation'], ['Confidence', 'confidence'],
-]
-function buildSubScores(scoresText: string, q1: string): { label: string; val: number }[] {
-  const ai: Record<string, number> = {}
-  for (const line of (scoresText || '').split('\n')) {
-    const m = line.match(/^\s*\**([A-Za-z][A-Za-z ]*?)\**\s*:\s*(\d{1,3})/)
-    if (m) ai[m[1].trim().toLowerCase()] = Math.max(0, Math.min(100, parseInt(m[2], 10)))
-  }
-  const fb = deriveScores(q1)
-  const fbMap: Record<string, number> = {
-    offer: fb.offer, positioning: fb.positioning, pricing: fb.pricing, sales: fb.momentum,
-    content: fb.positioning, marketing: fb.momentum, automation: Math.max(20, fb.offer - 12), confidence: fb.pricing,
-  }
-  return SCORE_DIMS.map(([label, key]) => ({ label, val: ai[key] ?? fbMap[key] ?? fb.overall }))
 }
 
 /* Parse the AI markdown roadmap into a map of { SECTION HEADER: body }. */
@@ -101,8 +76,8 @@ const LOADING_MESSAGES = [
   'Finding hidden opportunities',
   'Comparing successful coaching businesses',
   'Identifying your highest-ROI move',
-  'Building your personalized roadmap',
-  'Preparing your AI recommendations',
+  'Scoring your business health',
+  'Preparing your assessment',
 ]
 
 const TESTIMONIALS = [
@@ -112,11 +87,22 @@ const TESTIMONIALS = [
 ]
 
 const SESSION_INCLUDES = [
-  'We review your AI report and roadmap together',
+  'We review your full diagnostic and roadmap together',
   'We prioritize the highest-impact next 90 days',
   'We refine your offer and your pricing',
   'We name the one blind spot holding you back',
   'You leave with clarity, whether or not we work together',
+]
+
+/* What the $27 full diagnostic unlocks — shown on the paywall. */
+const FULL_REPORT_INCLUDES = [
+  'Your complete executive summary and full category breakdown',
+  'Your signature offer, built for your niche and stage',
+  'Your pricing strategy and the exact language to hold your price',
+  'Your personalised 30-day action plan and 7-day content plan',
+  'Your lead magnet and digital product blueprints',
+  'Your prioritised fixes and the fastest path forward',
+  'A free 1:1 strategy call to implement it, included',
 ]
 
 /* ════════ Add-to-calendar links (Google / Microsoft / Apple) ════════ */
@@ -139,18 +125,46 @@ function buildCalendarLinks(startISO: string, meetingUrl?: string | null) {
   return { google, outlook, apple }
 }
 
+/* Fire-and-forget funnel event → Journey Intelligence (server dedups/ignores unknown). */
+function track(event: string, meta?: Record<string, unknown>) {
+  try {
+    const email = sessionStorage.getItem('quiz_email') || ''
+    fetch('/api/quiz/track', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, email, meta: meta || {} }), keepalive: true,
+    }).catch(() => {})
+  } catch { /* ignore */ }
+}
+
+/* Ordered deep sections for the paid full report. */
+const FULL_SECTIONS: { key: string; title: string; dark?: boolean }[] = [
+  { key: 'YOUR SITUATION RIGHT NOW', title: 'Your situation, right now' },
+  { key: 'MONEY PSYCHOLOGY INSIGHTS', title: 'Money psychology insights', dark: true },
+  { key: 'YOUR SIGNATURE OFFER', title: 'Your signature offer' },
+  { key: 'YOUR PRICING STRATEGY', title: 'Your pricing strategy' },
+  { key: 'YOUR LEAD MAGNET IDEA', title: 'Your lead magnet' },
+  { key: 'YOUR DIGITAL PRODUCT IDEA', title: 'Your digital product' },
+  { key: '7-DAY CONTENT PLAN', title: 'Your 7-day content plan' },
+  { key: '30-DAY ACTION PLAN', title: 'Your 30-day action plan' },
+  { key: 'YOUR BIGGEST OPPORTUNITY', title: 'Your biggest opportunity' },
+  { key: 'YOUR NEXT 7 DAYS', title: 'Your next 7 days' },
+]
+
 /* ════════ Page ════════ */
 export default function ResultsPage() {
   const [name, setName]           = useState('')
   const [email, setEmail]         = useState('')
   const [answers, setAnswers]     = useState<Record<string, string>>({})
+  const [tier, setTier]           = useState<'free' | 'full'>('free')
   const [roadmap, setRoadmap]     = useState('')
+  const [snapshot, setSnapshot]   = useState<Snapshot | null>(null)
+  const [diagnostic, setDiagnostic] = useState<Diagnostic | null>(null)
+  const [growthAreas, setGrowthAreas] = useState(7)
   const [loading, setLoading]     = useState(true)
   const [msgIdx, setMsgIdx]       = useState(0)
   const [slow, setSlow]           = useState(false)
   const [genFailed, setGenFailed] = useState(false)
   const [archetype, setArchetype] = useState('')
-  const [personalityType, setPersonalityType] = useState('')
   const [booked, setBooked]       = useState(false)
   const [booking, setBooking]     = useState<{ name?: string; start?: string; timeZone?: string; meetingUrl?: string | null }>({})
 
@@ -173,6 +187,7 @@ export default function ResultsPage() {
           setBooking({ name: nm, start })
           setBooked(true)
           whopTrack('schedule') // Whop Pixel: appointment booked
+          track('strategy_call_booked', { start })
           window.scrollTo({ top: 0, behavior: 'smooth' })
           // Enrich with the real start time / timezone / meeting link from Cal.
           if (em) fetch(`/api/cal/recent-booking?email=${encodeURIComponent(em)}`)
@@ -219,24 +234,32 @@ export default function ResultsPage() {
       })
       const data = await res.json().catch(() => ({}))
 
+      // A successful response has either a free snapshot or a full roadmap.
+      const ok = res.ok && ((data.tier === 'free' && data.snapshot) || (data.tier === 'full' && data.roadmap))
       // Transient (concurrency lock / rate limit / 5xx): the first generation may
-      // still be completing. Wait and retry so we land on the cached report.
-      if ((!res.ok || !data.roadmap) && attempt < 3) {
+      // still be completing. Wait and retry so we land on the finished result.
+      if (!ok && attempt < 3) {
         await new Promise(r => setTimeout(r, 3500))
         return generateRoadmap(n, a, attempt + 1)
       }
+      if (!ok) { setGenFailed(true); setLoading(false); return }
 
-      if (!data.roadmap) { setGenFailed(true); setLoading(false); return }
-
-      setRoadmap(data.roadmap)
-      if (data.archetype)   setArchetype(data.archetype)
-      if (data.personality) setPersonalityType(data.personality)
+      const t: 'free' | 'full' = data.tier === 'full' ? 'full' : 'free'
+      setTier(t)
+      if (data.diagnostic) setDiagnostic(data.diagnostic as Diagnostic)
+      if (data.archetype)  setArchetype(data.archetype)
+      if (typeof data.growthAreas === 'number') setGrowthAreas(data.growthAreas)
+      if (t === 'full') setRoadmap(data.roadmap)
+      else setSnapshot(data.snapshot as Snapshot)
       setLoading(false)
 
-      // Email the PDF only on a FRESH generation, never on a cache hit (no duplicate PDFs).
+      track(t === 'full' ? 'full_report_viewed' : 'free_report_viewed')
+      if (t === 'free') track('paywall_viewed')
+
+      // Email the PDF only for the PAID full report, on a FRESH generation (no dup PDFs).
       const storedEmail   = sessionStorage.getItem('quiz_email') || ''
       const storedAnswers = JSON.parse(sessionStorage.getItem('quiz_answers') || '{}')
-      if (storedEmail && !data.cached) {
+      if (t === 'full' && storedEmail && !data.cached) {
         fetch('/api/generate-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -287,17 +310,9 @@ export default function ResultsPage() {
   /* ─── Derived ─── */
   const firstName  = name.split(' ')[0] || 'there'
   const stageLabel = archetype || formatStage(answers.q1 || 'starting')
-  const sections   = parseRoadmap(roadmap)
-  // Real AI scores (parsed from the model). Falls back to stage-derived values if absent.
-  const subScores  = buildSubScores(sections['SCORES'] || '', answers.q1 || 'starting')
-  const overall    = Math.round(subScores.reduce((s, x) => s + x.val, 0) / subScores.length)
-  const situation  = sections['YOUR SITUATION RIGHT NOW'] || ''
-  const moneyPsych = sections['MONEY PSYCHOLOGY INSIGHTS'] || ''
-  const opportunity = sections['YOUR BIGGEST OPPORTUNITY'] || ''
-  const next7      = sections['YOUR NEXT 7 DAYS'] || ''
-  const gatedKeys  = ['YOUR SIGNATURE OFFER', 'YOUR PRICING STRATEGY', '30-DAY ACTION PLAN', '7-DAY CONTENT PLAN', 'YOUR LEAD MAGNET IDEA', 'YOUR DIGITAL PRODUCT IDEA']
-  const gatedPreview = (sections[gatedKeys.find(k => sections[k]) || ''] || '').slice(0, 320)
-  void personalityType
+  const overall    = diagnostic?.overall ?? 0
+  const categories = diagnostic?.categories ?? []
+  const sections   = tier === 'full' ? parseRoadmap(roadmap) : {}
 
   /* ════════ Loading ════════ */
   if (loading) {
@@ -369,13 +384,15 @@ export default function ResultsPage() {
 
       {/* notification */}
       <div style={{ background: C.plumDark, padding: '11px 24px', textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,.82)' }}>
-        Your full report has also been sent to <b style={{ color: C.goldSoft }}>{email || 'your inbox'}</b>
+        {tier === 'full'
+          ? <>Your full report has also been sent to <b style={{ color: C.goldSoft }}>{email || 'your inbox'}</b></>
+          : <>Your assessment is saved to <b style={{ color: C.goldSoft }}>{email || 'your inbox'}</b></>}
       </div>
 
       {/* header */}
       <header style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, background: C.ivory }}>
         <Image src="/logo-the5th.png" alt="The5th Consulting" width={150} height={38} style={{ objectFit: 'contain' }} />
-        <span style={{ fontSize: 12, color: C.muted, letterSpacing: '.1em', textTransform: 'uppercase' }}>AI Business Assessment</span>
+        <span style={{ fontSize: 12, color: C.muted, letterSpacing: '.1em', textTransform: 'uppercase' }}>Business Growth Diagnostic</span>
       </header>
 
       {/* hero */}
@@ -385,7 +402,7 @@ export default function ResultsPage() {
           Here&apos;s exactly where your business stands, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>{firstName}.</em>
         </h1>
         <p style={{ fontSize: 17, fontWeight: 300, color: C.inkSoft, maxWidth: 560, margin: '20px auto 0', lineHeight: 1.7 }}>
-          Our AI read all of your answers and built this for you. Your profile reads as <b style={{ color: C.ink, fontWeight: 600 }}>{stageLabel}</b>.
+          We read all of your answers and scored your business health across {categories.length || 8} dimensions. Your profile reads as <b style={{ color: C.ink, fontWeight: 600 }}>{stageLabel}</b>.
         </p>
       </section>
 
@@ -395,9 +412,9 @@ export default function ResultsPage() {
           <div style={{ background: C.ivory, border: `1px solid ${C.goldLine}`, borderRadius: 14, padding: '22px 26px', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
             <div style={{ fontSize: 20, flexShrink: 0 }}>⏳</div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 15.5, color: C.ink, fontWeight: 600, marginBottom: 4 }}>Your full written report is taking a little longer.</p>
+              <p style={{ fontSize: 15.5, color: C.ink, fontWeight: 600, marginBottom: 4 }}>Your assessment is taking a little longer.</p>
               <p style={{ fontSize: 14.5, color: C.inkSoft, fontWeight: 300, lineHeight: 1.6 }}>
-                We&apos;re finishing it now and it will also arrive in your inbox shortly. Your scores are below, and you can book your session any time.
+                We&apos;re finishing it now. Please try again in a moment.
               </p>
               <button onClick={() => { setGenFailed(false); setLoading(true); generateRoadmap(name, answers) }}
                 style={{ marginTop: 12, background: 'none', border: `1px solid ${C.green}`, color: C.green, fontWeight: 600, fontSize: 13.5, padding: '8px 18px', borderRadius: 6, cursor: 'pointer' }}>
@@ -408,177 +425,191 @@ export default function ResultsPage() {
         </section>
       )}
 
-      {/* score + diagnostic */}
-      <section className="rwrap ru2" style={{ padding: '40px 24px' }}>
-        <div className="rgrid2">
-          {/* Health score */}
-          <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, color: '#fff', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
-            <span style={{ ...eyebrow, color: C.gold }}>Business Health Score</span>
-            <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 84, fontWeight: 500, color: C.gold, lineHeight: 1 }}>{overall}</div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', letterSpacing: '.04em' }}>out of 100</div>
-            <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,.7)', marginTop: 18, lineHeight: 1.6, fontWeight: 300 }}>
-              Scored by our AI from your answers, an honest read on where you are today, and how much room there is to grow.
-            </p>
-          </div>
-          {/* Sub scores */}
-          <div style={card}>
-            <span style={eyebrow}>Your Nine Scores</span>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', columnGap: 26, marginTop: 4 }}>
-              {subScores.map(s => <ScoreBar key={s.label} label={s.label} val={s.val} />)}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* diagnostic — "where am I" (FREE) */}
-      {situation && (
-        <section className="rwrap ru3" style={{ padding: '20px 24px 40px' }}>
-          <div style={card}>
-            <span style={eyebrow}>What Our AI Sees</span>
-            <h2 style={{ ...h2, marginBottom: 18 }}>Your situation, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>right now.</em></h2>
-            <RoadmapBody text={situation} />
-          </div>
-        </section>
-      )}
-
-      {/* money psychology insights (FREE) */}
-      {moneyPsych && (
-        <section className="rwrap" style={{ padding: '0 24px 40px' }}>
-          <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, border: 'none', color: '#fff' }}>
-            <span style={{ ...eyebrow, color: C.gold }}>Money Psychology Insights</span>
-            <h2 style={{ ...h2, color: '#fff', marginBottom: 18 }}>How you relate to money is <em style={{ fontStyle: 'italic', color: C.gold }}>shaping your pricing.</em></h2>
-            <div style={{ color: 'rgba(255,255,255,.82)' }}>
-              {moneyPsych.split('\n').filter(l => l.trim()).map((line, i) => (
-                <p key={i} style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.8, fontSize: 15.5, margin: '10px 0', fontWeight: 300 }}>{line.trim().replace(/\*\*/g, '')}</p>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* biggest opportunity (FREE teaser) */}
-      {opportunity && (
-        <section className="rwrap" style={{ padding: '0 24px 40px' }}>
-          <div style={{ ...card, background: `linear-gradient(165deg,${C.ivory},${C.creamMid})`, borderColor: C.goldLine }}>
-            <span style={eyebrow}>Your Biggest Opportunity</span>
-            <h2 style={{ ...h2, marginBottom: 18 }}>The highest-leverage move <em style={{ fontStyle: 'italic', color: C.goldDeep }}>available to you.</em></h2>
-            <RoadmapBody text={opportunity} />
-          </div>
-        </section>
-      )}
-
-      {/* YOUR NEXT 7 DAYS — the solution (FREE) */}
-      {next7 && (
-        <section className="rwrap" style={{ padding: '0 24px 24px' }}>
-          <div style={{ ...card, borderTop: `3px solid ${C.green}` }}>
-            <span style={eyebrow}>Your Solution · Start Today</span>
-            <h2 style={{ ...h2, marginBottom: 8 }}>Your next 7 days, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>made simple.</em></h2>
-            <p style={{ fontSize: 15, color: C.inkSoft, fontWeight: 300, marginBottom: 22 }}>One small, doable step each day. This is where momentum begins.</p>
-            <RoadmapBody text={next7} />
-          </div>
-        </section>
-      )}
-
-      {/* 7-day AI coaching activated */}
-      <section className="rwrap" style={{ padding: '0 24px 24px' }}>
-        <div style={{ ...card, background: `linear-gradient(165deg,${C.ivory},${C.creamMid})`, borderColor: C.goldLine, display: 'flex', gap: 18, alignItems: 'flex-start' }}>
-          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(201,168,76,.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 20 }}>✉️</div>
-          <div>
-            <span style={{ ...eyebrow, marginBottom: 6 }}>Your 7-Day AI Coaching Is Now Active</span>
-            <p style={{ fontSize: 15, color: C.inkSoft, fontWeight: 300, lineHeight: 1.65 }}>
-              We&apos;ve emailed your full report and PDF to <b style={{ color: C.ink, fontWeight: 600 }}>{email || 'your inbox'}</b>. Starting tomorrow morning, you&apos;ll get one short coaching email a day for 7 days, each tailored to your answers, to keep you moving. Check your inbox (and your spam folder, just in case).
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* GATED full roadmap → book to unlock */}
-      <section className="rwrap" style={{ padding: '0 24px 24px' }}>
-        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${C.border}` }}>
-          {/* blurred preview */}
-          <div style={{ padding: '36px 38px', filter: 'blur(5px)', opacity: .5, userSelect: 'none', pointerEvents: 'none', maxHeight: 240, overflow: 'hidden', background: C.white }} aria-hidden="true">
-            <span style={eyebrow}>Your 90-Day Roadmap</span>
-            <RoadmapBody text={gatedPreview || 'Your signature offer, your pricing strategy, your full 30-day action plan, and your personalised content plan are ready and waiting inside your roadmap.'} muted />
-          </div>
-          {/* lock overlay */}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '40px 28px', background: 'linear-gradient(180deg,rgba(250,246,240,.72),rgba(250,246,240,.96))' }}>
-            <div style={{ width: 52, height: 52, borderRadius: '50%', border: `1.5px solid ${C.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18, background: 'rgba(201,168,76,.1)' }}>
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke={C.goldDeep} strokeWidth="1.6"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-            </div>
-            <span style={eyebrow}>Your 90-Day Roadmap Is Ready</span>
-            <h2 style={{ ...h2, maxWidth: 560, marginBottom: 12 }}>This is the half that changes everything, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>and we build it with you.</em></h2>
-            <p style={{ fontSize: 16, fontWeight: 300, color: C.inkSoft, maxWidth: 520, lineHeight: 1.7, marginBottom: 8 }}>
-              Your signature offer, your pricing, your full 30-day action plan, and your personalised content plan are ready. We&apos;ll walk through them with you on your Private Strategy &amp; Coaching Session, and prioritise the exact next steps for your situation.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* THE SESSION — booking (Step 2): embedded scheduler + confirmation */}
-      <section className="rwrap" id="book" style={{ padding: '20px 24px 8px' }}>
-        <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
-          {!booked ? (
-            <>
-              <span style={{ ...eyebrow, color: C.gold }}>Your Next 14 Days</span>
-              <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want to understand your full report, and solve your biggest problem, <em style={{ fontStyle: 'italic', color: C.gold }}>within 14 days?</em></h2>
-              <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 14px', lineHeight: 1.75 }}>
-                You&apos;ve seen half of it. The other half, your offer, your pricing, and your full 90-day roadmap, is the half that actually changes your income. And right now it&apos;s sitting unopened.
+      {/* score + diagnostic (BOTH tiers) */}
+      {diagnostic && (
+        <section className="rwrap ru2" style={{ padding: '40px 24px' }}>
+          <div className="rgrid2">
+            {/* Health score */}
+            <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, color: '#fff', border: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+              <span style={{ ...eyebrow, color: C.gold }}>Business Health Score</span>
+              <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 84, fontWeight: 500, color: C.gold, lineHeight: 1 }}>{overall}</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', letterSpacing: '.04em' }}>out of 100</div>
+              <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,.7)', marginTop: 18, lineHeight: 1.6, fontWeight: 300 }}>
+                An honest read on where your business is today, scored from your answers, and how much room there is to grow.
               </p>
-              <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 26px', lineHeight: 1.75 }}>
-                On a Private Strategy &amp; Coaching Session, Indrodip walks through your complete report with you and maps the exact moves to solve the one challenge you came here for, <b style={{ color: '#fff', fontWeight: 600 }}>starting in the next 14 days.</b> Pick a time that works for you below.
-              </p>
-
-              {/* Embedded Cal.com scheduler */}
-              <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', maxWidth: 900, margin: '0 auto', boxShadow: '0 20px 50px -30px rgba(0,0,0,.6)' }}>
-                <Cal namespace="60min" calLink="indrodip-ghosh-ut1vxh/60min" style={{ width: '100%', height: '660px', overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', name, email }} />
+            </div>
+            {/* Sub scores */}
+            <div style={card}>
+              <span style={eyebrow}>Your Category Scores</span>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', columnGap: 26, marginTop: 4 }}>
+                {categories.map(c => <ScoreBar key={c.key} label={c.label} val={c.score} />)}
               </div>
+            </div>
+          </div>
+        </section>
+      )}
 
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
+      {/* ══════════ FREE TIER: snapshot + paywall ══════════ */}
+      {tier === 'free' && snapshot && (
+        <>
+          {/* Overall health snapshot */}
+          <section className="rwrap ru3" style={{ padding: '20px 24px 24px' }}>
+            <div style={card}>
+              <span style={eyebrow}>Your Business Health</span>
+              <h2 style={{ ...h2, marginBottom: 18 }}>What we see, <em style={{ fontStyle: 'italic', color: C.goldDeep }}>right now.</em></h2>
+              <RoadmapBody text={snapshot.health} />
+            </div>
+          </section>
 
-              <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
-                <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>
-                {SESSION_INCLUDES.map((s, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
-                    <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
-                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,.78)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
+          {/* Strengths + biggest gap */}
+          <section className="rwrap" style={{ padding: '0 24px 24px' }}>
+            <div className="rgrid2">
+              <div style={{ ...card, borderTop: `3px solid ${C.green}` }}>
+                <span style={eyebrow}>Your Top Strengths</span>
+                {(snapshot.strengths.length ? snapshot.strengths : ['You showed up and did the honest work of assessing your business.']).map((s, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 11, margin: '10px 0' }}>
+                    <span style={{ color: C.green, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                    <span style={{ color: C.inkSoft, lineHeight: 1.6, fontSize: 15 }}>{s.replace(/\*\*/g, '')}</span>
                   </div>
                 ))}
               </div>
-            </>
-          ) : (() => {
-            const firstName = (booking.name || name || '').split(' ')[0]
-            const when = booking.start ? new Date(booking.start).toLocaleString([], { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }) : ''
-            const links = booking.start ? buildCalendarLinks(booking.start, booking.meetingUrl) : null
-            const calBtn: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 9, background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#fff', fontSize: 14, fontWeight: 600, padding: '12px 20px', borderRadius: 8, textDecoration: 'none' }
-            return (
-              <>
-                <div style={{ width: 68, height: 68, borderRadius: '50%', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 34, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>✓</div>
-                <span style={{ ...eyebrow, color: C.gold }}>You&apos;re booked</span>
-                <h2 style={{ ...h2, color: '#fff', maxWidth: 620, margin: '0 auto 14px' }}>Your session is confirmed{firstName ? `, ${firstName}` : ''}.</h2>
-                {when && (
-                  <div style={{ display: 'inline-block', background: 'rgba(201,168,76,.12)', border: `1px solid ${C.goldLine}`, borderRadius: 12, padding: '16px 26px', margin: '6px auto 22px' }}>
-                    <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, fontWeight: 700, marginBottom: 6 }}>Your Session</div>
-                    <div style={{ fontSize: 20, fontWeight: 600, color: '#fff', fontFamily: "'Cormorant Garamond',serif" }}>{when}</div>
+              <div style={{ ...card, background: `linear-gradient(165deg,${C.ivory},${C.creamMid})`, borderColor: C.goldLine }}>
+                <span style={eyebrow}>Your Biggest Growth Gap</span>
+                <RoadmapBody text={snapshot.biggest_gap} />
+              </div>
+            </div>
+          </section>
+
+          {/* One immediate recommendation */}
+          <section className="rwrap" style={{ padding: '0 24px 24px' }}>
+            <div style={{ ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, border: 'none', color: '#fff' }}>
+              <span style={{ ...eyebrow, color: C.gold }}>Do This First</span>
+              <h2 style={{ ...h2, color: '#fff', marginBottom: 16 }}>One move to make <em style={{ fontStyle: 'italic', color: C.gold }}>this week.</em></h2>
+              <p style={{ fontSize: 16.5, color: 'rgba(255,255,255,.82)', lineHeight: 1.75, fontWeight: 300, marginBottom: 14 }}>{snapshot.recommendation.replace(/\*\*/g, '')}</p>
+              <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,.6)', lineHeight: 1.7, fontWeight: 300 }}><b style={{ color: C.goldSoft, fontWeight: 600 }}>Focus first:</b> {snapshot.next_step.replace(/\*\*/g, '')}</p>
+            </div>
+          </section>
+
+          {/* ── Paywall: $27 full diagnostic ── */}
+          <section className="rwrap" style={{ padding: '20px 24px 8px' }}>
+            <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
+              <span style={{ ...eyebrow, color: C.gold }}>The5th Business Growth Diagnostic</span>
+              <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>
+                Your assessment identified <em style={{ fontStyle: 'italic', color: C.gold }}>{growthAreas} growth areas.</em> You&apos;ve seen the most important one.
+              </h2>
+              <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 8px', lineHeight: 1.75 }}>
+                Your full report contains the rest, your complete diagnosis, your prioritised fixes, your personalised action plan, and the fastest path forward, built specifically from your answers.
+              </p>
+
+              <div style={{ maxWidth: 520, margin: '30px auto 0', textAlign: 'left', background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 14, padding: '26px 28px' }}>
+                <span style={{ ...eyebrow, color: C.gold }}>Everything you unlock</span>
+                {FULL_REPORT_INCLUDES.map((s, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
+                    <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                    <span style={{ fontSize: 15, color: 'rgba(255,255,255,.82)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
                   </div>
-                )}
-                <p style={{ fontSize: 15.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
-                  A calendar invite{booking.meetingUrl ? ' and your meeting link' : ''} are on their way to your inbox. Add it to your calendar so it never slips:
-                </p>
-                {links && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: booking.meetingUrl ? 24 : 4 }}>
-                    <a href={links.google} target="_blank" rel="noopener noreferrer" style={calBtn}>📅 Google Calendar</a>
-                    <a href={links.apple} download="the5th-session.ics" style={calBtn}>🍎 Apple Calendar</a>
-                    <a href={links.outlook} target="_blank" rel="noopener noreferrer" style={calBtn}>🪟 Microsoft / Outlook</a>
+                ))}
+              </div>
+
+              <div style={{ margin: '32px auto 0' }}>
+                <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 15, color: 'rgba(255,255,255,.55)', letterSpacing: '.04em' }}>One-time</div>
+                <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 64, fontWeight: 600, color: C.gold, lineHeight: 1 }}>$27</div>
+              </div>
+
+              <a href="/diagnostic-checkout" onClick={() => track('checkout_started')}
+                style={{ display: 'inline-block', marginTop: 24, background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 17, fontWeight: 700, padding: '17px 46px', borderRadius: 8, textDecoration: 'none', boxShadow: '0 18px 40px -20px rgba(201,168,76,.8)' }}>
+                Unlock Your Full Business Growth Report →
+              </a>
+
+              <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,.55)', marginTop: 18, lineHeight: 1.7, maxWidth: 480, marginLeft: 'auto', marginRight: 'auto' }}>
+                <b style={{ color: C.goldSoft, fontWeight: 600 }}>7-Day Satisfaction Guarantee.</b> Go through your full report and start implementing it. If you genuinely feel it didn&apos;t give you meaningful value, email us within 7 days and we&apos;ll review your request per our guarantee terms.
+              </p>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* ══════════ FULL TIER: complete report + bonus strategy call ══════════ */}
+      {tier === 'full' && (
+        <>
+          {FULL_SECTIONS.filter(s => sections[s.key]).map(s => (
+            <section key={s.key} className="rwrap" style={{ padding: '0 24px 24px' }}>
+              <div style={s.dark
+                ? { ...card, background: `linear-gradient(165deg,${C.plum},${C.plumDark})`, border: 'none', color: '#fff' }
+                : card}>
+                <span style={{ ...eyebrow, ...(s.dark ? { color: C.gold } : {}) }}>{s.title}</span>
+                {s.dark
+                  ? <div>{sections[s.key].split('\n').filter(l => l.trim()).map((line, i) => (
+                      <p key={i} style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.8, fontSize: 15.5, margin: '10px 0', fontWeight: 300 }}>{line.trim().replace(/\*\*/g, '')}</p>
+                    ))}</div>
+                  : <RoadmapBody text={sections[s.key]} />}
+              </div>
+            </section>
+          ))}
+
+          {/* Bonus: free strategy call */}
+          <section className="rwrap" id="book" style={{ padding: '20px 24px 8px' }}>
+            <div style={{ ...card, background: `linear-gradient(168deg,${C.plum},${C.plumDark} 60%,${C.plumDeep})`, color: '#fff', border: 'none', textAlign: 'center', padding: '52px 38px' }}>
+              {!booked ? (
+                <>
+                  <span style={{ ...eyebrow, color: C.gold }}>Included Bonus · Free 1:1</span>
+                  <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want help implementing this? Book your <em style={{ fontStyle: 'italic', color: C.gold }}>free strategy call.</em></h2>
+                  <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 26px', lineHeight: 1.75 }}>
+                    As a bonus with your diagnostic, Indrodip will walk through your complete report with you and map the exact moves to solve the one challenge you came here for. Pick a time below.
+                  </p>
+
+                  <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', maxWidth: 900, margin: '0 auto', boxShadow: '0 20px 50px -30px rgba(0,0,0,.6)' }}>
+                    <Cal namespace="60min" calLink="indrodip-ghosh-ut1vxh/60min" style={{ width: '100%', height: '660px', overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', name, email }} />
                   </div>
-                )}
-                {booking.meetingUrl && (
-                  <a href={booking.meetingUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 40px', borderRadius: 6, textDecoration: 'none', marginTop: 6 }}>Join Link →</a>
-                )}
-              </>
-            )
-          })()}
-        </div>
-      </section>
+
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
+
+                  <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
+                    <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>
+                    {SESSION_INCLUDES.map((s, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 11 }}>
+                        <span style={{ color: C.gold, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                        <span style={{ fontSize: 15, color: 'rgba(255,255,255,.78)', fontWeight: 300, lineHeight: 1.5 }}>{s}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (() => {
+                const bFirstName = (booking.name || name || '').split(' ')[0]
+                const when = booking.start ? new Date(booking.start).toLocaleString([], { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }) : ''
+                const links = booking.start ? buildCalendarLinks(booking.start, booking.meetingUrl) : null
+                const calBtn: React.CSSProperties = { display: 'inline-flex', alignItems: 'center', gap: 9, background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#fff', fontSize: 14, fontWeight: 600, padding: '12px 20px', borderRadius: 8, textDecoration: 'none' }
+                return (
+                  <>
+                    <div style={{ width: 68, height: 68, borderRadius: '50%', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 34, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>✓</div>
+                    <span style={{ ...eyebrow, color: C.gold }}>You&apos;re booked</span>
+                    <h2 style={{ ...h2, color: '#fff', maxWidth: 620, margin: '0 auto 14px' }}>Your session is confirmed{bFirstName ? `, ${bFirstName}` : ''}.</h2>
+                    {when && (
+                      <div style={{ display: 'inline-block', background: 'rgba(201,168,76,.12)', border: `1px solid ${C.goldLine}`, borderRadius: 12, padding: '16px 26px', margin: '6px auto 22px' }}>
+                        <div style={{ fontSize: 11, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, fontWeight: 700, marginBottom: 6 }}>Your Session</div>
+                        <div style={{ fontSize: 20, fontWeight: 600, color: '#fff', fontFamily: "'Cormorant Garamond',serif" }}>{when}</div>
+                      </div>
+                    )}
+                    <p style={{ fontSize: 15.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.7 }}>
+                      A calendar invite{booking.meetingUrl ? ' and your meeting link' : ''} are on their way to your inbox. Add it to your calendar so it never slips:
+                    </p>
+                    {links && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', marginBottom: booking.meetingUrl ? 24 : 4 }}>
+                        <a href={links.google} target="_blank" rel="noopener noreferrer" style={calBtn}>📅 Google Calendar</a>
+                        <a href={links.apple} download="the5th-session.ics" style={calBtn}>🍎 Apple Calendar</a>
+                        <a href={links.outlook} target="_blank" rel="noopener noreferrer" style={calBtn}>🪟 Microsoft / Outlook</a>
+                      </div>
+                    )}
+                    {booking.meetingUrl && (
+                      <a href={booking.meetingUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: `linear-gradient(180deg,${C.goldSoft},${C.gold} 60%,${C.goldDeep})`, color: C.plumDark, fontSize: 16, fontWeight: 700, padding: '16px 40px', borderRadius: 6, textDecoration: 'none', marginTop: 6 }}>Join Link →</a>
+                    )}
+                  </>
+                )
+              })()}
+            </div>
+          </section>
+        </>
+      )}
 
       {/* testimonials */}
       <section className="rwrap" style={{ padding: '48px 24px 20px' }}>

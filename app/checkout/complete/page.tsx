@@ -62,10 +62,22 @@ const OFFERS: Record<string, Offer> = {
       { icon: '🛡️', t: 'Backed for a full year', d: 'Your 365-day money-back guarantee gives you a whole year to put it to work.' },
     ],
   },
+  diagnostic: {
+    eyebrow: 'Payment confirmed · Report unlocking',
+    title: 'Your full Business\nGrowth Diagnostic is ready.',
+    subtitle: 'We are unlocking your complete report right now. Here is what you just got — and how to use it.',
+    steps: [
+      { icon: '📊', t: 'Your full diagnosis', d: 'Your complete category breakdown, prioritised fixes, and the fastest path forward — built from your answers.' },
+      { icon: '🗺️', t: 'Your personalised action plan', d: 'Your signature offer, pricing strategy, 30-day plan and 7-day content plan, all in one place.' },
+      { icon: '📞', t: 'Your free strategy call', d: 'Included with your diagnostic — book it right inside your report and we will implement it together.' },
+      { icon: '📬', t: 'Saved to your inbox', d: 'A copy is on its way to the email you used, so you can reopen your report any time.' },
+    ],
+  },
 }
 
 export default function CheckoutComplete() {
   const [type, setType] = useState<string>('trial')
+  const [diagReady, setDiagReady] = useState(false)
 
   useEffect(() => {
     const t = new URLSearchParams(window.location.search).get('type') || 'trial'
@@ -77,6 +89,27 @@ export default function CheckoutComplete() {
       } catch {}
     })()
   }, [])
+
+  // For the $27 diagnostic: poll until the Whop webhook has marked the report
+  // paid for this session, then reveal the "view report" button. The results
+  // page itself also re-checks entitlement, so this is a smooth hand-off.
+  useEffect(() => {
+    if (type !== 'diagnostic') return
+    let tries = 0
+    let stop = false
+    const poll = async () => {
+      if (stop) return
+      try {
+        const r = await fetch('/api/quiz/report-status', { cache: 'no-store' })
+        const j = await r.json().catch(() => ({}))
+        if (j?.paid) { setDiagReady(true); return }
+      } catch { /* keep polling */ }
+      if (++tries < 20) setTimeout(poll, 3000)
+      else setDiagReady(true) // fail-open after ~60s; results page gates anyway
+    }
+    poll()
+    return () => { stop = true }
+  }, [type])
 
   const offer = OFFERS[type] || OFFERS.trial
 
@@ -117,10 +150,21 @@ export default function CheckoutComplete() {
           </div>
         )}
 
-        <a href={PLATFORM_URL} style={{ display: 'inline-block', background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: '#1a1206', fontWeight: 800, fontSize: 16.5, padding: '16px 36px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 12px 34px rgba(169,134,47,.34)', marginTop: offer.billing ? 0 : 8 }}>
-          Open your platform →
-        </a>
-        <p style={{ fontSize: 12.5, color: MUTE, marginTop: 12 }}>Log in with the email you just used — no password, just a 6-digit code.</p>
+        {type === 'diagnostic' ? (
+          <>
+            <a href="/quiz/results" style={{ display: 'inline-block', background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: '#1a1206', fontWeight: 800, fontSize: 16.5, padding: '16px 36px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 12px 34px rgba(169,134,47,.34)', marginTop: 8, opacity: diagReady ? 1 : 0.55, pointerEvents: diagReady ? 'auto' : 'none' }}>
+              {diagReady ? 'View my full report →' : 'Unlocking your report…'}
+            </a>
+            <p style={{ fontSize: 12.5, color: MUTE, marginTop: 12 }}>{diagReady ? 'Your complete diagnostic is ready.' : 'This takes a few seconds. A copy is also on its way to your inbox.'}</p>
+          </>
+        ) : (
+          <>
+            <a href={PLATFORM_URL} style={{ display: 'inline-block', background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: '#1a1206', fontWeight: 800, fontSize: 16.5, padding: '16px 36px', borderRadius: 14, textDecoration: 'none', boxShadow: '0 12px 34px rgba(169,134,47,.34)', marginTop: offer.billing ? 0 : 8 }}>
+              Open your platform →
+            </a>
+            <p style={{ fontSize: 12.5, color: MUTE, marginTop: 12 }}>Log in with the email you just used — no password, just a 6-digit code.</p>
+          </>
+        )}
       </main>
 
       <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Consulting</div>

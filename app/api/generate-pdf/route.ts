@@ -120,6 +120,18 @@ const firstSentence = (t: string): string => {
   return (m ? m[0] : clean.slice(0, 180)).trim()
 }
 
+/* Parse "Day N: task" lines from the report's NEXT 7 DAYS section. Shared by
+   the PDF homework page and (via the report) the daily email sequence. */
+export type Homework = { day: number; task: string }
+const parseHomework = (text: string): Homework[] => {
+  const out: Homework[] = []
+  for (const raw of (text || '').split('\n')) {
+    const m = raw.trim().replace(/^[-•*]\s+/, '').match(/^Day\s*(\d+)\s*[:\-–]\s*(.+)$/i)
+    if (m) out.push({ day: parseInt(m[1], 10), task: m[2].replace(/\*\*/g, '').trim() })
+  }
+  return out.sort((a, b) => a.day - b.day).slice(0, 7)
+}
+
 /* ─────────────────────────  CHARTS (inline SVG)  ───────────────────────── */
 const scorecardSVG = (scores: Score[]): string => {
   const rowH = 42, top = 8, w = 620
@@ -166,7 +178,12 @@ const matrixSVG = (scores: Score[]): string => {
 }
 
 /* ─────────────────────────  REPORT ASSEMBLY  ───────────────────────── */
-type Meta = { name: string; firstName: string; archetypeLabel: string; personalityLabel: string; goal: string; stage: string; dateStr: string }
+type Meta = { name: string; firstName: string; archetypeLabel: string; personalityLabel: string; goal: string; stage: string; dateStr: string; logo: string }
+
+/* White wordmark for dark pages — falls back to a text mark if unavailable. */
+const logoMark = (m: Meta, h: number) => m.logo
+  ? `<img src="${m.logo}" alt="The5th Consulting" style="height:${h}px;width:auto"/>`
+  : `<div style="font-family:'DM Sans';font-size:${Math.round(h * 0.6)}px;font-weight:800;color:#fff">The<span style="color:${P.gold}">5th</span></div>`
 
 const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const sec = parseSections(roadmap)
@@ -190,7 +207,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
 
   /* 01 — COVER */
   sheets.push(`<section class="sheet dark cover">
-    <img src="${SITE}/logo-white.png" alt="The5th Consulting" style="height:34px;width:auto;opacity:.96"/>
+    ${logoMark(m, 34)}
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
       <div style="font-family:'DM Sans';font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${P.goldSoft};margin-bottom:22px">Business Growth Diagnostic</div>
       <h1 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:56px;line-height:1.02;letter-spacing:-.02em;color:#fff;margin:0">Your Personalized<br/>Business Assessment<br/><span style="font-style:italic;color:${P.gold}">& Strategic Growth Roadmap</span></h1>
@@ -218,9 +235,10 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   /* 03 — TABLE OF CONTENTS */
   const toc = [
     ['01', 'Executive Summary'], ['02', 'Business Health Scorecard'], ['03', 'Detailed Diagnostic'],
-    ['04', 'A Strategic Insight'], ['05', 'Your Priority Matrix'], ['06', 'Your 7-Day Action Plan'],
-    ['07', 'If We Were Running Your Business'], ['08', 'A Relevant Result'], ['09', 'About The5th Consulting'],
-    ['10', 'Your Complimentary Strategy Session'],
+    ['04', 'A Strategic Insight'], ['05', 'Your Priority Matrix'], ['06', 'Your Signature Offer'],
+    ['07', 'Pricing & Money Psychology'], ['08', 'Your 30-Day Plan'], ['09', 'Content & Growth Assets'],
+    ['10', 'Your 7-Day Homework'], ['11', 'If We Were Running Your Business'], ['12', 'A Relevant Result'],
+    ['13', 'About The5th Consulting'], ['14', 'Your Strategy Session'],
   ]
   sheets.push(`<section class="sheet">
     ${eyebrow('Contents')}
@@ -316,11 +334,43 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
       </div>
     </div>${foot}</section>`)
 
-  /* 09 — 7-DAY ACTION PLAN */
+  /* 06–09 — DEEP STRATEGY PAGES (the detailed, personalized substance) */
+  const deepPage = (num: string, label: string, title: string, sub: string, blocks: [string, string][]) => {
+    const inner = blocks.filter(([, key]) => sec[key]).map(([hd, key]) =>
+      `${hd ? `<div style="font-family:'DM Sans';font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:${P.goldDeep};margin:20px 0 8px">${hd}</div>` : ''}${richBody(sec[key])}`
+    ).join('')
+    if (!inner.trim()) return
+    sheets.push(`<section class="sheet">
+      ${eyebrow(num + ' · ' + label)}
+      ${h2(title)}
+      ${sub ? `<p style="font-size:12px;color:${P.sub};line-height:1.7;margin:0 0 12px;max-width:560px">${sub}</p>` : ''}
+      <div style="max-width:620px">${inner}</div>${foot}</section>`)
+  }
+  deepPage('06', 'Your Signature Offer', `The offer built for <span style="font-style:italic;color:${P.goldDeep}">your niche.</span>`, 'A clear, premium way to package what you already do well.', [['', 'YOUR SIGNATURE OFFER']])
+  deepPage('07', 'Pricing & Money Psychology', `What to charge, <span style="font-style:italic;color:${P.goldDeep}">and how to hold it.</span>`, '', [['Your pricing strategy', 'YOUR PRICING STRATEGY'], ['How you relate to money', 'MONEY PSYCHOLOGY INSIGHTS']])
+  deepPage('08', 'Your 30-Day Plan', `The month that builds <span style="font-style:italic;color:${P.goldDeep}">momentum.</span>`, 'Four focused weeks, in order.', [['', '30-DAY ACTION PLAN']])
+  deepPage('09', 'Content & Growth Assets', `Demand, <span style="font-style:italic;color:${P.goldDeep}">on repeat.</span>`, '', [['Your 7-day content plan', '7-DAY CONTENT PLAN'], ['Your lead magnet', 'YOUR LEAD MAGNET IDEA'], ['Your digital product', 'YOUR DIGITAL PRODUCT IDEA']])
+
+  /* 10 — 7-DAY HOMEWORK PLAN (mirrors the daily email sequence) */
+  const homework = parseHomework(sec['YOUR NEXT 7 DAYS'] || '')
+  const hwCards = (homework.length ? homework : [
+    { day: 1, task: 'Define your single best offer and the one outcome it delivers.' },
+    { day: 2, task: 'Message three past leads with a specific invitation.' },
+    { day: 3, task: 'Publish one story-driven post about a client result.' },
+    { day: 4, task: 'Build a simple lead magnet from your best content.' },
+    { day: 5, task: 'Set up a two-email follow-up sequence.' },
+    { day: 6, task: 'Run one discovery call.' },
+    { day: 7, task: "Review what worked and pick next week's single priority." },
+  ]).map(h => `<div style="display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid ${P.line}">
+      <div style="min-width:52px;font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1px;color:${P.goldDeep};text-transform:uppercase;padding-top:2px">Day ${h.day}</div>
+      <div style="width:15px;height:15px;border:1.5px solid ${P.gold};border-radius:4px;flex-shrink:0;margin-top:1px"></div>
+      <div style="flex:1;font-size:12px;color:${P.sub};line-height:1.55">${esc(h.task)}</div>
+    </div>`).join('')
   sheets.push(`<section class="sheet">
-    ${eyebrow('06 · Your 7-Day Action Plan')}
-    ${h2(`Seven days.<br/>One move <span style="font-style:italic;color:${P.goldDeep}">each day.</span>`)}
-    <div style="max-width:600px">${richBody(sec['YOUR NEXT 7 DAYS'] || 'Day 1: Define your single best offer.\nDay 2: Reach out to three past leads.\nDay 3: Publish one story-driven post.')}</div>
+    ${eyebrow('10 · Your 7-Day Homework')}
+    ${h2(`One small task <span style="font-style:italic;color:${P.goldDeep}">each day.</span>`)}
+    <p style="font-size:12px;color:${P.sub};line-height:1.7;margin:0 0 18px;max-width:560px">Do these in order, one per day. You'll get a short email each morning with that day's task and a real example of someone who did the same thing. Check each box as you go.</p>
+    <div style="max-width:600px">${hwCards}</div>
     ${ctaBar}${foot}</section>`)
 
   /* 10 — IF WE WERE RUNNING YOUR BUSINESS */
@@ -329,7 +379,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div><div style="font-family:'DM Sans';font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Fix ${esc(s.label.toLowerCase())} before anything else.</div>
     <div style="font-size:11.5px;color:rgba(255,255,255,.7);line-height:1.6">At ${s.val}/100 it is the clearest limiter on your goal of ${esc(m.goal.toLowerCase())}. One focused week here changes the trajectory more than a month spread thin.</div></div></div>`).join('')
   sheets.push(`<section class="sheet dark">
-    ${eyebrow('07 · If We Were Running Your Business', true)}
+    ${eyebrow('11 · If We Were Running Your Business', true)}
     ${h2(`The first decisions<br/>we would <span style="font-style:italic;color:${P.gold}">make.</span>`, true)}
     <div style="max-width:600px">${moves}
       <p style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.75;margin:18px 0 0">And the discipline underneath all of it: resist the urge to improve what is already strong. Every hour spent on ${esc(strength.label.toLowerCase())} right now is an hour not spent on the constraint that is actually capping your growth.</p>
@@ -339,7 +389,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   if (study) {
     const metrics = (study.metrics || []).slice(0, 4)
     sheets.push(`<section class="sheet">
-      ${eyebrow('08 · A Relevant Result')}
+      ${eyebrow('12 · A Relevant Result')}
       ${h2(`How we solved a similar<br/><span style="font-style:italic;color:${P.goldDeep}">constraint.</span>`)}
       <div style="border:1px solid ${P.line};border-radius:14px;overflow:hidden">
         <div style="background:${P.plum};padding:24px 26px;color:#fff">
@@ -359,7 +409,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
 
   /* 12 — ABOUT THE5TH */
   sheets.push(`<section class="sheet">
-    ${eyebrow('09 · About The5th Consulting')}
+    ${eyebrow('13 · About The5th Consulting')}
     ${h2(`We help experts turn a<br/>lifetime of experience into<br/><span style="font-style:italic;color:${P.goldDeep}">a business that lasts.</span>`)}
     <div style="max-width:560px">
       <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">The5th works with coaches, consultants and experts, most of them established in their field, who know they are sitting on real value but have not yet built the offer, positioning and system to monetize it with confidence.</p>
@@ -370,7 +420,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   /* 13 — FINAL STRATEGY SESSION CTA */
   sheets.push(`<section class="sheet dark" style="text-align:center;justify-content:center">
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
-      ${eyebrow('10 · Your Next Step', true)}
+      ${eyebrow('14 · Your Next Step', true)}
       <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:46px;line-height:1.05;color:#fff;margin:0 0 18px;max-width:600px">Your complimentary<br/><span style="font-style:italic;color:${P.gold}">1:1 strategy session.</span></h2>
       <p style="font-size:13px;color:rgba(255,255,255,.76);line-height:1.8;max-width:500px;margin:0 0 28px">You have seen where your business stands and the highest-priority opportunities from your assessment. On your session, Indrodip will review your diagnostic with you, clarify your priorities, answer your questions, and map the exact next steps to implement it.</p>
       <a href="${BOOKING_URL}" style="display:inline-block;background:linear-gradient(180deg,${P.goldSoft},${P.gold} 60%,${P.goldDeep});color:${P.plumDeep};font-family:'DM Sans';font-weight:700;font-size:15px;padding:17px 44px;border-radius:8px;text-decoration:none">Book Your Complimentary Session →</a>
@@ -380,7 +430,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   /* 14 — FINAL BRAND PAGE */
   sheets.push(`<section class="sheet dark" style="text-align:center;justify-content:center">
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
-      <img src="${SITE}/logo-white.png" alt="The5th Consulting" style="height:44px;width:auto;margin-bottom:26px"/>
+      <div style="margin-bottom:26px">${logoMark(m, 44)}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:${P.gold};margin-bottom:30px">Business Strategy · Marketing · Growth</div>
       <div style="font-family:'DM Sans';font-size:12px;color:rgba(255,255,255,.7);line-height:2">
         <a href="${SITE}" style="color:#fff;text-decoration:none">the5th.consulting</a><br/>
@@ -409,6 +459,17 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     .foot .pg::after { content: counter(pg) " / ${total}"; }
     a { color: inherit; }
   </style></head><body>${sheets.join('')}</body></html>`
+}
+
+/* Fetch the white wordmark once and inline it as a data URI so the PDF never
+   depends on the renderer reaching an external image (logo-white.png 404s in
+   prod; logo-white2.png is the live white mark). Empty string → text fallback. */
+const fetchLogo = async (): Promise<string> => {
+  try {
+    const r = await fetch(`${SITE}/logo-white2.png`, { signal: AbortSignal.timeout(8000) })
+    if (!r.ok) return ''
+    return `data:image/png;base64,${Buffer.from(await r.arrayBuffer()).toString('base64')}`
+  } catch { return '' }
 }
 
 /* Render a PDF from HTML via APITemplate.io (managed, no cold starts). Returns
@@ -464,9 +525,10 @@ export async function POST(req: NextRequest) {
     let pdfAttachment: Array<{ filename: string; content: string }> | undefined = undefined
 
     // Primary: APITemplate.io renders our premium multi-page consulting report.
+    const logo = await fetchLogo()
     const reportHtml = buildPremiumReport(roadmap, {
       name, firstName, archetypeLabel, personalityLabel,
-      goal: goal || '$5K-$10K / month', stage: stage || 'launched', dateStr,
+      goal: goal || '$5K-$10K / month', stage: stage || 'launched', dateStr, logo,
     })
     const apiTemplateB64 = await pdfViaApiTemplate(reportHtml)
     if (apiTemplateB64) {
@@ -489,25 +551,44 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const emailHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(firstName)}, your Business Blueprint is ready</title></head>
-<body style="margin:0;padding:0;background:#f6f4f0;font-family:sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4f0;padding:32px 16px;"><tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-  <tr><td style="background:#2E1A35;padding:26px 40px;border-radius:12px 12px 0 0;">
-    <div style="color:#fff;font-weight:700;font-size:13px;letter-spacing:2px;">THE5TH CONSULTING</div>
-    <div style="padding-top:4px;color:#C9A84C;font-size:10px;font-weight:700;letter-spacing:1px;">BUSINESS GROWTH DIAGNOSTIC</div>
+    const preheader = `${firstName}, your Business Blueprint is attached — open it when you have 10 quiet minutes.`
+    const emailHtml = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light">
+<title>Your Business Blueprint</title>
+<style>
+  @media (max-width:600px){
+    .wrap{padding:14px 0!important}
+    .card{width:100%!important;border-radius:0!important}
+    .pad{padding:30px 24px!important}
+    .h1{font-size:22px!important}
+    .bd{font-size:17px!important}
+  }
+</style></head>
+<body style="margin:0;padding:0;background:#F4F1EC;">
+<span style="display:none!important;max-height:0;overflow:hidden;opacity:0;color:#F4F1EC;">${esc(preheader)}</span>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F1EC;"><tr><td class="wrap" align="center" style="padding:30px 12px;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" class="card" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(46,26,53,.08);">
+  <tr><td class="pad" style="padding:36px 42px;">
+    <div style="font-size:16px;font-weight:800;color:#2E1A35;letter-spacing:.3px;margin-bottom:24px;">The<span style="color:#C9A84C;">5th</span></div>
+    <p class="bd h1" style="font-size:19px;color:#221d29;line-height:1.5;margin:0 0 14px;font-weight:700;">Hi ${esc(firstName)}, your Business Blueprint is ready.</p>
+    <p class="bd" style="font-size:16px;color:#4a4550;line-height:1.6;margin:0 0 16px;">It's attached to this email as a PDF — your full business diagnostic, your scores, your biggest constraint, and a day-by-day plan.</p>
+    <p class="bd" style="font-size:16px;color:#4a4550;line-height:1.6;margin:0 0 22px;"><strong style="color:#221d29;">Open the attachment</strong> when you have 10 quiet minutes. It's worth reading properly.</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;width:100%;"><tr>
+      <td style="border:1px solid #e6e0d6;border-radius:10px;padding:13px 16px;">
+        <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+          <td style="width:36px;"><div style="width:36px;height:36px;border-radius:7px;background:#2E1A35;color:#C9A84C;font-size:10px;font-weight:800;text-align:center;line-height:36px;">PDF</div></td>
+          <td style="padding-left:12px;"><div style="font-size:14px;color:#221d29;font-weight:600;">${esc(name)} Business Blueprint.pdf</div><div style="font-size:12px;color:#8a8377;">Open the attachment ↑</div></td>
+        </tr></table>
+      </td>
+    </tr></table>
+    <p class="bd" style="font-size:16px;color:#4a4550;line-height:1.6;margin:0 0 18px;">When you're ready to put it into action, your complimentary strategy session is included with your diagnostic.</p>
+    <a href="${BOOKING_URL}" style="display:inline-block;background:#1C4A32;color:#ffffff;text-decoration:none;padding:14px 30px;font-weight:700;font-size:15px;border-radius:8px;">Book your session →</a>
+    <p class="bd" style="font-size:16px;color:#221d29;line-height:1.6;margin:26px 0 0;">— Indrodip<br/><span style="color:#8a8377;font-size:13px;">Founder, The5th</span></p>
   </td></tr>
-  <tr><td style="background:#ffffff;padding:40px 40px 32px;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;">
-    <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#9c7d28;text-transform:uppercase;margin-bottom:12px;">Your report is ready</div>
-    <div style="font-size:27px;font-weight:600;color:#1a1a2e;line-height:1.2;font-family:Georgia,serif;">${esc(firstName)}, your Business Blueprint<br/>is attached.</div>
-    <p style="font-size:14px;color:#5a5550;line-height:1.7;margin:18px 0 8px;">Your full Business Growth Diagnostic, your health scorecard, your priority matrix, your 7-day action plan, and the highest-leverage moves we would make in your business, is attached as a PDF.</p>
-    <p style="font-size:14px;color:#5a5550;line-height:1.7;margin:0 0 24px;">Read it like a strategic review, then book your complimentary session so we can implement it together.</p>
-    <a href="${BOOKING_URL}" style="display:inline-block;background:#C9A84C;color:#2E1A35;text-decoration:none;padding:15px 34px;font-weight:700;font-size:15px;border-radius:8px;font-family:sans-serif;">Book Your Complimentary Session →</a>
-  </td></tr>
-  <tr><td style="background:#2E1A35;padding:24px 40px;border-radius:0 0 12px 12px;">
-    <p style="color:#a99cae;font-size:11px;margin:0;font-family:sans-serif;text-align:center;">The5th Consulting &nbsp;|&nbsp; support@10kroadmap.org &nbsp;|&nbsp; the5th.consulting</p>
-  </td></tr>
-</table></td></tr></table></body></html>`
+</table>
+<div style="max-width:560px;margin:14px auto 0;font-size:11px;color:#a49c8f;text-align:center;line-height:1.5;">The5th Consulting · support@10kroadmap.org<br/>You're receiving this because you completed the business assessment.</div>
+</td></tr></table></body></html>`
 
     const resend = getResend()
     const { data, error } = await resend.emails.send({

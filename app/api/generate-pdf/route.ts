@@ -106,10 +106,10 @@ const richBody = (text: string, opts: { light?: boolean } = {}): string => {
     const isBullet = /^[-•*]\s+/.test(t)
     const isSub = /^(DAY|WEEK)\s/i.test(t) || (t.length < 62 && /:$/.test(t))
     const clean = esc(t.replace(/^[-•*]\s+/, '').replace(/\*\*/g, ''))
-    if (isSub) { if (inList) { html += '</ul>'; inList = false } html += `<p style="font-family:'DM Sans';font-weight:600;color:${head};margin:14px 0 4px;font-size:12.5px;letter-spacing:.01em">${clean}</p>`; continue }
-    if (isBullet) { if (!inList) { html += '<ul style="list-style:none;margin:6px 0;padding:0">'; inList = true } html += `<li style="position:relative;padding:4px 0 4px 18px;font-size:11.5px;color:${c};line-height:1.65"><span style="position:absolute;left:0;top:4px;color:${acc};font-weight:700">›</span>${clean}</li>`; continue }
+    if (isSub) { if (inList) { html += '</ul>'; inList = false } html += `<p style="font-family:'DM Sans';font-weight:600;color:${head};margin:14px 0 4px;font-size:15px;letter-spacing:.01em">${clean}</p>`; continue }
+    if (isBullet) { if (!inList) { html += '<ul style="list-style:none;margin:6px 0;padding:0">'; inList = true } html += `<li style="position:relative;padding:4px 0 4px 18px;font-size:14.5px;color:${c};line-height:1.65"><span style="position:absolute;left:0;top:4px;color:${acc};font-weight:700">›</span>${clean}</li>`; continue }
     if (inList) { html += '</ul>'; inList = false }
-    html += `<p style="margin:7px 0;font-size:11.8px;color:${c};line-height:1.72">${clean}</p>`
+    html += `<p style="margin:7px 0;font-size:15px;color:${c};line-height:1.72">${clean}</p>`
   }
   if (inList) html += '</ul>'
   return html
@@ -140,11 +140,11 @@ const scorecardSVG = (scores: Score[]): string => {
     const bw = Math.max(6, (s.val / 100) * 372)
     const b = bandFor(s.val)
     return `
-      <text x="0" y="${y + 15}" font-family="DM Sans" font-size="12" font-weight="500" fill="${P.ink}">${esc(s.label)}</text>
+      <text x="0" y="${y + 15}" font-family="DM Sans" font-size="15" font-weight="500" fill="${P.ink}">${esc(s.label)}</text>
       <rect x="150" y="${y + 5}" width="372" height="12" rx="6" fill="#EFE9DE"/>
       <rect x="150" y="${y + 5}" width="${bw}" height="12" rx="6" fill="url(#g5)"/>
-      <text x="536" y="${y + 15}" font-family="Cormorant Garamond" font-size="18" font-weight="600" fill="${P.goldDeep}">${s.val}</text>
-      <text x="566" y="${y + 15}" font-family="DM Sans" font-size="9" font-weight="600" letter-spacing="0.5" fill="${b.color}">${esc(b.label.toUpperCase())}</text>`
+      <text x="536" y="${y + 15}" font-family="Cormorant Garamond" font-size="22" font-weight="600" fill="${P.goldDeep}">${s.val}</text>
+      <text x="566" y="${y + 15}" font-family="DM Sans" font-size="12" font-weight="600" letter-spacing="0.5" fill="${b.color}">${esc(b.label.toUpperCase())}</text>`
   }).join('')
   return `<svg viewBox="0 0 ${w} ${top + scores.length * rowH + 6}" width="100%" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="g5" x1="0" x2="1"><stop offset="0" stop-color="${P.green}"/><stop offset="1" stop-color="${P.gold}"/></linearGradient></defs>
@@ -159,11 +159,11 @@ const matrixSVG = (scores: Score[]): string => {
     const impact = 100 - s.val // bigger gap = bigger impact
     const x = px(s.effort), y = py(impact)
     return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${P.gold}" stroke="${P.plum}" stroke-width="1"/>
-      <text x="${(x + 8).toFixed(1)}" y="${(y + 3).toFixed(1)}" font-family="DM Sans" font-size="9" font-weight="600" fill="${P.ink}">${esc(s.label)}</text>`
+      <text x="${(x + 8).toFixed(1)}" y="${(y + 3).toFixed(1)}" font-family="DM Sans" font-size="12" font-weight="600" fill="${P.ink}">${esc(s.label)}</text>`
   }).join('')
   const q = (x: number, y: number, t: string, sub: string) =>
-    `<text x="${x}" y="${y}" font-family="DM Sans" font-size="10" font-weight="700" letter-spacing="1" fill="${P.goldDeep}">${t}</text>
-     <text x="${x}" y="${y + 13}" font-family="DM Sans" font-size="8" fill="${P.muted}">${sub}</text>`
+    `<text x="${x}" y="${y}" font-family="DM Sans" font-size="13" font-weight="700" letter-spacing="1" fill="${P.goldDeep}">${t}</text>
+     <text x="${x}" y="${y + 13}" font-family="DM Sans" font-size="11" fill="${P.muted}">${sub}</text>`
   return `<svg viewBox="0 0 ${S} ${S}" width="330" xmlns="http://www.w3.org/2000/svg">
     <rect x="${pad}" y="${pad * 0.5}" width="${S - pad * 1.4}" height="${S - pad * 1.5}" fill="#FBF8F2" stroke="${P.line}"/>
     <line x1="${(pad + (S - pad * 1.4) / 2).toFixed(1)}" y1="${pad * 0.5}" x2="${(pad + (S - pad * 1.4) / 2).toFixed(1)}" y2="${S - pad}" stroke="${P.line}" stroke-dasharray="3 3"/>
@@ -172,8 +172,8 @@ const matrixSVG = (scores: Score[]): string => {
     ${q(pad + (S - pad * 1.4) / 2 + 6, pad * 0.5 + 16, 'PLAN', 'High impact · High effort')}
     ${q(pad + 6, S - pad - 8, 'QUICK WINS', 'Low impact · Low effort')}
     ${q(pad + (S - pad * 1.4) / 2 + 6, S - pad - 8, 'HOLD', 'Low impact · High effort')}
-    <text x="${pad}" y="${S - 14}" font-family="DM Sans" font-size="9" fill="${P.muted}">EFFORT →</text>
-    <text x="14" y="${pad * 0.5 + 4}" font-family="DM Sans" font-size="9" fill="${P.muted}" transform="rotate(-90 14 ${pad})">IMPACT →</text>
+    <text x="${pad}" y="${S - 14}" font-family="DM Sans" font-size="12" fill="${P.muted}">EFFORT →</text>
+    <text x="14" y="${pad * 0.5 + 4}" font-family="DM Sans" font-size="12" fill="${P.muted}" transform="rotate(-90 14 ${pad})">IMPACT →</text>
     ${dots}</svg>`
 }
 
@@ -202,7 +202,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const footDark = `<div class="foot dark"><span>The5th Consulting · Business Growth Diagnostic</span><span class="pg"></span></div>`
   const eyebrow = (t: string, light = false) => `<div style="font-family:'DM Sans';font-size:10px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:${light ? P.goldSoft : P.goldDeep};margin-bottom:14px">${t}</div>`
   const h2 = (t: string, light = false) => `<h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.08;letter-spacing:-.01em;color:${light ? '#fff' : P.ink};margin:0 0 18px">${t}</h2>`
-  const ctaBar = `<a href="${BOOKING_URL}" style="display:block;margin-top:22px;text-decoration:none;background:#FBF8F2;border:1px solid ${P.line};border-left:3px solid ${P.gold};border-radius:8px;padding:14px 18px;font-family:'DM Sans';font-size:11px;color:${P.sub}"><b style="color:${P.ink}">Want help implementing this?</b> Your complimentary strategy session is available. <span style="color:${P.goldDeep};font-weight:700">Book your session →</span></a>`
+  const ctaBar = `<a href="${BOOKING_URL}" style="display:block;margin-top:22px;text-decoration:none;background:#FBF8F2;border:1px solid ${P.line};border-left:3px solid ${P.gold};border-radius:8px;padding:14px 18px;font-family:'DM Sans';font-size:13px;color:${P.sub}"><b style="color:${P.ink}">Want help implementing this?</b> Your complimentary strategy session is available. <span style="color:${P.goldDeep};font-weight:700">Book your session →</span></a>`
 
   const sheets: string[] = []
 
@@ -225,10 +225,10 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     ${eyebrow('A note from The5th Consulting')}
     ${h2(`Your business is not a collection of<br/><span style="font-style:italic;color:${P.goldDeep}">disconnected problems.</span>`)}
     <div style="max-width:560px">
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">Dear ${esc(m.firstName)},</p>
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">Your marketing, positioning, offer, sales process, customer experience, and systems do not operate in isolation. They interact, and the constraint in one quietly caps the return on all the others. Most owners try to fix everything at once. The work is to find the one place that changes the most.</p>
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">This assessment was built to do exactly that: to identify where your business stands today, where the largest opportunities sit, and what you should prioritize next, given your stage and your goal of ${esc(m.goal.toLowerCase())}.</p>
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 22px">Read it the way you would a strategic review. The scorecard tells you where you are. The diagnostic explains why. The priorities tell you what to do first.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">Dear ${esc(m.firstName)},</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">Your marketing, positioning, offer, sales process, customer experience, and systems do not operate in isolation. They interact, and the constraint in one quietly caps the return on all the others. Most owners try to fix everything at once. The work is to find the one place that changes the most.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">This assessment was built to do exactly that: to identify where your business stands today, where the largest opportunities sit, and what you should prioritize next, given your stage and your goal of ${esc(m.goal.toLowerCase())}.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 22px">Read it the way you would a strategic review. The scorecard tells you where you are. The diagnostic explains why. The priorities tell you what to do first.</p>
       <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:${P.ink}">Indrodip Ghosh</div>
       <div style="font-family:'DM Sans';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${P.muted}">Founder · The5th Consulting</div>
     </div>${foot}</section>`)
@@ -247,7 +247,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div style="max-width:560px;margin-top:8px">
       ${toc.map(([n, t]) => `<div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-bottom:1px solid ${P.line}">
         <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:${P.gold};min-width:28px">${n}</span>
-        <span style="flex:1;font-family:'DM Sans';font-size:13px;color:${P.ink}">${t}</span></div>`).join('')}
+        <span style="flex:1;font-family:'DM Sans';font-size:15px;color:${P.ink}">${t}</span></div>`).join('')}
     </div>${foot}</section>`)
 
   /* 04 — EXECUTIVE SUMMARY */
@@ -272,7 +272,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     </div>
     <div style="margin-top:14px">
       <div style="font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${P.muted};margin-bottom:6px">Primary recommendation</div>
-      <p style="font-size:12px;color:${P.sub};line-height:1.7;margin:0">${esc(primaryRec || 'Strengthen your weakest link before scaling anything else.')}</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.7;margin:0">${esc(primaryRec || 'Strengthen your weakest link before scaling anything else.')}</p>
     </div>${foot}</section>`)
 
   /* 05 — SCORECARD */
@@ -282,7 +282,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div style="display:flex;align-items:center;gap:14px;margin:4px 0 22px">
       <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:600;color:${P.goldDeep};line-height:1">${overall}</div>
       <div><div style="font-family:'DM Sans';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:${P.muted}">Overall business health</div>
-      <div style="font-size:11.5px;color:${P.sub};max-width:340px;line-height:1.55;margin-top:4px">A weighted read across the levers that determine whether your business compounds or stalls.</div></div>
+      <div style="font-size:14.5px;color:${P.sub};max-width:340px;line-height:1.55;margin-top:4px">A weighted read across the levers that determine whether your business compounds or stalls.</div></div>
     </div>
     ${scorecardSVG(scores)}${foot}</section>`)
 
@@ -303,8 +303,8 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
         <span><span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:${P.goldDeep}">${s.val}</span><span style="font-size:10px;color:${P.muted}">/100</span>
         <span style="margin-left:10px;font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:.5px;color:#fff;background:${b.color};padding:3px 9px;border-radius:20px">${b.priority.toUpperCase()} PRIORITY</span></span>
       </div>
-      <p style="font-size:11.4px;color:${P.sub};line-height:1.62;margin:0 0 6px"><b style="color:${P.ink}">Assessment.</b> Your ${esc(s.label.toLowerCase())} currently reads as <b style="color:${b.color}">${esc(b.label.toLowerCase())}</b>${s.val < 60 ? ', and is likely capping the return on the areas around it' : ', a genuine asset to build around'}.</p>
-      <p style="font-size:11.4px;color:${P.sub};line-height:1.62;margin:0"><b style="color:${P.ink}">Recommended action.</b> ${esc(action || 'Tighten this into one clear, repeatable process before adding anything new.')}</p>
+      <p style="font-size:14.5px;color:${P.sub};line-height:1.62;margin:0 0 6px"><b style="color:${P.ink}">Assessment.</b> Your ${esc(s.label.toLowerCase())} currently reads as <b style="color:${b.color}">${esc(b.label.toLowerCase())}</b>${s.val < 60 ? ', and is likely capping the return on the areas around it' : ', a genuine asset to build around'}.</p>
+      <p style="font-size:14.5px;color:${P.sub};line-height:1.62;margin:0"><b style="color:${P.ink}">Recommended action.</b> ${esc(action || 'Tighten this into one clear, repeatable process before adding anything new.')}</p>
     </div>`
   }
   sheets.push(`<section class="sheet">
@@ -317,9 +317,9 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     ${eyebrow('04 · A Strategic Insight', true)}
     ${h2(`Your bottleneck is <span style="font-style:italic;color:${P.gold}">${esc(constraint.label)}</span>,<br/>not effort.`, true)}
     <div style="max-width:560px">
-      <p style="font-size:13px;color:rgba(255,255,255,.82);line-height:1.85;margin:0 0 16px">Your business scores <b style="color:${P.gold}">${strength.val}</b> on ${esc(strength.label)} but only <b style="color:${P.gold}">${constraint.val}</b> on ${esc(constraint.label)}. That gap is the story.</p>
-      <p style="font-size:13px;color:rgba(255,255,255,.82);line-height:1.85;margin:0 0 16px">It suggests the constraint is not your ability to deliver, it is your ${esc(constraint.label.toLowerCase())}. Pouring more energy into what is already strong will not move the number that is actually holding you back. The highest-leverage work is almost always at the weakest link, because that is where the whole system is currently rate-limited.</p>
-      <p style="font-size:13px;color:rgba(255,255,255,.82);line-height:1.85;margin:0">Fix ${esc(constraint.label.toLowerCase())} first, and the strengths you already have finally get to compound.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,.82);line-height:1.85;margin:0 0 16px">Your business scores <b style="color:${P.gold}">${strength.val}</b> on ${esc(strength.label)} but only <b style="color:${P.gold}">${constraint.val}</b> on ${esc(constraint.label)}. That gap is the story.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,.82);line-height:1.85;margin:0 0 16px">It suggests the constraint is not your ability to deliver, it is your ${esc(constraint.label.toLowerCase())}. Pouring more energy into what is already strong will not move the number that is actually holding you back. The highest-leverage work is almost always at the weakest link, because that is where the whole system is currently rate-limited.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,.82);line-height:1.85;margin:0">Fix ${esc(constraint.label.toLowerCase())} first, and the strengths you already have finally get to compound.</p>
     </div>${footDark}</section>`)
 
   /* 08 — PRIORITY MATRIX */
@@ -329,9 +329,9 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div style="display:flex;gap:26px;align-items:flex-start">
       <div>${matrixSVG(scores)}</div>
       <div style="flex:1;padding-top:8px">
-        <p style="font-size:11.6px;color:${P.sub};line-height:1.7;margin:0 0 14px">Each dimension is plotted by the <b style="color:${P.ink}">impact</b> of improving it against the <b style="color:${P.ink}">effort</b> to do so. Start top-left.</p>
-        <div style="border-left:3px solid ${P.gold};padding-left:14px;margin-bottom:12px"><div style="font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1.2px;color:${P.goldDeep};margin-bottom:2px">DO FIRST</div><div style="font-size:11.5px;color:${P.sub};line-height:1.5">${esc(constraint.label)} and ${esc(diagCats[1]?.label || lowThree[1]?.label || 'Positioning')} — highest return for the effort.</div></div>
-        <div style="border-left:3px solid ${P.line};padding-left:14px"><div style="font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1.2px;color:${P.muted};margin-bottom:2px">HOLD</div><div style="font-size:11.5px;color:${P.sub};line-height:1.5">Do not spend the next 30 days polishing ${esc(strength.label.toLowerCase())}. It is already working.</div></div>
+        <p style="font-size:14.5px;color:${P.sub};line-height:1.7;margin:0 0 14px">Each dimension is plotted by the <b style="color:${P.ink}">impact</b> of improving it against the <b style="color:${P.ink}">effort</b> to do so. Start top-left.</p>
+        <div style="border-left:3px solid ${P.gold};padding-left:14px;margin-bottom:12px"><div style="font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1.2px;color:${P.goldDeep};margin-bottom:2px">DO FIRST</div><div style="font-size:14.5px;color:${P.sub};line-height:1.5">${esc(constraint.label)} and ${esc(diagCats[1]?.label || lowThree[1]?.label || 'Positioning')} — highest return for the effort.</div></div>
+        <div style="border-left:3px solid ${P.line};padding-left:14px"><div style="font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1.2px;color:${P.muted};margin-bottom:2px">HOLD</div><div style="font-size:14.5px;color:${P.sub};line-height:1.5">Do not spend the next 30 days polishing ${esc(strength.label.toLowerCase())}. It is already working.</div></div>
       </div>
     </div>${foot}</section>`)
 
@@ -344,7 +344,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     sheets.push(`<section class="sheet">
       ${eyebrow(num + ' · ' + label)}
       ${h2(title)}
-      ${sub ? `<p style="font-size:12px;color:${P.sub};line-height:1.7;margin:0 0 12px;max-width:560px">${sub}</p>` : ''}
+      ${sub ? `<p style="font-size:15px;color:${P.sub};line-height:1.7;margin:0 0 12px;max-width:560px">${sub}</p>` : ''}
       <div style="max-width:620px">${inner}</div>${foot}</section>`)
   }
   deepPage('06', 'Your Signature Offer', `The offer built for <span style="font-style:italic;color:${P.goldDeep}">your niche.</span>`, 'A clear, premium way to package what you already do well.', [['', 'YOUR SIGNATURE OFFER']])
@@ -365,12 +365,12 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   ]).map(h => `<div style="display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid ${P.line}">
       <div style="min-width:52px;font-family:'DM Sans';font-size:9px;font-weight:700;letter-spacing:1px;color:${P.goldDeep};text-transform:uppercase;padding-top:2px">Day ${h.day}</div>
       <div style="width:15px;height:15px;border:1.5px solid ${P.gold};border-radius:4px;flex-shrink:0;margin-top:1px"></div>
-      <div style="flex:1;font-size:12px;color:${P.sub};line-height:1.55">${esc(h.task)}</div>
+      <div style="flex:1;font-size:15px;color:${P.sub};line-height:1.55">${esc(h.task)}</div>
     </div>`).join('')
   sheets.push(`<section class="sheet">
     ${eyebrow('10 · Your 7-Day Homework')}
     ${h2(`One small task <span style="font-style:italic;color:${P.goldDeep}">each day.</span>`)}
-    <p style="font-size:12px;color:${P.sub};line-height:1.7;margin:0 0 18px;max-width:560px">Do these in order, one per day. You'll get a short email each morning with that day's task and a real example of someone who did the same thing. Check each box as you go.</p>
+    <p style="font-size:15px;color:${P.sub};line-height:1.7;margin:0 0 18px;max-width:560px">Do these in order, one per day. You'll get a short email each morning with that day's task and a real example of someone who did the same thing. Check each box as you go.</p>
     <div style="max-width:600px">${hwCards}</div>
     ${ctaBar}${foot}</section>`)
 
@@ -378,12 +378,12 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const moves = lowThree.map((s, i) => `<div style="display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.12)">
     <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:${P.gold};min-width:34px">${i + 1}</div>
     <div><div style="font-family:'DM Sans';font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">Fix ${esc(s.label.toLowerCase())} before anything else.</div>
-    <div style="font-size:11.5px;color:rgba(255,255,255,.7);line-height:1.6">At ${s.val}/100 it is the clearest limiter on your goal of ${esc(m.goal.toLowerCase())}. One focused week here changes the trajectory more than a month spread thin.</div></div></div>`).join('')
+    <div style="font-size:14.5px;color:rgba(255,255,255,.7);line-height:1.6">At ${s.val}/100 it is the clearest limiter on your goal of ${esc(m.goal.toLowerCase())}. One focused week here changes the trajectory more than a month spread thin.</div></div></div>`).join('')
   sheets.push(`<section class="sheet dark">
     ${eyebrow('11 · If We Were Running Your Business', true)}
     ${h2(`The first decisions<br/>we would <span style="font-style:italic;color:${P.gold}">make.</span>`, true)}
     <div style="max-width:600px">${moves}
-      <p style="font-size:12px;color:rgba(255,255,255,.72);line-height:1.75;margin:18px 0 0">And the discipline underneath all of it: resist the urge to improve what is already strong. Every hour spent on ${esc(strength.label.toLowerCase())} right now is an hour not spent on the constraint that is actually capping your growth.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,.72);line-height:1.75;margin:18px 0 0">And the discipline underneath all of it: resist the urge to improve what is already strong. Every hour spent on ${esc(strength.label.toLowerCase())} right now is an hour not spent on the constraint that is actually capping your growth.</p>
     </div>${footDark}</section>`)
 
   /* 11 — RELEVANT RESULT (case study) */
@@ -396,13 +396,13 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
         <div style="background:${P.plum};padding:24px 26px;color:#fff">
           <div style="font-family:'DM Sans';font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:${P.goldSoft};margin-bottom:8px">${esc(study.niche)} · ${esc(study.location)}</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600">${esc(study.name)}</div>
-          <div style="font-size:11.5px;color:rgba(255,255,255,.72);margin-top:4px">${esc(study.tagline)}</div>
-          <div style="margin-top:16px;font-family:'Cormorant Garamond',serif"><span style="font-size:34px;font-weight:700;color:${P.gold}">${esc(study.headline.v)}</span> <span style="font-size:13px;color:rgba(255,255,255,.6)">${esc(study.headline.period)}</span></div>
+          <div style="font-size:14.5px;color:rgba(255,255,255,.72);margin-top:4px">${esc(study.tagline)}</div>
+          <div style="margin-top:16px;font-family:'Cormorant Garamond',serif"><span style="font-size:34px;font-weight:700;color:${P.gold}">${esc(study.headline.v)}</span> <span style="font-size:15px;color:rgba(255,255,255,.6)">${esc(study.headline.period)}</span></div>
         </div>
         <div style="padding:22px 26px">
-          <p style="font-size:11.6px;color:${P.sub};line-height:1.68;margin:0 0 12px"><b style="color:${P.ink}">The challenge.</b> ${esc(firstSentence(study.challenge))}</p>
-          <p style="font-size:11.6px;color:${P.sub};line-height:1.68;margin:0 0 16px"><b style="color:${P.ink}">What we did.</b> ${esc(firstSentence(study.whatWeDid))}</p>
-          ${metrics.length ? `<div style="display:grid;grid-template-columns:repeat(${metrics.length},1fr);gap:10px">${metrics.map(mt => `<div style="text-align:center;background:#FBF8F2;border-radius:8px;padding:12px 6px"><div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:${P.green}">${esc(mt.v)}</div><div style="font-size:8.5px;letter-spacing:.4px;text-transform:uppercase;color:${P.muted};margin-top:2px">${esc(mt.l)}</div></div>`).join('')}</div>` : ''}
+          <p style="font-size:14.5px;color:${P.sub};line-height:1.68;margin:0 0 12px"><b style="color:${P.ink}">The challenge.</b> ${esc(firstSentence(study.challenge))}</p>
+          <p style="font-size:14.5px;color:${P.sub};line-height:1.68;margin:0 0 16px"><b style="color:${P.ink}">What we did.</b> ${esc(firstSentence(study.whatWeDid))}</p>
+          ${metrics.length ? `<div style="display:grid;grid-template-columns:repeat(${metrics.length},1fr);gap:10px">${metrics.map(mt => `<div style="text-align:center;background:#FBF8F2;border-radius:8px;padding:12px 6px"><div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:${P.green}">${esc(mt.v)}</div><div style="font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:${P.muted};margin-top:2px">${esc(mt.l)}</div></div>`).join('')}</div>` : ''}
         </div>
       </div>
       <p style="font-size:10px;color:${P.muted};margin-top:12px;font-style:italic">A verified client result. Individual outcomes vary and are not a guarantee of future performance.</p>${foot}</section>`)
@@ -413,9 +413,9 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     ${eyebrow('13 · About The5th Consulting')}
     ${h2(`We help experts turn a<br/>lifetime of experience into<br/><span style="font-style:italic;color:${P.goldDeep}">a business that lasts.</span>`)}
     <div style="max-width:560px">
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">The5th works with coaches, consultants and experts, most of them established in their field, who know they are sitting on real value but have not yet built the offer, positioning and system to monetize it with confidence.</p>
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0 0 14px">Our philosophy is simple: growth is not about doing more, it is about fixing the one constraint that is holding everything else back. We diagnose it, we build the plan around it, and where it helps, we implement it with you.</p>
-      <p style="font-size:12.5px;color:${P.sub};line-height:1.85;margin:0">This diagnostic exists because clarity should come before commitment. You should be able to see exactly where your business stands, and what to do next, before you ever decide to work with us.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">The5th works with coaches, consultants and experts, most of them established in their field, who know they are sitting on real value but have not yet built the offer, positioning and system to monetize it with confidence.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">Our philosophy is simple: growth is not about doing more, it is about fixing the one constraint that is holding everything else back. We diagnose it, we build the plan around it, and where it helps, we implement it with you.</p>
+      <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0">This diagnostic exists because clarity should come before commitment. You should be able to see exactly where your business stands, and what to do next, before you ever decide to work with us.</p>
     </div>${foot}</section>`)
 
   /* 13 — FINAL STRATEGY SESSION CTA */
@@ -423,7 +423,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
       ${eyebrow('14 · Your Next Step', true)}
       <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:46px;line-height:1.05;color:#fff;margin:0 0 18px;max-width:600px">Your complimentary<br/><span style="font-style:italic;color:${P.gold}">1:1 strategy session.</span></h2>
-      <p style="font-size:13px;color:rgba(255,255,255,.76);line-height:1.8;max-width:500px;margin:0 0 28px">You have seen where your business stands and the highest-priority opportunities from your assessment. On your session, Indrodip will review your diagnostic with you, clarify your priorities, answer your questions, and map the exact next steps to implement it.</p>
+      <p style="font-size:15px;color:rgba(255,255,255,.76);line-height:1.8;max-width:500px;margin:0 0 28px">You have seen where your business stands and the highest-priority opportunities from your assessment. On your session, Indrodip will review your diagnostic with you, clarify your priorities, answer your questions, and map the exact next steps to implement it.</p>
       <a href="${BOOKING_URL}" style="display:inline-block;background:linear-gradient(180deg,${P.goldSoft},${P.gold} 60%,${P.goldDeep});color:${P.plumDeep};font-family:'DM Sans';font-weight:700;font-size:15px;padding:17px 44px;border-radius:8px;text-decoration:none">Book Your Complimentary Session →</a>
       <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:16px">Included with your diagnostic · 60 minutes · No obligation</div>
     </div>${footDark}</section>`)
@@ -433,7 +433,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
       <div style="margin-bottom:26px">${logoMark(m, 168)}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:${P.gold};margin-bottom:30px">Business Strategy · Marketing · Growth</div>
-      <div style="font-family:'DM Sans';font-size:12px;color:rgba(255,255,255,.7);line-height:2">
+      <div style="font-family:'DM Sans';font-size:15px;color:rgba(255,255,255,.7);line-height:2">
         <a href="${SITE}" style="color:#fff;text-decoration:none">the5th.consulting</a><br/>
         <a href="${BOOKING_URL}" style="color:${P.goldSoft};text-decoration:none">Book a strategy session</a><br/>
         support@10kroadmap.org</div>

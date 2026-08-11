@@ -23,6 +23,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
   ] },
   { section: 'CRM', items: [
     { href: '/admin/crm', label: 'Contacts', icon: '⧉', match: (p) => p === '/admin/crm' || /^\/admin\/crm\/[0-9a-f-]{8,}/.test(p) },
+    { href: '/admin/quiz', label: 'Quiz Leads', icon: '📝', match: (p) => p.startsWith('/admin/quiz') },
     { href: '/admin/crm/pipeline', label: 'Pipeline', icon: '▤', match: (p) => p.startsWith('/admin/crm/pipeline') || p.startsWith('/admin/crm/opportunities') },
     { href: '/admin/crm/meetings', label: 'Meetings', icon: '◷', match: (p) => p.startsWith('/admin/crm/meetings') },
     { href: '/admin/crm/tasks', label: 'Tasks', icon: '✓', match: (p) => p.startsWith('/admin/crm/tasks') },

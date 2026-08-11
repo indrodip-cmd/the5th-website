@@ -6,6 +6,7 @@ import { otpEmail, email1, email2, email3, email4, email5, email6, email7 } from
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeName } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { upsertContact, logActivity } from '@/lib/crm'
 
 function getAnthropicClient() {
   const key = process.env.ANTHROPIC_API_KEY
@@ -105,6 +106,22 @@ export async function POST(req: NextRequest) {
     //    on it. after() keeps this alive on Vercel past the response.
     const leadId = lead?.id ?? ''
     after(async () => {
+      // Mirror every quiz taker into the native CRM at email capture — even those
+      // who never reach /quiz/results (where save-lead mirrors them). Without this,
+      // drop-offs live only in quiz_leads and never appear under Contacts.
+      try {
+        const stage = (answers as Record<string, unknown> | null)?.q1
+        await upsertContact(email, {
+          name,
+          source: 'quiz',
+          business_stage: typeof stage === 'string' ? stage : null,
+          tags: ['quiz'],
+        })
+        await logActivity(email, 'lead', 'Started the quiz', typeof stage === 'string' && stage ? `Stage: ${stage}` : undefined)
+      } catch (e) {
+        console.error('send-otp: CRM mirror failed', e)
+      }
+
       let roadmap: Record<string, unknown> | null = null
       try {
         const profile = JSON.stringify(answers, null, 2)

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { limit, clientIp } from '@/lib/rateLimit'
+import { CASE_STUDIES } from '@/lib/case-studies'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,6 +12,31 @@ const getResend = () => {
 }
 
 const CAL_LINK = 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
+
+const escHtml = (s: unknown): string => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const firstSentence = (t: string): string => {
+  const c = (t || '').replace(/\*\*/g, '').trim()
+  const m = c.match(/[^.!?]+[.!?]/)
+  return (m ? m[0] : c.slice(0, 200)).trim()
+}
+
+/* A real client result (from approved case-study content), rotated by day and
+   rendered as a branded block: how they did it, and how the reader does the
+   same today. Homework reinforcement + nurture-to-close in one. Never fabricates. */
+function caseStudyBlock(day: number): string {
+  const s = CASE_STUDIES[(Math.max(1, day) - 1) % CASE_STUDIES.length]
+  if (!s) return ''
+  return `<div style="border:1px solid #E2DCD2;border-radius:10px;overflow:hidden;margin:30px 0 6px;">
+    <div style="background:#2E1A35;padding:16px 20px;">
+      <div style="font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:#E4C879;font-family:sans-serif;">Real result &middot; ${escHtml(s.niche)}</div>
+      <div style="font-family:Georgia,serif;font-size:18px;color:#ffffff;margin-top:4px;">${escHtml(s.name)} &mdash; <span style="color:#C9A84C;">${escHtml(s.headline.v)}</span> <span style="font-size:12px;color:rgba(255,255,255,.6);">${escHtml(s.headline.period)}</span></div>
+    </div>
+    <div style="padding:16px 20px;background:#ffffff;">
+      <p style="margin:0 0 10px;font-size:13px;color:#3d3d3d;line-height:1.65;font-family:sans-serif;"><strong style="color:#1C4A32;">How they did it.</strong> ${escHtml(firstSentence(s.whatWeDid))}</p>
+      <p style="margin:0;font-size:13px;color:#3d3d3d;line-height:1.65;font-family:sans-serif;"><strong style="color:#1C4A32;">How you do the same.</strong> Today's task is your first version of that move. Do it and reply &ldquo;Done&rdquo; &mdash; or if you'd rather we build it together on a free call, <a href="${CAL_LINK}" style="color:#1C4A32;">grab a time here</a>.</p>
+    </div>
+  </div>`
+}
 
 // ═══════════════════════════════════════════════════
 // EMAIL BUILDER HELPERS
@@ -936,12 +962,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `No email for day ${day} sequence ${sequence}` }, { status: 404 })
     }
 
+    // Every daily task email (day >= 1) carries a real, rotating case study +
+    // nurture, injected just before the signature so all days get it uniformly.
+    let html = emailData.html(name, videoUrl)
+    if ((day as number) >= 1) {
+      html = html.replace(/(<p style="margin:32px 0 0;[^"]*">\s*Indrodip)/, `${caseStudyBlock(day as number)}$1`)
+    }
+
     const resend = getResend()
     const { data, error } = await resend.emails.send({
       from: 'Indrodip at The5th <Indrodip@10kroadmap.org>',
       to: email,
       subject: emailData.subject,
-      html: emailData.html(name, videoUrl),
+      html,
     })
 
     if (error) {

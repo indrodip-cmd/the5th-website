@@ -28,8 +28,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',Helvetica,Arial,sans-serif;background:#FAF6F0;color:#1A1A2E;-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.5}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'DM Sans',Helvetica,Arial,sans-serif;background:#FAF6F0;color:#1A1A2E;-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.5;overflow-x:hidden;width:100%;max-width:100%;position:relative}
+/* Belt-and-suspenders: never let a child force horizontal scroll / right-side gap on mobile */
+section,.layout,.ticker,.footer,.footer-wordmark{max-width:100%}
+[data-t5-videos]{max-width:100%;overflow:hidden}
 a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%;height:auto}
 ul{list-style:none}

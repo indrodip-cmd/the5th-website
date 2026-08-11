@@ -1827,15 +1827,15 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   <style>
     .hero__chapter{display:block;font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:12px;line-height:1;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
     .hero__meet{font-weight:700;color:#fff}
-    .hero-portrait{margin:0;position:relative;width:100%;max-width:400px}
-    .hero-portrait__frame{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/5;background:radial-gradient(120% 120% at 50% 12%,#FBF3E4 0%,#EADFC7 62%,#E4C879 100%);box-shadow:0 44px 90px rgba(0,0,0,.4),inset 0 0 0 1px rgba(201,168,76,.45);display:flex;align-items:flex-end;justify-content:center}
+    .hero-portrait{margin:0;position:relative;width:100%;max-width:560px}
+    .hero-portrait__frame{position:relative;display:flex;align-items:flex-end;justify-content:center}
     .hero-portrait__face{width:96%;height:auto;display:block;filter:drop-shadow(0 18px 30px rgba(46,26,53,.18))}
     .hero-portrait__cap{position:absolute;left:16px;bottom:16px;background:rgba(46,26,53,.74);color:#fff;font:500 13px/1 'Inter',system-ui,sans-serif;letter-spacing:.01em;padding:9px 15px;border-radius:100px;backdrop-filter:blur(6px)}
     .hero-portrait__cap strong{color:var(--gold);font-weight:700}
     .hero .hero__imageContainer.cell{align-items:center;justify-content:center}
     @media(min-width:1100px){.hero .hero__imageContainer.cell{align-items:center}}
     /* Future real-photo swap: dropping an <img> into the frame just works. */
-    .hero .hero-portrait__frame img{position:static;inset:auto;width:100%;height:100%;max-width:none;object-fit:cover;mix-blend-mode:normal;margin:0}
+    .hero .hero-portrait__frame img{position:static;inset:auto;width:100%;height:auto;max-width:none;object-fit:contain;margin:0}
   </style>
   <div class="layout">
     <div class="hero__content flex">
@@ -1890,9 +1890,8 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
              - the frame already crops and styles it. -->
         <figure class="hero-portrait">
           <div class="hero-portrait__frame">
-            <img class="hero-portrait__face" src="/images/money-character.png" alt="Turn your expertise into income" style="width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 18px 30px rgba(46,26,53,.18))">
+            <img class="hero-portrait__face" src="/images/money-character.png" alt="Turn your expertise into income" style="width:100%;height:auto;display:block;filter:drop-shadow(0 26px 46px rgba(46,26,53,.20))">
           </div>
-          <figcaption class="hero-portrait__cap"><strong>76 coaches</strong> · 12 nations · $15M+ earned</figcaption>
         </figure>
       </div>
 

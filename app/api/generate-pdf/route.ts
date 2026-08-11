@@ -180,10 +180,11 @@ const matrixSVG = (scores: Score[]): string => {
 /* ─────────────────────────  REPORT ASSEMBLY  ───────────────────────── */
 type Meta = { name: string; firstName: string; archetypeLabel: string; personalityLabel: string; goal: string; stage: string; dateStr: string; logo: string }
 
-/* White wordmark for dark pages — falls back to a text mark if unavailable. */
-const logoMark = (m: Meta, h: number) => m.logo
-  ? `<img src="${m.logo}" alt="The5th Consulting" style="height:${h}px;width:auto"/>`
-  : `<div style="font-family:'DM Sans';font-size:${Math.round(h * 0.6)}px;font-weight:800;color:#fff">The<span style="color:${P.gold}">5th</span></div>`
+/* White wordmark for dark pages — width-constrained so a wide logo never
+   stretches across the page. Falls back to a text mark if unavailable. */
+const logoMark = (m: Meta, w: number) => m.logo
+  ? `<img src="${m.logo}" alt="The5th Consulting" style="width:${w}px;height:auto;max-width:100%;display:block"/>`
+  : `<div style="font-family:'DM Sans';font-size:${Math.round(w * 0.15)}px;font-weight:800;color:#fff">The<span style="color:${P.gold}">5th</span></div>`
 
 const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const sec = parseSections(roadmap)
@@ -207,7 +208,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
 
   /* 01 — COVER */
   sheets.push(`<section class="sheet dark cover">
-    ${logoMark(m, 34)}
+    ${logoMark(m, 132)}
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
       <div style="font-family:'DM Sans';font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:${P.goldSoft};margin-bottom:22px">Business Growth Diagnostic</div>
       <h1 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:56px;line-height:1.02;letter-spacing:-.02em;color:#fff;margin:0">Your Personalized<br/>Business Assessment<br/><span style="font-style:italic;color:${P.gold}">& Strategic Growth Roadmap</span></h1>
@@ -430,7 +431,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
   /* 14 — FINAL BRAND PAGE */
   sheets.push(`<section class="sheet dark" style="text-align:center;justify-content:center">
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
-      <div style="margin-bottom:26px">${logoMark(m, 44)}</div>
+      <div style="margin-bottom:26px">${logoMark(m, 168)}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:${P.gold};margin-bottom:30px">Business Strategy · Marketing · Growth</div>
       <div style="font-family:'DM Sans';font-size:12px;color:rgba(255,255,255,.7);line-height:2">
         <a href="${SITE}" style="color:#fff;text-decoration:none">the5th.consulting</a><br/>

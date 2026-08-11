@@ -302,7 +302,7 @@ export default function ResultsPage() {
       fetch('/api/send-sequence-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: e, name: n, day: 0, sequence: 'A', video_slug: getVideoSlug(a.q1) })
+        body: JSON.stringify({ email: e, name: n, day: 0, sequence: 'A', stage: a.q1, video_slug: getVideoSlug(a.q1) })
       }).catch(() => {})
     } catch { /* non-critical, will retry on next load */ }
   }

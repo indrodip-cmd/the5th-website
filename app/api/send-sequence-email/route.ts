@@ -949,17 +949,25 @@ export async function POST(req: NextRequest) {
   if (!rl.ok) return NextResponse.json({ error: 'Too many requests. Please wait a moment.' }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } })
   try {
     const body = await req.json()
-    const { email, name, day, sequence, video_slug } = body
+    const { email, name, day, sequence, video_slug, stage } = body
 
-    if (!email || !name || day === undefined || !sequence) {
+    if (!email || !name || day === undefined) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Resolve the archetype sequence key. Callers historically pass sequence 'A',
+    // which is NOT a content key — the real sequences are keyed by archetype.
+    // Fall back to mapping the lead's stage, then to PIONEER, so an email always sends.
+    const STAGE_SEQ: Record<string, string> = { idea: 'PIONEER', starting: 'PIONEER', launched: 'PATHFINDER', scaling: 'BUILDER', established: 'LUMINARY' }
+    const seqKey = (sequence && sequences[sequence as string])
+      ? (sequence as string)
+      : (STAGE_SEQ[String(stage || '').toLowerCase()] || 'PIONEER')
+
     const videoUrl = `https://quiz.the5th.consulting/video/${video_slug || 'v1'}`
-    const emailData = sequences[sequence as string]?.[day as number]
+    const emailData = sequences[seqKey]?.[day as number]
 
     if (!emailData) {
-      return NextResponse.json({ error: `No email for day ${day} sequence ${sequence}` }, { status: 404 })
+      return NextResponse.json({ error: `No email for day ${day} sequence ${seqKey}` }, { status: 404 })
     }
 
     // Every daily task email (day >= 1) carries a real, rotating case study +
@@ -982,7 +990,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, email_id: data?.id, day, sequence })
+    return NextResponse.json({ success: true, email_id: data?.id, day, sequence: seqKey })
   } catch (err) {
     console.error('Sequence email error:', err)
     return NextResponse.json({ error: 'Failed to send sequence email' }, { status: 500 })

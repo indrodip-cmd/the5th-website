@@ -87,8 +87,14 @@ export async function GET(req: NextRequest) {
           continue
         }
 
-        const sequence = lead.sequence_assigned // 'A' or 'B'
+        const sequence = lead.sequence_assigned // legacy 'A'/'B' — resolved by stage downstream
         const day = daysSinceCreated
+
+        // Don't resend a day we've already delivered (guards against multiple runs).
+        if (lead.last_email_day != null && lead.last_email_day >= day) {
+          results.skipped++
+          continue
+        }
 
         // Send the sequence email for this day
         const res = await fetch(`${BASE_URL}/api/send-sequence-email`, {
@@ -99,6 +105,7 @@ export async function GET(req: NextRequest) {
             name: lead.name || 'there',
             day,
             sequence,
+            stage: lead.answers?.q1 || lead.quiz_answers?.q1 || null,
             video_slug: lead.video_assigned || 'v1',
           })
         })

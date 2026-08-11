@@ -432,8 +432,8 @@ html { background: #FAF6F0; }
 body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1A2E; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes slideInLeft  { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInLeft  { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
 @keyframes dotPulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184,150,12,0.5); } 70% { transform: scale(1.25); box-shadow: 0 0 0 5px rgba(184,150,12,0); } }
 @keyframes meshMove { 0% { opacity:0.7 } 100% { opacity:1 } }
@@ -454,54 +454,77 @@ body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1
 .afu-5 { animation: fadeUp 0.6s 0.4s ease both; }
 .afu-6 { animation: fadeUp 0.6s 0.5s ease both; }
 
-.sir { animation: slideInRight 0.25s cubic-bezier(0.25,0.46,0.45,0.94) both; }
-.sil { animation: slideInLeft  0.25s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+.sir { animation: slideInRight 0.44s cubic-bezier(0.2,0.7,0.2,1) both; }
+.sil { animation: slideInLeft  0.44s cubic-bezier(0.2,0.7,0.2,1) both; }
 .popup-in { animation: scaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
 .dot-cur  { animation: dotPulse 1.5s ease-in-out infinite; }
 
+@keyframes optIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+
 .gbtn {
-  display: block; width: 100%; padding: 18px 32px;
-  background: #1c4a32;
+  display: block; width: 100%; padding: 19px 32px;
+  background: linear-gradient(180deg, #22593d, #1c4a32);
   border: none; border-radius: 50px;
-  box-shadow: 0 4px 20px rgba(28,74,50,0.38);
-  color: #fff; font-size: 17px; font-weight: 700;
-  cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 12px 30px -12px rgba(28,74,50,0.55);
+  color: #fff; font-size: 17px; font-weight: 700; letter-spacing: 0.01em;
+  cursor: pointer; transition: transform 0.28s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.28s ease, opacity 0.2s ease;
   text-align: center; font-family: inherit;
 }
-.gbtn:hover { opacity: 0.88; transform: translateY(-1px); }
-.gbtn:active { transform: scale(0.98); opacity: 1; }
-.gbtn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+.gbtn:hover { transform: translateY(-2px); box-shadow: 0 18px 44px -14px rgba(28,74,50,0.6); }
+.gbtn:active { transform: translateY(0) scale(0.99); }
+.gbtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 6px 18px -10px rgba(28,74,50,0.4); }
 
+/* Premium answer card */
 .qopt {
   display: flex; align-items: center; justify-content: flex-start; width: 100%;
-  padding: 18px 28px; background: #fff;
-  border: 2px solid transparent; border-radius: 50px;
-  cursor: pointer; transition: all 0.15s ease;
+  padding: 17px 22px; background: #fff;
+  border: 1.5px solid #EAE3D8; border-radius: 16px;
+  cursor: pointer; position: relative; overflow: hidden;
   text-align: left; margin-bottom: 12px; font-family: inherit;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 2px rgba(46,26,53,0.05);
+  transition: border-color 0.2s ease, box-shadow 0.3s cubic-bezier(0.2,0.7,0.2,1), transform 0.3s cubic-bezier(0.2,0.7,0.2,1), background 0.25s ease;
 }
-.qopt:hover { border-color: #1c4a32; box-shadow: 0 6px 22px rgba(28,74,50,0.14); transform: translateY(-1px); }
-.qopt.sel { background: #1c4a32; border-color: #1c4a32; }
+.qopt:hover { border-color: #C9A84C; box-shadow: 0 16px 38px -18px rgba(46,26,53,0.4); transform: translateY(-2px); }
+.qopt:active { transform: translateY(0) scale(0.995); }
+.qopt.sel { background: linear-gradient(165deg, #3D2645, #2E1A35); border-color: #2E1A35; box-shadow: 0 18px 40px -16px rgba(46,26,53,0.55); }
+/* staggered entrance */
+.qopt-grid .qopt { animation: optIn 0.5s cubic-bezier(0.2,0.7,0.2,1) both; }
+.qopt-grid .qopt:nth-child(1){animation-delay:.03s} .qopt-grid .qopt:nth-child(2){animation-delay:.07s}
+.qopt-grid .qopt:nth-child(3){animation-delay:.11s} .qopt-grid .qopt:nth-child(4){animation-delay:.15s}
+.qopt-grid .qopt:nth-child(5){animation-delay:.19s} .qopt-grid .qopt:nth-child(6){animation-delay:.23s}
+.qopt-grid .qopt:nth-child(7){animation-delay:.27s} .qopt-grid .qopt:nth-child(8){animation-delay:.31s}
+.qopt-grid .qopt:nth-child(9){animation-delay:.35s} .qopt-grid .qopt:nth-child(10){animation-delay:.39s}
+.qopt-grid .qopt:nth-child(11){animation-delay:.43s} .qopt-grid .qopt:nth-child(12){animation-delay:.47s}
 
-/* BetterMe-style option icon badge */
-.qopt-badge {
-  width: 46px; height: 46px; border-radius: 50%;
-  background: #F4EEE4; display: flex; align-items: center; justify-content: center;
-  font-size: 23px; line-height: 1; margin-right: 16px; flex-shrink: 0;
-  transition: background 0.15s ease, transform 0.15s ease;
+/* Selected gold check */
+.qopt-check {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; margin-left: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: #C9A84C; color: #2E1A35; font-size: 12px; font-weight: 800;
+  animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
 }
-.qopt:hover .qopt-badge { transform: scale(1.06); }
-.qopt.sel .qopt-badge { background: rgba(255,255,255,0.16); }
+
+/* option icon badge */
+.qopt-badge {
+  width: 44px; height: 44px; border-radius: 13px;
+  background: #F7F2E9; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; line-height: 1; margin-right: 15px; flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.3s cubic-bezier(0.2,0.7,0.2,1);
+}
+.qopt:hover .qopt-badge { transform: scale(1.07) rotate(-2deg); }
+.qopt.sel .qopt-badge { background: rgba(201,168,76,0.22); }
 
 /* Linear progress bar */
 .qprogress-track {
-  flex: 1; height: 8px; border-radius: 50px;
-  background: rgba(61,38,69,0.12); overflow: hidden;
+  flex: 1; height: 6px; border-radius: 50px;
+  background: rgba(46,26,53,0.10); overflow: hidden;
 }
 .qprogress-fill {
   height: 100%; border-radius: 50px;
-  background: linear-gradient(90deg, #3D2645 0%, #1C4A32 100%);
-  transition: width 0.5s cubic-bezier(0.2,0.7,0.2,1);
+  background: linear-gradient(90deg, #B0902F 0%, #C9A84C 100%);
+  box-shadow: 0 0 10px rgba(201,168,76,0.4);
+  transition: width 0.6s cubic-bezier(0.2,0.7,0.2,1);
 }
 /* Encouragement pill */
 .q-encourage {
@@ -518,19 +541,19 @@ body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; color: #1A1
   transition: border-color 0.2s ease, box-shadow 0.2s ease; outline: none;
   color: #1A1A2E; background: #fff;
 }
-.qinput:focus { border-color: #1c4a32; box-shadow: 0 0 0 3px rgba(28,74,50,.08); }
-.qinput::placeholder { color: #9ca3af; }
+.qinput:focus { border-color: #C9A84C; box-shadow: 0 0 0 3px rgba(201,168,76,.14); }
 .qinput::placeholder { color: #9ca3af; }
 
 .scale-btn {
-  flex: 1; height: 56px; border-radius: 50px;
-  border: 2px solid rgba(255,255,255,0.45); background: #fff;
-  font-size: 20px; font-weight: 700; cursor: pointer;
-  transition: all 0.15s ease; color: #111; font-family: inherit;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  flex: 1; height: 60px; border-radius: 16px;
+  border: 1.5px solid #EAE3D8; background: #fff;
+  font-size: 21px; font-weight: 700; cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.3s cubic-bezier(0.2,0.7,0.2,1), transform 0.3s cubic-bezier(0.2,0.7,0.2,1), background 0.25s ease, color 0.2s ease;
+  color: #2E1A35; font-family: inherit;
+  box-shadow: 0 1px 2px rgba(46,26,53,0.05);
 }
-.scale-btn:hover { border-color: #1c4a32; color: #1c4a32; }
-.scale-btn.sel { background: #1c4a32; border-color: #1c4a32; color: #fff; }
+.scale-btn:hover { border-color: #C9A84C; transform: translateY(-2px); box-shadow: 0 14px 30px -16px rgba(46,26,53,0.35); }
+.scale-btn.sel { background: linear-gradient(165deg, #3D2645, #2E1A35); border-color: #2E1A35; color: #fff; }
 
 .otp-box {
   width: 52px; height: 62px; border: 1.5px solid #E2DCD2;
@@ -2736,7 +2759,7 @@ export default function Page() {
               {SECTIONS[sectionOf(q.id)].eyebrow} · {SECTIONS[sectionOf(q.id)].name}
             </p>
             {/* Question title */}
-            <h2 style={{ fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 400, fontFamily: "'Cormorant Garamond',serif", color: '#0d0d0b', textAlign: 'center', margin: '14px auto 12px', lineHeight: 1.22, maxWidth: 640 }}>
+            <h2 style={{ fontSize: 'clamp(28px, 4.4vw, 46px)', fontWeight: 500, fontFamily: "'Cormorant Garamond',serif", color: '#1A1A2E', textAlign: 'center', margin: '16px auto 14px', lineHeight: 1.14, letterSpacing: '-.015em', maxWidth: 660 }}>
               {q.title}
             </h2>
             {q.sub && (
@@ -2769,7 +2792,7 @@ export default function Page() {
                             </span>
                           )}
                         </span>
-                        {sel && <span style={{ fontSize: 14, color: '#fff', flexShrink: 0, fontWeight: 700, marginLeft: 12 }}>✓</span>}
+                        {sel && <span className="qopt-check">✓</span>}
                       </button>
                     )
                   })}
@@ -2865,7 +2888,7 @@ export default function Page() {
                               </span>
                             )}
                           </span>
-                          {sel && <span style={{ fontSize: 14, color: '#fff', flexShrink: 0, fontWeight: 700, marginLeft: 12 }}>✓</span>}
+                          {sel && <span className="qopt-check">✓</span>}
                         </button>
                       )
                     })}

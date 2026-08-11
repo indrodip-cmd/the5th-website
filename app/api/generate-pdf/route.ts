@@ -56,6 +56,70 @@ const buildRoadmapHtml = (roadmap: string): string => {
   return html
 }
 
+/* Full standalone A4 document for the PDF (headless-chrome friendly, inline
+   styles only). Reuses buildRoadmapHtml for the body. */
+const buildPrintHtml = (
+  roadmap: string,
+  o: { firstName: string; archetypeLabel: string; personalityLabel: string; goal: string },
+): string => `<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: Helvetica, Arial, sans-serif; color: #1a1a1a; }
+  .page { padding: 0 46px 46px; }
+  .band { background: #060a07; color: #fff; padding: 30px 46px; }
+  .sec { page-break-inside: avoid; }
+</style></head>
+<body>
+  <div class="band">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-weight:700;font-size:13px;letter-spacing:2px;">THE5TH CONSULTING</div>
+      <div style="color:#3a9a64;font-size:10px;font-weight:700;letter-spacing:1px;">BUSINESS GROWTH DIAGNOSTIC</div>
+    </div>
+  </div>
+  <div style="background:#fff;padding:40px 46px 26px;border-bottom:2px solid #1d5c3a;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#1d5c3a;text-transform:uppercase;margin-bottom:12px;">Your Full Diagnostic Report</div>
+    <div style="font-size:30px;font-weight:700;color:#0a0a0a;line-height:1.15;font-family:Georgia,serif;">${o.firstName}, you are</div>
+    <div style="font-size:30px;font-weight:700;color:#1c4a32;font-style:italic;line-height:1.15;margin-bottom:12px;font-family:Georgia,serif;">${o.archetypeLabel}.</div>
+    <span style="display:inline-block;background:#8b7fcf;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:50px;">${o.personalityLabel}</span>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;background:#f6f4f0;border-top:2px solid #1d5c3a;">
+      <tr>
+        <td style="padding:12px 16px;border-right:1px solid #e0e0e0;"><div style="font-size:9px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">ARCHETYPE</div><div style="font-size:13px;font-weight:700;color:#1c4a32;">${o.archetypeLabel}</div></td>
+        <td style="padding:12px 16px;border-right:1px solid #e0e0e0;"><div style="font-size:9px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">PERSONALITY</div><div style="font-size:13px;font-weight:700;color:#8b7fcf;">${o.personalityLabel}</div></td>
+        <td style="padding:12px 16px;"><div style="font-size:9px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">6-MONTH GOAL</div><div style="font-size:13px;font-weight:700;color:#9a7a1a;">${o.goal}</div></td>
+      </tr>
+    </table>
+  </div>
+  <div class="page" style="padding-top:30px;">${buildRoadmapHtml(roadmap)}</div>
+</body></html>`
+
+/* Render a PDF from HTML via APITemplate.io (managed, no cold starts). Returns
+   the PDF bytes as base64, or null so the caller can still send the email. */
+const pdfViaApiTemplate = async (html: string): Promise<string | null> => {
+  const key = process.env.APITEMPLATE_API_KEY
+  if (!key) return null
+  try {
+    const res = await fetch('https://rest.apitemplate.io/v2/create-pdf-from-html', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-KEY': key },
+      body: JSON.stringify({
+        body: html,
+        settings: { paper_size: 'A4', margin_top: '0', margin_bottom: '0', margin_left: '0', margin_right: '0', print_background: '1' },
+      }),
+      signal: AbortSignal.timeout(30000),
+    })
+    const json = await res.json().catch(() => ({}))
+    const url = json?.download_url as string | undefined
+    if (!res.ok || !url) { console.error('APITemplate error:', res.status, JSON.stringify(json).slice(0, 300)); return null }
+    const fileRes = await fetch(url, { signal: AbortSignal.timeout(30000) })
+    if (!fileRes.ok) { console.error('APITemplate download failed:', fileRes.status); return null }
+    return Buffer.from(await fileRes.arrayBuffer()).toString('base64')
+  } catch (err) {
+    console.error('APITemplate request failed:', err)
+    return null
+  }
+}
+
 export async function POST(req: NextRequest) {
   // Generating + emailing a PDF is expensive; cap it hard per IP.
   const rl = await limit(`genpdf:ip:${clientIp(req)}`, 8, 600)
@@ -80,41 +144,41 @@ export async function POST(req: NextRequest) {
     const firstName = name.split(' ')[0]
     const videoUrl = `https://quiz.the5th.consulting/video/${videoSlug || 'v1'}`
 
-    // Generate PDF via Render microservice
-    const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'https://the5th-pdf-service.onrender.com'
+    const filename = `${firstName}-business-growth-diagnostic.pdf`
     let pdfAttachment: Array<{ filename: string; content: string }> | undefined = undefined
 
-    try {
-      // Wake up Render service (free tier cold-starts up to 30s)
-      fetch(`${PDF_SERVICE_URL}/health`).catch(() => {})
-      await new Promise(r => setTimeout(r, 5000))
-
-      const pdfRes = await fetch(`${PDF_SERVICE_URL}/generate-pdf`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          stage: stage || 'launched',
-          goal: goal || '$5K-$10K / month',
-          hours: hours || '10-20',
-          video_url: videoUrl,
-          roadmap,
-          archetype: archetypeLabel,
-          personality: personalityLabel,
-        }),
-        signal: AbortSignal.timeout(90000),
-      })
-      if (pdfRes.ok) {
-        const pdfBytes = await pdfRes.arrayBuffer()
-        const pdfBase64 = Buffer.from(pdfBytes).toString('base64')
-        pdfAttachment = [{ filename: `${firstName}-blueprint.pdf`, content: pdfBase64 }]
-        console.log('PDF received, size:', pdfBytes.byteLength)
-      } else {
-        console.error('PDF service error:', pdfRes.status, await pdfRes.text())
+    // Primary: APITemplate.io (managed, reliable, no cold start). We render our
+    // own branded print HTML so there's no dashboard template to maintain.
+    const apiTemplateB64 = await pdfViaApiTemplate(
+      buildPrintHtml(roadmap, { firstName, archetypeLabel, personalityLabel, goal: goal || '$5K-$10K / month' }),
+    )
+    if (apiTemplateB64) {
+      pdfAttachment = [{ filename, content: apiTemplateB64 }]
+    } else {
+      // Fallback: legacy Render microservice (only while APITEMPLATE_API_KEY is
+      // unset). Free tier cold-starts, so this is best-effort — email still sends.
+      const PDF_SERVICE_URL = process.env.PDF_SERVICE_URL || 'https://the5th-pdf-service.onrender.com'
+      try {
+        fetch(`${PDF_SERVICE_URL}/health`).catch(() => {})
+        await new Promise(r => setTimeout(r, 5000))
+        const pdfRes = await fetch(`${PDF_SERVICE_URL}/generate-pdf`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, email, stage: stage || 'launched', goal: goal || '$5K-$10K / month',
+            hours: hours || '10-20', video_url: videoUrl, roadmap,
+            archetype: archetypeLabel, personality: personalityLabel,
+          }),
+          signal: AbortSignal.timeout(90000),
+        })
+        if (pdfRes.ok) {
+          pdfAttachment = [{ filename, content: Buffer.from(await pdfRes.arrayBuffer()).toString('base64') }]
+        } else {
+          console.error('PDF service error:', pdfRes.status, await pdfRes.text())
+        }
+      } catch (err) {
+        console.error('PDF generation failed, sending without attachment:', err)
       }
-    } catch (err) {
-      console.error('PDF generation failed, sending without attachment:', err)
     }
 
     const emailHtml = `<!DOCTYPE html>

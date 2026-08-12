@@ -884,9 +884,66 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: 
 @media (max-width: 767px) {
   .qopt-grid { display: flex !important; flex-direction: column !important; }
 }
-/* Quiz content area responsive */
+/* ─────────────────────────────────────────────────────────────────────
+   MOBILE-FIRST POLISH (≤767px). Desktop is deliberately untouched: every
+   rule below lives inside a max-width query and only refines mobile.
+   ───────────────────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .quiz-content-area { max-width: 640px !important; padding: 120px 20px 100px !important; }
+  /* Fixed logo header (email / OTP screens): slimmer bar, smaller logo */
+  .site-header { padding: 9px 16px 8px !important; gap: 6px !important; }
+  .site-logo { width: 148px !important; height: auto !important; }
+  .site-header-tag { display: none !important; }
+
+  /* Question screen: tighter top gap so more of the question shows above
+     the fold, with a safe-area-aware bottom so nothing hides under the
+     iOS home indicator. */
+  .quiz-content-area { max-width: 640px !important; padding: 86px 18px calc(84px + env(safe-area-inset-bottom)) !important; }
+
+  /* Typography scaled for small screens (overrides the desktop clamps) */
+  .q-eyebrow { font-size: 10.5px !important; letter-spacing: .16em !important; margin-top: 4px !important; }
+  .q-title { font-size: 25px !important; line-height: 1.2 !important; margin: 12px auto 10px !important; }
+  .q-sub { font-size: 14.5px !important; line-height: 1.6 !important; margin: 0 auto 24px !important; }
+
+  /* Answer cards: full-width, generous tap target, tidy spacing */
+  .qopt { padding: 14px 15px !important; border-radius: 14px !important; margin-bottom: 10px !important; min-height: 62px !important; }
+  .qopt-badge { width: 40px !important; height: 40px !important; font-size: 20px !important; margin-right: 13px !important; border-radius: 11px !important; }
+  .qopt-check { width: 20px !important; height: 20px !important; margin-left: 10px !important; }
+
+  /* Continue / primary button: comfortable + thumb-reachable */
+  .gbtn { padding: 16px 24px !important; font-size: 16.5px !important; border-radius: 40px !important; }
+
+  /* Scale row always fits the viewport width */
+  .scale-row { gap: 8px !important; }
+  .scale-btn { height: 56px !important; font-size: 20px !important; border-radius: 14px !important; }
+
+  /* OTP boxes fit even narrow phones (6 boxes never overflow) */
+  .otp-row { gap: 8px !important; }
+  .otp-box { width: 44px !important; height: 54px !important; font-size: 22px !important; }
+
+  /* Inputs at 16px so iOS never zooms on focus */
+  .qinput { font-size: 16px !important; padding: 15px 16px !important; }
+
+  /* Touch feedback: no sticky hover-lift, crisp press states */
+  .qopt:hover { transform: none !important; box-shadow: 0 1px 2px rgba(46,26,53,0.05) !important; border-color: #EAE3D8 !important; }
+  .scale-btn:hover { transform: none !important; box-shadow: 0 1px 2px rgba(46,26,53,0.05) !important; border-color: #EAE3D8 !important; }
+  .gbtn:hover { transform: none !important; box-shadow: 0 12px 30px -12px rgba(28,74,50,0.55) !important; }
+  .qopt:active { transform: scale(.99) !important; }
+  .scale-btn:active, .gbtn:active, .otp-box:active { transform: scale(.985) !important; }
+
+  /* Kill the 300ms tap delay + double-tap zoom on interactive controls */
+  .qopt, .scale-btn, .gbtn, .otp-box, .qinput { touch-action: manipulation; }
+
+  /* Declutter: hide the fixed corner stars on small screens */
+  .quiz-corner-stars { display: none !important; }
+}
+@media (max-width: 360px) {
+  .q-title { font-size: 22.5px !important; }
+  .q-sub { font-size: 14px !important; }
+  .qopt { min-height: 58px !important; }
+  .qopt-badge { width: 36px !important; height: 36px !important; font-size: 18px !important; margin-right: 11px !important; }
+  .scale-btn { height: 52px !important; font-size: 18px !important; }
+  .otp-box { width: 40px !important; height: 50px !important; font-size: 20px !important; }
+  .gbtn { font-size: 16px !important; }
 }
 `
 
@@ -896,7 +953,7 @@ function SiteHeader({ screen, currentQ }: { screen: string; currentQ: number }) 
   const allDone = screen === 'email'
 
   return (
-    <header style={{
+    <header className="site-header" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)',
       borderBottom: '1px solid #f0f0f0',
@@ -904,7 +961,7 @@ function SiteHeader({ screen, currentQ }: { screen: string; currentQ: number }) 
       padding: '12px 40px 10px', gap: 8,
     }}>
       {/* Logo centered */}
-      <Image src="/logo-the5th.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
+      <Image className="site-logo" src="/logo-the5th.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
 
       {/* Progress dots + tag row */}
       <div style={{ width: '100%', maxWidth: 640, display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -2731,11 +2788,11 @@ export default function Page() {
         </div>
 
         {/* Decorative stars bottom corners */}
-        <div style={{ position:'fixed', bottom:40, left:24, zIndex:1, pointerEvents:'none', opacity:.55 }}>
+        <div className="quiz-corner-stars" style={{ position:'fixed', bottom:40, left:24, zIndex:1, pointerEvents:'none', opacity:.55 }}>
           <StarSVG size={20} style={{ color:'#0d0d0b' }} />
           <StarSVG size={14} style={{ marginTop:8, marginLeft:8, color:'#0d0d0b' }} />
         </div>
-        <div style={{ position:'fixed', bottom:40, right:24, zIndex:1, pointerEvents:'none', opacity:.55 }}>
+        <div className="quiz-corner-stars" style={{ position:'fixed', bottom:40, right:24, zIndex:1, pointerEvents:'none', opacity:.55 }}>
           <StarSVG size={14} style={{ color:'#0d0d0b' }} />
           <StarSVG size={20} style={{ marginTop:8, color:'#0d0d0b' }} />
         </div>
@@ -2755,15 +2812,15 @@ export default function Page() {
               </span>
             </div>
             {/* Chapter label */}
-            <p style={{ textAlign: 'center', fontSize: 11.5, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', fontWeight: 700, marginTop: 14 }}>
+            <p className="q-eyebrow" style={{ textAlign: 'center', fontSize: 11.5, letterSpacing: '.2em', textTransform: 'uppercase', color: '#B0902F', fontWeight: 700, marginTop: 14 }}>
               {SECTIONS[sectionOf(q.id)].eyebrow} · {SECTIONS[sectionOf(q.id)].name}
             </p>
             {/* Question title */}
-            <h2 style={{ fontSize: 'clamp(28px, 4.4vw, 46px)', fontWeight: 500, fontFamily: "'Cormorant Garamond',serif", color: '#1A1A2E', textAlign: 'center', margin: '16px auto 14px', lineHeight: 1.14, letterSpacing: '-.015em', maxWidth: 660 }}>
+            <h2 className="q-title" style={{ fontSize: 'clamp(28px, 4.4vw, 46px)', fontWeight: 500, fontFamily: "'Cormorant Garamond',serif", color: '#1A1A2E', textAlign: 'center', margin: '16px auto 14px', lineHeight: 1.14, letterSpacing: '-.015em', maxWidth: 660 }}>
               {q.title}
             </h2>
             {q.sub && (
-              <p style={{ fontSize: 16, color: 'rgba(13,13,11,.6)', textAlign: 'center', marginBottom: 36, lineHeight: 1.65, maxWidth: 520, margin: '0 auto 36px' }}>
+              <p className="q-sub" style={{ fontSize: 16, color: 'rgba(13,13,11,.6)', textAlign: 'center', marginBottom: 36, lineHeight: 1.65, maxWidth: 520, margin: '0 auto 36px' }}>
                 {q.sub}
               </p>
             )}
@@ -2841,7 +2898,7 @@ export default function Page() {
               {/* SCALE */}
               {q.type === 'scale' && (
                 <>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+                  <div className="scale-row" style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
                     {[1, 2, 3, 4, 5].map(n => (
                       <button
                         key={n}
@@ -2991,7 +3048,7 @@ export default function Page() {
             <p style={{ fontSize: 16, fontWeight: 300, color: '#5a5550', marginBottom: 28, lineHeight: 1.7, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
               Your assessment contains personal business insights only you should see. We&apos;ve sent a secure 6-digit code to <b style={{ color: '#1A1A2E', fontWeight: 600 }}>{email}</b>, no password needed.
             </p>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
+            <div className="otp-row" style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
               {otpDigits.map((d, i) => (
                 <input
                   key={i}

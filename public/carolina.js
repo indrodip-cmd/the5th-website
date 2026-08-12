@@ -8,10 +8,14 @@
   'use strict';
   if (window.__carolinaLoaded) return;
   // Distraction-free funnel pages: no chat widget on /lp/* or /event/* pages
-  // (keeps the single conversion path clean).
+  // (keeps the single conversion path clean). The assessment funnel (/quiz and
+  // /quiz/results) is likewise widget-free so nothing competes with the quiz —
+  // the ONLY exception is the post-booking /quiz/thank-you page, where Carolina
+  // returns to thank the visitor and point them to the case-study library.
   try {
     var _cp = location.pathname;
     if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0) return;
+    if (_cp.indexOf('/quiz') === 0 && _cp.indexOf('/quiz/thank') !== 0) return;
   } catch (e) {}
   window.__carolinaLoaded = true;
 
@@ -2947,6 +2951,9 @@
       msgs: ["You're only a couple of minutes from personalized insights — ready to begin?", "Take the Business Growth Quiz and discover what's holding your business back."] },
     quizdone: { agent: 'natasha', cta: 'Walk me through it', seed: 'I just finished the quiz — can you walk me through my results and next steps?',
       msgs: ['🎉 Nice work finishing the quiz! Want me to walk you through your results and the best next step?'] },
+    quizthankyou: { agent: 'carolina', cta: 'See real client wins', href: '/results',
+      returning: 'Thank you again 🙏 Want to see the client story closest to your situation while you wait for your call?',
+      msgs: ['Thank you so much for booking 🙏 While you wait for your call, come see the real client stories closest to your situation — I’ll take you there.'] },
     blog: { agent: 'benjamin', cta: 'Ask a question', seed: 'I have a question about this article.',
       msgs: ['Have a question about this article? Ask me anything.', 'Want me to recommend the next read based on what you’re looking at?'] },
     fastforward: { agent: 'carolina', cta: 'Tell me more', seed: 'Tell me about Fast Forward — the guarantee, case studies, and how a strategy call works.',
@@ -2966,6 +2973,9 @@
   function pageContext() {
     var p = (location.pathname || '/').toLowerCase();
     if (/lp\/make-10k-month/.test(p)) return 'training';   // VSL funnel — promote the free training only
+    // Post-booking thank-you page: thank them + guide to the case-study library.
+    // Checked before hasBooked()/quizdone so it always wins here.
+    if (/quiz\/thank/.test(p)) return 'quizthankyou';
     if (hasBooked()) return 'booked';
     // Only the quiz's OWN result/thank-you pages count as "quiz done".
     if (/quiz\/(results|thank)/.test(p)) return 'quizdone';
@@ -3021,7 +3031,13 @@
     }, REDUCE ? 0 : 1100);
     p.querySelector('.cw-promo-x').addEventListener('click', function () { dismissPromo(dkey); });
     p.querySelector('.cw-promo-no').addEventListener('click', function () { dismissPromo(dkey); });
-    p.querySelector('.cw-promo-cta').addEventListener('click', function () { dismissPromo(); toggle(true); startNewChat(g.seed); });
+    p.querySelector('.cw-promo-cta').addEventListener('click', function () {
+      dismissPromo();
+      // A greeting can send the visitor straight to a page (e.g. the thank-you
+      // page points to the /results case-study library) instead of opening chat.
+      if (g.href) { try { window.location.href = g.href; return; } catch (e) {} }
+      toggle(true); startNewChat(g.seed);
+    });
   }
 
   function maybeShowPromo() {
@@ -3038,7 +3054,7 @@
 
     var MIN = 2500, fired = false, startedAt = Date.now();
     var baseDelay = Math.max(4000, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 9) * 1000));
-    if (pageContext() === 'training') baseDelay = 6000;   // funnel: nudge people to act sooner
+    if (pageContext() === 'training' || pageContext() === 'quizthankyou') baseDelay = 6000;   // funnel/thank-you: nudge sooner
     function fire() { if (fired || isOpen) return; fired = true; cleanup(); showPromoBubble(g, dkey); }
     function cleanup() { clearTimeout(baseT); clearTimeout(idleT); window.removeEventListener('scroll', onScroll); document.removeEventListener('mousemove', onAct); document.removeEventListener('keydown', onAct); document.removeEventListener('touchstart', onAct); }
     var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay (fallback)

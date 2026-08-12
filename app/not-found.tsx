@@ -76,9 +76,11 @@ export default function NotFound() {
           <Link href="/" className="nf-btn" style={{ background: `linear-gradient(180deg, ${C.goldSoft}, ${C.gold} 60%, ${C.goldDeep})`, color: C.plum, boxShadow: '0 14px 30px -10px rgba(201,168,76,0.55)' }}>
             Back to Home →
           </Link>
-          <Link href="/quiz" className="nf-btn" style={{ color: '#fff', border: '1px solid rgba(255,255,255,.38)' }}>
+          {/* Plain anchor (full load) so the quiz's distraction-free guards in
+              carolina.js / cookie-consent.js always apply on entry. */}
+          <a href="/quiz" className="nf-btn" style={{ color: '#fff', border: '1px solid rgba(255,255,255,.38)' }}>
             Take the Assessment
-          </Link>
+          </a>
         </div>
 
         <div style={{ marginTop: 22 }}>

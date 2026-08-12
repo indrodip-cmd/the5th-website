@@ -1,10 +1,14 @@
 'use client'
-/* Quiz Leads — everyone who has taken the website quiz, with their answers and
-   AI-generated 15-day roadmap. Data comes from the quiz_leads table via
-   /api/quiz-leads (admin-only). This is the modern home for what used to live
-   under the deprecated /admin/legacy "Leads" tab. */
-import { useMemo, useState } from 'react'
+/* Quiz Leads — everyone who has taken the website quiz, with their answers,
+   AI roadmap, computed LEAD QUALIFICATION, and full communication history.
+   Data comes from the quiz_leads table via /api/quiz-leads (admin-only);
+   per-lead email engagement comes from /api/quiz-leads/comms.
+
+   Qualification colours (founder-specified, intentionally inverted):
+     Qualified → RED · Nurture → GREEN · Not qualified → BLUE */
+import { useEffect, useMemo, useState } from 'react'
 import { T, Card, PageHeader, Input, Button, Drawer, EmptyState, ErrorState, useAdminFetch, fmtDate } from '@/components/admin/ui'
+import type { Qualification, QualTier } from '@/lib/qualification'
 
 type Roadmap = {
   days?: Array<{ day: number; title?: string; theme?: string; tasks?: string[]; win_condition?: string; motivation?: string }>
@@ -30,8 +34,17 @@ type Lead = {
   call_booked: boolean | null
   report_viewed_at: string | null
   sequence_assigned: string | null
+  paid: boolean | null
+  paid_at: string | null
   created_at: string
+  qualification: Qualification
 }
+
+type CommMessage = {
+  id: string; channel: string; direction: string; to_addr: string | null; subject: string | null
+  status: string | null; source: string | null; created_at: string; opened_at: string | null; clicked_at: string | null
+}
+type CommStats = { sent: number; opened: number; clicked: number; replies: number; openRate: number; clickRate: number; engagement: number }
 
 /* Human labels for the quiz question keys. */
 const Q_LABELS: Record<string, string> = {
@@ -71,8 +84,10 @@ function orderedAnswers(answers: Lead['answers']): Array<[string, string | strin
   })
 }
 
+/* Journey/lifecycle status (separate from qualification). */
 function status(l: Lead): { label: string; color: string } {
   if (l.converted_to_member) return { label: 'Member', color: '#16a34a' }
+  if (l.paid) return { label: 'Paid', color: '#C9A84C' }
   if (l.call_booked) return { label: 'Call booked', color: '#2563eb' }
   if (l.report_viewed_at) return { label: 'Viewed report', color: '#7c3aed' }
   if (l.last_visit && new Date(l.last_visit) > new Date(Date.now() - 7 * 86400000)) return { label: 'Active', color: T.green }
@@ -82,37 +97,61 @@ function status(l: Lead): { label: string; color: string } {
 const th: React.CSSProperties = { padding: '12px 14px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '.06em', whiteSpace: 'nowrap' }
 const td: React.CSSProperties = { padding: '13px 14px', fontSize: 13.5, color: T.text, whiteSpace: 'nowrap' }
 
-function Stat({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
+function QualBadge({ q, dot }: { q: Qualification; dot?: boolean }) {
   return (
-    <Card pad={18} style={{ flex: 1, minWidth: 150 }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '3px 10px', borderRadius: 20, background: q.color + '18', color: q.color, fontSize: 12, fontWeight: 700 }}>
+      {dot && <span style={{ width: 7, height: 7, borderRadius: '50%', background: q.color }} />}
+      {q.label} · {q.score}
+    </span>
+  )
+}
+
+function Stat({ label, value, hint, color }: { label: string; value: string | number; hint?: string; color?: string }) {
+  return (
+    <Card pad={18} style={{ flex: 1, minWidth: 140, borderTop: color ? `3px solid ${color}` : undefined }}>
       <div style={{ fontSize: 11, fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 26, fontWeight: 800, color: T.text, lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: 26, fontWeight: 800, color: color || T.text, lineHeight: 1 }}>{value}</div>
       {hint && <div style={{ fontSize: 12, color: T.muted, marginTop: 5 }}>{hint}</div>}
     </Card>
   )
 }
 
+type FilterKey = 'all' | QualTier | 'paid'
+
 export default function QuizLeadsPage() {
   const { data, loading, error, reload } = useAdminFetch<{ leads: Lead[] }>('/api/quiz-leads')
   const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<FilterKey>('all')
+  const [sortHot, setSortHot] = useState(true)
   const [selected, setSelected] = useState<Lead | null>(null)
 
   const leads = useMemo(() => data?.leads ?? [], [data])
+
+  const counts = useMemo(() => ({
+    qualified: leads.filter(l => l.qualification?.tier === 'qualified').length,
+    nurture: leads.filter(l => l.qualification?.tier === 'nurture').length,
+    unqualified: leads.filter(l => l.qualification?.tier === 'unqualified').length,
+    paid: leads.filter(l => l.paid).length,
+  }), [leads])
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return leads
-    return leads.filter(l => leadName(l).toLowerCase().includes(q) || l.email.toLowerCase().includes(q))
-  }, [leads, search])
+    let list = leads
+    if (filter === 'paid') list = list.filter(l => l.paid)
+    else if (filter !== 'all') list = list.filter(l => l.qualification?.tier === filter)
+    if (q) list = list.filter(l => leadName(l).toLowerCase().includes(q) || l.email.toLowerCase().includes(q))
+    const sorted = [...list]
+    if (sortHot) sorted.sort((a, b) => (b.qualification?.score ?? 0) - (a.qualification?.score ?? 0))
+    return sorted
+  }, [leads, search, filter, sortHot])
 
   const newThisWeek = leads.filter(l => isNewThisWeek(l.created_at)).length
-  const withRoadmap = leads.filter(l => l.roadmap && (l.roadmap.days?.length || l.roadmap.summary)).length
-  const viewedReport = leads.filter(l => l.report_viewed_at).length
 
   const exportCSV = () => {
-    const cols = ['Name', 'Email', 'Signed Up', 'Status', 'Track', 'UTM Source', 'Roadmap', 'Report Viewed']
+    const cols = ['Name', 'Email', 'Signed Up', 'Qualification', 'Score', 'Status', 'Track', 'UTM Source', 'Paid', 'Report Viewed']
     const rows = filtered.map(l => [
-      leadName(l), l.email, l.created_at, status(l).label, l.sequence_assigned || '',
-      l.utm_source || '', l.roadmap ? 'yes' : 'no', l.report_viewed_at || '',
+      leadName(l), l.email, l.created_at, l.qualification?.label || '', String(l.qualification?.score ?? ''),
+      status(l).label, l.sequence_assigned || '', l.utm_source || '', l.paid ? 'yes' : 'no', l.report_viewed_at || '',
     ])
     const esc = (v: string) => `"${String(v).replace(/"/g, '""')}"`
     const csv = [cols, ...rows].map(r => r.map(esc).join(',')).join('\n')
@@ -124,19 +163,43 @@ export default function QuizLeadsPage() {
     URL.revokeObjectURL(a.href)
   }
 
+  const FILTERS: { key: FilterKey; label: string; color?: string }[] = [
+    { key: 'all', label: `All (${leads.length})` },
+    { key: 'qualified', label: `Qualified (${counts.qualified})`, color: '#dc2626' },
+    { key: 'nurture', label: `Nurture (${counts.nurture})`, color: '#16a34a' },
+    { key: 'unqualified', label: `Not qualified (${counts.unqualified})`, color: '#2563eb' },
+    { key: 'paid', label: `Paid (${counts.paid})`, color: '#C9A84C' },
+  ]
+
   return (
     <>
       <PageHeader
         title="Quiz Leads"
-        subtitle="Everyone who has taken the website quiz — with their answers and AI roadmap"
+        subtitle="Everyone who has taken the quiz — qualified, colour-coded, with answers, roadmap & email engagement"
         actions={filtered.length > 0 ? <Button variant="ghost" onClick={exportCSV}>Export CSV</Button> : undefined}
       />
 
       <div style={{ display: 'flex', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
-        <Stat label="Total Leads" value={leads.length} />
-        <Stat label="New This Week" value={newThisWeek} />
-        <Stat label="With AI Roadmap" value={withRoadmap} />
-        <Stat label="Viewed Report" value={viewedReport} />
+        <Stat label="Total Leads" value={leads.length} hint={`${newThisWeek} new this week`} />
+        <Stat label="Qualified" value={counts.qualified} color="#dc2626" hint="Hot — act now" />
+        <Stat label="Nurture" value={counts.nurture} color="#16a34a" hint="Warm up" />
+        <Stat label="Not Qualified" value={counts.unqualified} color="#2563eb" hint="Cold / not a fit" />
+        <Stat label="Paid $27" value={counts.paid} color="#C9A84C" />
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+        {FILTERS.map(f => (
+          <button key={f.key} onClick={() => setFilter(f.key)} style={{
+            padding: '7px 13px', borderRadius: 20, cursor: 'pointer', fontSize: 12.5, fontWeight: 700,
+            border: `1px solid ${filter === f.key ? (f.color || T.text) : T.border}`,
+            background: filter === f.key ? (f.color || T.text) + '18' : 'transparent',
+            color: filter === f.key ? (f.color || T.text) : T.sub,
+          }}>{f.label}</button>
+        ))}
+        <div style={{ flex: 1 }} />
+        <button onClick={() => setSortHot(s => !s)} style={{ padding: '7px 13px', borderRadius: 20, cursor: 'pointer', fontSize: 12.5, fontWeight: 700, border: `1px solid ${T.border}`, background: 'transparent', color: T.sub }}>
+          Sort: {sortHot ? 'Hottest first' : 'Newest first'}
+        </button>
       </div>
 
       <div style={{ marginBottom: 14, maxWidth: 320 }}>
@@ -156,24 +219,25 @@ export default function QuizLeadsPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: T.ink }}>
-                  {['#', 'Name', 'Email', 'Signed Up', 'Track', 'Roadmap', 'Status', ''].map((c, i) => (
+                  {['', 'Name', 'Email', 'Qualification', 'Signed Up', 'Track', 'Status', ''].map((c, i) => (
                     <th key={i} style={th}>{c}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={8} style={{ padding: '48px 24px', textAlign: 'center', color: T.muted }}>No results match your search.</td></tr>
-                ) : filtered.map((l, i) => {
+                  <tr><td colSpan={8} style={{ padding: '48px 24px', textAlign: 'center', color: T.muted }}>No results match your filter.</td></tr>
+                ) : filtered.map((l) => {
                   const s = status(l)
+                  const qc = l.qualification?.color || T.muted
                   return (
-                    <tr key={l.id} className="admin-row" style={{ borderTop: `1px solid ${T.border}`, cursor: 'pointer' }} onClick={() => setSelected(l)}>
-                      <td style={{ ...td, color: T.muted }}>{i + 1}</td>
-                      <td style={{ ...td, fontWeight: 600 }}>{leadName(l)}</td>
+                    <tr key={l.id} className="admin-row" style={{ borderTop: `1px solid ${T.border}`, cursor: 'pointer', boxShadow: `inset 4px 0 0 ${qc}` }} onClick={() => setSelected(l)}>
+                      <td style={{ ...td, width: 8, paddingLeft: 12, paddingRight: 0 }}><span style={{ width: 9, height: 9, borderRadius: '50%', background: qc, display: 'inline-block' }} /></td>
+                      <td style={{ ...td, fontWeight: 600 }}>{leadName(l)}{l.paid && <span title="Paid $27" style={{ marginLeft: 6, color: '#C9A84C' }}>★</span>}</td>
                       <td style={{ ...td, color: T.sub }}>{l.email}</td>
+                      <td style={td}>{l.qualification ? <QualBadge q={l.qualification} /> : '—'}</td>
                       <td style={{ ...td, color: T.sub }}>{fmtDate(l.created_at)}</td>
                       <td style={{ ...td, color: T.sub }}>{l.sequence_assigned || '—'}</td>
-                      <td style={td}>{l.roadmap ? '✓' : '—'}</td>
                       <td style={td}><span style={{ padding: '3px 10px', borderRadius: 20, background: s.color + '18', color: s.color, fontSize: 12, fontWeight: 700 }}>{s.label}</span></td>
                       <td style={td}><Button variant="ghost" onClick={(e) => { e.stopPropagation(); setSelected(l) }}>View</Button></td>
                     </tr>
@@ -189,17 +253,17 @@ export default function QuizLeadsPage() {
         <p style={{ fontSize: 12, color: T.muted, marginTop: 10, textAlign: 'right' }}>{filtered.length} of {leads.length} leads</p>
       )}
 
-      <Drawer open={!!selected} onClose={() => setSelected(null)} width={520}>
+      <Drawer open={!!selected} onClose={() => setSelected(null)} width={560}>
         {selected && <LeadDetail lead={selected} />}
       </Drawer>
     </>
   )
 }
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
+function Section({ label, children, accent }: { label: string; children: React.ReactNode; accent?: string }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', color: T.green, textTransform: 'uppercase', marginBottom: 12 }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', color: accent || T.green, textTransform: 'uppercase', marginBottom: 12 }}>{label}</div>
       {children}
     </div>
   )
@@ -209,13 +273,40 @@ function LeadDetail({ lead }: { lead: Lead }) {
   const answers = orderedAnswers(lead.answers)
   const rm = lead.roadmap
   const s = status(lead)
+  const q = lead.qualification
+
+  const [comms, setComms] = useState<{ messages: CommMessage[]; stats: CommStats } | null>(null)
+  const [commsLoading, setCommsLoading] = useState(true)
+  useEffect(() => {
+    let cancelled = false
+    setCommsLoading(true)
+    fetch(`/api/quiz-leads/comms?email=${encodeURIComponent(lead.email)}`, { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(j => { if (!cancelled) setComms({ messages: j.messages || [], stats: j.stats }) })
+      .catch(() => { if (!cancelled) setComms({ messages: [], stats: { sent: 0, opened: 0, clicked: 0, replies: 0, openRate: 0, clickRate: 0, engagement: 0 } }) })
+      .finally(() => { if (!cancelled) setCommsLoading(false) })
+    return () => { cancelled = true }
+  }, [lead.email])
+
   return (
     <div>
-      <div style={{ fontSize: 20, fontWeight: 800, color: T.text }}>{leadName(lead)}</div>
-      <div style={{ fontSize: 14, color: T.sub, marginTop: 3 }}>{lead.email}</div>
-      <div style={{ fontSize: 12, color: T.muted, marginTop: 5, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+        <div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: T.text }}>{leadName(lead)}</div>
+          <div style={{ fontSize: 14, color: T.sub, marginTop: 3 }}>{lead.email}</div>
+        </div>
+        {q && (
+          <div style={{ textAlign: 'center', flexShrink: 0 }}>
+            <div style={{ width: 62, height: 62, borderRadius: '50%', border: `3px solid ${q.color}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: q.color }}>{q.score}</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: q.color, marginTop: 5 }}>{q.label}</div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ fontSize: 12, color: T.muted, marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
         <span>Signed up {fmtDate(lead.created_at)}</span>
         <span style={{ padding: '2px 9px', borderRadius: 20, background: s.color + '18', color: s.color, fontWeight: 700 }}>{s.label}</span>
+        {lead.paid && <span style={{ padding: '2px 9px', borderRadius: 20, background: '#C9A84C22', color: '#a9862f', fontWeight: 700 }}>Paid{lead.paid_at ? ` · ${fmtDate(lead.paid_at)}` : ''}</span>}
         {lead.utm_source && <span>· via {lead.utm_source}</span>}
       </div>
 
@@ -225,6 +316,78 @@ function LeadDetail({ lead }: { lead: Lead }) {
       </div>
 
       <div style={{ height: 1, background: T.border, margin: '18px 0' }} />
+
+      {/* Qualification breakdown */}
+      {q && (
+        <Section label="Lead Qualification" accent={q.color}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <QualBadge q={q} dot />
+            <span style={{ fontSize: 12.5, color: T.muted }}>Fit score {q.score}/100</span>
+          </div>
+          {q.reasons.length > 0 && (
+            <div style={{ marginBottom: 10 }}>
+              {q.reasons.map((r, i) => (
+                <div key={i} style={{ display: 'flex', gap: 9, margin: '6px 0', fontSize: 13.5, color: T.text }}>
+                  <span style={{ color: '#16a34a', fontWeight: 800 }}>▲</span><span>{r}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {q.gaps.length > 0 && q.gaps.map((g, i) => (
+            <div key={i} style={{ display: 'flex', gap: 9, margin: '6px 0', fontSize: 13.5, color: T.sub }}>
+              <span style={{ color: '#2563eb', fontWeight: 800 }}>▼</span><span>{g}</span>
+            </div>
+          ))}
+          {q.reasons.length === 0 && q.gaps.length === 0 && (
+            <p style={{ fontSize: 13, color: T.muted }}>Not enough answers to explain the score.</p>
+          )}
+        </Section>
+      )}
+
+      {/* Communications / engagement */}
+      <Section label="Email Engagement">
+        {commsLoading && !comms ? (
+          <div className="skeleton" style={{ height: 70, borderRadius: 10 }} />
+        ) : comms && comms.stats ? (
+          <>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+              <MiniStat label="Sent" value={comms.stats.sent} />
+              <MiniStat label="Open rate" value={`${comms.stats.openRate}%`} sub={`${comms.stats.opened} opened`} />
+              <MiniStat label="Click rate" value={`${comms.stats.clickRate}%`} sub={`${comms.stats.clicked} clicked`} />
+              <MiniStat label="Replies" value={comms.stats.replies} />
+            </div>
+            {comms.messages.length === 0 ? (
+              <p style={{ fontSize: 13, color: T.muted }}>No emails logged yet for this lead.</p>
+            ) : (
+              <div style={{ display: 'grid', gap: 8 }}>
+                {comms.messages.slice(0, 25).map(m => (
+                  <div key={m.id} style={{ background: T.bg, borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'baseline' }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: T.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {m.direction === 'inbound' ? '↩ ' : ''}{m.subject || `(${m.channel})`}
+                      </div>
+                      <div style={{ fontSize: 11, color: T.muted, flexShrink: 0 }}>{fmtDate(m.created_at)}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 5, flexWrap: 'wrap' }}>
+                      <Tag>{m.channel}</Tag>
+                      {m.source && <Tag>{m.source}</Tag>}
+                      {m.opened_at || m.status === 'opened' || m.status === 'clicked' ? <Tag color="#16a34a">opened</Tag> : m.direction === 'outbound' ? <Tag color={T.muted}>not opened</Tag> : null}
+                      {(m.clicked_at || m.status === 'clicked') && <Tag color="#C9A84C">clicked</Tag>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <p style={{ fontSize: 13, color: T.muted }}>Couldn&apos;t load communications.</p>
+        )}
+        <div style={{ fontSize: 12, color: T.muted, marginTop: 10, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          {typeof lead.current_day === 'number' && <span>Drip day: {lead.current_day}</span>}
+          {lead.report_viewed_at && <span>Report viewed {fmtDate(lead.report_viewed_at)}</span>}
+          {lead.call_booked && <span>Call booked ✓</span>}
+        </div>
+      </Section>
 
       <Section label="Quiz Answers">
         {answers.length === 0 ? (
@@ -260,6 +423,21 @@ function LeadDetail({ lead }: { lead: Lead }) {
       )}
     </div>
   )
+}
+
+function MiniStat({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+  return (
+    <div style={{ flex: 1, minWidth: 92, background: T.bg, borderRadius: 10, padding: '10px 12px' }}>
+      <div style={{ fontSize: 10.5, fontWeight: 700, color: T.muted, textTransform: 'uppercase', letterSpacing: '.05em' }}>{label}</div>
+      <div style={{ fontSize: 20, fontWeight: 800, color: T.text, lineHeight: 1.1, marginTop: 3 }}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: T.muted, marginTop: 2 }}>{sub}</div>}
+    </div>
+  )
+}
+
+function Tag({ children, color }: { children: React.ReactNode; color?: string }) {
+  const c = color || T.sub
+  return <span style={{ fontSize: 10.5, fontWeight: 700, padding: '2px 7px', borderRadius: 6, background: c + '1e', color: c, textTransform: 'uppercase', letterSpacing: '.04em' }}>{children}</span>
 }
 
 function Field({ label, value, accent }: { label: string; value: string; accent?: boolean }) {

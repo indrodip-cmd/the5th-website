@@ -4,7 +4,7 @@
    On success Whop redirects to the plan's return URL; the Whop webhook on the
    platform provisions the member + tier automatically. Keying the checkout div
    by plan id remounts it when the billing toggle flips. */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const FOREST = '#1C4A32'
 const FOREST_2 = '#2d6a4f'
@@ -33,13 +33,41 @@ export type CheckoutConfig = {
 export default function CheckoutView({ config }: { config: CheckoutConfig }) {
   const [planKey, setPlanKey] = useState(config.plans[0]?.key)
   const [quizEmail, setQuizEmail] = useState('')
+  const [quizName, setQuizName] = useState('')
   const plan = config.plans.find((p) => p.key === planKey) || config.plans[0]
+
+  // Checkout-embed health: show a skeleton until the Whop iframe mounts, and a
+  // hosted-checkout fallback button if it is slow or blocked (ad-blockers, CSP).
+  const embedRef = useRef<HTMLDivElement | null>(null)
+  const [embedMounted, setEmbedMounted] = useState(false)
+  const [embedSlow, setEmbedSlow] = useState(false)
 
   useEffect(() => {
     if (config.prefillQuizEmail) {
-      try { setQuizEmail(sessionStorage.getItem('quiz_email') || '') } catch { /* ignore */ }
+      try {
+        setQuizEmail(sessionStorage.getItem('quiz_email') || '')
+        setQuizName(sessionStorage.getItem('quiz_name') || '')
+      } catch { /* ignore */ }
     }
   }, [config.prefillQuizEmail])
+
+  // Watch the embed container: the Whop loader injects an <iframe> once ready.
+  useEffect(() => {
+    setEmbedMounted(false)
+    setEmbedSlow(false)
+    const el = embedRef.current
+    if (!el) return
+    const check = () => { if (el.querySelector('iframe')) { setEmbedMounted(true); return true } return false }
+    if (check()) return
+    const obs = new MutationObserver(() => check())
+    obs.observe(el, { childList: true, subtree: true })
+    const poll = setInterval(() => { if (check()) clearInterval(poll) }, 500)
+    const slowT = setTimeout(() => { if (!el.querySelector('iframe')) setEmbedSlow(true) }, 7000)
+    return () => { obs.disconnect(); clearInterval(poll); clearTimeout(slowT) }
+  }, [plan.planId, quizEmail])
+
+  // Whop hosted-checkout URL — the reliable fallback if the embed cannot load.
+  const hostedUrl = `https://whop.com/checkout/${plan.planId}${quizEmail ? `?email=${encodeURIComponent(quizEmail)}` : ''}`
 
   const redirectUrl = quizEmail
     ? config.returnUrl + (config.returnUrl.includes('?') ? '&' : '?') + 'email=' + encodeURIComponent(quizEmail)
@@ -120,15 +148,39 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
 
               {config.prefillQuizEmail && quizEmail && (
                 <p style={{ textAlign: 'center', fontSize: 12.5, color: MUTE, marginBottom: 6 }}>
-                  Unlocking for <b style={{ color: INK }}>{quizEmail}</b> — please check out with this email.
+                  {quizName ? <>Unlocking for <b style={{ color: INK }}>{quizName.split(' ')[0]}</b> · </> : 'Unlocking for '}
+                  <b style={{ color: INK }}>{quizEmail}</b> — please check out with this email.
                 </p>
               )}
 
-              {/* Whop embedded checkout — remounts on plan/email change via key */}
-              <div key={`${plan.planId}:${quizEmail}`} data-whop-checkout-plan-id={plan.planId} data-whop-checkout-theme="light" data-whop-checkout-redirect-url={redirectUrl} data-whop-checkout-email={quizEmail || undefined} style={{ height: 'fit-content', overflow: 'hidden', maxWidth: 500, margin: '10px auto 0', width: '100%', minHeight: 70 }} />
+              {/* Whop embedded checkout with a skeleton while it loads and a
+                  hosted-checkout fallback if the embed is blocked/slow. */}
+              <div style={{ position: 'relative', maxWidth: 500, margin: '10px auto 0', width: '100%', minHeight: 90 }}>
+                <div ref={embedRef} key={`${plan.planId}:${quizEmail}`} data-whop-checkout-plan-id={plan.planId} data-whop-checkout-theme="light" data-whop-checkout-theme-accent-color="forest" data-whop-checkout-redirect-url={redirectUrl} data-whop-checkout-email={quizEmail || undefined} style={{ overflow: 'hidden', width: '100%', minHeight: 90 }} />
+
+                {!embedMounted && (
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#fff', borderRadius: 14, padding: 16 }}>
+                    {!embedSlow ? (
+                      <>
+                        <div style={{ width: 26, height: 26, borderRadius: '50%', border: `3px solid #eee`, borderTopColor: FOREST, animation: 'spin .8s linear infinite' }} />
+                        <p style={{ fontSize: 13, color: MUTE, margin: 0 }}>Loading secure checkout…</p>
+                        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ fontSize: 13.5, color: INK, margin: 0, textAlign: 'center', fontWeight: 600 }}>Checkout is taking a moment.</p>
+                        <a href={hostedUrl} target="_top" style={{ display: 'inline-block', background: `linear-gradient(145deg,${GOLD},${GOLD_DK})`, color: '#1a1206', fontWeight: 800, fontSize: 15.5, padding: '13px 28px', borderRadius: 12, textDecoration: 'none', boxShadow: '0 10px 26px rgba(169,134,47,.3)' }}>
+                          Pay {plan.price} securely →
+                        </a>
+                        <p style={{ fontSize: 11.5, color: MUTE, margin: 0, textAlign: 'center' }}>Opens Whop&apos;s secure checkout{quizEmail ? ' with your email prefilled' : ''}.</p>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
 
               <p style={{ textAlign: 'center', fontSize: 11.5, color: '#a99fb2', marginTop: 12, lineHeight: 1.5 }}>
-                Secure checkout · Powered by Whop · Instant access · 7-day guarantee
+                Secure checkout · Powered by Whop · Apple&nbsp;Pay &amp; Google&nbsp;Pay · Instant access · 7-day guarantee
               </p>
             </div>
           </div>

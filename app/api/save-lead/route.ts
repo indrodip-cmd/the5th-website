@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail } from '@/lib/validation'
-import { verifyTurnstile } from '@/lib/turnstile'
 import { verifyRecaptcha } from '@/lib/recaptcha'
 import { upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
@@ -40,9 +39,14 @@ export async function POST(req: NextRequest) {
   const supabase = getSupabase()
   try {
     const body = await req.json()
-    if (!(await verifyTurnstile(body?.turnstileToken, ip))) {
-      return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
-    }
+    // NOTE: No Turnstile check here on purpose. save-lead is called from
+    // /quiz/results (post-OTP), which renders no Turnstile widget and sends no
+    // token; the single-use token was already consumed by send-otp / verify-otp
+    // on the quiz email screen. Requiring it here 403'd the lead save (welcome
+    // email + CRM sync) silently whenever TURNSTILE_SECRET_KEY was set. Bot
+    // protection remains upstream (Turnstile + OTP) plus the per-IP rate limit
+    // above and the disposable-domain blocklist below. reCAPTCHA still applies
+    // when the client supplies a token.
     // Additional Google reCAPTCHA v3 check when the client provides a token
     // (additive — existing Turnstile-only callers are unaffected).
     if (body?.recaptchaToken) {

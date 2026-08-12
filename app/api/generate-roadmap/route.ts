@@ -3,7 +3,6 @@ import Anthropic from '@anthropic-ai/sdk'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { sanitizeAnswers, sanitizeName, isValidEmail } from '@/lib/validation'
-import { verifyTurnstile } from '@/lib/turnstile'
 import { sessionEnabled, sessionEmail } from '@/lib/session'
 import { computeDiagnostic, growthAreaCount, type Answers, type Diagnostic } from '@/lib/diagnostic'
 
@@ -89,10 +88,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
 
-    // Bot protection (no-op until Turnstile is configured).
-    if (!(await verifyTurnstile(body.turnstileToken, ip))) {
-      return NextResponse.json({ error: 'Verification failed. Please reload and try again.' }, { status: 403 })
-    }
+    // NOTE: No Turnstile check here on purpose. This endpoint is called from
+    // /quiz/results, which is reached only AFTER the visitor passed Turnstile +
+    // OTP on the quiz email screen (send-otp / verify-otp). The Turnstile token
+    // is single-use and already consumed there, and /results renders no widget,
+    // so it can never send a valid token. Re-checking Turnstile here 403'd every
+    // generation whenever TURNSTILE_SECRET_KEY was set (the "assessment is taking
+    // a little longer" bug). The real gates remain: the signed session cookie
+    // (below), plus per-IP and per-email rate limits and a concurrency lock.
 
     const name = sanitizeName(body.name)
     const answers = sanitizeAnswers(body.answers) as Answers

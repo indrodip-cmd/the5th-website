@@ -80,6 +80,30 @@ function readUtm(): Record<string, string> {
 
 const CLIENT_AVATARS = Array.from({ length: 12 }, (_, i) => `/clients/c${i + 1}.jpg`)
 
+/* Fine film-grain texture (same device as the quiz) for a tactile, premium
+   surface instead of a flat wash. */
+const GRAIN_URI = "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
+
+/* Four-point gold sparkle motif used across eyebrows, dividers and card corners. */
+function Sparkle({ size = 16, color = GOLD, style, className }: { size?: number; color?: string; style?: React.CSSProperties; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 28 28" fill="none" style={style} className={className} aria-hidden="true">
+      <path d="M14 2 L15.2 10.8 L22 6 L17.2 13.4 L26 14 L17.2 14.6 L22 22 L15.2 17.2 L14 26 L12.8 17.2 L6 22 L10.8 14.6 L2 14 L10.8 13.4 L6 6 L12.8 10.8 Z" fill={color} />
+    </svg>
+  )
+}
+
+/* Editorial section divider — hairline gold rule with a centered sparkle. */
+function Divider({ max = 640 }: { max?: number }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, maxWidth: max, margin: '54px auto', paddingLeft: 18, paddingRight: 18 }}>
+      <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,transparent,rgba(201,168,76,.5))' }} />
+      <Sparkle size={15} color={GOLD} style={{ opacity: .85, flexShrink: 0 }} />
+      <span style={{ flex: 1, height: 1, background: 'linear-gradient(90deg,rgba(201,168,76,.5),transparent)' }} />
+    </div>
+  )
+}
+
 /* ── Small presentational atoms ── */
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -238,7 +262,17 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         .posterWrap:hover .playBtn{transform:scale(1.06)}
         .posterWrap:focus-visible{outline:3px solid ${GOLD};outline-offset:3px}
         .poster,.playBtn{transition:transform .3s ease}
-        .lp-sec{max-width:${READ}px;margin:0 auto;padding-left:18px;padding-right:18px}
+        .pcard{position:relative;transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease,border-color .3s ease}
+        .pcard:hover{transform:translateY(-4px);box-shadow:0 32px 66px -32px rgba(46,26,53,.5);border-color:rgba(201,168,76,.5)}
+        .disc-card{overflow:hidden}
+        .disc-card .disc-num{position:absolute;top:2px;right:16px;font-family:${SERIF};font-size:96px;font-weight:600;line-height:1;color:rgba(201,168,76,.12);pointer-events:none;user-select:none}
+        .disc-card .disc-top{position:absolute;top:0;left:22px;right:22px;height:2px;background:linear-gradient(90deg,transparent,${GOLD},transparent);opacity:.55}
+        .glow{position:absolute;border-radius:50%;pointer-events:none;filter:blur(46px);z-index:0}
+        .corner-star{position:absolute;opacity:.5}
+        @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .float{animation:floaty 7s ease-in-out infinite}
+        @media(prefers-reduced-motion:reduce){.float{animation:none}}
+        .lp-sec{max-width:${READ}px;margin:0 auto;padding-left:18px;padding-right:18px;position:relative;z-index:1}
         .disc-grid{display:grid;grid-template-columns:1fr;gap:14px}
         .who-grid{display:grid;grid-template-columns:1fr;gap:22px}
         .how-grid{display:grid;grid-template-columns:1fr;gap:16px}
@@ -252,13 +286,21 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         @media(prefers-reduced-motion:reduce){.hero-in,[data-reveal].in,.pb-fill,.marq-track,.halo{animation:none!important}}
       `}</style>
 
-      <header style={{ padding: '18px 20px 16px', textAlign: 'center', borderBottom: `1px solid rgba(221,216,207,.8)`, background: 'rgba(250,246,240,.6)' }}>
+      {/* Film-grain texture over the whole page (premium, tactile) */}
+      <div aria-hidden="true" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: .05, backgroundImage: GRAIN_URI, mixBlendMode: 'multiply' }} />
+
+      <header style={{ position: 'relative', zIndex: 1, padding: '18px 20px 16px', textAlign: 'center', borderBottom: `1px solid rgba(221,216,207,.8)`, background: 'rgba(250,246,240,.6)' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(38px,9vw,48px)', width: 'auto', verticalAlign: 'middle' }} />
       </header>
 
       {/* ══════════ HERO ══════════ */}
-      <section className="lp-sec hero-in" style={{ padding: '30px 18px 6px', textAlign: 'center' }}>
+      <section className="lp-sec hero-in" style={{ padding: '34px 18px 6px', textAlign: 'center' }}>
+        {/* soft gold aura behind the hero */}
+        <div className="glow float" aria-hidden="true" style={{ top: -60, left: '50%', width: 'min(560px,86vw)', height: 320, transform: 'translateX(-50%)', background: 'radial-gradient(ellipse at center, rgba(201,168,76,.20), transparent 70%)' }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <Sparkle size={26} color={GOLD} className="float" style={{ marginBottom: 12 }} />
+        </div>
         <Eyebrow>{OPT_IN.eyebrow}</Eyebrow>
         <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(30px,6.6vw,50px)', fontWeight: 500, lineHeight: 1.08, letterSpacing: '-.015em', margin: '0 auto', maxWidth: 660, color: INK }}>{OPT_IN.headline}</h1>
         <p style={{ fontFamily: SERIF, fontSize: 'clamp(19px,4.6vw,26px)', fontWeight: 500, fontStyle: 'italic', color: GOLD_DK, margin: '10px 0 0' }}>{OPT_IN.subhead}</p>
@@ -316,8 +358,10 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         </div>
       </section>
 
+      <Divider max={520} />
+
       {/* ══════════ PROBLEM ══════════ */}
-      <section className="lp-sec" data-reveal style={{ marginTop: 58 }}>
+      <section className="lp-sec" data-reveal style={{ marginTop: 8 }}>
         <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px,5.6vw,40px)', fontWeight: 500, lineHeight: 1.12, letterSpacing: '-.01em', margin: 0, color: INK, textAlign: 'center' }}>{LP.problem.heading}</h2>
         <div style={{ margin: '20px auto 0', maxWidth: 560 }}>
           {LP.problem.body.map((t, i) => (
@@ -341,18 +385,28 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         </div>
         <div className="lp-sec disc-grid" style={{ maxWidth: 900 }}>
           {LP.discover.items.map((it) => (
-            <div key={it.n} style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 14, padding: 'clamp(20px,4vw,26px)', boxShadow: '0 18px 44px -34px rgba(46,26,53,.5)' }}>
-              <div style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 600, color: GOLD, lineHeight: 1, marginBottom: 12 }}>{it.n}</div>
-              <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(19px,4vw,22px)', fontWeight: 600, color: INK, lineHeight: 1.2, margin: '0 0 8px' }}>{it.title}</h3>
-              <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: BODY, lineHeight: 1.65, margin: 0 }}>{it.body}</p>
+            <div key={it.n} className="pcard disc-card" style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 14, padding: 'clamp(22px,4vw,28px)', boxShadow: '0 18px 44px -34px rgba(46,26,53,.5)' }}>
+              <span className="disc-top" />
+              <span className="disc-num">{it.n}</span>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 11, background: 'linear-gradient(160deg, rgba(201,168,76,.18), rgba(201,168,76,.06))', border: '1px solid rgba(201,168,76,.35)', marginBottom: 14 }}>
+                  <span style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 700, color: GOLD_DK, lineHeight: 1 }}>{it.n}</span>
+                </div>
+                <h3 style={{ fontFamily: SERIF, fontSize: 'clamp(19px,4vw,22px)', fontWeight: 600, color: INK, lineHeight: 1.2, margin: '0 0 8px' }}>{it.title}</h3>
+                <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: BODY, lineHeight: 1.65, margin: 0 }}>{it.body}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* ══════════ OBJECTION (dark) ══════════ */}
-      <section data-reveal style={{ marginTop: 62, background: `linear-gradient(165deg,${PLUM_2},${PLUM} 60%,${PLUM})`, padding: 'clamp(48px,9vw,72px) 0' }}>
-        <div className="lp-sec" style={{ textAlign: 'center' }}>
+      <section data-reveal style={{ position: 'relative', overflow: 'hidden', marginTop: 62, background: `linear-gradient(165deg,${PLUM_2},${PLUM} 60%,${PLUM})`, padding: 'clamp(52px,9vw,76px) 0' }}>
+        <div aria-hidden="true" style={{ position: 'absolute', inset: 0, opacity: .5, backgroundImage: GRAIN_URI, mixBlendMode: 'overlay', pointerEvents: 'none' }} />
+        <div className="glow" aria-hidden="true" style={{ top: -80, right: -40, width: 340, height: 340, background: 'radial-gradient(circle, rgba(201,168,76,.22), transparent 68%)' }} />
+        <Sparkle size={20} color="rgba(201,168,76,.4)" style={{ position: 'absolute', top: 30, left: 28 }} />
+        <Sparkle size={14} color="rgba(201,168,76,.3)" style={{ position: 'absolute', bottom: 34, right: 34 }} />
+        <div className="lp-sec" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(25px,5.4vw,38px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: '0 auto', maxWidth: 560, color: '#fff' }}>{LP.objection.heading}</h2>
           <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 9, margin: '26px 0 6px', textAlign: 'left' }}>
             {LP.objection.nots.map((t) => (
@@ -385,7 +439,7 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         </div>
         <div style={{ display: 'grid', gap: 14 }}>
           {REAL_PROOF.map((p) => (
-            <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px', boxShadow: '0 18px 44px -34px rgba(46,26,53,.55)' }}>
+            <figure key={p.name} className="pcard" style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 12, padding: '20px 22px', boxShadow: '0 18px 44px -34px rgba(46,26,53,.55)' }}>
               <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: 12 }}>
                 {p.photo ? (
                   <span style={{ width: 50, height: 50, flexShrink: 0, borderRadius: '50%', overflow: 'hidden', border: `2px solid rgba(201,168,76,.45)`, boxShadow: '0 4px 12px rgba(46,26,53,.18)' }}>
@@ -425,7 +479,7 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
           <Eyebrow>Who’s Behind the Training</Eyebrow>
           <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(23px,5vw,34px)', fontWeight: 500, lineHeight: 1.15, letterSpacing: '-.01em', margin: '0 auto', maxWidth: 620, color: INK }}>{LP.founder.heading}</h2>
         </div>
-        <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, boxShadow: '0 22px 55px -34px rgba(46,26,53,.5)', padding: 'clamp(22px,5vw,32px)' }}>
+        <div className="pcard" style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 16, boxShadow: '0 22px 55px -34px rgba(46,26,53,.5)', padding: 'clamp(22px,5vw,32px)' }}>
           <div className="bio-row">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th" loading="lazy" style={{ width: 'clamp(120px,30vw,150px)', aspectRatio: '3 / 3.6', objectFit: 'cover', objectPosition: 'top center', borderRadius: 14, border: `2px solid rgba(201,168,76,.4)`, flexShrink: 0 }} />
@@ -455,7 +509,7 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
           <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(25px,5.2vw,36px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: 0, color: INK }}>{LP.whoFor.heading}</h2>
         </div>
         <div className="who-grid">
-          <div style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 14, padding: 'clamp(22px,4vw,28px)', boxShadow: '0 18px 44px -36px rgba(46,26,53,.5)' }}>
+          <div className="pcard" style={{ background: '#fff', border: `1px solid ${BORDER}`, borderRadius: 14, padding: 'clamp(22px,4vw,28px)', boxShadow: '0 18px 44px -36px rgba(46,26,53,.5)' }}>
             <p style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: GREEN, margin: '0 0 16px' }}>This is for you</p>
             <div style={{ display: 'grid', gap: 13 }}>
               {LP.whoFor.forItems.map((t) => (
@@ -510,15 +564,18 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
         <div style={{ display: 'flex', justifyContent: 'center' }}><CtaBlock onClick={primaryAction} label={ctaLabel} /></div>
       </section>
 
+      <Divider max={520} />
+
       {/* ══════════ TESTIMONIALS (pull-quotes) ══════════ */}
-      <section className="lp-sec" data-reveal style={{ maxWidth: 720, marginTop: 60 }}>
+      <section className="lp-sec" data-reveal style={{ maxWidth: 720, marginTop: 8 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <Eyebrow>In Their Words</Eyebrow>
           <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(25px,5.2vw,36px)', fontWeight: 500, lineHeight: 1.14, letterSpacing: '-.01em', margin: 0, color: INK }}>{LP.testimonialsHeading}</h2>
         </div>
         <div style={{ display: 'grid', gap: 16 }}>
           {REAL_PROOF.filter((p) => p.quote.trim().startsWith('“')).map((p) => (
-            <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderLeft: `3px solid ${GOLD}`, borderRadius: 12, padding: 'clamp(20px,4vw,26px)', boxShadow: '0 18px 44px -36px rgba(46,26,53,.5)' }}>
+            <figure key={p.name} className="pcard" style={{ margin: 0, background: '#fff', border: `1px solid ${BORDER}`, borderLeft: `3px solid ${GOLD}`, borderRadius: 12, padding: 'clamp(22px,4vw,28px)', position: 'relative' }}>
+              <Sparkle size={16} color="rgba(201,168,76,.5)" style={{ position: 'absolute', top: 16, right: 18 }} />
               <blockquote style={{ margin: 0, fontFamily: SERIF, fontSize: 'clamp(19px,4.4vw,24px)', fontWeight: 500, fontStyle: 'italic', color: INK, lineHeight: 1.4 }}>{p.quote}</blockquote>
               <figcaption style={{ marginTop: 14, fontFamily: SANS, fontSize: 13, color: MUTE }}>
                 <strong style={{ color: INK, fontWeight: 700 }}>{p.name}</strong> · {p.role} <span style={{ color: GREEN, fontWeight: 700 }}>· {p.result}</span>
@@ -540,8 +597,13 @@ export default function FunnelView({ videoUrl }: { videoUrl: string }) {
       </section>
 
       {/* ══════════ FINAL CTA (dark, strongest) ══════════ */}
-      <section data-reveal style={{ marginTop: 62, background: `linear-gradient(168deg,${PLUM_2} 0%,${PLUM} 55%,#241029 100%)`, padding: 'clamp(56px,11vw,88px) 0' }}>
-        <div className="lp-sec" style={{ textAlign: 'center' }}>
+      <section data-reveal style={{ position: 'relative', overflow: 'hidden', marginTop: 62, background: `linear-gradient(168deg,${PLUM_2} 0%,${PLUM} 55%,#241029 100%)`, padding: 'clamp(60px,11vw,92px) 0' }}>
+        <div aria-hidden="true" style={{ position: 'absolute', inset: 0, opacity: .5, backgroundImage: GRAIN_URI, mixBlendMode: 'overlay', pointerEvents: 'none' }} />
+        <div className="glow float" aria-hidden="true" style={{ top: '50%', left: '50%', width: 'min(560px,88vw)', height: 360, transform: 'translate(-50%,-50%)', background: 'radial-gradient(ellipse at center, rgba(201,168,76,.20), transparent 70%)' }} />
+        <Sparkle size={22} color="rgba(201,168,76,.45)" style={{ position: 'absolute', top: 34, left: 30 }} />
+        <Sparkle size={16} color="rgba(201,168,76,.35)" style={{ position: 'absolute', top: 60, right: 40 }} />
+        <Sparkle size={18} color="rgba(201,168,76,.3)" style={{ position: 'absolute', bottom: 40, left: '18%' }} />
+        <div className="lp-sec" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <Eyebrow>The Free 12-Minute Training</Eyebrow>
           <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(28px,6.4vw,48px)', fontWeight: 500, lineHeight: 1.1, letterSpacing: '-.015em', color: '#fff', margin: '0 auto', maxWidth: 620 }}>{LP.finalCta.heading}</h2>
           <div style={{ margin: '18px auto 28px', maxWidth: 420 }}>

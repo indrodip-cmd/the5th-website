@@ -8,35 +8,122 @@
 */
 
 export const OPT_IN = {
-  eyebrow: 'A Free 12-Minute Training · For Coaches & Consultants',
-  headline: 'The 12-Minute Training That Changes How You See Your Own Coaching Business',
-  // Ad-facing copy: the "internal-shift" mechanism, no income claims / no
-  // viewer-status language (keeps the Meta ad + landing page review-safe).
-  sub: 'It’s not a new niche or a new offer. It’s a shift in how you see the business you already have — the same reframe behind how our clients price their work, talk about what they do, and get the right people to say yes.',
+  eyebrow: 'Free 12-Minute Strategy Training · For Coaches & Consultants',
+  // Positioning: what an expensive strategist would tell you — free, in 12 min.
+  // (Value anchor, NOT an income claim — keeps the Meta ad review-safe.)
+  headline: 'What a $2,000 strategist would tell you about your coaching business.',
+  subhead: 'Free, in 12 minutes.',
+  sub: 'You don’t need another marketing strategy. You need to see what’s actually keeping your expertise from becoming a business people are willing to pay for. In this short training, you’ll discover the positioning shift that can change how you package your expertise, communicate your value, and turn the right prospects into paying clients.',
   // Overlay label on the video poster (the primary conversion element).
   playLabel: 'Watch the Free Training',
   playNote: '12 minutes · Free · Watch instantly',
   // Explicit CTA button below the video (also opens the gate).
-  ctaButton: 'Watch the 12-Minute Training →',
+  ctaButton: 'Watch the Free Training →',
   ctaMicro: '12 minutes · Free · No credit card · Watch instantly',
   // Social-proof strip (mirrors /quiz — real client photos + rating).
-  rating: { score: '4.8', text: 'from 76 coaches & experts across 12 nations' },
+  rating: { score: '4.8', text: 'from 76 coaches across 12 nations' },
+  trustStatement: 'Trusted by coaches, consultants & experts building businesses around what they already know.',
   proofEyebrow: 'Results From the 10K Roadmap',
   proofHeading: 'Real experts. Real expertise. Real revenue.',
   proofDisclaimer: 'Case studies shown reflect real client outcomes; individual results are not typical.',
-  // Narrative "what this is" block (secondary, below the proof).
-  narrative: [
-    'There’s a specific moment when a coaching business stops feeling like guesswork.',
-    'It’s not a new niche. It’s not a new offer. It’s a shift in how you see the business you already have.',
-    'This 12-minute training walks through the exact reframe our clients go through — the one that changes how they price, how they talk about what they do, and how prospects respond to them.',
+}
+
+/* Full page copy for the conversion-focused sections (in reading order).
+   Tunable by non-devs; the component maps 1:1 onto these blocks. */
+export const LP = {
+  heroSupporting: [
+    'You don’t need another marketing strategy.',
+    'You need to see what’s actually keeping your expertise from becoming a business people are willing to pay for.',
+    'In this short training, you’ll discover the positioning shift that can change how you package your expertise, communicate your value, and turn the right prospects into paying clients.',
   ],
-  checklistTitle: 'Inside the training',
-  bullets: [
-    'Why most coaching businesses are one repositioning shift away from feeling completely different',
-    'The invisible mistake keeping experts stuck explaining instead of selling',
-    'What changes the moment you see your business the way your best clients already do',
-  ],
-  narrativeClose: '12 minutes. Free. Watch instantly.',
+  problem: {
+    heading: 'You probably don’t need more knowledge.',
+    body: [
+      'You already know a lot. You’ve spent years building expertise, helping people, solving problems, and becoming genuinely good at what you do.',
+      'So why does turning that expertise into a consistent coaching business still feel harder than it should?',
+      'Because expertise alone doesn’t create demand. The market has to understand:',
+    ],
+    questions: ['Why you?', 'Why this?', 'Why now?', 'And why is it worth paying you for?'],
+    after: 'When those answers aren’t clear, you can have an incredible background and still struggle with inconsistent leads, low confidence in your offer, and prospects who say “Let me think about it.”',
+    transition: 'This 12-minute training shows you where that disconnect happens.',
+  },
+  discover: {
+    heading: 'In 12 minutes, you’ll see what most coaches spend months trying to figure out.',
+    items: [
+      { n: '01', title: 'The real reason expertise doesn’t automatically sell', body: 'Why being highly qualified can actually make your marketing harder — and what to do instead.' },
+      { n: '02', title: 'The invisible positioning mistake', body: 'The subtle way coaches describe what they do that makes prospects interested but not ready to buy.' },
+      { n: '03', title: 'The shift that makes your offer easier to sell', body: 'How to move from “Here’s what I do” to a message built around what your ideal client actually wants to solve.' },
+      { n: '04', title: 'Why more content isn’t always the answer', body: 'Why posting more, creating more lead magnets, or learning another tactic won’t fix a fundamentally unclear offer.' },
+      { n: '05', title: 'What your business needs to focus on next', body: 'How to identify the highest-leverage change instead of trying to fix everything at once.' },
+    ],
+  },
+  objection: {
+    heading: 'This isn’t another 60-minute marketing masterclass.',
+    nots: ['No 47-step funnel.', 'No complicated tech stack.', 'No “post three times a day.”', 'No motivational speech disguised as strategy.', 'And no giant course you’ll never finish.'],
+    lead: 'It’s 12 minutes.',
+    ones: ['One idea.', 'One strategic shift.', 'One different way of looking at the coaching business you already have.'],
+    emphasis: ['You may walk away realizing that the problem isn’t that you need to become a better marketer.', 'You may simply have been marketing the wrong thing.'],
+  },
+  resultsTransition: {
+    small: 'The point isn’t their numbers.',
+    big: 'It’s what happened before the numbers.',
+    body: ['They stopped trying to become someone else.', 'They learned how to position what they already knew.'],
+  },
+  founder: {
+    heading: 'Strategy that’s been tested far beyond the coaching industry.',
+    body: [
+      'I’ve spent my career working at the intersection of marketing, positioning, sales, funnels, and business strategy. I’ve advised Fortune 500 executives, billion-dollar companies, celebrity coaches, and organizations operating at the highest level.',
+      'But The5th wasn’t built to help big companies become bigger. It was built around a much more interesting problem:',
+      'Why do highly experienced people often struggle to monetize the very expertise that took them decades to build?',
+      'I’ve seen that problem repeatedly. And I’ve built this training to help you see the part of your business you may be missing.',
+    ],
+    name: 'Indrodip Ghosh',
+    title: 'Founder, The5th Consulting',
+  },
+  whoFor: {
+    heading: 'This training is for you if…',
+    forItems: [
+      'You have real expertise but struggle to turn it into a clear, premium offer.',
+      'You know you can help people, but your marketing doesn’t communicate your value.',
+      'You’re tired of creating content without knowing whether it’s actually moving your business forward.',
+      'You want premium clients — not thousands of followers.',
+      'You’ve bought courses, tried strategies, consumed content, and still don’t have a simple path to consistent clients.',
+      'You want to build a business around your expertise without becoming a full-time marketer.',
+    ],
+    notHeading: 'And it probably isn’t for you if…',
+    notItems: [
+      'You’re looking for a get-rich-quick shortcut.',
+      'You don’t have meaningful expertise or experience to build on.',
+      'You want someone else to build your business while you do nothing.',
+    ],
+    close: 'This training is for people who are ready to stop guessing and start seeing their business clearly.',
+  },
+  how: {
+    heading: 'Getting the training takes less than a minute.',
+    steps: [
+      { n: '01', title: 'Click', body: 'Click “Watch the Free Training.”' },
+      { n: '02', title: 'Get access', body: 'Enter your details. No credit card. No complicated application.' },
+      { n: '03', title: 'Watch', body: 'Spend 12 minutes with me and see the strategic shift for yourself.' },
+    ],
+    close: 'That’s it.',
+  },
+  midCta: {
+    heading: 'Give me 12 minutes.',
+    body: 'I’ll show you what may be missing between your expertise and the clients you want.',
+  },
+  testimonialsHeading: 'Don’t take my word for it.',
+  secondObjection: {
+    heading: 'You don’t need another year of trial and error.',
+    body: ['You may already have the experience, knowledge, and expertise you need.', 'You just haven’t seen how to position it yet.'],
+  },
+  finalCta: {
+    heading: 'What would change if you finally saw your business clearly?',
+    body: ['Give me 12 minutes.', 'I’ll show you the shift.'],
+  },
+  finalTrust: {
+    heading: 'Built from real-world strategy, not internet theory.',
+    privacy: 'Free & private · No credit card · We never sell your information',
+  },
 }
 
 /* "As featured in" press strip (mirrors the /call page — styled wordmarks). */

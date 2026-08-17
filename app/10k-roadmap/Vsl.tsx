@@ -98,8 +98,8 @@ export default function Vsl({ url, poster }: { url: string; poster?: string }) {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', padding: 0,
             background: poster ? `linear-gradient(180deg,rgba(46,26,53,.05),rgba(46,26,53,.28)), url(${poster}) center/cover` : 'radial-gradient(120% 90% at 50% 20%, #FBF8F2, #EFE4D2)' }}>
           <span style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18 }}>
-            <span style={{ width: 84, height: 84, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 34px -8px rgba(201,168,76,.75)' }}>
-              <svg width="30" height="30" viewBox="0 0 24 24" fill={T.brand}><path d="M8 5v14l11-7z" /></svg>
+            <span style={{ width: 84, height: 84, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 34px -8px rgba(94,46,134,.6)' }}>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z" /></svg>
             </span>
             <span style={{ color: poster ? '#fff' : T.text, fontSize: 14, fontWeight: 700, letterSpacing: '.02em', textShadow: poster ? '0 2px 12px rgba(0,0,0,.5)' : 'none' }}>Play the training</span>
           </span>

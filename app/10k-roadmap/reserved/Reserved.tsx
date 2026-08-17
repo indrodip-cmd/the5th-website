@@ -95,7 +95,7 @@ function Unpaid({ email }: { email: string }) {
     <div style={{ textAlign: 'center', padding: '50px 0', maxWidth: 520, margin: '0 auto' }}>
       <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 12px' }}>We couldn’t confirm your deposit yet.</h1>
       <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.65, marginBottom: 24 }}>
-        Your information is safe. If you just paid, it can take a minute to register — refresh this page. If you haven’t completed the {`$27`} deposit, you can do it now.
+        Your information is safe. If you just paid, it can take a minute to register. Refresh this page. If you haven’t completed the {`$27`} deposit, you can do it now.
       </p>
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
         <Btn onClick={() => location.reload()}>Refresh</Btn>
@@ -154,7 +154,7 @@ function Booking({ email, name, onBooked }: { email: string; name: string; onBoo
       track('booking_completed')
       onBooked()
     } catch {
-      setErr('We couldn’t lock that slot in. Your deposit is safe — please pick another time and try again (you won’t be charged again).')
+      setErr('We couldn’t lock that slot in. Your deposit is safe. Please pick another time and try again (you won’t be charged again).')
       setBusy(false)
     }
   }
@@ -217,12 +217,12 @@ function Booking({ email, name, onBooked }: { email: string; name: string; onBoo
                   return (
                     <button key={iso} onClick={() => { setPicked(iso); track('calendar_time_selected', { start: iso }) }} className="rm-focus"
                       style={{ padding: '12px 8px', borderRadius: 12, cursor: 'pointer', fontSize: 14, fontWeight: 600,
-                        background: sel ? T.accent : T.bg, color: sel ? T.brand : T.text, border: `1px solid ${sel ? T.accent : T.line}` }}>
+                        background: sel ? T.accent : T.bg, color: sel ? '#fff' : T.text, border: `1px solid ${sel ? T.accent : T.line}` }}>
                       {fmtTime(iso)}
                     </button>
                   )
                 })}
-                {active && active.slots.length === 0 && <p style={{ color: T.text3, fontSize: 14 }}>No times left this day — try another.</p>}
+                {active && active.slots.length === 0 && <p style={{ color: T.text3, fontSize: 14 }}>No times left this day. Try another.</p>}
               </div>
 
               {picked && (
@@ -249,7 +249,7 @@ function Booking({ email, name, onBooked }: { email: string; name: string; onBoo
 function CalEmbedFallback() {
   return (
     <div style={{ textAlign: 'center', padding: '30px 10px' }}>
-      <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>Choose your time on the next screen — it opens our live calendar.</p>
+      <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>Choose your time on the next screen. It opens our live calendar.</p>
       <Btn href="https://cal.com/indrodip-ghosh-ut1vxh/60min" >Open the calendar →</Btn>
     </div>
   )

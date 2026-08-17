@@ -39,7 +39,7 @@ export default function Reserve({ planId }: { planId: string }) {
       track('checkout_started', { value: DEPOSIT.amount, currency: DEPOSIT.currency })
       setStep('pay')
     } catch {
-      setErr('We couldn’t save that. Your details are safe — please try again.')
+      setErr('We couldn’t save that. Your details are safe. Please try again.')
     } finally { setBusy(false) }
   }
 
@@ -100,7 +100,7 @@ export default function Reserve({ planId }: { planId: string }) {
                     </div>
                     <input className="rm-focus" placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" style={inp} />
                     <input className="rm-focus" placeholder="Email address" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} autoComplete="email" style={inp} />
-                    <input className="rm-focus" placeholder="Phone (with country code) — optional" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" style={inp} />
+                    <input className="rm-focus" placeholder="Phone (with country code), optional" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} autoComplete="tel" style={inp} />
                     {err && <p role="alert" style={{ color: T.danger, fontSize: 13, margin: 0 }}>{err}</p>}
                     <Btn type="submit" full disabled={busy}>{busy ? 'Securing your slot…' : RESERVE.contact.cta}</Btn>
                     <p style={{ textAlign: 'center', color: T.text3, fontSize: 11.5, margin: 0, lineHeight: 1.5 }}>{RESERVE.contact.micro}</p>

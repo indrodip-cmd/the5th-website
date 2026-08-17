@@ -1,7 +1,7 @@
 # The $10K Roadmap Audit — paid conversion funnel
 
 A premium **light/white high-authority** funnel for cold traffic (The5th brand:
-plum `#2E1A35` + gold `#C9A84C` on white/cream `#FAF6F0`, Gelica display serif),
+plum `#2E1A35` + purple accent `#5E2E86` on white/cream `#FAF6F0`, Cormorant Garamond serif, no em dashes),
 built as ONE continuous experience:
 
 ```

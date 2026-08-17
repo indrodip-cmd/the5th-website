@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   The $10K Roadmap Audit — funnel configuration.
+   The $10K Roadmap Audit, funnel configuration.
 
    ALL copy, the design tokens, and the qualification / deep-diagnostic
    question sets live here so the psychology can be tuned aggressively later
@@ -14,28 +14,29 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
-   Light, premium, high-authority — a $10K+ advisory aesthetic. White/cream
-   environment, deep plum-ink typography, restrained gold accent. These are the
-   ACTUAL The5th brand colours (homepage public/index.html + checkout): plum
-   #2E1A35, gold #C9A84C, cream #FAF6F0, Gelica display serif. The psychology
-   comes from the copy + structure, not from a dark interface. */
+   Light, premium, high-authority, a $10K+ advisory aesthetic. White/cream
+   environment, deep plum-ink typography, restrained PURPLE accent (the brand
+   plum family, not gold). Original site display serif is Cormorant Garamond
+   (used across /results + case studies). The psychology comes from the copy +
+   structure, not from a dark interface. */
 export const T = {
   bg: '#ffffff',
-  surface: '#FAF6F0',      // cream — section separation / cards
+  surface: '#FAF6F0',      // cream, section separation / cards
   surface2: '#FBF8F2',
   line: 'rgba(46,26,53,0.12)',
   lineStrong: 'rgba(46,26,53,0.22)',
-  text: '#2E1A35',         // plum-ink — headings + primary copy (reads near-black)
+  text: '#2E1A35',         // plum-ink, headings + primary copy (reads near-black)
   text2: '#645a6e',        // muted body
   text3: '#9a93a2',        // faint / captions
-  accent: '#C9A84C',       // brand gold
-  accentInk: '#9c7f2f',    // gold, darkened for text/underline on white
-  accentSoft: 'rgba(201,168,76,0.16)',
-  brand: '#2E1A35',        // plum — primary brand colour
+  accent: '#5E2E86',       // brand purple (CTA fills, play buttons, badges)
+  accentInk: '#5E2E86',    // purple for emphasis text on white (AA)
+  accentSoft: 'rgba(94,46,134,0.12)',
+  brand: '#2E1A35',        // plum, primary brand colour
   danger: '#c0392b',
   radius: 16,
-  serif: "'Gelica', Georgia, 'Times New Roman', serif",
-  sans: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  // Original site display serif (used across /results + case studies).
+  serif: "'Cormorant Garamond', Georgia, 'Times New Roman', serif",
+  sans: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 } as const
 
 export function videoUrl(): string {
@@ -51,10 +52,10 @@ export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 export const LANDING = {
   eyebrow: 'For Coaches & Consultants 40+',
   // Hero headline is rendered in parts so the guarantee phrase carries the
-  // brand-gold emphasis. Largest element on the page.
-  headlineLead: 'Build a Predictable $10K/Month Business — Or Get ',
+  // brand-purple emphasis. Largest element on the page.
+  headlineLead: 'Build a Predictable $10K/Month Business, or Get ',
   headlineEmphasis: '100% of Your Money Back.',
-  sub: 'Find the bottleneck keeping your coaching or consulting business from consistent $10K months — and get the strategy to fix it.',
+  sub: 'Find the bottleneck keeping your coaching or consulting business from consistent $10K months, and get the strategy to fix it.',
   guaranteeBadge: '100% Money-Back Guarantee',
   ctaPrimary: 'See If You Qualify',
   ctaMicro: '2-minute qualification · $27 commitment deposit if invited',
@@ -108,11 +109,11 @@ export const LANDING = {
     chain: ['Positioning', 'Offer', 'Lead Generation', 'Sales', 'Conversion', 'Repeatable Acquisition'],
   },
 
-  // Dedicated risk-reversal section — a major trust signal, not buried.
+  // Dedicated risk-reversal section, a major trust signal, not buried.
   guarantee: {
     heading: 'You’re Not Taking The Risk Alone.',
     badge: '100% Money-Back Guarantee',
-    intro: 'The $27 is a commitment deposit to reserve a private audit slot — not the price of the advice. It simply filters for people who are serious about solving the problem.',
+    intro: 'The $27 is a commitment deposit to reserve a private audit slot, not the price of the advice. It simply filters for people who are serious about solving the problem.',
     // Accurate refund terms supplied by the owner. No invented guarantees.
     terms: [
       'If I determine you’re genuinely unqualified for the process, your deposit is refunded.',
@@ -124,13 +125,13 @@ export const LANDING = {
 
   faq: [
     { q: 'What happens on the audit?', a: '45 minutes. We’ll examine your positioning, offer, lead generation, sales and conversion path, identify the bottleneck and map the strategy I’d recommend.' },
-    { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session — not a free consultation. The deposit helps reserve the session for people who are serious about solving the problem.' },
+    { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session, not a free consultation. The deposit helps reserve the session for people who are serious about solving the problem.' },
     { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely unqualified for the process, your deposit is refunded.' },
   ],
 
   finalCta: {
     heading: 'Stop Guessing. Find The Bottleneck.',
-    sub: 'Build a predictable path to $10K/month — with a 100% money-back guarantee.',
+    sub: 'Build a predictable path to $10K/month, with a 100% money-back guarantee.',
     cta: 'See If You Qualify',
     micro: '2-minute qualification',
   },
@@ -148,8 +149,10 @@ export const LANDING = {
    exercised on the live site). No numbers/names invented. */
 export type Proof = { name: string; role: string; result: string; quote: string; photo?: string }
 export const REAL_PROOF: Proof[] = [
-  { name: 'Torill', role: 'Leadership Coach · returned after 15 years', result: '$210,000 from a single launch', quote: 'Came back with no current audience — we structured a $7,000 program and turned her reputation into revenue.', photo: '/clients/toril.jpg' },
-  { name: 'Laurie', role: 'Dating Coach · TEDx speaker', result: '$14,193 in her first 60 days', quote: 'Repositioned from $79 to $249 — 57 buyers and a 600-strong community within two months.', photo: '/clients/laurie.jpg' },
+  // Torill's photo is intentionally omitted, no consent to use her image
+  // (mirrors the case-study page). The card renders a branded monogram instead.
+  { name: 'Torill', role: 'Leadership Coach · returned after 15 years', result: '$210,000 from a single launch', quote: 'Came back with no current audience, we structured a $7,000 program and turned her reputation into revenue.' },
+  { name: 'Laurie', role: 'Dating Coach · TEDx speaker', result: '$14,193 in her first 60 days', quote: 'Repositioned from $79 to $249, 57 buyers and a 600-strong community within two months.', photo: '/clients/laurie.jpg' },
   { name: 'Angela', role: '10K Roadmap Accelerator', result: '$12,000 in 9 weeks', quote: '“I had never earned that from my own business in my life. The framework works if you work it.”', photo: '/clients/angela.jpg' },
   { name: 'Jeanne', role: '10K Roadmap Accelerator', result: '$8,000 in 8 weeks', quote: '“Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible.”', photo: '/clients/jeanne.jpg' },
 ]
@@ -223,19 +226,19 @@ export const QUALIFICATION: Q[] = [
   },
   {
     id: 'readiness', key: 'readiness', type: 'single',
-    prompt: 'If we identify the specific bottleneck — and you believe the strategy is right for you — are you ready to invest in implementing it?',
+    prompt: 'If we identify the specific bottleneck, and you believe the strategy is right for you, are you ready to invest in implementing it?',
     options: [
-      { value: 'yes', label: 'Yes — I’m ready to solve this' },
-      { value: 'maybe', label: 'Possibly — I need to understand the strategy first' },
-      { value: 'no', label: 'No — I’m only looking for free advice', reject: true },
+      { value: 'yes', label: 'Yes, I’m ready to solve this' },
+      { value: 'maybe', label: 'Possibly, I need to understand the strategy first' },
+      { value: 'no', label: 'No, I’m only looking for free advice', reject: true },
     ],
   },
 ]
 
 /* Post-payment deep diagnostic (AFTER the $27 commitment). */
 export const DEEP: Q[] = [
-  { id: 'd_stuck', type: 'text', long: true, prompt: 'What is the ONE thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific — this is what we’ll go after first.' },
-  { id: 'd_cost', type: 'text', long: true, prompt: 'If nothing changes over the next 6–12 months, what will staying at your current level cost you?', helper: 'Think beyond money — time, freedom, confidence, family, lifestyle and opportunities.' },
+  { id: 'd_stuck', type: 'text', long: true, prompt: 'What is the ONE thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific, this is what we’ll go after first.' },
+  { id: 'd_cost', type: 'text', long: true, prompt: 'If nothing changes over the next 6–12 months, what will staying at your current level cost you?', helper: 'Think beyond money, time, freedom, confidence, family, lifestyle and opportunities.' },
   { id: 'd_change', type: 'text', long: true, prompt: 'If you built a predictable path to $10K/month, what would that actually change in your life?' },
   {
     id: 'd_tried', type: 'multi', prompt: 'What have you already tried to fix this?', helper: 'Select all that apply.',
@@ -265,7 +268,7 @@ export const DEEP: Q[] = [
       { value: '11-20', label: '11–20' }, { value: '21-50', label: '21–50' }, { value: '50+', label: '50+' },
     ],
   },
-  { id: 'd_commitment', type: 'scale', prompt: 'How committed are you to solving this now — not someday?', min: 1, max: 10, minLabel: 'Just exploring', maxLabel: 'I’m ready to act' },
+  { id: 'd_commitment', type: 'scale', prompt: 'How committed are you to solving this now, not someday?', min: 1, max: 10, minLabel: 'Just exploring', maxLabel: 'I’m ready to act' },
 ]
 
 /* ── Qualified transition + reserve screen ─────────────────────────────────*/
@@ -273,15 +276,15 @@ export const RESERVE = {
   headline: 'Your answers suggest there may be a real opportunity here.',
   sub: 'Let’s find out what’s actually standing between your business and consistent $10K months.',
   bodyHeading: 'The next step is a private 45-minute $10K Roadmap Audit.',
-  body: 'On the call, we’ll look at your positioning, offer, lead generation, sales and conversion path — and identify the bottleneck I’d fix first.',
+  body: 'On the call, we’ll look at your positioning, offer, lead generation, sales and conversion path, and identify the bottleneck I’d fix first.',
   includes: [
     'A private 45-minute strategy session',
     'A live audit of your positioning, offer, lead gen, sales & conversion',
-    'The single bottleneck I’d fix first — and the path around it',
+    'The single bottleneck I’d fix first, and the path around it',
     'Your business reviewed from your answers before we meet',
   ],
-  depositNote: 'The $27 is a commitment deposit to reserve your private audit slot — not the price of the advice.',
-  cta: 'Reserve My Audit — $27',
+  depositNote: 'The $27 is a commitment deposit to reserve your private audit slot, not the price of the advice.',
+  cta: 'Reserve My Audit, $27',
   contact: {
     heading: 'Where should we send your audit details?',
     sub: 'We’ll use this to confirm your slot and prepare your session.',
@@ -308,7 +311,7 @@ export const SUCCESS = {
     'You’ll receive your confirmation email.',
     'Your calendar invitation is available below.',
     'I’ll review the information you submitted before the call.',
-    'Come prepared to be honest about what’s working — and what’s not.',
+    'Come prepared to be honest about what’s working, and what’s not.',
   ],
   before: {
     heading: 'Before we meet…',
@@ -329,16 +332,16 @@ export const SUCCESS = {
 
 /* ── Rejection ─────────────────────────────────────────────────────────────*/
 export const REJECT = {
-  headline: 'This probably isn’t the right next step — yet.',
+  headline: 'This probably isn’t the right next step, yet.',
   sub: 'The $10K Roadmap Audit is designed for coaches and consultants who already have a business in motion and are ready to solve a specific growth bottleneck.',
   reasons: {
     no_business: 'Based on your answers, you’re still building the foundation. If you haven’t started generating revenue from your own offer yet, there are earlier, better-fitting steps than a paid strategy audit.',
-    free_advice: 'Based on your answers, you’re looking for free advice right now — and that’s completely fair. The audit is built for people ready to implement, so it wouldn’t create enough value for you today.',
+    free_advice: 'Based on your answers, you’re looking for free advice right now, and that’s completely fair. The audit is built for people ready to implement, so it wouldn’t create enough value for you today.',
     default: 'Based on your answers, I don’t think we’d create enough value for you right now.',
   } as Record<string, string>,
   dontForce: 'Don’t force the next level before you’ve built the foundation.',
   altHeading: 'A better next step',
-  altBody: 'Start with the free resources and the case studies — see exactly how experts fixed their bottleneck — then come back when you’re ready to implement.',
+  altBody: 'Start with the free resources and the case studies, see exactly how experts fixed their bottleneck, then come back when you’re ready to implement.',
   altCta: 'Explore the case studies',
   altHref: '/results',
   altCta2: 'Take the free growth diagnostic',
@@ -348,7 +351,7 @@ export const REJECT = {
 /* ── Legal (Meta-safe) ─────────────────────────────────────────────────────*/
 export const LEGAL = {
   earnings:
-    'This is a strategy audit and makes no guarantee of income or results. The case studies shown are the real experiences of specific clients — they are not a promise that you will achieve the same or similar outcomes. Results depend on your experience, effort, offer, market and factors outside our control.',
+    'This is a strategy audit and makes no guarantee of income or results. The case studies shown are the real experiences of specific clients, they are not a promise that you will achieve the same or similar outcomes. Results depend on your experience, effort, offer, market and factors outside our control.',
   meta:
     'This site is not a part of the Facebook or Instagram website or Meta Platforms, Inc., and is not endorsed by Meta in any way. FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.',
   links: [

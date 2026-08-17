@@ -10,12 +10,12 @@ import { T, type Q } from './config'
 export function Fonts() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
       *{box-sizing:border-box}
       html,body{margin:0;padding:0;background:${T.bg};color:${T.text};font-family:${T.sans};-webkit-font-smoothing:antialiased}
       ::selection{background:${T.accentSoft};color:${T.text}}
       a{color:inherit}
-      .rm-serif{font-family:${T.serif};font-weight:400;letter-spacing:-.015em;line-height:1.08}
+      .rm-serif{font-family:${T.serif};font-weight:600;letter-spacing:-.005em;line-height:1.08}
       .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
       .rm-mark{color:${T.accentInk}}
       .rm-reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -92,7 +92,7 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     opacity: disabled ? 0.5 : 1, ...style,
   }
   const skin: React.CSSProperties = variant === 'primary'
-    ? { background: T.accent, color: T.brand, boxShadow: '0 14px 34px -14px rgba(201,168,76,.65)' }
+    ? { background: T.accent, color: '#fff', boxShadow: '0 14px 34px -14px rgba(94,46,134,.6)' }
     : { background: '#fff', color: T.text, borderColor: T.lineStrong }
   const props = {
     className: 'rm-focus rm-btn', style: { ...base, ...skin },
@@ -285,14 +285,14 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
           return (
             <button key={n} className="rm-focus" onClick={() => onChange(String(n))}
               style={{ flex: '1 0 auto', minWidth: 46, height: 52, borderRadius: 12, cursor: 'pointer', fontSize: 16, fontWeight: 700,
-                background: sel ? T.accent : '#fff', color: sel ? T.brand : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
+                background: sel ? T.accent : '#fff', color: sel ? '#fff' : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
               {n}
             </button>
           )
         })}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: T.text3, fontSize: 12.5 }}>
-        <span>{q.min} — {q.minLabel}</span><span>{q.maxLabel} — {q.max}</span>
+        <span>{q.min} · {q.minLabel}</span><span>{q.maxLabel} · {q.max}</span>
       </div>
     </div>
   )

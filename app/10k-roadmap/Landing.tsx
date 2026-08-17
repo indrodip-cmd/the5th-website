@@ -102,12 +102,12 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           {/* Featured + supporting testimonial videos */}
           <Reveal>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 16, marginBottom: 22 }}>
-              {VIDEO_REVIEWS.slice(0, 4).map((v, k) => (
+              {VIDEO_REVIEWS.slice(0, 6).map((v, k) => (
                 <button key={k} onClick={() => setModal(v.src)} className="rm-focus rm-vt" aria-label={`Play client story ${k + 1}`}
                   style={{ position: 'relative', border: `1px solid ${T.line}`, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', aspectRatio: '16/10', background: '#fff', padding: 0, boxShadow: '0 14px 40px -28px rgba(46,26,53,.6)' }}>
                   <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(180deg,#FBF8F2,#F1E9DC)' }}>
-                    <span style={{ width: 54, height: 54, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 22px -6px rgba(201,168,76,.7)' }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill={T.brand}><path d="M8 5v14l11-7z" /></svg>
+                    <span style={{ width: 54, height: 54, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 22px -6px rgba(94,46,134,.55)' }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z" /></svg>
                     </span>
                   </span>
                   <span style={{ position: 'absolute', left: 12, bottom: 10, color: T.text, fontSize: 12.5, fontWeight: 700 }}>Client story</span>
@@ -122,9 +122,11 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
               {REAL_PROOF.map((p) => (
                 <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${T.line}`, borderRadius: 16, padding: 22, display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    {p.photo && (
+                    {p.photo ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={p.photo} alt={p.name} style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${T.line}` }} />
+                    ) : (
+                      <span aria-hidden style={{ width: 46, height: 46, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: T.accentSoft, border: `1px solid ${T.line}`, color: T.accentInk, fontFamily: T.serif, fontSize: 20, fontWeight: 600 }}>{p.name.slice(0, 1)}</span>
                     )}
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 15 }}>{p.name}</div>
@@ -181,7 +183,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
       {/* ── Guarantee (risk reversal) ── */}
       <section style={{ maxWidth: 820, margin: '0 auto', padding: '10px 22px 80px' }}>
         <Reveal>
-          <div style={{ background: '#fff', border: `1.5px solid ${T.accent}`, borderRadius: 22, padding: 'clamp(30px,5vw,48px)', textAlign: 'center', boxShadow: '0 30px 80px -50px rgba(201,168,76,.6)' }}>
+          <div style={{ background: '#fff', border: `1.5px solid ${T.accent}`, borderRadius: 22, padding: 'clamp(30px,5vw,48px)', textAlign: 'center', boxShadow: '0 30px 80px -50px rgba(94,46,134,.5)' }}>
             <div style={{ marginBottom: 18 }}><GuaranteeBadge /></div>
             <h2 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 18px', fontWeight: 700 }}>{LANDING.guarantee.heading}</h2>
             <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.65, margin: '0 auto 24px', maxWidth: 620 }}>{LANDING.guarantee.intro}</p>
@@ -193,7 +195,6 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
                 </div>
               ))}
             </div>
-            <a href={LANDING.guarantee.policyHref} style={{ display: 'inline-block', marginTop: 22, color: T.accentInk, fontSize: 14, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 3 }}>{LANDING.guarantee.policyLabel} →</a>
           </div>
         </Reveal>
       </section>
@@ -216,14 +217,14 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
       <section style={{ background: T.brand, color: '#fff', padding: '96px 22px', textAlign: 'center' }}>
         <Reveal>
           <div style={{ marginBottom: 22, display: 'flex', justifyContent: 'center' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(201,168,76,.16)', border: `1px solid ${T.accent}`, color: T.accent, borderRadius: 999, padding: '8px 15px', fontSize: 12.5, fontWeight: 700 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.32)', color: '#fff', borderRadius: 999, padding: '8px 15px', fontSize: 12.5, fontWeight: 700 }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
               {LANDING.guaranteeBadge}
             </span>
           </div>
           <h2 className="rm-serif" style={{ fontSize: 'clamp(30px,5.4vw,54px)', margin: '0 auto', maxWidth: 780, color: '#fff', fontWeight: 700 }}>{LANDING.finalCta.heading}</h2>
           <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 'clamp(16px,2vw,20px)', margin: '18px auto 34px', maxWidth: 600 }}>{LANDING.finalCta.sub}</p>
-          <Btn onClick={() => go('final')} style={{ padding: '19px 48px', fontSize: 18 }}>{LANDING.finalCta.cta} →</Btn>
+          <Btn onClick={() => go('final')} variant="ghost" style={{ padding: '19px 48px', fontSize: 18 }}>{LANDING.finalCta.cta} →</Btn>
           <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 13, marginTop: 16 }}>{LANDING.finalCta.micro}</p>
         </Reveal>
       </section>

@@ -66,7 +66,8 @@ export function getAuditId(): string {
   } catch { return '' }
 }
 
-/* Shared applicant answers (qualification) carried client-side to /reserve. */
+/* Shared applicant answers (qualification) carried client-side to the
+   post-payment page, where they're saved to the lead. */
 export function saveQualAnswers(a: Record<string, unknown>) { try { sessionStorage.setItem('audit_qual', JSON.stringify(a)) } catch { /* noop */ } }
 export function loadQualAnswers(): Record<string, unknown> { try { return JSON.parse(sessionStorage.getItem('audit_qual') || '{}') } catch { return {} } }
 

@@ -1,51 +1,68 @@
 'use client'
-/* Post-payment experience: verify the deposit (server-side) → deep diagnostic
-   → premium native booking. One continuous flow; nothing here is reachable
-   without a webhook-confirmed payment. */
+/* Post-payment page (the URL Whop redirects to after the $27 deposit).
+   Whop captures the buyer's email, so we confirm their details here, save the
+   qualification answers to the lead, then run the deep diagnostic + booking.
+   Refresh-safe: an already-booked email jumps straight to the success page. */
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { DEEP, BOOK, SUCCESS, T } from '../config'
-import { Fonts, Header, Btn, QuestionFlow, Reveal } from '../ui'
+import { Fonts, Header, Btn, QuestionFlow, Reveal, useUtm, loadQualAnswers, getAuditId } from '../ui'
 import { track } from '../track'
 
-type Phase = 'verifying' | 'unpaid' | 'diagnostic' | 'booking'
+type Phase = 'confirm' | 'saving' | 'diagnostic' | 'booking'
 
 const TZ_LIST = ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Sao_Paulo', 'Europe/London', 'Europe/Berlin', 'Europe/Athens', 'Asia/Dubai', 'Asia/Kolkata', 'Asia/Singapore', 'Australia/Sydney']
 
-// Read the applicant identity once, from the URL or the session it was saved in.
-function readIdentity(): { email: string; name: string } {
-  if (typeof window === 'undefined') return { email: '', name: '' }
-  try {
-    const email = (new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase() || sessionStorage.getItem('audit_email') || ''
-    return { email, name: sessionStorage.getItem('audit_name') || '' }
-  } catch { return { email: '', name: '' } }
+function prefillEmail(): string {
+  if (typeof window === 'undefined') return ''
+  try { return (new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase() || sessionStorage.getItem('audit_email') || '' } catch { return '' }
 }
 
 export default function Reserved() {
   const router = useRouter()
-  const [phase, setPhase] = useState<Phase>('verifying')
-  const [{ email, name }] = useState(readIdentity)
+  const utm = useUtm()
+  const [phase, setPhase] = useState<Phase>('confirm')
+  const [form, setForm] = useState({ name: '', email: prefillEmail() })
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [err, setErr] = useState('')
 
+  // Refresh-safe: if this email already booked, skip straight to success.
   useEffect(() => {
-    if (!email) { router.replace('/10k-roadmap/qualify'); return }
-    let tries = 0, stop = false
-    const poll = async () => {
-      tries++
+    const e = prefillEmail()
+    if (!e) return
+    ;(async () => {
       try {
-        const r = await fetch(`/api/10k-roadmap/status?email=${encodeURIComponent(email)}`, { cache: 'no-store' })
+        const r = await fetch(`/api/10k-roadmap/status?email=${encodeURIComponent(e)}`, { cache: 'no-store' })
         const j = await r.json()
-        if (stop) return
-        if (j.booked) { router.replace('/10k-roadmap/success'); return }
-        if (j.paid) { track('payment_success'); setPhase(j.deepDone ? 'booking' : 'diagnostic'); return }
-      } catch { /* keep polling */ }
-      if (tries >= 12) { setPhase('unpaid'); return }
-      setTimeout(poll, 2500)
-    }
-    poll()
-    return () => { stop = true }
-  }, [email, router])
+        if (j?.booked) router.replace('/10k-roadmap/success')
+        else if (j?.name && !form.name) setForm((f) => ({ ...f, name: j.name }))
+      } catch { /* ignore */ }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => { if (phase === 'diagnostic') track('deep_application_started') }, [phase])
+
+  const submitConfirm = async (e: React.FormEvent) => {
+    e.preventDefault(); setErr('')
+    const em = form.email.trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setErr('Please enter the email you used at checkout.'); return }
+    if (form.name.trim().length < 2) { setErr('Please enter your name.'); return }
+    setPhase('saving')
+    try {
+      await fetch('/api/10k-roadmap/reserve', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: form.name.trim(), email: em, qualification: loadQualAnswers(), utm, audit_id: getAuditId() }),
+      })
+      try { sessionStorage.setItem('audit_email', em); sessionStorage.setItem('audit_name', form.name.trim()) } catch { /* noop */ }
+      track('payment_success')
+      setEmail(em); setName(form.name.trim()); setPhase('diagnostic')
+    } catch {
+      setErr('We couldn’t save that. Your details are safe. Please try again.')
+      setPhase('confirm')
+    }
+  }
 
   const onDeepComplete = useCallback(async (answers: Record<string, string | string[]>) => {
     try {
@@ -62,49 +79,44 @@ export default function Reserved() {
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
       <Header />
-      <main style={{ maxWidth: phase === 'booking' ? 1040 : 720, margin: '0 auto', padding: 'clamp(30px,6vw,60px) 22px 90px' }}>
-        {phase === 'verifying' && <Verifying />}
-        {phase === 'unpaid' && <Unpaid email={email} />}
+      <main style={{ maxWidth: phase === 'booking' ? 1040 : 640, margin: '0 auto', padding: 'clamp(30px,6vw,60px) 22px 90px' }}>
+        {(phase === 'confirm' || phase === 'saving') && (
+          <Reveal style={{ textAlign: 'center' }}>
+            <svg width="60" height="60" viewBox="0 0 86 86" style={{ margin: '0 auto 18px', display: 'block' }} aria-hidden>
+              <circle cx="43" cy="43" r="40" fill="none" stroke={T.accent} strokeWidth="2.5" strokeDasharray="252" strokeDashoffset="252" style={{ animation: 'rm-draw 0.8s ease forwards' }} />
+              <path d="M26 44 l12 12 l22 -24" fill="none" stroke={T.accent} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="60" strokeDashoffset="60" style={{ animation: 'rm-draw 0.5s 0.6s ease forwards' }} />
+            </svg>
+            <div className="rm-eyebrow" style={{ marginBottom: 12 }}>Deposit received</div>
+            <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,36px)', margin: '0 0 8px', fontWeight: 700 }}>You’re in. Let’s lock in your audit.</h1>
+            <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 440, margin: '0 auto 26px' }}>
+              Confirm the details you used at checkout so we can prepare your session and send your booking.
+            </p>
+            <form onSubmit={submitConfirm} style={{ display: 'grid', gap: 12, maxWidth: 400, margin: '0 auto', textAlign: 'left' }}>
+              <input className="rm-focus" placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} autoComplete="name" style={inp} />
+              <input className="rm-focus" placeholder="Email used at checkout" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} autoComplete="email" style={inp} />
+              {err && <p role="alert" style={{ color: T.danger, fontSize: 13, margin: 0 }}>{err}</p>}
+              <Btn type="submit" full disabled={phase === 'saving'}>{phase === 'saving' ? 'Saving…' : 'Continue to my booking →'}</Btn>
+            </form>
+          </Reveal>
+        )}
+
         {phase === 'diagnostic' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 30 }}>
-              <div className="rm-eyebrow" style={{ marginBottom: 12 }}>Deposit confirmed · a few questions before we meet</div>
-              <h1 className="rm-serif" style={{ fontSize: 'clamp(24px,3.6vw,34px)', margin: 0 }}>Let’s make your 45 minutes count.</h1>
+              <div className="rm-eyebrow" style={{ marginBottom: 12 }}>A few questions before we meet</div>
+              <h1 className="rm-serif" style={{ fontSize: 'clamp(24px,3.6vw,34px)', margin: 0, fontWeight: 700 }}>Let’s make your 45 minutes count.</h1>
             </Reveal>
             <QuestionFlow questions={DEEP} onComplete={onDeepComplete} />
           </>
         )}
+
         {phase === 'booking' && <Booking email={email} name={name} onBooked={() => router.push('/10k-roadmap/success')} />}
       </main>
     </div>
   )
 }
 
-function Verifying() {
-  return (
-    <div style={{ textAlign: 'center', padding: '60px 0' }}>
-      <div style={{ width: 34, height: 34, borderRadius: '50%', border: `3px solid ${T.line}`, borderTopColor: T.accent, animation: 'rm-spin .8s linear infinite', margin: '0 auto 22px' }} />
-      <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 8px' }}>Confirming your deposit…</h1>
-      <p style={{ color: T.text2, fontSize: 15 }}>This takes just a moment. Please don’t close this tab.</p>
-    </div>
-  )
-}
-
-function Unpaid({ email }: { email: string }) {
-  return (
-    <div style={{ textAlign: 'center', padding: '50px 0', maxWidth: 520, margin: '0 auto' }}>
-      <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 12px' }}>We couldn’t confirm your deposit yet.</h1>
-      <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.65, marginBottom: 24 }}>
-        Your information is safe. If you just paid, it can take a minute to register. Refresh this page. If you haven’t completed the {`$27`} deposit, you can do it now.
-      </p>
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Btn onClick={() => location.reload()}>Refresh</Btn>
-        <Btn href="/10k-roadmap/reserve" variant="ghost">Back to checkout</Btn>
-      </div>
-      {email && <p style={{ color: T.text3, fontSize: 12.5, marginTop: 18 }}>Confirming for {email}</p>}
-    </div>
-  )
-}
+const inp: React.CSSProperties = { width: '100%', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '14px 15px', fontFamily: T.sans }
 
 /* ── Native premium booking ────────────────────────────────────────────────*/
 type Day = { day: string; slots: string[] }

@@ -18,8 +18,11 @@ export async function POST(req: NextRequest) {
     const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
     if (!isValidEmail(email)) return NextResponse.json({ error: 'invalid_email' }, { status: 400 })
 
+    // The lead must exist (saved on the post-payment page after the Whop
+    // redirect). We trust the redirect for payment; the webhook additionally
+    // marks paid when a dedicated audit plan is configured.
     const status = await getAuditStatus(email)
-    if (!status.paid) return NextResponse.json({ error: 'not_paid' }, { status: 402 })
+    if (!status.found) return NextResponse.json({ error: 'lead_not_found' }, { status: 404 })
 
     const answers = sanitizeAnswers(body?.answers)
     const res = await saveDeep(email, answers)

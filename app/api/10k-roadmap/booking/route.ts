@@ -27,8 +27,11 @@ export async function POST(req: NextRequest) {
     if (!isValidEmail(email)) return NextResponse.json({ error: 'invalid_email' }, { status: 400 })
     if (!startISO || Number.isNaN(Date.parse(startISO))) return NextResponse.json({ error: 'invalid_time' }, { status: 400 })
 
+    // Trust the Whop post-payment redirect: require the lead to exist (saved on
+    // the post-payment page) rather than a webhook-confirmed paid flag, so the
+    // shared checkout plan works without extra env wiring.
     const status = await getAuditStatus(email)
-    if (!status.paid) return NextResponse.json({ error: 'not_paid' }, { status: 402 })
+    if (!status.found) return NextResponse.json({ error: 'lead_not_found' }, { status: 404 })
 
     const res = await createBooking({
       startISO, name: name || status.name || 'Guest', email, timeZone,

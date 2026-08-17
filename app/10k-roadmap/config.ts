@@ -46,6 +46,11 @@ export function auditPlanId(): string {
   return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
 }
 
+/* The Whop hosted checkout page qualified applicants are sent to for the $27
+   commitment deposit. Configure Whop's post-payment redirect to send buyers to
+   https://the5th.consulting/10k-roadmap/reserved (the post-payment page). */
+export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
+
 export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 
 /* Social-proof rating (mirrors the /quiz + free-training funnel — real figure). */

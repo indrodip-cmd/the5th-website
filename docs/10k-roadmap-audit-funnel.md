@@ -17,10 +17,9 @@ funnel is untouched, so nothing running on ads breaks). Not indexed.
 | Path | What |
 |---|---|
 | `/10k-roadmap` | Landing: hero + VSL, recognition→tension copy, mechanism chain, video + case-study proof, who-it's-for, $27 deposit explainer, 3 FAQs, final CTA |
-| `/10k-roadmap/qualify` | 5-question qualification, one at a time. A `reject` option routes to `/not-a-fit` |
+| `/10k-roadmap/qualify` | 5-question qualification, one at a time. A `reject` option routes to `/not-a-fit`. On success it redirects STRAIGHT to the Whop checkout (`AUDIT_CHECKOUT_URL` in `config.ts`, currently `plan_85pIPWE1K0uBB`) |
 | `/10k-roadmap/not-a-fit` | Rejection page — rejects the timing/fit, not the person. Routes to `/results` + `/quiz` |
-| `/10k-roadmap/reserve` | Qualified transition → contact capture → **Whop embedded $27 deposit checkout** |
-| `/10k-roadmap/reserved` | Post-payment: server-verifies deposit → 8-question deep diagnostic → **native cal.com booking** |
+| `/10k-roadmap/reserved` | **The post-payment page — set this as Whop's post-purchase redirect: `https://the5th.consulting/10k-roadmap/reserved`.** Confirms the buyer's name/email, saves the qualification answers to the lead, then runs the 8-question deep diagnostic → **native cal.com booking**. Payment is trusted via the Whop redirect (the webhook also marks paid if a dedicated `WHOP_AUDIT_PLAN_ID` is set) |
 | `/10k-roadmap/success` | Confirmation moment + booking card + **Add to Google/Apple/Outlook** (ICS built from the real event) |
 
 APIs under `/api/10k-roadmap/*`: `reserve`, `status`, `diagnostic`, `slots`, `booking`.

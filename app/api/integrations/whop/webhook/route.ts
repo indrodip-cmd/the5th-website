@@ -7,6 +7,7 @@ import { emitEvent } from '@/lib/events'
 import { enrollBuyer } from '@/lib/event-enroll'
 import { resolveOrCreateContact, logActivity, addTag } from '@/lib/crm'
 import { recordPurchase } from '@/lib/purchases'
+import { markAuditPaid, AUDIT_PLAN_ID } from '@/lib/roadmap-audit'
 import { Resend } from 'resend'
 
 export const dynamic = 'force-dynamic'
@@ -103,6 +104,22 @@ export async function POST(req: NextRequest) {
         if (email) await grantDiagnostic(email, name, receiptId)
       } catch (e) {
         emitEvent('diagnostic_grant_failed', { provider: 'whop', error: String(e) })
+      }
+    }
+
+    // $27 10K Roadmap Audit commitment deposit → flip the audit lead to paid
+    // (unlocks the deep diagnostic + booking). Guarded so it never breaks the
+    // core webhook. Matches the plan id anywhere in the raw payload.
+    if (action === 'payment.succeeded' && AUDIT_PLAN_ID && raw.includes(AUDIT_PLAN_ID)) {
+      try {
+        const d = (body.data as Record<string, unknown>) || {}
+        const user = (d.user as Record<string, unknown>) || {}
+        const email = String(user.email || d.email || '').toLowerCase()
+        const name = String(user.name || user.username || d.name || '') || null
+        const receiptId = String(d.id || d.receipt_id || d.payment_id || '')
+        if (email) await markAuditPaid(email, name, receiptId)
+      } catch (e) {
+        emitEvent('audit_grant_failed', { provider: 'whop', error: String(e) })
       }
     }
 

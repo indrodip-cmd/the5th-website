@@ -48,6 +48,15 @@ export function auditPlanId(): string {
 
 export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 
+/* Social-proof rating (mirrors the /quiz + free-training funnel — real figure). */
+export const RATING = { score: '4.8', text: 'from 76 coaches across 12 nations' }
+
+/* "As featured in" press strip (styled wordmarks — same set as the /call page). */
+export const PRESS = {
+  label: 'Our clients have been featured in',
+  items: ['Forbes', 'The New York Times', 'HuffPost', 'TEDx', 'The Guardian', 'Yahoo Finance'],
+}
+
 /* ── Landing copy ──────────────────────────────────────────────────────────*/
 export const LANDING = {
   eyebrow: 'For Coaches & Consultants 40+',

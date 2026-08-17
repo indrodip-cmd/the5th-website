@@ -28,7 +28,11 @@ export function Fonts() {
         *{animation-duration:.001ms!important}
       }
       button{font-family:inherit}
+      img{max-width:100%}
+      h1,h2,h3{text-wrap:balance}
+      p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
+      @media (max-width:640px){ .rm-serif{letter-spacing:0} }
     `}</style>
   )
 }
@@ -109,10 +113,10 @@ export function Header({ cta }: { cta?: React.ReactNode }) {
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.85)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '15px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 28, width: 'auto' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(38px,6vw,50px)', width: 'auto' }} />
         </a>
         {cta}
       </div>
@@ -125,7 +129,7 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; lin
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 24, opacity: 0.85, marginBottom: 20 }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 20 }} />
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>

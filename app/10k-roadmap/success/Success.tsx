@@ -93,7 +93,7 @@ export default function Success() {
                 <Row label="Time" value={fmt(b.start, { hour: 'numeric', minute: '2-digit' })} />
                 <Row label="Timezone" value={tz.replace(/_/g, ' ')} />
                 <Row label="Duration" value="45 minutes" />
-                {b.meetingUrl && <Row label="Link" value={<a href={b.meetingUrl} style={{ color: T.accent }}>{b.meetingUrl}</a>} />}
+                {b.meetingUrl && <Row label="Link" value={<a href={b.meetingUrl} style={{ color: T.accentInk }}>{b.meetingUrl}</a>} />}
               </div>
             ) : (
               <p style={{ color: T.text2, fontSize: 15, margin: 0 }}>Your audit is confirmed. Full details are on their way to your inbox.</p>
@@ -119,7 +119,7 @@ export default function Success() {
           <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12 }}>
             {SUCCESS.next.map((n, k) => (
               <li key={k} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 12, padding: '14px 16px' }}>
-                <span style={{ color: T.accent, fontWeight: 700, fontFamily: T.serif, fontSize: 18 }}>{k + 1}</span>
+                <span style={{ color: T.accentInk, fontWeight: 700, fontFamily: T.serif, fontSize: 18 }}>{k + 1}</span>
                 <span style={{ color: T.text2, fontSize: 15, lineHeight: 1.55 }}>{n}</span>
               </li>
             ))}
@@ -137,12 +137,12 @@ export default function Success() {
 
         {/* 3 numbers */}
         <Reveal delay={300} style={{ marginTop: 22 }}>
-          <div style={{ background: 'radial-gradient(120% 100% at 50% 0%, #14110a, #0e0e0e)', border: `1px solid ${T.line}`, borderRadius: 18, padding: '30px 26px' }}>
+          <div style={{ background: 'linear-gradient(180deg,#FBF8F2,#F1E9DC)', border: `1px solid ${T.line}`, borderRadius: 18, padding: '30px 26px' }}>
             <h2 className="rm-serif" style={{ fontSize: 24, margin: '0 0 18px' }}>{SUCCESS.numbers.heading}</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 14 }}>
               {SUCCESS.numbers.items.map((it, k) => (
                 <div key={it} style={{ background: T.bg, border: `1px solid ${T.line}`, borderRadius: 12, padding: '18px 16px' }}>
-                  <div style={{ color: T.accent, fontFamily: T.serif, fontSize: 24 }}>{k + 1}</div>
+                  <div style={{ color: T.accentInk, fontFamily: T.serif, fontSize: 24 }}>{k + 1}</div>
                   <div style={{ color: T.text2, fontSize: 14, marginTop: 6, lineHeight: 1.4 }}>{it}</div>
                 </div>
               ))}

@@ -10,13 +10,14 @@ import { T, type Q } from './config'
 export function Fonts() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
       *{box-sizing:border-box}
       html,body{margin:0;padding:0;background:${T.bg};color:${T.text};font-family:${T.sans};-webkit-font-smoothing:antialiased}
-      ::selection{background:${T.accentSoft};color:#fff}
+      ::selection{background:${T.accentSoft};color:${T.text}}
       a{color:inherit}
-      .rm-serif{font-family:${T.serif};font-weight:500;letter-spacing:-.02em;line-height:1.06}
-      .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:${T.accent}}
+      .rm-serif{font-family:${T.serif};font-weight:400;letter-spacing:-.015em;line-height:1.08}
+      .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
+      .rm-mark{color:${T.accentInk}}
       .rm-reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
       .rm-reveal.in{opacity:1;transform:none}
       @keyframes rm-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -91,8 +92,8 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     opacity: disabled ? 0.5 : 1, ...style,
   }
   const skin: React.CSSProperties = variant === 'primary'
-    ? { background: T.accent, color: '#12100a', boxShadow: '0 12px 40px -12px rgba(201,168,76,.5)' }
-    : { background: 'transparent', color: T.text, borderColor: T.lineStrong }
+    ? { background: T.accent, color: T.brand, boxShadow: '0 14px 34px -14px rgba(201,168,76,.65)' }
+    : { background: '#fff', color: T.text, borderColor: T.lineStrong }
   const props = {
     className: 'rm-focus rm-btn', style: { ...base, ...skin },
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.05)' } },
@@ -107,11 +108,11 @@ export function Header({ cta }: { cta?: React.ReactNode }) {
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s', background: solid ? 'rgba(8,8,8,.82)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}` }}>
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '16px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.85)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '15px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 26, width: 'auto', opacity: 0.95 }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 28, width: 'auto' }} />
         </a>
         {cta}
       </div>
@@ -121,10 +122,10 @@ export function Header({ cta }: { cta?: React.ReactNode }) {
 
 export function Footer({ legal }: { legal: { earnings: string; meta: string; links: { label: string; href: string }[] } }) {
   return (
-    <footer style={{ borderTop: `1px solid ${T.line}`, background: T.bg, padding: '46px 22px 60px' }}>
+    <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 24, opacity: 0.7, marginBottom: 20 }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 24, opacity: 0.85, marginBottom: 20 }} />
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>
@@ -236,7 +237,7 @@ export function QuestionFlow({ questions, onComplete, onReject, eyebrow, onStep 
                   onMouseEnter={(e) => { if (!selected) e.currentTarget.style.borderColor = T.lineStrong }}
                   onMouseLeave={(e) => { if (!selected) e.currentTarget.style.borderColor = T.line }}
                 >
-                  <span style={{ width: 26, height: 26, flexShrink: 0, borderRadius: q.type === 'multi' ? 7 : '50%', border: `1.5px solid ${selected ? T.accent : T.lineStrong}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.accent, fontSize: 12, fontWeight: 700 }}>
+                  <span style={{ width: 26, height: 26, flexShrink: 0, borderRadius: q.type === 'multi' ? 7 : '50%', border: `1.5px solid ${selected ? T.accent : T.lineStrong}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.accentInk, fontSize: 12, fontWeight: 700 }}>
                     {selected ? '✓' : <span style={{ color: T.text3 }}>{idx + 1}</span>}
                   </span>
                   <span>{opt.label}</span>
@@ -284,7 +285,7 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
           return (
             <button key={n} className="rm-focus" onClick={() => onChange(String(n))}
               style={{ flex: '1 0 auto', minWidth: 46, height: 52, borderRadius: 12, cursor: 'pointer', fontSize: 16, fontWeight: 700,
-                background: sel ? T.accent : T.surface, color: sel ? '#12100a' : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
+                background: sel ? T.accent : '#fff', color: sel ? T.brand : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
               {n}
             </button>
           )

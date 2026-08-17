@@ -1,7 +1,8 @@
 # The $10K Roadmap Audit — paid conversion funnel
 
-A premium dark-editorial funnel for cold traffic, built as ONE continuous
-experience:
+A premium **light/white high-authority** funnel for cold traffic (The5th brand:
+plum `#2E1A35` + gold `#C9A84C` on white/cream `#FAF6F0`, Gelica display serif),
+built as ONE continuous experience:
 
 ```
 VSL → Qualification → $27 deposit → Deep diagnostic → Booking → Success (+ calendar)

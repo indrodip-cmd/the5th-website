@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 /* Hide third-party feedback/survey/toolbar widgets on the funnel only, and pin
    a dark theme-color so mobile browser chrome matches. */
 const FUNNEL_CSS = `
-  html { color-scheme: dark; background:#080808; }
+  html { color-scheme: light; background:#ffffff; }
   #vercel-toolbar, vercel-live-feedback, [data-vercel-toolbar-root],
   [aria-label="Feedback" i], [aria-label*="feedback" i], [title="Feedback" i],
   iframe[title*="feedback" i], iframe[title*="survey" i],
@@ -29,7 +29,7 @@ const FUNNEL_CSS = `
 export default function RoadmapAuditLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <meta name="theme-color" content="#080808" />
+      <meta name="theme-color" content="#ffffff" />
       <style dangerouslySetInnerHTML={{ __html: FUNNEL_CSS }} />
       {children}
     </>

@@ -14,24 +14,28 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
-   Dark, premium, editorial. Predominantly near-black with restrained warm
-   accents borrowed from the brand gold so the funnel still reads as The5th
-   without turning into a generic dark-SaaS page. */
+   Light, premium, high-authority — a $10K+ advisory aesthetic. White/cream
+   environment, deep plum-ink typography, restrained gold accent. These are the
+   ACTUAL The5th brand colours (homepage public/index.html + checkout): plum
+   #2E1A35, gold #C9A84C, cream #FAF6F0, Gelica display serif. The psychology
+   comes from the copy + structure, not from a dark interface. */
 export const T = {
-  bg: '#080808',
-  surface: '#111111',
-  surface2: '#171717',
-  line: 'rgba(255,255,255,0.10)',
-  lineStrong: 'rgba(255,255,255,0.18)',
-  text: '#F5F5F5',
-  text2: '#A3A3A3',
-  text3: '#6f6f6f',
-  accent: '#C9A84C', // brand gold — used sparingly
-  accentSoft: 'rgba(201,168,76,0.14)',
-  danger: '#e06666',
+  bg: '#ffffff',
+  surface: '#FAF6F0',      // cream — section separation / cards
+  surface2: '#FBF8F2',
+  line: 'rgba(46,26,53,0.12)',
+  lineStrong: 'rgba(46,26,53,0.22)',
+  text: '#2E1A35',         // plum-ink — headings + primary copy (reads near-black)
+  text2: '#645a6e',        // muted body
+  text3: '#9a93a2',        // faint / captions
+  accent: '#C9A84C',       // brand gold
+  accentInk: '#9c7f2f',    // gold, darkened for text/underline on white
+  accentSoft: 'rgba(201,168,76,0.16)',
+  brand: '#2E1A35',        // plum — primary brand colour
+  danger: '#c0392b',
   radius: 16,
-  serif: '"Fraunces", "Times New Roman", Georgia, serif',
-  sans: '"Public Sans", "Inter", system-ui, -apple-system, sans-serif',
+  serif: "'Gelica', Georgia, 'Times New Roman', serif",
+  sans: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
 } as const
 
 export function videoUrl(): string {
@@ -46,10 +50,15 @@ export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 /* ── Landing copy ──────────────────────────────────────────────────────────*/
 export const LANDING = {
   eyebrow: 'For Coaches & Consultants 40+',
-  headline: 'Your experience shouldn’t be this hard to monetize.',
-  sub: 'Build a predictable path to $10,000/month by finding the one bottleneck between your expertise and consistent revenue.',
+  // Hero headline is rendered in parts so the guarantee phrase carries the
+  // brand-gold emphasis. Largest element on the page.
+  headlineLead: 'Build a Predictable $10K/Month Business — Or Get ',
+  headlineEmphasis: '100% of Your Money Back.',
+  sub: 'Find the bottleneck keeping your coaching or consulting business from consistent $10K months — and get the strategy to fix it.',
+  guaranteeBadge: '100% Money-Back Guarantee',
   ctaPrimary: 'See If You Qualify',
   ctaMicro: '2-minute qualification · $27 commitment deposit if invited',
+  ctaMicroShort: '2-minute qualification',
 
   // Recognition → tension, directly under the VSL.
   recognition: {
@@ -59,7 +68,8 @@ export const LANDING = {
       'And somehow the revenue is still unpredictable.',
     ],
     turn: 'That’s usually not a motivation problem.',
-    turn2: 'It’s a bottleneck problem.',
+    turn2: 'It’s a ',
+    turn2Emphasis: 'bottleneck problem.',
   },
 
   proof: {
@@ -98,27 +108,29 @@ export const LANDING = {
     chain: ['Positioning', 'Offer', 'Lead Generation', 'Sales', 'Conversion', 'Repeatable Acquisition'],
   },
 
-  deposit: {
-    heading: 'The $27 isn’t the price of the advice.',
-    body: 'It’s a commitment deposit for reserving a private audit slot. It filters for people who are serious about solving the problem — not collecting free consultations.',
+  // Dedicated risk-reversal section — a major trust signal, not buried.
+  guarantee: {
+    heading: 'You’re Not Taking The Risk Alone.',
+    badge: '100% Money-Back Guarantee',
+    intro: 'The $27 is a commitment deposit to reserve a private audit slot — not the price of the advice. It simply filters for people who are serious about solving the problem.',
     // Accurate refund terms supplied by the owner. No invented guarantees.
     terms: [
-      'If you’re genuinely, completely unqualified for the process, the deposit is refunded.',
-      'If you implement the strategy in good faith and it doesn’t work, you may request a refund within 30 days per the stated refund terms.',
+      'If I determine you’re genuinely unqualified for the process, your deposit is refunded.',
+      'The strategy from your audit is meant to be implemented. If you genuinely implement it and it doesn’t work within the stated 30-day period, you may request a refund per the official refund policy.',
     ],
-    policyLabel: 'View full refund policy',
+    policyLabel: 'Read the full refund policy',
     policyHref: '/data-usage',
   },
 
   faq: [
-    { q: 'What happens on the audit?', a: '45 minutes. We examine your business, identify the bottleneck, and map the strategic path I’d recommend first.' },
-    { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session, not a free consultation. The deposit filters for people who are serious about solving the problem.' },
-    { q: 'What if I’m not a fit?', a: 'Then I’ll tell you. If you’re genuinely unqualified for the process, the deposit is refunded.' },
+    { q: 'What happens on the audit?', a: '45 minutes. We’ll examine your positioning, offer, lead generation, sales and conversion path, identify the bottleneck and map the strategy I’d recommend.' },
+    { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session — not a free consultation. The deposit helps reserve the session for people who are serious about solving the problem.' },
+    { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely unqualified for the process, your deposit is refunded.' },
   ],
 
   finalCta: {
-    heading: 'You don’t need another year of guessing.',
-    sub: 'Find the bottleneck. Build the path. Make $10K/month predictable.',
+    heading: 'Stop Guessing. Find The Bottleneck.',
+    sub: 'Build a predictable path to $10K/month — with a 100% money-back guarantee.',
     cta: 'See If You Qualify',
     micro: '2-minute qualification',
   },

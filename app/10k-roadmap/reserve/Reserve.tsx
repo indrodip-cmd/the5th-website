@@ -70,7 +70,7 @@ export default function Reserve({ planId }: { planId: string }) {
 
             <div style={{ marginTop: 26, background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, padding: '16px 20px', maxWidth: 560 }}>
               <p style={{ margin: 0, color: T.text2, fontSize: 14, lineHeight: 1.6 }}>
-                <b style={{ color: T.accent }}>{DEPOSIT.label} commitment deposit.</b> {RESERVE.depositNote}
+                <b style={{ color: T.accentInk }}>{DEPOSIT.label} commitment deposit.</b> {RESERVE.depositNote}
               </p>
             </div>
 
@@ -87,7 +87,7 @@ export default function Reserve({ planId }: { planId: string }) {
               <div style={{ position: 'sticky', top: 90, background: T.surface, border: `1px solid ${T.line}`, borderRadius: 20, padding: '26px 24px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 18 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 6 }}>
-                    <span className="rm-serif" style={{ fontSize: 42, color: T.accent }}>{DEPOSIT.label}</span>
+                    <span className="rm-serif" style={{ fontSize: 42, color: T.accentInk }}>{DEPOSIT.label}</span>
                     <span style={{ color: T.text2, fontSize: 14 }}>one-time deposit</span>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ function WhopCheckout({ planId, email }: { planId: string; email: string }) {
     <div style={{ position: 'relative', minHeight: 110 }}>
       <div ref={ref} key={`${planId}:${email}`}
         data-whop-checkout-plan-id={planId}
-        data-whop-checkout-theme="dark"
+        data-whop-checkout-theme="light"
         data-whop-checkout-theme-accent-color="gold"
         data-whop-checkout-redirect-url={redirect}
         data-whop-checkout-email={email || undefined}

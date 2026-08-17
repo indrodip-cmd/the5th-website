@@ -174,7 +174,7 @@ function Booking({ email, name, onBooked }: { email: string; name: string; onBoo
           <div className="rm-eyebrow" style={{ marginBottom: 12 }}>{BOOK.offerTitle}</div>
           {BOOK.offerPoints.map((p) => (
             <div key={p} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
-              <span style={{ color: T.accent, marginTop: 2 }}>•</span>
+              <span style={{ color: T.accentInk, marginTop: 2 }}>•</span>
               <span style={{ fontSize: 14.5, color: T.text2, lineHeight: 1.5 }}>{p}</span>
             </div>
           ))}
@@ -217,7 +217,7 @@ function Booking({ email, name, onBooked }: { email: string; name: string; onBoo
                   return (
                     <button key={iso} onClick={() => { setPicked(iso); track('calendar_time_selected', { start: iso }) }} className="rm-focus"
                       style={{ padding: '12px 8px', borderRadius: 12, cursor: 'pointer', fontSize: 14, fontWeight: 600,
-                        background: sel ? T.accent : T.bg, color: sel ? '#12100a' : T.text, border: `1px solid ${sel ? T.accent : T.line}` }}>
+                        background: sel ? T.accent : T.bg, color: sel ? T.brand : T.text, border: `1px solid ${sel ? T.accent : T.line}` }}>
                       {fmtTime(iso)}
                     </button>
                   )

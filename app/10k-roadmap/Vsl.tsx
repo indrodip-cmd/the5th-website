@@ -88,7 +88,7 @@ export default function Vsl({ url, poster }: { url: string; poster?: string }) {
 
   const frame: React.CSSProperties = {
     position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 20, overflow: 'hidden',
-    background: '#0c0c0c', border: `1px solid ${T.line}`, boxShadow: '0 40px 120px -50px rgba(201,168,76,.35), 0 30px 80px -40px #000',
+    background: '#F1E9DC', border: `1px solid ${T.line}`, boxShadow: '0 40px 90px -50px rgba(46,26,53,.45), 0 18px 50px -30px rgba(46,26,53,.35)',
   }
 
   return (
@@ -96,12 +96,12 @@ export default function Vsl({ url, poster }: { url: string; poster?: string }) {
       {!playing && (
         <button onClick={start} aria-label="Play the training" className="rm-focus"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', padding: 0,
-            background: poster ? `linear-gradient(180deg,rgba(8,8,8,.15),rgba(8,8,8,.65)), url(${poster}) center/cover` : 'radial-gradient(120% 90% at 50% 20%, #1a1a1a, #0a0a0a)' }}>
+            background: poster ? `linear-gradient(180deg,rgba(46,26,53,.05),rgba(46,26,53,.28)), url(${poster}) center/cover` : 'radial-gradient(120% 90% at 50% 20%, #FBF8F2, #EFE4D2)' }}>
           <span style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18 }}>
-            <span style={{ width: 84, height: 84, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 40px -6px rgba(201,168,76,.6)' }}>
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="#12100a"><path d="M8 5v14l11-7z" /></svg>
+            <span style={{ width: 84, height: 84, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 34px -8px rgba(201,168,76,.75)' }}>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill={T.brand}><path d="M8 5v14l11-7z" /></svg>
             </span>
-            <span style={{ color: '#fff', fontSize: 14, fontWeight: 600, letterSpacing: '.02em', textShadow: '0 2px 12px rgba(0,0,0,.6)' }}>Play the training</span>
+            <span style={{ color: poster ? '#fff' : T.text, fontSize: 14, fontWeight: 700, letterSpacing: '.02em', textShadow: poster ? '0 2px 12px rgba(0,0,0,.5)' : 'none' }}>Play the training</span>
           </span>
         </button>
       )}

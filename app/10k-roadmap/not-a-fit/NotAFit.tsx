@@ -24,7 +24,7 @@ function Body() {
         <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.75, maxWidth: 560, margin: '0 auto' }}>{explanation}</p>
       </Reveal>
       <Reveal delay={200} style={{ marginTop: 44 }}>
-        <p className="rm-serif" style={{ fontSize: 'clamp(22px,3.4vw,30px)', color: T.accent, maxWidth: 560, margin: '0 auto 8px' }}>{REJECT.dontForce}</p>
+        <p className="rm-serif" style={{ fontSize: 'clamp(22px,3.4vw,30px)', color: T.accentInk, maxWidth: 560, margin: '0 auto 8px' }}>{REJECT.dontForce}</p>
       </Reveal>
       <Reveal delay={280} style={{ marginTop: 40 }}>
         <div style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: 18, padding: '30px 26px', maxWidth: 520, margin: '0 auto' }}>

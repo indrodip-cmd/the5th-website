@@ -78,9 +78,10 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
             <div className="rm-eyebrow" style={{ marginBottom: 16 }}>{LANDING.eyebrow}</div>
             <h1 className="rm-serif" style={{ fontSize: 'clamp(31px,6vw,58px)', margin: '0 auto', maxWidth: 940, fontWeight: 800, lineHeight: 1.05 }}>{LANDING.headline}</h1>
             <p style={{ color: T.text2, fontSize: 'clamp(16px,2.1vw,21px)', lineHeight: 1.5, maxWidth: 640, margin: '18px auto 0', fontWeight: 500 }}>{LANDING.headlineSub}</p>
-            <p style={{ fontSize: 'clamp(16px,2vw,20px)', lineHeight: 1.5, maxWidth: 620, margin: '18px auto 0', fontWeight: 600 }}>
-              {LANDING.guaranteeLine}<span className="rm-mark">{LANDING.guaranteeEmphasis}</span>
-            </p>
+            <div style={{ marginTop: 24, maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
+              <p className="rm-serif" style={{ fontSize: 'clamp(19px,3vw,28px)', lineHeight: 1.22, margin: 0, fontWeight: 700 }}>{LANDING.guaranteeLine}</p>
+              <p className="rm-serif" style={{ fontSize: 'clamp(24px,4.4vw,40px)', lineHeight: 1.08, margin: '8px auto 0', fontWeight: 800, color: T.accentInk }}>{LANDING.guaranteeEmphasis}</p>
+            </div>
           </Reveal>
           <Reveal delay={100} style={{ marginTop: 30, maxWidth: 920, marginLeft: 'auto', marginRight: 'auto' }}><Vsl url={videoUrl} /></Reveal>
           <Reveal delay={160} style={{ marginTop: 24 }}>

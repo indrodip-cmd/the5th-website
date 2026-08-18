@@ -17,8 +17,8 @@ const HERO_AVATARS = ['/clients/toril.jpg', '/clients/laurie.jpg', '/clients/jea
 const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image).slice(0, 9)
 
 const MAXW = 1120
-const PADX = 'clamp(18px,5vw,22px)'
-const SECY = 'clamp(46px,8vw,80px)' // section vertical rhythm
+const PADX = 'clamp(20px,5vw,22px)'
+const SECY = 'clamp(58px,11vw,84px)' // section vertical rhythm (roomier on mobile)
 
 function GuaranteeBadge() {
   return (

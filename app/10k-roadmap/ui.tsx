@@ -35,7 +35,13 @@ export function Fonts() {
       h1,h2,h3{text-wrap:balance}
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
-      @media (max-width:640px){ .rm-serif{letter-spacing:0} }
+      /* Mobile readability: more generous leading so text never feels cramped. */
+      @media (max-width:640px){
+        .rm-serif{letter-spacing:-.005em!important;line-height:1.2!important}
+        p{line-height:1.68!important}
+        li{line-height:1.6!important}
+        details summary{line-height:1.4!important}
+      }
     `}</style>
   )
 }
@@ -381,7 +387,7 @@ export function StepFrame({ current, children, wide }: { current: number; childr
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
       <Header />
-      <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 40px' }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(28px,5vw,44px) clamp(20px,4vw,22px) 48px' }}>
         <Stepper current={current} />
         {children}
       </main>

@@ -7,10 +7,10 @@ import type { Metadata } from 'next'
 
    NOTE: kept out of the search index by design (it's a paid ad-traffic funnel,
    not a content page). To let it rank in Google, set robots.index to true. */
-const TITLE = 'The $10K Roadmap Audit for Coaches & Consultants | The5th'
-const OG_TITLE = 'Build a Predictable $10K/Month Coaching Business'
+const TITLE = 'Build a Predictable $10K/Month Coaching Business, or 100% Money Back'
+const OG_TITLE = 'Build a Predictable $10K/Month Coaching Business, Guaranteed'
 const DESC =
-  'A private 60-minute strategy audit for coaches & consultants. Find the one bottleneck blocking consistent $10K months and get the exact plan to fix it, backed by a 30-day money-back guarantee.'
+  'You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable $10K/month, or get 100% of your money back.'
 const URL = 'https://the5th.consulting/10k-roadmap'
 
 export const metadata: Metadata = {

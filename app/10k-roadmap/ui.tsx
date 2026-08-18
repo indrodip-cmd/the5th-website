@@ -5,7 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { T, STEPS, GATE, LEGAL, type Q } from './config'
+import { T, STEPS, GATE, LEGAL, HELP, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
@@ -112,22 +112,31 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
 }
 
 /* ── Minimal funnel header + footer ────────────────────────────────────────*/
-export function Header({ cta, nav }: { cta?: React.ReactNode; nav?: { label: string; href: string }[] }) {
+function HelpContact() {
+  const link: React.CSSProperties = { color: T.accentInk, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }
+  return (
+    <div style={{ textAlign: 'right', fontSize: 12.5, lineHeight: 1.45, color: T.text2, maxWidth: 260 }}>
+      Need help? Text us at <a href={HELP.phoneHref} style={link}>{HELP.phone}</a> or email us at <a href={HELP.emailHref} style={link}>{HELP.email}</a>
+    </div>
+  )
+}
+
+export function Header({ nav }: { nav?: { label: string; href: string }[] }) {
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.85)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
-      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-        <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center' }}>
+    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.9)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
+      <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
+        <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(36px,5.5vw,48px)', width: 'auto' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
         </a>
         {nav && (
           <nav className="rm-nav" style={{ display: 'flex', gap: 28 }}>
             {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
-        {cta}
+        <HelpContact />
       </div>
       <style>{`@media(max-width:900px){.rm-nav{display:none!important}}`}</style>
     </header>
@@ -154,7 +163,7 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; lin
 /* Copyright + jurisdiction notice, shown at the foot of every funnel page. */
 export function LegalNote() {
   return (
-    <p style={{ color: T.text3, fontSize: 10.5, lineHeight: 1.65, maxWidth: 820, margin: '0 auto', textAlign: 'center' }}>{LEGAL.copyright}</p>
+    <p style={{ color: T.text2, fontSize: 13, lineHeight: 1.75, maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>{LEGAL.copyright}</p>
   )
 }
 

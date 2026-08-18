@@ -71,7 +71,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: T.sans, overflowX: 'hidden' }}>
       <Fonts />
-      <Header nav={LANDING.nav} cta={<Btn onClick={() => go('nav')} style={{ padding: '10px 16px', fontSize: 13.5 }}>See If You Qualify</Btn>} />
+      <Header nav={LANDING.nav} />
 
       {/* ── Hero ── */}
       <div style={{ background: 'radial-gradient(110% 60% at 50% -6%, #FBF6EF 0%, #ffffff 62%)' }}>

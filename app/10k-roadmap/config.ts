@@ -63,6 +63,14 @@ export function auditCalUrl(): string {
 
 export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 
+/* Support contact shown in the header of every funnel page. */
+export const HELP = {
+  phone: '+1 917 967 6380',
+  phoneHref: 'tel:+19179676380',
+  email: 'support@10kroadmap.org',
+  emailHref: 'mailto:support@10kroadmap.org',
+}
+
 /* Social-proof rating (mirrors the /quiz + free-training funnel — real figure). */
 export const RATING = { score: '4.8', text: 'from 76 coaches across 12 nations' }
 

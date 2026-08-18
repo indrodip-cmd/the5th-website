@@ -4,7 +4,8 @@
    the one-question-at-a-time flow engine, so every step feels like one
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { T, type Q } from './config'
+import { useRouter } from 'next/navigation'
+import { T, STEPS, GATE, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
@@ -159,6 +160,41 @@ export function Progress({ value }: { value: number }) {
   )
 }
 
+/* ── Booking wizard progress indicator (persists across all steps) ─────────*/
+export function Stepper({ current }: { current: number }) {
+  return (
+    <div style={{ maxWidth: 640, margin: '0 auto 30px' }}>
+      {/* Desktop: numbered steps + connectors */}
+      <div className="rm-stepper" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+        {STEPS.map((s, i) => {
+          const done = i < current, active = i === current
+          return (
+            <React.Fragment key={s.key}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, flex: '0 0 auto' }}>
+                <span style={{ width: 30, height: 30, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
+                  background: done || active ? T.accent : '#fff', color: done || active ? '#fff' : T.text3, border: `1.5px solid ${done || active ? T.accent : T.line}` }}>
+                  {done ? '✓' : i + 1}
+                </span>
+                <span style={{ fontSize: 11.5, fontWeight: 600, color: active ? T.text : T.text3, whiteSpace: 'nowrap' }}>{s.label}</span>
+              </div>
+              {i < STEPS.length - 1 && <span style={{ flex: 1, height: 2, background: i < current ? T.accent : T.line, margin: '0 6px', marginBottom: 22, borderRadius: 2 }} />}
+            </React.Fragment>
+          )
+        })}
+      </div>
+      {/* Mobile: compact label + bar */}
+      <div className="rm-stepper-m" style={{ display: 'none' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: T.text }}>{STEPS[current]?.label}</span>
+          <span style={{ fontSize: 12, color: T.text3 }}>Step {current + 1} of {STEPS.length}</span>
+        </div>
+        <Progress value={(current + 1) / STEPS.length} />
+      </div>
+      <style>{`@media(max-width:640px){.rm-stepper{display:none!important}.rm-stepper-m{display:block!important}}`}</style>
+    </div>
+  )
+}
+
 /* ── One-question-at-a-time flow engine ────────────────────────────────────
    Handles single / multi / scale / text with keyboard support. A `reject`
    option fires onReject immediately. Emits onComplete(answers) at the end. */
@@ -307,6 +343,73 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, color: T.text3, fontSize: 12.5 }}>
         <span>{q.min} · {q.minLabel}</span><span>{q.maxLabel} · {q.max}</span>
       </div>
+    </div>
+  )
+}
+
+/* Shared frame for wizard steps: chrome + persistent progress indicator. */
+export function StepFrame({ current, children, wide }: { current: number; children: React.ReactNode; wide?: boolean }) {
+  return (
+    <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
+      <Fonts />
+      <Header />
+      <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 70px' }}>
+        <Stepper current={current} />
+        {children}
+      </main>
+    </div>
+  )
+}
+
+/* ── Payment gate (client side of the server gate) ─────────────────────────
+   Rendered by a gated step's server component when the paid cookie is absent.
+   Re-verifies payment against the DB via /api/10k-roadmap/unlock (which issues
+   the cookie on success), then refreshes so the server renders the real step.
+   Polls briefly to absorb the webhook lag after the Whop redirect. */
+export function PayGate() {
+  const router = useRouter()
+  const [blocked, setBlocked] = useState(false)
+  useEffect(() => {
+    let stop = false
+    ;(async () => {
+      let email = ''
+      try { email = (new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase() || sessionStorage.getItem('audit_email') || '' } catch { /* noop */ }
+      if (!email) { setBlocked(true); return }
+      let tries = 0
+      const poll = async () => {
+        tries++
+        try {
+          const r = await fetch('/api/10k-roadmap/unlock', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+          const j = await r.json()
+          if (stop) return
+          if (j?.paid) { router.refresh(); return }
+        } catch { /* keep polling */ }
+        if (tries >= 10) { setBlocked(true); return }
+        setTimeout(poll, 2500)
+      }
+      poll()
+    })()
+    return () => { stop = true }
+  }, [router])
+
+  return (
+    <div style={{ textAlign: 'center', padding: '60px 20px', maxWidth: 520, margin: '0 auto' }}>
+      {!blocked ? (
+        <>
+          <div style={{ width: 32, height: 32, borderRadius: '50%', border: `3px solid ${T.line}`, borderTopColor: T.accent, animation: 'rm-spin .8s linear infinite', margin: '0 auto 20px' }} />
+          <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 8px', fontWeight: 700 }}>{GATE.verifying}</h1>
+          <p style={{ color: T.text2, fontSize: 15 }}>{GATE.verifyingSub}</p>
+        </>
+      ) : (
+        <>
+          <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 10px', fontWeight: 700 }}>{GATE.blockedHeadline}</h1>
+          <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 22 }}>{GATE.blockedSub}</p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Btn href="/10k-roadmap/pay">{GATE.blockedCta}</Btn>
+            <Btn variant="ghost" onClick={() => location.reload()}>Refresh</Btn>
+          </div>
+        </>
+      )}
     </div>
   )
 }

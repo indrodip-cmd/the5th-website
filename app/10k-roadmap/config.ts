@@ -354,6 +354,59 @@ export const SUCCESS = {
   },
 }
 
+/* ── 5-step booking wizard ─────────────────────────────────────────────────
+   Your Details → Payment → Deep Questions → Pick a Time → Confirmation.
+   Steps 3-5 are gated server-side on a verified payment. */
+export const STEPS = [
+  { key: 'apply', label: 'Your Details', href: '/10k-roadmap/apply' },
+  { key: 'pay', label: 'Payment', href: '/10k-roadmap/pay' },
+  { key: 'questions', label: 'Deep Questions', href: '/10k-roadmap/questions' },
+  { key: 'schedule', label: 'Pick a Time', href: '/10k-roadmap/schedule' },
+  { key: 'confirmed', label: 'Confirmation', href: '/10k-roadmap/confirmed' },
+] as const
+
+export const APPLY = {
+  eyebrow: 'Private Advisory · Step 1 of 5',
+  headline: 'Reserve your $10K Roadmap Audit.',
+  sub: 'Enter your details to begin. Next you’ll place your $27 refundable deposit to lock in a private slot.',
+  cta: 'Continue to payment →',
+  micro: '$27 refundable commitment deposit · secured by Whop',
+}
+
+export const PAY = {
+  eyebrow: 'Step 2 of 5 · Commitment deposit',
+  headline: 'Secure your private audit slot.',
+  sub: 'The $27 is a refundable commitment deposit that reserves your session — not the price of the advice. It simply filters for people serious about solving the problem.',
+  points: [
+    'A private 45-minute strategy session',
+    'A live audit of your positioning, offer, lead gen, sales & conversion',
+    'The one bottleneck I’d fix first, and the path around it',
+  ],
+  micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay · refundable per policy',
+}
+
+export const GATE = {
+  verifying: 'Confirming your payment…',
+  verifyingSub: 'This takes just a moment. Please don’t close this tab.',
+  blockedHeadline: 'Payment required to continue.',
+  blockedSub: 'This step unlocks once your $27 deposit is confirmed. If you just paid, give it a few seconds and refresh. Otherwise, complete your deposit to continue.',
+  blockedCta: 'Go to payment →',
+}
+
+export const SCHEDULE = {
+  eyebrow: 'Step 4 of 5 · Pick a time',
+  headline: 'Choose your audit time.',
+  sub: 'We’ll use your answers to make the 45 minutes extremely specific to your business.',
+}
+
+export const CONFIRMED = {
+  eyebrow: 'Step 5 of 5',
+  badge: 'You’re booked',
+  headline: 'You’re all set.',
+  sub: 'Your $10K Roadmap Audit is confirmed.',
+  refundReminder: 'Reminder: your $27 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
+}
+
 /* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/
 export const RESERVED_WHY = {
   eyebrow: 'Deposit received',

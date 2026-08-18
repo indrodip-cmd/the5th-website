@@ -5,8 +5,21 @@ plum `#2E1A35` + purple accent `#5E2E86` on white/cream `#FAF6F0`, Cormorant Gar
 built as ONE continuous experience:
 
 ```
-VSL → Qualification → $27 deposit → Deep diagnostic → Booking → Success (+ calendar)
+VSL → Qualification → [ 5-step wizard ] → done
                     ↘ Not qualified → /not-a-fit (relationship preserved)
+
+5-step wizard (persistent progress indicator, purple accent):
+  1. Your Details (/apply)     name/email/phone → save lead
+  2. Payment (/pay)            $27 Whop embedded checkout
+  3. Deep Questions (/questions)  embedded Typeform — SERVER-GATED on payment
+  4. Pick a Time (/schedule)   cal.com embed (prefilled) — SERVER-GATED on payment
+  5. Confirmation (/confirmed) date/time + countdown + Google/Apple/Outlook + refund reminder
+
+Server-side gating: Steps 3-5 require the signed HttpOnly `audit_paid_pass`
+cookie, issued only by /api/10k-roadmap/unlock after the Whop webhook marks the
+lead paid. Direct-URL access without it renders the PayGate, never the step.
+(Legacy standalone pages /reserved, /thank-you, /success remain but are not in
+this primary flow.)
 ```
 
 Lives at **`/10k-roadmap`** (a NEW route — the existing free `/lp/make-10k-month`

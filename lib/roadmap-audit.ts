@@ -15,13 +15,45 @@
    block a visitor-facing request, and webhook retries / double submits must
    never duplicate leads or admin emails.
    ───────────────────────────────────────────────────────────────────────── */
+import crypto from 'crypto'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { normEmail, normPhone, upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
 export const AUDIT_SOURCE = '10k-roadmap-audit'
-export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || ''
+// Defaults to the shared $27 plan so the webhook marks audit leads paid out of
+// the box; override with a dedicated plan via WHOP_AUDIT_PLAN_ID for clean CRM.
+export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+
+/* ── Signed "paid" pass (server-side step gating) ───────────────────────────
+   After payment is verified against the DB, we hand the browser an HttpOnly,
+   HMAC-signed cookie bound to the buyer's email. The gated step routes (server
+   components) verify this cookie and redirect to Payment if it's missing/invalid
+   — so Steps 3-5 can't be reached by direct URL without a confirmed payment. */
+export const AUDIT_PAID_COOKIE = 'audit_paid_pass'
+const PASS_SECRET = process.env.VSL_SESSION_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || 'dev-secret'
+const PASS_MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24h
+
+export function signPaidPass(email: string): string {
+  const payload = Buffer.from(JSON.stringify({ e: normEmail(email), t: Date.now() })).toString('base64url')
+  const sig = crypto.createHmac('sha256', PASS_SECRET).update(payload).digest('base64url')
+  return `${payload}.${sig}`
+}
+
+export function verifyPaidPass(token?: string | null): { email: string } | null {
+  if (!token) return null
+  const [payload, sig] = token.split('.')
+  if (!payload || !sig) return null
+  const expected = crypto.createHmac('sha256', PASS_SECRET).update(payload).digest('base64url')
+  try { if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null } catch { return null }
+  try {
+    const j = JSON.parse(Buffer.from(payload, 'base64url').toString())
+    if (!j?.e || typeof j.e !== 'string') return null
+    if (Date.now() - Number(j.t || 0) > PASS_MAX_AGE_MS) return null
+    return { email: String(j.e) }
+  } catch { return null }
+}
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.consulting').replace(/\/$/, '')
 const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'

@@ -4,11 +4,17 @@
    via clamp() so nothing feels loose on desktop or cramped on phones. */
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, REAL_PROOF, RATING, PRESS, T } from './config'
+import { LANDING, LEGAL, RATING, PRESS, T } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import Vsl from './Vsl'
 import { track } from './track'
 import { VIDEO_REVIEWS } from '@/components/VideoWall'
+import { CASE_STUDIES } from '@/lib/case-studies'
+
+// Real client faces for the hero trust cluster (photos already on the site).
+const HERO_AVATARS = ['/clients/toril.jpg', '/clients/laurie.jpg', '/clients/jeanne.jpg', '/clients/angela.jpg', '/clients/hayley.jpg']
+// Featured case studies (real, from the published library) — those with a photo.
+const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image).slice(0, 9)
 
 const MAXW = 1120
 const PADX = 'clamp(18px,5vw,22px)'
@@ -33,12 +39,28 @@ function Stars() {
   )
 }
 
+function AvatarCluster() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }} aria-hidden>
+      {HERO_AVATARS.map((src, i) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img key={src} src={src} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: '2px solid #fff', marginLeft: i === 0 ? 0 : -10, boxShadow: '0 2px 8px -2px rgba(46,26,53,.4)' }} />
+      ))}
+    </div>
+  )
+}
+
 function RatingRow({ center }: { center?: boolean }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: center ? 'center' : 'flex-start', flexWrap: 'wrap' }}>
-      <Stars />
-      <span style={{ fontWeight: 800, fontSize: 15 }}>{RATING.score}</span>
-      <span style={{ color: T.text2, fontSize: 13.5 }}>{RATING.text}</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: center ? 'center' : 'flex-start', flexWrap: 'wrap' }}>
+      <AvatarCluster />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: center ? 'flex-start' : 'flex-start', gap: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Stars />
+          <span style={{ fontWeight: 800, fontSize: 15 }}>{RATING.score}</span>
+        </div>
+        <span style={{ color: T.text2, fontSize: 13 }}>{RATING.text}</span>
+      </div>
     </div>
   )
 }
@@ -160,25 +182,25 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
             </div>
           </Reveal>
 
-          {/* Real case-study cards */}
+          {/* Real case studies from the published library (photos + results) */}
           <Reveal>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 16 }}>
-              {REAL_PROOF.map((p) => (
-                <figure key={p.name} style={{ margin: 0, background: '#fff', border: `1px solid ${T.line}`, borderRadius: 16, padding: 20, display: 'flex', flexDirection: 'column', gap: 10, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    {p.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.photo} alt={p.name} style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${T.line}` }} />
-                    ) : (
-                      <span aria-hidden style={{ width: 46, height: 46, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: T.accentSoft, border: `1px solid ${T.line}`, color: T.accentInk, fontFamily: T.serif, fontSize: 20, fontWeight: 700 }}>{p.name.slice(0, 1)}</span>
-                    )}
+            <div className="cs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 16 }}>
+              {FEATURED_CASES.map((s) => (
+                <figure key={s.slug} className="cs-card" style={{ margin: 0, background: '#fff', border: `1px solid ${T.line}`, borderRadius: 18, padding: 22, display: 'flex', flexDirection: 'column', gap: 14, boxShadow: '0 20px 50px -34px rgba(46,26,53,.5)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={s.image} alt={s.name} loading="lazy" style={{ width: 54, height: 54, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.surface}`, boxShadow: '0 4px 12px -4px rgba(46,26,53,.4)' }} />
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 15 }}>{p.name}</div>
-                      <div style={{ color: T.text3, fontSize: 12.5 }}>{p.role}</div>
+                      <div style={{ fontWeight: 700, fontSize: 15.5 }}>{s.name}</div>
+                      <div style={{ color: T.text3, fontSize: 12.5, lineHeight: 1.35 }}>{s.niche}</div>
+                      <div style={{ color: T.text3, fontSize: 11.5 }}>{s.location}</div>
                     </div>
                   </div>
-                  <div className="rm-serif" style={{ color: T.accentInk, fontSize: 22, fontWeight: 700 }}>{p.result}</div>
-                  <p style={{ color: T.text2, fontSize: 14, lineHeight: 1.55, margin: 0 }}>{p.quote}</p>
+                  <div style={{ borderTop: `1px solid ${T.line}`, paddingTop: 14 }}>
+                    <div className="rm-serif" style={{ color: T.accentInk, fontSize: 28, fontWeight: 800, lineHeight: 1 }}>{s.headline.v}</div>
+                    <div style={{ color: T.text2, fontSize: 12.5, marginTop: 5, fontWeight: 600 }}>{s.headline.period}</div>
+                  </div>
+                  <p className="cs-tag" style={{ color: T.text2, fontSize: 13.5, lineHeight: 1.5, margin: 0 }}>{s.tagline}</p>
                 </figure>
               ))}
             </div>
@@ -283,6 +305,9 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
       </div>
 
       <style>{`
+        .cs-card{transition:transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .22s ease}
+        .cs-card:hover{transform:translateY(-4px);box-shadow:0 30px 64px -34px rgba(46,26,53,.55)}
+        .cs-tag{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:560px){
@@ -290,6 +315,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           .mech-item > div{min-width:min(220px,80vw)!important;width:100%}
           .mech-arrow{transform:rotate(90deg)}
           .vid-grid{grid-template-columns:1fr!important}
+          .cs-grid{grid-template-columns:1fr!important}
         }
       `}</style>
     </div>

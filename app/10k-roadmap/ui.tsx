@@ -93,18 +93,18 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
 }) {
   const base: React.CSSProperties = {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-    fontFamily: T.sans, fontWeight: 700, fontSize: 16, letterSpacing: '.01em',
-    padding: '17px 34px', borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
+    fontFamily: T.sans, fontWeight: 700, fontSize: 16, letterSpacing: '.005em',
+    padding: '16px 32px', minHeight: 54, borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
     border: '1px solid transparent', textDecoration: 'none', width: full ? '100%' : undefined,
-    transition: 'transform .18s ease, filter .18s ease, background .2s ease, border-color .2s ease',
-    opacity: disabled ? 0.5 : 1, ...style,
+    transition: 'transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, filter .18s ease',
+    opacity: disabled ? 0.55 : 1, WebkitTapHighlightColor: 'transparent', ...style,
   }
   const skin: React.CSSProperties = variant === 'primary'
-    ? { background: T.accent, color: '#fff', boxShadow: '0 14px 34px -14px rgba(94,46,134,.6)' }
-    : { background: '#fff', color: T.text, borderColor: T.lineStrong }
+    ? { background: 'linear-gradient(180deg,#6b39a0 0%,#5a2c86 55%,#4c2472 100%)', color: '#fff', boxShadow: '0 16px 32px -14px rgba(94,46,134,.7), inset 0 1px 0 rgba(255,255,255,.22)' }
+    : { background: '#fff', color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(46,26,53,.4)' }
   const props = {
     className: 'rm-focus rm-btn', style: { ...base, ...skin },
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.05)' } },
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.06)' } },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' },
   }
   if (href) return <a href={href} onClick={onClick} {...props}>{children}</a>
@@ -196,11 +196,14 @@ export function Stepper({ current }: { current: number }) {
           return (
             <React.Fragment key={s.key}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, flex: '0 0 auto' }}>
-                <span style={{ width: 30, height: 30, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
-                  background: done || active ? T.accent : '#fff', color: done || active ? '#fff' : T.text3, border: `1.5px solid ${done || active ? T.accent : T.line}` }}>
+                <span style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
+                  background: done ? T.accent : active ? 'linear-gradient(180deg,#6b39a0,#552879)' : '#fff', color: done || active ? '#fff' : T.text3,
+                  border: `1.5px solid ${done || active ? 'transparent' : T.line}`,
+                  boxShadow: active ? '0 8px 18px -6px rgba(94,46,134,.55)' : done ? '0 3px 8px -4px rgba(94,46,134,.4)' : 'none',
+                  transition: 'all .3s ease' }}>
                   {done ? '✓' : i + 1}
                 </span>
-                <span style={{ fontSize: 11.5, fontWeight: 600, color: active ? T.text : T.text3, whiteSpace: 'nowrap' }}>{s.label}</span>
+                <span style={{ fontSize: 11.5, fontWeight: active ? 700 : 600, color: active ? T.text : T.text3, whiteSpace: 'nowrap' }}>{s.label}</span>
               </div>
               {i < STEPS.length - 1 && <span style={{ flex: 1, height: 2, background: i < current ? T.accent : T.line, margin: '0 6px', marginBottom: 22, borderRadius: 2 }} />}
             </React.Fragment>

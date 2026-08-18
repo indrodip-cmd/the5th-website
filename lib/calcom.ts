@@ -175,6 +175,23 @@ async function fetchBookings(key: string, status: string, take = 100): Promise<C
   }
 }
 
+/* Fetch a single booking by its uid (cal.com appends the uid to its
+   post-booking redirect). Returns the normalised booking or null. */
+export async function getBookingByUid(uid: string): Promise<CalBooking | null> {
+  const key = calKey()
+  if (!key || !uid) return null
+  try {
+    const r = await fetch(`${CAL_BASE}/bookings/${encodeURIComponent(uid)}`, { headers: headers(BOOKINGS_API_VERSION, key), cache: 'no-store' })
+    if (!r.ok) return null
+    const j = await r.json()
+    const data = j?.data || j
+    return data ? normalizeBooking(data as Record<string, unknown>) : null
+  } catch (e) {
+    console.error('calcom getBookingByUid failed', e)
+    return null
+  }
+}
+
 export interface BookingsOverview {
   configured: boolean
   totalBooked: number

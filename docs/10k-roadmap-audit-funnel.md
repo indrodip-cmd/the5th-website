@@ -19,7 +19,8 @@ funnel is untouched, so nothing running on ads breaks). Not indexed.
 | `/10k-roadmap` | Landing: hero + VSL, recognition→tension copy, mechanism chain, video + case-study proof, who-it's-for, $27 deposit explainer, 3 FAQs, final CTA |
 | `/10k-roadmap/qualify` | 5-question qualification, one at a time. A `reject` option routes to `/not-a-fit`. On success it redirects STRAIGHT to the Whop checkout (`AUDIT_CHECKOUT_URL` in `config.ts`, currently `plan_85pIPWE1K0uBB`) |
 | `/10k-roadmap/not-a-fit` | Rejection page — rejects the timing/fit, not the person. Routes to `/results` + `/quiz` |
-| `/10k-roadmap/reserved` | **The post-payment page — set this as Whop's post-purchase redirect: `https://the5th.consulting/10k-roadmap/reserved`.** Embeds the deep-questions **Typeform** (`NEXT_PUBLIC_AUDIT_TYPEFORM_ID`); on submit it **auto-redirects to the cal.com page** (`NEXT_PUBLIC_AUDIT_CAL_URL`). A "skip to booking" fallback link is always shown |
+| `/10k-roadmap/reserved` | **The post-payment page — set this as Whop's post-purchase redirect: `https://the5th.consulting/10k-roadmap/reserved`.** Explains why the step matters, embeds the deep-questions **Typeform** (`NEXT_PUBLIC_AUDIT_TYPEFORM_ID`); on submit it **auto-redirects to the cal.com page** (`NEXT_PUBLIC_AUDIT_CAL_URL`). Mandatory — no skip (only a refresh fallback if the form fails to load) |
+| `/10k-roadmap/thank-you` | **Set this as cal.com's "redirect on booking" URL: `https://the5th.consulting/10k-roadmap/thank-you`.** Shows the booked date/time, a live **countdown**, and **Add to Google / Apple / Outlook** calendar links. Resolves the booking from cal.com's appended `uid`/`email` (via `/api/10k-roadmap/booking-lookup`), with an email-lookup fallback |
 | `/10k-roadmap/success` | Confirmation moment + booking card + **Add to Google/Apple/Outlook** (ICS built from the real event) |
 
 APIs under `/api/10k-roadmap/*`: `reserve`, `status`, `diagnostic`, `slots`, `booking`.

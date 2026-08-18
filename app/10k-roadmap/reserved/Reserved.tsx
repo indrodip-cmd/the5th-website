@@ -1,13 +1,14 @@
 'use client'
 /* Post-payment page (the URL Whop redirects to after the $27 deposit).
-   Two things, exactly:
-     1. An embedded Typeform with the deep pre-call questions.
-     2. On submit, the buyer is auto-redirected to the cal.com booking page.
-   Form id + cal URL are configurable in config.ts (env-overridable). If the
-   Typeform can't load (blocked/misconfigured), a direct "book your call" button
-   is shown so the buyer is never stuck. */
+   This step is REQUIRED and cannot be skipped: the deep answers are how we
+   prepare a specific audit instead of vague advice. Two things:
+     1. A "why this matters" frame + the embedded deep-questions Typeform.
+     2. On submit, the buyer is auto-redirected to the cal.com booking page,
+        which is configured to send them on to /10k-roadmap/thank-you.
+   No skip link. If the form genuinely fails to load, the only action is to
+   refresh, so the questions always get answered. */
 import { useEffect, useState } from 'react'
-import { auditTypeformId, auditCalUrl, T } from '../config'
+import { auditTypeformId, auditCalUrl, RESERVED_WHY, T } from '../config'
 import { Fonts, Header, Btn, Reveal } from '../ui'
 import { track } from '../track'
 
@@ -35,7 +36,6 @@ export default function Reserved() {
         opacity: 100,
         onSubmit: () => {
           track('deep_application_completed'); track('calendar_viewed')
-          // Small beat so Typeform's own "submitted" state shows, then to cal.com.
           setTimeout(() => { window.location.href = cal }, 900)
         },
       })
@@ -51,7 +51,6 @@ export default function Reserved() {
       setTimeout(mount, 400)
     }
 
-    // If the form iframe never appears, offer the direct booking fallback.
     const t = setTimeout(() => {
       const c = document.getElementById('tf-container')
       if (c && !c.querySelector('iframe')) setFailed(true)
@@ -63,33 +62,36 @@ export default function Reserved() {
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
       <Header />
-      <main style={{ flex: 1, width: '100%', maxWidth: 900, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 40px' }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: 900, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 44px' }}>
         <Reveal style={{ textAlign: 'center', marginBottom: 22 }}>
           <svg width="56" height="56" viewBox="0 0 86 86" style={{ margin: '0 auto 14px', display: 'block' }} aria-hidden>
             <circle cx="43" cy="43" r="40" fill="none" stroke={T.accent} strokeWidth="2.5" strokeDasharray="252" strokeDashoffset="252" style={{ animation: 'rm-draw 0.8s ease forwards' }} />
             <path d="M26 44 l12 12 l22 -24" fill="none" stroke={T.accent} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="60" strokeDashoffset="60" style={{ animation: 'rm-draw 0.5s 0.6s ease forwards' }} />
           </svg>
-          <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Deposit received</div>
-          <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 8px', fontWeight: 700 }}>You’re in. One quick step, then pick your time.</h1>
-          <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 480, margin: '0 auto' }}>
-            Answer a few questions so your 45-minute audit is built around your business. You’ll go straight to the calendar right after.
-          </p>
+          <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{RESERVED_WHY.eyebrow}</div>
+          <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 12px', fontWeight: 700 }}>{RESERVED_WHY.headline}</h1>
+          <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.6, maxWidth: 560, margin: '0 auto 20px' }}>{RESERVED_WHY.body}</p>
+          <div style={{ display: 'grid', gap: 9, maxWidth: 520, margin: '0 auto', textAlign: 'left' }}>
+            {RESERVED_WHY.points.map((p) => (
+              <div key={p} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', background: T.surface, borderRadius: 12, padding: '12px 16px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: 2, flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
+                <span style={{ color: T.text, fontSize: 14.5, lineHeight: 1.5 }}>{p}</span>
+              </div>
+            ))}
+          </div>
+          <p style={{ color: T.text3, fontSize: 13, marginTop: 16 }}>{RESERVED_WHY.footnote}</p>
         </Reveal>
 
         <Reveal>
-          <div id="tf-container" style={{ width: '100%', height: 'clamp(560px,76vh,820px)', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)' }} />
+          <div id="tf-container" style={{ width: '100%', height: 'clamp(560px,74vh,820px)', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)' }} />
         </Reveal>
 
         {failed && (
           <Reveal style={{ textAlign: 'center', marginTop: 22 }}>
-            <p style={{ color: T.text2, fontSize: 14.5, marginBottom: 12 }}>Trouble loading the questions? You can go straight to booking your call.</p>
-            <Btn href={cal} onClick={() => track('calendar_viewed')}>Book my audit call →</Btn>
+            <p style={{ color: T.text2, fontSize: 14.5, marginBottom: 12 }}>{RESERVED_WHY.errorHint}</p>
+            <Btn onClick={() => location.reload()}>{RESERVED_WHY.errorCta}</Btn>
           </Reveal>
         )}
-
-        <p style={{ textAlign: 'center', marginTop: 18 }}>
-          <a href={cal} onClick={() => track('calendar_viewed')} style={{ color: T.text3, fontSize: 12.5, textDecoration: 'underline', textUnderlineOffset: 3 }}>Skip to booking your call →</a>
-        </p>
       </main>
     </div>
   )

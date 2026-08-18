@@ -354,6 +354,45 @@ export const SUCCESS = {
   },
 }
 
+/* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/
+export const RESERVED_WHY = {
+  eyebrow: 'Deposit received',
+  headline: 'You’re in. One essential step before your call.',
+  body: 'This isn’t a formality. Your answers here are exactly how we prepare a personalised audit for YOUR business, so on the call we pinpoint the specific fix you need, not vague, generic advice.',
+  points: [
+    'It’s how we understand your exact situation before we meet.',
+    'It’s what lets us pinpoint the one specific fix, instead of generic advice.',
+    'The more honest you are, the more valuable your 45 minutes will be.',
+  ],
+  footnote: 'Take two minutes. As soon as you finish, you’ll go straight to picking your time.',
+  loadingHint: 'Loading your questions…',
+  errorHint: 'The questions couldn’t load. Please refresh the page to continue.',
+  errorCta: 'Refresh',
+}
+
+/* ── Thank-you page (after cal.com booking) ────────────────────────────────*/
+export const THANKYOU = {
+  badge: 'You’re booked',
+  headline: 'You’re all set.',
+  sub: 'Your $10K Roadmap Audit is confirmed.',
+  countdownLabel: 'Your call starts in',
+  liveLabel: 'Your call is starting now',
+  passedLabel: 'This call time has passed. Check your email, or rebook if you need to.',
+  addHeading: 'Add it to your calendar',
+  detailsPending: 'Your call is confirmed. Your calendar invitation and confirmation are on their way to your inbox.',
+  emailPrompt: 'Enter the email you booked with to see your countdown and calendar links.',
+  next: [
+    'You’ll receive your confirmation email and calendar invite.',
+    'I’ll review your answers before the call so we go straight to what matters.',
+    'Bring three numbers: current monthly revenue, average offer price, and qualified leads per month.',
+    'Come ready to be honest about what’s working, and what isn’t.',
+  ],
+  event: {
+    title: '10K Roadmap Audit',
+    description: 'Private business strategy audit focused on identifying the bottleneck preventing a predictable path to $10K/month.',
+  },
+}
+
 /* ── Rejection ─────────────────────────────────────────────────────────────*/
 export const REJECT = {
   headline: 'This probably isn’t the right next step, yet.',

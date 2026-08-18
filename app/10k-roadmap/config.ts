@@ -65,7 +65,7 @@ export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 
 /* Support contact shown in the header of every funnel page. */
 export const HELP = {
-  phone: '+1 917 967 6380',
+  phone: '+1 (917) 967 6380',
   phoneHref: 'tel:+19179676380',
   email: 'support@10kroadmap.org',
   emailHref: 'mailto:support@10kroadmap.org',

@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
    metadata, and render NO site navigation/footer chrome so paid traffic has a
    single path. The dark theme + fonts are injected by <Fonts/> in the pages. */
 const SHARE_TITLE = 'The $10K Roadmap Audit | The5th'
-const SHARE_DESC = 'A private 45-minute audit to find the one bottleneck between your expertise and a predictable $10K/month. For coaches & consultants 40+.'
+const SHARE_DESC = 'A private 60-minute audit to find the one bottleneck between your expertise and a predictable $10K/month. For coaches & consultants 40+.'
 
 export const metadata: Metadata = {
   title: SHARE_TITLE,

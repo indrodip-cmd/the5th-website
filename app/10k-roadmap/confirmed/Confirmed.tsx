@@ -96,7 +96,7 @@ export default function Confirmed() {
               <Row label="Date" value={fmt(b.start, { weekday: 'long', month: 'long', day: 'numeric' })} />
               <Row label="Time" value={fmt(b.start, { hour: 'numeric', minute: '2-digit' })} />
               <Row label="Timezone" value={tz.replace(/_/g, ' ')} />
-              <Row label="Duration" value="45 minutes" />
+              <Row label="Duration" value="60 minutes" />
             </div>
           </Reveal>
           <Reveal delay={170} style={{ marginTop: 24 }}><Countdown start={b.start} /></Reveal>

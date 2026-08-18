@@ -73,7 +73,7 @@ export default function ThankYou() {
       const email = param(sp, ['email', 'attendeeEmail']).toLowerCase()
 
       if (start && !Number.isNaN(Date.parse(start))) {
-        const end = param(sp, ['end', 'endTime']) || new Date(new Date(start).getTime() + 45 * 60000).toISOString()
+        const end = param(sp, ['end', 'endTime']) || new Date(new Date(start).getTime() + 60 * 60000).toISOString()
         setB({ start, end, timeZone: tz, meetingUrl: sp.get('meetingUrl') }); setTried(true); return
       }
       if (!uid && !email) { setTried(true); return }

@@ -47,7 +47,7 @@ export default function Questions() {
   return (
     <>
       <Reveal style={{ textAlign: 'center', marginBottom: 20 }}>
-        <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Deposit received · Step 3 of 5</div>
+        <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Deposit received · Step 2 of 4</div>
         <h1 className="rm-serif" style={{ fontSize: 'clamp(24px,3.6vw,34px)', margin: '0 0 10px', fontWeight: 700 }}>{RESERVED_WHY.headline}</h1>
         <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 540, margin: '0 auto' }}>{RESERVED_WHY.body}</p>
         <p style={{ color: T.text3, fontSize: 13, marginTop: 12 }}>{RESERVED_WHY.footnote}</p>

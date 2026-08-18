@@ -14,31 +14,43 @@ function readEmail(): string {
 }
 
 export default function Pay({ planId }: { planId: string }) {
+  // Email is optional now: qualified users come straight to payment and Whop
+  // collects it. If we happen to have it (return visit), we prefill the embed.
   const [email] = useState(readEmail)
 
-  useEffect(() => {
-    if (!email) { window.location.replace('/10k-roadmap/apply'); return }
-    track('checkout_started', { value: DEPOSIT.amount, currency: DEPOSIT.currency })
-  }, [email])
+  useEffect(() => { track('checkout_started', { value: DEPOSIT.amount, currency: DEPOSIT.currency }) }, [])
 
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
       <Header />
-      <main style={{ maxWidth: 900, margin: '0 auto', padding: 'clamp(26px,5vw,48px) 22px 80px' }}>
-        <Stepper current={1} />
+      <main style={{ maxWidth: 940, margin: '0 auto', padding: 'clamp(26px,5vw,48px) 22px 80px' }}>
+        <Stepper current={0} />
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,420px)', gap: 34, alignItems: 'start' }} className="pay-grid">
           <Reveal>
             <div className="rm-eyebrow" style={{ marginBottom: 12 }}>{PAY.eyebrow}</div>
-            <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 12px', fontWeight: 700 }}>{PAY.headline}</h1>
-            <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.6, marginBottom: 22 }}>{PAY.sub}</p>
-            <div style={{ display: 'grid', gap: 11 }}>
+            <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4.2vw,40px)', margin: '0 0 14px', fontWeight: 700, lineHeight: 1.08 }}>{PAY.headline}</h1>
+            <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.6, marginBottom: 16 }}>{PAY.sub}</p>
+            <p style={{ color: T.text, fontSize: 15.5, lineHeight: 1.55, marginBottom: 20, fontWeight: 600 }}>{PAY.notPitch}</p>
+
+            <p style={{ color: T.text, fontSize: 15, fontWeight: 700, margin: '0 0 12px' }}>{PAY.coverLead}</p>
+            <div style={{ display: 'grid', gap: 11, marginBottom: 20 }}>
               {PAY.points.map((p) => (
                 <div key={p} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: 2, flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
                   <span style={{ fontSize: 15, lineHeight: 1.5 }}>{p}</span>
                 </div>
               ))}
+            </div>
+
+            <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.fit}</p>
+            <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.deposit}</p>
+
+            <div style={{ background: T.surface, border: `1px solid ${T.accent}`, borderRadius: 14, padding: '16px 18px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
+              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: T.text }}>
+                <b style={{ color: T.accentInk, fontWeight: 800 }}>{PAY.guaranteeTitle}:</b> {PAY.guaranteeBody}
+              </p>
             </div>
           </Reveal>
 

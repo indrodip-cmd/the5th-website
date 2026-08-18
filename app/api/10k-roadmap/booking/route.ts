@@ -7,7 +7,7 @@ import { markBooked, getAuditStatus } from '@/lib/roadmap-audit'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const AUDIT_MINUTES = 45
+const AUDIT_MINUTES = 60
 
 /* Create the real cal.com booking, then record it on the audit lead. Only a
    paid lead may book. Returns the confirmed booking so the success page can

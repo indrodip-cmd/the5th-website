@@ -368,33 +368,58 @@ export function StepFrame({ current, children, wide }: { current: number; childr
    Polls briefly to absorb the webhook lag after the Whop redirect. */
 export function PayGate() {
   const router = useRouter()
-  const [blocked, setBlocked] = useState(false)
-  useEffect(() => {
-    let stop = false
-    ;(async () => {
-      let email = ''
-      try { email = (new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase() || sessionStorage.getItem('audit_email') || '' } catch { /* noop */ }
-      if (!email) { setBlocked(true); return }
-      let tries = 0
-      const poll = async () => {
-        tries++
-        try {
-          const r = await fetch('/api/10k-roadmap/unlock', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
-          const j = await r.json()
-          if (stop) return
-          if (j?.paid) { router.refresh(); return }
-        } catch { /* keep polling */ }
-        if (tries >= 10) { setBlocked(true); return }
-        setTimeout(poll, 2500)
-      }
-      poll()
-    })()
-    return () => { stop = true }
+  const [mode, setMode] = useState<'checking' | 'ask'>('checking')
+  const [emailInput, setEmailInput] = useState('')
+  const [note, setNote] = useState('')
+  const runRef = useRef(0)
+
+  // On a confirmed payment: save the qualification answers to the lead, remember
+  // the email for later steps, and re-render the server component (now unlocked).
+  const unlockAndGo = useCallback(async (em: string) => {
+    try {
+      await fetch('/api/10k-roadmap/reserve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em, qualification: loadQualAnswers(), audit_id: getAuditId() }) })
+    } catch { /* best effort */ }
+    try { sessionStorage.setItem('audit_email', em) } catch { /* noop */ }
+    router.refresh()
   }, [router])
 
+  const startCheck = useCallback((em: string) => {
+    const myRun = ++runRef.current
+    setMode('checking'); setNote('')
+    let tries = 0
+    const poll = async () => {
+      if (runRef.current !== myRun) return
+      tries++
+      try {
+        const r = await fetch('/api/10k-roadmap/unlock', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em }) })
+        const j = await r.json()
+        if (runRef.current !== myRun) return
+        if (j?.paid) { unlockAndGo(em); return }
+      } catch { /* keep polling */ }
+      if (tries >= 8) { setMode('ask'); setNote('We couldn’t find a completed payment for that email yet. If you just paid, wait a few seconds and try again.'); return }
+      setTimeout(poll, 2500)
+    }
+    poll()
+  }, [unlockAndGo])
+
+  useEffect(() => {
+    ;(async () => {
+      let em = ''
+      try { em = (new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase() || sessionStorage.getItem('audit_email') || '' } catch { /* noop */ }
+      if (em) { setEmailInput(em); startCheck(em) } else { setMode('ask') }
+    })()
+  }, [startCheck])
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const em = emailInput.trim().toLowerCase()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setNote('Please enter a valid email.'); return }
+    startCheck(em)
+  }
+
   return (
-    <div style={{ textAlign: 'center', padding: '60px 20px', maxWidth: 520, margin: '0 auto' }}>
-      {!blocked ? (
+    <div style={{ textAlign: 'center', padding: '54px 20px', maxWidth: 460, margin: '0 auto' }}>
+      {mode === 'checking' ? (
         <>
           <div style={{ width: 32, height: 32, borderRadius: '50%', border: `3px solid ${T.line}`, borderTopColor: T.accent, animation: 'rm-spin .8s linear infinite', margin: '0 auto 20px' }} />
           <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 8px', fontWeight: 700 }}>{GATE.verifying}</h1>
@@ -402,12 +427,17 @@ export function PayGate() {
         </>
       ) : (
         <>
-          <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 10px', fontWeight: 700 }}>{GATE.blockedHeadline}</h1>
-          <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 22 }}>{GATE.blockedSub}</p>
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Btn href="/10k-roadmap/pay">{GATE.blockedCta}</Btn>
-            <Btn variant="ghost" onClick={() => location.reload()}>Refresh</Btn>
-          </div>
+          <h1 className="rm-serif" style={{ fontSize: 26, margin: '0 0 10px', fontWeight: 700 }}>Confirm your payment to continue.</h1>
+          <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 20 }}>Enter the email you used at checkout and we’ll unlock the next step.</p>
+          <form onSubmit={submit} style={{ display: 'grid', gap: 10 }}>
+            <input className="rm-focus" type="email" placeholder="Email used at checkout" value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
+              style={{ width: '100%', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '14px 15px', fontFamily: T.sans }} />
+            {note && <p style={{ color: T.text3, fontSize: 13, margin: 0, lineHeight: 1.5 }}>{note}</p>}
+            <Btn type="submit" full>Unlock my booking →</Btn>
+          </form>
+          <p style={{ marginTop: 16 }}>
+            <a href="/10k-roadmap/pay" style={{ color: T.text3, fontSize: 13, textDecoration: 'underline' }}>Haven’t paid yet? Go to payment →</a>
+          </p>
         </>
       )}
     </div>

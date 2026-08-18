@@ -92,7 +92,7 @@ export default function Success() {
                 <Row label="Date" value={fmt(b.start, { weekday: 'long', month: 'long', day: 'numeric' })} />
                 <Row label="Time" value={fmt(b.start, { hour: 'numeric', minute: '2-digit' })} />
                 <Row label="Timezone" value={tz.replace(/_/g, ' ')} />
-                <Row label="Duration" value="45 minutes" />
+                <Row label="Duration" value="60 minutes" />
                 {b.meetingUrl && <Row label="Link" value={<a href={b.meetingUrl} style={{ color: T.accentInk }}>{b.meetingUrl}</a>} />}
               </div>
             ) : (

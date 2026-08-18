@@ -32,7 +32,7 @@ export default function Qualify() {
           onComplete={(answers) => {
             saveQualAnswers(answers)
             track('qualification_completed'); track('qualification_accepted')
-            router.push('/10k-roadmap/apply')
+            router.push('/10k-roadmap/pay')
           }}
         />
         <p style={{ textAlign: 'center', color: T.text3, fontSize: 12.5, marginTop: 40 }}>{LANDING.ctaMicro}</p>

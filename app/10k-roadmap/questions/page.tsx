@@ -6,5 +6,5 @@ import Questions from './Questions'
    sent — the PayGate re-checks the DB and unlocks. Blocks direct-URL skipping. */
 export default async function QuestionsPage() {
   const email = await getPaidEmail()
-  return <StepFrame current={2}>{email ? <Questions /> : <PayGate />}</StepFrame>
+  return <StepFrame current={1}>{email ? <Questions /> : <PayGate />}</StepFrame>
 }

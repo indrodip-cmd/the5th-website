@@ -148,7 +148,7 @@ export const LANDING = {
   },
 
   faq: [
-    { q: 'What happens on the audit?', a: '45 minutes. We’ll examine your positioning, offer, lead generation, sales and conversion path, identify the bottleneck and map the strategy I’d recommend.' },
+    { q: 'What happens on the audit?', a: '60 minutes. We’ll examine your positioning, offer, lead generation, sales and conversion path, identify the bottleneck and map the strategy I’d recommend.' },
     { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session, not a free consultation. The deposit helps reserve the session for people who are serious about solving the problem.' },
     { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely unqualified for the process, your deposit is refunded.' },
   ],
@@ -299,10 +299,10 @@ export const DEEP: Q[] = [
 export const RESERVE = {
   headline: 'Your answers suggest there may be a real opportunity here.',
   sub: 'Let’s find out what’s actually standing between your business and consistent $10K months.',
-  bodyHeading: 'The next step is a private 45-minute $10K Roadmap Audit.',
+  bodyHeading: 'The next step is a private 60-minute $10K Roadmap Audit.',
   body: 'On the call, we’ll look at your positioning, offer, lead generation, sales and conversion path, and identify the bottleneck I’d fix first.',
   includes: [
-    'A private 45-minute strategy session',
+    'A private 60-minute strategy session',
     'A live audit of your positioning, offer, lead gen, sales & conversion',
     'The single bottleneck I’d fix first, and the path around it',
     'Your business reviewed from your answers before we meet',
@@ -320,9 +320,9 @@ export const RESERVE = {
 /* ── Booking ───────────────────────────────────────────────────────────────*/
 export const BOOK = {
   headline: 'Your audit is almost locked in.',
-  sub: 'Choose a time that works for you. We’ll use your answers to make the 45 minutes extremely specific to your business.',
+  sub: 'Choose a time that works for you. We’ll use your answers to make the 60 minutes extremely specific to your business.',
   offerTitle: 'Your $10K Roadmap Audit',
-  offerPoints: ['45 minutes', 'Private strategy session', 'Your business reviewed before the call', '$27 deposit applied per the stated terms'],
+  offerPoints: ['60 minutes', 'Private strategy session', 'Your business reviewed before the call', '$27 deposit applied per the stated terms'],
   confirmCta: 'Confirm My Audit',
 }
 
@@ -358,31 +358,28 @@ export const SUCCESS = {
    Your Details → Payment → Deep Questions → Pick a Time → Confirmation.
    Steps 3-5 are gated server-side on a verified payment. */
 export const STEPS = [
-  { key: 'apply', label: 'Your Details', href: '/10k-roadmap/apply' },
   { key: 'pay', label: 'Payment', href: '/10k-roadmap/pay' },
   { key: 'questions', label: 'Deep Questions', href: '/10k-roadmap/questions' },
   { key: 'schedule', label: 'Pick a Time', href: '/10k-roadmap/schedule' },
   { key: 'confirmed', label: 'Confirmation', href: '/10k-roadmap/confirmed' },
 ] as const
 
-export const APPLY = {
-  eyebrow: 'Private Advisory · Step 1 of 5',
-  headline: 'Reserve your $10K Roadmap Audit.',
-  sub: 'Enter your details to begin. Next you’ll place your $27 refundable deposit to lock in a private slot.',
-  cta: 'Continue to payment →',
-  micro: '$27 refundable commitment deposit · secured by Whop',
-}
-
 export const PAY = {
-  eyebrow: 'Step 2 of 5 · Commitment deposit',
-  headline: 'Secure your private audit slot.',
-  sub: 'The $27 is a refundable commitment deposit that reserves your session — not the price of the advice. It simply filters for people serious about solving the problem.',
+  eyebrow: 'Step 1 of 4 · Commitment deposit',
+  headline: 'Book a 1:1 Call to Map Your Exact Path to $10K/Month',
+  sub: 'A focused strategy session where we diagnose what’s blocking your coaching or consulting business from consistent $10K months, and build your plan to fix it.',
+  notPitch: 'This is a 1:1 call with Indrodip, not a sales pitch disguised as a strategy session.',
+  coverLead: 'In 60 minutes, we’ll cover:',
   points: [
-    'A private 45-minute strategy session',
-    'A live audit of your positioning, offer, lead gen, sales & conversion',
-    'The one bottleneck I’d fix first, and the path around it',
+    'Where your current offer, pricing, or positioning is leaking revenue',
+    'The single biggest gap standing between you and consistent $10K months',
+    'A clear, prioritized action plan you can start using immediately after the call',
   ],
-  micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay · refundable per policy',
+  fit: 'This works if you’re a coach or consultant who has some traction but hasn’t cracked consistency. You know your expertise is valuable, you’re just not converting it into predictable revenue yet.',
+  deposit: 'Your $27 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
+  guaranteeTitle: '30-Day Money-Back Guarantee',
+  guaranteeBody: 'If you attend the call and feel it didn’t give you real clarity or a usable next step, email us within 30 days for a full refund. No conditions attached.',
+  micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay',
 }
 
 export const GATE = {
@@ -394,13 +391,13 @@ export const GATE = {
 }
 
 export const SCHEDULE = {
-  eyebrow: 'Step 4 of 5 · Pick a time',
+  eyebrow: 'Step 3 of 4 · Pick a time',
   headline: 'Choose your audit time.',
-  sub: 'We’ll use your answers to make the 45 minutes extremely specific to your business.',
+  sub: 'We’ll use your answers to make the 60 minutes extremely specific to your business.',
 }
 
 export const CONFIRMED = {
-  eyebrow: 'Step 5 of 5',
+  eyebrow: 'Step 4 of 4',
   badge: 'You’re booked',
   headline: 'You’re all set.',
   sub: 'Your $10K Roadmap Audit is confirmed.',
@@ -415,7 +412,7 @@ export const RESERVED_WHY = {
   points: [
     'It’s how we understand your exact situation before we meet.',
     'It’s what lets us pinpoint the one specific fix, instead of generic advice.',
-    'The more honest you are, the more valuable your 45 minutes will be.',
+    'The more honest you are, the more valuable your 60 minutes will be.',
   ],
   footnote: 'Take two minutes. As soon as you finish, you’ll go straight to picking your time.',
   loadingHint: 'Loading your questions…',

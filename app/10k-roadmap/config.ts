@@ -82,27 +82,67 @@ export const PRESS = {
 
 /* ── Landing copy ──────────────────────────────────────────────────────────*/
 export const LANDING = {
-  eyebrow: 'For Coaches & Consultants 40+',
-  // Hero headline is rendered in parts so the guarantee phrase carries the
-  // brand-purple emphasis. Largest element on the page.
-  headlineLead: 'Build a Predictable $10K/Month Coaching Business in 6-12 Months. Or Get ',
-  headlineEmphasis: '100% of Your Investment Back.',
-  sub: 'Find the bottleneck keeping your coaching or consulting business from consistent $10K months, and get the strategy to fix it.',
+  eyebrow: 'The 10K Roadmap · Consumer Behavior & AI Researcher',
+  // Hero: headline + the "without the nonsense" sub + the write-the-cheque line.
+  headline: 'Build a Predictable $10K/Month Coaching Business in 6-12 Months.',
+  headlineSub: 'Without fancy funnels, cold DMs, or chasing people for appointments.',
+  guaranteeLine: 'Hit $10K/month, or get every dollar you invested back. ',
+  guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
   ctaPrimary: 'See If You Qualify',
   ctaMicro: '2-minute qualification · $27 commitment deposit if invited',
   ctaMicroShort: '2-minute qualification',
 
-  // Recognition → tension, directly under the VSL.
   recognition: {
+    heading: 'Your expertise isn’t the problem.',
     lines: [
-      'You’ve probably tried the obvious things.',
-      'More content. More followers. Another funnel. Another course.',
-      'And somehow the revenue is still unpredictable.',
+      'You know your stuff. You can help people. You may even have clients and testimonials.',
+      'But if your revenue still looks like this:',
     ],
-    turn: 'That’s usually not a motivation problem.',
-    turn2: 'It’s a ',
-    turn2Emphasis: 'bottleneck problem.',
+    rollercoaster: '$3K → $7K → $2K → $0 → $5K…',
+    after: 'you don’t have a predictable client-acquisition system. Posting more content won’t fix it. Neither will another funnel. Or another course. Or another 100 cold DMs.',
+    turn: 'You have a ',
+    turnEmphasis: 'bottleneck.',
+    close: ['We find it.', 'We fix it.', 'Then we build the system around it.'],
+  },
+
+  roadmap: {
+    eyebrow: 'The 10K Roadmap',
+    heading: 'A data-driven approach to a $10K/month coaching business.',
+    sub: 'Instead of throwing random tactics at your business, we analyze the six areas that decide whether prospects become clients.',
+    steps: [
+      { n: '01', t: 'Consumer Behavior', d: 'What your ideal client actually wants, fears, believes, and needs to see before they buy.' },
+      { n: '02', t: 'Positioning', d: 'Make your expertise immediately relevant to the people you want to attract.' },
+      { n: '03', t: 'Offer', d: 'Turn your knowledge into an offer people understand, value, and want.' },
+      { n: '04', t: 'Acquisition', d: 'A predictable way to get qualified prospects into your world, without living in your DMs.' },
+      { n: '05', t: 'Conversion', d: 'Turn attention and conversations into paying clients.' },
+      { n: '06', t: 'AI-Powered Optimization', d: 'Use AI to research, analyze, personalize, test, and improve your marketing faster.' },
+    ],
+    close: 'The objective isn’t more marketing. ',
+    closeEmphasis: 'It’s more qualified buyers.',
+  },
+
+  stop: {
+    heading: 'Stop doing what doesn’t work.',
+    nots: [
+      'Fancy 20-step funnels',
+      'Cold-DMing strangers all day',
+      'Begging people to book appointments',
+      'Posting three times a day for “the algorithm”',
+      'Constantly changing your offer',
+      'Buying another course',
+    ],
+    lead: 'You need a simple system that answers four questions:',
+    questions: ['Who do I sell to?', 'What do I sell them?', 'How do I get them interested?', 'How do I turn that interest into revenue?'],
+    close: 'That’s the 10K Roadmap.',
+  },
+
+  results: {
+    heading: 'And it’s not just theory.',
+    sub: 'Coaches and consultants we’ve worked with have generated results including:',
+    stats: ['$21K+ in 2 months', '$14,193 in 60 days', '$18K in 3 months', '$120K in 8 months', '$180K in 5 months'],
+    principle: 'Different businesses. Different markets. Different starting points. The same principle: find what’s preventing growth, fix it, scale what works.',
+    disclaimer: 'Individual results vary. Past results are not typical and do not guarantee future results.',
   },
 
   proof: {
@@ -120,56 +160,71 @@ export const LANDING = {
   forYou: {
     heading: 'This is for you if…',
     yes: [
-      'You already have expertise people pay for.',
-      'You already have a coaching or consulting business.',
-      'Revenue is inconsistent or stuck below your target.',
-      'You want a predictable path to $10K/month.',
+      'You’re already a coach, consultant, expert, or service provider.',
+      'You have an offer, or expertise you can monetize.',
+      'You’ve made money before but can’t consistently repeat it.',
+      'You’re tired of unpredictable revenue.',
+      'You want consistent $10K months without chasing clients.',
       'You’re willing to implement.',
     ],
-    notHeading: 'This isn’t for you if…',
+    notHeading: 'This is not for you if…',
     no: [
-      'You’re still looking for your first business idea.',
       'You want someone to magically build the business for you.',
-      'You’re unwilling to change what’s not working.',
-      'You’re only looking for free advice.',
+      'You’re unwilling to sell.',
+      'You won’t implement.',
+      'You’re looking for another course to watch.',
+      'You want guaranteed results without doing the work.',
+    ],
+    close: 'You don’t need to be perfect. You do need to be serious.',
+  },
+
+  how: {
+    heading: 'Here’s how it works.',
+    steps: [
+      { n: '01', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
+      { n: '02', t: 'Get your diagnosis', d: 'If invited, reserve your private strategy session with a $27 commitment deposit.' },
+      { n: '03', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and $10K/month.' },
+      { n: '04', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
+      { n: '05', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
     ],
   },
 
-  mechanism: {
-    heading: 'There is usually a bottleneck somewhere in this chain.',
-    sub: 'The audit is about finding it.',
-    chain: ['Positioning', 'Offer', 'Lead Generation', 'Sales', 'Conversion', 'Repeatable Acquisition'],
+  diagnosis: {
+    heading: 'This isn’t another “pick my brain” call.',
+    body: 'The $27 isn’t the product. The diagnosis is.',
+    youLeave: ['What’s holding your business back.', 'Why it’s happening.', 'What needs to change.', 'What to prioritize.', 'And what to do next.'],
+    close: 'No generic advice. No motivational speech. A diagnosis of your actual business.',
+    cta: 'Get Your Business Diagnosed',
   },
 
-  // Dedicated risk-reversal section, a major trust signal, not buried.
   guarantee: {
-    heading: 'You’re Not Taking The Risk Alone.',
-    badge: '100% Money-Back Guarantee',
-    intro: 'The $27 is a commitment deposit to reserve a private audit slot, not the price of the advice. It simply filters for people who are serious about solving the problem.',
-    // Accurate refund terms supplied by the owner. No invented guarantees.
-    terms: [
-      'If I determine you’re genuinely unqualified for the process, your deposit is refunded.',
-      'The strategy from your audit is meant to be implemented. If you genuinely implement it and it doesn’t work within the stated 30-day period, you may request a refund per the official refund policy.',
-    ],
-    policyLabel: 'Read the full refund policy',
-    policyHref: '/data-usage',
+    heading: 'I’m putting my money where my mouth is.',
+    body: 'You’ve heard coaches make big promises before. So I’m making the risk simple.',
+    terms: ['You do the work.', 'You follow the agreed strategy.', 'You meet the written eligibility requirements.'],
+    payoff: 'And you don’t hit the guaranteed $10K/month outcome?',
+    big: 'You get every dollar of your investment back.',
+    cheque: 'Yes. I’ll write the cheque.',
+    fine: 'The guarantee is subject to the specific written terms, milestones, implementation requirements, and eligibility criteria provided before you commit.',
   },
 
   faq: [
-    { q: 'What happens on the audit?', a: '60 minutes. We’ll examine your positioning, offer, lead generation, sales and conversion path, identify the bottleneck and map the strategy I’d recommend.' },
-    { q: 'Why is there a $27 deposit?', a: 'Because this is a private strategy session, not a free consultation. The deposit helps reserve the session for people who are serious about solving the problem.' },
+    { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
+    { q: 'Why is there a $27 deposit?', a: 'Because this is a private diagnosis, not a free consultation. The deposit filters for people who are serious about solving the problem.' },
     { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely unqualified for the process, your deposit is refunded.' },
   ],
 
   finalCta: {
-    heading: 'Stop Guessing. Find The Bottleneck.',
-    sub: 'Build a predictable path to $10K/month, with a 100% money-back guarantee.',
+    heading: 'Ready to build your $10K/month coaching business?',
+    lines: ['Stop guessing. Stop chasing. Stop rebuilding your funnel.', 'Start building a predictable acquisition system.'],
+    big: 'Build your predictable $10K/month coaching business in 6-12 months.',
+    guarantee: 'Hit $10K/month, or get every dollar you invested back.',
+    cheque: 'Yes, I’ll write the cheque.',
     cta: 'See If You Qualify',
-    micro: '2-minute qualification',
+    micro: '2-minute qualification · $27 commitment deposit if invited',
   },
 
   nav: [
-    { label: 'How It Works', href: '#how' },
+    { label: 'The Roadmap', href: '#how' },
     { label: 'Proof', href: '#proof' },
     { label: 'FAQ', href: '#faq' },
   ],

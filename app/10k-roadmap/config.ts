@@ -85,8 +85,8 @@ export const LANDING = {
   eyebrow: 'For Coaches & Consultants 40+',
   // Hero headline is rendered in parts so the guarantee phrase carries the
   // brand-purple emphasis. Largest element on the page.
-  headlineLead: 'Build a Predictable $10K/Month Business, or Get ',
-  headlineEmphasis: '100% of Your Money Back.',
+  headlineLead: 'Build a Predictable $10K/Month Coaching Business in 6-12 Months. Or Get ',
+  headlineEmphasis: '100% of Your Investment Back.',
   sub: 'Find the bottleneck keeping your coaching or consulting business from consistent $10K months, and get the strategy to fix it.',
   guaranteeBadge: '100% Money-Back Guarantee',
   ctaPrimary: 'See If You Qualify',

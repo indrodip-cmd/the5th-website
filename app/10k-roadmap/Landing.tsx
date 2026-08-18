@@ -145,14 +145,11 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           <p style={{ color: T.text2, fontSize: 16, marginTop: 10 }}>{LANDING.mechanism.sub}</p>
         </Reveal>
         <Reveal>
-          <div className="mech-chain" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', alignItems: 'stretch' }}>
+          <div className="mech" style={{ maxWidth: 940, margin: '0 auto' }}>
             {LANDING.mechanism.chain.map((step, k) => (
-              <div key={step} className="mech-item" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, padding: '13px 16px', minWidth: 132, textAlign: 'center', boxShadow: '0 10px 30px -24px rgba(46,26,53,.5)' }}>
-                  <span style={{ color: T.accentInk, fontSize: 11.5, fontWeight: 800, letterSpacing: '.05em', display: 'block', marginBottom: 3 }}>{String(k + 1).padStart(2, '0')}</span>
-                  <span style={{ fontSize: 14.5, fontWeight: 600 }}>{step}</span>
-                </div>
-                {k < LANDING.mechanism.chain.length - 1 && <span className="mech-arrow" style={{ color: T.accentInk, fontSize: 17, fontWeight: 700 }}>→</span>}
+              <div key={step} className="mech-step">
+                <span className="mech-node">{String(k + 1).padStart(2, '0')}</span>
+                <span className="mech-lbl">{step}</span>
               </div>
             ))}
           </div>
@@ -308,12 +305,23 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         .cs-card{transition:transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .22s ease}
         .cs-card:hover{transform:translateY(-4px);box-shadow:0 30px 64px -34px rgba(46,26,53,.55)}
         .cs-tag{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        /* Mechanism flow — horizontal on desktop, clean vertical timeline on mobile */
+        .mech{display:flex;align-items:flex-start;justify-content:center;position:relative}
+        .mech-step{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:0 4px}
+        .mech-step:not(:last-child)::after{content:"";position:absolute;top:21px;left:50%;width:100%;height:2px;background:linear-gradient(90deg,rgba(94,46,134,.4),rgba(94,46,134,.6));z-index:0}
+        .mech-node{width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,#6b39a0,#552879);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;position:relative;z-index:1;box-shadow:0 10px 22px -8px rgba(94,46,134,.55)}
+        .mech-lbl{margin-top:14px;font-weight:700;font-size:14.5px;color:#2E1A35;line-height:1.25}
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
+        @media(max-width:640px){
+          .mech{flex-direction:column;max-width:340px;margin:0 auto}
+          .mech-step{flex:none;flex-direction:row;align-items:center;gap:18px;text-align:left;width:100%;padding:0 0 28px 0}
+          .mech-step:last-child{padding-bottom:0}
+          .mech-step:not(:last-child)::after{top:44px;left:21px;width:2px;height:100%;background:linear-gradient(180deg,rgba(94,46,134,.45),rgba(94,46,134,.2))}
+          .mech-node{flex-shrink:0}
+          .mech-lbl{margin-top:0;font-size:17px}
+        }
         @media(max-width:560px){
-          .mech-item{flex-direction:column;gap:6px}
-          .mech-item > div{min-width:min(220px,80vw)!important;width:100%}
-          .mech-arrow{transform:rotate(90deg)}
           .vid-grid{grid-template-columns:1fr!important}
           .cs-grid{grid-template-columns:1fr!important}
         }

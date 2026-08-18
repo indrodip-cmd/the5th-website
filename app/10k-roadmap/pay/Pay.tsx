@@ -24,9 +24,9 @@ export default function Pay({ planId }: { planId: string }) {
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
       <Header />
-      <main style={{ maxWidth: 940, margin: '0 auto', padding: 'clamp(26px,5vw,48px) 22px 80px' }}>
+      <main style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(26px,5vw,48px) clamp(16px,4vw,22px) 80px' }}>
         <Stepper current={0} />
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,420px)', gap: 34, alignItems: 'start' }} className="pay-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(460px,540px)', gap: 40, alignItems: 'start' }} className="pay-grid">
           <Reveal>
             <div className="rm-eyebrow" style={{ marginBottom: 12 }}>{PAY.eyebrow}</div>
             <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4.2vw,40px)', margin: '0 0 14px', fontWeight: 700, lineHeight: 1.08 }}>{PAY.headline}</h1>
@@ -55,9 +55,9 @@ export default function Pay({ planId }: { planId: string }) {
           </Reveal>
 
           <Reveal delay={80}>
-            <div style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: 20, padding: '24px 22px', position: 'sticky', top: 90 }}>
+            <div style={{ background: '#fff', border: `1px solid ${T.line}`, borderRadius: 20, padding: 'clamp(20px,3vw,28px) clamp(16px,2.5vw,22px)', position: 'sticky', top: 90, boxShadow: '0 30px 70px -50px rgba(46,26,53,.5)' }}>
               <div style={{ textAlign: 'center', marginBottom: 16 }}>
-                <span className="rm-serif" style={{ fontSize: 42, color: T.accentInk, fontWeight: 700 }}>{DEPOSIT.label}</span>
+                <span className="rm-serif" style={{ fontSize: 44, color: T.accentInk, fontWeight: 800 }}>{DEPOSIT.label}</span>
                 <span style={{ color: T.text2, fontSize: 14, marginLeft: 6 }}>refundable deposit</span>
               </div>
               <WhopCheckout planId={planId} email={email} />
@@ -67,7 +67,7 @@ export default function Pay({ planId }: { planId: string }) {
         </div>
       </main>
       <StepLegal />
-      <style>{`@media(max-width:780px){.pay-grid{grid-template-columns:1fr!important}}`}</style>
+      <style>{`@media(max-width:1000px){.pay-grid{grid-template-columns:1fr!important;max-width:600px;margin:0 auto}}`}</style>
     </div>
   )
 }

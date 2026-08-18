@@ -5,20 +5,20 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { T, STEPS, GATE, type Q } from './config'
+import { T, STEPS, GATE, LEGAL, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
   return (
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
       *{box-sizing:border-box}
       html{scroll-behavior:smooth}
       section[id]{scroll-margin-top:86px}
-      html,body{margin:0;padding:0;background:${T.bg};color:${T.text};font-family:${T.sans};-webkit-font-smoothing:antialiased}
+      html,body{margin:0;padding:0;background:${T.bg};color:${T.text};font-family:${T.sans};-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
       ::selection{background:${T.accentSoft};color:${T.text}}
       a{color:inherit}
-      .rm-serif{font-family:${T.serif};font-weight:600;letter-spacing:-.005em;line-height:1.08}
+      .rm-serif{font-family:${T.serif};font-weight:700;letter-spacing:-.022em;line-height:1.05}
       .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
       .rm-mark{color:${T.accentInk}}
       .rm-reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -144,9 +144,25 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; lin
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>
         <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.7, maxWidth: 720, margin: '0 auto 14px' }}>{legal.earnings}</p>
-        <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.7, maxWidth: 720, margin: '0 auto 20px' }}>{legal.meta}</p>
-        <p style={{ color: T.text3, fontSize: 11.5 }}>© {new Date().getFullYear()} The5th Consulting</p>
+        <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.7, maxWidth: 720, margin: '0 auto 18px' }}>{legal.meta}</p>
+        <LegalNote />
       </div>
+    </footer>
+  )
+}
+
+/* Copyright + jurisdiction notice, shown at the foot of every funnel page. */
+export function LegalNote() {
+  return (
+    <p style={{ color: T.text3, fontSize: 10.5, lineHeight: 1.65, maxWidth: 820, margin: '0 auto', textAlign: 'center' }}>{LEGAL.copyright}</p>
+  )
+}
+
+/* Compact page-foot legal strip for step/form pages without the full Footer. */
+export function StepLegal() {
+  return (
+    <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '26px 22px 34px', marginTop: 40 }}>
+      <div style={{ maxWidth: 860, margin: '0 auto' }}><LegalNote /></div>
     </footer>
   )
 }
@@ -353,10 +369,11 @@ export function StepFrame({ current, children, wide }: { current: number; childr
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
       <Header />
-      <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 70px' }}>
+      <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 40px' }}>
         <Stepper current={current} />
         {children}
       </main>
+      <StepLegal />
     </div>
   )
 }

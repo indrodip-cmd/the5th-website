@@ -6,7 +6,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { QUALIFICATION, QUALIFY, LANDING, T } from '../config'
-import { Fonts, Header, QuestionFlow, saveQualAnswers, useUtm } from '../ui'
+import { Fonts, Header, QuestionFlow, saveQualAnswers, useUtm, StepLegal } from '../ui'
 import { track } from '../track'
 
 export default function Qualify() {
@@ -37,6 +37,7 @@ export default function Qualify() {
         />
         <p style={{ textAlign: 'center', color: T.text3, fontSize: 12.5, marginTop: 40 }}>{LANDING.ctaMicro}</p>
       </main>
+      <StepLegal />
     </div>
   )
 }

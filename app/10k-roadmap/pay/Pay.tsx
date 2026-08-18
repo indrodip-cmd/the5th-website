@@ -5,7 +5,7 @@
    fallback so a blocked embed never strands the buyer. */
 import { useEffect, useRef, useState } from 'react'
 import { PAY, DEPOSIT, T } from '../config'
-import { Fonts, Header, Btn, Reveal, Stepper } from '../ui'
+import { Fonts, Header, Btn, Reveal, Stepper, StepLegal } from '../ui'
 import { track } from '../track'
 
 function readEmail(): string {
@@ -66,6 +66,7 @@ export default function Pay({ planId }: { planId: string }) {
           </Reveal>
         </div>
       </main>
+      <StepLegal />
       <style>{`@media(max-width:780px){.pay-grid{grid-template-columns:1fr!important}}`}</style>
     </div>
   )

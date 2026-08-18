@@ -9,7 +9,7 @@
    refresh, so the questions always get answered. */
 import { useEffect, useState } from 'react'
 import { auditTypeformId, auditCalUrl, RESERVED_WHY, T } from '../config'
-import { Fonts, Header, Btn, Reveal } from '../ui'
+import { Fonts, Header, Btn, Reveal, StepLegal } from '../ui'
 import { track } from '../track'
 
 type TfApi = { createWidget: (id: string, opts: Record<string, unknown>) => void }
@@ -93,6 +93,7 @@ export default function Reserved() {
           </Reveal>
         )}
       </main>
+      <StepLegal />
     </div>
   )
 }

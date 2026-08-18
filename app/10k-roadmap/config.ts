@@ -34,9 +34,9 @@ export const T = {
   brand: '#2E1A35',        // plum, primary brand colour
   danger: '#c0392b',
   radius: 16,
-  // Original site display serif (used across /results + case studies).
-  serif: "'Cormorant Garamond', Georgia, 'Times New Roman', serif",
-  sans: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  // Clean, bold, modern. Headlines use Plus Jakarta Sans (700/800); body Inter.
+  serif: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
+  sans: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 } as const
 
 export function videoUrl(): string {
@@ -359,7 +359,7 @@ export const SUCCESS = {
    Steps 3-5 are gated server-side on a verified payment. */
 export const STEPS = [
   { key: 'pay', label: 'Payment', href: '/10k-roadmap/pay' },
-  { key: 'questions', label: 'Deep Questions', href: '/10k-roadmap/questions' },
+  { key: 'questions', label: 'Understand Your Need', href: '/10k-roadmap/questions' },
   { key: 'schedule', label: 'Pick a Time', href: '/10k-roadmap/schedule' },
   { key: 'confirmed', label: 'Confirmation', href: '/10k-roadmap/confirmed' },
 ] as const
@@ -472,4 +472,6 @@ export const LEGAL = {
     { label: 'Terms', href: '/data-usage' },
     { label: 'Code of Ethics', href: '/ethics' },
   ],
+  copyright:
+    '© 2026 The5th Consulting. All rights reserved. Unauthorized copying, reproduction, distribution, use, or collection of any content or information from this website is strictly prohibited. Any unauthorized use may result in legal action. To the extent permitted by law, any dispute arising from or relating to the unauthorized use of this website or its content shall be subject to the jurisdiction of the courts located in the State of New York.',
 }

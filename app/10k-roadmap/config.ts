@@ -82,7 +82,7 @@ export const PRESS = {
 
 /* ── Landing copy ──────────────────────────────────────────────────────────*/
 export const LANDING = {
-  eyebrow: 'The 10K Roadmap · Consumer Behavior & AI Researcher',
+  eyebrow: 'From the desk of a Consumer Behavior & AI Researcher:',
   // Hero: headline + the "without the nonsense" sub + the write-the-cheque line.
   headline: 'Build a Predictable $10K/Month Coaching Business in 6-12 Months.',
   headlineSub: 'Without fancy funnels, cold DMs, or chasing people for appointments.',

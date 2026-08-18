@@ -17,7 +17,7 @@
   // (including /quiz/results and /quiz/thank-you) — keeps the path clean.
   try {
     var _p = location.pathname;
-    if (_p.indexOf('/lp/') === 0 || _p.indexOf('/event/') === 0 || _p.indexOf('/quiz') === 0) return;
+    if (_p.indexOf('/lp/') === 0 || _p.indexOf('/event/') === 0 || _p.indexOf('/quiz') === 0 || _p.indexOf('/10k-roadmap') === 0) return;
   } catch (e) {}
 
   var STORAGE_KEY = 'the5th_cookie_consent_v1';

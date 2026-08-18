@@ -14,7 +14,7 @@
   // returns to thank the visitor and point them to the case-study library.
   try {
     var _cp = location.pathname;
-    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0) return;
+    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0 || _cp.indexOf('/10k-roadmap') === 0) return;
     if (_cp.indexOf('/quiz') === 0 && _cp.indexOf('/quiz/thank') !== 0) return;
   } catch (e) {}
   window.__carolinaLoaded = true;

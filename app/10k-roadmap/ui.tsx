@@ -12,6 +12,8 @@ export function Fonts() {
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
       *{box-sizing:border-box}
+      html{scroll-behavior:smooth}
+      section[id]{scroll-margin-top:86px}
       html,body{margin:0;padding:0;background:${T.bg};color:${T.text};font-family:${T.sans};-webkit-font-smoothing:antialiased}
       ::selection{background:${T.accentSoft};color:${T.text}}
       a{color:inherit}
@@ -109,7 +111,7 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
 }
 
 /* ── Minimal funnel header + footer ────────────────────────────────────────*/
-export function Header({ cta }: { cta?: React.ReactNode }) {
+export function Header({ cta, nav }: { cta?: React.ReactNode; nav?: { label: string; href: string }[] }) {
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
@@ -117,10 +119,16 @@ export function Header({ cta }: { cta?: React.ReactNode }) {
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(38px,6vw,50px)', width: 'auto' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(36px,5.5vw,48px)', width: 'auto' }} />
         </a>
+        {nav && (
+          <nav className="rm-nav" style={{ display: 'flex', gap: 28 }}>
+            {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
+          </nav>
+        )}
         {cta}
       </div>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}`}</style>
     </header>
   )
 }

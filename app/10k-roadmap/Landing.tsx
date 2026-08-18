@@ -2,7 +2,7 @@
 /* The $10K Roadmap Audit, landing page.
    Light, clean, high-authority. Direct-response hierarchy; mobile-first spacing
    via clamp() so nothing feels loose on desktop or cramped on phones. */
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, REAL_PROOF, RATING, PRESS, T } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
@@ -58,16 +58,23 @@ function PressStrip() {
 
 export default function Landing({ videoUrl }: { videoUrl: string }) {
   const router = useRouter()
+  const [showSticky, setShowSticky] = useState(false)
   useUtm()
   useEffect(() => { track('page_view') }, [])
+  useEffect(() => {
+    const on = () => setShowSticky(window.scrollY > 620)
+    on(); window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
   const go = (where: string) => { track('cta_click', { where }); router.push('/10k-roadmap/qualify') }
 
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: T.sans, overflowX: 'hidden' }}>
       <Fonts />
-      <Header cta={<Btn onClick={() => go('nav')} style={{ padding: '10px 16px', fontSize: 13.5 }}>See If You Qualify</Btn>} />
+      <Header nav={LANDING.nav} cta={<Btn onClick={() => go('nav')} style={{ padding: '10px 16px', fontSize: 13.5 }}>See If You Qualify</Btn>} />
 
       {/* ── Hero ── */}
+      <div style={{ background: 'radial-gradient(110% 60% at 50% -6%, #FBF6EF 0%, #ffffff 62%)' }}>
       <section style={{ maxWidth: MAXW, margin: '0 auto', padding: 'clamp(26px,5vw,46px) ' + PADX + ' 18px', textAlign: 'center' }}>
         <Reveal>
           <div className="rm-eyebrow" style={{ marginBottom: 14 }}>{LANDING.eyebrow}</div>
@@ -88,6 +95,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           <div style={{ marginTop: 16 }}><RatingRow center /></div>
         </Reveal>
       </section>
+      </div>
 
       {/* ── Press strip ── */}
       <section style={{ background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
@@ -267,7 +275,16 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
 
       <Footer legal={LEGAL} />
 
+      {/* Sticky mobile CTA — app-like, appears once past the hero */}
+      <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(255,255,255,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${T.line}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(46,26,53,.5)' }}>
+        <button onClick={() => go('sticky')} className="rm-focus" style={{ width: '100%', background: T.accent, color: '#fff', border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: T.sans }}>
+          {LANDING.ctaPrimary} →
+        </button>
+      </div>
+
       <style>{`
+        .rm-sticky-cta{display:none}
+        @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:560px){
           .mech-item{flex-direction:column;gap:6px}
           .mech-item > div{min-width:min(220px,80vw)!important;width:100%}

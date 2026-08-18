@@ -25,13 +25,14 @@ export const metadata: Metadata = {
     siteName: 'The5th Consulting',
     title: OG_TITLE,
     description: DESC,
-    // og:image is provided automatically by ./opengraph-image.tsx (1200x630).
+    // Actual landing-page hero screenshot (1200x630), not a generated card.
+    images: [{ url: '/og/10k-roadmap-hero.png', width: 1200, height: 630, alt: OG_TITLE }],
   },
   twitter: {
     card: 'summary_large_image',
     title: OG_TITLE,
     description: DESC,
-    // twitter:image is provided automatically by ./opengraph-image.tsx.
+    images: ['/og/10k-roadmap-hero.png'],
   },
 }
 

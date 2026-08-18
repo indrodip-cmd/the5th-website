@@ -169,7 +169,13 @@ export async function saveApplication(input: {
     await db.from('vsl_leads').update(patch).eq('email', email)
   }
 
-  await mirrorToCrm(email, name, phone, 'audit_reserved', 'Qualified for the $10K Roadmap Audit — reserving a slot')
+  // Mirror to CRM at the lead's CURRENT stage so a post-payment save (email
+  // arrives after checkout now) never downgrades a paid/booked contact to "Lead".
+  const stage: Stage = existing?.status === 'audit_booked' ? 'audit_booked' : existing?.status === 'audit_paid' ? 'audit_paid' : 'audit_reserved'
+  const detail = stage === 'audit_reserved'
+    ? 'Qualified for the $10K Roadmap Audit, reserving a slot'
+    : 'Saved qualification answers to the audit lead'
+  await mirrorToCrm(email, name, phone, stage, detail)
   emitEvent('lead_captured', { email, name: name || undefined, source: AUDIT_SOURCE }).catch(() => {})
   return { ok: true }
 }

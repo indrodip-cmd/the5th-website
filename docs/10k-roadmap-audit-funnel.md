@@ -19,7 +19,7 @@ funnel is untouched, so nothing running on ads breaks). Not indexed.
 | `/10k-roadmap` | Landing: hero + VSL, recognition→tension copy, mechanism chain, video + case-study proof, who-it's-for, $27 deposit explainer, 3 FAQs, final CTA |
 | `/10k-roadmap/qualify` | 5-question qualification, one at a time. A `reject` option routes to `/not-a-fit`. On success it redirects STRAIGHT to the Whop checkout (`AUDIT_CHECKOUT_URL` in `config.ts`, currently `plan_85pIPWE1K0uBB`) |
 | `/10k-roadmap/not-a-fit` | Rejection page — rejects the timing/fit, not the person. Routes to `/results` + `/quiz` |
-| `/10k-roadmap/reserved` | **The post-payment page — set this as Whop's post-purchase redirect: `https://the5th.consulting/10k-roadmap/reserved`.** Confirms the buyer's name/email, saves the qualification answers to the lead, then runs the 8-question deep diagnostic → **native cal.com booking**. Payment is trusted via the Whop redirect (the webhook also marks paid if a dedicated `WHOP_AUDIT_PLAN_ID` is set) |
+| `/10k-roadmap/reserved` | **The post-payment page — set this as Whop's post-purchase redirect: `https://the5th.consulting/10k-roadmap/reserved`.** Embeds the deep-questions **Typeform** (`NEXT_PUBLIC_AUDIT_TYPEFORM_ID`); on submit it **auto-redirects to the cal.com page** (`NEXT_PUBLIC_AUDIT_CAL_URL`). A "skip to booking" fallback link is always shown |
 | `/10k-roadmap/success` | Confirmation moment + booking card + **Add to Google/Apple/Outlook** (ICS built from the real event) |
 
 APIs under `/api/10k-roadmap/*`: `reserve`, `status`, `diagnostic`, `slots`, `booking`.
@@ -66,6 +66,8 @@ touching the funnel plumbing. Rejection verdict is re-derived server-side in
 | `NEXT_PUBLIC_AUDIT_VIDEO_URL` | VSL (YouTube / Vimeo / mp4). Empty → "coming soon" poster |
 | `NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID` | **$27 deposit** Whop plan id (client — powers the checkout embed) |
 | `WHOP_AUDIT_PLAN_ID` | Same plan id, server-side (webhook match + paid gate) |
+| `NEXT_PUBLIC_AUDIT_TYPEFORM_ID` | Typeform id for the post-payment deep questions (default `u9maum7Y`) |
+| `NEXT_PUBLIC_AUDIT_CAL_URL` | cal.com booking URL to redirect to after the Typeform (default `https://cal.com/indrodip-ghosh-ut1vxh/60min`) |
 
 > ⚠️ **Create a DEDICATED $27 Whop plan for the deposit.** Until
 > `NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID` / `WHOP_AUDIT_PLAN_ID` are set, the checkout

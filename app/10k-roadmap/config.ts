@@ -51,6 +51,16 @@ export function auditPlanId(): string {
    https://the5th.consulting/10k-roadmap/reserved (the post-payment page). */
 export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
 
+/* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
+   are auto-redirected to after they submit it. Both are env-overridable so you
+   can swap the form / calendar without a deploy. */
+export function auditTypeformId(): string {
+  return process.env.NEXT_PUBLIC_AUDIT_TYPEFORM_ID || process.env.NEXT_PUBLIC_TYPEFORM_FORM_ID || 'u9maum7Y'
+}
+export function auditCalUrl(): string {
+  return process.env.NEXT_PUBLIC_AUDIT_CAL_URL || 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
+}
+
 export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
 
 /* Social-proof rating (mirrors the /quiz + free-training funnel — real figure). */

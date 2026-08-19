@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Cal, { getCalApi } from '@calcom/embed-react'
 import { auditCalUrl, SCHEDULE, T } from '../config'
-import { Reveal } from '../ui'
+import { Reveal, loadQualAnswers, getAuditId, useUtm } from '../ui'
 import { track } from '../track'
 
 function parseCal(url: string): { calLink: string; namespace: string } {
@@ -17,6 +17,7 @@ function parseCal(url: string): { calLink: string; namespace: string } {
 
 export default function Schedule() {
   const router = useRouter()
+  const utm = useUtm()
   const { calLink, namespace } = parseCal(auditCalUrl())
   const [me] = useState<{ name: string; email: string }>(() => {
     if (typeof window === 'undefined') return { name: '', email: '' }
@@ -43,19 +44,22 @@ export default function Schedule() {
             const name = String(att.name || me.name || '')
             track('booking_completed')
             if (email && start) {
+              // Free funnel: this call also creates/backfills the lead from the
+              // qualification answers (no prior payment step to do it), then
+              // marks it booked + fires the confirmation email.
               fetch('/api/10k-roadmap/record-booking', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, name, start }),
+                body: JSON.stringify({ email, name, start, qualification: loadQualAnswers(), audit_id: getAuditId(), utm }),
               }).catch(() => {})
-              try { sessionStorage.setItem('audit_email', email) } catch { /* noop */ }
+              try { sessionStorage.setItem('audit_email', email); if (name) sessionStorage.setItem('audit_name', name) } catch { /* noop */ }
             }
-            router.push(`/10k-roadmap/confirmed${email ? `?email=${encodeURIComponent(email)}` : ''}`)
+            router.push(`/10k-roadmap/questions${email ? `?email=${encodeURIComponent(email)}` : ''}`)
           },
         })
       } catch { /* embed will still render; booking sync falls back to email lookup */ }
     })()
     return () => { cancelled = true }
-  }, [namespace, me, router])
+  }, [namespace, me, router, utm])
 
   return (
     <>

@@ -1,8 +1,8 @@
 'use client'
 /* Qualification, 5 questions, one at a time. A `reject` option routes to
    /not-a-fit. On success the applicant enters the booking wizard at Step 1
-   (Your Details). The qualification answers ride in sessionStorage and are
-   saved to the lead there. */
+   (Pick a Time). The qualification answers ride in sessionStorage and are
+   saved to the lead when the booking is recorded. */
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { QUALIFICATION, QUALIFY, LANDING, T } from '../config'
@@ -32,7 +32,7 @@ export default function Qualify() {
           onComplete={(answers) => {
             saveQualAnswers(answers)
             track('qualification_completed'); track('qualification_accepted')
-            router.push('/10k-roadmap/pay')
+            router.push('/10k-roadmap/schedule')
           }}
         />
         <p style={{ textAlign: 'center', color: T.text3, fontSize: 12.5, marginTop: 40 }}>{LANDING.ctaMicro}</p>

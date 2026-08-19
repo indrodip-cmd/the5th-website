@@ -90,7 +90,7 @@ export const LANDING = {
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
   ctaPrimary: 'See If You Qualify',
-  ctaMicro: '2-minute qualification · $27 commitment deposit if invited',
+  ctaMicro: '2-minute qualification · Book your free session if you qualify',
   ctaMicroShort: '2-minute qualification',
 
   recognition: {
@@ -182,7 +182,7 @@ export const LANDING = {
     heading: 'Here’s how it works.',
     steps: [
       { n: '01', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
-      { n: '02', t: 'Get your diagnosis', d: 'If invited, reserve your private strategy session with a $27 commitment deposit.' },
+      { n: '02', t: 'Get your diagnosis', d: 'If invited, book your private strategy session, free of charge.' },
       { n: '03', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and $10K/month.' },
       { n: '04', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
       { n: '05', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
@@ -191,7 +191,7 @@ export const LANDING = {
 
   diagnosis: {
     heading: 'This isn’t another “pick my brain” call.',
-    body: 'The $27 isn’t the product. The diagnosis is.',
+    body: 'The call itself isn’t the product. The diagnosis is.',
     youLeave: ['What’s holding your business back.', 'Why it’s happening.', 'What needs to change.', 'What to prioritize.', 'And what to do next.'],
     close: 'No generic advice. No motivational speech. A diagnosis of your actual business.',
     cta: 'Get Your Business Diagnosed',
@@ -209,8 +209,8 @@ export const LANDING = {
 
   faq: [
     { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
-    { q: 'Why is there a $27 deposit?', a: 'Because this is a private diagnosis, not a free consultation. The deposit filters for people who are serious about solving the problem.' },
-    { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely unqualified for the process, your deposit is refunded.' },
+    { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
+    { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
   ],
 
   finalCta: {
@@ -220,7 +220,7 @@ export const LANDING = {
     guarantee: 'Hit $10K/month, or get every dollar you invested back.',
     cheque: 'Yes, I’ll write the cheque.',
     cta: 'See If You Qualify',
-    micro: '2-minute qualification · $27 commitment deposit if invited',
+    micro: '2-minute qualification · Book your free session if you qualify',
   },
 
   nav: [
@@ -417,14 +417,14 @@ export const SUCCESS = {
   },
 }
 
-/* ── 5-step booking wizard ─────────────────────────────────────────────────
-   Your Details → Payment → Deep Questions → Pick a Time → Confirmation.
-   Steps 3-5 are gated server-side on a verified payment. */
+/* ── 3-step booking wizard ─────────────────────────────────────────────────
+   Qualify → Pick a Time → A Few Questions → Confirmation.
+   The audit is free while we validate the copy + VSL, so there is no payment
+   step and no server-side pay gate. */
 export const STEPS = [
-  { key: 'pay', label: 'Payment', href: '/10k-roadmap/pay' },
-  { key: 'questions', label: 'Understand Your Need', href: '/10k-roadmap/questions' },
   { key: 'schedule', label: 'Pick a Time', href: '/10k-roadmap/schedule' },
-  { key: 'confirmed', label: 'Confirmation', href: '/10k-roadmap/confirmed' },
+  { key: 'questions', label: 'A Few Questions', href: '/10k-roadmap/questions' },
+  { key: 'confirmed', label: 'Confirmation', href: '/10k-roadmap/thank-you' },
 ] as const
 
 export const PAY = {
@@ -454,9 +454,9 @@ export const GATE = {
 }
 
 export const SCHEDULE = {
-  eyebrow: 'Step 3 of 4 · Pick a time',
+  eyebrow: 'Step 1 of 3 · Pick a time',
   headline: 'Choose your audit time.',
-  sub: 'We’ll use your answers to make the 60 minutes extremely specific to your business.',
+  sub: 'Grab the slot that works for you. Next we’ll ask a few quick questions so your 60 minutes are laser-specific to your business.',
 }
 
 export const CONFIRMED = {
@@ -469,15 +469,15 @@ export const CONFIRMED = {
 
 /* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/
 export const RESERVED_WHY = {
-  eyebrow: 'Deposit received',
-  headline: 'You’re in. One essential step before your call.',
+  eyebrow: 'Time reserved',
+  headline: 'Your time is held. One essential step before your call.',
   body: 'This isn’t a formality. Your answers here are exactly how we prepare a personalised audit for YOUR business, so on the call we pinpoint the specific fix you need, not vague, generic advice.',
   points: [
     'It’s how we understand your exact situation before we meet.',
     'It’s what lets us pinpoint the one specific fix, instead of generic advice.',
     'The more honest you are, the more valuable your 60 minutes will be.',
   ],
-  footnote: 'Take two minutes. As soon as you finish, you’ll go straight to picking your time.',
+  footnote: 'Take two minutes. As soon as you finish, your booking is locked in.',
   loadingHint: 'Loading your questions…',
   errorHint: 'The questions couldn’t load. Please refresh the page to continue.',
   errorCta: 'Refresh',

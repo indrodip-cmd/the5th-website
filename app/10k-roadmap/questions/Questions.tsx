@@ -1,6 +1,6 @@
 'use client'
-/* Step 3 — Deep Questions (embedded Typeform, mandatory). On submit we advance
-   to Step 4 (Pick a Time). No skip. */
+/* Step 2 — Deep Questions (embedded Typeform, mandatory). The time is already
+   picked; on submit we advance to the Confirmation (thank-you) page. No skip. */
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { auditTypeformId, RESERVED_WHY, T } from '../config'
@@ -30,7 +30,7 @@ export default function Questions() {
           track('deep_application_completed')
           let email = ''
           try { email = sessionStorage.getItem('audit_email') || '' } catch { /* noop */ }
-          setTimeout(() => { router.push(`/10k-roadmap/schedule${email ? `?email=${encodeURIComponent(email)}` : ''}`) }, 700)
+          setTimeout(() => { router.push(`/10k-roadmap/thank-you${email ? `?email=${encodeURIComponent(email)}` : ''}`) }, 700)
         },
       })
       return true
@@ -47,7 +47,7 @@ export default function Questions() {
   return (
     <>
       <Reveal style={{ textAlign: 'center', marginBottom: 20 }}>
-        <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Deposit received · Step 2 of 4</div>
+        <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Time reserved · Step 2 of 3</div>
         <h1 className="rm-serif" style={{ fontSize: 'clamp(24px,3.6vw,34px)', margin: '0 0 10px', fontWeight: 700 }}>{RESERVED_WHY.headline}</h1>
         <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 540, margin: '0 auto' }}>{RESERVED_WHY.body}</p>
         <p style={{ color: T.text3, fontSize: 13, marginTop: 12 }}>{RESERVED_WHY.footnote}</p>

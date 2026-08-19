@@ -1,9 +1,8 @@
-import { StepFrame, PayGate } from '../ui'
-import { getPaidEmail } from '../serverGate'
+import { StepFrame } from '../ui'
 import Schedule from './Schedule'
 
-/* Server-gated: the calendar is only rendered for a verified-paid session. */
-export default async function SchedulePage() {
-  const email = await getPaidEmail()
-  return <StepFrame current={2} wide>{email ? <Schedule /> : <PayGate />}</StepFrame>
+/* Step 1 — Pick a Time. The audit is free, so there is no pay gate: the
+   calendar renders straight away. cal.com collects name + email at booking. */
+export default function SchedulePage() {
+  return <StepFrame current={0} wide><Schedule /></StepFrame>
 }

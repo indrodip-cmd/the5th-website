@@ -42,7 +42,7 @@ export const RATING = { score: '4.8', text: 'from the founders and professionals
 /* ── Landing copy (INR, India) ─────────────────────────────────────────────*/
 export const LANDING = {
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headline: 'Build a Predictable, Profitable Business From Your Expertise, in 6–12 Months.',
+  headline: 'Build a Predictable ₹5 Lakh/Month Business From Your Expertise, in 6–12 Months.',
   headlineSub: 'Without quitting your job, running fancy funnels, cold DMs, or chasing people for appointments.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',

@@ -492,6 +492,11 @@ export const THANKYOU = {
   liveLabel: 'Your call is starting now',
   passedLabel: 'This call time has passed. Check your email, or rebook if you need to.',
   addHeading: 'Add it to your calendar',
+  joinNote: 'Save this link — it’s where you’ll join when it’s time.',
+  joinPending: 'Your video call link is being generated and will be in your confirmation email and calendar invite. It’ll also appear here in a moment.',
+  saveTitle: 'Save this page',
+  saveSub: 'Keep a link to this page so you can jump back to your countdown and join link anytime.',
+  saveCta: 'Save / copy this page →',
   detailsPending: 'Your call is confirmed. Your calendar invitation and confirmation are on their way to your inbox.',
   emailPrompt: 'Enter the email you booked with to see your countdown and calendar links.',
   next: [

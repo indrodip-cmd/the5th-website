@@ -16,6 +16,7 @@ export type AuditEvent =
   | 'deep_application_started' | 'deep_application_completed'
   | 'calendar_viewed' | 'calendar_time_selected' | 'booking_completed'
   | 'success_page_viewed' | 'calendar_google_clicked' | 'calendar_apple_clicked' | 'calendar_outlook_clicked'
+  | 'meeting_link_clicked' | 'thankyou_save_clicked'
 
 // Whop pixel events are a fixed vocabulary — map ours onto theirs where it fits.
 const WHOP_MAP: Partial<Record<AuditEvent, string>> = {

@@ -61,37 +61,43 @@ export default function ThankYou() {
   const [b, setB] = useState<Booking | null>(null)
   const [tried, setTried] = useState(false)
   const [emailInput, setEmailInput] = useState('')
+  // Query string that re-resolves this exact booking, so "Save this page" hands
+  // the attendee a link they can bookmark and re-open to the live countdown.
+  const [shareParam, setShareParam] = useState('')
 
   useEffect(() => {
     let stop = false
+    let tries = 0
+    const runPoll = async (query: string) => {
+      tries++
+      try {
+        const r = await fetch(`/api/10k-roadmap/booking-lookup?${query}`, { cache: 'no-store' })
+        const j = await r.json()
+        if (stop) return
+        if (j?.booking?.start) { setB(j.booking); setTried(true); return }
+      } catch { /* keep trying */ }
+      if (tries >= 5) { setTried(true); return }
+      setTimeout(() => runPoll(query), 2500)
+    }
     ;(async () => {
       track('success_page_viewed')
       const sp = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
       const start = param(sp, ['start', 'startTime', 'date'])
       const tz = param(sp, ['timeZone', 'tz']) || (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone } catch { return 'UTC' } })()
       const uid = param(sp, ['uid', 'bookingUid', 'bookingId'])
-      const email = param(sp, ['email', 'attendeeEmail']).toLowerCase()
+      let email = param(sp, ['email', 'attendeeEmail']).toLowerCase()
+      if (!email) { try { email = (sessionStorage.getItem('audit_email') || '').toLowerCase() } catch { /* noop */ } }
+
+      // Prefer a uid (stable), else the email — either lets the page rebuild.
+      const query = uid ? `uid=${encodeURIComponent(uid)}` : email ? `email=${encodeURIComponent(email)}` : ''
+      if (query) setShareParam(query)
 
       if (start && !Number.isNaN(Date.parse(start))) {
         const end = param(sp, ['end', 'endTime']) || new Date(new Date(start).getTime() + 60 * 60000).toISOString()
         setB({ start, end, timeZone: tz, meetingUrl: sp.get('meetingUrl') }); setTried(true); return
       }
-      if (!uid && !email) { setTried(true); return }
-
-      let tries = 0
-      const poll = async () => {
-        tries++
-        try {
-          const q = uid ? `uid=${encodeURIComponent(uid)}` : `email=${encodeURIComponent(email)}`
-          const r = await fetch(`/api/10k-roadmap/booking-lookup?${q}`, { cache: 'no-store' })
-          const j = await r.json()
-          if (stop) return
-          if (j?.booking?.start) { setB(j.booking); setTried(true); return }
-        } catch { /* keep trying */ }
-        if (tries >= 5) { setTried(true); return }
-        setTimeout(poll, 2500)
-      }
-      poll()
+      if (!query) { setTried(true); return }
+      runPoll(query)
     })()
     return () => { stop = true }
   }, [])
@@ -101,6 +107,7 @@ export default function ThankYou() {
     const em = emailInput.trim().toLowerCase()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return
     setTried(false)
+    setShareParam(`email=${encodeURIComponent(em)}`)
     try {
       const r = await fetch(`/api/10k-roadmap/booking-lookup?email=${encodeURIComponent(em)}`, { cache: 'no-store' })
       const j = await r.json()
@@ -137,25 +144,47 @@ export default function ThankYou() {
                   <Row label="Date" value={fmt(b.start, { weekday: 'long', month: 'long', day: 'numeric' })} />
                   <Row label="Time" value={fmt(b.start, { hour: 'numeric', minute: '2-digit' })} />
                   <Row label="Timezone" value={tz.replace(/_/g, ' ')} />
-                  {b.meetingUrl && <Row label="Link" value={<a href={b.meetingUrl} style={{ color: T.accentInk }}>Join link</a>} />}
+                  <Row label="Duration" value="60 minutes" />
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={180} style={{ marginTop: 26 }}>
+            <Reveal delay={160} style={{ marginTop: 26 }}>
               <Countdown start={b.start} />
             </Reveal>
 
+            {/* Prominent join link (Zoom / video). Appears once cal.com returns it. */}
+            {b.meetingUrl ? (
+              <Reveal delay={200} style={{ marginTop: 26 }}>
+                <a href={b.meetingUrl} target="_blank" rel="noopener noreferrer" onClick={() => track('meeting_link_clicked')}
+                  className="rm-focus"
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', maxWidth: 420, padding: '18px 28px', borderRadius: 16, background: 'linear-gradient(180deg,#6b39a0 0%,#5a2c86 55%,#4c2472 100%)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 17, boxShadow: '0 16px 32px -14px rgba(94,46,134,.7)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+                  Join the call
+                </a>
+                <p style={{ color: T.text3, fontSize: 12.5, marginTop: 10 }}>{THANKYOU.joinNote}</p>
+              </Reveal>
+            ) : (
+              <Reveal delay={200} style={{ marginTop: 22 }}>
+                <p style={{ color: T.text3, fontSize: 13, lineHeight: 1.6, maxWidth: 460, margin: '0 auto' }}>{THANKYOU.joinPending}</p>
+              </Reveal>
+            )}
+
             {full && (
-              <Reveal delay={220} style={{ marginTop: 28 }}>
+              <Reveal delay={240} style={{ marginTop: 28 }}>
                 <div className="rm-eyebrow" style={{ marginBottom: 14 }}>{THANKYOU.addHeading}</div>
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <Btn href={googleUrl(full)} variant="ghost" onClick={() => track('calendar_google_clicked')}>Google</Btn>
-                  <a href={icsBlobUrl(full)} download="10k-roadmap-audit.ics" onClick={() => track('calendar_apple_clicked')} className="rm-focus" style={{ display: 'inline-flex', alignItems: 'center', padding: '17px 30px', borderRadius: 999, border: `1px solid ${T.lineStrong}`, background: '#fff', color: T.text, textDecoration: 'none', fontWeight: 700, fontSize: 16 }}>Apple</a>
-                  <Btn href={outlookUrl(full)} variant="ghost" onClick={() => track('calendar_outlook_clicked')}>Outlook</Btn>
+                  <Btn href={googleUrl(full)} variant="ghost" onClick={() => track('calendar_google_clicked')}>Google Calendar</Btn>
+                  <a href={icsBlobUrl(full)} download="10k-roadmap-audit.ics" onClick={() => track('calendar_apple_clicked')} className="rm-focus" style={{ display: 'inline-flex', alignItems: 'center', padding: '17px 30px', borderRadius: 999, border: `1px solid ${T.lineStrong}`, background: '#fff', color: T.text, textDecoration: 'none', fontWeight: 700, fontSize: 16 }}>Apple Calendar</a>
+                  <Btn href={outlookUrl(full)} variant="ghost" onClick={() => track('calendar_outlook_clicked')}>Outlook / Microsoft</Btn>
                 </div>
               </Reveal>
             )}
+
+            {/* Save this page — copyable, bookmarkable link back to this countdown. */}
+            <Reveal delay={280} style={{ marginTop: 26 }}>
+              <SaveThisPage shareParam={shareParam} />
+            </Reveal>
           </>
         ) : tried ? (
           <Reveal delay={120} style={{ marginTop: 28 }}>
@@ -197,6 +226,43 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, borderBottom: `1px solid ${T.line}`, paddingBottom: 12 }}>
       <span style={{ color: T.text3, fontSize: 13, textTransform: 'uppercase', letterSpacing: '.08em' }}>{label}</span>
       <span style={{ fontSize: 15, fontWeight: 600, textAlign: 'right' }}>{value}</span>
+    </div>
+  )
+}
+
+/* "Save this page": copies a bookmarkable link that re-opens to this exact
+   booking + live countdown. Uses the Web Share sheet on mobile when available,
+   otherwise copies to the clipboard with an inline confirmation. */
+function SaveThisPage({ shareParam }: { shareParam: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const pageUrl = () => {
+    if (typeof window === 'undefined') return ''
+    const base = `${window.location.origin}/10k-roadmap/thank-you`
+    return shareParam ? `${base}?${shareParam}` : window.location.href
+  }
+
+  const onSave = async () => {
+    track('thankyou_save_clicked')
+    const url = pageUrl()
+    // Prefer the native share sheet (great on mobile: Save to Files, bookmark…).
+    const nav = navigator as Navigator & { share?: (d: { title?: string; url?: string }) => Promise<void> }
+    if (nav.share) {
+      try { await nav.share({ title: THANKYOU.event.title, url }); return } catch { /* fall through to copy */ }
+    }
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true); setTimeout(() => setCopied(false), 2200)
+    } catch { window.prompt('Copy this link to save your confirmation:', url) }
+  }
+
+  return (
+    <div style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: 16, padding: '18px 18px', maxWidth: 460, margin: '0 auto' }}>
+      <p style={{ fontSize: 14.5, fontWeight: 700, margin: '0 0 4px' }}>{THANKYOU.saveTitle}</p>
+      <p style={{ color: T.text2, fontSize: 13.5, lineHeight: 1.55, margin: '0 0 14px' }}>{THANKYOU.saveSub}</p>
+      <Btn onClick={onSave} variant="ghost" full>
+        {copied ? 'Link copied ✓' : THANKYOU.saveCta}
+      </Btn>
     </div>
   )
 }

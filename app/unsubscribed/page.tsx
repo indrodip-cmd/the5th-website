@@ -44,8 +44,8 @@ function UnsubscribedInner() {
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');*{box-sizing:border-box}`}</style>
 
       <div style={{ maxWidth: 520, width: '100%', background: C.white, border: `1px solid ${C.border}`, borderRadius: 22, padding: '48px 44px', textAlign: 'center', boxShadow: '0 40px 90px -50px rgba(46,26,53,.55)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 30 }}>
-          <Image src="/logo-the5th.png" alt="The5th" width={150} height={38} style={{ objectFit: 'contain', height: 38, width: 'auto' }} priority />
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 34 }}>
+          <Image src="/logo-the5th.png" alt="The5th" width={260} height={66} style={{ objectFit: 'contain', height: 60, width: 'auto', maxWidth: '80%' }} priority />
         </div>
 
         {mode === 'invalid' ? (

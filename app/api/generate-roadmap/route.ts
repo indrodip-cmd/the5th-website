@@ -4,7 +4,7 @@ import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { sanitizeAnswers, sanitizeName, isValidEmail } from '@/lib/validation'
-import { sessionEnabled, sessionEmail } from '@/lib/session'
+import { sessionEnabled, sessionEmail, adminEmail } from '@/lib/session'
 import { computeDiagnostic, growthAreaCount, type Answers, type Diagnostic } from '@/lib/diagnostic'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -137,10 +137,13 @@ export async function POST(req: NextRequest) {
     // AUTHORIZATION: when sessions are enabled, trust only the signed cookie, never the body email.
     const bodyEmail = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
     const sessEmail = sessionEmail(req)
-    if (sessionEnabled() && !sessEmail) {
+    // An authenticated admin (from /admin/quiz) may generate a full report for any
+    // lead by passing the target email in the body — bypassing the user session gate.
+    const isAdmin = !!adminEmail(req)
+    if (sessionEnabled() && !sessEmail && !isAdmin) {
       return NextResponse.json({ error: 'Please verify your email to view your report.' }, { status: 401 })
     }
-    const email = sessionEnabled() ? (sessEmail || '') : bodyEmail
+    const email = isAdmin ? bodyEmail : (sessionEnabled() ? (sessEmail || '') : bodyEmail)
     if (Object.keys(answers).length === 0) {
       return NextResponse.json({ error: 'No answers provided' }, { status: 400 })
     }
@@ -167,7 +170,8 @@ export async function POST(req: NextRequest) {
     // ══════════════════ FREE TIER (not paid) ══════════════════
     // Never returns the deep report — even if an old cached roadmap exists.
     // Skipped entirely pre-launch (DIAGNOSTIC_LIVE off) so everyone gets full.
-    if (!isPaid && DIAGNOSTIC_LIVE) {
+    // Admins always get the full report generated (they are comping the paywall).
+    if (!isPaid && DIAGNOSTIC_LIVE && !isAdmin) {
       if (cachedSnapshot && cachedSnapshot.health) {
         return NextResponse.json({ tier: 'free', diagnostic, snapshot: cachedSnapshot, archetype, personality: personalityKey, growthAreas: growthAreaCount(diagnostic) })
       }

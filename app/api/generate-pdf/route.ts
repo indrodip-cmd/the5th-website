@@ -179,7 +179,7 @@ const matrixSVG = (scores: Score[]): string => {
 }
 
 /* ─────────────────────────  REPORT ASSEMBLY  ───────────────────────── */
-type Meta = { name: string; firstName: string; archetypeLabel: string; personalityLabel: string; goal: string; stage: string; dateStr: string; logo: string }
+export type Meta = { name: string; firstName: string; archetypeLabel: string; personalityLabel: string; goal: string; stage: string; dateStr: string; logo: string }
 
 /* White wordmark for dark pages — width-constrained so a wide logo never
    stretches across the page. Falls back to a text mark if unavailable. */
@@ -187,7 +187,7 @@ const logoMark = (m: Meta, w: number) => m.logo
   ? `<img src="${m.logo}" alt="The5th Consulting" style="width:${w}px;height:auto;max-width:100%;display:block"/>`
   : `<div style="font-family:'DM Sans';font-size:${Math.round(w * 0.15)}px;font-weight:800;color:#fff">The<span style="color:${P.gold}">5th</span></div>`
 
-const buildPremiumReport = (roadmap: string, m: Meta): string => {
+export const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const sec = parseSections(roadmap)
   const scores = parseScores(sec['SCORES'] || '')
   const overall = Math.round(scores.reduce((s, x) => s + x.val, 0) / scores.length)
@@ -466,7 +466,7 @@ const buildPremiumReport = (roadmap: string, m: Meta): string => {
 /* Fetch the white wordmark once and inline it as a data URI so the PDF never
    depends on the renderer reaching an external image (logo-white.png 404s in
    prod; logo-white2.png is the live white mark). Empty string → text fallback. */
-const fetchLogo = async (): Promise<string> => {
+export const fetchLogo = async (): Promise<string> => {
   try {
     const r = await fetch(`${SITE}/logo-white2.png`, { signal: AbortSignal.timeout(8000) })
     if (!r.ok) return ''
@@ -476,7 +476,7 @@ const fetchLogo = async (): Promise<string> => {
 
 /* Render a PDF from HTML via APITemplate.io (managed, no cold starts). Returns
    the PDF bytes as base64, or null so the caller can still send the email. */
-const pdfViaApiTemplate = async (html: string): Promise<string | null> => {
+export const pdfViaApiTemplate = async (html: string): Promise<string | null> => {
   const key = process.env.APITEMPLATE_API_KEY
   if (!key) return null
   try {

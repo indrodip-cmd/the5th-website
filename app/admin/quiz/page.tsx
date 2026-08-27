@@ -288,6 +288,32 @@ function LeadDetail({ lead }: { lead: Lead }) {
     return () => { cancelled = true }
   }, [lead.email])
 
+  const [pdfBusy, setPdfBusy] = useState(false)
+  const [pdfErr, setPdfErr] = useState('')
+  const downloadPdf = async () => {
+    if (pdfBusy) return
+    setPdfErr(''); setPdfBusy(true)
+    try {
+      const res = await fetch(`/api/admin/quiz/pdf?email=${encodeURIComponent(lead.email)}`, { credentials: 'same-origin' })
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}))
+        setPdfErr(j.error || 'Could not generate PDF.')
+        return
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${leadName(lead)} Business Blueprint.pdf`
+      document.body.appendChild(a); a.click(); a.remove()
+      URL.revokeObjectURL(url)
+    } catch {
+      setPdfErr('Network error. Please try again.')
+    } finally {
+      setPdfBusy(false)
+    }
+  }
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
@@ -313,7 +339,9 @@ function LeadDetail({ lead }: { lead: Lead }) {
       <div style={{ display: 'flex', gap: 8, marginTop: 16, marginBottom: 8, flexWrap: 'wrap' }}>
         <a href={`mailto:${lead.email}`}><Button variant="primary">Send Email →</Button></a>
         <a href={`/admin/crm?q=${encodeURIComponent(lead.email)}`}><Button variant="ghost">Open in CRM</Button></a>
+        <Button variant="ghost" onClick={downloadPdf} disabled={pdfBusy}>{pdfBusy ? 'Generating PDF…' : '⬇ Download Full PDF'}</Button>
       </div>
+      {pdfErr && <div style={{ fontSize: 12.5, color: '#c0392b', marginBottom: 8 }}>{pdfErr}</div>}
 
       <div style={{ height: 1, background: T.border, margin: '18px 0' }} />
 

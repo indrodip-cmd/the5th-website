@@ -8,6 +8,7 @@ import { isValidEmail, sanitizeName } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { upsertContact, logActivity } from '@/lib/crm'
 import { isUnsubscribed } from '@/lib/comm/unsubscribe'
+import { subscribeToBeehiiv } from '@/lib/beehiiv'
 
 function getAnthropicClient() {
   const key = process.env.ANTHROPIC_API_KEY
@@ -128,6 +129,10 @@ export async function POST(req: NextRequest) {
       } catch (e) {
         console.error('send-otp: CRM mirror failed', e)
       }
+
+      // Add every joiner to the 10K Roadmap newsletter (Beehiiv). No-op if unconfigured.
+      const stageVal = (answers as Record<string, unknown> | null)?.q1
+      await subscribeToBeehiiv(email, { name, stage: typeof stageVal === 'string' ? stageVal : undefined, source: 'quiz' })
 
       let roadmap: Record<string, unknown> | null = null
       try {

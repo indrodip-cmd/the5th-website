@@ -3,6 +3,7 @@
    identify the recipient. The engine checks the suppression list before sending. */
 import crypto from 'crypto'
 import { getSupabaseAdmin } from '@/lib/supabase'
+import { subscribeToBeehiiv, unsubscribeFromBeehiiv } from '@/lib/beehiiv'
 
 const SECRET = process.env.SESSION_SECRET || process.env.CRON_SECRET || 'the5th-unsub-secret'
 const b64u = (b: Buffer | string) => Buffer.from(b).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -32,9 +33,13 @@ export async function isUnsubscribed(email: string): Promise<boolean> {
 }
 export async function unsubscribe(email: string, reason = 'link', source = 'link'): Promise<void> {
   await getSupabaseAdmin().from('email_unsubscribes').upsert({ email: email.trim().toLowerCase(), reason, source }, { onConflict: 'email' })
+  // Also remove them from the Beehiiv newsletter so no channel keeps emailing them.
+  await unsubscribeFromBeehiiv(email)
 }
 export async function resubscribe(email: string): Promise<void> {
   await getSupabaseAdmin().from('email_unsubscribes').delete().eq('email', email.trim().toLowerCase())
+  // Put them back on the newsletter too.
+  await subscribeToBeehiiv(email, { source: 'resubscribe' })
 }
 
 /* Store the optional "how was your experience" rating (1-5) + comment left on the

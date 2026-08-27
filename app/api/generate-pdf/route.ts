@@ -595,6 +595,9 @@ export async function POST(req: NextRequest) {
     const { data, error } = await resend.emails.send({
       from: 'Indrodip at The5th <Indrodip@10kroadmap.org>',
       to: email,
+      // Keep the team looped in on every report that goes out: support gets a
+      // copy (with the same PDF attached) of every customer's Business Blueprint.
+      cc: 'support@10kroadmap.org',
       subject: `${firstName}, your Business Blueprint is ready`,
       html: emailHtml,
       attachments: pdfAttachment,

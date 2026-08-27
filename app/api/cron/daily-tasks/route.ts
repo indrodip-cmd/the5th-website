@@ -7,7 +7,7 @@ import { currentUnlockedDay, taskForDay, PLAN_LENGTH } from '@/lib/plan'
 export const dynamic = 'force-dynamic'
 
 const FROM = 'Indrodip | The5th <noreply@10kroadmap.org>'
-const DASH_URL = 'https://10kroadmap.org/dashboard'
+const DASH_URL = 'https://the5th.consulting/quiz/dashboard'
 
 const getSupabase = () => createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

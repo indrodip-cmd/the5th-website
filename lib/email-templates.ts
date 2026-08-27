@@ -59,7 +59,7 @@ ${HEADER('🗺️ Your Personal 15-Day Roadmap is inside')}
   <p style="font-size:15px;color:#555;line-height:1.8;margin-bottom:24px">${summary}</p>
   <p style="font-size:14px;font-weight:700;color:#333;margin-bottom:14px">Your first 3 days:</p>
   ${preview}
-  ${CTA_BTN('Open My Dashboard →', 'https://10kroadmap.org/dashboard')}
+  ${CTA_BTN('Open My Dashboard →', 'https://the5th.consulting/quiz/dashboard')}
   <p style="font-size:13px;color:#888;line-height:1.7;margin-top:24px">Over the next 7 days, I'll be sending you one personalized coaching email per day — built entirely from your quiz answers. Real homework. Zero templates.</p>
   <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>

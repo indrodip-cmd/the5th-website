@@ -107,6 +107,9 @@ function buildEmail(name: string, content: string): string {
       The5th Consulting &nbsp;|&nbsp; support@10kroadmap.org
       &nbsp;|&nbsp; quiz.the5th.consulting
     </p>
+    <p style="margin:8px 0 0;font-size:10.5px;color:#bbb;font-family:sans-serif;text-align:center;">
+      🔒 Private &amp; confidential — this email and your report are intended only for you.
+    </p>
   </td></tr>
 
 </table>

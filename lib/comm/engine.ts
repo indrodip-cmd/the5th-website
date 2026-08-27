@@ -6,6 +6,7 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { PROVIDERS, getProvider } from '@/lib/comm/providers'
 import { emitEvent } from '@/lib/events'
 import { isUnsubscribed, unsubscribeUrl } from '@/lib/comm/unsubscribe'
+import { marketingFooter } from '@/lib/email-templates'
 
 type Row = Record<string, unknown>
 const MAX_ATTEMPTS = 3
@@ -55,9 +56,17 @@ export async function sendMessage(m: SendMessage): Promise<{ id: string | null; 
   const sender = m.from ? { from: m.from, replyTo: m.replyTo } : await defaultSender()
   const scheduled = m.scheduledAt && new Date(m.scheduledAt).getTime() > Date.now()
   const toAddr = channel === 'whatsapp' && !m.to.startsWith('whatsapp:') ? `whatsapp:${m.to}` : m.to
+  // Every marketing email inherits the one global footer. Skip for transactional
+  // (source 'system'), non-email channels, and any body that already carries an
+  // unsubscribe link (a studio template using {{unsubscribe_url}}), so we never
+  // double up.
+  let body = interp(m.html || m.text || '', vars)
+  if (channel === 'email' && m.source !== 'system' && recipEmail && !/unsubscrib/i.test(body)) {
+    body += marketingFooter(recipEmail)
+  }
   const { data } = await db.from('comm_messages').insert({
     channel, direction: 'outbound', to_addr: toAddr, from_addr: sender.from, reply_to: m.replyTo || sender.replyTo || null,
-    subject: m.subject ? interp(m.subject, vars) : null, body: interp(m.html || m.text || '', vars),
+    subject: m.subject ? interp(m.subject, vars) : null, body,
     status: scheduled ? 'scheduled' : 'queued', contact_id: (contact?.id as string) || m.contactId || null, contact_email: (contact?.email as string) || m.contactEmail || (channel === 'email' ? m.to : null),
     template_id: m.templateId || null, campaign_id: m.campaignId || null, source: m.source || 'manual',
     priority: m.priority ?? 100, tags: m.tags || [], scheduled_at: m.scheduledAt || null,

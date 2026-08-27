@@ -6,6 +6,8 @@
 
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getProvider } from '@/lib/comm/providers'
+import { marketingFooter } from '@/lib/email-templates'
+import { unsubscribeUrl } from '@/lib/comm/unsubscribe'
 
 const sb = () => getSupabaseAdmin()
 const FROM = process.env.PLATFORM_EMAIL_FROM || 'The5th <noreply@10kroadmap.org>'
@@ -43,25 +45,31 @@ async function audienceRecipients(audience: string) {
   const tiers = AUDIENCE_TIERS[audience]
   if (tiers) q = q.in('tier', tiers)
   const { data } = await q
-  // Respect opt-out; skip rows without an email.
-  return (data || []).filter((m: any) => m.email && m.email_notifications !== false)
+  // Respect the member opt-out flag; skip rows without an email.
+  const base = (data || []).filter((m: any) => m.email && m.email_notifications !== false)
+  // Also honor the global unsubscribe list (one place to opt out of everything).
+  const { data: sup } = await sb().from('email_unsubscribes').select('email')
+  const suppressed = new Set((sup || []).map((r: any) => String(r.email).toLowerCase()))
+  return base.filter((m: any) => !suppressed.has(String(m.email).toLowerCase()))
 }
 
-// Basic branded wrapper so pasted content looks intentional.
+// Branded wrapper + the ONE global footer (inherited via placeholder so the
+// address/copyright/unsubscribe live in a single place: lib/email-templates.ts).
 function shell(subject: string, bodyHtml: string) {
-  return `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a2e;line-height:1.6">
-  <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#2E1A35;margin-bottom:16px">The5th</div>
-  ${bodyHtml}
-  <div style="margin-top:28px;padding-top:16px;border-top:1px solid #eee;font-size:12px;color:#8A8075">You're receiving this as a member of The5th. <a href="{{unsub}}" style="color:#8A8075">Unsubscribe</a>.</div>
+  return `<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a2e;line-height:1.6">
+  <div style="padding:24px 24px 0">
+    <div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#2E1A35;margin-bottom:16px">The5th</div>
+    ${bodyHtml}
+  </div>
+  {{GLOBAL_FOOTER}}
 </div>`
 }
 
 async function sendOne(to: string, subject: string, bodyHtml: string) {
   const provider = getProvider('resend')
   if (!provider) return { ok: false, error: 'resend provider missing' }
-  const unsub = `https://the5th.consulting/unsubscribe?email=${encodeURIComponent(to)}`
-  const html = shell(subject, bodyHtml).replace('{{unsub}}', unsub)
-  return provider.send({ from: FROM, to, subject, html, listUnsubscribe: unsub } as any)
+  const html = shell(subject, bodyHtml).replace('{{GLOBAL_FOOTER}}', marketingFooter(to))
+  return provider.send({ from: FROM, to, subject, html, listUnsubscribe: unsubscribeUrl(to) } as any)
 }
 
 // ── Broadcasts ───────────────────────────────────────────────────────

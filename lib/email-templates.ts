@@ -36,7 +36,7 @@ ${HEADER('Your 6-digit code is here')}
   <div style="background:#f6faf7;border:2px solid #2d6a4f;border-radius:16px;padding:28px;text-align:center;margin-bottom:32px">
     <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#2d6a4f;margin-bottom:12px">Your Access Code</div>
     <div style="font-size:48px;font-weight:900;color:#1a1a1a;letter-spacing:12px;font-family:monospace">${otpCode}</div>
-    <div style="font-size:12px;color:#aaa;margin-top:10px">Expires in 15 minutes</div>
+    <div style="font-size:12px;color:#aaa;margin-top:10px">Expires in 30 minutes</div>
   </div>
   ${days.length > 0 ? `<p style="font-size:14px;font-weight:700;color:#333;margin-bottom:14px">A preview of your first 3 days:</p>${preview}` : ''}
 </div>

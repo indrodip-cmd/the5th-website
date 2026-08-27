@@ -16,8 +16,10 @@ export async function POST(req: NextRequest) {
     const otp = typeof vbody?.otp === 'string' ? vbody.otp.trim() : String(vbody?.otp ?? '')
     if (!isValidEmail(email) || !/^\d{4,8}$/.test(otp)) return NextResponse.json({ error: 'A valid email and code are required' }, { status: 400 })
 
-    const codeLimit = await limit(`verify:email:${email}`, 8, 600)
-    if (!codeLimit.ok) return NextResponse.json({ error: 'Too many attempts. Please request a new code.' }, { status: 429 })
+    // A little more headroom (12 tries / 15 min): older users often fat-finger a
+    // digit or two before getting it right, and 8 was locking them out mid-attempt.
+    const codeLimit = await limit(`verify:email:${email}`, 12, 900)
+    if (!codeLimit.ok) return NextResponse.json({ error: 'That was a lot of tries. Please tap "Resend code" for a fresh one, then enter it.' }, { status: 429 })
 
     const { data: session, error } = await getSupabaseAdmin()
       .from('roadmap_sessions')
@@ -28,10 +30,10 @@ export async function POST(req: NextRequest) {
       .limit(1)
       .single()
 
-    if (error || !session) return NextResponse.json({ error: 'Invalid code' }, { status: 400 })
+    if (error || !session) return NextResponse.json({ error: 'That code is not right. Check the most recent email, or tap "Resend code" for a new one.' }, { status: 400 })
 
     if (new Date(session.expires_at) < new Date()) {
-      return NextResponse.json({ error: 'Code expired. Please request a new one.' }, { status: 400 })
+      return NextResponse.json({ error: 'That code has expired. Tap "Resend code" and we will send a fresh one.' }, { status: 400 })
     }
 
     // Single-use: a code that has already been redeemed cannot be replayed.

@@ -74,7 +74,10 @@ export async function POST(req: NextRequest) {
 
     // 2. Generate OTP + session — this is the ONLY thing on the critical path.
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString()
+    // 30-minute validity. Our audience skews 45+ and often opens the code on a
+    // second device or after a distraction; a 15-min window was expiring before
+    // they finished, forcing confusing resends. 30 min removes that friction.
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString()
     try {
       const { error: otpErr } = await getSupabaseAdmin().from('roadmap_sessions').insert({ email, otp, expires_at: expiresAt })
       if (otpErr) {

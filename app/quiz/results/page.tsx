@@ -239,7 +239,7 @@ export default function ResultsPage() {
       // Transient (concurrency lock / rate limit / 5xx): the first generation may
       // still be completing. Wait and retry so we land on the finished result.
       if (!ok && attempt < 3) {
-        await new Promise(r => setTimeout(r, 3500))
+        await new Promise(r => setTimeout(r, 2500))
         return generateRoadmap(n, a, attempt + 1)
       }
       if (!ok) { setGenFailed(true); setLoading(false); return }
@@ -277,7 +277,7 @@ export default function ResultsPage() {
         }).then(r => r.json()).catch(() => {})
       }
     } catch {
-      if (attempt < 3) { await new Promise(r => setTimeout(r, 3500)); return generateRoadmap(n, a, attempt + 1) }
+      if (attempt < 3) { await new Promise(r => setTimeout(r, 2500)); return generateRoadmap(n, a, attempt + 1) }
       setGenFailed(true); setLoading(false)
     }
   }

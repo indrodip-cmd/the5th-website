@@ -59,7 +59,7 @@ ${HEADER('🗺️ Your Personal 15-Day Roadmap is inside')}
   <p style="font-size:15px;color:#555;line-height:1.8;margin-bottom:24px">${summary}</p>
   <p style="font-size:14px;font-weight:700;color:#333;margin-bottom:14px">Your first 3 days:</p>
   ${preview}
-  ${CTA_BTN('Open My Dashboard →', 'https://10kroadmap.org')}
+  ${CTA_BTN('Open My Dashboard →', 'https://10kroadmap.org/dashboard')}
   <p style="font-size:13px;color:#888;line-height:1.7;margin-top:24px">Over the next 7 days, I'll be sending you one personalized coaching email per day — built entirely from your quiz answers. Real homework. Zero templates.</p>
   <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>
@@ -198,6 +198,24 @@ ${HEADER('Admin sign-in code')}
     <div style="font-size:12px;color:#aaa;margin-top:10px">Expires in 10 minutes</div>
   </div>
   <p style="font-size:13px;color:#888;line-height:1.7">If you didn't try to sign in, you can safely ignore this email — no one can access the dashboard without this code.</p>
+</div>
+${FOOTER}`)
+}
+
+/* Daily unlock email for the 7-Day Action Plan (sent by the daily-tasks cron). */
+export function dailyTaskEmail(firstName: string, day: number, task: string, url: string) {
+  return BODY_WRAP(`
+${HEADER(`Day ${day} is unlocked`)}
+<div style="padding:32px 40px">
+  <p style="font-size:16px;color:#333;margin-bottom:20px">Hi ${firstName},</p>
+  <p style="font-size:15px;color:#555;line-height:1.8;margin-bottom:22px">Day ${day} of your 7-Day Action Plan is ready. Here is today's focus:</p>
+  <div style="border-left:3px solid #2d6a4f;padding:14px 18px;margin-bottom:24px;background:#f6faf7;border-radius:0 8px 8px 0">
+    <div style="font-size:12px;color:#2d6a4f;font-weight:700;letter-spacing:.06em;text-transform:uppercase">Day ${day}</div>
+    <div style="font-size:15px;color:#1a1a1a;margin-top:6px;line-height:1.6">${task}</div>
+  </div>
+  <p style="font-size:14px;color:#555;line-height:1.7;margin-bottom:4px">Open your dashboard to check it off and see how far you have come.</p>
+  ${CTA_BTN('Open My Dashboard →', url)}
+  <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>
 ${FOOTER}`)
 }

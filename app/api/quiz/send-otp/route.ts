@@ -7,6 +7,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeName } from '@/lib/validation'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { upsertContact, logActivity } from '@/lib/crm'
+import { isUnsubscribed } from '@/lib/comm/unsubscribe'
 
 function getAnthropicClient() {
   const key = process.env.ANTHROPIC_API_KEY
@@ -169,6 +170,9 @@ export async function POST(req: NextRequest) {
 }
 
 async function triggerEmailSequence(email: string, firstName: string, roadmap: Record<string, unknown> | null, leadId: string) {
+  // Never send the marketing drip to someone who has unsubscribed.
+  if (await isUnsubscribed(email)) return
+
   const days = (roadmap as { days?: { day: number; title: string; tasks: string[] }[] })?.days || []
   const summary = (roadmap as { summary?: string })?.summary || 'Your roadmap is ready to unlock your path to $5K/month.'
 
@@ -176,7 +180,7 @@ async function triggerEmailSequence(email: string, firstName: string, roadmap: R
     await getResendClient().emails.send({
       from: FROM, to: email,
       subject: '🗺️ Your Personal 15-Day Roadmap is inside',
-      html: email1(firstName, summary, days)
+      html: email1(firstName, summary, days, email)
     })
   } catch (e) { console.error('Email 1 failed', e) }
 
@@ -197,7 +201,7 @@ async function triggerEmailSequence(email: string, firstName: string, roadmap: R
         await getResendClient().emails.send({
           from: FROM, to: email,
           subject: subjects[i],
-          html: templates[i](firstName)
+          html: templates[i](firstName, email)
         })
       } catch (e) { console.error(`Email ${i + 2} failed`, e) }
     }, delay)

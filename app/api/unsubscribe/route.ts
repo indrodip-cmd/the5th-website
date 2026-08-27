@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
   const email = token ? verifyUnsub(token) : null
   if (!email) return page('Invalid link', '<p style="color:#6b6570;font-size:14px;">This unsubscribe link is invalid or expired.</p>')
   if (sp.get('resubscribe') === '1') { await resubscribe(email); return page('Resubscribed', `<p style="color:#2b2530;font-size:15px;">You're back on the list — <b>${email}</b> will receive our emails again.</p>`) }
+  // One click unsubscribes immediately, then lands them on the branded
+  // "sorry to see you go" page (with an optional experience rating).
   await unsubscribe(email, 'link', 'link')
-  return page('Unsubscribed', `<p style="color:#2b2530;font-size:15px;line-height:1.6;">You've been unsubscribed. <b>${email}</b> won't receive further emails from us.</p><p style="margin-top:16px;"><a href="?token=${encodeURIComponent(token!)}&resubscribe=1" style="color:#C9A84C;font-size:13px;">Changed your mind? Resubscribe</a></p>`)
+  return NextResponse.redirect(new URL(`/unsubscribed?t=${encodeURIComponent(token!)}`, req.url))
 }

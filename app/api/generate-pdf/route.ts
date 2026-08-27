@@ -4,6 +4,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { CASE_STUDIES, type Study } from '@/lib/case-studies'
 import { emitEvent } from '@/lib/events'
 import { logActivity } from '@/lib/crm'
+import { marketingFooter } from '@/lib/email-templates'
 
 export const dynamic = 'force-dynamic'
 
@@ -588,7 +589,7 @@ export async function POST(req: NextRequest) {
     <p class="bd" style="font-size:16px;color:#221d29;line-height:1.6;margin:26px 0 0;">— Indrodip<br/><span style="color:#8a8377;font-size:13px;">Founder, The5th</span></p>
   </td></tr>
 </table>
-<div style="max-width:560px;margin:14px auto 0;font-size:11px;color:#a49c8f;text-align:center;line-height:1.5;">The5th Consulting · support@10kroadmap.org<br/>You're receiving this because you completed the business assessment.</div>
+${marketingFooter(email)}
 </td></tr></table></body></html>`
 
     const resend = getResend()

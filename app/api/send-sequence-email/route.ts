@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { CASE_STUDIES } from '@/lib/case-studies'
+import { marketingFooter } from '@/lib/email-templates'
+import { isUnsubscribed } from '@/lib/comm/unsubscribe'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,16 +103,7 @@ function buildEmail(name: string, content: string): string {
     </p>
   </td></tr>
 
-  <tr><td style="background:#FAF6F0;padding:20px 40px;
-    border:1px solid #E2DCD2;border-top:none;border-radius:0 0 12px 12px;">
-    <p style="margin:0;font-size:11px;color:#aaa;font-family:sans-serif;text-align:center;">
-      The5th Consulting &nbsp;|&nbsp; support@10kroadmap.org
-      &nbsp;|&nbsp; quiz.the5th.consulting
-    </p>
-    <p style="margin:8px 0 0;font-size:10.5px;color:#bbb;font-family:sans-serif;text-align:center;">
-      🔒 Private &amp; confidential — this email and your report are intended only for you.
-    </p>
-  </td></tr>
+  <tr><td>{{GLOBAL_FOOTER}}</td></tr>
 
 </table>
 </td></tr>
@@ -958,6 +951,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Respect the suppression list — never send the coaching series to someone
+    // who unsubscribed. Return 200 so the daily cron records it as handled.
+    if (await isUnsubscribed(String(email).toLowerCase())) {
+      return NextResponse.json({ success: true, skipped: 'unsubscribed' })
+    }
+
     // Resolve the archetype sequence key. Callers historically pass sequence 'A',
     // which is NOT a content key — the real sequences are keyed by archetype.
     // Fall back to mapping the lead's stage, then to PIONEER, so an email always sends.
@@ -979,6 +978,8 @@ export async function POST(req: NextRequest) {
     if ((day as number) >= 1) {
       html = html.replace(/(<p style="margin:32px 0 0;[^"]*">\s*Indrodip)/, `${caseStudyBlock(day as number)}$1`)
     }
+    // Inherit the one global marketing footer (copyright, address, unsubscribe).
+    html = html.replace('{{GLOBAL_FOOTER}}', marketingFooter(String(email).toLowerCase()))
 
     const resend = getResend()
     const { data, error } = await resend.emails.send({

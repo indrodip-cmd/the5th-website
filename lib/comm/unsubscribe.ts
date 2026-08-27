@@ -21,7 +21,7 @@ export function verifyUnsub(token: string): string | null {
 }
 
 export function unsubscribeUrl(email: string): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.co'
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.consulting').replace(/\/$/, '')
   return `${base}/api/unsubscribe?token=${encodeURIComponent(signUnsub(email))}`
 }
 
@@ -35,4 +35,14 @@ export async function unsubscribe(email: string, reason = 'link', source = 'link
 }
 export async function resubscribe(email: string): Promise<void> {
   await getSupabaseAdmin().from('email_unsubscribes').delete().eq('email', email.trim().toLowerCase())
+}
+
+/* Store the optional "how was your experience" rating (1-5) + comment left on the
+   unsubscribe landing page. Best-effort; upserts onto the existing row. */
+export async function saveUnsubFeedback(email: string, rating: number, feedback?: string): Promise<void> {
+  const r = Math.max(1, Math.min(5, Math.round(rating)))
+  await getSupabaseAdmin().from('email_unsubscribes').upsert(
+    { email: email.trim().toLowerCase(), rating: r, feedback: (feedback || '').slice(0, 1000) || null, rated_at: new Date().toISOString() },
+    { onConflict: 'email' },
+  )
 }

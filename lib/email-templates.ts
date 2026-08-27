@@ -1,14 +1,63 @@
+import { unsubscribeUrl } from '@/lib/comm/unsubscribe'
+
+/* ────────────────────────────────────────────────────────────────────────
+   Shared email building blocks. There is ONE global footer, defined here and
+   inherited by every quiz-funnel email, so the address/copyright/unsubscribe
+   are edited in exactly one place.
+
+   - marketingFooter(email): premium footer WITH a working one-click Unsubscribe
+     link. Used by every marketing/newsletter email.
+   - SYSTEM_FOOTER: minimal footer with NO unsubscribe, for transactional/system
+     mail (one-time codes) that a user must always receive.
+
+   Colours are reused from the existing email system only: #f9f9f6 (footer gray),
+   #E2DCD2 (divider), dark text. No new brand colours are introduced. Layout is
+   table-based with inline CSS for reliable rendering in Gmail/Outlook/Apple Mail.
+   ──────────────────────────────────────────────────────────────────────── */
+
 const HEADER = (title: string) => `
 <div style="background:linear-gradient(135deg,#2d6a4f,#1a4a35);padding:36px 40px;text-align:center;border-radius:0">
   <div style="font-family:Georgia,serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px">Indrodip | The5th</div>
   <div style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#fff;line-height:1.3">${title}</div>
 </div>`
 
-const FOOTER = `
-<div style="padding:24px 40px;border-top:1px solid #e8e8e0;text-align:center;background:#f9f9f6">
-  <p style="font-size:12px;color:#aaa;margin:0">Indrodip | The5th Consulting · noreply@10kroadmap.org</p>
-  <p style="font-size:11px;color:#ccc;margin-top:6px"><a href="#" style="color:#ccc">Unsubscribe</a></p>
-</div>`
+/* Premium, email-safe global footer WITH one-click unsubscribe. */
+export function marketingFooter(email: string): string {
+  const unsub = unsubscribeUrl(email)
+  return `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f9f9f6" style="width:100%;background:#f9f9f6;border-collapse:collapse">
+  <tr><td style="padding:0 24px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse">
+      <tr><td height="1" style="height:1px;line-height:1px;font-size:0;border-top:1px solid #E2DCD2">&nbsp;</td></tr>
+    </table>
+  </td></tr>
+  <tr><td align="center" style="padding:28px 24px 32px">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;max-width:480px;border-collapse:collapse">
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#26202b;font-weight:700">&copy; 2026 The5th Consulting ($10k Roadmap), All rights reserved.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#3d3742;padding-top:8px">15 Central Park West, NYC, NY 10023, United States</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#5a5550;padding-top:16px">You were sent this message because you opted in and subscribed to The5th Consulting product, services, and Indrodip's $10K Newsletter.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#5a5550;padding-top:10px">If you believe this message was sent to you in error, you can safely ignore it, or you can <a href="${unsub}" style="color:#1a1a2e;font-weight:700;text-decoration:underline">Unsubscribe</a>.</td></tr>
+    </table>
+  </td></tr>
+</table>`
+}
+
+/* Minimal footer for transactional/system mail — no unsubscribe (a login or
+   payment code must always be deliverable). */
+const SYSTEM_FOOTER = `
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f9f9f6" style="width:100%;background:#f9f9f6;border-collapse:collapse">
+  <tr><td style="padding:0 24px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse">
+      <tr><td height="1" style="height:1px;line-height:1px;font-size:0;border-top:1px solid #E2DCD2">&nbsp;</td></tr>
+    </table>
+  </td></tr>
+  <tr><td align="center" style="padding:22px 24px 26px">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;max-width:480px;border-collapse:collapse">
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#3d3742;font-weight:700">&copy; 2026 The5th Consulting ($10k Roadmap), All rights reserved.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#5a5550;padding-top:6px">15 Central Park West, NYC, NY 10023, United States &middot; support@10kroadmap.org</td></tr>
+    </table>
+  </td></tr>
+</table>`
 
 const BODY_WRAP = (content: string) => `
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -22,6 +71,7 @@ const CTA_BTN = (text: string, href = 'https://the5thconsulting.typeform.com/to/
   <a href="${href}" style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#2d6a4f,#1a4a35);color:#fff;font-weight:700;font-size:15px;border-radius:50px;text-decoration:none;letter-spacing:.04em">${text}</a>
 </div>`
 
+/* TRANSACTIONAL — one-time roadmap access code (system footer, no unsubscribe). */
 export function otpEmail(firstName: string, otpCode: string, days: { day: number; title: string; tasks: string[] }[]) {
   const preview = days.slice(0, 3).map(d => `
     <div style="border-left:3px solid #2d6a4f;padding:10px 16px;margin-bottom:10px;background:#f6faf7;border-radius:0 8px 8px 0">
@@ -39,14 +89,12 @@ ${HEADER('Your 6-digit code is here')}
     <div style="font-size:12px;color:#aaa;margin-top:10px">Expires in 30 minutes</div>
   </div>
   ${days.length > 0 ? `<p style="font-size:14px;font-weight:700;color:#333;margin-bottom:14px">A preview of your first 3 days:</p>${preview}` : ''}
+  <p style="font-size:12px;color:#999;line-height:1.6;margin-top:8px">This is an automated one-time security code. If you did not request it, you can safely ignore this email.</p>
 </div>
-<div style="padding:20px 40px;border-top:1px solid #e8e8e0;text-align:center;background:#f9f9f6">
-  <p style="font-size:12px;color:#999;margin:0;line-height:1.6">This is an automated one-time security code for your roadmap access. If you did not request it, you can safely ignore this email.</p>
-  <p style="font-size:11px;color:#bbb;margin-top:6px">Indrodip | The5th Consulting · noreply@10kroadmap.org</p>
-</div>`)
+${SYSTEM_FOOTER}`)
 }
 
-export function email1(firstName: string, summary: string, days: { day: number; title: string; tasks: string[] }[]) {
+export function email1(firstName: string, summary: string, days: { day: number; title: string; tasks: string[] }[], email: string) {
   const preview = days.slice(0, 3).map(d => `
     <div style="border-left:3px solid #2d6a4f;padding:10px 16px;margin-bottom:10px;background:#f6faf7;border-radius:0 8px 8px 0">
       <div style="font-size:12px;color:#2d6a4f;font-weight:700">Day ${d.day}: ${d.title}</div>
@@ -63,10 +111,10 @@ ${HEADER('🗺️ Your Personal 15-Day Roadmap is inside')}
   <p style="font-size:13px;color:#888;line-height:1.7;margin-top:24px">Over the next 7 days, I'll be sending you one personalized coaching email per day — built entirely from your quiz answers. Real homework. Zero templates.</p>
   <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email2(firstName: string) {
+export function email2(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER('The offer mistake that keeps experts broke')}
 <div style="padding:32px 40px">
@@ -84,10 +132,10 @@ ${HEADER('The offer mistake that keeps experts broke')}
   ${CTA_BTN('Book a Free Strategy Call →')}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email3(firstName: string) {
+export function email3(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER('Where your next 3 clients are hiding right now')}
 <div style="padding:32px 40px">
@@ -105,10 +153,10 @@ ${HEADER('Where your next 3 clients are hiding right now')}
   ${CTA_BTN('Book a Free Strategy Call →')}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email4(firstName: string) {
+export function email4(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER('What to say when they say "tell me more"')}
 <div style="padding:32px 40px">
@@ -124,10 +172,10 @@ ${HEADER('What to say when they say "tell me more"')}
   ${CTA_BTN('Book a Free Strategy Call →')}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email5(firstName: string) {
+export function email5(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER("You're closer than you think")}
 <div style="padding:32px 40px">
@@ -142,10 +190,10 @@ ${HEADER("You're closer than you think")}
   ${CTA_BTN('Book a Free Strategy Call →')}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email6(firstName: string) {
+export function email6(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER('The pricing conversation that changes everything')}
 <div style="padding:32px 40px">
@@ -161,10 +209,10 @@ ${HEADER('The pricing conversation that changes everything')}
   ${CTA_BTN('Book a Free Strategy Call →')}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-export function email7(firstName: string) {
+export function email7(firstName: string, email: string) {
   return BODY_WRAP(`
 ${HEADER("Your 15 days are almost up — here's what's next")}
 <div style="padding:32px 40px">
@@ -183,10 +231,10 @@ ${HEADER("Your 15 days are almost up — here's what's next")}
   <p style="font-size:13px;color:#888;line-height:1.7">No pressure. The call is free. The worst that happens is you leave with more clarity than you have now.</p>
   <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }
 
-/* One-time code for signing into the /admin command center. */
+/* TRANSACTIONAL — one-time code for signing into /admin (system footer). */
 export function adminOtpEmail(otpCode: string) {
   return BODY_WRAP(`
 ${HEADER('Admin sign-in code')}
@@ -199,11 +247,11 @@ ${HEADER('Admin sign-in code')}
   </div>
   <p style="font-size:13px;color:#888;line-height:1.7">If you didn't try to sign in, you can safely ignore this email — no one can access the dashboard without this code.</p>
 </div>
-${FOOTER}`)
+${SYSTEM_FOOTER}`)
 }
 
 /* Daily unlock email for the 7-Day Action Plan (sent by the daily-tasks cron). */
-export function dailyTaskEmail(firstName: string, day: number, task: string, url: string) {
+export function dailyTaskEmail(firstName: string, day: number, task: string, url: string, email: string) {
   return BODY_WRAP(`
 ${HEADER(`Day ${day} is unlocked`)}
 <div style="padding:32px 40px">
@@ -217,5 +265,5 @@ ${HEADER(`Day ${day} is unlocked`)}
   ${CTA_BTN('Open My Dashboard →', url)}
   <p style="font-size:14px;color:#2d6a4f;font-weight:600;margin-top:16px">— Indrodip</p>
 </div>
-${FOOTER}`)
+${marketingFooter(email)}`)
 }

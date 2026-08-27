@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { dailyTaskEmail } from '@/lib/email-templates'
+import { isUnsubscribed } from '@/lib/comm/unsubscribe'
 import { currentUnlockedDay, taskForDay, PLAN_LENGTH } from '@/lib/plan'
 
 export const dynamic = 'force-dynamic'
@@ -43,6 +44,7 @@ export async function GET(req: NextRequest) {
     if (cur < 2 || cur <= emailed) continue
 
     const email = lead.email as string
+    if (await isUnsubscribed(email)) continue
     const firstName = ((lead.name as string) || '').split(' ')[0] || 'there'
     const roadmap = typeof lead.roadmap === 'string' ? lead.roadmap : null
     const task = taskForDay(roadmap, cur)
@@ -51,7 +53,7 @@ export async function GET(req: NextRequest) {
         from: FROM,
         to: email,
         subject: `Day ${cur} of your action plan is unlocked`,
-        html: dailyTaskEmail(firstName, cur, task, DASH_URL),
+        html: dailyTaskEmail(firstName, cur, task, DASH_URL, email),
         text: `Hi ${firstName},\n\nDay ${cur} of your 7-Day Action Plan is unlocked.\n\nToday: ${task}\n\nOpen your dashboard: ${DASH_URL}\n\n— Indrodip`,
       })
       await supabase.from('quiz_leads').update({ task_email_day: cur }).eq('email', email)

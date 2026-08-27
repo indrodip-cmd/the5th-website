@@ -3048,6 +3048,9 @@ export default function Page() {
             <p style={{ fontSize: 16, fontWeight: 300, color: '#5a5550', marginBottom: 28, lineHeight: 1.7, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto' }}>
               Your assessment contains personal business insights only you should see. We&apos;ve sent a secure 6-digit code to <b style={{ color: '#1A1A2E', fontWeight: 600 }}>{email}</b>, no password needed.
             </p>
+            <div style={{ background: 'rgba(201,168,76,.1)', border: '1px solid rgba(201,168,76,.32)', borderRadius: 10, padding: '12px 16px', marginBottom: 24, maxWidth: 420, marginLeft: 'auto', marginRight: 'auto', fontSize: 13.5, color: '#7a6a2f', lineHeight: 1.55 }}>
+              📬 <b>Don&apos;t see it?</b> Check your <b>spam</b> or <b>junk</b> folder, the code comes from <b>noreply@10kroadmap.org</b>. Add that address to your contacts so it always lands in your inbox.
+            </div>
             <div className="otp-row" style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }} onPaste={handleOtpPaste}>
               {otpDigits.map((d, i) => (
                 <input

@@ -40,7 +40,10 @@ ${HEADER('Your 6-digit code is here')}
   </div>
   ${days.length > 0 ? `<p style="font-size:14px;font-weight:700;color:#333;margin-bottom:14px">A preview of your first 3 days:</p>${preview}` : ''}
 </div>
-${FOOTER}`)
+<div style="padding:20px 40px;border-top:1px solid #e8e8e0;text-align:center;background:#f9f9f6">
+  <p style="font-size:12px;color:#999;margin:0;line-height:1.6">This is an automated one-time security code for your roadmap access. If you did not request it, you can safely ignore this email.</p>
+  <p style="font-size:11px;color:#bbb;margin-top:6px">Indrodip | The5th Consulting · noreply@10kroadmap.org</p>
+</div>`)
 }
 
 export function email1(firstName: string, summary: string, days: { day: number; title: string; tasks: string[] }[]) {

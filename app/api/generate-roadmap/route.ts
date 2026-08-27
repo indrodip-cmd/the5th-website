@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { limit, clientIp } from '@/lib/rateLimit'
 import { sanitizeAnswers, sanitizeName, isValidEmail } from '@/lib/validation'
@@ -7,6 +8,40 @@ import { sessionEnabled, sessionEmail } from '@/lib/session'
 import { computeDiagnostic, growthAreaCount, type Answers, type Diagnostic } from '@/lib/diagnostic'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+const getResend = () => new Resend(process.env.RESEND_API_KEY || 'placeholder')
+
+/* Loop the team in on every NEW free-tier (snapshot/paywall) lead — the people
+   who take the quiz but never buy the $27 report, who would otherwise be invisible
+   in the inbox. Deduped to one notice per email per day via the shared limiter,
+   and fired in after() so it never delays the visitor's result. */
+async function notifyTeamOfLead(email: string, name: string, diagnostic: Diagnostic, answers: Answers) {
+  try {
+    const once = await limit(`leadnotify:${email}`, 1, 86400)
+    if (!once.ok) return
+    const gap = diagnostic.biggestGap
+    const strengths = diagnostic.topStrengths.map(s => `${s.label} ${s.score}`).join(', ')
+    const val = (k: string) => (typeof answers[k] === 'string' ? (answers[k] as string) : '')
+    const rows = [
+      ['Name', name || '(not given)'],
+      ['Email', email],
+      ['Stage', val('q1')],
+      ['Health score', `${diagnostic.overall}/100`],
+      ['Biggest gap', `${gap.label} (${gap.score}/100)`],
+      ['Top strengths', strengths],
+      ['12-month goal', val('qgoal')],
+      ['Challenge they want solved', val('qchallenge')],
+    ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#8a8075;font-size:13px;vertical-align:top">${k}</td><td style="padding:4px 0;color:#1a1a2e;font-size:13px;font-weight:600">${v || '—'}</td></tr>`).join('')
+    await getResend().emails.send({
+      from: 'The5th Leads <noreply@10kroadmap.org>',
+      to: 'support@10kroadmap.org',
+      subject: `New quiz lead: ${name || email} · ${diagnostic.overall}/100 · gap: ${gap.label}`,
+      html: `<div style="font-family:-apple-system,Arial,sans-serif;max-width:560px"><p style="font-size:15px;color:#1a1a2e"><b>New free-tier lead</b> completed the diagnostic (snapshot + $27 paywall).</p><table style="border-collapse:collapse">${rows}</table><p style="font-size:12px;color:#8a8075;margin-top:16px">They have not purchased the full report yet. Sent automatically by The5th.</p></div>`,
+    })
+  } catch (e) {
+    console.error('notifyTeamOfLead failed', e)
+  }
+}
 
 export const maxDuration = 60
 
@@ -145,6 +180,8 @@ export async function POST(req: NextRequest) {
       if (email && isValidEmail(email) && supabase) {
         try { await supabase.from('quiz_leads').update({ snapshot }).eq('email', email) } catch { /* non-fatal */ }
       }
+      // Heads-up to the team about this new free lead (deduped, non-blocking).
+      if (email && isValidEmail(email)) after(() => notifyTeamOfLead(email, name, diagnostic, answers))
       return NextResponse.json({ tier: 'free', diagnostic, snapshot, archetype, personality: personalityKey, growthAreas: growthAreaCount(diagnostic) })
     }
 

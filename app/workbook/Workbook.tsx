@@ -299,19 +299,28 @@ export default function Workbook({ planId }: { planId: string }) {
         .ka-guar{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:center}
         .ka-proofstats{display:flex;justify-content:center;gap:clamp(28px,5vw,64px);flex-wrap:wrap;padding-top:3rem;border-top:1px solid rgba(255,255,255,.1)}
         .ka-sticky{display:none}
+        /* Tablet */
         @media(max-width:1000px){
-          .ka-hero{grid-template-columns:1fr;gap:44px}
+          .ka-hero{grid-template-columns:1fr;gap:40px}
           .ka-4col{grid-template-columns:1fr 1fr}
-          .ka-timeline{grid-template-columns:1fr}
-          .ka-3col{grid-template-columns:1fr}
+          .ka-3col{grid-template-columns:1fr 1fr}
+          .ka-timeline{grid-template-columns:repeat(2,1fr);gap:22px 18px}
           .ka-nav-links{display:none}
-          .ka-guar{grid-template-columns:1fr;gap:40px;text-align:center}
+          .ka-guar{grid-template-columns:1fr;gap:36px;text-align:center}
+          .ka-discover{grid-template-columns:1fr!important}
+          .ka-book-hero{max-width:300px;margin:0 auto}
         }
+        /* Mobile */
         @media(max-width:760px){
           .ka-2col{grid-template-columns:1fr}
+          .ka-3col{grid-template-columns:1fr}
           .ka-4col{grid-template-columns:1fr}
+          .ka-timeline{grid-template-columns:1fr;gap:18px}
           .ka-sticky{display:flex}
           .ka-float{animation:none}
+        }
+        @media(max-width:480px){
+          .ka-hero h1{font-size:clamp(2.2rem,8.4vw,2.9rem)!important}
         }
         @media(prefers-reduced-motion:reduce){.ka-float,.ka-btn,.ka-lift,.ka-marq,.ka-tmarq{animation:none;transition:none}}
       `}</style>
@@ -363,8 +372,8 @@ export default function Workbook({ planId }: { planId: string }) {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <BookShot w="min(360px, 80vw)" />
+            <div className="ka-book-hero" style={{ display: 'flex', justifyContent: 'center' }}>
+              <BookShot w="min(340px, 74vw)" />
             </div>
           </div>
         </div>
@@ -471,10 +480,10 @@ export default function Workbook({ planId }: { planId: string }) {
           ))}
         </div>
         <Reveal delay={120} style={{ marginTop: 16 }}>
-          <div style={{ background: `linear-gradient(160deg,${PLUM},${PLUM_DK})`, color: PARCH, padding: '1.7rem 1.8rem', border: `1px solid ${GOLD_LINE}` }}>
+          <div style={{ background: `linear-gradient(160deg,${PLUM},${PLUM_DK})`, color: PARCH, padding: '2.2rem 2rem', border: `1px solid ${GOLD_LINE}` }}>
             <Eyebrow>Plus · the finale</Eyebrow>
-            <div style={{ fontFamily: SERIF, fontSize: '1.7rem', fontWeight: 600, marginTop: 6, color: WHITE }}>Your Next 24 Hours</div>
-            <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: 'rgba(250,246,240,.82)', marginTop: 4, maxWidth: 640 }}>A practical, action-focused conclusion designed to get you moving immediately — not someday.</p>
+            <div style={{ fontFamily: SERIF, fontSize: '1.8rem', fontWeight: 600, marginTop: 14, color: WHITE, lineHeight: 1.1 }}>Your Next 24 Hours</div>
+            <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: 'rgba(250,246,240,.82)', marginTop: 10, maxWidth: 640, lineHeight: 1.6 }}>A practical, action-focused conclusion designed to get you moving immediately — not someday.</p>
           </div>
         </Reveal>
       </Section>
@@ -486,7 +495,7 @@ export default function Workbook({ planId }: { planId: string }) {
           <h2 style={{ ...H2, marginTop: '.8rem', color: WHITE }}>A few of the things you&apos;ll walk away <em style={{ fontStyle: 'italic', fontWeight: 300, color: GOLD }}>knowing how to do.</em></h2>
         </Reveal>
         <Reveal delay={80} style={{ maxWidth: 900, margin: '2.6rem auto 0' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(340px,1fr))', gap: '14px 28px' }}>
+          <div className="ka-discover" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: '14px 28px' }}>
             {DISCOVER.map(([t, ch]) => (
               <div key={t as string} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '4px 0' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }} aria-hidden><polyline points="20 6 9 17 4 12" /></svg>
@@ -556,7 +565,7 @@ export default function Workbook({ planId }: { planId: string }) {
         <span aria-hidden style={{ position: 'absolute', top: '-3rem', left: '50%', transform: 'translateX(-50%)', fontFamily: SERIF, fontSize: '20rem', fontWeight: 300, color: 'rgba(255,255,255,.03)', lineHeight: 1, pointerEvents: 'none' }}>&ldquo;</span>
         <Reveal style={{ position: 'relative', maxWidth: 1000, margin: '0 auto' }}>
           <span style={{ display: 'block', fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.35)', marginBottom: '1.4rem' }}>The team behind the book</span>
-          <span style={{ display: 'block', fontFamily: SERIF, fontSize: 'clamp(3.5rem,12vw,8rem)', fontWeight: 700, color: WHITE, lineHeight: 1, letterSpacing: '-.04em', marginBottom: '3rem' }}>$15,000,000</span>
+          <span style={{ display: 'block', fontFamily: SERIF, fontSize: 'clamp(2.6rem,11vw,8rem)', fontWeight: 700, color: WHITE, lineHeight: 1, letterSpacing: '-.04em', marginBottom: '3rem' }}>$15,000,000</span>
           <div className="ka-proofstats">
             {PROOF.map(([fig, sup, label]) => (
               <div key={label}>
@@ -753,8 +762,8 @@ export default function Workbook({ planId }: { planId: string }) {
               <div style={{ position: 'absolute', inset: 18, borderRadius: '50%', border: `1px dashed ${GOLD_LINE}` }} />
               <div style={{ textAlign: 'center', color: PARCH, padding: '0 34px', maxWidth: '86%' }}>
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD }}>Build to</div>
-                <div style={{ fontFamily: SERIF, fontSize: 'clamp(2.7rem,10vw,4rem)', fontWeight: 700, lineHeight: .95, margin: '.1rem 0 .2rem', color: WHITE }}>$5,000<span style={{ fontSize: '.3em', color: GOLD }}>/mo</span></div>
-                <div style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '.1em', lineHeight: 1.35, textTransform: 'uppercase', color: GOLD }}>or your money back</div>
+                <div style={{ fontFamily: SERIF, fontSize: 'clamp(2.6rem,9.6vw,3.9rem)', fontWeight: 700, lineHeight: 1, margin: '.55rem 0 .5rem', color: WHITE }}>$5,000<span style={{ fontSize: '.3em', color: GOLD }}>/mo</span></div>
+                <div style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '.1em', lineHeight: 1.4, textTransform: 'uppercase', color: GOLD }}>or your money back</div>
               </div>
             </div>
           </Reveal>

@@ -5,6 +5,7 @@ import { recordRevenueEvent } from '@/lib/revenue'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
 import { enrollBuyer } from '@/lib/event-enroll'
+import { enrollWorkbookBuyer } from '@/lib/workbook-campaign'
 import { resolveOrCreateContact, logActivity, addTag } from '@/lib/crm'
 import { recordPurchase } from '@/lib/purchases'
 import { markAuditPaid, AUDIT_PLAN_ID } from '@/lib/roadmap-audit'
@@ -19,6 +20,11 @@ const BREAKTHROUGH_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
 // Whop plan id for the $27 Business Growth Diagnostic — buyers unlock the full
 // report on /quiz/results. Configure via env once the Whop product exists.
 const DIAGNOSTIC_PLAN_ID = process.env.WHOP_DIAGNOSTIC_PLAN_ID || ''
+
+// The Knowledge Asset ($7.93 workbook) — buyers are enrolled into the 7-day
+// AI-trial nurture (and mirrored into the CRM). Matches plan OR product id.
+const WORKBOOK_PLAN_ID = process.env.NEXT_PUBLIC_WHOP_WORKBOOK_PLAN_ID || 'plan_9p1vwkc9eoH2H'
+const WORKBOOK_PRODUCT_ID = 'prod_N6s0DPIc5sQAA'
 
 /* Whop payment webhook (Svix). Verifies the signature over the RAW body,
    dedups by Svix message id, stores every payload for audit, then dispatches.
@@ -89,6 +95,21 @@ export async function POST(req: NextRequest) {
         if (email) await enrollBuyer(email, name, 'whop')
       } catch (e) {
         emitEvent('event_enroll_failed', { provider: 'whop', error: String(e) })
+      }
+    }
+
+    // The Knowledge Asset ($7.93) → record the buyer + start the 7-day AI-trial
+    // nurture (day-0 welcome sends only when WORKBOOK_CAMPAIGN_LIVE=true; the
+    // cron catches up otherwise). Guarded so it never breaks the core webhook.
+    if (action === 'payment.succeeded' && (raw.includes(WORKBOOK_PLAN_ID) || raw.includes(WORKBOOK_PRODUCT_ID))) {
+      try {
+        const d = (body.data as Record<string, unknown>) || {}
+        const user = (d.user as Record<string, unknown>) || {}
+        const email = String(user.email || d.email || '').toLowerCase()
+        const name = String(user.name || user.username || d.name || '') || null
+        if (email) await enrollWorkbookBuyer(email, name, 'whop')
+      } catch (e) {
+        emitEvent('workbook_enroll_failed', { provider: 'whop', error: String(e) })
       }
     }
 

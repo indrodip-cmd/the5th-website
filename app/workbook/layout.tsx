@@ -12,13 +12,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://the5th.consulting/workbook',
-    title: 'The Knowledge Asset — Turn What You Know Into an Asset You Can Sell',
-    description: 'A build-as-you-go workbook for coaches, consultants, and experts. Build your product, offer, audience, content, and launch toward $10K months — including a 7-day free trial of The5th AI.',
+    title: 'The Knowledge Asset — Turn What You Already Know Into a $10K-a-Month Business',
+    description: 'A build-as-you-go workbook from The5th Consulting. Build your product, offer, audience, content, and launch toward $10K months — including a 7-day free trial of The5th AI.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Knowledge Asset — Turn What You Know Into an Asset You Can Sell',
-    description: 'A build-as-you-go workbook for coaches, consultants, and experts. Build toward $10K months — includes a 7-day free trial of The5th AI. $7.93.',
+    title: 'The Knowledge Asset — Turn What You Already Know Into a $10K-a-Month Business',
+    description: 'A build-as-you-go workbook from The5th Consulting. Build toward $10K months — includes a 7-day free trial of The5th AI. $7.93.',
   },
 }
 

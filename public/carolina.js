@@ -433,7 +433,8 @@
       '.cw-launcher.cw-open ~ .cw-nametag{opacity:0;transform:translateX(10px);pointer-events:none;}',
       '@media(max-width:600px){.cw-nametag{right:88px;bottom:34px;padding:8px 13px;font-size:12px;}}',
       '@media(max-width:420px){.cw-nametag{display:none;}}',
-      '.cw-open .l-close{opacity:1;transform:rotate(0) scale(1);}',
+      // When the panel is open, hide the launcher entirely (no floating cross).
+      '.cw-launcher.cw-open{opacity:0;transform:scale(.6) translateY(6px);pointer-events:none;}',
       '.cw-badge{position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;border-radius:10px;background:var(--acc);color:#1a1206;font:700 11px/19px "Inter";text-align:center;padding:0 5px;box-shadow:0 2px 8px rgba(0,0,0,.4);animation:cwPulse 2.4s infinite;}',
       '@keyframes cwPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.5);}50%{box-shadow:0 0 0 6px rgba(201,168,76,0);}}',
       // window
@@ -2095,7 +2096,8 @@
       + '<button data-menu="clear" role="menuitem">' + ICON.refresh + ' Clear chat</button>'
       + '<button data-menu="emailme" role="menuitem">' + ICON.mail + ' Email me this chat</button>'
       + '<button data-menu="export" role="menuitem">' + ICON.download + ' Export transcript</button>'
-      + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div></div>'
+      + '<button data-menu="delete" role="menuitem" class="danger">' + ICON.trash + ' Delete conversation</button></div>'
+      + '<button class="cw-iconbtn cw-chead-x" id="cw-chead-close" aria-label="Close chat">' + ICON.close + '</button></div>'
       + '<div class="cw-scroll" id="cw-cscroll"><div class="cw-msgs" id="cw-msgs"></div></div>'
       + '<div class="cw-comp"><div class="cw-slash" id="cw-slash" role="listbox" hidden></div>'
       + '<div class="cw-atts" id="cw-atts"></div>'
@@ -2115,6 +2117,7 @@
     var cscroll = els.win.querySelector('#cw-cscroll');
 
     els.win.querySelector('#cw-back').addEventListener('click', function () { pendingScroll = homeScroll; renderPanels(); });
+    els.win.querySelector('#cw-chead-close').addEventListener('click', function () { toggle(false); });
     els.send.addEventListener('click', function () { sendMessage(els.in.value); });
     wireComposer();
     cscroll.addEventListener('scroll', function () { if (nearBottom()) hideNewPill(); });

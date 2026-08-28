@@ -479,11 +479,11 @@ export default function Workbook({ planId }: { planId: string }) {
             </Reveal>
           ))}
         </div>
-        <Reveal delay={120} style={{ marginTop: 16 }}>
-          <div style={{ background: `linear-gradient(160deg,${PLUM},${PLUM_DK})`, color: PARCH, padding: '2.2rem 2rem', border: `1px solid ${GOLD_LINE}` }}>
+        <Reveal delay={120} style={{ marginTop: '2.75rem' }}>
+          <div style={{ background: `linear-gradient(160deg,${PLUM},${PLUM_DK})`, color: PARCH, padding: '2.8rem 2.2rem', border: `1px solid ${GOLD_LINE}` }}>
             <Eyebrow>Plus · the finale</Eyebrow>
-            <div style={{ fontFamily: SERIF, fontSize: '1.8rem', fontWeight: 600, marginTop: 14, color: WHITE, lineHeight: 1.1 }}>Your Next 24 Hours</div>
-            <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: 'rgba(250,246,240,.82)', marginTop: 10, maxWidth: 640, lineHeight: 1.6 }}>A practical, action-focused conclusion designed to get you moving immediately — not someday.</p>
+            <div style={{ fontFamily: SERIF, fontSize: '1.9rem', fontWeight: 600, marginTop: 18, color: WHITE, lineHeight: 1.1 }}>Your Next 24 Hours</div>
+            <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: 'rgba(250,246,240,.82)', marginTop: 12, maxWidth: 640, lineHeight: 1.6 }}>A practical, action-focused conclusion designed to get you moving immediately — not someday.</p>
           </div>
         </Reveal>
       </Section>

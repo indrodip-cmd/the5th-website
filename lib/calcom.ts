@@ -204,6 +204,24 @@ export interface BookingsOverview {
   cancelled: CalBooking[]
 }
 
+/** Set of attendee emails (lowercased) who have a live booking — upcoming or
+    past, excluding cancelled/rejected. Used by the workbook nurture campaign to
+    stop nagging people who already booked their call. Empty set if cal.com is
+    not configured or the API fails (fail-open: better to nudge than to block). */
+export async function getBookedEmails(): Promise<Set<string>> {
+  const key = calKey()
+  const out = new Set<string>()
+  if (!key) return out
+  try {
+    const [upcoming, past] = await Promise.all([fetchBookings(key, 'upcoming'), fetchBookings(key, 'past')])
+    for (const b of [...upcoming, ...past]) {
+      if (b.status === 'cancelled' || b.status === 'rejected') continue
+      if (b.email) out.add(b.email.toLowerCase())
+    }
+  } catch { /* fail-open */ }
+  return out
+}
+
 /** Live overview of the account's real bookings for the CRM dashboard. */
 export async function getBookingsOverview(): Promise<BookingsOverview> {
   const key = calKey()

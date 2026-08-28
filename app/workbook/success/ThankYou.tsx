@@ -6,13 +6,14 @@
    bonus via the embedded cal.com scheduler. Brand: parchment + plum + gold +
    green, Cormorant Garamond + DM Sans (house system).
    ───────────────────────────────────────────────────────────────────────── */
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Cal, { getCalApi } from '@calcom/embed-react'
 
 const PLUM = '#3D2645'
 const PLUM_DK = '#2E1A35'
 const PLUM_DEEP = '#241229'
 const GOLD = '#C9A84C'
+const GOLD_DK = '#8a6f22'
 const GOLD_LT = '#E4C879'
 const GOLD_SOFT = 'rgba(201,168,76,0.12)'
 const GOLD_LINE = 'rgba(201,168,76,0.35)'
@@ -28,11 +29,16 @@ const CREAM = '#F6EFE3'
 const SERIF = "'Cormorant Garamond', Georgia, Times, serif"
 const SANS = "'DM Sans', system-ui, -apple-system, sans-serif"
 
-// Direct-download link for the workbook PDF (Google Drive).
-const DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=1N9xdoqKyRg708TFvvPtHtZt3uQiswmUZ'
+// Self-hosted workbook PDF — clean one-click download (no Drive interstitial).
+const DOWNLOAD_URL = '/downloads/the-knowledge-asset.pdf'
 const CAL_LINK = 'indrodip-ghosh-ut1vxh/60min'
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default function ThankYou() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle')
+
   useEffect(() => {
     (async () => {
       try {
@@ -40,6 +46,26 @@ export default function ThankYou() {
         cal('ui', { hideEventTypeDetails: true, layout: 'month_view' })
       } catch { /* embed loads on its own if the API call fails */ }
     })()
+  }, [])
+
+  // Enrol the buyer into the 7-day AI-trial nurture. Auto-runs if Whop passes
+  // ?email; otherwise the visible form below captures it.
+  async function enroll(e: string, n?: string) {
+    if (!EMAIL_RE.test(e)) return
+    setStatus('sending')
+    try {
+      await fetch('/api/workbook/enroll', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: e, name: n || undefined, source: 'workbook_thankyou' }) })
+    } catch { /* fail soft — never block the thank-you experience */ }
+    setStatus('done')
+  }
+
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search)
+      const e = sp.get('email') || ''
+      const n = sp.get('name') || ''
+      if (EMAIL_RE.test(e)) { queueMicrotask(() => { setEmail(e); enroll(e, n) }) }
+    } catch { /* ignore */ }
   }, [])
 
   return (
@@ -64,12 +90,41 @@ export default function ThankYou() {
             Your purchase is confirmed. Download your workbook right now — we&apos;ve also emailed you a copy plus access to your 7-day free trial of The5th AI and your three bonuses.
           </p>
           <div style={{ marginTop: 26 }}>
-            <a href={DOWNLOAD_URL} target="_blank" rel="noopener noreferrer" className="ty-dl" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 11, background: GREEN, color: WHITE, fontFamily: SANS, fontWeight: 700, fontSize: '1.05rem', letterSpacing: '.01em', padding: '1.15rem 2.4rem', minHeight: 56, textDecoration: 'none', boxShadow: '0 10px 36px rgba(28,74,50,.45)' }}>
+            <a href={DOWNLOAD_URL} download="The-Knowledge-Asset.pdf" className="ty-dl" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 11, background: GREEN, color: WHITE, fontFamily: SANS, fontWeight: 700, fontSize: '1.05rem', letterSpacing: '.01em', padding: '1.15rem 2.4rem', minHeight: 56, textDecoration: 'none', boxShadow: '0 10px 36px rgba(28,74,50,.45)' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
               Download the workbook (PDF)
             </a>
           </div>
           <p style={{ fontSize: 13, color: 'rgba(246,239,227,.6)', marginTop: 14 }}>Instant access · Also sent to your email · Lifetime access</p>
+        </div>
+      </section>
+
+      {/* Activate — enrol into the 7-day AI-trial nurture + quiz CTA */}
+      <section style={{ padding: 'clamp(40px,6vw,64px) 1.25rem 0', maxWidth: 900, margin: '0 auto' }}>
+        <div style={{ background: WHITE, border: `1px solid ${BORDER}`, borderTop: `3px solid ${GOLD}`, padding: 'clamp(24px,4vw,40px)', textAlign: 'center' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: GOLD_DK }}>Activate your bonus</div>
+          <h2 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(1.7rem,3.4vw,2.4rem)', color: INK, margin: '10px 0 0', lineHeight: 1.1 }}>Switch on your <em style={{ fontStyle: 'italic', color: PLUM }}>free 7-day AI coaching</em></h2>
+          <p style={{ fontSize: 15.5, color: INK_MID, marginTop: 12, lineHeight: 1.7, maxWidth: 560, margin: '12px auto 0' }}>
+            Enter your email to activate your bonus coaching. Then take the 2-minute quiz — it gives your The5th AI coach the context to coach <em style={{ color: PLUM, fontStyle: 'italic' }}>your</em> business, and we&apos;ll walk you through the book over the next 7 days.
+          </p>
+          {status === 'done' ? (
+            <div style={{ marginTop: 22, display: 'inline-flex', alignItems: 'center', gap: 10, background: '#f2f8f4', border: `1px solid #cfe6d8`, borderRadius: 10, padding: '14px 20px', color: GREEN_DK, fontWeight: 600, fontSize: 15 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="20 6 9 17 4 12" /></svg>
+              You&apos;re activated — check your inbox for your welcome + coaching.
+            </div>
+          ) : (
+            <form onSubmit={(e) => { e.preventDefault(); enroll(email) }} style={{ marginTop: 22, display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" aria-label="Email address" style={{ flex: '1 1 260px', maxWidth: 340, minHeight: 52, padding: '0 16px', fontFamily: SANS, fontSize: 15.5, color: INK, background: PARCH, border: `1px solid ${BORDER}`, outline: 'none' }} />
+              <button type="submit" disabled={status === 'sending'} className="ty-dl" style={{ minHeight: 52, background: GREEN, color: WHITE, fontFamily: SANS, fontWeight: 700, fontSize: 15.5, letterSpacing: '.01em', padding: '0 1.8rem', border: 'none', cursor: 'pointer', boxShadow: '0 8px 26px rgba(28,74,50,.35)' }}>
+                {status === 'sending' ? 'Activating…' : 'Activate my AI coaching'}
+              </button>
+            </form>
+          )}
+          <div style={{ marginTop: 16 }}>
+            <a href="/quiz" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: SANS, fontSize: 14, fontWeight: 600, color: PLUM, textDecoration: 'none', borderBottom: `1px solid ${GOLD_LINE}`, paddingBottom: 2 }}>
+              Take the free 2-minute quiz to personalise your coaching →
+            </a>
+          </div>
         </div>
       </section>
 

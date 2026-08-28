@@ -458,7 +458,7 @@ export default function Workbook({ planId }: { planId: string }) {
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16, marginTop: '2.4rem' }}>
           {CHAPTERS.map(([t, d], i) => (
-            <Reveal key={t} delay={i * 40}>
+            <Reveal key={t} delay={i * 40} style={{ height: '100%' }}>
               <div className="ka-lift" style={{ background: WHITE, border: `1px solid ${BORDER}`, padding: '1.6rem 1.5rem', height: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
                   <span style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '1.7rem', fontWeight: 600, color: GOLD }}>{String(i + 1).padStart(2, '0')}</span>
@@ -470,7 +470,7 @@ export default function Workbook({ planId }: { planId: string }) {
             </Reveal>
           ))}
         </div>
-        <Reveal delay={120} style={{ marginTop: '1.4rem' }}>
+        <Reveal delay={120} style={{ marginTop: 16 }}>
           <div style={{ background: `linear-gradient(160deg,${PLUM},${PLUM_DK})`, color: PARCH, padding: '1.7rem 1.8rem', border: `1px solid ${GOLD_LINE}` }}>
             <Eyebrow>Plus · the finale</Eyebrow>
             <div style={{ fontFamily: SERIF, fontSize: '1.7rem', fontWeight: 600, marginTop: 6, color: WHITE }}>Your Next 24 Hours</div>
@@ -750,11 +750,11 @@ export default function Workbook({ planId }: { planId: string }) {
         <div className="ka-guar">
           <Reveal style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ position: 'relative', width: 'min(300px,74vw)', aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: `radial-gradient(circle at 50% 34%, #4E3158, ${PLUM_DK} 72%)`, boxShadow: `0 30px 70px rgba(15,6,20,.5), inset 0 0 0 2px ${GOLD}` }}>
-              <div style={{ position: 'absolute', inset: 15, borderRadius: '50%', border: `1px dashed ${GOLD_LINE}` }} />
-              <div style={{ textAlign: 'center', color: PARCH, padding: 8 }}>
-                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: GOLD }}>Build to</div>
-                <div style={{ fontFamily: SERIF, fontSize: 'clamp(3.6rem,13vw,5.4rem)', fontWeight: 700, lineHeight: .84, margin: '.25rem 0', color: WHITE }}>$5,000<span style={{ fontSize: '.32em', color: GOLD }}>/mo</span></div>
-                <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, letterSpacing: '.22em', textTransform: 'uppercase', color: GOLD }}>or your money back</div>
+              <div style={{ position: 'absolute', inset: 18, borderRadius: '50%', border: `1px dashed ${GOLD_LINE}` }} />
+              <div style={{ textAlign: 'center', color: PARCH, padding: '0 34px', maxWidth: '86%' }}>
+                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD }}>Build to</div>
+                <div style={{ fontFamily: SERIF, fontSize: 'clamp(2.7rem,10vw,4rem)', fontWeight: 700, lineHeight: .95, margin: '.1rem 0 .2rem', color: WHITE }}>$5,000<span style={{ fontSize: '.3em', color: GOLD }}>/mo</span></div>
+                <div style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '.1em', lineHeight: 1.35, textTransform: 'uppercase', color: GOLD }}>or your money back</div>
               </div>
             </div>
           </Reveal>

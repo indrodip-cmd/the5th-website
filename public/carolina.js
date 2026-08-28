@@ -171,7 +171,7 @@
   var LANGS = [['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['es', 'Español'], ['it', 'Italiano'], ['pt', 'Português'], ['nl', 'Nederlands']];
   function langName(c) { return ({ en: 'English', fr: 'French', de: 'German', es: 'Spanish', it: 'Italian', pt: 'Portuguese', nl: 'Dutch' })[c] || 'English'; }
   var I18N = {
-    en: { hi: 'Hello there.', help: 'How can we help?', ask: 'Ask a question', askSub: 'Our AI agent and team are here to help', ph: 'Ask The5th AI anything…', welcome: 'Welcome to The5th AI 👋' },
+    en: { hi: 'Hello there.', help: 'How can we help?', ask: 'Ask Carolina', askSub: 'Carolina and the team are here to help', ph: 'Ask Carolina anything…', welcome: 'Welcome to The5th AI 👋' },
     fr: { hi: 'Bonjour.', help: 'Comment pouvons-nous aider ?', ask: 'Posez une question', askSub: 'Notre agent IA et notre équipe sont là pour vous aider', ph: 'Demandez tout à The5th AI…', welcome: 'Bienvenue chez The5th AI 👋' },
     de: { hi: 'Hallo.', help: 'Wie können wir helfen?', ask: 'Stellen Sie eine Frage', askSub: 'Unser KI-Agent und Team helfen gerne', ph: 'Fragen Sie The5th AI…', welcome: 'Willkommen bei The5th AI 👋' },
     es: { hi: 'Hola.', help: '¿Cómo podemos ayudar?', ask: 'Haz una pregunta', askSub: 'Nuestro agente de IA y equipo están aquí para ayudar', ph: 'Pregúntale lo que sea a The5th AI…', welcome: 'Bienvenido a The5th AI 👋' },
@@ -427,6 +427,12 @@
       '.cw-launcher svg{width:26px;height:26px;color:var(--acc);transition:opacity .2s,transform .3s var(--sp);position:absolute;}',
       '.cw-launcher .l-close{opacity:0;transform:rotate(-40deg) scale(.6);}',
       '.cw-open .l-chat{opacity:0;transform:rotate(40deg) scale(.6);}',
+      // Launcher name tag ("Carolina") — sits to the left of the FAB when closed.
+      '.cw-nametag{position:fixed;right:94px;bottom:39px;z-index:2147482499;display:flex;align-items:center;gap:7px;background:#fff;color:#3D2645;font:700 13px/1 "Inter",system-ui,sans-serif;letter-spacing:.01em;padding:10px 15px;border-radius:999px;box-shadow:0 10px 26px rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.4);pointer-events:none;white-space:nowrap;transition:opacity .25s var(--sp),transform .25s var(--sp);}',
+      '.cw-nametag .cw-nt-dot{width:8px;height:8px;border-radius:50%;background:#1C4A32;box-shadow:0 0 0 3px rgba(28,74,50,.16);flex-shrink:0;}',
+      '.cw-launcher.cw-open ~ .cw-nametag{opacity:0;transform:translateX(10px);pointer-events:none;}',
+      '@media(max-width:600px){.cw-nametag{right:88px;bottom:34px;padding:8px 13px;font-size:12px;}}',
+      '@media(max-width:420px){.cw-nametag{display:none;}}',
       '.cw-open .l-close{opacity:1;transform:rotate(0) scale(1);}',
       '.cw-badge{position:absolute;top:-2px;right:-2px;min-width:19px;height:19px;border-radius:10px;background:var(--acc);color:#1a1206;font:700 11px/19px "Inter";text-align:center;padding:0 5px;box-shadow:0 2px 8px rgba(0,0,0,.4);animation:cwPulse 2.4s infinite;}',
       '@keyframes cwPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.5);}50%{box-shadow:0 0 0 6px rgba(201,168,76,0);}}',
@@ -1666,7 +1672,7 @@
 
     // Personalized welcome for returning, known visitors — "remember me".
     var known = leadName && !isFirstTime();
-    var hg1 = known ? ('Welcome back, ' + leadName + ' 👋') : T('hi');
+    var hg1 = known ? ('Welcome back, ' + leadName + ' 👋') : "Hi, I'm Carolina 👋";
     var hg2 = known ? 'Good to see you again — want to pick up where we left off?' : T('help');
     var greet = '<div class="cw-hgreet"><span class="cw-hg1">' + esc(hg1) + '</span><span class="cw-hg2">' + esc(hg2) + '</span></div>';
 
@@ -3073,7 +3079,7 @@
   // ── Build shell ──
   function build() {
     injectStyles(); suppressIntercom();
-    var launcher = el('<button class="cw cw-launcher" aria-label="Chat with The5th AI">'
+    var launcher = el('<button class="cw cw-launcher" aria-label="Chat with Carolina">'
       + '<span class="l-chat"><img class="l-icon" src="' + LAUNCHER_ICON + '" alt="" '
       + 'onerror="this.style.display=\'none\';var f=this.parentNode.querySelector(\'.l-fb\');if(f)f.style.display=\'flex\'" />'
       + '<span class="l-fb">' + ICON.msg + '</span></span>'
@@ -3083,8 +3089,11 @@
     // Always-reachable close (mobile can hide the launcher behind a full-screen
     // window). Large touch target, respects safe areas.
     var mclose = el('<button class="cw cw-mclose" aria-label="Close chat">' + ICON.close + '</button>');
-    document.body.appendChild(launcher); document.body.appendChild(win); document.body.appendChild(mclose);
-    els.launcher = launcher; els.win = win; els.mclose = mclose;
+    // Always-visible name tag beside the collapsed launcher so visitors know
+    // they're chatting with Carolina (hidden while the panel is open).
+    var nameTag = el('<div class="cw cw-nametag" aria-hidden="true"><span class="cw-nt-dot"></span>Carolina</div>');
+    document.body.appendChild(launcher); document.body.appendChild(win); document.body.appendChild(mclose); document.body.appendChild(nameTag);
+    els.launcher = launcher; els.win = win; els.mclose = mclose; els.nameTag = nameTag;
     applyTheme();
     launcher.addEventListener('click', function () { toggle(); });
     mclose.addEventListener('click', function () { toggle(false); });

@@ -14,7 +14,7 @@
   // returns to thank the visitor and point them to the case-study library.
   try {
     var _cp = location.pathname;
-    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0 || _cp.indexOf('/10k-roadmap') === 0 || _cp.indexOf('/workbook') === 0) return;
+    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0 || _cp.indexOf('/10k-roadmap') === 0) return;
     if (_cp.indexOf('/quiz') === 0 && _cp.indexOf('/quiz/thank') !== 0) return;
   } catch (e) {}
   window.__carolinaLoaded = true;
@@ -2729,7 +2729,7 @@
       var payload = conv.messages
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
-      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid() };
+      var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid(), path: (typeof location !== 'undefined' && location.pathname) || '' };
       // If we already know who this is (e.g. from the /results access gate),
       // tell the server so Carolina greets and personalizes from the first turn.
       if (leadName || leadEmail) body.lead = { name: leadName || null, email: leadEmail || null };

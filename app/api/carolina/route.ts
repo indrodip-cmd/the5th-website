@@ -45,8 +45,18 @@ const PAGES: Record<string, string> = {
   ai_checkout: '/ai-checkout',
   collective_checkout: '/collective-checkout',
   fast_forward_checkout: '/fast-forward-checkout',
+  workbook: '/workbook',
   support: '/support',
 }
+
+/* THE KNOWLEDGE ASSET — the $7.93 book. Unlike the coaching programs, Carolina
+   SELLS this one directly (fixed public price, instant checkout on the page). */
+const BOOK_KNOWLEDGE = `THE KNOWLEDGE ASSET — THE BOOK (you sell this one directly):
+- What it is: "The Knowledge Asset", a $7.93 build-as-you-go digital workbook by Indrodip Ghosh & Christinee Mathison. The reader builds their product, offer, audience, content and launch INSIDE it. 9 chapters + a "Your Next 24 Hours" finale, exercises, worksheets, and the $7 → $10K product ladder. Instant digital access, lifetime.
+- Free bonuses included: (1) a 7-DAY FREE TRIAL of The5th AI (the flagship bonus), (2) the 90-Day Content Calendar, (3) the Product Blueprint Template, (4) the Offer Stack Builder.
+- The $5K Promise: work through it and do the exercises; if they don't build toward $5,000/month they can get a full refund within 365 days. It is a money-back guarantee on the PURCHASE, not a guarantee of income — never promise earnings.
+- Where to buy: the /workbook page (page key "workbook") — tap the green "Get the book — $7.93" button, or the hosted checkout https://whop.com/checkout/plan_9p1vwkc9eoH2H.
+- PRICING EXCEPTION: unlike the coaching programs, this book has a FIXED public price of $7.93 — you MAY quote the price plainly and encourage an immediate purchase. Sell it warmly and confidently as a tiny, no-brainer first step. For anyone who isn't ready for coaching or wants a low-cost start, recommend the book.`
 
 /* One-line description of each page so the AI knows where to send visitors. */
 const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user (use the key in parentheses):
@@ -60,6 +70,7 @@ const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user
 - Client Results (results) — real client outcomes and stories.
 - About (about) — Indrodip's story and what The5th is about.
 - Help & Support (support) — the support centre: FAQs plus a ticket form to report a bug or ask for help. Send anyone with a problem, bug, or support question here.
+- The Knowledge Asset (workbook) — the $7.93 build-as-you-go book/workbook. Send anyone who wants a low-cost first step, "the book", or isn't ready for coaching. Checkout is right on the page.
 - Checkout pages (ai_checkout, collective_checkout, fast_forward_checkout) — direct checkout; only open these when the visitor is ready to buy that specific thing.
 
 SUPPORT & BUGS: There is a ticket system behind the Help & Support page (support). If a visitor reports a bug, something broken, a billing/account problem, or any issue you cannot resolve yourself, DON'T just apologise — use report_issue to file a ticket (capture a clear summary in their words, the best-fit category, and their email if you have it). Then give them the ticket reference you get back and reassure them a real person will follow up. You can also open (support) so they can track it or add detail. Never invent a fix or a policy; when in doubt, file the ticket.
@@ -141,6 +152,7 @@ function buildSystem(opts: {
     `SALES-CONCIERGE FRAMEWORK: Guide every conversation through — understand their situation → educate → build trust (the guarantee and real client outcomes, never fabricated) → recommend the right fit → invite the natural next step (usually the free assessment or a strategy call) → keep helping. Discover their business, goal and where they are now conversationally (never a form) and save it with save_lead as you learn it. Only suggest a call at genuine high-intent moments (comparing options, fit/implementation questions, ready to move) — never pushy, never mid-thought. Keep the conversation flowing inside this chat and use show_card for programs and booking — but you MAY open a page with navigate_user when it genuinely helps the visitor (see the PAGE DIRECTORY), and you SHOULD open the live demo whenever someone wants to see or try The5th AI.`
   )
   parts.push(MASTER_PLAYBOOK)
+  parts.push(BOOK_KNOWLEDGE)
   parts.push(PAGE_DIRECTORY)
   // Real client proof — lets Carolina/Natasha guide visitors with documented
   // wins closest to their niche and move them toward the assessment or a call.
@@ -508,6 +520,7 @@ export async function POST(req: NextRequest) {
     const agentKey: AgentKey = AGENT_KEYS.includes(body?.agent) ? body.agent : 'carolina'
     const handoff = body?.handoff === true
     const context = sanitizeText(body?.context, 300) || null
+    const pagePath = sanitizeText(body?.path, 200) || ''
 
     const settings = await loadSettings()
     const [magnet, agents] = await Promise.all([loadActiveLeadMagnet(settings), loadAgents()])
@@ -517,6 +530,11 @@ export async function POST(req: NextRequest) {
 
     const cfg = aiConfig(settings)
     let system = buildSystem({ agent: agentKey, personas, kb: settings.knowledge_base, magnet, timeZone, handoff, context })
+
+    // On the book page, Carolina's #1 job is to sell The Knowledge Asset.
+    if (pagePath.startsWith('/workbook')) {
+      system += `\n\nCURRENT PAGE — /workbook: The visitor is looking at The Knowledge Asset book right now. Your #1 goal on this page is to SELL THE BOOK ($7.93). Open with genuine warmth, uncover the one thing holding them back, then highlight the $5K promise and the free 7-day The5th AI trial, and move them to tap the green "Get the book — $7.93" button (or share the checkout link). Lead with the book — don't pitch the coaching programs unless they ask.`
+    }
 
     // Known identity (e.g. captured by the /results access gate) — so Carolina
     // uses their name from the first turn and the CRM stays linked.

@@ -13,7 +13,6 @@
    trial is the flagship bonus. No fabricated book reviews.
    ───────────────────────────────────────────────────────────────────────── */
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react'
-import WorkbookChat from './WorkbookChat'
 
 /* ── House tokens (from the homepage) ─────────────────────────────────────── */
 const PLUM = '#3D2645'
@@ -213,6 +212,17 @@ const CHAPTERS = [
   ['Mindset for Consistent $10K Months', 'Show up and sustain momentum.'],
 ]
 const WORKBOOK_PAGES = ['Your Knowledge Inventory', 'Your Product Blueprint', 'Your One-Sentence Sales Promise', 'Your Offer Stack', 'Your 7-Day Launch Plan', 'Your Consistency Commitment']
+/* "Fascination" bullets — curiosity-framed, each tied to a real chapter. */
+const DISCOVER = [
+  ['The counter-intuitive first move that matters more than any tactic — skip it and you stay stuck.', 'Ch. 1'],
+  ['Why you don’t need a big audience, paid ads, or a team to earn your first digital dollar.', 'Ch. 3'],
+  ['How to find the ONE person you’re really building for, so your offer finally clicks.', 'Ch. 4'],
+  ['The simplest way to turn a skill you take for granted into a product people happily pay for.', 'Ch. 5'],
+  ['The one-sentence “sales promise” that makes the right buyer think “I need this.”', 'Ch. 6'],
+  ['A 90-day content system so you never stare at a blank screen wondering what to post.', 'Ch. 7'],
+  ['The calm, no-anxiety way to launch and land your first buyers, without a complicated funnel.', 'Ch. 8'],
+  ['The mindset shift that separates people who build $10K months from people who keep planning.', 'Ch. 9'],
+]
 const LADDER = [['$7', 'Ebook'], ['$27', 'Mini-Course'], ['$47', 'Toolkit'], ['$10', 'Strategy Call'], ['$1K–$5K', 'Coaching']]
 const BONUSES = [
   ['7-Day Free Trial of The5th AI', 'Full access to The5th AI — your AI business co-pilot — free for 7 days. It works through the book with you: shaping your product, writing your offer, and drafting your content, live as you go.', 'Flagship bonus'],
@@ -325,9 +335,9 @@ export default function Workbook({ planId }: { planId: string }) {
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div className="ka-hero">
             <div>
-              <span style={{ display: 'block', fontFamily: SANS, fontWeight: 700, fontSize: 12, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD, marginBottom: 18 }}>The 10K Roadmap Series · A Workbook</span>
+              <span style={{ display: 'inline-block', fontFamily: SANS, fontWeight: 700, fontSize: 11.5, letterSpacing: '.12em', textTransform: 'uppercase', color: GOLD, marginBottom: 18, background: GOLD_SOFT, border: `1px solid ${GOLD_LINE}`, borderRadius: 4, padding: '6px 12px' }}>Attention: coaches, consultants &amp; experts tired of trading time for money</span>
               <h1 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(2.7rem, 5.8vw, 5rem)', lineHeight: 1.0, letterSpacing: '-.03em', margin: 0, color: WHITE }}>
-                Build a <em style={{ fontStyle: 'italic', fontWeight: 400, color: GOLD }}>$5,000-a-month</em> business from what you already know.
+                Turn what you already <span style={{ display: 'inline' }}>know</span> into a <em style={{ fontStyle: 'italic', fontWeight: 400, color: GOLD }}>$5,000-a-month</em> business.
               </h1>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginTop: '1.5rem', background: 'rgba(201,168,76,.1)', border: `1px solid ${GOLD_LINE}`, borderRadius: 6, padding: '.7rem 1.1rem' }}>
                 <span aria-hidden style={{ color: GOLD, fontSize: 18 }}>✦</span>
@@ -466,6 +476,28 @@ export default function Workbook({ planId }: { planId: string }) {
             <div style={{ fontFamily: SERIF, fontSize: '1.7rem', fontWeight: 600, marginTop: 6, color: WHITE }}>Your Next 24 Hours</div>
             <p style={{ fontFamily: SANS, fontSize: 14.5, fontWeight: 300, color: 'rgba(250,246,240,.82)', marginTop: 4, maxWidth: 640 }}>A practical, action-focused conclusion designed to get you moving immediately — not someday.</p>
           </div>
+        </Reveal>
+      </Section>
+
+      {/* What you'll discover — Sell-Like-Crazy fascination bullets */}
+      <Section bg={PLUM_DK} color={PARCH} style={{ position: 'relative', overflow: 'hidden' }}>
+        <Reveal style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center' }}>
+          <Eyebrow center>What you&apos;ll discover inside</Eyebrow>
+          <h2 style={{ ...H2, marginTop: '.8rem', color: WHITE }}>A few of the things you&apos;ll walk away <em style={{ fontStyle: 'italic', fontWeight: 300, color: GOLD }}>knowing how to do.</em></h2>
+        </Reveal>
+        <Reveal delay={80} style={{ maxWidth: 900, margin: '2.6rem auto 0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(340px,1fr))', gap: '14px 28px' }}>
+            {DISCOVER.map(([t, ch]) => (
+              <div key={t as string} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: '4px 0' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }} aria-hidden><polyline points="20 6 9 17 4 12" /></svg>
+                <p style={{ fontFamily: SANS, fontSize: '1.05rem', lineHeight: 1.6, color: 'rgba(250,246,240,.9)', margin: 0 }}>{t}<span style={{ color: GOLD, fontFamily: SANS, fontSize: 12, fontWeight: 700, letterSpacing: '.04em', marginLeft: 8, whiteSpace: 'nowrap' }}>{ch}</span></p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={120} style={{ textAlign: 'center', marginTop: '2.6rem' }}>
+          <p style={{ fontFamily: SERIF, fontSize: 'clamp(1.3rem,2.4vw,1.8rem)', fontStyle: 'italic', color: GOLD, marginBottom: '1.4rem' }}>…and that&apos;s barely scratching the surface.</p>
+          <Btn label={`Get the book — ${PRICE}`} />
         </Reveal>
       </Section>
 
@@ -794,9 +826,6 @@ export default function Workbook({ planId }: { planId: string }) {
           Get The Knowledge Asset — {PRICE} →
         </a>
       </div>
-
-      {/* Proactive AI sales concierge (appears ~60s in / on exit-intent) */}
-      <WorkbookChat />
     </div>
   )
 }

@@ -13,6 +13,7 @@
    trial is the flagship bonus. No fabricated book reviews.
    ───────────────────────────────────────────────────────────────────────── */
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react'
+import WorkbookChat from './WorkbookChat'
 
 /* ── House tokens (from the homepage) ─────────────────────────────────────── */
 const PLUM = '#3D2645'
@@ -72,18 +73,18 @@ const emItal: CSSProperties = { fontStyle: 'italic', fontWeight: 300, color: PLU
 function BookShot({ w = 'min(340px, 76vw)' }: { w?: string }) {
   return (
     <div style={{ perspective: 1700, display: 'flex', justifyContent: 'center', width: '100%' }}>
-      <div className="ka-book ka-float" style={{ position: 'relative', width: w, aspectRatio: '3 / 4.2', transformStyle: 'preserve-3d', transform: 'rotateY(-21deg) rotateX(5deg)' }}>
+      <div className="ka-book ka-float" style={{ position: 'relative', width: w, aspectRatio: '3 / 4.5', transformStyle: 'preserve-3d', transform: 'rotateY(-21deg) rotateX(5deg)' }}>
         <div style={{ position: 'absolute', top: 7, right: -14, width: 18, height: 'calc(100% - 14px)', background: 'linear-gradient(90deg,#f1e9d8,#d3c7ac)', transform: 'rotateY(90deg) translateZ(9px)', transformOrigin: 'right' }} />
-        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, ${PLUM} 0%, ${PLUM_DK} 62%, #241229 100%)`, boxShadow: `0 40px 70px rgba(46,26,53,.4), inset 0 0 0 1px ${GOLD_LINE}`, padding: '34px 30px', display: 'flex', flexDirection: 'column', color: PARCH }}>
+        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, ${PLUM} 0%, ${PLUM_DK} 62%, #241229 100%)`, boxShadow: `0 40px 70px rgba(46,26,53,.4), inset 0 0 0 1px ${GOLD_LINE}`, padding: '30px 26px', display: 'flex', flexDirection: 'column', color: PARCH }}>
           <div style={{ position: 'absolute', top: 0, left: 0, width: 11, height: '100%', background: 'linear-gradient(90deg, rgba(255,255,255,.16), rgba(255,255,255,0))' }} />
-          <div style={{ position: 'absolute', inset: 14, border: `1px solid ${GOLD_LINE}`, pointerEvents: 'none' }} />
-          <div style={{ fontFamily: SANS, fontSize: 10, fontWeight: 700, letterSpacing: '.26em', color: GOLD, textTransform: 'uppercase' }}>The 10K Roadmap Series</div>
-          <div style={{ height: 1, background: `linear-gradient(90deg, ${GOLD}, transparent)`, margin: '18px 0 auto', width: '46%' }} />
-          <h3 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(30px, 8vw, 46px)', lineHeight: 0.97, letterSpacing: '-.02em', margin: 0, color: WHITE }}>
+          <div style={{ position: 'absolute', inset: 13, border: `1px solid ${GOLD_LINE}`, pointerEvents: 'none' }} />
+          <div style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, letterSpacing: '.24em', color: GOLD, textTransform: 'uppercase' }}>The 10K Roadmap Series</div>
+          <div style={{ height: 1, background: `linear-gradient(90deg, ${GOLD}, transparent)`, margin: '16px 0 auto', width: '46%' }} />
+          <h3 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(28px, 7.4vw, 42px)', lineHeight: 0.98, letterSpacing: '-.02em', margin: 0, color: WHITE }}>
             THE<br />KNOWLEDGE<br /><em style={{ fontStyle: 'italic', fontWeight: 500, color: GOLD }}>ASSET</em>
           </h3>
-          <p style={{ fontFamily: SANS, fontSize: 11, lineHeight: 1.5, color: 'rgba(250,246,240,.8)', marginTop: 18, fontWeight: 300 }}>Turn What You Know Into a $10K-a-Month Digital Business</p>
-          <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: `1px solid ${GOLD_LINE}`, fontFamily: SANS, fontSize: 9.5, letterSpacing: '.08em', color: 'rgba(250,246,240,.88)', textTransform: 'uppercase' }}>
+          <p style={{ fontFamily: SANS, fontSize: 10.5, lineHeight: 1.45, color: 'rgba(250,246,240,.8)', marginTop: 14, fontWeight: 300 }}>Turn What You Know Into a $10K-a-Month Digital Business</p>
+          <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: `1px solid ${GOLD_LINE}`, fontFamily: SANS, fontSize: 9, letterSpacing: '.07em', color: 'rgba(250,246,240,.88)', textTransform: 'uppercase' }}>
             Indrodip Ghosh <span style={{ color: GOLD }}>&amp;</span> Christinee Mathison
           </div>
         </div>
@@ -242,8 +243,8 @@ const FAQS = [
   ['Do I need a team?', 'No. The book is specifically designed around building a simple digital product business without requiring a large team.'],
   ['What is the 7-day The5th AI trial?', 'Your purchase includes 7 days of free access to The5th AI, our AI business co-pilot. You can cancel any time within the trial. It helps you apply the book — building your product, offer, and content as you read.'],
   ['How much does it cost?', '$7.93 one time.'],
-  ['Is there a guarantee?', 'Yes. The purchase comes with a 365-day money-back guarantee, subject to the published refund terms.'],
-  ['Will this guarantee that I make $10,000/month?', 'No. The $10K/month figure is the business-building target and roadmap. Results depend on execution, market, offer, audience, consistency, and many factors outside the authors’ control.'],
+  ['What is the $5K promise?', 'Work through the workbook and do the exercises — build the product, offer, and launch it walks you through. If you put in the work and do not build toward $5,000/month, request a full refund within 365 days and we will return every penny. It is a money-back guarantee on the purchase, not a guarantee of business results.'],
+  ['Will this guarantee that I make $5,000 or $10,000/month?', 'No — those figures are the business-building targets the roadmap points you toward, not promised income. Your results depend on your execution, market, offer, audience, and consistency. What we do guarantee is your money back if you do the work and it does not work for you.'],
 ]
 
 function Section({ id, bg = PARCH, color, children, style }: { id?: string; bg?: string; color?: string; children: ReactNode; style?: CSSProperties }) {
@@ -309,9 +310,7 @@ export default function Workbook({ planId }: { planId: string }) {
       <header style={{ position: 'sticky', top: 0, zIndex: 40, background: `linear-gradient(180deg,${PLUM_DK} 0%,#241229 100%)`, borderBottom: `1px solid ${GOLD_LINE}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '.7rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-            <span style={{ background: 'linear-gradient(180deg,#FBF8F2,#F1E9DC)', border: `1px solid ${GOLD_LINE}`, padding: '.5rem .9rem', display: 'inline-flex' }}>
-              <img src="/images/logo.png" alt="The5th Consulting" style={{ height: 30, width: 'auto', mixBlendMode: 'multiply' }} />
-            </span>
+            <img src="/images/logo-header-white.png" alt="The5th Consulting" style={{ height: 34, width: 'auto' }} />
           </a>
           <nav className="ka-nav-links" aria-label="Sections">
             {NAV.map(([l, h]) => <a key={h} href={h} style={{ fontSize: '.72rem', fontWeight: 500, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.8)', textDecoration: 'none', padding: '0 1.1em' }}>{l}</a>)}
@@ -327,15 +326,21 @@ export default function Workbook({ planId }: { planId: string }) {
           <div className="ka-hero">
             <div>
               <span style={{ display: 'block', fontFamily: SANS, fontWeight: 700, fontSize: 12, letterSpacing: '.18em', textTransform: 'uppercase', color: GOLD, marginBottom: 18 }}>The 10K Roadmap Series · A Workbook</span>
-              <h1 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(2.6rem, 5.6vw, 4.6rem)', lineHeight: 1.0, letterSpacing: '-.03em', margin: 0, color: WHITE }}>
-                Turn what you already know<br /><em style={{ fontStyle: 'italic', fontWeight: 300, color: GOLD }}>into a $10K-a-month business.</em>
+              <h1 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: 'clamp(2.7rem, 5.8vw, 5rem)', lineHeight: 1.0, letterSpacing: '-.03em', margin: 0, color: WHITE }}>
+                Build a <em style={{ fontStyle: 'italic', fontWeight: 400, color: GOLD }}>$5,000-a-month</em> business from what you already know.
               </h1>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginTop: '1.5rem', background: 'rgba(201,168,76,.1)', border: `1px solid ${GOLD_LINE}`, borderRadius: 6, padding: '.7rem 1.1rem' }}>
+                <span aria-hidden style={{ color: GOLD, fontSize: 18 }}>✦</span>
+                <span style={{ fontFamily: SANS, fontSize: 14.5, color: '#fff', fontWeight: 500, lineHeight: 1.4 }}><strong style={{ color: GOLD, fontWeight: 700 }}>Our promise:</strong> build it with this workbook, or get every penny back.</span>
+              </div>
               <p style={{ fontFamily: SANS, fontSize: 'clamp(1rem,1.5vw,1.2rem)', fontWeight: 300, color: 'rgba(255,255,255,.82)', marginTop: '1.4rem', maxWidth: 500, lineHeight: 1.7 }}>
                 <strong style={{ fontWeight: 600, color: WHITE }}>The Knowledge Asset</strong> is a build-as-you-go workbook. You don&apos;t just read it — you build your product, offer, audience, content, and launch inside it. From the team behind The5th Consulting.
               </p>
-              <div style={{ marginTop: '2rem' }}><Btn label={`Get the book — ${PRICE}`} href="#buy" /></div>
-              <p style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(255,255,255,.7)', marginTop: '.9rem' }}>Instant digital access · Work through it as you build · 365-day guarantee</p>
-              <span style={{ display: 'inline-block', marginTop: '1.1rem', fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: GOLD, background: GOLD_SOFT, border: `1px solid ${GOLD_LINE}`, borderRadius: 100, padding: '5px 16px' }}>+ Free 7-day The5th AI trial included</span>
+              <div style={{ marginTop: '1.8rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+                <Btn label={`Get the book — ${PRICE}`} href="#buy" />
+                <span style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: GOLD, background: GOLD_SOFT, border: `1px solid ${GOLD_LINE}`, borderRadius: 100, padding: '6px 16px' }}>+ Free 7-day The5th AI trial</span>
+              </div>
+              <p style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(255,255,255,.7)', marginTop: '1rem' }}>Instant digital access · Work through it as you build</p>
               {/* author + brand proof */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: '1.9rem', paddingTop: '1.4rem', borderTop: `1px solid rgba(255,255,255,.14)` }}>
                 <div style={{ display: 'flex' }}>
@@ -348,8 +353,8 @@ export default function Workbook({ planId }: { planId: string }) {
                 </div>
               </div>
             </div>
-            <div id="buy" style={{ scrollMarginTop: 80 }}>
-              <CheckoutCard planId={planId} />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <BookShot w="min(360px, 80vw)" />
             </div>
           </div>
         </div>
@@ -677,65 +682,58 @@ export default function Workbook({ planId }: { planId: string }) {
 
       {/* Offer + book showcase */}
       <Section bg={WHITE} id="offer">
+        <div id="buy" style={{ scrollMarginTop: 80 }} />
         <Reveal style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto' }}>
           <Eyebrow center>The offer</Eyebrow>
           <h2 style={{ ...H2, marginTop: '.8rem' }}>Your knowledge is already there. <em style={emItal}>Now build something with it.</em></h2>
         </Reveal>
-        <div className="ka-2col" style={{ marginTop: '3rem', alignItems: 'center', gap: 'clamp(32px,5vw,72px)' }}>
-          <Reveal style={{ display: 'flex', justifyContent: 'center' }}><BookShot /></Reveal>
-          <Reveal delay={100} style={{ maxWidth: 560 }}>
-            <div style={{ background: PARCH, border: `1px solid ${BORDER}`, padding: '2.2rem 1.9rem', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: GREEN }} />
-              <div style={{ fontFamily: SERIF, fontSize: '1.9rem', fontWeight: 600, textAlign: 'center', color: INK }}>The Knowledge Asset</div>
-              <div style={{ textAlign: 'center', fontFamily: SANS, fontSize: 13, color: INK_MUTE, marginTop: 4 }}>Digital Workbook + 4 Bonuses</div>
-              <ul style={{ listStyle: 'none', margin: '1.6rem 0 0', display: 'grid', gap: 10 }}>
+        <div className="ka-2col" style={{ marginTop: '3rem', alignItems: 'start', gap: 'clamp(32px,5vw,64px)' }}>
+          {/* Left — full value stack */}
+          <Reveal>
+            <div style={{ background: PARCH, border: `1px solid ${BORDER}`, padding: '2rem 1.8rem' }}>
+              <div style={{ fontFamily: SERIF, fontSize: '1.7rem', fontWeight: 600, color: INK }}>What&apos;s included</div>
+              <ul style={{ listStyle: 'none', margin: '1.3rem 0 0', display: 'grid', gap: 11 }}>
                 {OFFER_INCLUDES.map((t) => (
                   <li key={t} style={{ display: 'flex', gap: 11, fontFamily: SANS, fontSize: 15, color: INK_MID }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 3 }} aria-hidden><polyline points="20 6 9 17 4 12" /></svg>{t}
                   </li>
                 ))}
               </ul>
-              <div style={{ margin: '1.4rem 0', paddingTop: '1.2rem', borderTop: `1px solid ${BORDER}`, display: 'grid', gap: 9 }}>
+              <div style={{ margin: '1.4rem 0 0', paddingTop: '1.2rem', borderTop: `1px solid ${BORDER}`, display: 'grid', gap: 10 }}>
                 {['7-Day Free Trial of The5th AI', '90-Day Content Calendar', 'Product Blueprint Template', 'Offer Stack Builder'].map((t, i) => (
                   <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 11, fontFamily: SANS, fontSize: 15, color: INK_MID }}>
-                    <span style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, letterSpacing: '.08em', color: PLUM_DK, background: 'linear-gradient(180deg,#E4C879,#C9A84C)', padding: '.25rem .6rem' }}>{i === 0 ? 'FREE 7 DAYS' : 'BONUS'}</span>{t}
+                    <span style={{ fontFamily: SANS, fontSize: 9.5, fontWeight: 700, letterSpacing: '.06em', color: PLUM_DK, background: 'linear-gradient(180deg,#E4C879,#C9A84C)', padding: '.28rem .6rem', whiteSpace: 'nowrap' }}>{i === 0 ? 'FREE 7 DAYS' : 'BONUS'}</span>{t}
                   </div>
                 ))}
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, justifyContent: 'center' }}>
-                  <span style={{ fontFamily: SANS, fontSize: 16, color: INK_MUTE, textDecoration: 'line-through' }}>$47</span>
-                  <div style={{ fontFamily: SERIF, fontSize: '3.6rem', fontWeight: 600, color: PLUM, lineHeight: 1 }}>{PRICE}</div>
-                </div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, color: INK_MUTE, marginTop: 6 }}>One-time · Digital access · 365-day guarantee</div>
-                <div style={{ marginTop: '1.2rem' }}><Btn label="Get The Knowledge Asset" /></div>
-              </div>
             </div>
           </Reveal>
+          {/* Right — the live checkout */}
+          <Reveal delay={100}><CheckoutCard planId={planId} /></Reveal>
         </div>
       </Section>
 
-      {/* Guarantee */}
-      <Section bg={PARCH} style={{ padding: 'clamp(80px,10vw,140px) 1.25rem' }}>
+      {/* Guarantee — the $5K promise */}
+      <Section bg={PLUM_DK} color={PARCH} style={{ padding: 'clamp(80px,10vw,140px) 1.25rem' }}>
         <div className="ka-guar">
           <Reveal style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{ position: 'relative', width: 'min(280px,72vw)', aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px solid ${GOLD}`, borderRadius: '50%' }}>
-              <div style={{ position: 'absolute', inset: 14, borderRadius: '50%', border: `1px solid ${GOLD_LINE}` }} />
-              <div style={{ textAlign: 'center', color: PLUM }}>
-                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: GOLD }}>Money-Back</div>
-                <div style={{ fontFamily: SERIF, fontSize: 'clamp(4.4rem,15vw,6.5rem)', fontWeight: 700, lineHeight: .82, margin: '.3rem 0', color: PLUM }}>365</div>
-                <div style={{ fontFamily: SANS, fontSize: 12.5, fontWeight: 700, letterSpacing: '.3em', textTransform: 'uppercase', color: INK_MUTE }}>Day Guarantee</div>
+            <div style={{ position: 'relative', width: 'min(300px,74vw)', aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: `radial-gradient(circle at 50% 34%, #4E3158, ${PLUM_DK} 72%)`, boxShadow: `0 30px 70px rgba(15,6,20,.5), inset 0 0 0 2px ${GOLD}` }}>
+              <div style={{ position: 'absolute', inset: 15, borderRadius: '50%', border: `1px dashed ${GOLD_LINE}` }} />
+              <div style={{ textAlign: 'center', color: PARCH, padding: 8 }}>
+                <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: GOLD }}>Build to</div>
+                <div style={{ fontFamily: SERIF, fontSize: 'clamp(3.6rem,13vw,5.4rem)', fontWeight: 700, lineHeight: .84, margin: '.25rem 0', color: WHITE }}>$5,000<span style={{ fontSize: '.32em', color: GOLD }}>/mo</span></div>
+                <div style={{ fontFamily: SANS, fontSize: 12, fontWeight: 700, letterSpacing: '.22em', textTransform: 'uppercase', color: GOLD }}>or your money back</div>
               </div>
             </div>
           </Reveal>
           <Reveal delay={90}>
-            <Eyebrow>Zero risk</Eyebrow>
-            <h2 style={{ ...H2, marginTop: '.8rem' }}>A full year to change your mind. <em style={emItal}>We&apos;re that confident.</em></h2>
-            <p style={{ fontFamily: SANS, fontSize: '1.15rem', color: INK_MID, marginTop: '1.3rem', lineHeight: 1.8, maxWidth: 560 }}>
-              We want you to actually use this book. Work through it, complete the exercises, build your product, shape your offer, plan your content, launch. And if you decide it isn&apos;t right for you, you&apos;re protected by our full 365-day money-back guarantee.
+            <Eyebrow>The $5K promise</Eyebrow>
+            <h2 style={{ ...H2, marginTop: '.8rem', color: WHITE }}>Build a $5,000-a-month business — <em style={{ fontStyle: 'italic', fontWeight: 300, color: GOLD }}>or get every penny back.</em></h2>
+            <p style={{ fontFamily: SANS, fontSize: '1.15rem', color: 'rgba(250,246,240,.82)', marginTop: '1.3rem', lineHeight: 1.8, maxWidth: 560 }}>
+              Here&apos;s our promise. Work through the workbook, do the exercises, and build the product, offer, and launch it walks you through. If you put in the work and don&apos;t build toward <strong style={{ color: '#fff', fontWeight: 600 }}>$5,000/month</strong>, we&apos;ll refund every penny — no hard feelings. You have a full year. That&apos;s how confident we are that this actually works.
             </p>
-            <div style={{ marginTop: '1.8rem' }}><Btn label="Get the book risk-free" /></div>
-            <p style={{ fontFamily: SANS, fontSize: 12, color: INK_MUTE, marginTop: '1.2rem', maxWidth: 540 }}>365-day money-back guarantee applies to the purchase price and is subject to the published refund terms.</p>
+            <div style={{ marginTop: '1.8rem' }}><Btn label="Start risk-free — $7.93" /></div>
+            <p style={{ fontFamily: SANS, fontSize: 12, color: 'rgba(250,246,240,.55)', marginTop: '1.2rem', maxWidth: 540 }}>The guarantee is a money-back guarantee on the purchase price, valid for 365 days and subject to the published refund terms. It is not a guarantee of business results — those depend on your execution, market, and effort.</p>
           </Reveal>
         </div>
       </Section>
@@ -778,7 +776,7 @@ export default function Workbook({ planId }: { planId: string }) {
               <a href="https://10kroadmap.org" style={{ fontFamily: SANS, fontSize: 13.5, color: GOLD, textDecoration: 'none', display: 'inline-block', marginTop: 4 }}>10kroadmap.org</a>
             </div>
             <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px' }} aria-label="Footer">
-              {[['Privacy Policy', '/privacy'], ['Terms', '/terms'], ['Refund Policy', '/refund'], ['Contact', '/support']].map(([l, h]) => (
+              {[['Terms', '/terms'], ['Refund Policy', '/refund'], ['Contact', '/support']].map(([l, h]) => (
                 <a key={l} href={h} style={{ fontFamily: SANS, fontSize: 13.5, color: 'rgba(250,246,240,.72)', textDecoration: 'none' }}>{l}</a>
               ))}
             </nav>
@@ -796,6 +794,9 @@ export default function Workbook({ planId }: { planId: string }) {
           Get The Knowledge Asset — {PRICE} →
         </a>
       </div>
+
+      {/* Proactive AI sales concierge (appears ~60s in / on exit-intent) */}
+      <WorkbookChat />
     </div>
   )
 }

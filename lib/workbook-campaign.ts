@@ -269,13 +269,14 @@ async function alreadySent(email: string, key: string) {
   return !!data
 }
 
-export async function sendWorkbookEmail(email: string, key: string, ctx: WBCtx): Promise<{ ok: boolean; error?: string }> {
+export async function sendWorkbookEmail(email: string, key: string, ctx: WBCtx, opts: { log?: boolean; skipSuppress?: boolean } = {}): Promise<{ ok: boolean; error?: string }> {
+  const { log = true, skipSuppress = false } = opts
   const def = WB_BY_KEY[key]
   if (!def) return { ok: false, error: 'unknown key' }
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) return { ok: false, error: 'RESEND_API_KEY missing' }
   const to = email.trim().toLowerCase()
-  if (await isUnsubscribed(to)) return { ok: false, error: 'unsubscribed' }
+  if (!skipSuppress && (await isUnsubscribed(to))) return { ok: false, error: 'unsubscribed' }
   const unsubUrl = unsubscribeUrl(to)
   const html = def.build({ ...ctx, unsubUrl })
   const resend = new Resend(apiKey)
@@ -293,7 +294,7 @@ export async function sendWorkbookEmail(email: string, key: string, ctx: WBCtx):
     tags: [{ name: 'campaign', value: 'workbook' }, { name: 'email_key', value: key }],
   })
   if (error) return { ok: false, error: String((error as { message?: string }).message || error) }
-  await getSupabaseAdmin().from('event_email_log').insert({ email: to, email_key: key, provider_id: data?.id || null }).then(() => {}, () => {})
+  if (log) await getSupabaseAdmin().from('event_email_log').upsert({ email: to, email_key: key, provider_id: data?.id || null }, { onConflict: 'email,email_key' }).then(() => {}, () => {})
   return { ok: true }
 }
 

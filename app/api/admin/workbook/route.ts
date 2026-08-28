@@ -26,11 +26,12 @@ export async function GET(req: NextRequest) {
     .select('email,email_key,created_at')
     .like('email_key', 'wb_%')
     .limit(50000)
-  const byEmail: Record<string, { keys: Set<string>; last: string | null }> = {}
+  const byEmail: Record<string, { keys: Set<string>; last: string | null; at: Record<string, string> }> = {}
   for (const l of logs || []) {
     const e = String(l.email).toLowerCase()
-    if (!byEmail[e]) byEmail[e] = { keys: new Set(), last: null }
+    if (!byEmail[e]) byEmail[e] = { keys: new Set(), last: null, at: {} }
     byEmail[e].keys.add(String(l.email_key))
+    byEmail[e].at[String(l.email_key)] = String(l.created_at)
     if (!byEmail[e].last || String(l.created_at) > byEmail[e].last!) byEmail[e].last = String(l.created_at)
   }
 
@@ -59,6 +60,8 @@ export async function GET(req: NextRequest) {
       total_emails: totalEmails,
       last_email_at: log?.last || null,
       sent_keys: log ? [...log.keys] : [],
+      // Per-email timeline for the drawer: every step + when it was sent (if it was).
+      timeline: WB_EMAILS.map((def) => ({ key: def.key, day: def.day, subject: def.subject, sent_at: log?.at[def.key] || null })),
     }
   })
 

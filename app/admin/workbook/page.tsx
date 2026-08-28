@@ -4,14 +4,16 @@
    Data: /api/admin/workbook (admin-only). Buyers are also mirrored into the CRM
    (Contacts, tagged "Workbook Buyer", with a purchase on their timeline). */
 import { useMemo, useState } from 'react'
-import { T, Card, PageHeader, Input, EmptyState, ErrorState, useAdminFetch, fmtDate, Avatar } from '@/components/admin/ui'
+import { T, Card, PageHeader, Input, EmptyState, ErrorState, useAdminFetch, fmtDate, Avatar, Drawer, adminSend } from '@/components/admin/ui'
 
+type Step = { key: string; day: number; subject: string; sent_at: string | null }
 type Buyer = {
   email: string; name: string | null; source: string | null
   purchased_at: string | null; trial_ends_at: string | null
   quiz_taken: boolean; call_booked: boolean; unsubscribed: boolean
   day: number; trial_left: number; trial_active: boolean
   sent_count: number; total_emails: number; last_email_at: string | null; sent_keys: string[]
+  timeline: Step[]
 }
 type Stats = { total: number; trial_active: number; quiz_taken: number; call_booked: number; unsubscribed: number; emails_sent: number; live: boolean }
 type Resp = { buyers: Buyer[]; stats: Stats; sequence: { key: string; day: number; subject: string }[] }
@@ -31,6 +33,28 @@ const Tick = ({ on }: { on: boolean }) =>
 export default function WorkbookBuyersPage() {
   const { data, loading, error, reload } = useAdminFetch<Resp>('/api/admin/workbook')
   const [q, setQ] = useState('')
+  const [sel, setSel] = useState<Buyer | null>(null)
+  const [busy, setBusy] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+
+  async function preview() {
+    if (!confirm('Send all 8 campaign emails to your own inbox for proofing? (These are marked as previews and do not affect any buyer.)')) return
+    setBusy('preview'); setNote(null)
+    try { const r = await adminSend('/api/admin/workbook/send', 'POST', { action: 'preview' }); setNote(`✓ Sent the full ${r.sent}-email preview to ${r.to}.`) }
+    catch (e) { setNote(`Couldn't send preview: ${String(e)}`) }
+    finally { setBusy(null) }
+  }
+
+  async function sendToBuyer(email: string, key: string, label: string) {
+    if (!confirm(`Send "${label}" to ${email} now? This is a real email.`)) return
+    setBusy(key); setNote(null)
+    try {
+      const r = await adminSend('/api/admin/workbook/send', 'POST', { action: 'send', email, key })
+      setNote(r.done ? 'All emails have already been sent to this buyer.' : `✓ Sent "${r.subject || label}" to ${email}.`)
+      reload()
+    } catch (e) { setNote(`Send failed: ${String(e)}`) }
+    finally { setBusy(null) }
+  }
 
   const buyers = useMemo(() => {
     const list = data?.buyers || []
@@ -46,8 +70,20 @@ export default function WorkbookBuyersPage() {
       <PageHeader
         title="Workbook Buyers"
         subtitle="The Knowledge Asset · post-purchase 7-day AI-trial nurture"
-        actions={<button className="a-btn a-btn-ghost" onClick={reload}>Refresh</button>}
+        actions={<>
+          <button className="a-btn a-btn-ghost" onClick={preview} disabled={busy === 'preview'}>{busy === 'preview' ? 'Sending…' : '✉ Email me the 8-email preview'}</button>
+          <button className="a-btn a-btn-ghost" onClick={reload}>Refresh</button>
+        </>}
       />
+
+      {note && (
+        <Card pad={12} style={{ marginBottom: 16, background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+          <div style={{ fontSize: 13.5, color: '#166534', display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+            <span>{note}</span>
+            <button onClick={() => setNote(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#166534' }}>×</button>
+          </div>
+        </Card>
+      )}
 
       {s && !s.live && (
         <Card pad={16} style={{ marginBottom: 18, background: '#fffbeb', border: '1px solid #fde68a' }}>
@@ -94,7 +130,7 @@ export default function WorkbookBuyersPage() {
                 </thead>
                 <tbody>
                   {buyers.map((b) => (
-                    <tr key={b.email} className="admin-row" style={{ borderBottom: `1px solid ${T.border}` }}>
+                    <tr key={b.email} className="admin-row" onClick={() => setSel(b)} style={{ borderBottom: `1px solid ${T.border}`, cursor: 'pointer' }}>
                       <td style={{ padding: '11px 16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <Avatar name={b.name} email={b.email} size={32} />
@@ -131,6 +167,62 @@ export default function WorkbookBuyersPage() {
           </>
         )}
       </Card>
+
+      {/* Buyer drawer — details, email timeline, and manual sends */}
+      <Drawer open={!!sel} onClose={() => setSel(null)} width={460}>
+        {sel && (
+          <div style={{ padding: 22 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
+              <Avatar name={sel.name} email={sel.email} size={44} />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: T.ink }}>{sel.name || sel.email.split('@')[0]}</div>
+                <div style={{ fontSize: 13, color: T.sub }}>{sel.email}</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '14px 0 4px' }}>
+              <Pill label={`Day ${sel.day}`} />
+              <Pill label={sel.trial_active ? `${sel.trial_left}d of trial left` : 'Trial ended'} tone={sel.trial_active ? 'green' : 'muted'} />
+              <Pill label={sel.quiz_taken ? 'Quiz taken' : 'No quiz'} tone={sel.quiz_taken ? 'green' : 'muted'} />
+              <Pill label={sel.call_booked ? 'Call booked' : 'No call'} tone={sel.call_booked ? 'green' : 'muted'} />
+              {sel.unsubscribed && <Pill label="Unsubscribed" tone="danger" />}
+            </div>
+            <div style={{ fontSize: 12.5, color: T.sub, marginTop: 8 }}>Purchased {fmtDate(sel.purchased_at)} · {sel.sent_count}/{sel.total_emails} emails sent</div>
+
+            <div style={{ display: 'flex', gap: 8, margin: '18px 0 20px', flexWrap: 'wrap' }}>
+              <button className="a-btn" style={{ width: 'auto', padding: '10px 16px' }} disabled={!!busy} onClick={() => sendToBuyer(sel.email, 'next', 'next due email')}>
+                {busy === 'next' ? 'Sending…' : '↦ Send next email now'}
+              </button>
+            </div>
+
+            <div style={{ fontSize: 11.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: T.sub, marginBottom: 10 }}>Email sequence</div>
+            <div style={{ display: 'grid', gap: 8 }}>
+              {sel.timeline.map((step) => (
+                <div key={step.key} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', border: `1px solid ${T.border}`, borderRadius: 10, background: step.sent_at ? '#f0fdf4' : T.card }}>
+                  <div style={{ width: 26, height: 26, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: step.sent_at ? '#166534' : T.muted, background: step.sent_at ? '#dcfce7' : '#f4f5f4' }}>{step.sent_at ? '✓' : `D${step.day}`}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: T.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{step.subject}</div>
+                    <div style={{ fontSize: 11.5, color: T.sub }}>{step.sent_at ? `Sent ${fmtDate(step.sent_at)}` : `Day ${step.day} · not sent`}</div>
+                  </div>
+                  <button className="a-btn a-btn-ghost" style={{ width: 'auto', padding: '6px 12px', fontSize: 12.5 }} disabled={busy === step.key} onClick={() => sendToBuyer(sel.email, step.key, step.subject)}>
+                    {busy === step.key ? '…' : step.sent_at ? 'Resend' : 'Send'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </Drawer>
     </div>
   )
+}
+
+function Pill({ label, tone = 'ink' }: { label: string; tone?: 'ink' | 'green' | 'muted' | 'danger' }) {
+  const map: Record<string, { c: string; bg: string; bd: string }> = {
+    ink: { c: T.ink, bg: '#f4f5f4', bd: T.border },
+    green: { c: '#166534', bg: '#f0fdf4', bd: '#bbf7d0' },
+    muted: { c: T.muted, bg: '#f9fafb', bd: T.border },
+    danger: { c: T.danger, bg: '#fef2f2', bd: '#fecaca' },
+  }
+  const s = map[tone]
+  return <span style={{ fontSize: 12, fontWeight: 700, color: s.c, background: s.bg, border: `1px solid ${s.bd}`, borderRadius: 999, padding: '3px 10px' }}>{label}</span>
 }

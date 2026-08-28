@@ -19,6 +19,7 @@ import { getSupabaseAdmin } from './supabase'
 import { isUnsubscribed, unsubscribeUrl } from './comm/unsubscribe'
 import { getBookedEmails } from './calcom'
 import { ctaButton, FROM, REPLY_TO } from './event-campaign'
+import { resolveOrCreateContact, addTag, logActivity } from './crm'
 
 const SITE = 'https://the5th.consulting'
 export const WB = {
@@ -307,6 +308,13 @@ export async function enrollWorkbookBuyer(email: string, name?: string | null, s
     const now = new Date()
     const ends = new Date(now.getTime() + WB.trialDays * 86400000)
     await db.from('workbook_buyers').insert({ email: e, name: name || null, source, purchased_at: now.toISOString(), trial_ends_at: ends.toISOString() }).then(() => {}, () => {})
+    // Mirror the buyer into the CRM: contact + "Workbook Buyer" tag + a purchase
+    // on their timeline, so the book shows up alongside everything else.
+    try {
+      const contact = await resolveOrCreateContact({ email: e, name: name || undefined, source: 'workbook' }, { source: 'workbook' })
+      if (contact?.id) await addTag(contact.id as string, 'Workbook Buyer', '#C9A84C')
+      await logActivity(e, 'purchase', 'Bought The Knowledge Asset', '$7.93 workbook + 7-day The5th AI trial', { product: 'knowledge_asset', price: 7.93, source }, 'workbook')
+    } catch { /* CRM sync is best-effort — never block enrollment */ }
   } else if (name) {
     await db.from('workbook_buyers').update({ name }).eq('email', e).then(() => {}, () => {})
   }

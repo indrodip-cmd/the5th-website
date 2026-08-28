@@ -467,8 +467,8 @@ export default function Workbook({ planId }: { planId: string }) {
         </Reveal>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16, marginTop: '2.4rem' }}>
           {CHAPTERS.map(([t, d], i) => (
-            <Reveal key={t} delay={i * 40} style={{ height: '100%' }}>
-              <div className="ka-lift" style={{ background: WHITE, border: `1px solid ${BORDER}`, padding: '1.6rem 1.5rem', height: '100%' }}>
+            <Reveal key={t} delay={i * 40} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="ka-lift" style={{ background: WHITE, border: `1px solid ${BORDER}`, padding: '1.6rem 1.5rem', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
                   <span style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '1.7rem', fontWeight: 600, color: GOLD }}>{String(i + 1).padStart(2, '0')}</span>
                   <span style={{ fontFamily: SANS, fontSize: 10.5, fontWeight: 700, letterSpacing: '.14em', color: INK_MUTE }}>CHAPTER</span>
@@ -624,8 +624,8 @@ export default function Workbook({ planId }: { planId: string }) {
           {BONUSES.map(([t, d, tag], i) => {
             const flagship = i === 0
             return (
-              <Reveal key={t} delay={i * 60}>
-                <div className="ka-lift" style={{ background: flagship ? `linear-gradient(160deg,${PLUM},${PLUM_DK})` : PARCH, color: flagship ? PARCH : INK, border: flagship ? `1px solid ${GOLD_LINE}` : `1px solid ${BORDER}`, padding: '1.7rem 1.5rem', height: '100%', position: 'relative' }}>
+              <Reveal key={t} delay={i * 60} style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="ka-lift" style={{ background: flagship ? `linear-gradient(160deg,${PLUM},${PLUM_DK})` : PARCH, color: flagship ? PARCH : INK, border: flagship ? `1px solid ${GOLD_LINE}` : `1px solid ${BORDER}`, padding: '1.7rem 1.5rem', flex: 1, position: 'relative' }}>
                   <span style={{ display: 'inline-block', fontFamily: SANS, fontSize: 9.5, fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: flagship ? PLUM_DK : GOLD, background: flagship ? 'linear-gradient(180deg,#E4C879,#C9A84C)' : GOLD_SOFT, padding: '.35rem .8rem' }}>{tag}</span>
                   <div style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '2rem', fontWeight: 600, color: flagship ? GOLD : PLUM, marginTop: 14 }}>0{i + 1}</div>
                   <div style={{ fontFamily: SERIF, fontSize: '1.4rem', fontWeight: 600, color: flagship ? WHITE : INK, marginTop: 4, lineHeight: 1.12 }}>{t}</div>
@@ -649,8 +649,8 @@ export default function Workbook({ planId }: { planId: string }) {
             ['The Knowledge Asset', ['Read.', 'Answer.', 'Build.', 'Launch.', 'Learn.'], true],
             ['The outcome', ['A real product.', 'A real offer.', 'A real audience.', 'A real launch plan.'], false],
           ].map(([title, items, hl]) => (
-            <Reveal key={title as string}>
-              <div className="ka-lift" style={{ background: hl ? `linear-gradient(160deg,${PLUM},${PLUM_DK})` : WHITE, color: hl ? PARCH : INK, border: hl ? `1px solid ${GOLD_LINE}` : `1px solid ${BORDER}`, padding: '1.8rem 1.6rem', height: '100%' }}>
+            <Reveal key={title as string} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="ka-lift" style={{ background: hl ? `linear-gradient(160deg,${PLUM},${PLUM_DK})` : WHITE, color: hl ? PARCH : INK, border: hl ? `1px solid ${GOLD_LINE}` : `1px solid ${BORDER}`, padding: '1.8rem 1.6rem', flex: 1 }}>
                 <div style={{ fontFamily: SANS, fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: hl ? GOLD : INK_MUTE }}>{title as string}</div>
                 <ul style={{ listStyle: 'none', margin: '1.1rem 0 0', display: 'grid', gap: 10 }}>
                   {(items as string[]).map((it) => (
@@ -676,8 +676,8 @@ export default function Workbook({ planId }: { planId: string }) {
             { name: 'Indrodip Ghosh', role: 'Digital Product Strategist · Co-Author', src: '/images/founder.png', initials: 'IG', copy: 'Indrodip brings the strategy and systems side of the book — business mechanics, digital products, scaling, and the market reality of building online. His chapters draw from years of building and rebuilding businesses and the real stories of 20+ clients he has guided toward their first $10K months. He also shares his own transition from a service business dependent on his time to digital products and coaching.' },
             { name: 'Christinee Mathison', role: 'Mindset Coach · Co-Author', src: '/images/christinee.png', initials: 'CM', copy: 'Christinee brings the transformation and clarity side — audience clarity, offer building, content, mindset, and the inner work required to show up consistently. Her chapters help readers understand who they are building for, package their expertise into an offer, communicate their value, and develop the mindset required for consistent action.' },
           ].map((a, i) => (
-            <Reveal key={a.name} delay={i * 90}>
-              <div className="ka-lift" style={{ background: PARCH, border: `1px solid ${BORDER}`, padding: '2rem 1.8rem', height: '100%' }}>
+            <Reveal key={a.name} delay={i * 90} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="ka-lift" style={{ background: PARCH, border: `1px solid ${BORDER}`, padding: '2rem 1.8rem', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                   <Avatar src={a.src} initials={a.initials} name={a.name} size={92} />
                   <div>

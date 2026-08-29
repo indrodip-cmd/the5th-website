@@ -45,6 +45,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
   { section: 'Platform', items: [
     { href: '/admin/platform', label: 'Platform Control', icon: '⚙', match: (p) => p.startsWith('/admin/platform') },
     { href: '/admin/integrations', label: 'Integrations', icon: '🔌', match: (p) => p.startsWith('/admin/integrations') },
+    { href: '/admin/whop-recover', label: 'Whop Recovery', icon: '↺', match: (p) => p.startsWith('/admin/whop-recover') },
     { href: '/admin/costs', label: 'Costs', icon: '＄', match: (p) => p.startsWith('/admin/costs'), flag: 'cost_center' },
     { href: '/admin/system', label: 'System', icon: '❤', match: (p) => p.startsWith('/admin/system') },
     { href: '/admin/flags', label: 'Feature Flags', icon: '⚑', match: (p) => p.startsWith('/admin/flags') },

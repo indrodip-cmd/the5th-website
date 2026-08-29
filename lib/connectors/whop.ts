@@ -241,6 +241,57 @@ export function verifyWhopWebhook(raw: string, h: SvixHeaders): boolean {
   return provided.some((sig) => { try { return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected)) } catch { return false } })
 }
 
+function eqStr(a: string, b: string): boolean {
+  try { const ab = Buffer.from(a), bb = Buffer.from(b); return ab.length === bb.length && crypto.timingSafeEqual(ab, bb) } catch { return false }
+}
+
+/* Robust, scheme-agnostic Whop webhook verification. Whop has shipped two
+   signing formats over time: legacy Svix (svix- or webhook- headers, whsec_
+   secret, base64 HMAC of id.timestamp.body) and its own x-whop-signature
+   (Stripe-style t=,v1= hex, or a bare hmac). Rather than guess, we try every
+   realistic combination with the CONFIGURED secret and accept only a genuine
+   HMAC match, so it is robust to Whop's format while remaining cryptographically
+   secure (an attacker still cannot forge without the secret). Replay protection
+   is handled by the caller's unique(external_id) dedup, so there is no brittle
+   clock-skew guard. Returns which headers were present so failures diagnose. */
+export function verifyWhopRequest(raw: string, headers: Headers): { ok: boolean; scheme: string | null; present: string[] } {
+  const secret = process.env.WHOP_WEBHOOK_SECRET || ''
+  const HDRS = ['svix-id', 'svix-timestamp', 'svix-signature', 'webhook-id', 'webhook-timestamp', 'webhook-signature', 'x-whop-signature', 'whop-signature']
+  const present = HDRS.filter((h) => headers.get(h))
+  if (!secret) return { ok: false, scheme: null, present }
+
+  // Candidate keys: raw secret as utf8, and (for whsec_) its base64-decoded form.
+  const stripped = secret.replace(/^whsec_/, '')
+  const keys: Buffer[] = [Buffer.from(secret, 'utf8'), Buffer.from(stripped, 'utf8')]
+  try { const d = Buffer.from(stripped, 'base64'); if (d.length) keys.push(d) } catch { /* ignore */ }
+  const hmac = (k: Buffer, data: string, enc: 'hex' | 'base64') => crypto.createHmac('sha256', k).update(data).digest(enc)
+
+  // ── Svix scheme ──
+  const svId = headers.get('svix-id') || headers.get('webhook-id')
+  const svTs = headers.get('svix-timestamp') || headers.get('webhook-timestamp')
+  const svSig = headers.get('svix-signature') || headers.get('webhook-signature')
+  if (svId && svTs && svSig) {
+    const content = `${svId}.${svTs}.${raw}`
+    const sigs = svSig.split(' ').map((s) => (s.includes(',') ? s.split(',')[1] : s)).filter(Boolean)
+    for (const k of keys) { const exp = hmac(k, content, 'base64'); if (sigs.some((s) => eqStr(s, exp))) return { ok: true, scheme: 'svix', present } }
+  }
+
+  // ── Whop native x-whop-signature ──
+  const wh = headers.get('x-whop-signature') || headers.get('whop-signature')
+  if (wh) {
+    const parts: Record<string, string> = {}
+    for (const seg of wh.split(',')) { const i = seg.indexOf('='); if (i > 0) parts[seg.slice(0, i).trim()] = seg.slice(i + 1).trim() }
+    const ts = parts['t']
+    const provided = [parts['v1'], parts['sha256'], wh.replace(/^sha256=/, '').trim()].filter(Boolean) as string[]
+    const contents = ts ? [`${ts}.${raw}`, raw] : [raw]
+    for (const content of contents) for (const k of keys) {
+      const hex = hmac(k, content, 'hex'), b64 = hmac(k, content, 'base64')
+      if (provided.some((s) => eqStr(s, hex) || eqStr(s, b64))) return { ok: true, scheme: 'whop', present }
+    }
+  }
+  return { ok: false, scheme: null, present }
+}
+
 /* Revenue-affecting events → RevenueEvent; other events return null and are
    handled (notify / subscriber count) by the webhook route. */
 const REVENUE_MAP: Record<string, RevenueEvent['type']> = {

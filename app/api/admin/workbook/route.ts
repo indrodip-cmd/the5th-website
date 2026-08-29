@@ -23,16 +23,17 @@ export async function GET(req: NextRequest) {
   // Campaign emails received, grouped by buyer.
   const { data: logs } = await db
     .from('event_email_log')
-    .select('email,email_key,created_at')
+    .select('email,email_key,sent_at')
     .like('email_key', 'wb_%')
     .limit(50000)
   const byEmail: Record<string, { keys: Set<string>; last: string | null; at: Record<string, string> }> = {}
   for (const l of logs || []) {
     const e = String(l.email).toLowerCase()
+    const at = String(l.sent_at || '')
     if (!byEmail[e]) byEmail[e] = { keys: new Set(), last: null, at: {} }
     byEmail[e].keys.add(String(l.email_key))
-    byEmail[e].at[String(l.email_key)] = String(l.created_at)
-    if (!byEmail[e].last || String(l.created_at) > byEmail[e].last!) byEmail[e].last = String(l.created_at)
+    if (at) byEmail[e].at[String(l.email_key)] = at
+    if (at && (!byEmail[e].last || at > byEmail[e].last!)) byEmail[e].last = at
   }
 
   const now = Date.now()

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { verifyWhopWebhook, normalizeWhopEvent, whopConfigured, whopSyncBalances, whopRefreshMember } from '@/lib/connectors/whop'
+import { verifyWhopRequest, normalizeWhopEvent, whopConfigured, whopSyncBalances, whopRefreshMember } from '@/lib/connectors/whop'
 import { recordRevenueEvent } from '@/lib/revenue'
 import { notify } from '@/lib/notifications'
 import { emitEvent } from '@/lib/events'
@@ -39,21 +39,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, skipped: 'whop not configured' })
   }
 
-  const svix = {
-    id: req.headers.get('svix-id') || req.headers.get('webhook-id'),
-    timestamp: req.headers.get('svix-timestamp') || req.headers.get('webhook-timestamp'),
-    signature: req.headers.get('svix-signature') || req.headers.get('webhook-signature'),
-  }
-  if (!verifyWhopWebhook(raw, svix)) {
-    await db.from('integration_webhooks').insert({ provider: 'whop', status: 'error', signature_valid: false, error: 'invalid signature', payload: safeParse(raw) }).then(() => {}, () => {})
+  const ver = verifyWhopRequest(raw, req.headers)
+  if (!ver.ok) {
+    // Capture which signature headers actually arrived so a bad secret vs. a
+    // format mismatch can be told apart from the logs without guessing.
+    const rawSig = (req.headers.get('x-whop-signature') || req.headers.get('svix-signature') || req.headers.get('webhook-signature') || '').slice(0, 24)
+    const diag = `invalid signature · present=[${ver.present.join(',')}] · sig~=${rawSig}`
+    await db.from('integration_webhooks').insert({ provider: 'whop', status: 'error', signature_valid: false, error: diag, payload: safeParse(raw) }).then(() => {}, () => {})
     emitEvent('webhook_failed', { provider: 'whop', reason: 'invalid_signature' })
-    notify('integration_error', 'Whop webhook rejected: bad signature', 'A Whop event failed signature verification. Sales, subscriptions and Breakthrough enrollments are being DROPPED until this is fixed. Check WHOP_WEBHOOK_SECRET matches the signing secret on the Whop endpoint.').catch(() => {})
+    notify('integration_error', 'Whop webhook rejected: bad signature', `A Whop event failed signature verification (headers present: ${ver.present.join(', ') || 'none'}). Sales, subscriptions and workbook/Breakthrough enrollments are being DROPPED. Verify WHOP_WEBHOOK_SECRET matches the signing secret on the Whop endpoint.`).catch(() => {})
     return NextResponse.json({ error: 'invalid signature' }, { status: 401 })
   }
 
   const body = safeParse(raw)
   const action = String(body.action || body.event || body.type || 'unknown')
-  const dedupeId = svix.id || String(body.id || '') // Svix message id → retries share it
+  // Idempotency id — the webhook message id (Svix or Whop), falling back to the
+  // event's own id. Retries of the same event share it, so dedup holds.
+  const dedupeId = req.headers.get('svix-id') || req.headers.get('webhook-id') || req.headers.get('x-whop-request-id') || String(body.id || (body.data as Record<string, unknown>)?.id || '')
 
   // Dedup + audit: unique(provider, external_id, event_type)
   const { error: insErr } = await db.from('integration_webhooks').insert({

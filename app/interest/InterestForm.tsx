@@ -195,7 +195,7 @@ export default function InterestForm() {
 
   // ── Form shell ──
   return (
-    <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100dvh', width: '100%', background: C.cream, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
       <div style={{ width: '100%', maxWidth: 600, margin: '0 auto', padding: '26px 20px 40px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <TopBar />
         <ProgressIndicator current={idx + 1} total={total} />
@@ -385,10 +385,10 @@ function ContactStep({
 
 function Hero({ onStart }: { onStart: () => void }) {
   return (
-    <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100dvh', width: '100%', background: C.cream, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
       {/* Slim brand bar */}
-      <div style={{ padding: '20px 24px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ width: '100%', padding: '20px 22px' }}>
+        <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
           <Wordmark size={22} />
           <span aria-hidden style={{ width: 1, height: 16, background: C.line }} />
           <span style={{ fontSize: 10.5, letterSpacing: 2.4, color: C.inkSoft, fontWeight: 700, fontFamily: SANS }}>CONSULTING</span>
@@ -396,29 +396,30 @@ function Hero({ onStart }: { onStart: () => void }) {
       </div>
 
       <div style={{
-        flex: 1, width: '100%', maxWidth: 960, margin: '0 auto', padding: '8px 24px 56px',
+        flex: 1, width: '100%', maxWidth: 760, margin: '0 auto', padding: '10px 22px 52px',
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
       }}>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ maxWidth: 680 }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ width: '100%', maxWidth: 640 }}>
           <span style={{
-            display: 'inline-block', fontSize: 11.5, letterSpacing: 2.6, fontWeight: 700, fontFamily: SANS,
+            display: 'inline-block', fontSize: 'clamp(10px,2.8vw,11.5px)', letterSpacing: 2.2, fontWeight: 700, fontFamily: SANS,
             color: '#8A6D1F', background: 'rgba(201,168,76,0.14)', border: '1px solid rgba(201,168,76,0.32)',
-            padding: '7px 13px', borderRadius: 999, marginBottom: 22,
+            padding: '7px 13px', borderRadius: 999, marginBottom: 22, maxWidth: '100%',
           }}>
             FOR COACHES · CONSULTANTS · EXPERTS
           </span>
           <h1 style={{
             fontFamily: FONT, fontWeight: 400, color: C.ink,
-            fontSize: 'clamp(36px,7.5vw,62px)', lineHeight: 1.06, margin: '0 0 22px', letterSpacing: '-0.015em',
+            fontSize: 'clamp(31px,7vw,56px)', lineHeight: 1.08, margin: '0 0 20px', letterSpacing: '-0.015em',
+            maxWidth: '100%', overflowWrap: 'break-word',
           }}>
-            Build a business around<br />what you already know.
+            The end-to-end platform to build your coaching business.
           </h1>
-          <p style={{ fontFamily: SANS, fontSize: 'clamp(16px,2.4vw,19px)', color: C.inkSoft, lineHeight: 1.62, maxWidth: 560, marginBottom: 36 }}>
-            Tell us a little about what you&apos;re building. We&apos;ll use your answers to understand
-            where you are, what you&apos;re trying to achieve, and how we may be able to help.
+          <p style={{ fontFamily: SANS, fontSize: 'clamp(15.5px,2.4vw,19px)', color: C.inkSoft, lineHeight: 1.62, maxWidth: 540, marginBottom: 34 }}>
+            Positioning, offers, funnels, content and automation — in one place. Tell us what
+            you&apos;re building, and we&apos;ll map where you are and how we can help.
           </p>
           <Btn onClick={onStart} size="lg">Tell us about your business →</Btn>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: C.inkSoft, marginTop: 18, display: 'flex', alignItems: 'center', gap: 7 }}>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: C.inkSoft, marginTop: 16, display: 'flex', alignItems: 'center', gap: 7 }}>
             <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: C.gold }} />
             Takes under 60 seconds · No obligation
           </p>
@@ -432,7 +433,7 @@ function Hero({ onStart }: { onStart: () => void }) {
 
 function Success({ name }: { name: string }) {
   return (
-    <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100dvh', width: '100%', background: C.cream, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '56px 24px' }}>
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}

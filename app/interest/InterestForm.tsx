@@ -12,7 +12,8 @@ import {
 } from './config'
 import { COUNTRIES } from './countries'
 import {
-  OptionCard, Field, Btn, ProgressIndicator, useAttribution, useVisitorId, FONT, SANS,
+  OptionCard, Field, Btn, ProgressIndicator, Footer, Wordmark,
+  useAttribution, useVisitorId, FONT, SANS,
 } from './ui'
 import { track } from './track'
 import { getRecaptchaToken } from '@/lib/recaptcha-client'
@@ -195,7 +196,7 @@ export default function InterestForm() {
   // ── Form shell ──
   return (
     <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ width: '100%', maxWidth: 620, margin: '0 auto', padding: '28px 20px 120px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '100%', maxWidth: 600, margin: '0 auto', padding: '26px 20px 40px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <TopBar />
         <ProgressIndicator current={idx + 1} total={total} />
 
@@ -242,13 +243,14 @@ export default function InterestForm() {
         )}
       </div>
 
-      {/* Sticky action bar (comfortable on mobile). */}
+      {/* Sticky action bar (comfortable on mobile, respects the home indicator). */}
       <div style={{
-        position: 'sticky', bottom: 0, background: `linear-gradient(to top, ${C.cream} 70%, rgba(250,246,240,0))`,
-        padding: '16px 20px 22px', borderTop: `1px solid ${C.line}`,
+        position: 'sticky', bottom: 0, background: `linear-gradient(to top, ${C.cream} 74%, rgba(251,248,242,0))`,
+        padding: '16px 20px calc(20px + env(safe-area-inset-bottom))', borderTop: `1px solid ${C.line}`,
+        backdropFilter: 'blur(2px)',
       }}>
         <div style={{
-          maxWidth: 620, margin: '0 auto', display: 'flex', alignItems: 'center',
+          maxWidth: 600, margin: '0 auto', display: 'flex', alignItems: 'center',
           justifyContent: 'space-between', gap: 12,
         }}>
           <Btn variant="ghost" onClick={back}>← Back</Btn>
@@ -269,9 +271,11 @@ export default function InterestForm() {
 
 function TopBar() {
   return (
-    <div style={{ marginBottom: 24 }}>
-      <span style={{ fontSize: 11, letterSpacing: 3, color: C.purple, fontWeight: 700, fontFamily: SANS }}>
-        FIFTH CONSULTING
+    <div style={{ marginBottom: 26, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <Wordmark size={20} />
+      <span aria-hidden style={{ width: 1, height: 15, background: C.line }} />
+      <span style={{ fontSize: 10.5, letterSpacing: 2.4, color: C.inkSoft, fontWeight: 700, fontFamily: SANS }}>
+        CONSULTING
       </span>
     </div>
   )
@@ -382,58 +386,79 @@ function ContactStep({
 function Hero({ onStart }: { onStart: () => void }) {
   return (
     <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
+      {/* Slim brand bar */}
+      <div style={{ padding: '20px 24px' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Wordmark size={22} />
+          <span aria-hidden style={{ width: 1, height: 16, background: C.line }} />
+          <span style={{ fontSize: 10.5, letterSpacing: 2.4, color: C.inkSoft, fontWeight: 700, fontFamily: SANS }}>CONSULTING</span>
+        </div>
+      </div>
+
       <div style={{
-        flex: 1, maxWidth: 720, margin: '0 auto', padding: '0 24px',
+        flex: 1, width: '100%', maxWidth: 960, margin: '0 auto', padding: '8px 24px 56px',
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
       }}>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <span style={{ fontSize: 12, letterSpacing: 3, color: C.purple, fontWeight: 700, fontFamily: SANS }}>
-            FIFTH CONSULTING
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ maxWidth: 680 }}>
+          <span style={{
+            display: 'inline-block', fontSize: 11.5, letterSpacing: 2.6, fontWeight: 700, fontFamily: SANS,
+            color: '#8A6D1F', background: 'rgba(201,168,76,0.14)', border: '1px solid rgba(201,168,76,0.32)',
+            padding: '7px 13px', borderRadius: 999, marginBottom: 22,
+          }}>
+            FOR COACHES · CONSULTANTS · EXPERTS
           </span>
           <h1 style={{
             fontFamily: FONT, fontWeight: 400, color: C.ink,
-            fontSize: 'clamp(34px,7vw,58px)', lineHeight: 1.08, margin: '22px 0 20px', letterSpacing: '-0.01em',
+            fontSize: 'clamp(36px,7.5vw,62px)', lineHeight: 1.06, margin: '0 0 22px', letterSpacing: '-0.015em',
           }}>
             Build a business around<br />what you already know.
           </h1>
-          <p style={{ fontFamily: SANS, fontSize: 'clamp(16px,2.4vw,19px)', color: C.inkSoft, lineHeight: 1.6, maxWidth: 560, marginBottom: 36 }}>
+          <p style={{ fontFamily: SANS, fontSize: 'clamp(16px,2.4vw,19px)', color: C.inkSoft, lineHeight: 1.62, maxWidth: 560, marginBottom: 36 }}>
             Tell us a little about what you&apos;re building. We&apos;ll use your answers to understand
             where you are, what you&apos;re trying to achieve, and how we may be able to help.
           </p>
-          <Btn onClick={onStart}>Tell us about your business →</Btn>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: C.inkSoft, marginTop: 18 }}>
-            Takes under 60 seconds.
+          <Btn onClick={onStart} size="lg">Tell us about your business →</Btn>
+          <p style={{ fontFamily: SANS, fontSize: 13, color: C.inkSoft, marginTop: 18, display: 'flex', alignItems: 'center', gap: 7 }}>
+            <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: C.gold }} />
+            Takes under 60 seconds · No obligation
           </p>
         </motion.div>
       </div>
+
+      <Footer />
     </div>
   )
 }
 
 function Success({ name }: { name: string }) {
   return (
-    <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px' }}>
-      <motion.div
-        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        style={{ maxWidth: 560, textAlign: 'center' }}
-      >
-        <div style={{
-          width: 60, height: 60, borderRadius: 999, background: C.purple, margin: '0 auto 28px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12.5 10 17.5 19.5 7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <h1 style={{ fontFamily: FONT, fontWeight: 400, fontSize: 'clamp(28px,6vw,44px)', color: C.ink, lineHeight: 1.15, marginBottom: 18 }}>
-          You&apos;re on our radar.
-        </h1>
-        <p style={{ fontFamily: SANS, fontSize: 17, color: C.inkSoft, lineHeight: 1.6 }}>
-          {name ? `Thanks, ${name}. ` : 'Thanks. '}
-          We&apos;ve received your answers and we&apos;ll review what you&apos;re building.
-          If the next step calls for a conversation, we&apos;ll reach out with the right one.
-        </p>
-      </motion.div>
+    <div style={{ minHeight: '100dvh', background: C.cream, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '56px 24px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          style={{ maxWidth: 560, textAlign: 'center' }}
+        >
+          <div style={{
+            width: 66, height: 66, borderRadius: 999, background: C.plum, margin: '0 auto 30px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 0 8px rgba(201,168,76,0.14), 0 14px 34px rgba(46,26,53,0.28)',
+          }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12.5 10 17.5 19.5 7" stroke={C.goldLight} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h1 style={{ fontFamily: FONT, fontWeight: 400, fontSize: 'clamp(30px,6.5vw,46px)', color: C.ink, lineHeight: 1.12, marginBottom: 18, letterSpacing: '-0.01em' }}>
+            You&apos;re on our radar.
+          </h1>
+          <p style={{ fontFamily: SANS, fontSize: 17, color: C.inkSoft, lineHeight: 1.62 }}>
+            {name ? `Thanks, ${name}. ` : 'Thanks. '}
+            We&apos;ve received your answers and we&apos;ll review what you&apos;re building.
+            If the next step calls for a conversation, we&apos;ll reach out with the right one.
+          </p>
+        </motion.div>
+      </div>
+
+      <Footer />
     </div>
   )
 }

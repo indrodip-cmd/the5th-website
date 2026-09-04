@@ -8,17 +8,25 @@
 export const SOURCE = 'interest-registration'
 export const LANDING_PATH = '/interest'
 
-/* Brand tokens (from the site palette + Gelica, already loaded in globals.css). */
+/* The5th Consulting brand tokens — deep aubergine + gold on warm cream,
+   matching the marketing site (public/index.html) and Gelica display type
+   (loaded in globals.css). */
 export const C = {
-  cream: '#FAF6F0',
-  creamAlt: '#FBF6EF',
-  ink: '#1C1A22',
-  inkSoft: '#4A4550',
-  line: '#E7DFD4',
-  purple: '#552879',
-  purpleSoft: '#6B39A0',
-  gold: '#E4C879',
+  cream: '#FBF8F2',      // page paper
+  creamAlt: '#F4EFE4',   // input / prefix fill
+  ink: '#2E1A35',        // aubergine — headings & primary buttons
+  inkSoft: '#6B5E67',    // muted body
+  line: '#E7DDCE',       // hairlines / borders
+  plum: '#2E1A35',
+  plumDeep: '#231029',   // footer base
+  plum2: '#3D2645',
+  purple: '#8A5BB0',     // accent purple (wordmark gradient)
+  gold: '#C9A84C',       // primary gold
+  goldLight: '#F4DE93',
+  goldSoft: '#F6E29B',
   white: '#FFFFFF',
+  // purple→gold display gradient used for wordmark + progress + selection glow
+  grad: 'linear-gradient(100deg,#8A5BB0 0%,#C9A84C 48%,#F4DE93 62%,#8A5BB0 100%)',
 } as const
 
 export type Option = { value: string; label: string; hint?: string }

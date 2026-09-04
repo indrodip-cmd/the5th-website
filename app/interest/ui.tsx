@@ -59,38 +59,33 @@ export function OptionCard({
       role={multi ? 'checkbox' : 'radio'}
       aria-checked={selected}
       onClick={onSelect}
-      className="io-card"
-      style={{
-        borderColor: selected ? C.purple : C.line,
-        background: selected ? 'rgba(85,40,121,0.05)' : C.white,
-        boxShadow: selected ? `0 0 0 1px ${C.purple}` : 'none',
-      }}
+      className={`io-card${selected ? ' io-card--on' : ''}`}
     >
       <span
         aria-hidden
         className="io-mark"
         style={{
-          borderRadius: multi ? 6 : 999,
-          borderColor: selected ? C.purple : C.line,
-          background: selected ? C.purple : 'transparent',
+          borderRadius: multi ? 7 : 999,
+          borderColor: selected ? C.gold : C.line,
+          background: selected ? C.gold : 'transparent',
         }}
       >
         {selected && (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M2.5 6.2 5 8.6l4.5-5" stroke="#fff" strokeWidth="1.8"
+          <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+            <path d="M2.5 6.2 5 8.6l4.5-5" stroke={C.plumDeep} strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         )}
       </span>
       <span className="io-card-text">
-        <span style={{ fontWeight: 500, color: C.ink }}>{label}</span>
+        <span style={{ fontWeight: 600, color: C.ink }}>{label}</span>
         {hint && <span style={{ display: 'block', fontSize: 13, color: C.inkSoft, marginTop: 2 }}>{hint}</span>}
       </span>
     </button>
   )
 }
 
-/* Text / email / tel input with a floating label + inline error. */
+/* Text / email / tel input with a label + inline error. */
 export function Field({
   id, label, type = 'text', value, onChange, error, placeholder, autoComplete, inputMode, prefix,
 }: {
@@ -99,17 +94,17 @@ export function Field({
   autoComplete?: string; inputMode?: 'text' | 'email' | 'tel' | 'numeric'; prefix?: string
 }) {
   return (
-    <div style={{ marginBottom: 16 }}>
-      <label htmlFor={id} style={{ display: 'block', fontSize: 13, fontWeight: 600, color: C.ink, marginBottom: 6, fontFamily: SANS }}>
+    <div style={{ marginBottom: 18 }}>
+      <label htmlFor={id} style={{ display: 'block', fontSize: 12.5, fontWeight: 700, color: C.ink, marginBottom: 7, fontFamily: SANS, letterSpacing: '0.01em' }}>
         {label}
       </label>
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         {prefix && (
           <span style={{
-            display: 'inline-flex', alignItems: 'center', padding: '0 12px',
+            display: 'inline-flex', alignItems: 'center', padding: '0 13px',
             border: `1px solid ${error ? '#C0392B' : C.line}`, borderRight: 'none',
-            borderRadius: '10px 0 0 10px', background: C.creamAlt, color: C.inkSoft,
-            fontSize: 15, fontFamily: SANS, whiteSpace: 'nowrap',
+            borderRadius: '12px 0 0 12px', background: C.creamAlt, color: C.inkSoft,
+            fontSize: 15, fontFamily: SANS, whiteSpace: 'nowrap', fontWeight: 600,
           }}>{prefix}</span>
         )}
         <input
@@ -117,14 +112,15 @@ export function Field({
           autoComplete={autoComplete} inputMode={inputMode}
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={!!error} aria-describedby={error ? `${id}-err` : undefined}
+          className="io-input"
           style={{
-            flex: 1, width: '100%', padding: '13px 14px', fontSize: 16,
+            flex: 1, width: '100%', padding: '15px 15px', fontSize: 16,
             fontFamily: SANS, color: C.ink, background: C.white,
             border: `1px solid ${error ? '#C0392B' : C.line}`,
-            borderRadius: prefix ? '0 10px 10px 0' : 10, outline: 'none',
+            borderRadius: prefix ? '0 12px 12px 0' : 12, outline: 'none',
           }}
-          onFocus={(e) => { e.target.style.borderColor = error ? '#C0392B' : C.purple }}
-          onBlur={(e) => { e.target.style.borderColor = error ? '#C0392B' : C.line }}
+          onFocus={(e) => { e.target.style.borderColor = error ? '#C0392B' : C.gold; e.target.style.boxShadow = error ? 'none' : `0 0 0 3px rgba(201,168,76,0.18)` }}
+          onBlur={(e) => { e.target.style.borderColor = error ? '#C0392B' : C.line; e.target.style.boxShadow = 'none' }}
         />
       </div>
       {error && <p id={`${id}-err`} role="alert" style={{ color: '#C0392B', fontSize: 13, marginTop: 6, fontFamily: SANS }}>{error}</p>}
@@ -134,52 +130,96 @@ export function Field({
 
 /* Primary / ghost button. */
 export function Btn({
-  children, onClick, variant = 'primary', disabled, type = 'button', full,
+  children, onClick, variant = 'primary', disabled, type = 'button', full, size = 'md',
 }: {
   children: React.ReactNode; onClick?: () => void
-  variant?: 'primary' | 'ghost'; disabled?: boolean; type?: 'button' | 'submit'; full?: boolean
+  variant?: 'primary' | 'ghost'; disabled?: boolean; type?: 'button' | 'submit'
+  full?: boolean; size?: 'md' | 'lg'
 }) {
   const primary = variant === 'primary'
   return (
     <button
       type={type} onClick={onClick} disabled={disabled}
+      className={primary ? 'io-btn io-btn--primary' : 'io-btn io-btn--ghost'}
       style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        padding: '14px 26px', fontSize: 15, fontWeight: 600, fontFamily: SANS,
+        padding: size === 'lg' ? '17px 34px' : '14px 26px',
+        fontSize: size === 'lg' ? 16 : 15, fontWeight: 700, fontFamily: SANS,
         borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
-        width: full ? '100%' : 'auto',
+        width: full ? '100%' : 'auto', letterSpacing: '0.01em',
         border: primary ? 'none' : `1px solid ${C.line}`,
-        background: primary ? (disabled ? '#B7A9C6' : C.purple) : 'transparent',
+        background: primary ? (disabled ? '#C7BCC9' : C.plum) : 'transparent',
         color: primary ? '#fff' : C.inkSoft,
-        opacity: disabled && !primary ? 0.5 : 1,
-        transition: 'transform .12s ease, background .2s ease',
+        opacity: disabled && !primary ? 0.55 : 1,
+        boxShadow: primary && !disabled ? '0 8px 22px rgba(46,26,53,0.22)' : 'none',
+        transition: 'transform .12s ease, box-shadow .2s ease, background .2s ease',
       }}
-      onMouseDown={(e) => { if (!disabled) e.currentTarget.style.transform = 'scale(0.98)' }}
-      onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
     >
       {children}
     </button>
   )
 }
 
-/* Step counter + subtle progress bar. */
+/* Step counter + gradient progress bar. */
 export function ProgressIndicator({ current, total }: { current: number; total: number }) {
   const pct = Math.round((current / total) * 100)
   return (
-    <div style={{ marginBottom: 28 }}>
+    <div style={{ marginBottom: 30 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <span style={{ fontSize: 12, letterSpacing: 2, color: C.inkSoft, fontFamily: SANS, fontWeight: 600 }}>
-          {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
+        <span style={{ fontSize: 12, letterSpacing: 2.5, color: C.inkSoft, fontFamily: SANS, fontWeight: 700 }}>
+          {String(current).padStart(2, '0')} <span style={{ color: C.line }}>/</span> {String(total).padStart(2, '0')}
         </span>
       </div>
-      <div style={{ height: 3, background: C.line, borderRadius: 999, overflow: 'hidden' }}>
+      <div style={{ height: 4, background: C.line, borderRadius: 999, overflow: 'hidden' }}>
         <div style={{
-          height: '100%', width: `${pct}%`, background: C.purple,
-          borderRadius: 999, transition: 'width .4s cubic-bezier(.4,0,.2,1)',
+          height: '100%', width: `${pct}%`, background: C.grad,
+          borderRadius: 999, transition: 'width .45s cubic-bezier(.4,0,.2,1)',
         }} />
       </div>
     </div>
+  )
+}
+
+/* The5th gradient wordmark. */
+export function Wordmark({ size = 22 }: { size?: number }) {
+  return (
+    <span aria-label="The5th Consulting" style={{
+      fontFamily: FONT, fontWeight: 700, fontSize: size, letterSpacing: '-0.01em',
+      backgroundImage: C.grad, WebkitBackgroundClip: 'text', backgroundClip: 'text',
+      WebkitTextFillColor: 'transparent', color: 'transparent',
+      filter: 'drop-shadow(0 0 18px rgba(201,168,76,.28))',
+    }}>
+      the<em style={{ fontStyle: 'italic', WebkitTextFillColor: C.goldSoft, color: C.goldSoft }}>5</em>th.
+    </span>
+  )
+}
+
+/* Branded aubergine footer with the required legal line. */
+export function Footer() {
+  const linkStyle: React.CSSProperties = { color: 'rgba(246,226,155,0.82)', textDecoration: 'none', fontFamily: SANS, fontSize: 13.5 }
+  return (
+    <footer style={{ background: C.plumDeep, color: '#EFE7DA', marginTop: 'auto' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '44px 24px 36px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
+          <Wordmark size={26} />
+          <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px' }}>
+            <a href="/about" style={linkStyle}>About</a>
+            <a href="/privacy" style={linkStyle}>Privacy</a>
+            <a href="/terms" style={linkStyle}>Terms</a>
+            <a href="/support" style={linkStyle}>Support</a>
+          </nav>
+        </div>
+        <div style={{ height: 1, background: 'rgba(246,226,155,0.14)', marginBottom: 22 }} />
+        <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.7, color: 'rgba(239,231,218,0.66)', margin: 0 }}>
+          © 2026 The5th Consulting. All rights reserved. Unauthorized copying, reproduction,
+          distribution, use, or collection of any content or information from this website is
+          strictly prohibited. Any unauthorized use may result in legal action. To the extent
+          permitted by law, any dispute arising from or relating to the unauthorized use of this
+          website or its content shall be subject to the jurisdiction of the courts located in the
+          State of New York.
+        </p>
+      </div>
+    </footer>
   )
 }
 

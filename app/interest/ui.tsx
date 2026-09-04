@@ -180,17 +180,13 @@ export function ProgressIndicator({ current, total }: { current: number; total: 
   )
 }
 
-/* The5th gradient wordmark. */
-export function Wordmark({ size = 22 }: { size?: number }) {
+/* The5th brand logo (mark + wordmark, includes "CONSULTING").
+   'dark' = aubergine logo for light surfaces; 'white' = for dark surfaces. */
+export function Logo({ variant = 'dark', height = 30 }: { variant?: 'dark' | 'white'; height?: number }) {
+  const src = variant === 'white' ? '/images/logo-white.png' : '/images/the5th-logo-purple.png'
   return (
-    <span aria-label="The5th Consulting" style={{
-      fontFamily: FONT, fontWeight: 700, fontSize: size, letterSpacing: '-0.01em',
-      backgroundImage: C.grad, WebkitBackgroundClip: 'text', backgroundClip: 'text',
-      WebkitTextFillColor: 'transparent', color: 'transparent',
-      filter: 'drop-shadow(0 0 18px rgba(201,168,76,.28))',
-    }}>
-      the<em style={{ fontStyle: 'italic', WebkitTextFillColor: C.goldSoft, color: C.goldSoft }}>5</em>th.
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="The5th Consulting" style={{ height, width: 'auto', display: 'block' }} />
   )
 }
 
@@ -201,7 +197,7 @@ export function Footer() {
     <footer style={{ background: C.plumDeep, color: '#EFE7DA', marginTop: 'auto' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '44px 24px 36px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center', justifyContent: 'space-between', marginBottom: 26 }}>
-          <Wordmark size={26} />
+          <Logo variant="white" height={30} />
           <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px' }}>
             <a href="/about" style={linkStyle}>About</a>
             <a href="/privacy" style={linkStyle}>Privacy</a>

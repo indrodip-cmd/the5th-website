@@ -3,7 +3,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeName, sanitizeText } from '@/lib/validation'
 import { verifyRecaptcha } from '@/lib/recaptcha'
 import { saveInterestLead } from '@/lib/interest-leads'
-import { ALLOWED, REVENUE_STAGES } from '@/app/interest/config'
+import { ALLOWED, REVENUE_STAGES, COUNTRY_CODES, countryByCode } from '@/app/interest/config'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -64,8 +64,15 @@ export async function POST(req: NextRequest) {
   if (!phoneRaw || phoneRaw.replace(/\D/g, '').length < 7) {
     return NextResponse.json({ error: 'Please enter a valid phone number.' }, { status: 400 })
   }
-  const country = sanitizeText(body?.country, 80)
-  if (!country) return NextResponse.json({ error: 'Please select your country.' }, { status: 400 })
+  // Country: a validated two-market code (US | IN). Name + price are derived
+  // server-side from the code, never trusted from the client.
+  const countryCode = String(body?.country_code || '').toUpperCase()
+  if (!COUNTRY_CODES.has(countryCode)) {
+    return NextResponse.json({ error: 'Please select your country.' }, { status: 400 })
+  }
+  const countryMeta = countryByCode(countryCode)!
+  const country = countryMeta.name
+  const priceShown = `${countryMeta.pricePrefix} ${countryMeta.priceMain}`.trim()
 
   // ── Qualification (validated against the shared vocabulary) ──
   const business_type = pick('business_type', body?.business_type)
@@ -113,6 +120,7 @@ export async function POST(req: NextRequest) {
   const visitor_id = sanitizeText(body?.visitor_id, 80) || null
 
   const answers = {
+    country_code: countryCode, price_shown: priceShown,
     business_type, niche, business_stage, monthly_revenue,
     ai_business_type, primary_goal, help_needed,
     niche_other: niche.startsWith('other:') ? nicheOther : null,

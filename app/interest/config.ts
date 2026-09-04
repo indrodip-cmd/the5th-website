@@ -29,6 +29,20 @@ export const C = {
   grad: 'linear-gradient(100deg,#8A5BB0 0%,#C9A84C 48%,#F4DE93 62%,#8A5BB0 100%)',
 } as const
 
+/* Two-market country choice (drives the price shown + the phone dial code). */
+export type PricingCountry = {
+  code: 'US' | 'IN'; name: string; flag: string; dial: string
+  pricePrefix: string; priceMain: string
+}
+export const PRICING_COUNTRIES: PricingCountry[] = [
+  { code: 'US', name: 'United States', flag: '🇺🇸', dial: '+1', pricePrefix: '', priceMain: '$2,500' },
+  { code: 'IN', name: 'India', flag: '🇮🇳', dial: '+91', pricePrefix: 'Starting from', priceMain: '₹25,000' },
+]
+export const COUNTRY_CODES = new Set<string>(PRICING_COUNTRIES.map((c) => c.code))
+export function countryByCode(code: string): PricingCountry | undefined {
+  return PRICING_COUNTRIES.find((c) => c.code === code)
+}
+
 export type Option = { value: string; label: string; hint?: string }
 export type FieldId =
   | 'business_type' | 'niche' | 'business_stage' | 'monthly_revenue'
@@ -87,8 +101,8 @@ export const AI_BUSINESS_TYPES: Option[] = [
 
 export const PRIMARY_GOALS: Option[] = [
   { value: 'first_clients', label: 'Get my first clients' },
-  { value: '5k_month', label: 'Reach $5K/month' },
-  { value: '10k_month', label: 'Reach $10K/month' },
+  { value: '5k_month', label: 'Reach $5K / ₹5 lakh a month' },
+  { value: '10k_month', label: 'Reach $10K / ₹10 lakh a month' },
   { value: 'scale', label: 'Scale an existing business' },
   { value: 'lead_gen', label: 'Build predictable lead generation' },
   { value: 'systems', label: 'Build systems & automation' },

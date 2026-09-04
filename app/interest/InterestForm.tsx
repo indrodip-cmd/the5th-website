@@ -12,7 +12,7 @@ import {
 } from './config'
 import { COUNTRIES } from './countries'
 import {
-  OptionCard, Field, Btn, ProgressIndicator, Footer, Wordmark,
+  OptionCard, Field, Btn, ProgressIndicator, Footer, Logo,
   useAttribution, useVisitorId, FONT, SANS,
 } from './ui'
 import { track } from './track'
@@ -271,12 +271,8 @@ export default function InterestForm() {
 
 function TopBar() {
   return (
-    <div style={{ marginBottom: 26, display: 'flex', alignItems: 'center', gap: 10 }}>
-      <Wordmark size={20} />
-      <span aria-hidden style={{ width: 1, height: 15, background: C.line }} />
-      <span style={{ fontSize: 10.5, letterSpacing: 2.4, color: C.inkSoft, fontWeight: 700, fontFamily: SANS }}>
-        CONSULTING
-      </span>
+    <div style={{ marginBottom: 26 }}>
+      <Logo variant="dark" height={26} />
     </div>
   )
 }
@@ -388,10 +384,8 @@ function Hero({ onStart }: { onStart: () => void }) {
     <div style={{ minHeight: '100dvh', width: '100%', background: C.cream, display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}>
       {/* Slim brand bar */}
       <div style={{ width: '100%', padding: '20px 22px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Wordmark size={22} />
-          <span aria-hidden style={{ width: 1, height: 16, background: C.line }} />
-          <span style={{ fontSize: 10.5, letterSpacing: 2.4, color: C.inkSoft, fontWeight: 700, fontFamily: SANS }}>CONSULTING</span>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <Logo variant="dark" height={30} />
         </div>
       </div>
 

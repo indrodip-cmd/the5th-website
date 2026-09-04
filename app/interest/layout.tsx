@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
-const TITLE = 'Build a business around what you already know — Fifth Consulting'
+const TITLE = 'The end-to-end platform to build your coaching business — The5th Consulting'
 const DESC =
-  'Tell us what you’re building. A short set of questions to understand where you are, what you’re trying to achieve, and how Fifth Consulting can help.'
+  'One place to build and grow your coaching business — positioning, offers, funnels, content and automation. Tell us what you’re building and we’ll map where you are and how we can help.'
 const URL = 'https://the5th.consulting/interest'
 
 export const metadata: Metadata = {
@@ -14,15 +14,32 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   openGraph: {
-    type: 'website', url: URL, siteName: 'Fifth Consulting', title: TITLE, description: DESC,
+    type: 'website', url: URL, siteName: 'The5th Consulting', title: TITLE, description: DESC,
   },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESC },
+}
+
+/* Pin a light color-scheme for this route so a phone's dark theme / the
+   browser's auto-dark can't invert the branded cream page into near-black.
+   Emits <meta name="color-scheme" content="light">, which Chrome's Auto Dark
+   honours as an opt-out. */
+export const viewport: Viewport = {
+  colorScheme: 'light',
+  themeColor: '#FBF8F2',
+  width: 'device-width',
+  initialScale: 1,
 }
 
 /* Scoped styles for the interest form + funnel chrome hygiene (hide the
    third-party feedback/toolbar/chat widgets, pin the mobile theme colour). */
 const CSS = `
-  html { color-scheme: light; background:#FBF8F2; }
+  :root { color-scheme: light; }
+  html, body { background:#FBF8F2 !important; overflow-x: hidden; max-width: 100%; }
+  /* Keep the branded look identical under a device/browser dark theme —
+     never let the page get auto-inverted. */
+  @media (prefers-color-scheme: dark) {
+    html, body { background:#FBF8F2 !important; }
+  }
   #vercel-toolbar, vercel-live-feedback, [data-vercel-toolbar-root],
   [aria-label="Feedback" i], iframe[title*="feedback" i], iframe[title*="survey" i] {
     display: none !important; visibility: hidden !important;
@@ -63,7 +80,6 @@ const CSS = `
 export default function InterestLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <meta name="theme-color" content="#FBF8F2" />
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       {children}
     </>

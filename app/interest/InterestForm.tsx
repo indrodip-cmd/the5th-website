@@ -328,14 +328,13 @@ function MultiStep({ value, onToggle }: { value: string[]; onToggle: (v: string)
 }
 
 function CountryStep({ value, onSelect }: { value: string; onSelect: (v: string) => void }) {
-  const selected = countryByCode(value)
   return (
     <div role="radiogroup" aria-label="Where are you based?">
       <h2 style={{ fontFamily: FONT, fontWeight: 400, fontSize: 'clamp(24px,5vw,32px)', color: C.ink, lineHeight: 1.2, marginBottom: 8 }}>
         Where are you based?
       </h2>
       <p style={{ fontFamily: SANS, fontSize: 15, color: C.inkSoft, marginBottom: 20 }}>
-        So we can show you the right pricing and reach you the right way.
+        So we can tailor this to you and reach you the right way.
       </p>
 
       <div style={{ display: 'grid', gap: 10 }}>
@@ -364,32 +363,6 @@ function CountryStep({ value, onSelect }: { value: string; onSelect: (v: string)
           )
         })}
       </div>
-
-      {/* Price reveal */}
-      {selected && (
-        <motion.div
-          key={selected.code}
-          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.28 }}
-          style={{
-            marginTop: 18, padding: '18px 20px', borderRadius: 16,
-            background: C.plum, color: '#fff',
-            boxShadow: '0 12px 30px rgba(46,26,53,0.22)',
-          }}
-        >
-          <span style={{ display: 'block', fontFamily: SANS, fontSize: 11.5, letterSpacing: 2, fontWeight: 700, color: C.goldSoft, marginBottom: 6 }}>
-            YOUR INVESTMENT
-          </span>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-            {selected.pricePrefix && (
-              <span style={{ fontFamily: SANS, fontSize: 14, color: 'rgba(255,255,255,0.7)' }}>{selected.pricePrefix}</span>
-            )}
-            <span style={{ fontFamily: FONT, fontSize: 'clamp(28px,7vw,38px)', fontWeight: 400, lineHeight: 1 }}>{selected.priceMain}</span>
-          </div>
-          <p style={{ fontFamily: SANS, fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 8, lineHeight: 1.5 }}>
-            The exact plan depends on your answers. We&apos;ll confirm the right next step after we review them.
-          </p>
-        </motion.div>
-      )}
     </div>
   )
 }

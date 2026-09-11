@@ -263,6 +263,7 @@ export const SCHEDULE = {
   eyebrow: 'Step 1 of 3 · Pick a time',
   headline: 'Choose your audit time.',
   sub: 'Grab the slot that works for you. Next we’ll ask a few quick questions so your 60 minutes are laser-specific to your business.',
+  loading: 'Loading available times…',
 }
 
 /* ── Step: A Few Questions (Typeform) ───────────────────────────────────────*/

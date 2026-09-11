@@ -24,16 +24,21 @@ export default function Schedule() {
     if (typeof window === 'undefined') return { name: '', email: '' }
     try { return { name: sessionStorage.getItem('audit_name') || '', email: (new URLSearchParams(window.location.search).get('email') || '').toLowerCase() || sessionStorage.getItem('audit_email') || '' } } catch { return { name: '', email: '' } }
   })
+  const [calReady, setCalReady] = useState(false)
 
   useEffect(() => { track('calendar_viewed') }, [])
 
   useEffect(() => {
     let cancelled = false
+    // Fallback: never leave the skeleton up forever if the embed's ready event
+    // doesn't fire (slow network, blocked event, etc.).
+    const fallback = setTimeout(() => { if (!cancelled) setCalReady(true) }, 6000)
     ;(async () => {
       try {
         const cal = await getCalApi({ namespace })
         if (cancelled) return
         cal('ui', { hideEventTypeDetails: false, layout: 'month_view' })
+        cal('on', { action: 'linkReady', callback: () => { if (!cancelled) setCalReady(true) } })
         cal('on', {
           action: 'bookingSuccessful',
           callback: (e: unknown) => {
@@ -58,7 +63,7 @@ export default function Schedule() {
         })
       } catch { /* embed will still render; booking sync falls back to email lookup */ }
     })()
-    return () => { cancelled = true }
+    return () => { cancelled = true; clearTimeout(fallback) }
   }, [namespace, me, router, utm])
 
   return (
@@ -69,10 +74,17 @@ export default function Schedule() {
         <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 520, margin: '0 auto' }}>{SCHEDULE.sub}</p>
       </Reveal>
       <Reveal>
-        <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)', minHeight: 560 }}>
+        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)', minHeight: 560 }}>
+          {!calReady && (
+            <div aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: '#fff', zIndex: 2 }}>
+              <span className="rm-cal-spin" style={{ width: 34, height: 34, borderRadius: '50%', border: `3px solid ${T.line}`, borderTopColor: T.accentInk, display: 'block' }} />
+              <span style={{ color: T.text2, fontSize: 14, fontWeight: 600 }}>{SCHEDULE.loading || 'Loading available times…'}</span>
+            </div>
+          )}
           <Cal namespace={namespace} calLink={calLink} style={{ width: '100%', height: '100%', minHeight: 560, overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', name: me.name, email: me.email }} />
         </div>
       </Reveal>
+      <style>{`@keyframes rm-cal-spin{to{transform:rotate(360deg)}}.rm-cal-spin{animation:rm-cal-spin .8s linear infinite}`}</style>
     </>
   )
 }

@@ -14,17 +14,9 @@ import { VIDEO_REVIEWS } from '@/components/VideoWall'
 
 const MAXW = 1120
 const PADX = 'clamp(20px,5vw,22px)'
-const SECY = 'clamp(58px,11vw,88px)'
+const SECY = 'clamp(40px,7.5vw,62px)'
 const HERO_AVATARS = ['/clients/toril.jpg', '/clients/laurie.jpg', '/clients/jeanne.jpg', '/clients/angela.jpg', '/clients/hayley.jpg']
 
-function GuaranteeBadge() {
-  return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: T.accentSoft, border: `1px solid ${T.accent}`, color: T.accentInk, borderRadius: 999, padding: '8px 15px', fontSize: 13, fontWeight: 700 }}>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
-      {LANDING.guaranteeBadge}
-    </span>
-  )
-}
 function Stars() {
   return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="17" height="17" viewBox="0 0 24 24" fill={T.accent}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>
 }
@@ -76,10 +68,6 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
             <div className="rm-eyebrow" style={{ marginBottom: 16 }}>{LANDING.eyebrow}</div>
             <h1 className="rm-serif" style={{ fontSize: 'clamp(31px,6vw,58px)', margin: '0 auto', maxWidth: 940, fontWeight: 800, lineHeight: 1.05 }}>{LANDING.headline}</h1>
             <p style={{ color: T.text2, fontSize: 'clamp(16px,2.1vw,21px)', lineHeight: 1.5, maxWidth: 640, margin: '18px auto 0', fontWeight: 500 }}>{LANDING.headlineSub}</p>
-            <div style={{ marginTop: 24, maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
-              <p className="rm-serif" style={{ fontSize: 'clamp(19px,3vw,28px)', lineHeight: 1.22, margin: 0, fontWeight: 700 }}>{LANDING.guaranteeLine}</p>
-              <p className="rm-serif" style={{ fontSize: 'clamp(24px,4.4vw,40px)', lineHeight: 1.08, margin: '8px auto 0', fontWeight: 800, color: T.accentInk }}>{LANDING.guaranteeEmphasis}</p>
-            </div>
           </Reveal>
           <Reveal delay={100} style={{ marginTop: 30, maxWidth: 920, marginLeft: 'auto', marginRight: 'auto' }}><Vsl url={videoUrl} /></Reveal>
           <Reveal delay={160} style={{ marginTop: 24 }}>
@@ -275,30 +263,6 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         </Reveal>
       </section>
 
-      {/* ── Guarantee ── */}
-      <section style={{ maxWidth: 820, margin: '0 auto', padding: '0 ' + PADX + ' ' + SECY }}>
-        <Reveal>
-          <div style={{ background: '#fff', border: `1.5px solid ${T.accent}`, borderRadius: 22, padding: 'clamp(28px,5vw,46px)', textAlign: 'center', boxShadow: '0 30px 80px -50px rgba(94,46,134,.5)' }}>
-            <div style={{ marginBottom: 18, display: 'flex', justifyContent: 'center' }}><GuaranteeBadge /></div>
-            <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,36px)', margin: '0 0 14px', fontWeight: 800, lineHeight: 1.1 }}>{LANDING.guarantee.heading}</h2>
-            <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.6, margin: '0 auto 22px', maxWidth: 560 }}>{LANDING.guarantee.body}</p>
-            <div style={{ display: 'grid', gap: 10, textAlign: 'left', maxWidth: 460, margin: '0 auto 22px' }}>
-              {LANDING.guarantee.terms.map((t) => (
-                <div key={t} style={{ display: 'flex', gap: 11, alignItems: 'center', background: T.surface, borderRadius: 12, padding: '12px 16px' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
-                  <span style={{ fontSize: 15, fontWeight: 600 }}>{t}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ fontSize: 16, fontWeight: 600, margin: '0 0 14px' }}>{LANDING.guarantee.payoff}</p>
-            <p className="rm-serif" style={{ fontSize: 'clamp(24px,4.4vw,38px)', fontWeight: 800, margin: '0 0 6px', lineHeight: 1.1 }}>{LANDING.guarantee.big}</p>
-            <p className="rm-serif" style={{ fontSize: 'clamp(22px,3.6vw,30px)', fontWeight: 800, margin: '0 0 20px', color: T.accentInk }}>{LANDING.guarantee.cheque}</p>
-            {CTA('guarantee')}
-            <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.6, marginTop: 22, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guarantee.fine}</p>
-          </div>
-        </Reveal>
-      </section>
-
       {/* ── FAQ ── */}
       <section id="faq" style={{ maxWidth: 720, margin: '0 auto', padding: '0 ' + PADX + ' ' + SECY }}>
         <Reveal>
@@ -314,13 +278,11 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
       </section>
 
       {/* ── Final CTA ── */}
-      <section style={{ background: T.brand, color: '#fff', padding: 'clamp(64px,10vw,96px) ' + PADX, textAlign: 'center' }}>
+      <section style={{ background: T.brand, color: '#fff', padding: 'clamp(48px,8vw,72px) ' + PADX, textAlign: 'center' }}>
         <Reveal>
           <h2 className="rm-serif" style={{ fontSize: 'clamp(26px,4.6vw,44px)', margin: '0 auto 16px', maxWidth: 720, color: '#fff', fontWeight: 800, lineHeight: 1.08 }}>{LANDING.finalCta.heading}</h2>
           {LANDING.finalCta.lines.map((l) => <p key={l} style={{ color: 'rgba(255,255,255,.8)', fontSize: 'clamp(15.5px,2vw,18px)', margin: '0 0 4px' }}>{l}</p>)}
-          <p className="rm-serif" style={{ fontSize: 'clamp(20px,3vw,28px)', color: '#fff', fontWeight: 800, margin: '26px auto 10px', maxWidth: 700, lineHeight: 1.15 }}>{LANDING.finalCta.big}</p>
-          <p style={{ color: 'rgba(255,255,255,.82)', fontSize: 'clamp(15px,2vw,18px)', margin: '0 0 4px' }}>{LANDING.finalCta.guarantee}</p>
-          <p className="rm-serif" style={{ fontSize: 'clamp(19px,2.8vw,26px)', color: '#E4C879', fontWeight: 800, margin: '0 0 30px' }}>{LANDING.finalCta.cheque}</p>
+          <p className="rm-serif" style={{ fontSize: 'clamp(20px,3vw,28px)', color: '#fff', fontWeight: 800, margin: '26px auto 30px', maxWidth: 700, lineHeight: 1.15 }}>{LANDING.finalCta.big}</p>
           <Btn onClick={() => go('final')} variant="ghost" style={{ padding: '18px 44px', fontSize: 17.5 }}>{LANDING.finalCta.cta} →</Btn>
           <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 14 }}>{LANDING.finalCta.micro}</p>
         </Reveal>

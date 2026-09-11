@@ -8,10 +8,10 @@ import type { Metadata } from 'next'
    Indexable so AI assistants/search (ChatGPT, Claude, Perplexity, Gemini, etc.)
    and Google can fetch, index and cite it. robots.txt already welcomes AI bots;
    the content is server-rendered (in the HTML), so fetchers read the full copy. */
-const TITLE = 'Build a Predictable $10K/Month Coaching Business, or 100% Money Back'
-const OG_TITLE = 'Build a Predictable $10K/Month Coaching Business, Guaranteed'
+const TITLE = 'Build a Predictable $10K/Month Coaching Business'
+const OG_TITLE = 'Build a Predictable $10K/Month Coaching Business'
 const DESC =
-  'You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable $10K/month, or get 100% of your money back.'
+  'You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable $10K/month.'
 const URL = 'https://the5th.consulting/10k-roadmap'
 
 export const metadata: Metadata = {
@@ -56,6 +56,10 @@ export default function RoadmapAuditLayout({ children }: { children: React.React
   return (
     <>
       <meta name="theme-color" content="#ffffff" />
+      {/* Warm up the cal.com embed connection early so the scheduler iframe on
+          /schedule starts loading the moment the user reaches it. */}
+      <link rel="preconnect" href="https://app.cal.com" crossOrigin="" />
+      <link rel="dns-prefetch" href="https://app.cal.com" />
       <style dangerouslySetInnerHTML={{ __html: FUNNEL_CSS }} />
       {children}
     </>

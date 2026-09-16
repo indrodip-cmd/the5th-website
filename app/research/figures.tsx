@@ -803,3 +803,104 @@ export function FigAugmentReplace() {
     </Figure>
   )
 }
+
+/* ── AI persuasion white paper ─────────────────────────────────────────────*/
+
+// Fig: study design, the four arms
+export function FigPersuasionArms() {
+  const arms = ['No message (control)', 'A human persuader', 'The AI, generic', 'The AI, personalised']
+  return (
+    <Figure n={1} caption={<>The design behind this study. People gave their view on a topic, were assigned to one of four conditions, held a short exchange, and then gave their view again. The question was simple: which condition moved opinion the most, and by how much.</>}>
+      <svg viewBox="0 0 600 240" style={svgStyle} role="img" aria-label="Persuasion study design with four arms">
+        <defs>{arrow('pa', F.goldDeep)}</defs>
+        <rect x="20" y="96" width="120" height="48" rx="10" fill={F.plum} />
+        <text x="80" y="116" fontFamily={SANS} fontSize="12" fill="#fff" textAnchor="middle" fontWeight="700">Opinion</text>
+        <text x="80" y="132" fontFamily={SANS} fontSize="10.5" fill="rgba(255,255,255,.8)" textAnchor="middle">measured</text>
+        {arms.map((a, i) => (
+          <g key={a}>
+            <rect x={200} y={20 + i * 50} width="210" height="38" rx="9" fill={i === 3 ? F.purple : F.plum2} opacity={0.7 + i * 0.06} />
+            <text x={305} y={20 + i * 50 + 23} fontFamily={SANS} fontSize="12.5" fill="#fff" textAnchor="middle" fontWeight={i === 3 ? 700 : 500}>{a}</text>
+            <line x1={140} y1="120" x2={198} y2={39 + i * 50} stroke={F.goldDeep} strokeWidth="1.4" markerEnd="url(#pa)" opacity="0.7" />
+            <line x1={410} y1={39 + i * 50} x2={452} y2="120" stroke={F.goldDeep} strokeWidth="1.4" markerEnd="url(#pa)" opacity="0.7" />
+          </g>
+        ))}
+        <rect x={454} y="96" width="126" height="48" rx="10" fill={F.gold} />
+        <text x={517} y="116" fontFamily={SANS} fontSize="12" fill={F.plum} textAnchor="middle" fontWeight="700">Opinion</text>
+        <text x={517} y="132" fontFamily={SANS} fontSize="10.5" fill={F.plum} textAnchor="middle">measured again</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: opinion shift by arm (illustrative)
+export function FigPersuasionShift() {
+  const bars = [
+    { l: 'Control', v: 8, c: F.plum2 },
+    { l: 'Human', v: 21, c: F.purple },
+    { l: 'AI, generic', v: 27, c: F.purple },
+    { l: 'AI, personalised', v: 34, c: F.gold },
+  ]
+  return (
+    <Figure n={2} caption={<>The shape the evidence keeps finding, drawn to show the pattern rather than exact values. A capable model already moves opinion about as much as a skilled human, and when it is allowed to tailor its case to the individual it pulls ahead. In one controlled study (Salvi et al., 2024), a personalised model was markedly more likely to shift a person than a human debater was.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Opinion shift by persuasion condition">
+        <line x1="150" y1="30" x2="150" y2="210" stroke={F.line} strokeWidth="1.5" />
+        {bars.map((b, i) => {
+          const y = 44 + i * 42
+          const w = b.v * 11
+          return (
+            <g key={b.l}>
+              <text x="140" y={y + 17} fontFamily={SANS} fontSize="12.5" fill={F.ink} textAnchor="end">{b.l}</text>
+              <rect x="150" y={y} width={w} height="26" rx="6" fill={b.c} />
+              <text x={150 + w + 8} y={y + 18} fontFamily={SANS} fontSize="12" fill={F.muted}>{b.v}%</text>
+            </g>
+          )
+        })}
+        <text x="360" y="232" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">share who meaningfully shifted their view (schematic)</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: two routes of persuasion (ELM)
+export function FigElmRoutes() {
+  return (
+    <Figure n={3} caption={<>The two doors persuasion comes through (the Elaboration Likelihood Model, Petty &amp; Cacioppo). The central route is real argument and evidence, weighed with effort. The peripheral route is cues: confidence, fluency, warmth, apparent authority. A frontier model is unusually strong at both at once, which is what makes it different.</>}>
+      <svg viewBox="0 0 600 210" style={svgStyle} role="img" aria-label="Central and peripheral routes to persuasion">
+        <defs>{arrow('elm', F.goldDeep)}</defs>
+        <rect x="20" y="86" width="120" height="40" rx="10" fill={F.plum} />
+        <text x="80" y="111" fontFamily={SANS} fontSize="12.5" fill="#fff" textAnchor="middle" fontWeight="700">A message</text>
+        <rect x="300" y="30" width="280" height="52" rx="12" fill="rgba(94,46,134,.10)" stroke={F.purple} strokeWidth="1.2" />
+        <text x="440" y="52" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">Central route</text>
+        <text x="440" y="70" fontFamily={SANS} fontSize="11.5" fill={F.ink} textAnchor="middle">arguments, evidence, effortful thought</text>
+        <rect x="300" y="128" width="280" height="52" rx="12" fill="rgba(201,168,76,.14)" stroke={F.goldDeep} strokeWidth="1.2" />
+        <text x="440" y="150" fontFamily={SERIF} fontSize="15" fill={F.goldDeep} textAnchor="middle" fontWeight="700">Peripheral route</text>
+        <text x="440" y="168" fontFamily={SANS} fontSize="11.5" fill={F.ink} textAnchor="middle">confidence, fluency, warmth, authority</text>
+        <line x1="140" y1="100" x2="298" y2="60" stroke={F.goldDeep} strokeWidth="1.6" markerEnd="url(#elm)" />
+        <line x1="140" y1="112" x2="298" y2="150" stroke={F.goldDeep} strokeWidth="1.6" markerEnd="url(#elm)" />
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: the scale asymmetry
+export function FigPersuasionScale() {
+  return (
+    <Figure n={4} caption={<>The asymmetry that worries me most. A gifted human persuader is limited to one room at a time. A model that is roughly as persuasive can hold a tailored, one-to-one conversation with millions of people at once, each argument fitted to the person. Persuasion stops being a craft and becomes infrastructure.</>}>
+      <svg viewBox="0 0 600 220" style={svgStyle} role="img" aria-label="One human persuader versus AI at scale">
+        <text x="150" y="34" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">A human persuader</text>
+        <circle cx="150" cy="80" r="16" fill={F.plum} />
+        {[0, 1, 2].map((i) => <circle key={i} cx={110 + i * 40} cy="150" r="9" fill={F.plum2} />)}
+        {[0, 1, 2].map((i) => <line key={i} x1="150" y1="96" x2={110 + i * 40} y2="141" stroke={F.line} strokeWidth="1.4" />)}
+        <text x="150" y="188" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">one room at a time</text>
+        <line x1="300" y1="40" x2="300" y2="190" stroke={F.line} strokeWidth="1.5" />
+        <text x="450" y="34" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">A frontier model</text>
+        <circle cx="450" cy="80" r="16" fill={F.purple} />
+        {Array.from({ length: 11 }).map((_, i) => {
+          const x = 330 + i * 24
+          return <g key={i}><circle cx={x} cy="152" r="7" fill={F.gold} opacity="0.85" /><line x1="450" y1="96" x2={x} y2="145" stroke={F.line} strokeWidth="0.8" /></g>
+        })}
+        <text x="450" y="190" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">millions at once, each one personalised</text>
+      </svg>
+    </Figure>
+  )
+}

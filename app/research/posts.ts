@@ -15,6 +15,18 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
+    slug: 'how-persuasive-is-frontier-ai',
+    title: 'The Persuasion Engine: A White Paper on How Good AI Has Become at Changing Our Minds',
+    excerpt:
+      'An original study, roughly a year and about $10,000 in the making, on a question I could no longer ignore: how persuasive has a leading frontier model become, and what happens to human judgment when a machine that can change your mind can also do it a million times at once, personalised to each person? Written in plain words from a behavioural-science point of view, grounded in the converging published evidence, and honest about where the real danger, and the real promise, sit.',
+    date: '2026-09-15',
+    dateLabel: 'September 15, 2026',
+    readTime: '30 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Behavioural Research', 'Persuasion', 'Artificial Intelligence', 'White Paper'],
+  },
+  {
     slug: 'is-ai-eroding-critical-thinking',
     title: 'Cognitive Debt: A White Paper on How Everyday AI Use May Be Eroding Our Critical Thinking',
     excerpt:

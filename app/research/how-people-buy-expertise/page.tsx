@@ -65,11 +65,10 @@ const refStyle: React.CSSProperties = { fontSize: 14, lineHeight: 1.6, color: C.
 export default function Article() {
   const lead = (
     <>
-      Every year, millions of people hand real money to coaches, consultants, advisors, therapists, and other experts on
-      the strength of a promise they cannot actually check first. I have always found that quietly astonishing. So this
-      report asks one deceptively simple question, <em>what really governs that decision</em>, and tries to answer it not
-      with opinion but by pulling together five decades of peer-reviewed findings, across behavioral economics, services
-      marketing, and psychology, into one account of how the expertise purchase actually works.
+      Every year, millions of people hand real money to coaches, consultants, advisors, and other experts, on a promise
+      they cannot check first. I have always found that quietly amazing. So this report asks one simple question.
+      <em> What really drives that choice?</em> And it answers not with opinion, but by pulling together fifty years of
+      research, across behavior, marketing, and psychology, into one clear picture of how people buy expertise.
     </>
   )
 
@@ -82,16 +81,13 @@ export default function Article() {
         <div id="abstract" style={{ background: C.cream, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.gold}`, borderRadius: 12, padding: '22px 24px', margin: '6px 0 34px' }}>
           <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 10 }}>Abstract</div>
           <p style={{ ...rp.p, fontSize: 15.5, margin: '0 0 10px' }}>
-            The purchase of an expert service is one of the highest-uncertainty transactions a person makes on any regular
-            basis. Unlike a good whose quality you can inspect before, or at least after, buying, expertise is a
-            <em> credence good</em>: its value is hard to judge even once you have consumed it. This report synthesizes the
-            empirical literature on how buyers resolve that uncertainty anyway. I organize the evidence around eleven
-            findings (the credence-good evaluation problem, dual-process decision-making, loss aversion, reference-price
-            formation, the tripartite model of trust, social proof, quality signaling, commitment and pre-payment, choice
-            architecture, and the psychology of inaction) and then fold them into a five-stage model of the decision. It
-            closes with the evidence on whether these services actually deliver what they promise, the line between
-            persuasion and manipulation, and the honest limitations of the underlying research, replication worries
-            included.
+            Buying an expert service is one of the least certain choices a person makes on a regular basis. With most
+            things, you can judge quality before you buy, or at least after. Expertise is a <em>credence good</em>: its
+            value is hard to judge even after you use it. This report gathers the research on how buyers get past that
+            anyway. I organize it around eleven findings, from the credence-good problem and fast-versus-slow thinking to
+            loss aversion, trust, social proof, signaling, small first steps, and the pull of doing nothing. Then I fold
+            them into a simple five-stage model of the choice. It ends with the evidence on whether these services actually
+            work, the line between persuasion and manipulation, and the honest limits of the research.
           </p>
           <p style={{ ...rp.p, fontSize: 13.5, color: C.muted, margin: 0 }}>
             <strong style={{ color: C.plum }}>Keywords:</strong> credence goods · decision under uncertainty · prospect
@@ -102,31 +98,31 @@ export default function Article() {
         {/* 1 */}
         <h2 id="rationale" style={rp.h2}>1. Background and rationale</h2>
         <p style={rp.p}>
-          Economists sort products by how easily a buyer can judge quality. Nelson (1970) split
-          <strong style={rp.strong}> search goods</strong>, where you can assess quality before you buy (a laptop’s
-          specifications), from <strong style={rp.strong}>experience goods</strong>, where quality only shows up once you
-          use the thing (a meal at a new restaurant). Then Darby and Karni (1973) added a third, more unsettling category:
-          <strong style={rp.strong}> credence goods</strong>, whose quality is hard to judge <em>even after</em> you have
-          consumed them, because you lack the expertise to evaluate what was delivered and you cannot run the
-          counterfactual of what would have happened otherwise. A mechanic, a surgeon, a management consultant, a business
-          coach. All of them sell credence goods. You might feel better after the coaching, sure, but good luck isolating
-          how much of your later success was the coach, versus the market, versus your own effort, versus plain regression
-          to the mean.
+          Economists sort products by how easily you can judge them. Nelson (1970) named
+          <strong style={rp.strong}> search goods</strong>, which you can judge before you buy, like a laptop’s specs. And
+          <strong style={rp.strong}> experience goods</strong>, which you can only judge after you use them, like a meal at
+          a new restaurant. Then Darby and Karni (1973) added a third, more unsettling kind:
+          <strong style={rp.strong}> credence goods</strong>. These are hard to judge <em>even after</em> you use them,
+          because you do not have the expertise to tell what you got, and you cannot run the do-over to see what would have
+          happened instead.
         </p>
         <p style={rp.p}>
-          That sets up a structural problem no amount of good intentions on the seller’s side can dissolve. The buyer is
-          in what Akerlof (1970) famously called a market for lemons. Unable to tell high quality from low quality up
-          front, a rational buyer discounts what they are willing to pay, which pushes the best providers toward expensive
-          signals and pushes some buyers out of the market entirely. The economics of credence goods (Dulleck and
-          Kerschbamer, 2006) shows these markets only really function when certain institutions are present to keep the
-          information gap in check: reputation, liability, verifiability, or trust.
+          A mechanic, a surgeon, a consultant, a coach. All of them sell credence goods. You might feel better after the
+          coaching. But good luck telling how much of your later success was the coach, versus the market, versus your own
+          effort, versus plain luck.
         </p>
         <p style={rp.p}>
-          The practical upshot is that buying expertise is not, and cannot be, a tidy value-for-money calculation. It is a
-          decision made under deep uncertainty, and it is dominated by the buyer trying to manage risk without the
-          information they would need to do it properly. Understanding it means borrowing from the parts of science that
-          study judgment under uncertainty. That literature is enormous, and yet, oddly, it has rarely been gathered in one
-          place around this specific transaction. That gap is what this report is for.
+          This sets up a deep problem that no amount of good intentions can fix. The buyer is in what Akerlof (1970) called
+          a market for lemons. If you cannot tell good from bad up front, you lower what you will pay. That pushes the best
+          providers to spend on expensive signals, and pushes some buyers out of the market for good. The research on
+          credence goods (Dulleck and Kerschbamer, 2006) shows these markets only work when something holds the trust gap
+          in check: reputation, a guarantee, proof, or plain trust.
+        </p>
+        <p style={rp.p}>
+          So buying expertise is not a tidy value-for-money sum. It cannot be. It is a choice made in the dark, and it is
+          ruled by the buyer trying to manage risk without the facts they would need. To understand it, you have to borrow
+          from the science of how people decide under uncertainty. That science is huge. Yet it has rarely been gathered in
+          one place around this one choice. That gap is what this report is for.
         </p>
 
         {/* 2 */}
@@ -136,14 +132,12 @@ export default function Article() {
           that bear on the decision to buy a high-consideration expert service, and to state them as one coherent model.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>Design.</strong> This is an integrative evidence synthesis, not a report of new primary
-          data, and I want to be upfront about that. It draws on foundational, heavily-cited work across four literatures:
-          behavioral economics and judgment-and-decision-making (prospect theory, heuristics and biases, mental
-          accounting); services and consumer marketing (credence goods, perceived risk, quality signaling, word of mouth);
-          the psychology of trust and social influence; and the outcome literature on coaching and advisory effectiveness.
-          I gave priority to seminal experiments, replicated effects, and quantitative meta-analyses over one-off studies.
-          And where a once-canonical finding has since failed to replicate, I say so plainly in section 6 rather than
-          quietly leaving it out.
+          <strong style={rp.strong}>Design.</strong> This pulls together existing research. It is not new lab data, and I
+          want to be upfront about that. It draws on well-known work from four fields: how people decide (prospect theory,
+          biases, mental accounting); marketing (credence goods, risk, signaling, word of mouth); the psychology of trust
+          and social influence; and the research on whether coaching and advice actually work. I leaned on landmark
+          experiments and big review studies over one-off papers. And where a once-famous finding later failed to hold up, I
+          say so plainly in section 6, instead of quietly leaving it out.
         </p>
         <p style={rp.p}>
           <strong style={rp.strong}>Framing.</strong> The findings are laid out descriptively first, what governs the
@@ -165,15 +159,13 @@ export default function Article() {
         {/* 3.1 */}
         <h3 id="f1" style={rp.h3}>3.1 Finding: expertise is a credence good, so buyers substitute proxies for quality</h3>
         <p style={rp.p}>
-          The core attribute a buyer cares about, will this expert actually improve my outcome, is invisible at the point
-          of sale. So buyers do not evaluate it. They cannot. Instead they evaluate <em>observable proxies</em> that
-          correlate, rightly or wrongly, with quality: how confident and fluent the provider seems, how polished the
-          materials are, testimonials, credentials, price, who referred them, and how similar the provider feels to people
-          the buyer already trusts. Zeithaml (1981) documented that services high in credence qualities push consumers
-          toward exactly these surrogate cues, and toward personal sources over impersonal ones. The whole report really
-          hangs on this one fact: <strong style={rp.strong}>the buyer is not buying the outcome, the buyer is buying a set
-          of signals that predict the outcome.</strong> Everything after this is just a description of which signals win,
-          and why.
+          The thing a buyer really cares about, will this expert actually help me, is invisible at the moment of sale. So
+          buyers do not judge it. They cannot. Instead they judge <em>stand-ins</em> that seem to go with quality: how
+          confident and smooth the provider is, how polished the materials look, testimonials, credentials, price, who
+          referred them, and how much the provider feels like people they already trust. Zeithaml (1981) found that services
+          like this push people toward exactly these stand-in cues, and toward personal sources over ads. The whole report
+          hangs on one fact: <strong style={rp.strong}>the buyer is not buying the outcome. They are buying signals that
+          predict the outcome.</strong> Everything after this just describes which signals win, and why.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: quality that is real but invisible does not sell; quality that is credibly signalled does.</p>
         <FigCredence />
@@ -181,16 +173,16 @@ export default function Article() {
         {/* 3.2 */}
         <h3 id="f2" style={rp.h3}>3.2 Finding: the decision is produced by two interacting systems, not one</h3>
         <p style={rp.p}>
-          Dual-process theories, pulled together by Kahneman (2011) out of decades of work (Stanovich and West, 2000;
-          Evans, 2008), separate a fast, automatic, feeling-driven mode of judgment (System 1) from a slow, effortful,
-          deliberate one (System 2). A high-uncertainty purchase pulls on both. There is an immediate gut read of the
-          provider, do I like and trust this person, and then a slower rationalization, can I justify this expense. What
-          the evidence keeps showing, and I think this is the part people underrate, is that the feeling usually arrives
-          first and the reasoning is recruited afterward to back it up. Haidt’s (2001) social-intuitionist work and
-          Zajonc’s (1980) demonstration that affect can run ahead of cognition both point the same direction. Slovic and
-          colleagues (2007) named it the <strong style={rp.strong}>affect heuristic</strong>: people judge risk and benefit
-          by consulting a quick good-or-bad feeling, and that single feeling nudges perceived benefit up and perceived risk
-          down at the same time.
+          We think in two modes, an idea Kahneman (2011) gathered from decades of work (Stanovich and West, 2000; Evans,
+          2008). One is fast, automatic, and feeling-driven. The other is slow, effortful, and careful. A high-stakes buy
+          pulls on both. First a quick gut read of the provider, do I like and trust this person. Then a slower check, can I
+          justify the cost.
+        </p>
+        <p style={rp.p}>
+          Here is the part people underrate. The feeling usually comes first, and the reasoning shows up afterward to back
+          it up. Haidt (2001) and Zajonc (1980) both point that way. Slovic and colleagues (2007) called it the
+          <strong style={rp.strong}> affect heuristic</strong>: people judge risk and benefit from one quick good-or-bad
+          feeling, and that single feeling pushes the benefit up and the risk down at the same time.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: the felt sense of the provider is not a tiebreaker after the analysis; it is often the input the analysis defends.</p>
 
@@ -210,30 +202,26 @@ export default function Article() {
         </Eq>
         <FigProspect />
         <p style={rp.p}>
-          That coefficient, <M>λ ≈ 2.25</M>, means a possible loss hurts roughly twice as much as an equivalent gain
-          pleases, and the probability-weighting function <M>π</M> means people overweight small probabilities, which is
-          exactly why a vivid fear of being scammed can swamp a genuinely small chance of it. For the expertise buyer, the
-          loss that looms is not just the fee. It is the <em>waste</em>: the money, the time, and the hope poured into
-          something that did not work, plus the sting of having been fooled. Since that loss is weighted about twice as
-          heavily as the matching gain of success, the decision ends up governed far more by
-          <strong style={rp.strong}> de-risking the downside</strong> than by inflating the upside. It is why guarantees,
-          refunds, small first commitments, and simple proof that this is safe tend to move buyers more than a bigger
-          promise ever does.
+          In plain words: that <M>λ ≈ 2.25</M> means a possible loss hurts about twice as much as the same-size gain
+          pleases. And people overweight small chances, which is why a vivid fear of being scammed can drown out a genuinely
+          tiny risk. For the expertise buyer, the loss that looms is not just the fee. It is the <em>waste</em>: the money,
+          the time, and the hope poured into something that did not work, plus the sting of feeling fooled. Because that
+          loss counts about double, the choice is ruled far more by <strong style={rp.strong}>killing the downside</strong>
+          {' '}than by growing the upside. That is why guarantees, refunds, small first steps, and plain proof of safety move
+          buyers more than a bigger promise ever does.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: removing the fear of loss is worth roughly twice as much as adding to the promise of gain.</p>
 
         {/* 3.4 */}
         <h3 id="f4" style={rp.h3}>3.4 Finding: willingness to pay has no fixed anchor, it is constructed on the spot</h3>
         <p style={rp.p}>
-          Buyers do not walk around with a stable internal number for what a coach or consultant is worth. They build one
-          in the moment, out of whatever reference points happen to be lying around. Tversky and Kahneman (1974) showed
-          judgments latch onto arbitrary numbers even when everyone knows the numbers are irrelevant. Ariely, Loewenstein,
-          and Prelec (2003), in <em>Coherent Arbitrariness</em>, went further: initial willingness-to-pay for ordinary
-          goods could be shoved around by an anchor as meaningless as the last two digits of a participant’s social-security
-          number, and yet, once that anchor was set, the later valuations stayed internally consistent. Thaler’s (1985)
-          mental-accounting work adds the other half. Buyers judge a price against a reference (what they expected, what
-          others charge, what the alternative would cost) and feel the gap itself as a gain or a loss, separately from the
-          good’s actual usefulness.
+          Buyers do not carry a fixed number for what a coach or consultant is worth. They build one on the spot, from
+          whatever reference points are lying around. Tversky and Kahneman (1974) showed people latch onto random numbers,
+          even ones they know are meaningless. Ariely, Loewenstein, and Prelec (2003) went further. What people would pay
+          for ordinary goods could be shoved around by an anchor as random as the last two digits of their ID number. And
+          yet, once that anchor was set, their later prices stayed consistent with it. Thaler (1985) adds the other half.
+          Buyers judge a price against a reference, what they expected, what others charge, what the other option costs, and
+          feel the gap itself as a win or a loss, apart from how useful the thing is.
         </p>
         <p style={rp.p}>
           For credence services this is close to decisive, because there is usually no obvious market reference to lean on.
@@ -247,13 +235,12 @@ export default function Article() {
         {/* 3.5 */}
         <h3 id="f5" style={rp.h3}>3.5 Finding: trust is the master variable, and it decomposes into ability, benevolence, and integrity</h3>
         <p style={rp.p}>
-          If the buyer is really purchasing signals that predict an outcome they cannot verify, then the meta-signal tying
-          all of them together is trust. The most widely validated model here (Mayer, Davis, and Schoorman, 1995) breaks
-          trustworthiness into three perceived parts: <strong style={rp.strong}>ability</strong> (is this person actually
-          competent in the relevant domain), <strong style={rp.strong}>benevolence</strong> (do they want good things for
-          me, beyond their own payday), and <strong style={rp.strong}>integrity</strong> (do they stick to principles I can
-          live with). Trust then gives the buyer permission to be vulnerable, to take the risk. And the model is careful on
-          this point: trust only produces action when it clears the level of risk the situation actually demands.
+          If the buyer is really buying signals that predict an outcome they cannot check, then the one signal that ties
+          them all together is trust. The most tested model (Mayer, Davis, and Schoorman, 1995) breaks trust into three
+          parts: <strong style={rp.strong}>ability</strong> (are they actually good at this), <strong style={rp.strong}>benevolence</strong>
+          {' '}(do they want good things for me, not just my money), and <strong style={rp.strong}>integrity</strong> (do
+          they stick to principles I can live with). Trust is what lets the buyer take the risk. And the model is careful on
+          one point: trust only leads to action when it clears the level of risk the situation demands.
         </p>
         <p style={rp.p}>
           Trust formation is well described as Bayesian updating from evidence. Writing <M>T</M> for trustworthiness and
@@ -264,11 +251,11 @@ export default function Article() {
           O(T | e) = [ P(e | T) ⁄ P(e | ¬T) ] · O(T)
         </Eq>
         <p style={rp.p}>
-          where <M>O</M> is odds. The persuasive power of any piece of evidence is that likelihood ratio in the brackets.
-          Evidence a low-quality provider could not easily fake (a specific, checkable result, a genuinely useful free
-          diagnosis, a willingness to say “honestly, you are not a fit”) moves the posterior a great deal. Evidence anyone
-          can produce (generic claims, a bit of self-praise) barely moves it. That is the formal reason costly,
-          hard-to-fake signals win, and it is the same logic that comes back as signaling in section 3.7.
+          In plain words: a piece of evidence moves trust in proportion to how hard it would be to fake. Evidence a
+          low-quality provider could not easily fake, a specific, checkable result, a genuinely useful free diagnosis, a
+          willingness to say honestly, you are not a fit, moves trust a lot. Evidence anyone can produce, generic claims, a
+          bit of self-praise, barely moves it. That is the real reason costly, hard-to-fake signals win. It is the same
+          logic that comes back as signaling in section 3.7.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: trust is built fastest by supplying evidence a dishonest provider could not afford to supply.</p>
         <FigTrust />
@@ -276,14 +263,13 @@ export default function Article() {
         {/* 3.6 */}
         <h3 id="f6" style={rp.h3}>3.6 Finding: under uncertainty, people substitute the crowd’s judgment for their own</h3>
         <p style={rp.p}>
-          When buyers cannot judge quality themselves, they look at what similar others did. Cialdini (2006) catalogued
-          this as <strong style={rp.strong}>social proof</strong>, and it traces back to Festinger’s (1954) social
-          comparison. It is strongest under precisely the conditions of an expertise purchase: uncertainty, plus
-          similarity. And its causal power has been shown cleanly, which is rarer than you might think. Salganik, Dodds, and
-          Watts (2006), in a controlled online music market with more than 14,000 participants, found that simply making
-          earlier download counts visible produced both more inequality and more <em>unpredictability</em> in which songs
-          took off. The very same song could become a hit or a flop depending only on the early, partly random choices of
-          the people who came before. Quality set the outer limits. Social influence decided almost everything inside them.
+          When buyers cannot judge quality themselves, they look at what people like them did. Cialdini (2006) called this
+          <strong style={rp.strong}> social proof</strong>. It is strongest under the exact conditions of an expertise buy:
+          uncertainty, plus similarity. And it has been shown to actually cause behaviour, not just go with it, which is
+          rarer than you would think. Salganik, Dodds, and Watts (2006) ran an online music market with more than 14,000
+          people. Simply showing how many others had downloaded a song changed everything. The same song could become a hit
+          or a flop, based only on the early, partly random picks of the people who came first. Quality set the outer
+          limits. Social influence decided almost everything inside them.
         </p>
         <p style={rp.p}>
           In actual commerce, Chevalier and Mayzlin (2006) found that when a book’s reviews improved at one retailer
@@ -306,13 +292,13 @@ export default function Article() {
           c<sub>low</sub>(s) &gt; Δ ≥ c<sub>high</sub>(s)
         </Eq>
         <p style={rp.p}>
-          where <M>Δ</M> is the payoff from being believed high-quality. A real multi-year track record, a body of public
-          teaching, a specific and checkable result, these are costly or outright impossible for a weak provider to fake,
-          so they carry information. A bare claim of excellence is cheap for anyone to make, so rational buyers discount it,
-          and they are right to. This is the section 3.5 likelihood-ratio logic again, seen from the seller’s side. It also
-          untangles an apparent paradox, that giving away real value for free (a genuinely useful diagnosis, tool, or
-          lesson) tends to increase conversion rather than cannibalize it. The give-away is itself a costly signal, proof
-          that the provider has expertise to spare, and a low-quality provider cannot copy it without giving the game away.
+          In plain words: a signal only works if it is cheap for a good provider and painful for a bad one. A real
+          multi-year track record, a body of public teaching, a specific checkable result, these are costly or impossible
+          for a weak provider to fake. So they carry weight. A bare claim of being great is cheap for anyone to say, so
+          smart buyers ignore it, and they are right to. This also solves a puzzle: why giving away real value for free, a
+          genuinely useful diagnosis, tool, or lesson, tends to win more clients, not fewer. The give-away is itself a
+          costly signal. It shows the provider has expertise to spare, and a weak one cannot copy it without exposing
+          themselves.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: the persuasive value of a signal is proportional to how hard it would be for a bad provider to produce it.</p>
 
@@ -341,15 +327,15 @@ export default function Article() {
         {/* 3.9 */}
         <h3 id="f9" style={rp.h3}>3.9 Finding: the structure of the options shapes the choice as much as the options themselves</h3>
         <p style={rp.p}>
-          Choice is context-dependent, and three effects are well established. The
-          <strong style={rp.strong}> compromise effect</strong> (Simonson and Tversky, 1992): add a high, expensive option
-          and the middle option gets chosen more, because the extremes feel risky. The
-          <strong style={rp.strong}> decoy, or asymmetric dominance, effect</strong> (Huber, Payne, and Puto, 1982): drop
-          in an option clearly worse than one target but not the other, and choice shifts toward the target that dominates
-          it. And <strong style={rp.strong}>choice overload</strong>: Iyengar and Lepper (2000) found shoppers shown 24
-          jams were far less likely to buy than shoppers shown 6, roughly 3 percent versus 30 percent in the original
-          study, suggesting too many options can just shut the decision down. Although, and this matters, that effect turns
-          out to be shakier than it first looked, which I get into in section 6.
+          The choice depends on how the options are set up. Three effects are well known. The
+          <strong style={rp.strong}> compromise effect</strong> (Simonson and Tversky, 1992): add a high, pricey option and
+          the middle one gets picked more, because the extremes feel risky. The
+          <strong style={rp.strong}> decoy effect</strong> (Huber, Payne, and Puto, 1982): add an option clearly worse than
+          one choice but not the other, and people shift toward the one that beats it. And
+          <strong style={rp.strong}> choice overload</strong>: Iyengar and Lepper (2000) found shoppers shown 24 jams were
+          far less likely to buy than shoppers shown 6, about 3 percent versus 30 percent, which suggests too many options
+          can freeze the decision. Although, and this matters, that last effect turns out to be shakier than it first
+          looked, which I get into in section 6.
         </p>
         <p style={rp.p}>
           For expert services, the takeaway is that how you frame the packages, how many, at what prices, with what
@@ -362,15 +348,14 @@ export default function Article() {
         {/* 3.10 */}
         <h3 id="f10" style={rp.h3}>3.10 Finding: the strongest competitor is inaction, which is protected by powerful biases</h3>
         <p style={rp.p}>
-          The default outcome of any uncertain decision is to do nothing, and a whole cluster of biases stands guard over
-          that default. Samuelson and Zeckhauser (1988) documented <strong style={rp.strong}>status-quo bias</strong>,
-          people sticking with the current state well past the point of reason. Kahneman, Knetsch, and Thaler (1991) linked
-          it to the <strong style={rp.strong}>endowment effect</strong> and loss aversion, since giving up the current
-          situation gets coded as a loss. And Ritov and Baron (1990) documented
-          <strong style={rp.strong}> omission bias</strong>, our preference for harms that come from doing nothing over
-          equal or even smaller harms that come from doing something, because action feels more like our fault. Put
-          together, the buyer weighs the vivid, blameable risk of a bad <em>purchase</em> far more heavily than the
-          diffuse, easy-to-ignore risk of a bad <em>status quo</em>.
+          The default outcome of any uncertain choice is to do nothing, and a whole set of biases guards that default.
+          Samuelson and Zeckhauser (1988) named <strong style={rp.strong}>status-quo bias</strong>, sticking with the
+          current state well past the point of reason. Kahneman, Knetsch, and Thaler (1991) tied it to the
+          <strong style={rp.strong}> endowment effect</strong> and loss aversion, since giving up what you have feels like a
+          loss. And Ritov and Baron (1990) named <strong style={rp.strong}>omission bias</strong>, our habit of preferring
+          harm that comes from doing nothing over equal or smaller harm that comes from doing something, because action
+          feels more like our fault. Put together, the buyer fears the vivid, blameable risk of a bad <em>buy</em> far more
+          than the dull, easy-to-ignore risk of a bad <em>staying-put</em>.
         </p>
         <p style={rp.p}>
           The counterweight the literature points to is making the cost of inaction concrete and present, not abstract and
@@ -384,16 +369,14 @@ export default function Article() {
         {/* 3.11 */}
         <h3 id="f11" style={rp.h3}>3.11 Finding: the outcome literature says expert help works, conditionally</h3>
         <p style={rp.p}>
-          A report on how people buy expertise would feel hollow, and a bit dishonest, if it never asked whether the
-          purchase is actually justified. The strongest evidence comes from workplace and life coaching, where real
-          meta-analyses now exist. Theeboom, Beersma, and van Vianen (2014) meta-analyzed 18 studies and found coaching had
-          significant positive effects on performance and skills, well-being, coping, work attitudes, and goal-directed
-          self-regulation, with small-to-moderate effect sizes. Jones, Woods, and Guillaume (2016) meta-analyzed 17 studies
-          of workplace coaching and found an overall positive effect, moderated by things like whether the coach was
-          internal. Sonesh et al. (2015) landed in broadly the same place. The effect sizes are real but modest, and,
-          importantly, the literature keeps pointing at the <em>client’s own engagement and goal commitment</em>, not just
-          the coach, as a primary driver, which fits self-determination theory (Deci and Ryan, 2000) and its claim that
-          autonomy, competence, and relatedness underpin durable change.
+          A report on how people buy expertise would feel hollow, and a bit dishonest, if it never asked whether the buy is
+          even worth it. The best evidence comes from coaching, where real review studies now exist. Theeboom, Beersma, and
+          van Vianen (2014) pooled 18 studies and found coaching helped performance, well-being, coping, work attitudes, and
+          self-control, with small-to-medium effects. Jones, Woods, and Guillaume (2016) pooled 17 workplace studies and
+          also found a positive effect. Sonesh et al. (2015) landed in the same place. The effects are real but modest.
+          And, importantly, the research keeps pointing at the <em>client’s own effort and commitment</em>, not just the
+          coach, as a main driver, which fits self-determination theory (Deci and Ryan, 2000): people change and stick with
+          it when they feel ownership, growing skill, and connection.
         </p>
         <p style={rp.p}>
           So the honest read is neither cynical nor starry-eyed. Expert help produces genuine, measurable gains on average.
@@ -429,74 +412,67 @@ export default function Article() {
           buy  ⟺  V<sub>gain</sub> · Trust  −  λ · V<sub>loss</sub> · (1 − Trust)  &gt;  V<sub>status-quo</sub>
         </Eq>
         <p style={rp.p}>
-          with <M>λ ≈ 2.25</M> carrying the loss-aversion asymmetry. It is a heuristic summary, not a fitted model, and I
-          would not want anyone to over-read it. But it does capture the report’s central claim in one line: because the
-          loss term is weighted more than twice the gain term, <strong style={rp.strong}>raising trust and lowering
-          perceived risk are together the dominant levers</strong>, and the status-quo term is the real competitor.
+          In plain words: the loss side counts more than twice the gain side. It is a rough summary, not a fitted formula,
+          and I would not over-read it. But it captures the whole report in one line. Because the loss counts double,
+          <strong style={rp.strong}> raising trust and cutting risk are the two big levers</strong>, and the real competitor
+          is the buyer doing nothing.
         </p>
 
         {/* 5 */}
         <h2 id="discussion" style={rp.h2}>5. Discussion and implications</h2>
         <p style={rp.p}>
-          <strong style={rp.strong}>For buyers,</strong> the model doubles as a checklist against your own biases. If your
-          decision is being driven by a fast gut read (section 3.2), by an anchor someone else planted (section 3.4), by
-          raw social proof (section 3.6), or by fear with no credible path attached (section 3.10), those are exactly the
-          inputs that are easiest to manufacture. The defensible move is to interrogate the <em>diagnosticity</em> of the
-          evidence (section 3.5). Ask for the signals a low-quality provider could not fake: a specific, verifiable result,
-          a genuinely useful free diagnosis, a provider willing to disqualify you. Treat everything cheap to produce as
-          close to noise.
+          <strong style={rp.strong}>For buyers,</strong> the model is a checklist against your own biases. If your choice is
+          being driven by a fast gut read, by a price someone else anchored, by raw social proof, or by fear with no real
+          path out, those are exactly the things easiest to fake. The safe move is to ask how hard the evidence would be to
+          fake. Ask for the signals a weak provider could not: a specific, checkable result, a genuinely useful free
+          diagnosis, a provider willing to tell you no. Treat anything cheap to produce as close to noise.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>For providers,</strong> the same findings prescribe a strategy that is ethical and, as
-          it happens, effective. Because outcomes depend on client engagement (section 3.11), the seller’s interest and the
-          buyer’s interest line up best when the sale <em>selects for fit and secures commitment</em> rather than
-          maximizing conversion at any cost. Qualify honestly. Supply costly signals of real competence. Reverse risk with
-          guarantees you actually mean. Use a small first commitment to filter and to bind. Offer a small, clear set of
-          options. Every one of those comes straight out of a finding above, and every one is a fair response to the
-          buyer’s real problem, which is resolving uncertainty about something they cannot verify.
+          <strong style={rp.strong}>For providers,</strong> the same findings point to a strategy that is both ethical and,
+          as it happens, effective. Because results depend on the client’s own effort (section 3.11), your interest and the
+          buyer’s line up best when the sale <em>picks for fit and locks in commitment</em>, instead of chasing every sale
+          at any cost. Qualify people honestly. Show costly, hard-to-fake proof of real skill. Reverse risk with a
+          guarantee you actually mean. Use a small first step to filter and to bind. Offer a small, clear set of options.
+          Every one of those comes straight from a finding above. And every one is a fair answer to the buyer’s real
+          problem: handling uncertainty about something they cannot check.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>The ethical line.</strong> Every mechanism in section 3 is dual-use, and pretending
-          otherwise would be dishonest. Social proof can be fabricated. Scarcity can be faked. Commitment can be escalated
-          against a buyer’s interest. Fear can be cranked up with no real path offered. The line between persuasion and
-          manipulation, following Cialdini and the wider literature, comes down to one test: does the influence make the
-          buyer’s judgment <em>more accurate</em> about a decision that genuinely serves them, or <em>less</em>? Supplying
-          diagnostic, hard-to-fake evidence that helps a suitable buyer choose well is persuasion. Supplying cheap-to-fake
-          cues that push an unsuitable buyer to act against their own interest is manipulation. The mechanisms are the
-          same. The diagnosticity, and the fit, are what differ.
+          <strong style={rp.strong}>The ethical line.</strong> Every tool in section 3 cuts both ways, and pretending
+          otherwise would be dishonest. Social proof can be faked. Scarcity can be staged. A small commitment can be used to
+          push someone deeper against their interest. Fear can be cranked up with no real way out offered. So where is the
+          line between persuasion and manipulation? One test. Does the influence make the buyer’s judgment
+          <em> more accurate</em> about a choice that truly serves them, or <em>less</em>? Giving honest, hard-to-fake
+          evidence that helps a good-fit buyer choose well is persuasion. Giving cheap, fake cues that push a bad-fit buyer
+          against their own interest is manipulation. The tools are the same. The honesty, and the fit, are what differ.
         </p>
 
         {/* 6 */}
         <h2 id="limits" style={rp.h2}>6. Limitations</h2>
         <p style={rp.p}>
-          Three kinds of limitation apply, and I would rather name them than paper over them. First, this is a
-          <strong style={rp.strong}> synthesis, not primary research</strong>. It integrates existing findings and proposes
-          a model, but the model itself has not been tested end to end on this specific transaction. Second, a lot of the
-          underlying literature rests on <strong style={rp.strong}>WEIRD samples</strong> (Western, educated,
-          industrialized, rich, democratic; Henrich, Heine, and Norenzayan, 2010) and on lab or single-market settings,
-          which limits how far it generalizes across cultures and contexts. Third, and most importantly, some
-          once-canonical effects have <strong style={rp.strong}>failed to replicate or been seriously contested</strong>.
-          Ego-depletion has largely failed large-scale replication. Several social-priming results did not survive. And
-          choice overload, which I leaned on in section 3.9, is not universal at all: Scheibehenne, Greifeneder, and Todd
-          (2010) meta-analyzed the literature and found a mean effect near zero, with assortment size interacting with
-          things like prior preferences and how hard the decision is. I have flagged these where they came up. The robust
-          core I am relying on here, loss aversion, reference dependence, the tripartite trust model, signaling, and the
-          causal social-proof experiments, has held up comparatively well. But the more fragile effects (specific
-          choice-architecture manipulations, priming) should be read as provisional.
+          Three limits apply, and I would rather name them than hide them. First, this
+          <strong style={rp.strong}> pulls together existing research</strong>. It does not test one new model end to end on
+          this exact buy. Second, a lot of the research rests on <strong style={rp.strong}>WEIRD samples</strong> (Western,
+          educated, rich, industrial countries; Henrich, Heine, and Norenzayan, 2010) and on lab settings, so it may not
+          carry over to every culture. Third, and most important, some once-famous effects have
+          <strong style={rp.strong}> failed to hold up</strong>. Ego-depletion largely failed to replicate. Several priming
+          results did not survive. And choice overload, which I used in section 3.9, is not universal. Scheibehenne,
+          Greifeneder, and Todd (2010) pooled the studies and found an average effect near zero, depending on things like
+          the person and how hard the choice was. I have flagged these as they came up. The solid core I lean on, loss
+          aversion, reference points, the trust model, signaling, and the social-proof experiments, has held up well. But
+          treat the shakier bits (specific choice tricks, priming) as unsettled.
         </p>
 
         {/* 7 */}
         <h2 id="conclusion" style={rp.h2}>7. Conclusion</h2>
         <p style={rp.p}>
-          People do not buy expertise the way they buy a laptop, because they cannot. The core attribute is unverifiable,
-          so the decision stops being a value-for-money calculation and becomes an exercise in resolving uncertainty under
-          the shadow of loss. Buyers swap observable proxies in for the invisible outcome. They lean on a fast gut read and
-          then justify it. They are ruled more by the fear of a wasted, regretted loss than by the promise of a gain. They
-          build willingness-to-pay out of whatever references are lying around. And above all, they route the whole
-          decision through trust, updating it from evidence in proportion to how hard that evidence would be to fake.
-          Social proof, credentials and costly signals, small binding commitments, well-formed choices, these are the tools
-          that discharge the uncertainty. And the strongest competitor, start to finish, is not some rival provider. It is
-          the biased, well-defended option of doing nothing.
+          People do not buy expertise the way they buy a laptop, because they cannot. The main thing you are paying for is
+          invisible. So the choice stops being a value-for-money sum and becomes a struggle to handle uncertainty under the
+          shadow of loss. Buyers swap in stand-ins for the outcome they cannot see. They lean on a fast gut read, then
+          justify it. They fear a wasted, regretted loss more than they want a gain. They build a price out of whatever
+          reference points are around. And above all, they run the whole choice through trust, updating it from evidence
+          in proportion to how hard that evidence would be to fake. Social proof, credentials, costly signals, small
+          binding steps, clear choices, these are the tools that burn off the uncertainty. And the strongest competitor,
+          start to finish, is not a rival provider. It is the well-guarded option of doing nothing.
         </p>
         <p style={rp.p}>
           There is one last thing worth saying, because it surprised me a little as the pieces came together. Since the

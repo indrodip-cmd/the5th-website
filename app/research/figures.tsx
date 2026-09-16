@@ -680,3 +680,126 @@ export function FigAIWaves() {
     </Figure>
   )
 }
+
+/* ── Critical thinking / cognitive offloading white paper ──────────────────*/
+
+// Fig: the study design
+export function FigStudyDesign() {
+  const box = (x: number, w: number, title: string, lines: string[]) => (
+    <g>
+      <rect x={x} y="60" width={w} height="120" rx="12" fill={F.cream} stroke={F.line} />
+      <rect x={x} y="60" width={w} height="30" rx="12" fill={F.plum} />
+      <text x={x + w / 2} y="80" fontFamily={SERIF} fontSize="14" fill="#fff" textAnchor="middle" fontWeight="700">{title}</text>
+      {lines.map((l, i) => <text key={i} x={x + 14} y={108 + i * 20} fontFamily={SANS} fontSize="11.5" fill={F.ink}>{l}</text>)}
+    </g>
+  )
+  return (
+    <Figure n={1} caption={<>The shape of the study behind this paper. I looked at how a group of everyday US adults aged 30 to 60 reason on the same kinds of problems with and without an AI assistant, and measured not just whether they got the answer, but whether they still did the thinking.</>}>
+      <svg viewBox="0 0 600 210" style={svgStyle} role="img" aria-label="Study design: participants, tasks, measures">
+        <defs>{arrow('sd', F.goldDeep)}</defs>
+        {box(20, 168, 'Participants', ['100+ US adults', 'ages 30 to 60', 'mixed AI habits'])}
+        {box(216, 168, 'Tasks', ['reasoning + judgment', 'with AI vs without', 'then explain it back'])}
+        {box(412, 168, 'What I measured', ['unaided reasoning', 'offloading habits', 'confidence vs accuracy'])}
+        <line x1="188" y1="120" x2="214" y2="120" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#sd)" />
+        <line x1="384" y1="120" x2="410" y2="120" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#sd)" />
+        <text x="300" y="30" fontFamily={SANS} fontSize="12.5" fill={F.muted} textAnchor="middle">a plain look at how the thinking changes when the tool is present</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: the cognitive offloading vicious cycle
+export function FigOffloadingCycle() {
+  const node = (x: number, y: number, t: string, s: string) => (
+    <g>
+      <rect x={x - 78} y={y - 26} width="156" height="52" rx="12" fill={F.plum2} />
+      <text x={x} y={y - 3} fontFamily={SANS} fontSize="12.5" fill="#fff" textAnchor="middle" fontWeight="700">{t}</text>
+      <text x={x} y={y + 14} fontFamily={SANS} fontSize="10.5" fill="rgba(255,255,255,.82)" textAnchor="middle">{s}</text>
+    </g>
+  )
+  return (
+    <Figure n={2} caption={<>The loop I keep seeing. You hand a hard task to the AI, so the mental muscle it would have used goes unexercised, so it gets a little weaker and the next task feels a little harder, so you hand that one over too. Each turn feels efficient. The direction is downhill.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="The cognitive offloading vicious cycle">
+        <defs>{arrow('oc', F.goldDeep)}</defs>
+        {node(300, 48, 'Hard task appears', 'thinking required')}
+        {node(500, 128, 'Offload to AI', 'skip the effort')}
+        {node(300, 208, 'Skill goes unused', 'no practice')}
+        {node(100, 128, 'It feels harder next time', 'so you offload again')}
+        <path d="M372,58 C430,74 470,96 486,110" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#oc)" />
+        <path d="M486,146 C470,172 400,196 366,202" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#oc)" />
+        <path d="M234,202 C168,196 130,172 114,146" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#oc)" />
+        <path d="M114,110 C130,96 172,74 228,58" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#oc)" />
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: reliance vs critical thinking (illustrative, after Gerlich 2025)
+export function FigRelianceThinking() {
+  const dots = [
+    [110, 70], [140, 84], [130, 96], [175, 92], [200, 108], [190, 122], [235, 118],
+    [260, 132], [250, 146], [300, 140], [330, 156], [320, 168], [370, 162], [400, 176],
+    [390, 150], [430, 182], [460, 178], [455, 190], [500, 186], [520, 196], [230, 100], [350, 150],
+  ]
+  return (
+    <Figure n={3} caption={<>The pattern the published work keeps finding, drawn here to show the shape rather than exact values. Across large surveys (for example Gerlich, 2025), heavier everyday reliance on AI tools lines up with weaker critical-thinking scores, and cognitive offloading is the thing sitting in the middle explaining it.</>}>
+      <svg viewBox="0 0 600 240" style={svgStyle} role="img" aria-label="Higher AI reliance associated with lower critical thinking">
+        <line x1="70" y1="210" x2="560" y2="210" stroke={F.line} strokeWidth="1.5" />
+        <line x1="70" y1="30" x2="70" y2="210" stroke={F.line} strokeWidth="1.5" />
+        {dots.map((d, i) => <circle key={i} cx={d[0]} cy={d[1]} r="5" fill={F.purple} opacity="0.7" />)}
+        <line x1="95" y1="78" x2="535" y2="196" stroke={F.goldDeep} strokeWidth="2.5" strokeDasharray="6 5" />
+        <text x="300" y="232" fontFamily={SANS} fontSize="12" fill={F.muted} textAnchor="middle">everyday reliance on AI →</text>
+        <text x="52" y="120" fontFamily={SANS} fontSize="12" fill={F.muted} transform="rotate(-90 52 120)">critical-thinking score</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: use it or lose it (skill over time, practice vs offload)
+export function FigUseItLoseIt() {
+  const keep: string[] = [], lose: string[] = []
+  for (let i = 0; i <= 100; i++) {
+    const x = i / 100
+    keep.push(`${(70 + x * 470).toFixed(1)},${(160 - (0.35 + 0.45 * x) * 150 + 60).toFixed(1)}`)
+    lose.push(`${(70 + x * 470).toFixed(1)},${(160 - (0.35 * Math.exp(-1.6 * x)) * 150 + 60).toFixed(1)}`)
+  }
+  return (
+    <Figure n={4} caption={<>Why it matters at the level of the brain. Skills you keep using with real effort are maintained and even strengthened (the rising line); skills you stop exercising fade (the falling line). This “use it or lose it” rule is not a metaphor, it is how synapses and myelin actually respond to practice and disuse.</>}>
+      <svg viewBox="0 0 600 240" style={svgStyle} role="img" aria-label="Skill retained with practice versus lost with offloading">
+        <line x1="70" y1="210" x2="560" y2="210" stroke={F.line} strokeWidth="1.5" />
+        <line x1="70" y1="30" x2="70" y2="210" stroke={F.line} strokeWidth="1.5" />
+        <polyline points={keep.join(' ')} fill="none" stroke={F.purple} strokeWidth="3" />
+        <polyline points={lose.join(' ')} fill="none" stroke={F.goldDeep} strokeWidth="3" strokeDasharray="6 5" />
+        <text x="470" y="70" fontFamily={SANS} fontSize="12" fill={F.purple} fontWeight="700">kept in practice</text>
+        <text x="470" y="196" fontFamily={SANS} fontSize="12" fill={F.goldDeep} fontWeight="700">offloaded, fading</text>
+        <text x="300" y="232" fontFamily={SANS} fontSize="12" fill={F.muted} textAnchor="middle">time →</text>
+        <text x="52" y="120" fontFamily={SANS} fontSize="12" fill={F.muted} transform="rotate(-90 52 120)">skill strength</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: replace vs augment
+export function FigAugmentReplace() {
+  const col = (x: number, title: string, sub: string, steps: string[], fill: string, tc: string) => (
+    <g>
+      <rect x={x} y="34" width="248" height="40" rx="10" fill={fill} />
+      <text x={x + 124} y="52" fontFamily={SERIF} fontSize="15" fill={tc} textAnchor="middle" fontWeight="700">{title}</text>
+      <text x={x + 124} y="67" fontFamily={SANS} fontSize="10.5" fill={tc} textAnchor="middle" opacity="0.85">{sub}</text>
+      {steps.map((s, i) => (
+        <g key={s}>
+          <rect x={x} y={84 + i * 30} width="248" height="24" rx="6" fill="#fff" stroke={F.line} />
+          <text x={x + 12} y={84 + i * 30 + 16} fontFamily={SANS} fontSize="11.5" fill={F.ink}>{s}</text>
+        </g>
+      ))}
+    </g>
+  )
+  return (
+    <Figure n={5} caption={<>The whole difference is where you put the AI in the sequence. Let it do the thinking for you and the skill erodes. Do the thinking first and let it stress-test, extend, and speed you up, and the same tool strengthens you. Same tool, opposite effect.</>}>
+      <svg viewBox="0 0 600 210" style={svgStyle} role="img" aria-label="Replacement versus augmentation">
+        {col(24, 'Replacement', 'AI thinks, you paste', ['ask AI first', 'accept the answer', 'skill unused → fades'], F.plum, '#fff')}
+        {col(328, 'Augmentation', 'you think, AI extends', ['form your own view', 'let AI challenge it', 'skill used → grows'], F.gold, F.plum)}
+      </svg>
+    </Figure>
+  )
+}

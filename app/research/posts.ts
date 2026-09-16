@@ -15,6 +15,18 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
+    slug: 'is-ai-eroding-critical-thinking',
+    title: 'Cognitive Debt: A White Paper on How Everyday AI Use May Be Eroding Our Critical Thinking',
+    excerpt:
+      'A white paper from my own behavioural research, looking at more than 100 American adults aged 30 to 60, on a question that started to worry me: does leaning on AI for everyday thinking quietly weaken the thinking itself? Written in plain words from a cognitive-science and neuroscience point of view, grounded in the converging published evidence, and ending with a practical protocol for using AI without losing your edge.',
+    date: '2026-09-14',
+    dateLabel: 'September 14, 2026',
+    readTime: '32 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Behavioural Research', 'Cognitive Science', 'Neuroscience', 'White Paper'],
+  },
+  {
     slug: 'future-of-ai-from-tools-to-agents',
     title: 'From Tools to Agents: A Plain-Language Field Guide to the Next Ten Years of AI',
     excerpt:

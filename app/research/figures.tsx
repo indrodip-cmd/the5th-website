@@ -904,3 +904,91 @@ export function FigPersuasionScale() {
     </Figure>
   )
 }
+
+/* ── Vega 2.0 ──────────────────────────────────────────────────────────────*/
+
+// Fig: the leaky manual funnel
+export function FigFunnelLeak() {
+  const stages = [
+    { l: 'Visitors', w: 520 },
+    { l: 'Leads', w: 388 },
+    { l: 'Calls booked', w: 250 },
+    { l: 'Clients', w: 132 },
+  ]
+  return (
+    <Figure n={1} caption={<>The funnel most coaches run today. People leak out at every step, and you are usually guessing where, and why. Fixing it by hand is slow, so most of the leaks just stay.</>}>
+      <svg viewBox="0 0 600 260" style={svgStyle} role="img" aria-label="A leaky marketing funnel">
+        <defs>{arrow('fl', F.goldDeep)}</defs>
+        {stages.map((s, i) => {
+          const y = 22 + i * 56
+          const x = (600 - s.w) / 2
+          return (
+            <g key={s.l}>
+              <rect x={x} y={y} width={s.w} height="40" rx="7" fill={i === 3 ? F.gold : F.plum2} opacity={0.7 + i * 0.06} />
+              <text x="300" y={y + 25} fontFamily={SANS} fontSize="13.5" fill={i === 3 ? F.plum : '#fff'} textAnchor="middle" fontWeight="700">{s.l}</text>
+              {i < 3 && <>
+                <line x1={x + s.w} y1={y + 30} x2={x + s.w + 34} y2={y + 30} stroke={F.goldDeep} strokeWidth="1.5" markerEnd="url(#fl)" opacity="0.7" />
+                <text x={x + s.w + 40} y={y + 34} fontFamily={SANS} fontSize="10.5" fill={F.muted}>leak</text>
+              </>}
+            </g>
+          )
+        })}
+        <text x="300" y="252" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">most of the people who could have become clients quietly fall out</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: Vega's loop
+export function FigVegaLoop() {
+  const node = (x: number, y: number, t: string) => (
+    <g>
+      <rect x={x - 62} y={y - 21} width="124" height="42" rx="10" fill={F.plum2} />
+      <text x={x} y={y + 5} fontFamily={SANS} fontSize="13.5" fill="#fff" textAnchor="middle" fontWeight="700">{t}</text>
+    </g>
+  )
+  return (
+    <Figure n={2} caption={<>How Vega 2.0 works, in one loop. It learns your business, builds the funnel, runs it, and learns from what happens, then goes around again. The funnel stops being a thing you set up once and starts being a thing that improves on its own.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Vega understand, build, run, learn loop">
+        <defs>{arrow('vl', F.goldDeep)}</defs>
+        {node(300, 40, 'Understand')}
+        {node(496, 128, 'Build')}
+        {node(300, 214, 'Run')}
+        {node(104, 128, 'Learn')}
+        <circle cx="300" cy="128" r="44" fill="none" stroke={F.gold} strokeWidth="1.6" strokeDasharray="4 4" />
+        <text x="300" y="124" fontFamily={SERIF} fontSize="13.5" fill={F.plum} textAnchor="middle" fontWeight="700">Your</text>
+        <text x="300" y="141" fontFamily={SERIF} fontSize="13.5" fill={F.plum} textAnchor="middle" fontWeight="700">business</text>
+        <path d="M360,48 C418,62 470,90 488,108" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#vl)" />
+        <path d="M488,150 C470,178 400,202 362,208" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#vl)" />
+        <path d="M238,208 C170,202 118,176 112,152" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#vl)" />
+        <path d="M112,106 C130,88 200,60 240,48" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#vl)" />
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: the four layers of Vega 2.0
+export function FigVegaStack() {
+  const rows = [
+    { t: 'The Brain', s: 'understands your buyer and what moves them' },
+    { t: 'The Builder', s: 'writes the offer, pages, emails, and ads' },
+    { t: 'The Runner', s: 'launches, watches, tests, and fixes the funnel' },
+    { t: 'The Concierge', s: 'talks to every lead, one to one, at scale' },
+  ]
+  return (
+    <Figure n={3} caption={<>The four parts of Vega 2.0. One understands the buyer, one builds the funnel, one runs and fixes it, and one talks to every lead personally. Together they do the work that used to take a whole team.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="The four layers of Vega 2.0">
+        {rows.map((r, i) => {
+          const y = 20 + i * 56
+          return (
+            <g key={r.t}>
+              <rect x="60" y={y} width="480" height="44" rx="10" fill={i === 3 ? F.gold : F.plum2} opacity={i === 3 ? 1 : 0.72 + i * 0.06} />
+              <text x="80" y={y + 22} fontFamily={SERIF} fontSize="16" fill={i === 3 ? F.plum : '#fff'} fontWeight="700">{r.t}</text>
+              <text x="80" y={y + 37} fontFamily={SANS} fontSize="11.5" fill={i === 3 ? 'rgba(46,26,53,.8)' : 'rgba(255,255,255,.82)'}>{r.s}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </Figure>
+  )
+}

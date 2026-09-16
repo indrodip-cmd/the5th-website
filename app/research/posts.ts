@@ -15,6 +15,18 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
+    slug: 'vega-2-marketing-funnels-automation',
+    title: 'Vega 2.0: How Our Own AI Will Run Marketing and Funnels',
+    excerpt:
+      'A plain look at what I am building. Vega is our own AI, and Vega 2.0 turns a funnel from a thing you set up once into a thing that runs and fixes itself. It learns your buyer, builds the offer and pages and emails, launches and tests them, and talks to every lead one to one, at scale. Here is how it works, why competent AI is already enough to change marketing, and what it leaves for the human to do.',
+    date: '2026-09-16',
+    dateLabel: 'September 16, 2026',
+    readTime: '18 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Vega', 'Marketing', 'AI Agents', 'Automation'],
+  },
+  {
     slug: 'how-persuasive-is-frontier-ai',
     title: 'The Persuasion Engine: A White Paper on How Good AI Has Become at Changing Our Minds',
     excerpt:

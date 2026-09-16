@@ -1,7 +1,7 @@
 import React from 'react'
 import { C } from './ui'
 
-/* Hand-built, dependency-free SVG figures for Research articles — charts and
+/* Hand-built, dependency-free SVG figures for Research articles, charts and
    diagrams in the brand palette (plum / gold / cream). Server components. Each
    figure is responsive (width 100%, height from viewBox) and wrapped with a
    numbered caption. */
@@ -44,7 +44,7 @@ export function FigProspect() {
     if (x <= 0) { const g = Math.pow(-x, 0.88); mirror.push(`${(300 + x * 2.4).toFixed(1)},${(170 + g * 1.05).toFixed(1)}`) }
   }
   return (
-    <Figure n={1} caption={<>The prospect-theory value function (Kahneman &amp; Tversky, 1979). Value is measured from a reference point; the curve is markedly steeper for losses than for gains (λ ≈ 2.25). The dashed line mirrors the gain curve to make the loss asymmetry visible — a loss of a given size hurts about twice as much as the same-size gain pleases.</>}>
+    <Figure n={1} caption={<>The prospect-theory value function (Kahneman &amp; Tversky, 1979). Value is measured from a reference point; the curve is markedly steeper for losses than for gains (λ ≈ 2.25). The dashed line mirrors the gain curve to make the loss asymmetry visible, a loss of a given size hurts about twice as much as the same-size gain pleases.</>}>
       <svg viewBox="0 0 600 340" style={svgStyle} role="img" aria-label="Prospect theory value function">
         <line x1="60" y1="170" x2="560" y2="170" stroke={F.line} strokeWidth="1.5" />
         <line x1="300" y1="30" x2="300" y2="320" stroke={F.line} strokeWidth="1.5" />
@@ -70,7 +70,7 @@ export function FigCredence() {
     { x: 386, w: 174, label: 'Credence', sub: 'hard to judge even after', c: F.plum },
   ]
   return (
-    <Figure n={2} caption={<>The evaluability spectrum (Nelson, 1970; Darby &amp; Karni, 1973). Expert services sit at the far end: their core value is a <em>credence</em> quality, difficult to verify even after consumption — which is why buyers fall back on proxies for quality rather than the quality itself.</>}>
+    <Figure n={2} caption={<>The evaluability spectrum (Nelson, 1970; Darby &amp; Karni, 1973). Expert services sit at the far end: their core value is a <em>credence</em> quality, difficult to verify even after consumption, which is why buyers fall back on proxies for quality rather than the quality itself.</>}>
       <svg viewBox="0 0 600 190" style={svgStyle} role="img" aria-label="Search, experience, credence goods spectrum">
         {seg.map((s) => (
           <g key={s.label}>
@@ -82,7 +82,7 @@ export function FigCredence() {
         <defs>{arrow('a2', F.goldDeep)}</defs>
         <line x1="40" y1="150" x2="556" y2="150" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#a2)" />
         <text x="40" y="170" fontFamily={SANS} fontSize="12.5" fill={F.goldDeep}>easier to evaluate</text>
-        <text x="556" y="170" fontFamily={SANS} fontSize="12.5" fill={F.goldDeep} textAnchor="end" fontWeight="700">harder to evaluate — where coaching/consulting lives</text>
+        <text x="556" y="170" fontFamily={SANS} fontSize="12.5" fill={F.goldDeep} textAnchor="end" fontWeight="700">harder to evaluate, where coaching/consulting lives</text>
         <text x="300" y="30" fontFamily={SANS} fontSize="13" fill={F.muted} textAnchor="middle">Uncertainty about quality</text>
       </svg>
     </Figure>
@@ -99,7 +99,7 @@ export function FigTrust() {
     </g>
   )
   return (
-    <Figure n={3} caption={<>The tripartite model of trustworthiness (Mayer, Davis &amp; Schoorman, 1995). Perceived ability, benevolence, and integrity combine into trust, which licenses risk-taking only when it exceeds the risk the situation demands — the pivot of the whole purchase.</>}>
+    <Figure n={3} caption={<>The tripartite model of trustworthiness (Mayer, Davis &amp; Schoorman, 1995). Perceived ability, benevolence, and integrity combine into trust, which licenses risk-taking only when it exceeds the risk the situation demands, the pivot of the whole purchase.</>}>
       <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Ability, benevolence, integrity to trust to action">
         <defs>{arrow('a3', F.purple)}{arrow('a3g', F.goldDeep)}</defs>
         {box(30, 'Ability', 'competence')}
@@ -147,7 +147,7 @@ export function FigFunnel() {
 // Fig: access vs phenomenal (Venn)
 export function FigAccessPhenomenal() {
   return (
-    <Figure n={1} caption={<>Two senses of “consciousness” (Block). Access consciousness is information globally available for report and control; phenomenal consciousness is felt experience. Ordinary human awareness lives in the overlap — and the open question is whether a machine could occupy the left circle without the right.</>}>
+    <Figure n={1} caption={<>Two senses of “consciousness” (Block). Access consciousness is information globally available for report and control; phenomenal consciousness is felt experience. Ordinary human awareness lives in the overlap, and the open question is whether a machine could occupy the left circle without the right.</>}>
       <svg viewBox="0 0 600 260" style={svgStyle} role="img" aria-label="Access versus phenomenal consciousness">
         <circle cx="240" cy="130" r="110" fill={F.purpleSoft} stroke={F.purple} strokeWidth="1.6" />
         <circle cx="360" cy="130" r="110" fill="rgba(201,168,76,.14)" stroke={F.goldDeep} strokeWidth="1.6" />
@@ -174,7 +174,7 @@ export function FigIgnition() {
     pts.push(`${(60 + x * 480).toFixed(1)},${(210 - y * 160).toFixed(1)}`)
   }
   return (
-    <Figure n={2} caption={<>Global-workspace “ignition” (Dehaene). Below a threshold, stimuli are processed locally and briefly; once the threshold is crossed, a nonlinear, all-or-nothing surge broadcasts the content system-wide. Consciousness, on this view, is the sudden jump — not the gradual ramp.</>}>
+    <Figure n={2} caption={<>Global-workspace “ignition” (Dehaene). Below a threshold, stimuli are processed locally and briefly; once the threshold is crossed, a nonlinear, all-or-nothing surge broadcasts the content system-wide. Consciousness, on this view, is the sudden jump, not the gradual ramp.</>}>
       <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Nonlinear ignition curve">
         <line x1="60" y1="210" x2="560" y2="210" stroke={F.line} strokeWidth="1.5" />
         <line x1="60" y1="40" x2="60" y2="210" stroke={F.line} strokeWidth="1.5" />
@@ -255,7 +255,7 @@ export function FigTimeline() {
 export function FigBackpropFA() {
   const col = (cx: number, fill: string) => [0, 1, 2].map((i) => <circle key={i} cx={cx} cy={70 + i * 55} r="12" fill={fill} />)
   return (
-    <Figure n={1} caption={<>The weight-transport problem and its dissolution. Backpropagation (left) needs the exact transpose Wᵀ for the backward pass — biologically implausible. Feedback alignment (right) replaces it with a fixed random matrix B; the forward weights learn to align with it, and the network still trains (Lillicrap et al., 2016).</>}>
+    <Figure n={1} caption={<>The weight-transport problem and its dissolution. Backpropagation (left) needs the exact transpose Wᵀ for the backward pass, biologically implausible. Feedback alignment (right) replaces it with a fixed random matrix B; the forward weights learn to align with it, and the network still trains (Lillicrap et al., 2016).</>}>
       <svg viewBox="0 0 600 300" style={svgStyle} role="img" aria-label="Backpropagation versus feedback alignment">
         {/* left: backprop */}
         <text x="150" y="30" fontFamily={SERIF} fontSize="16" fill={F.plum} textAnchor="middle" fontWeight="700">Backpropagation</text>
@@ -280,7 +280,7 @@ export function FigBackpropFA() {
 export function FigPredictiveCoding() {
   const levels = ['sensory input', 'level 1', 'level 2', 'level 3 (priors)']
   return (
-    <Figure n={2} caption={<>Predictive coding. Each level sends predictions downward; only the residual prediction error ascends. Inference and learning both descend the same free-energy gradient with strictly local updates — which, at equilibrium, recover the backpropagation gradients (Rao &amp; Ballard, 1999; Whittington &amp; Bogacz, 2017).</>}>
+    <Figure n={2} caption={<>Predictive coding. Each level sends predictions downward; only the residual prediction error ascends. Inference and learning both descend the same free-energy gradient with strictly local updates, which, at equilibrium, recover the backpropagation gradients (Rao &amp; Ballard, 1999; Whittington &amp; Bogacz, 2017).</>}>
       <svg viewBox="0 0 600 260" style={svgStyle} role="img" aria-label="Predictive coding hierarchy">
         <defs>{arrow('pcp', F.purple)}{arrow('pce', F.goldDeep)}</defs>
         {levels.map((l, i) => {
@@ -314,7 +314,7 @@ export function FigManifold() {
     return <polyline points={p.join(' ')} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" />
   }
   return (
-    <Figure n={3} caption={<>Representational geometry and untangling (Chung, Lee &amp; Sompolinsky; DiCarlo &amp; Cox). Early in a hierarchy, category manifolds are entangled and not linearly separable (left); a good hierarchy — biological or artificial — reshapes the geometry so a simple linear readout can separate them (right). The same transformation is measured in cortex and in deep networks.</>}>
+    <Figure n={3} caption={<>Representational geometry and untangling (Chung, Lee &amp; Sompolinsky; DiCarlo &amp; Cox). Early in a hierarchy, category manifolds are entangled and not linearly separable (left); a good hierarchy, biological or artificial, reshapes the geometry so a simple linear readout can separate them (right). The same transformation is measured in cortex and in deep networks.</>}>
       <svg viewBox="0 0 600 260" style={svgStyle} role="img" aria-label="Neural manifold untangling">
         <rect x="30" y="40" width="240" height="180" rx="12" fill={F.cream} stroke={F.line} />
         {spiral(150, 130, 1, F.purple)}{spiral(150, 130, -1, F.gold)}
@@ -326,6 +326,241 @@ export function FigManifold() {
         <ellipse cx="485" cy="168" rx="60" ry="20" fill="none" stroke={F.gold} strokeWidth="3" transform="rotate(-16 485 168)" />
         <line x1="345" y1="180" x2="555" y2="80" stroke={F.plum2} strokeWidth="1.6" strokeDasharray="6 5" />
         <text x="450" y="238" fontFamily={SANS} fontSize="12.5" fill={F.muted} textAnchor="middle">late: untangled, linearly separable</text>
+      </svg>
+    </Figure>
+  )
+}
+
+/* ── Language and tone ─────────────────────────────────────────────────────*/
+
+// Fig: same question, two languages, two tones (illustrative chat mockup)
+export function FigToneByLanguage() {
+  const bubble = (x: number, y: number, w: number, right: boolean, fill: string, tc: string, line1: string, line2?: string) => (
+    <g>
+      <rect x={x} y={y} width={w} height={line2 ? 52 : 34} rx="12" fill={fill} />
+      <text x={right ? x + w - 12 : x + 12} y={y + 21} fontFamily={SANS} fontSize="12" fill={tc} textAnchor={right ? 'end' : 'start'}>{line1}</text>
+      {line2 && <text x={right ? x + w - 12 : x + 12} y={y + 39} fontFamily={SANS} fontSize="12" fill={tc} textAnchor={right ? 'end' : 'start'}>{line2}</text>}
+    </g>
+  )
+  return (
+    <Figure n={1} caption={<>An illustrative sketch of the effect this piece is about (not a transcript). Asked the same thing, assistants often answer English prompts more directly and Hindi prompts more warmly and deferentially. The rest of the article asks whether that is real, and if so, why.</>}>
+      <svg viewBox="0 0 600 300" style={svgStyle} role="img" aria-label="Same question answered in two languages with two tones">
+        <rect x="24" y="24" width="266" height="252" rx="16" fill={F.cream} stroke={F.line} />
+        <rect x="310" y="24" width="266" height="252" rx="16" fill={F.cream} stroke={F.line} />
+        <text x="157" y="52" fontFamily={SERIF} fontSize="17" fill={F.plum} textAnchor="middle" fontWeight="700">Asked in English</text>
+        <text x="443" y="52" fontFamily={SERIF} fontSize="17" fill={F.plum} textAnchor="middle" fontWeight="700">Asked in Hindi</text>
+        {bubble(120, 66, 150, true, F.purple, '#fff', 'fix this. now.')}
+        {bubble(40, 112, 210, false, '#fff', F.ink, 'Here is the fix. Your code', 'was wrong on line two.')}
+        {bubble(406, 66, 150, true, F.purple, '#fff', 'zara ye theek kar dijiye')}
+        {bubble(326, 112, 210, false, '#fff', F.ink, 'Bilkul! Aapke liye ye raha.', 'Koi baat nahi, ho jaata hai.')}
+        <rect x="40" y="188" width="210" height="30" rx="8" fill="rgba(94,46,134,.10)" />
+        <text x="145" y="207" fontFamily={SANS} fontSize="12" fill={F.purple} textAnchor="middle" fontWeight="700">tone: direct, efficient</text>
+        <rect x="326" y="188" width="210" height="30" rx="8" fill="rgba(201,168,76,.16)" />
+        <text x="431" y="207" fontFamily={SANS} fontSize="12" fill={F.goldDeep} textAnchor="middle" fontWeight="700">tone: warm, deferential</text>
+        <text x="300" y="252" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">same request · same model · different register</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: linguistic accommodation loop
+export function FigMirrorLoop() {
+  return (
+    <Figure n={2} caption={<>The mirror. A model trained to be helpful tends to match the register it is given: the politeness, formality, and warmth of your prompt flow back into its reply. Communication Accommodation Theory (Giles) describes the same move in humans. The loop is why the language you choose quietly sets the tone.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Register accommodation loop">
+        <defs>{arrow('ml', F.goldDeep)}</defs>
+        <rect x="40" y="100" width="150" height="56" rx="12" fill={F.plum} />
+        <text x="115" y="126" fontFamily={SANS} fontSize="13" fill="#fff" textAnchor="middle" fontWeight="700">Your prompt</text>
+        <text x="115" y="144" fontFamily={SANS} fontSize="11" fill="rgba(255,255,255,.8)" textAnchor="middle">register, politeness</text>
+        <rect x="225" y="100" width="150" height="56" rx="12" fill={F.purple} />
+        <text x="300" y="126" fontFamily={SANS} fontSize="13" fill="#fff" textAnchor="middle" fontWeight="700">Model mirrors</text>
+        <text x="300" y="144" fontFamily={SANS} fontSize="11" fill="rgba(255,255,255,.85)" textAnchor="middle">matches the style</text>
+        <rect x="410" y="100" width="150" height="56" rx="12" fill={F.plum2} />
+        <text x="485" y="126" fontFamily={SANS} fontSize="13" fill="#fff" textAnchor="middle" fontWeight="700">Reply tone</text>
+        <text x="485" y="144" fontFamily={SANS} fontSize="11" fill="rgba(255,255,255,.8)" textAnchor="middle">warm or blunt</text>
+        <line x1="190" y1="128" x2="223" y2="128" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#ml)" />
+        <line x1="375" y1="128" x2="408" y2="128" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#ml)" />
+        <path d="M485,156 C485,205 115,205 115,158" fill="none" stroke={F.line} strokeWidth="1.8" strokeDasharray="6 5" markerEnd="url(#ml)" />
+        <text x="300" y="200" fontFamily={SANS} fontSize="12" fill={F.muted} textAnchor="middle">you read the tone and adjust again</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: honorific resolution, Hindi vs English
+export function FigHonorifics() {
+  return (
+    <Figure n={3} caption={<>What the grammar forces. Hindi makes you pick a stance toward the listener with the pronoun itself: <em>tu</em> (intimate or curt), <em>tum</em> (familiar), <em>aap</em> (respectful). English flattens all three into one <em>you</em>. A model writing Hindi cannot stay neutral about respect; a model writing English can.</>}>
+      <svg viewBox="0 0 600 220" style={svgStyle} role="img" aria-label="Hindi honorific levels versus English you">
+        <text x="40" y="52" fontFamily={SERIF} fontSize="16" fill={F.plum} fontWeight="700">Hindi</text>
+        <line x1="120" y1="70" x2="560" y2="70" stroke={F.line} strokeWidth="2" />
+        {[['tu', 'intimate / curt', 150], ['tum', 'familiar', 330], ['aap', 'respectful', 510]].map(([w, s, x]) => (
+          <g key={w as string}>
+            <circle cx={x as number} cy="70" r="7" fill={F.purple} />
+            <text x={x as number} y="52" fontFamily={SERIF} fontSize="17" fill={F.plum} textAnchor="middle" fontWeight="700" fontStyle="italic">{w}</text>
+            <text x={x as number} y="92" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">{s}</text>
+          </g>
+        ))}
+        <text x="120" y="150" fontFamily={SANS} fontSize="11.5" fill={F.goldDeep}>less deference</text>
+        <text x="560" y="150" fontFamily={SANS} fontSize="11.5" fill={F.goldDeep} textAnchor="end">more deference</text>
+        <text x="40" y="185" fontFamily={SERIF} fontSize="16" fill={F.plum} fontWeight="700">English</text>
+        <rect x="120" y="168" width="440" height="30" rx="8" fill="rgba(94,46,134,.10)" />
+        <text x="340" y="188" fontFamily={SERIF} fontSize="16" fill={F.purple} textAnchor="middle" fontWeight="700" fontStyle="italic">you</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: where the alignment data lives (illustrative)
+export function FigDataByLanguage() {
+  const bars = [
+    { l: 'English', v: 100 }, { l: 'Chinese', v: 26 }, { l: 'Spanish', v: 18 },
+    { l: 'German', v: 15 }, { l: 'French', v: 13 }, { l: 'Hindi', v: 4 },
+  ]
+  return (
+    <Figure n={4} caption={<>Illustrative, not exact. The text these models learn from, and especially the human feedback used to fine-tune their manners, skews heavily toward English. Politeness and safety are therefore tuned most precisely in English, and approximated elsewhere. Proportions here are schematic.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Share of training and alignment data by language, illustrative">
+        <line x1="110" y1="30" x2="110" y2="210" stroke={F.line} strokeWidth="1.5" />
+        {bars.map((b, i) => {
+          const y = 40 + i * 30
+          const w = b.v * 4.3
+          return (
+            <g key={b.l}>
+              <text x="100" y={y + 15} fontFamily={SANS} fontSize="12.5" fill={F.ink} textAnchor="end">{b.l}</text>
+              <rect x="110" y={y} width={w} height="20" rx="5" fill={i === 0 ? F.plum : i === 5 ? F.gold : F.purple} opacity={i === 0 ? 1 : 0.85} />
+            </g>
+          )
+        })}
+        <text x="300" y="232" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">relative share of training + alignment data (schematic)</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: prompt politeness vs output quality (after Yin et al., 2024)
+export function FigPolitenessCurve() {
+  const curve = (amp: number, peak: number, base: number, color: string, dash?: string) => {
+    const p: string[] = []
+    for (let i = 0; i <= 100; i++) {
+      const x = i / 100
+      const y = base + amp * Math.exp(-Math.pow((x - peak) / 0.26, 2))
+      p.push(`${(70 + x * 470).toFixed(1)},${(200 - y * 150).toFixed(1)}`)
+    }
+    return <polyline points={p.join(' ')} fill="none" stroke={color} strokeWidth="3" strokeDasharray={dash} />
+  }
+  return (
+    <Figure n={5} caption={<>Politeness is not free, and the sweet spot moves by language. In cross-lingual tests (Yin et al., 2024), rude prompts tend to degrade answers while very high politeness rarely helps and can slightly hurt, with the optimum sitting at a different point in each language. Curves here are stylized to show the shape, not exact values.</>}>
+      <svg viewBox="0 0 600 240" style={svgStyle} role="img" aria-label="Prompt politeness versus output quality by language">
+        <line x1="70" y1="200" x2="560" y2="200" stroke={F.line} strokeWidth="1.5" />
+        <line x1="70" y1="30" x2="70" y2="200" stroke={F.line} strokeWidth="1.5" />
+        {curve(0.62, 0.62, 0.22, F.purple)}
+        {curve(0.52, 0.78, 0.24, F.goldDeep, '6 5')}
+        <text x="300" y="226" fontFamily={SANS} fontSize="12" fill={F.muted} textAnchor="middle">rude  →  neutral  →  very polite</text>
+        <text x="52" y="120" fontFamily={SANS} fontSize="12" fill={F.muted} transform="rotate(-90 52 120)">answer quality</text>
+        <rect x="360" y="40" width="14" height="3" fill={F.purple} /><text x="380" y="46" fontFamily={SANS} fontSize="11.5" fill={F.ink}>English (peak nearer neutral)</text>
+        <rect x="360" y="58" width="14" height="3" fill={F.goldDeep} /><text x="380" y="64" fontFamily={SANS} fontSize="11.5" fill={F.ink}>a more honorific language</text>
+      </svg>
+    </Figure>
+  )
+}
+
+/* ── AGI and the agency thesis ─────────────────────────────────────────────*/
+
+// Fig: levels of AGI (after Morris et al., 2023)
+export function FigAgiLevels() {
+  const steps = ['Narrow tool', 'Emerging', 'Competent', 'Expert', 'Virtuoso', 'Superhuman']
+  return (
+    <Figure n={1} caption={<>AGI is not a single switch, it is a ladder. Morris et al. (2023) grade general systems from emerging, through competent and expert, to superhuman, by how broadly and how well they match skilled people. Most of the disruption in this essay does not wait for the top rung. It happens around “competent.”</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Levels of AGI ladder">
+        {steps.map((s, i) => {
+          const w = 92
+          const x = 20 + i * 95
+          const h = 40 + i * 26
+          return (
+            <g key={s}>
+              <rect x={x} y={210 - h} width={w} height={h} rx="6" fill={i >= 2 ? F.purple : F.plum2} opacity={0.55 + i * 0.08} />
+              <text x={x + w / 2} y={224} fontFamily={SANS} fontSize="11" fill={F.ink} textAnchor="middle">{s}</text>
+            </g>
+          )
+        })}
+        <line x1="210" y1="40" x2="210" y2="184" stroke={F.goldDeep} strokeWidth="1.5" strokeDasharray="5 5" />
+        <text x="216" y="52" fontFamily={SANS} fontSize="11.5" fill={F.goldDeep}>disruption starts here</text>
+        <text x="300" y="20" fontFamily={SANS} fontSize="12.5" fill={F.muted} textAnchor="middle">generality and skill →</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: task exposure to LLMs by job family (illustrative, after Eloundou et al.)
+export function FigTaskExposure() {
+  const rows = [
+    { l: 'Copywriting / content', v: 92 }, { l: 'Marketing / PR', v: 84 }, { l: 'Sales / SDR', v: 74 },
+    { l: 'Analysis / research', v: 68 }, { l: 'Software', v: 62 }, { l: 'Skilled trades', v: 16 },
+  ]
+  return (
+    <Figure n={2} caption={<>Exposure, not extinction. Illustrative of the pattern in Eloundou et al. (2023): language-heavy office work, and marketing sits near the top, has the highest share of tasks a capable model can already do or assist. The trades sit at the bottom. Proportions here are schematic.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Task exposure to language models by job family">
+        <line x1="170" y1="30" x2="170" y2="212" stroke={F.line} strokeWidth="1.5" />
+        {rows.map((b, i) => {
+          const y = 40 + i * 30
+          const w = b.v * 3.7
+          return (
+            <g key={b.l}>
+              <text x="160" y={y + 15} fontFamily={SANS} fontSize="12" fill={F.ink} textAnchor="end">{b.l}</text>
+              <rect x="170" y={y} width={w} height="20" rx="5" fill={i === 0 ? F.gold : F.purple} opacity={i === 0 ? 1 : 0.85 - i * 0.05} />
+              <text x={170 + w + 6} y={y + 15} fontFamily={SANS} fontSize="11" fill={F.muted}>{b.v}%</text>
+            </g>
+          )
+        })}
+        <text x="360" y="234" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">share of tasks exposed to language models (schematic)</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: agency unbundling, what collapses vs what survives
+export function FigAgencyUnbundling() {
+  const dies = ['Content production', 'Media-buying ops', 'Reporting / dashboards', 'First-draft strategy', 'Research decks']
+  const lives = ['Taste and judgment', 'Accountability for outcomes', 'Relationships and trust', 'Proprietary data', 'Distribution and access']
+  const col = (x: number, title: string, items: string[], fill: string, tc: string) => (
+    <g>
+      <rect x={x} y="34" width="248" height="34" rx="8" fill={fill} />
+      <text x={x + 124} y="56" fontFamily={SERIF} fontSize="15" fill={tc} textAnchor="middle" fontWeight="700">{title}</text>
+      {items.map((it, i) => (
+        <g key={it}>
+          <rect x={x} y={78 + i * 30} width="248" height="24" rx="6" fill="#fff" stroke={F.line} />
+          <text x={x + 12} y={78 + i * 30 + 16} fontFamily={SANS} fontSize="12" fill={F.ink}>{it}</text>
+        </g>
+      ))}
+    </g>
+  )
+  return (
+    <Figure n={3} caption={<>The unbundling. AI drives the marginal cost of the left column toward zero, which is most of what a traditional agency bills for. The right column, the parts that were never really about production, is where the defensible value moves. The agency does not vanish, it is turned inside out.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="What AI collapses versus what survives in agencies">
+        {col(24, 'Collapses to near-zero cost', dies, F.plum, '#fff')}
+        {col(328, 'Where value survives', lives, F.gold, F.plum)}
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: marginal cost of a campaign asset over time
+export function FigMarginalCost() {
+  const pts: string[] = []
+  for (let i = 0; i <= 100; i++) {
+    const x = i / 100
+    const y = Math.exp(-3.2 * x) // decaying cost
+    pts.push(`${(70 + x * 480).toFixed(1)},${(50 + (1 - y) * 0 + y * 150).toFixed(1)}`)
+  }
+  return (
+    <Figure n={4} caption={<>Why the model breaks. For a century, agencies priced the labor of making things, and that labor was scarce. As the marginal cost of producing a competent asset, a landing page, an ad variant, a research brief, falls toward zero, pricing that labor stops working. What is scarce moves elsewhere. Curve is stylized.</>}>
+      <svg viewBox="0 0 600 230" style={svgStyle} role="img" aria-label="Marginal cost of a campaign asset falling toward zero">
+        <line x1="70" y1="200" x2="560" y2="200" stroke={F.line} strokeWidth="1.5" />
+        <line x1="70" y1="30" x2="70" y2="200" stroke={F.line} strokeWidth="1.5" />
+        <polyline points={pts.join(' ')} fill="none" stroke={F.purple} strokeWidth="3" />
+        <text x="300" y="222" fontFamily={SANS} fontSize="12" fill={F.muted} textAnchor="middle">time / AI capability →</text>
+        <text x="52" y="120" fontFamily={SANS} fontSize="12" fill={F.muted} transform="rotate(-90 52 120)">cost to produce an asset</text>
+        <text x="470" y="188" fontFamily={SANS} fontSize="11.5" fill={F.goldDeep} textAnchor="middle">near zero</text>
       </svg>
     </Figure>
   )

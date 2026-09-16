@@ -38,7 +38,7 @@ export default function NewsletterForm() {
         <div style={{ fontSize: 34, marginBottom: 8 }} aria-hidden>✓</div>
         <h3 style={{ fontFamily: 'Georgia, serif', fontSize: 24, color: '#fff', margin: '0 0 8px' }}>You’re on the list.</h3>
         <p style={{ color: 'rgba(255,255,255,.75)', fontSize: 15.5, lineHeight: 1.6, margin: 0 }}>
-          New research lands in your inbox the moment it’s published. No noise, no selling — just the work.
+          New research lands in your inbox the moment it’s published. No noise, no selling, just the work.
         </p>
       </div>
     )

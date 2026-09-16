@@ -29,7 +29,7 @@ export function Eq({ children, label }: { children: React.ReactNode; label?: str
   )
 }
 
-/* "In plain terms" aside — the layperson translation of a technical passage. */
+/* "In plain terms" aside, the layperson translation of a technical passage. */
 export function Plain({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ background: 'rgba(201,168,76,.09)', border: `1px solid ${C.goldLine}`, borderRadius: 14, padding: '18px 22px', margin: '0 0 22px' }}>

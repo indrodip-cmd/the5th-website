@@ -2,7 +2,7 @@ import React from 'react'
 import { C, rp } from './ui'
 import type { ResearchPost } from './posts'
 
-/* Dedicated, publication-style shell for the Research section — an editorial
+/* Dedicated, publication-style shell for the Research section, an editorial
    layout in the brand palette (plum / cream / gold), modelled on a modern
    research index + article template. Not PageShell: these pages are their own
    publication surface. Server components. */
@@ -116,11 +116,12 @@ export function ResearchPage({ children }: { children: React.ReactNode }) {
 
 /* ── Article layout (category eyebrow · big title · meta · TOC + column) ───*/
 export function ResearchArticleLayout({
-  post, toc, lead, children,
+  post, toc, lead, objective, children,
 }: {
   post: ResearchPost
   toc: [string, string][]
   lead: React.ReactNode
+  objective?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
@@ -159,15 +160,29 @@ export function ResearchArticleLayout({
         </aside>
 
         <article>
-          <div style={{ ...rp.p, fontSize: 20, lineHeight: 1.7, color: C.plum, margin: '0 0 10px' }}>{lead}</div>
+          <div style={{ ...rp.p, fontSize: 20, lineHeight: 1.7, color: C.plum, margin: '0 0 18px' }}>{lead}</div>
+          {objective && (
+            <div style={{ background: C.cream, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.gold}`, borderRadius: 12, padding: '20px 22px', margin: '0 0 30px' }}>
+              <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 8 }}>Objective of this research</div>
+              <div style={{ fontSize: 16, lineHeight: 1.7, color: C.inkSoft }}>{objective}</div>
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${C.border}`, fontSize: 13, color: C.muted, lineHeight: 1.6 }}>
+                Independent research by {post.author}. I am a self-taught researcher, and this is one entry in an ongoing
+                journey to understand, in plain language, how AI actually works and where it is taking us. The questions,
+                the investigation, and the conclusions are my own; where I build on published studies I name them, so you
+                can check my work and learn alongside me.
+              </div>
+            </div>
+          )}
           {children}
 
-          {/* About the series */}
+          {/* About this research journal */}
           <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: 'clamp(24px, 5vw, 34px)', margin: '52px 0 0' }}>
-            <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this series</div>
+            <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this research</div>
             <p style={{ fontSize: 16.5, lineHeight: 1.7, color: 'rgba(255,255,255,.86)', margin: '0 0 8px' }}>
-              <strong>Research</strong> is where The5th Consulting works out loud on the questions at the edge of
-              artificial intelligence, neuroscience, and human behaviour. Written by {post.author}, {post.authorRole}.
+              <strong>Research</strong> is my personal research journal. I am {post.author}, a self-taught researcher
+              working in the open on how artificial intelligence really works, what it means for people, and what is
+              coming next. I try to write every piece so that anyone, with no background at all, can follow it and come
+              away understanding a little more.
             </p>
             <a href="/research" style={{ color: C.gold, fontWeight: 700, textDecoration: 'none' }}>← Back to all research</a>
           </div>

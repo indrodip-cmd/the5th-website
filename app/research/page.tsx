@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     url: 'https://the5th.consulting/research',
     title: 'Research | The5th Consulting',
     description:
-      'In-depth research on artificial intelligence, neuroscience, and the science of machine minds — written for the curious layperson and the working researcher.',
+      'In-depth research on artificial intelligence, neuroscience, and the science of machine minds, written for the curious layperson and the working researcher.',
   },
 }
 
@@ -27,11 +27,12 @@ export default function ResearchIndex() {
     <ResearchPage>
       {/* Hero */}
       <section style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(48px,7vw,88px) clamp(20px,5vw,44px) clamp(28px,4vw,44px)' }}>
-        <div style={{ fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: C.goldDeep, fontWeight: 700, marginBottom: 16 }}>The5th Consulting</div>
+        <div style={{ fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: C.goldDeep, fontWeight: 700, marginBottom: 16 }}>Independent research · Indrodip Ghosh</div>
         <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(44px,9vw,92px)', lineHeight: 0.98, letterSpacing: '-.03em', color: C.plumDark, margin: 0 }}>Research</h1>
-        <p style={{ fontSize: 'clamp(17px,2.2vw,20px)', lineHeight: 1.6, color: C.inkSoft, maxWidth: 640, margin: '24px 0 0' }}>
-          First-principles writing on artificial intelligence, neuroscience, and human behaviour. We publish rarely and
-          go deep — each piece written to be read by the curious and mined by the technical.
+        <p style={{ fontSize: 'clamp(17px,2.2vw,20px)', lineHeight: 1.6, color: C.inkSoft, maxWidth: 660, margin: '24px 0 0' }}>
+          This is my personal research journal. I am a self-taught researcher trying to work out, in plain language, how
+          artificial intelligence really works and where it is taking us. Every piece is my own investigation, written so
+          that anyone, with no background at all, can follow it and understand a little more of what is coming.
         </p>
       </section>
 
@@ -100,7 +101,7 @@ export default function ResearchIndex() {
             <div>
               <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>The Research Newsletter</div>
               <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,3.6vw,34px)', lineHeight: 1.12, letterSpacing: '-.015em', color: '#fff', margin: '0 0 12px' }}>
-                Ideas at the edge of AI, mind, and behaviour — in your inbox.
+                Ideas at the edge of AI, mind, and behaviour, in your inbox.
               </h2>
               <p style={{ fontSize: 16.5, lineHeight: 1.65, color: 'rgba(255,255,255,.78)', margin: 0 }}>
                 We publish rarely and go deep. Join researchers, founders, and the plain curious who get each new piece the day it drops.

@@ -15,64 +15,16 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
-    slug: 'vega-2-marketing-funnels-automation',
-    title: 'Vega 2.0: How Our Own AI Will Run Marketing and Funnels',
-    excerpt:
-      'A plain look at what I am building. Vega is our own AI, and Vega 2.0 turns a funnel from a thing you set up once into a thing that runs and fixes itself. It learns your buyer, builds the offer and pages and emails, launches and tests them, and talks to every lead one to one, at scale. Here is how it works, why competent AI is already enough to change marketing, and what it leaves for the human to do.',
-    date: '2026-09-16',
-    dateLabel: 'September 16, 2026',
-    readTime: '18 min read',
-    author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
-    tags: ['Vega', 'Marketing', 'AI Agents', 'Automation'],
-  },
-  {
     slug: 'how-persuasive-is-frontier-ai',
     title: 'The Persuasion Engine: A White Paper on How Good AI Has Become at Changing Our Minds',
     excerpt:
       'An original study, roughly a year and about $10,000 in the making, on a question I could no longer ignore: how persuasive has a leading frontier model become, and what happens to human judgment when a machine that can change your mind can also do it a million times at once, personalised to each person? Written in plain words from a behavioural-science point of view, grounded in the converging published evidence, and honest about where the real danger, and the real promise, sit.',
-    date: '2026-09-15',
-    dateLabel: 'September 15, 2026',
+    date: '2026-09-14',
+    dateLabel: 'September 14, 2026',
     readTime: '30 min read',
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Behavioural Research', 'Persuasion', 'Artificial Intelligence', 'White Paper'],
-  },
-  {
-    slug: 'is-ai-eroding-critical-thinking',
-    title: 'Cognitive Debt: A White Paper on How Everyday AI Use May Be Eroding Our Critical Thinking',
-    excerpt:
-      'A white paper from my own behavioural research, looking at more than 100 American adults aged 30 to 60, on a question that started to worry me: does leaning on AI for everyday thinking quietly weaken the thinking itself? Written in plain words from a cognitive-science and neuroscience point of view, grounded in the converging published evidence, and ending with a practical protocol for using AI without losing your edge.',
-    date: '2026-09-14',
-    dateLabel: 'September 14, 2026',
-    readTime: '32 min read',
-    author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
-    tags: ['Behavioural Research', 'Cognitive Science', 'Neuroscience', 'White Paper'],
-  },
-  {
-    slug: 'future-of-ai-from-tools-to-agents',
-    title: 'From Tools to Agents: A Plain-Language Field Guide to the Next Ten Years of AI',
-    excerpt:
-      'My working map of where AI is actually heading, written for someone with no technical background. The big shift is from software that answers to software that acts: agents, memory, the quiet collapse of the app interface, models that understand the physical world, and what all of it means for an ordinary working day. Honest about what I believe, and about what nobody yet knows.',
-    date: '2026-09-10',
-    dateLabel: 'September 10, 2026',
-    readTime: '25 min read',
-    author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
-    tags: ['Artificial Intelligence', 'Future of AI', 'AI Agents', 'Society'],
-  },
-  {
-    slug: 'agi-society-and-the-end-of-b2b-agencies',
-    title: 'The Last Agency: AGI, the Society It Reshapes, and Why B2B Marketing Agencies Die First',
-    excerpt:
-      'A first-principles look at artificial general intelligence, what the word actually means, what it does to work and society, and then a blunt thesis about one industry sitting directly in the blast radius. The traditional B2B marketing agency priced the labor of making things. When that labor costs almost nothing, the model breaks. Here is how, what survives, and what replaces it.',
-    date: '2026-09-02',
-    dateLabel: 'September 2, 2026',
-    readTime: '27 min read',
-    author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
-    tags: ['Artificial Intelligence', 'AGI', 'Economics', 'Marketing'],
   },
   {
     slug: 'chatgpt-tone-hindi-english',
@@ -121,6 +73,54 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Artificial Intelligence', 'Neuroscience', 'Consciousness', 'Mathematics'],
+  },
+  {
+    slug: 'vega-2-marketing-funnels-automation',
+    title: 'Vega 2.0: How Our Own AI Will Run Marketing and Funnels',
+    excerpt:
+      'A plain look at what I am building. Vega is our own AI, and Vega 2.0 turns a funnel from a thing you set up once into a thing that runs and fixes itself. It learns your buyer, builds the offer and pages and emails, launches and tests them, and talks to every lead one to one, at scale. Here is how it works, why competent AI is already enough to change marketing, and what it leaves for the human to do.',
+    date: '2026-04-22',
+    dateLabel: 'April 22, 2026',
+    readTime: '18 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Vega', 'Marketing', 'AI Agents', 'Automation'],
+  },
+  {
+    slug: 'future-of-ai-from-tools-to-agents',
+    title: 'From Tools to Agents: A Plain-Language Field Guide to the Next Ten Years of AI',
+    excerpt:
+      'My working map of where AI is actually heading, written for someone with no technical background. The big shift is from software that answers to software that acts: agents, memory, the quiet collapse of the app interface, models that understand the physical world, and what all of it means for an ordinary working day. Honest about what I believe, and about what nobody yet knows.',
+    date: '2026-03-05',
+    dateLabel: 'March 5, 2026',
+    readTime: '25 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Artificial Intelligence', 'Future of AI', 'AI Agents', 'Society'],
+  },
+  {
+    slug: 'is-ai-eroding-critical-thinking',
+    title: 'Cognitive Debt: A White Paper on How Everyday AI Use May Be Eroding Our Critical Thinking',
+    excerpt:
+      'A white paper from my own behavioural research, looking at more than 100 American adults aged 30 to 60, on a question that started to worry me: does leaning on AI for everyday thinking quietly weaken the thinking itself? Written in plain words from a cognitive-science and neuroscience point of view, grounded in the converging published evidence, and ending with a practical protocol for using AI without losing your edge.',
+    date: '2026-02-11',
+    dateLabel: 'February 11, 2026',
+    readTime: '32 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Behavioural Research', 'Cognitive Science', 'Neuroscience', 'White Paper'],
+  },
+  {
+    slug: 'agi-society-and-the-end-of-b2b-agencies',
+    title: 'The Last Agency: AGI, the Society It Reshapes, and Why B2B Marketing Agencies Die First',
+    excerpt:
+      'A first-principles look at artificial general intelligence, what the word actually means, what it does to work and society, and then a blunt thesis about one industry sitting directly in the blast radius. The traditional B2B marketing agency priced the labor of making things. When that labor costs almost nothing, the model breaks. Here is how, what survives, and what replaces it.',
+    date: '2026-01-27',
+    dateLabel: 'January 27, 2026',
+    readTime: '27 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Artificial Intelligence', 'AGI', 'Economics', 'Marketing'],
   },
 ]
 

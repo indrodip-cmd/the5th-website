@@ -36,6 +36,17 @@ export default function ResearchIndex() {
         </p>
       </section>
 
+      {/* Live study banner */}
+      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 clamp(20px,5vw,44px)' }}>
+        <a href="/research/study" style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap', textDecoration: 'none', background: 'linear-gradient(120deg, #3D2645, #231029)', borderRadius: 16, padding: '18px 22px', boxShadow: '0 20px 50px -40px rgba(46,26,53,.6)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: '#E4C879', border: '1px solid rgba(228,200,121,.4)', borderRadius: 999, padding: '4px 11px' }}>Live study</span>
+            <span style={{ fontSize: 15.5, color: 'rgba(255,255,255,.9)' }}>Take part in my research: is AI changing how we think? About 6 minutes, anonymous.</span>
+          </span>
+          <span style={{ color: '#E4C879', fontWeight: 800, whiteSpace: 'nowrap' }}>Take the study →</span>
+        </a>
+      </section>
+
       {/* Featured */}
       {featured && (
         <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 clamp(20px,5vw,44px)' }}>

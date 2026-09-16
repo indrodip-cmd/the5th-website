@@ -5,7 +5,7 @@ import { upsertContact, logActivity } from '@/lib/crm'
 import { emitEvent } from '@/lib/events'
 
 /* Research newsletter signup. Reuses the native CRM (crm_contacts is the single
-   source of truth) rather than a bespoke table — a subscriber is just a contact
+   source of truth) rather than a bespoke table, a subscriber is just a contact
    tagged `research`. Rate-limited per IP; disposable/invalid emails rejected. */
 export async function POST(req: NextRequest) {
   const ip = clientIp(req)

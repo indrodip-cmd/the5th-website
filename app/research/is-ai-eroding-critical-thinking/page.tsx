@@ -84,10 +84,11 @@ export default function Article() {
           <p style={{ ...rp.p, fontSize: 15.5, margin: '0 0 10px' }}>
             The convenience of AI carries a hidden cost I have started calling <em>cognitive debt</em>. When we hand the
             effortful parts of thinking, recalling, weighing, judging, doubting, to a machine, those skills go unpracticed
-            and slowly fade, while our <em>confidence</em> stays high or even rises. In my own look at more than 100 US
-            adults aged 30 to 60, the people who leaned hardest on AI for everyday questions were the ones least likely to
-            check its answers or to reason a problem through unaided, and this lines up closely with a wave of recent
-            published research finding the same pattern. This paper explains the mechanism in simple words, from cognitive
+            and slowly fade, while our <em>confidence</em> stays high or even rises. I am running this as an open study of
+            adults aged 30 to 60, which you can take part in yourself in a few minutes, and the pattern it tests, the one a
+            wave of recent published research already shows, is that the people who lean hardest on AI for everyday
+            questions are the least likely to check its answers or to reason a problem through unaided, while staying just
+            as sure of themselves. This paper explains the mechanism in simple words, from cognitive
             science and neuroscience, separates the real risk from the panic, names who is most exposed, and ends with a
             concrete protocol for keeping the benefits of AI without paying the debt.
           </p>
@@ -152,25 +153,37 @@ export default function Article() {
           being right is, to me, the heart of the whole story.
         </p>
         <p style={{ ...rp.p, fontSize: 14.5, color: C.muted, borderLeft: `2px solid ${C.border}`, paddingLeft: 16 }}>
-          A note on method, in the open. This paper reports the <em>direction</em> of what I observed in the field and
-          reads it against the published record. Where I give hard numbers, they come from the peer-reviewed studies I
-          cite, not from my own sample, which is why I describe my findings as patterns rather than precise statistics. I
-          would rather under-claim my own data and let the converging evidence carry the weight than dress a small study up
-          as something it is not.
+          A note on method, in the open. This is a live study, and I am collecting responses right now. As the sample
+          grows I will report the results on this page. For now, every hard number in this paper comes from the
+          peer-reviewed studies I cite, not from my own in-progress data, which is why I describe my own expected result as
+          a hypothesis and a direction rather than as settled statistics. I would rather under-claim my own data and let
+          the published evidence carry the weight than dress an early study up as something it is not.
         </p>
+        {/* Participate CTA */}
+        <div style={{ background: C.plumDark, color: '#fff', borderRadius: 16, padding: 'clamp(22px,4vw,30px)', margin: '8px 0 26px' }}>
+          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 10 }}>Take part in the study</div>
+          <p style={{ fontSize: 16, lineHeight: 1.65, color: 'rgba(255,255,255,.86)', margin: '0 0 16px' }}>
+            This research only works if real people take part. It is anonymous, takes about six minutes, and at the end you
+            get your own result: how your reasoning and your confidence line up. If you are 30 to 60 I would especially
+            love your response, but everyone is welcome.
+          </p>
+          <a href="/research/study" style={{ display: 'inline-flex', alignItems: 'center', background: `linear-gradient(180deg, #E4C879, ${C.gold})`, color: C.plumDark, fontWeight: 800, fontSize: 15.5, textDecoration: 'none', borderRadius: 999, padding: '13px 26px' }}>Take the study →</a>
+        </div>
 
         {/* 4 */}
         <h2 id="found" style={rp.h2}>4. What I found, and what the evidence says</h2>
         <p style={rp.p}>
-          The pattern in my group was consistent and, honestly, a little sobering. The heavier a person’s everyday reliance
-          on AI, the less likely they were to interrogate its answers, and the weaker their unaided reasoning looked when
-          the tool was taken away. And their confidence did not fall to match. People felt just as sure of answers they had
-          not actually produced or checked. The felt sense of competence stayed high while the underlying competence
-          thinned out. If I had to compress it to one line: <strong style={rp.strong}>AI was not making people wrong, it
-          was making them sure without being right, and comfortable not knowing the difference.</strong>
+          Because this is a live, open study, let me separate cleanly what I am testing from what is already established.
+          The hypothesis I built the study around, and the pattern that keeps surfacing across the published record, is
+          sobering and simple. The heavier a person’s everyday reliance on AI, the less likely they are to interrogate its
+          answers, and the weaker their unaided reasoning looks when the tool is taken away, while their confidence does
+          not fall to match. People feel just as sure of answers they never actually produced or checked. The felt sense of
+          competence stays high while the underlying competence thins out. If I had to compress it to one line:
+          <strong style={rp.strong}> AI is not making people wrong, it is making them sure without being right, and
+          comfortable not knowing the difference.</strong>
         </p>
         <p style={rp.p}>
-          I would not lean on my own sample alone, and I do not have to, because a striking amount of recent, larger,
+          I would not lean on my own study alone, and I do not have to, because a striking amount of recent, larger,
           careful research points the same way. Gerlich (2025), surveying hundreds of people, found a clear negative
           relationship between frequent AI-tool use and critical-thinking ability, with cognitive offloading sitting in the
           middle as the explanation. Researchers at Microsoft and Carnegie Mellon (Lee and colleagues, 2025) surveyed

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 /* The5th Original Research, the live study instrument.
    Anonymous. Collects demographics, AI-reliance habits, and a short reasoning
@@ -69,18 +69,25 @@ function Choice({ options, value, onPick }: { options: string[]; value: string; 
 
 function LikertRow({ id, text, store, set }: { id: string; text: string; store: Record<string, number>; set: (u: Record<string, number>) => void }) {
   return (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ fontSize: 15, color: C.ink, marginBottom: 10, lineHeight: 1.5 }}>{text}</div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 6 }}>
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ fontSize: 15, color: C.ink, marginBottom: 12, lineHeight: 1.5 }}>{text}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 8 }}>
         {LIKERT.map((l, i) => {
           const v = i + 1, sel = store[id] === v
           return (
-            <button key={l} onClick={() => set({ ...store, [id]: v })} title={l} style={{
-              cursor: 'pointer', padding: '10px 4px', borderRadius: 10, fontSize: 11.5, lineHeight: 1.25, fontFamily: SANS,
-              background: sel ? C.purple : C.cream, color: sel ? '#fff' : C.muted, border: `1px solid ${sel ? C.purple : C.border}`, fontWeight: sel ? 700 : 500,
-            }}>{l}</button>
+            <button key={l} onClick={() => set({ ...store, [id]: v })} aria-label={l} aria-pressed={sel} style={{
+              cursor: 'pointer', minHeight: 52, padding: '8px 4px', borderRadius: 12, fontFamily: SANS,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: sel ? C.purple : C.cream, color: sel ? '#fff' : C.muted,
+              border: `1.5px solid ${sel ? C.purple : C.border}`, fontWeight: 800, fontSize: 16,
+              transition: 'background .12s ease, border-color .12s ease',
+            }}>{v}</button>
           )
         })}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11.5, color: C.muted, marginTop: 6 }}>
+        <span>Strongly disagree</span>
+        <span>Strongly agree</span>
       </div>
     </div>
   )
@@ -100,6 +107,12 @@ export default function StudyPage() {
   const [state, setState] = useState<'idle' | 'loading' | 'error'>('idle')
   const [msg, setMsg] = useState('')
   const [result, setResult] = useState<Result | null>(null)
+
+  // On mobile a step change would otherwise leave the viewport scrolled
+  // partway down the previous (taller) step; return to the top of the card.
+  useEffect(() => {
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [step])
 
   const totalSteps = 5
   const relianceDone = RELIANCE.every((r) => reliance[r.id]) && SELF_CT.every((s) => selfCt[s.id])

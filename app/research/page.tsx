@@ -28,18 +28,18 @@ export default function ResearchIndex() {
   return (
     <ResearchPage>
       {/* Hero */}
-      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(60px,9vw,120px) ${PADX} clamp(30px,4vw,44px)` }}>
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(44px,9vw,120px) ${PADX} clamp(30px,4vw,44px)` }}>
         <div className="r-hero" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 'clamp(28px,5vw,72px)', alignItems: 'center' }}>
           <div>
             <div style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, marginBottom: 22 }}>
               The5th <span style={{ color: C.goldDeep }}>·</span> Independent Research
             </div>
-            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(52px,11vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
+            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(46px,12vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
             <p style={{ fontSize: 'clamp(18px,2.2vw,22px)', lineHeight: 1.55, color: C.inkSoft, maxWidth: 620, margin: '30px 0 0', fontWeight: 400 }}>
               A personal research journal by Indrodip Ghosh. Long, careful essays on how artificial intelligence really works
               and where it is taking us, written so anyone can follow, and precise enough for anyone who cannot.
             </p>
-            <div style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em', flexWrap: 'wrap' }}>
+            <div className="r-hero-meta" style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em', flexWrap: 'wrap' }}>
               <span>{POSTS.length} essays</span>
               <span aria-hidden style={{ color: C.border }}>|</span>
               <span>Updated regularly</span>
@@ -75,7 +75,7 @@ export default function ResearchIndex() {
               </div>
               <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px,3.2vw,38px)', lineHeight: 1.1, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 18px', fontWeight: 400 }}>{featured.title}</h2>
               <p style={{ fontSize: 16.5, lineHeight: 1.6, color: C.inkSoft, margin: '0 0 26px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{featured.excerpt}</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13.5, color: C.muted }}>
+              <div className="r-feat-meta" style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13.5, color: C.muted }}>
                 <time dateTime={featured.date}>{featured.dateLabel}</time>
                 <span aria-hidden style={{ color: C.border }}>|</span>
                 <span>{featured.readTime}</span>
@@ -170,6 +170,13 @@ export default function ResearchIndex() {
           .r-row-meta time{display:inline!important}
           .r-row-meta span{display:inline!important}
           .nl-grid{grid-template-columns:1fr!important}
+        }
+        @media(max-width:560px){
+          .r-study{align-items:flex-start!important;gap:10px!important;padding:16px 18px!important}
+          .r-study-cta{margin-left:0!important}
+          .r-feat-cta{margin-left:0!important}
+          .r-feat-meta{flex-wrap:wrap!important;row-gap:10px!important}
+          .r-hero-meta{gap:12px 16px!important}
         }
       `}</style>
     </ResearchPage>

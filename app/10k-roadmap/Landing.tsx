@@ -1,9 +1,8 @@
 'use client'
 /* The $10K Roadmap — landing page.
-   Tight, visceral, high-authority. Every line earns its place; the reader
-   should feel the tension (revenue rollercoaster), the mechanism (6-area
-   roadmap), the proof (real results), and the risk-reversal (I'll write the
-   cheque). Light, premium, mobile-first. */
+   Deliberately SHORT. One clear promise, one mechanism, tight proof, a fast
+   qualify. Modelled on the /quiz feel: crisp, high-authority, momentum toward a
+   single CTA. Every section earns its scroll. Light, premium, mobile-first. */
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS, T } from './config'
@@ -17,7 +16,8 @@ const MAXW = 1120
 const PADX = 'clamp(20px,5vw,22px)'
 const SECY = 'clamp(40px,7.5vw,62px)'
 const HERO_AVATARS = ['/clients/toril.jpg', '/clients/laurie.jpg', '/clients/jeanne.jpg', '/clients/angela.jpg', '/clients/hayley.jpg']
-const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image).slice(0, 6)
+const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image).slice(0, 3)
+const FEATURED_VIDEOS = VIDEO_REVIEWS.slice(0, 3)
 
 function Stars() {
   return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="17" height="17" viewBox="0 0 24 24" fill={T.accent}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>
@@ -82,7 +82,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
 
       {/* ── Press strip ── */}
       <section style={{ background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, marginTop: 34 }}>
-        <div style={{ maxWidth: MAXW, margin: '0 auto', padding: 'clamp(24px,4vw,32px) ' + PADX, textAlign: 'center' }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto', padding: 'clamp(20px,3.4vw,26px) ' + PADX, textAlign: 'center' }}>
           <div style={{ fontSize: 11.5, letterSpacing: '.16em', textTransform: 'uppercase', color: T.text3, fontWeight: 700, marginBottom: 14 }}>{PRESS.label}</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(16px,4vw,38px)', justifyContent: 'center', alignItems: 'center' }}>
             {PRESS.items.map((p) => <span key={p} style={{ fontFamily: T.serif, fontSize: 'clamp(15px,2.4vw,19px)', color: T.text, opacity: 0.6, fontWeight: 700, whiteSpace: 'nowrap' }}>{p}</span>)}
@@ -90,24 +90,8 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         </div>
       </section>
 
-      {/* ── Recognition: your expertise isn't the problem ── */}
-      <section style={{ maxWidth: 720, margin: '0 auto', padding: SECY + ' ' + PADX, textAlign: 'center' }}>
-        <Reveal>
-          <h2 className="rm-serif" style={{ fontSize: 'clamp(26px,4.6vw,42px)', margin: '0 0 20px', fontWeight: 800, lineHeight: 1.08 }}>{LANDING.recognition.heading}</h2>
-          {LANDING.recognition.lines.map((l, k) => <p key={k} style={{ color: T.text2, fontSize: 'clamp(16px,2.1vw,19px)', lineHeight: 1.6, margin: '0 0 10px' }}>{l}</p>)}
-          <div style={{ margin: '22px auto', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, padding: '18px 16px', maxWidth: 520 }}>
-            <span className="rm-serif" style={{ fontSize: 'clamp(22px,4vw,32px)', fontWeight: 800, color: T.accentInk, letterSpacing: '.01em' }}>{LANDING.recognition.rollercoaster}</span>
-          </div>
-          <p style={{ color: T.text2, fontSize: 'clamp(15.5px,2vw,18px)', lineHeight: 1.65, margin: '0 auto', maxWidth: 600 }}>{LANDING.recognition.after}</p>
-          <p className="rm-serif" style={{ fontSize: 'clamp(26px,4.6vw,40px)', fontWeight: 800, margin: '30px 0 18px' }}>{LANDING.recognition.turn}<span className="rm-mark">{LANDING.recognition.turnEmphasis}</span></p>
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {LANDING.recognition.close.map((c) => <span key={c} style={{ background: '#fff', border: `1px solid ${T.line}`, borderRadius: 999, padding: '10px 20px', fontSize: 15, fontWeight: 700, boxShadow: '0 10px 26px -20px rgba(46,26,53,.5)' }}>{c}</span>)}
-          </div>
-        </Reveal>
-      </section>
-
       {/* ── The 10K Roadmap: 6-area mechanism ── */}
-      <section id="how" style={{ background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}`, padding: SECY + ' ' + PADX }}>
+      <section id="how" style={{ padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.roadmap.eyebrow} heading={LANDING.roadmap.heading} sub={LANDING.roadmap.sub} maxW={720} /></Reveal>
           <Reveal>
@@ -129,61 +113,29 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         </div>
       </section>
 
-      {/* ── Stop doing what doesn't work ── */}
-      <section style={{ maxWidth: 820, margin: '0 auto', padding: SECY + ' ' + PADX }}>
-        <Reveal><SectionHead heading={LANDING.stop.heading} /></Reveal>
-        <Reveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 10, marginBottom: 30 }}>
-            {LANDING.stop.nots.map((n) => (
-              <div key={n} style={{ display: 'flex', gap: 11, alignItems: 'center', background: T.surface, borderRadius: 12, padding: '13px 16px' }}>
-                <span style={{ color: T.danger, fontWeight: 800, fontSize: 15, flexShrink: 0 }}>✕</span>
-                <span style={{ fontSize: 14.5, color: T.text2 }}>{n}</span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-        <Reveal>
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ fontSize: 17, fontWeight: 700, marginBottom: 18 }}>{LANDING.stop.lead}</p>
-            <div style={{ display: 'grid', gap: 10, maxWidth: 560, margin: '0 auto' }}>
-              {LANDING.stop.questions.map((q, i) => (
-                <div key={q} style={{ display: 'flex', gap: 12, alignItems: 'center', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, padding: '14px 18px', textAlign: 'left' }}>
-                  <span style={{ color: T.accentInk, fontFamily: T.serif, fontWeight: 800, fontSize: 16 }}>{i + 1}</span>
-                  <span className="rm-serif" style={{ fontSize: 17, fontWeight: 700 }}>{q}</span>
-                </div>
-              ))}
-            </div>
-            <p className="rm-serif" style={{ fontSize: 20, fontWeight: 800, marginTop: 22 }}>{LANDING.stop.close}</p>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ── Results band ── */}
-      <section id="proof" style={{ background: T.brand, color: '#fff', padding: SECY + ' ' + PADX }}>
+      {/* ── Proof: stats band + video + case studies + CTA ── */}
+      <section id="proof" style={{ background: T.brand, color: '#fff', padding: 'clamp(40px,6vw,56px) ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto', textAlign: 'center' }}>
           <Reveal>
-            <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,38px)', margin: '0 0 10px', fontWeight: 800, color: '#fff' }}>{LANDING.results.heading}</h2>
-            <p style={{ color: 'rgba(255,255,255,.78)', fontSize: 16.5, lineHeight: 1.6, maxWidth: 640, margin: '0 auto 30px' }}>{LANDING.results.sub}</p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 26 }}>
+            <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,38px)', margin: '0 0 26px', fontWeight: 800, color: '#fff' }}>{LANDING.results.heading}</h2>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               {LANDING.results.stats.map((st) => (
                 <div key={st} style={{ background: 'rgba(255,255,255,.08)', border: '1px solid rgba(201,168,76,.4)', borderRadius: 14, padding: '16px 22px' }}>
                   <span className="rm-serif" style={{ fontSize: 'clamp(18px,2.4vw,24px)', fontWeight: 800, color: '#E4C879' }}>{st}</span>
                 </div>
               ))}
             </div>
-            <p style={{ color: 'rgba(255,255,255,.72)', fontSize: 15, lineHeight: 1.65, maxWidth: 620, margin: '0 auto' }}>{LANDING.results.principle}</p>
             <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 11.5, marginTop: 16 }}>{LANDING.results.disclaimer}</p>
           </Reveal>
         </div>
       </section>
 
-      {/* ── Video + case-study proof ── */}
       <section style={{ padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead heading={LANDING.proof.heading} sub={LANDING.proof.sub} /></Reveal>
           <Reveal>
-            <div className="vid-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16, marginBottom: 20 }}>
-              {VIDEO_REVIEWS.slice(0, 6).map((v, k) => (
+            <div className="vid-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16, marginBottom: 18 }}>
+              {FEATURED_VIDEOS.map((v, k) => (
                 <figure key={k} style={{ margin: 0, background: '#000', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.line}`, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
                   <div style={{ position: 'relative', width: '100%', aspectRatio: `${v.w} / ${v.h}` }}>
                     <iframe src={v.src} title={`Client review ${k + 1}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
@@ -209,8 +161,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           </Reveal>
           <p style={{ color: T.text3, fontSize: 11.5, textAlign: 'center', marginTop: 22, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.6 }}>{LANDING.proof.disclaimer}</p>
           <div style={{ textAlign: 'center', marginTop: 30 }}>
-            <h3 className="rm-serif" style={{ fontSize: 'clamp(22px,3.2vw,30px)', fontWeight: 800, margin: '0 0 6px' }}>{LANDING.afterProof.big}</h3>
-            <p className="rm-serif" style={{ fontSize: 'clamp(20px,3vw,26px)', margin: '0 0 24px' }}><span className="rm-mark">{LANDING.afterProof.line}</span></p>
+            <p className="rm-serif" style={{ fontSize: 'clamp(20px,3vw,26px)', margin: '0 0 24px' }}>{LANDING.afterProof.big} <span className="rm-mark">{LANDING.afterProof.line}</span></p>
             {CTA('after-proof')}
           </div>
         </div>
@@ -247,41 +198,8 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section style={{ maxWidth: 760, margin: '0 auto', padding: SECY + ' ' + PADX }}>
-        <Reveal><SectionHead heading={LANDING.how.heading} /></Reveal>
-        <div style={{ display: 'grid', gap: 12 }}>
-          {LANDING.how.steps.map((s) => (
-            <Reveal key={s.n}>
-              <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 14, padding: '18px 20px' }}>
-                <span style={{ width: 38, height: 38, borderRadius: 10, background: T.accentSoft, color: T.accentInk, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{s.n}</span>
-                <div><h3 className="rm-serif" style={{ fontSize: 18, fontWeight: 800, margin: '2px 0 5px' }}>{s.t}</h3><p style={{ color: T.text2, fontSize: 14.5, lineHeight: 1.55, margin: 0 }}>{s.d}</p></div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── The $27 diagnosis ── */}
-      <section style={{ maxWidth: 720, margin: '0 auto', padding: '0 ' + PADX + ' ' + SECY, textAlign: 'center' }}>
-        <Reveal>
-          <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,36px)', margin: '0 0 12px', fontWeight: 800, lineHeight: 1.1 }}>{LANDING.diagnosis.heading}</h2>
-          <p className="rm-serif" style={{ fontSize: 'clamp(19px,2.6vw,24px)', margin: '0 0 22px' }}>{LANDING.diagnosis.body.split('The diagnosis is.')[0]}<span className="rm-mark">The diagnosis is.</span></p>
-          <div style={{ display: 'grid', gap: 9, maxWidth: 440, margin: '0 auto 22px', textAlign: 'left' }}>
-            {LANDING.diagnosis.youLeave.map((y) => (
-              <div key={y} style={{ display: 'flex', gap: 11, alignItems: 'center', background: T.surface, borderRadius: 12, padding: '12px 16px' }}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
-                <span className="rm-serif" style={{ fontSize: 15.5, fontWeight: 700 }}>{y}</span>
-              </div>
-            ))}
-          </div>
-          <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.6, marginBottom: 26 }}>{LANDING.diagnosis.close}</p>
-          {CTA('diagnosis', LANDING.diagnosis.cta)}
-        </Reveal>
-      </section>
-
       {/* ── FAQ ── */}
-      <section id="faq" style={{ maxWidth: 720, margin: '0 auto', padding: '0 ' + PADX + ' ' + SECY }}>
+      <section id="faq" style={{ maxWidth: 720, margin: '0 auto', padding: SECY + ' ' + PADX }}>
         <Reveal>
           <div style={{ display: 'grid', gap: 10 }}>
             {LANDING.faq.map((f) => (

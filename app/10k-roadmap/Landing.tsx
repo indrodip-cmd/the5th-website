@@ -16,8 +16,8 @@ const MAXW = 1120
 const PADX = 'clamp(20px,5vw,22px)'
 const SECY = 'clamp(40px,7.5vw,62px)'
 const HERO_AVATARS = ['/clients/toril.jpg', '/clients/laurie.jpg', '/clients/jeanne.jpg', '/clients/angela.jpg', '/clients/hayley.jpg']
-const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image).slice(0, 3)
-const FEATURED_VIDEOS = VIDEO_REVIEWS.slice(0, 3)
+const FEATURED_CASES = CASE_STUDIES.filter((s) => s.image)
+const FEATURED_VIDEOS = VIDEO_REVIEWS
 
 function Stars() {
   return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="17" height="17" viewBox="0 0 24 24" fill={T.accent}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>

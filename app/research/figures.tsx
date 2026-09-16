@@ -565,3 +565,118 @@ export function FigMarginalCost() {
     </Figure>
   )
 }
+
+/* ── Future of AI ──────────────────────────────────────────────────────────*/
+
+// Fig: tool -> assistant -> agent -> teams of agents
+export function FigToolsToAgents() {
+  const steps = [
+    { t: 'Tool', s: 'does one fixed thing' },
+    { t: 'Assistant', s: 'answers what you ask' },
+    { t: 'Agent', s: 'acts, uses tools, follows up' },
+    { t: 'Teams of agents', s: 'divide and coordinate work' },
+  ]
+  return (
+    <Figure n={1} caption={<>The shift I think matters most. We are moving from software that answers to software that <em>acts</em>: from a tool you operate, to an assistant you ask, to an agent that carries out a goal, to teams of agents that split the work between them.</>}>
+      <svg viewBox="0 0 600 170" style={svgStyle} role="img" aria-label="From tools to teams of agents">
+        <defs>{arrow('t2a', F.goldDeep)}</defs>
+        {steps.map((st, i) => {
+          const x = 12 + i * 150
+          return (
+            <g key={st.t}>
+              <rect x={x} y="52" width="128" height="64" rx="12" fill={i >= 2 ? F.purple : F.plum2} opacity={0.6 + i * 0.12} />
+              <text x={x + 64} y="82" fontFamily={SERIF} fontSize="16" fill="#fff" textAnchor="middle" fontWeight="700">{st.t}</text>
+              <text x={x + 64} y="102" fontFamily={SANS} fontSize="10.5" fill="rgba(255,255,255,.82)" textAnchor="middle">{st.s}</text>
+              {i < steps.length - 1 && <line x1={x + 128} y1="84" x2={x + 150} y2="84" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#t2a)" />}
+            </g>
+          )
+        })}
+        <text x="300" y="30" fontFamily={SANS} fontSize="12.5" fill={F.muted} textAnchor="middle">answers  →  actions</text>
+        <text x="300" y="148" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">each step keeps the last, and adds the ability to do more on its own</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: the agent loop (perceive, plan, act, observe) around memory
+export function FigAgentLoop() {
+  const node = (x: number, y: number, t: string) => (
+    <g>
+      <rect x={x - 62} y={y - 22} width="124" height="44" rx="10" fill={F.plum2} />
+      <text x={x} y={y + 5} fontFamily={SANS} fontSize="13.5" fill="#fff" textAnchor="middle" fontWeight="600">{t}</text>
+    </g>
+  )
+  return (
+    <Figure n={2} caption={<>What an agent actually is, under the branding. A loop: take a goal, make a plan, act in the world through tools, look at what happened, and go again, with a memory that persists across the cycle. Nothing magic. Just a thermostat with imagination and a keyboard.</>}>
+      <svg viewBox="0 0 600 260" style={svgStyle} role="img" aria-label="The agent loop around a memory">
+        <defs>{arrow('al', F.goldDeep)}</defs>
+        {node(300, 44, 'Goal / plan')}
+        {node(492, 130, 'Act (tools)')}
+        {node(300, 216, 'Observe result')}
+        {node(108, 130, 'Update plan')}
+        <circle cx="300" cy="130" r="46" fill="none" stroke={F.gold} strokeWidth="1.6" strokeDasharray="4 4" />
+        <text x="300" y="126" fontFamily={SERIF} fontSize="14" fill={F.plum} textAnchor="middle" fontWeight="700">Memory</text>
+        <text x="300" y="144" fontFamily={SANS} fontSize="10.5" fill={F.muted} textAnchor="middle">persists</text>
+        <path d="M360,52 C420,66 470,92 486,108" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#al)" />
+        <path d="M486,152 C470,180 400,204 362,210" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#al)" />
+        <path d="M238,210 C170,204 118,178 112,154" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#al)" />
+        <path d="M114,108 C130,82 200,60 240,52" fill="none" stroke={F.goldDeep} strokeWidth="2" markerEnd="url(#al)" />
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: the interface collapses
+export function FigInterfaceCollapse() {
+  const apps = ['CRM', 'Email', 'Docs', 'Ads', 'Sheets', 'Calendar']
+  return (
+    <Figure n={3} caption={<>Where the everyday change shows up. Today you learn and operate a dozen apps yourself. Next, you state what you want and an agent operates them for you. The apps do not disappear, they slide behind a single line of intent.</>}>
+      <svg viewBox="0 0 600 250" style={svgStyle} role="img" aria-label="Interface collapsing from many apps to one intent">
+        <text x="150" y="30" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">Today: you operate the apps</text>
+        {apps.map((a, i) => {
+          const x = 40 + (i % 3) * 78
+          const y = 50 + Math.floor(i / 3) * 62
+          return <g key={a}><rect x={x} y={y} width="66" height="48" rx="8" fill="#fff" stroke={F.line} /><text x={x + 33} y={y + 28} fontFamily={SANS} fontSize="11.5" fill={F.ink} textAnchor="middle">{a}</text></g>
+        })}
+        <text x="150" y="212" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">you click through all of them</text>
+        <defs>{arrow('ic', F.plum)}</defs>
+        <line x1="288" y1="120" x2="326" y2="120" stroke={F.plum} strokeWidth="2.5" markerEnd="url(#ic)" />
+        <text x="450" y="30" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">Next: you state intent</text>
+        <rect x="336" y="66" width="228" height="44" rx="22" fill={F.plum} />
+        <text x="450" y="93" fontFamily={SANS} fontSize="12.5" fill="#fff" textAnchor="middle">“win back last quarter’s churned accounts”</text>
+        <rect x="360" y="132" width="180" height="40" rx="10" fill={F.purple} />
+        <text x="450" y="157" fontFamily={SANS} fontSize="13" fill="#fff" textAnchor="middle" fontWeight="700">agent operates the apps</text>
+        <text x="450" y="200" fontFamily={SANS} fontSize="11.5" fill={F.muted} textAnchor="middle">the twelve apps slide behind one line</text>
+      </svg>
+    </Figure>
+  )
+}
+
+// Fig: waves of AI capability
+export function FigAIWaves() {
+  const waves = [
+    { y: 2012, t: 'Perception', s: 'seeing, hearing' },
+    { y: 2020, t: 'Language', s: 'reading, writing' },
+    { y: 2025, t: 'Reasoning + agents', s: 'planning, acting' },
+    { y: 2030, t: 'World models + bodies', s: 'acting in the world' },
+  ]
+  return (
+    <Figure n={4} caption={<>How I keep the history straight in my head. Each wave did not replace the last, it stacked on it: machines learned to perceive, then to use language, then to reason and act, and the next wave is models with a working picture of the physical world, increasingly attached to robots. Years are rough.</>}>
+      <svg viewBox="0 0 600 220" style={svgStyle} role="img" aria-label="Stacking waves of AI capability">
+        <line x1="40" y1="180" x2="560" y2="180" stroke={F.line} strokeWidth="1.5" />
+        {waves.map((w, i) => {
+          const x = 70 + i * 150
+          const h = 40 + i * 34
+          return (
+            <g key={w.y}>
+              <rect x={x - 52} y={180 - h} width="104" height={h} rx="8" fill={i >= 2 ? F.purple : F.plum2} opacity={0.55 + i * 0.12} />
+              <text x={x} y={180 - h - 22} fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">{w.t}</text>
+              <text x={x} y={180 - h - 6} fontFamily={SANS} fontSize="10.5" fill={F.muted} textAnchor="middle">{w.s}</text>
+              <text x={x} y={198} fontFamily={SANS} fontSize="12" fill={F.ink} textAnchor="middle" fontWeight="700">~{w.y}</text>
+            </g>
+          )
+        })}
+      </svg>
+    </Figure>
+  )
+}

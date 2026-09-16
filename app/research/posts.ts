@@ -15,6 +15,18 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
+    slug: 'future-of-ai-from-tools-to-agents',
+    title: 'From Tools to Agents: A Plain-Language Field Guide to the Next Ten Years of AI',
+    excerpt:
+      'My working map of where AI is actually heading, written for someone with no technical background. The big shift is from software that answers to software that acts: agents, memory, the quiet collapse of the app interface, models that understand the physical world, and what all of it means for an ordinary working day. Honest about what I believe, and about what nobody yet knows.',
+    date: '2026-09-10',
+    dateLabel: 'September 10, 2026',
+    readTime: '25 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Artificial Intelligence', 'Future of AI', 'AI Agents', 'Society'],
+  },
+  {
     slug: 'agi-society-and-the-end-of-b2b-agencies',
     title: 'The Last Agency: AGI, the Society It Reshapes, and Why B2B Marketing Agencies Die First',
     excerpt:

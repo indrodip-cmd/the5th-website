@@ -37,304 +37,267 @@ const ARTICLE_JSONLD = {
 }
 
 const TOC: [string, string][] = [
-  ['align', '1. Measuring alignment: RSA, CKA, encoding models'],
-  ['credit', '2. The credit-assignment problem'],
-  ['approx', '3. Plausible approximations to backprop'],
-  ['pc', '4. Predictive coding, the unifying substrate'],
-  ['geometry', '5. Population geometry and manifold capacity'],
-  ['converge', '6. Why the representations converge'],
-  ['interface', '7. The read/write interface'],
-  ['falsify', '8. What would falsify the bridge'],
+  ['align', '1. Measuring the match'],
+  ['credit', '2. The learning puzzle'],
+  ['approx', '3. How the brain might learn'],
+  ['pc', '4. The idea that ties it together'],
+  ['geometry', '5. The shape of thoughts'],
+  ['converge', '6. Why they end up alike'],
+  ['interface', '7. Reading and writing the brain'],
+  ['falsify', '8. What would prove me wrong'],
 ]
 
 export default function Article() {
   const lead = (
     <>
-      We usually talk about brains and artificial neural networks with a metaphor, a loose “it is kind of like the brain”
-      that nobody is meant to take literally. I want to argue that the metaphor has quietly stopped being a metaphor.
-      Three results pushed it over: deep networks trained only to do a task turn out to be, so far, the best predictors we
-      have of real neural responses in sensory cortex; the representations that very different systems learn are
-      measurably similar, and more similar as they scale; and backpropagation, the learning rule we assumed was
-      hopelessly artificial, has biological approximations that actually work. So this piece treats the brain and AI
-      connection the way a technical reader deserves, as a set of alignment metrics, learning rules, geometric objects,
-      and interface equations. The mathematics does the talking.
+      We usually talk about brains and AI with a loose comparison. It is kind of like the brain, we say, and nobody means
+      it too seriously. I want to argue that the comparison has quietly stopped being loose. Three findings pushed it over.
+      AI trained only to do a task turns out to be the best predictor we have of real brain activity. Very different
+      systems learn very similar inner patterns. And the way AI learns, which we thought was hopelessly artificial, has
+      versions the brain could plausibly run too. This piece treats the brain-and-AI link the way a curious reader
+      deserves. There is some math. I explain every piece in plain words.
     </>
   )
+  const objective = (
+    <>
+      My goal was to test a claim I kept hearing, that brains and AI are basically the same thing, and see how literally
+      the evidence lets me take it. So I worked through the ways we measure the match, the ways these systems learn, and
+      the brain-reading research, looking for where the comparison is real and where it quietly breaks.
+    </>
+  )
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }} />
-      <ResearchArticleLayout post={post} toc={TOC} lead={lead} objective={<>My goal was to test a claim I kept hearing, that brains and AI are “basically the same thing,” and to see how literally the evidence lets me take it. So I worked through the alignment metrics, the learning rules, and the neural-interface research myself, looking for where the comparison is genuinely real and where it quietly falls apart.</>}>
-        {/* ── 1 ── */}
-        <h2 id="align" style={rp.h2}>1. Measuring alignment: RSA, CKA, encoding models</h2>
+      <ResearchArticleLayout post={post} toc={TOC} lead={lead} objective={objective}>
+
+        {/* 1 */}
+        <h2 id="align" style={rp.h2}>1. Measuring the match</h2>
         <p style={rp.p}>
-          The whole empirical bridge depends on one awkward practical question. How do you measure whether two
-          representations are similar when the systems have different dimensionalities, share no neurons, and sit in no
-          common coordinate frame? Three families of methods dominate, and the differences between them matter more than
-          people usually admit.
+          The whole thing rests on one hard question. How do you measure whether two systems have similar inner patterns,
+          when they have different sizes, share no cells, and use no common map? Three tools do most of the work, and the
+          differences between them matter.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>Encoding models</strong> ask the hardest version of the question. Can a linear map
-          from model features <M>Φ(S)</M> predict held-out neural responses <M>Y</M> to the same stimuli <M>S</M>? You fit
-          ridge regression and score the noise-corrected correlation on data the fit never saw:
+          The first tool asks the toughest version. Can a simple, straight-line map from the AI’s inner features predict
+          the brain’s real activity to the same pictures? You fit that map and score how well it does on data it never saw.
         </p>
         <Eq label="neural predictivity">
           Ŵ = argmin<sub>W</sub> ‖ Y − Φ(S) W ‖²<sub>F</sub> + λ‖W‖²<sub>F</sub> ;  score = corr( Y<sub>test</sub> , Φ(S<sub>test</sub>) Ŵ )
         </Eq>
         <p style={rp.p}>
-          This is the logic behind Yamins and DiCarlo’s 2014 result, that the intermediate layers of a
-          performance-optimised convolutional network are the best available predictors of macaque V4 and IT population
-          responses, and behind the Brain-Score benchmark that later formalised it. The important detail is that the
-          mapping is forced to be <em>linear</em>. A linear decoder is assumed to be within reach of downstream biology,
-          so linear predictivity gets read as evidence that model and cortex expose information in the same format. That
-          assumption is load-bearing, and I will poke at it in a moment.
+          In plain words: find the best simple map from the model to the brain, then see how well it predicts brain data it
+          has not seen. This is the logic behind Yamins and DiCarlo’s 2014 result: the middle layers of a task-trained
+          vision network are the best predictor we have of activity in the monkey visual brain. The map is kept simple on
+          purpose, because a simple readout is something real biology could do too. So a good simple match is a hint that
+          the model and the brain lay information out the same way.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>Representational Similarity Analysis</strong> (Kriegeskorte et al., 2008) skips the
-          mapping altogether. For each system you build a representational dissimilarity matrix, an RDM, over the stimuli,
-          with <M>D<sub>ij</sub> = 1 − corr(r<sub>i</sub>, r<sub>j</sub>)</M>, and then you compare the two RDMs. Because
-          the RDM lives in stimulus space rather than neuron space, it does not care about rotation or how many units you
-          have. The price you pay is that it throws away which features actually carry the geometry.
+          The second tool (Kriegeskorte and colleagues, 2008) skips the map. For each system you ask: which pictures does it
+          treat as similar, and which as different? Then you compare those similarity patterns across the two systems. It
+          does not care about size or map, but it throws away which features carry the pattern.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>Centered Kernel Alignment</strong> (Kornblith et al., 2019) has become the default for
-          comparing model to model and model to brain. It is invariant to orthogonal transformation and to isotropic
-          scaling, but, unlike CCA, it is <em>not</em> invariant to arbitrary invertible linear maps, and that last
-          stubbornness is exactly what makes it discriminative. Linear CKA between centered activation matrices <M>X</M>
-          and <M>Y</M> is:
+          The third tool, CKA (Kornblith and colleagues, 2019), is now the go-to for comparing two systems. The formula is:
         </p>
         <Eq label="linear CKA">
           CKA(X, Y) = ‖ YᵀX ‖²<sub>F</sub>  ⁄  ( ‖ XᵀX ‖<sub>F</sub> · ‖ YᵀY ‖<sub>F</sub> )
         </Eq>
         <p style={rp.p}>
-          One caution runs under all of this, and I think it is worth stating plainly. High linear predictivity is
-          necessary but not sufficient for representational identity. Two systems can share a linearly decodable subspace
-          and still disagree about everything the probe cannot see, and a readout that is expressive enough can manufacture
-          alignment that says more about the probe than the representation. So treat alignment scores as hypotheses about
-          a shared format, to be triangulated across several metrics, not as a verdict.
+          In plain words: it gives a score from 0 to 1 for how alike two systems’ patterns are, ignoring things that should
+          not matter, like rotating the picture, while still noticing real differences.
+        </p>
+        <p style={rp.p}>
+          One warning runs under all of this. A good match is necessary, but not proof. Two systems can share a slice you
+          can read easily and still differ in everything the probe cannot see. Treat these scores as clues about a shared
+          format, checked across several tools, not as a verdict.
         </p>
 
-        {/* ── 2 ── */}
-        <h2 id="credit" style={rp.h2}>2. The credit-assignment problem</h2>
+        {/* 2 */}
+        <h2 id="credit" style={rp.h2}>2. The learning puzzle</h2>
         <p style={rp.p}>
-          Deep networks learn by backpropagation (Rumelhart, Hinton and Williams, 1986). The loss gradient travels
-          backward through the layers using the transpose of the forward weights:
+          AI learns by a method called backpropagation (Rumelhart, Hinton and Williams, 1986). When it makes a mistake, the
+          error is passed backward through the layers to fix each connection:
         </p>
         <Eq label="backpropagation">
           δ<sup>l</sup> = ( (W<sup>l+1</sup>)ᵀ δ<sup>l+1</sup> ) ⊙ σ′(z<sup>l</sup>) ,  ΔW<sup>l</sup> = −η · δ<sup>l</sup> (a<sup>l−1</sup>)ᵀ
         </Eq>
         <p style={rp.p}>
-          For a cortical circuit to run this, three requirements crash straight into neurobiology. First there is the
-          <strong style={rp.strong}> weight-transport problem</strong>. The backward pass needs the exact transpose
-          <M> (W<sup>l+1</sup>)ᵀ</M>, which implies a feedback synapse whose strength mirrors a separate feedforward
-          synapse, a symmetry nobody has found a biological mechanism for. Second, the backward pass is a
-          <strong style={rp.strong}> distinct, linear computation</strong> using the derivatives <M>σ′</M>, whereas real
-          cortical feedback drives the same spiking units as feedforward drive. Third, the gradients have to be
-          <strong style={rp.strong}> held and shuttled around</strong> without disturbing the activity that is still going
-          on. Francis Crick pointed at the transport problem back in 1989, and for roughly twenty years it stood as a kind
-          of proof that the brain simply does not do gradient descent. The last decade has, more or less, dissolved that
-          proof. That is the part I did not see coming.
+          In plain words: the error travels back through the exact same connections it came forward through, and nudges
+          each one. That last bit is the problem for the brain. It needs the exact same wiring, used backward. Real brain
+          cells do not seem to have that neat mirror. Francis Crick pointed this out in 1989, and for about twenty years it
+          stood as near-proof that the brain does not learn this way. The last decade mostly dissolved that proof. That is
+          the part I did not see coming.
         </p>
 
-        {/* ── 3 ── */}
-        <h2 id="approx" style={rp.h2}>3. Plausible approximations to backprop</h2>
+        {/* 3 */}
+        <h2 id="approx" style={rp.h2}>3. How the brain might learn</h2>
         <p style={rp.p}>
-          <strong style={rp.strong}>Feedback alignment</strong> (Lillicrap et al., 2016) delivered the first genuine
-          surprise. The feedback weights do not need to be the transpose of the forward weights. They do not even need to
-          be learned. Replace them with a <em>fixed random</em> matrix <M>B</M>:
+          The first surprise is called feedback alignment (Lillicrap and colleagues, 2016). It turns out the backward path
+          does not need the exact same wiring. You can use <em>random</em>, fixed connections instead:
         </p>
         <Eq label="feedback alignment">
           δ<sup>l</sup> = ( B<sup>l+1</sup> δ<sup>l+1</sup> ) ⊙ σ′(z<sup>l</sup>) ,  B fixed, random
         </Eq>
         <p style={rp.p}>
-          and the network still learns. What happens is quietly elegant: during training the forward weights rotate until
-          <M> W</M> lines up approximately with <M>Bᵀ</M>, so the forward pathway teaches itself to make the random
-          feedback useful. The transport requirement just disappears. It is not perfect, it degrades in very deep
-          convolutional regimes, and that limitation is what motivated sign-symmetry and direct-feedback-alignment variants
-          that claw back most of the performance while keeping the biology cheap.
-        </p>
-        <FigBackpropFA />
-        <p style={rp.p}>
-          <strong style={rp.strong}>Target propagation</strong> (Bengio; Lee et al., 2015) goes a different way. Instead of
-          shipping gradients backward, it ships <em>targets</em>, meaning desirable activity patterns for each layer,
-          computed by learned approximate inverses <M>g<sub>l</sub> ≈ f<sub>l</sub><sup>−1</sup></M>. Each layer then just
-          reduces a local reconstruction loss toward its target. A global gradient problem becomes a stack of local ones,
-          and the inverse it needs looks a lot like an autoencoder, which gives it an obvious feedback reading.
+          In plain words: send the error back through random wiring, and the network still learns. What happens is quietly
+          neat. The forward connections slowly shift to line up with the random ones, so the forward path teaches itself to
+          make random feedback useful. The mirror problem just disappears. It is not perfect, and it struggles on very deep
+          networks, which is why people built better versions after it.
         </p>
         <p style={rp.p}>
-          <strong style={rp.strong}>Equilibrium propagation</strong> (Scellier and Bengio, 2017) is, to my eye, the most
-          beautiful of the three, at least for energy-based systems that could be built in physical hardware. A network
-          with energy <M>E(θ, x, s)</M> relaxes to a free-phase fixed point <M>s<sub>∗</sub></M>. Then you nudge the output
-          gently toward the target with strength <M>β</M> and let it relax again. The gradient of the supervised loss falls
-          out of the difference between the two equilibria, using only quantities each synapse can see locally:
+          A second idea, target propagation (Bengio; Lee and colleagues, 2015), sends back <em>goals</em> instead of error.
+          Each layer just tries to hit a good target for itself. A global problem becomes a stack of small local ones.
+        </p>
+        <p style={rp.p}>
+          The third, to my eye the most beautiful, is equilibrium propagation (Scellier and Bengio, 2017). The network
+          settles into a resting state. Then you gently nudge the output toward the right answer and let it settle again.
+          The fix for every connection falls out of the difference between the two resting states:
         </p>
         <Eq label="equilibrium propagation">
           ∂L ⁄ ∂θ  =  lim<sub>β→0</sub>  (1⁄β) ( ∂E⁄∂θ |<sub>nudged</sub> − ∂E⁄∂θ |<sub>free</sub> )
         </Eq>
         <p style={rp.p}>
-          No separate backward network. No dedicated error-carrying wire. The same neurons and synapses that ran the
-          inference compute the weight update out of their own two resting states. That is precisely the kind of two-phase,
-          local-rule scheme a physical substrate, biological or neuromorphic, could actually run.
+          In plain words: no separate backward network, no special error wires. The same cells that ran the thinking work
+          out the fix from their own two resting states. That is exactly the kind of simple, local rule a real brain, or a
+          brain-like chip, could actually run.
         </p>
+        <FigBackpropFA />
 
-        {/* ── 4 ── */}
-        <h2 id="pc" style={rp.h2}>4. Predictive coding, the unifying substrate</h2>
+        {/* 4 */}
+        <h2 id="pc" style={rp.h2}>4. The idea that ties it together</h2>
         <p style={rp.p}>
-          Here is the connection I keep coming back to. Predictive coding, a mainstream account of cortical hierarchy since
-          Rao and Ballard (1999), approximates backpropagation under a local update rule. In a hierarchical Gaussian
-          generative model, each level predicts the level below, only the residual prediction errors
-          <M> ε<sub>l</sub></M> travel upward, and the whole hierarchy minimises one sum-of-squared-errors energy, which is
-          the same thing as a Gaussian variational free energy:
+          Here is the link I keep coming back to. Predictive coding, a mainstream brain theory since Rao and Ballard (1999),
+          turns out to closely match backpropagation, using only local rules. Each level of the brain predicts the level
+          below. Only the <em>errors</em> travel up. And the whole stack works to shrink one quantity:
         </p>
         <Eq label="predictive-coding energy">
           F = Σ<sub>l</sub>  (1 ⁄ 2Σ<sub>l</sub>) ‖ ε<sub>l</sub> ‖² ,  ε<sub>l</sub> = x<sub>l</sub> − W<sub>l</sub> f(x<sub>l+1</sub>)
         </Eq>
         <p style={rp.p}>
-          Inference is gradient descent on <M>F</M> in the activity variables. Learning is gradient descent on <M>F</M> in
-          the weights. Both are strictly local, in the sense that each update needs only the pre-synaptic activity and the
-          error unit sitting right next to it:
+          In plain words: each level guesses what the level below is doing, and only the mismatch gets sent up. Both
+          thinking and learning just shrink the total mismatch, and each update needs only what is right next to it:
         </p>
         <Eq label="local inference + learning">
           ẋ<sub>l</sub> ∝ − ∂F⁄∂x<sub>l</sub> = −(ε<sub>l</sub> ⁄ Σ<sub>l</sub>) + f′(x<sub>l</sub>) ⊙ (W<sub>l−1</sub>ᵀ ε<sub>l−1</sub> ⁄ Σ<sub>l−1</sub>) ;  ΔW<sub>l</sub> ∝ (ε<sub>l</sub> ⁄ Σ<sub>l</sub>) f(x<sub>l+1</sub>)ᵀ
         </Eq>
         <FigPredictiveCoding />
         <p style={rp.p}>
-          Whittington and Bogacz (2017) then proved the punchline: once the error units settle to equilibrium, these local
-          updates equal the backpropagation gradients of the corresponding deep network, to arbitrary precision. Later work
-          from Millidge, Song, Salvatori and colleagues tightened the result and pushed it past the original
-          fixed-prediction assumptions. Sit with what that means for a second. The operation we invented for machines and
-          the operation the cortex may run for perception are, in a well-defined limit, the <em>same</em> optimisation.
-          They differ only in how the error signal is physically carried. Predictive coding, in other words, stitches the
-          free-energy story of the brain (Friston, 2010) to the gradient story of deep learning.
+          Then Whittington and Bogacz (2017) proved the punchline. Once the error units settle, these local brain-style
+          updates match the backpropagation updates of the matching AI, as closely as you like. Later work pushed the match
+          further. Sit with what that means. The method we invented for machines and the method the brain may run for
+          seeing are, in the right limit, the <em>same</em> method. They differ only in how the error signal is physically
+          carried. Predictive coding ties the brain’s story to deep learning’s story.
         </p>
 
         <Divider />
 
-        {/* ── 5 ── */}
-        <h2 id="geometry" style={rp.h2}>5. Population geometry and manifold capacity</h2>
+        {/* 5 */}
+        <h2 id="geometry" style={rp.h2}>5. The shape of thoughts</h2>
         <p style={rp.p}>
-          Representations are not really lists of tuning curves. They are geometric objects. A population of <M>N</M>
-          neurons responding across a set of conditions traces out a low-dimensional manifold inside the
-          <M> N</M>-dimensional firing-rate space, and it is the geometry of that manifold, not the tuning of any single
-          cell, that downstream circuits and linear decoders actually read off. The effective dimensionality is captured
-          by the participation ratio of the covariance eigenvalues:
+          Thoughts are not really lists of numbers. They are shapes. A group of <M>N</M> brain cells responding to many
+          things traces out a low-dimensional shape inside a big space, and it is the shape, not any single cell, that
+          gets read by the rest of the brain. How many dimensions that shape really uses is captured here:
         </p>
         <Eq label="participation ratio">
           PR = ( Σ<sub>i</sub> λ<sub>i</sub> )²  ⁄  Σ<sub>i</sub> λ<sub>i</sub>²
         </Eq>
         <p style={rp.p}>
-          In practice, both cortical populations and trained network layers use far fewer dimensions than they have units,
-          and motor and prefrontal cortex look more like <strong style={rp.strong}>dynamical systems</strong>, trajectories
-          flowing across a manifold, than like static encoders (Gallego, Perich, Miller and Solla, 2017; Vyas et al.,
-          2020). Sussillo and Barak (2013) showed trained RNNs solve tasks by arranging fixed points and the linearised
-          flow around them, and Maheswaranathan et al. (2019) found that solution to be <em>universal</em> across
-          architectures. The same topology of fixed points shows up whether the unit is an LSTM cell or a plain rectifier.
-          That is exactly the sort of convergence you would hope to see between artificial and biological recurrent
-          circuits, and honestly it is a little eerie that it holds.
+          In plain words: a big population of cells usually uses far fewer real dimensions than it has cells. And motor and
+          planning areas look more like a moving system, a path tracing across a shape, than a fixed lookup table (Gallego
+          and colleagues, 2017). Trained AI networks solve tasks with the same kind of structure, and that structure keeps
+          turning up across very different designs, which is exactly the kind of match you would hope to see. Honestly, it
+          is a little eerie that it holds.
         </p>
         <p style={rp.p}>
-          The theory tying geometry to function is <strong style={rp.strong}>manifold capacity</strong> (Chung, Lee and
-          Sompolinsky, 2018). Ask how many object manifolds of radius <M>R</M> and dimension <M>D</M> can be linearly
-          separated by <M>N</M> neurons. The critical load per neuron <M>α<sub>c</sub> = P ⁄ N</M> is set by the effective
-          radius and dimension of those manifolds:
+          The theory that ties shape to function is manifold capacity (Chung, Lee and Sompolinsky, 2018). Ask how many
+          separate object shapes a set of cells can cleanly tell apart:
         </p>
         <Eq label="manifold capacity">
           α<sub>c</sub> ≈ α<sub>0</sub>( R<sub>eff</sub> , D<sub>eff</sub> ) ,  with  α<sub>c</sub> → 2  as  R → 0
         </Eq>
         <FigManifold />
         <p style={rp.p}>
-          As information climbs a good hierarchy, biological or artificial, the object manifolds shrink and untangle,
-          capacity rises, and invariant categories become linearly separable. That hands us a common currency. You can
-          measure, in the very same units, how the ventral stream and a deep vision network each reshape the geometry of
-          the same images, and what you find is that they do it in strikingly parallel ways.
+          In plain words: as information climbs a good system, brain or AI, the shapes for different objects shrink and
+          untangle, and become easy to tell apart with a simple readout. That gives us a shared ruler. You can measure, in
+          the same units, how the human visual brain and a vision network each reshape the same pictures, and they do it in
+          strikingly similar ways.
         </p>
 
-        {/* ── 6 ── */}
-        <h2 id="converge" style={rp.h2}>6. Why the representations converge</h2>
+        {/* 6 */}
+        <h2 id="converge" style={rp.h2}>6. Why they end up alike</h2>
         <p style={rp.p}>
-          So we keep bumping into the same finding. Task-optimised networks resemble cortex, and independently trained
-          models resemble each other. That demands an explanation that has nothing to do with shared wiring, because there
-          is no shared wiring. Huh et al. (2024) call it the <strong style={rp.strong}>Platonic Representation Hypothesis</strong>:
-          systems trained on different data, with different objectives, at enough scale, drift toward a shared statistical
-          model of the world’s underlying generative structure. The driver is constraint, not coincidence. A
-          representation forced to support many tasks, generalise out of distribution, and stay robust gets pushed toward
-          the environment’s true latent variables, and there is a lot less room in that target than in the space of
-          networks that could exist.
+          So we keep bumping into the same finding. Task-trained AI looks like the brain, and separately trained AIs look
+          like each other. That needs an explanation with nothing to do with shared wiring, because there is none.
         </p>
         <p style={rp.p}>
-          Identifiability theory gives the argument a formal spine. Under contrastive and self-supervised objectives, the
-          learned features provably recover the true latent factors up to a limited class of transformations, linear, or
-          permutation and scaling. That happens to be the exact equivalence class RSA and CKA were built to see through.
-          So if two systems each recover the same latents up to a rotation, rotation-invariant metrics will report a
-          match. The convergence and our ability to measure it are two faces of one identifiability result. Evolution and
-          gradient descent are just different search procedures crawling over the same loss landscape that a shared
-          physical world imposes. Convergent representation is what optimisation under shared constraints looks like from
-          the outside.
+          Huh and colleagues (2024) call it the Platonic Representation idea. Systems trained on different data, with
+          different goals, at enough scale, drift toward the same inner picture of how the world really works. The reason
+          is pressure, not luck. A picture that has to handle many tasks, work on new cases, and stay steady is pushed
+          toward the world’s true underlying parts. And there is far less room in that target than in the space of possible
+          networks.
+        </p>
+        <p style={rp.p}>
+          The math backs this up. Under certain training goals, systems provably recover the world’s true hidden factors,
+          up to small, harmless changes, the exact kinds of changes our matching tools are built to see through. So if two
+          systems each recover the same factors, our tools report a match. The matching and our ability to measure it are
+          two sides of one fact. Evolution and machine training are just two different searches over the same landscape,
+          set by one shared world. Ending up alike is what that looks like from outside.
         </p>
 
-        {/* ── 7 ── */}
-        <h2 id="interface" style={rp.h2}>7. The read/write interface</h2>
+        {/* 7 */}
+        <h2 id="interface" style={rp.h2}>7. Reading and writing the brain</h2>
         <p style={rp.p}>
-          The connection is not only explanatory. It is also a tool. Neural decoding recovers task variables <M>k</M>, such
-          as kinematics, phonemes, or intended text, from population activity <M>r</M>. The ceiling on what any decoder can
-          pull out is set by the mutual information the population carries, bounded below through Fano’s inequality by the
-          error of the best possible decoder:
+          This link is not only an explanation. It is a tool. Brain decoding pulls what a person is trying to do, move a
+          hand, say a word, out of brain activity. The most you can ever pull out is set by how much information the
+          activity carries:
         </p>
         <Eq label="decodable information">
           I(k ; r) ≥ H(k) − H(k | k̂(r)) ,  P<sub>e</sub> ≥ ( H(k | r) − 1 ) ⁄ log|K|
         </Eq>
         <p style={rp.p}>
-          The old decoders were linear filters or Kalman filters over binned spikes. The state of the art is now openly a
-          brain and AI hybrid. Latent variable models like LFADS (Pandarinath et al., 2018) fit a nonlinear dynamical
-          system whose inferred latents clean up single-trial activity, and sequence models, the Neural Data Transformer
-          (Ye and Pandarinath, 2021) and cross-animal models such as POYO (Azabou et al., 2023), simply treat spike trains
-          as token streams. These are the systems behind the clinical headlines. Willett et al. decoded attempted
-          handwriting at about 90 characters per minute (2021) and attempted speech at roughly 60 to 70 words per minute
-          (2023) from motor cortex, and they did it because deep sequence models turn noisy population dynamics into clean,
-          structured latent trajectories.
+          In plain words: there is a hard ceiling on what any decoder can recover, set by the signal itself. The old
+          decoders were simple filters. The state of the art is openly a brain-and-AI hybrid. Deep models clean up messy
+          brain signals and read them as smooth paths. These are the systems behind the headlines. Willett and colleagues
+          decoded attempted handwriting at about 90 characters a minute (2021) and attempted speech at roughly 60 to 70
+          words a minute (2023) from the motor brain, because deep models turn noisy activity into clean, structured paths.
         </p>
         <p style={rp.p}>
-          The real technical headache is <strong style={rp.strong}>non-stationarity</strong>. Recorded units drift from
-          session to session and differ from person to person, so a decoder trained today quietly rots by tomorrow. The fix
-          is <strong style={rp.strong}>latent alignment</strong>, which is just the geometry from section 5 put to work.
-          Because the underlying neural manifold stays stable even when the individual channels do not, you can align each
-          new session’s activity to a canonical latent space and keep the decoder. Formally it is a Procrustes or CCA
-          problem, finding the orthogonal <M>Q</M> that minimises the distance between the new latents and the reference:
+          The real headache is that the signal drifts. The cells you record shift from day to day and differ from person
+          to person, so a decoder trained today quietly rots by tomorrow. The fix is to line up each new day’s signal with
+          a stable inner shape and reuse the decoder. It is a matching problem:
         </p>
         <Eq label="latent alignment (Procrustes)">
           Q<sub>∗</sub> = argmin<sub>QᵀQ = I</sub> ‖ Z<sub>new</sub> Q − Z<sub>ref</sub> ‖²<sub>F</sub>
         </Eq>
         <p style={rp.p}>
-          Gallego et al. (2020) showed these latent dynamics hold across months, and even across individuals, which is what
-          makes stable, transferable interfaces possible at all. Closing the loop, writing structured stimulation back
-          through the same aligned latent space so the cortex reads it as signal, is still the frontier. And it is the
-          place where the representational-alignment programme and the interface programme finally collapse into a single
-          engineering discipline.
+          In plain words: rotate today’s signal until it lines up with a saved reference, and the decoder keeps working.
+          Gallego and colleagues (2020) showed this inner shape holds across months, and even across people, which is what
+          makes stable, reusable brain interfaces possible at all. Closing the loop, writing signal back in through the
+          same shape, is the frontier. It is where brain reading and brain understanding finally become one job.
         </p>
 
         <Divider />
 
-        {/* ── 8 ── */}
-        <h2 id="falsify" style={rp.h2}>8. What would falsify the bridge</h2>
+        {/* 8 */}
+        <h2 id="falsify" style={rp.h2}>8. What would prove me wrong</h2>
         <p style={rp.p}>
-          A programme worth trusting names its own failure modes, so here are the ones I take seriously. The bridge gets
-          weaker, not stronger, if linear predictivity turns out to be driven mostly by the flexibility of the mapping
-          rather than the model, so that untrained or randomly wired networks predict cortex nearly as well as trained ones
-          (a live critique, and partly borne out for some early visual areas). It gets weaker if scaling
-          <em> diverges</em> representations once objectives differ enough, which would contradict the Platonic hypothesis.
-          It gets weaker if the predictive-coding and backprop equivalence only holds under fixed-prediction assumptions
-          that real cortical microcircuits happen to break. And it gets weaker if decoding stability rests on task
-          structure rather than a genuinely conserved neural manifold. Every one of those is a concrete, measurable claim,
-          and every one is under active test right now, which is more than you can say for most grand unifying stories.
+          A serious claim names how it could fail, so here are the ways this one could. The link gets weaker if the good
+          match turns out to come mostly from the flexible map, not the model, so that even untrained networks predict the
+          brain about as well. It gets weaker if bigger training makes systems <em>less</em> alike, not more. It gets
+          weaker if the predictive-coding-and-backprop match only holds under neat assumptions that real brains break. And
+          it gets weaker if brain decoding rests on the task, not on a truly stable inner shape. Each of these is a
+          concrete, testable claim, and each is being tested right now. That is more than you can say for most grand
+          unifying stories.
         </p>
         <p style={rp.p}>
-          What has already survived, though, is a lot. We can quantify representational similarity across systems that
-          share no substrate. We have removed the old theoretical objection that the brain cannot approximate gradient
-          descent. We have a local, energy-based learning rule that provably recovers backpropagation. We can measure the
-          geometry that brains and networks impose on the same inputs and watch it transform the same way. And we can read
-          intended movement and speech straight out of cortex, then align those readings across time, using the very models
-          the neuroscience helped inspire. The brain and AI connection has graduated from analogy into a shared formalism,
-          one where a learning rule, a representational geometry, and an interface protocol are turning out to be the same
-          object, just described from two directions at once.
+          But a lot has already survived. We can measure how alike two systems are with no shared parts. We have removed
+          the old objection that the brain cannot do gradient learning. We have a simple, local rule that provably matches
+          backpropagation. We can measure the shape brains and AIs impose on the same input and watch it change the same
+          way. And we can read intended movement and speech straight out of the brain, and line those readings up over
+          time, using the very models the brain science helped inspire. The brain-and-AI link has grown up. It has gone
+          from a loose comparison to a shared language, one where a learning rule, a shape, and a brain interface keep
+          turning out to be the same thing, seen from two sides.
         </p>
       </ResearchArticleLayout>
     </>

@@ -12,36 +12,41 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 
 /* ── Branded generative card art (deterministic per slug) ──────────────────*/
 const GRADS = [
-  'linear-gradient(140deg, #3D2645 0%, #2E1A35 100%)',
-  'linear-gradient(140deg, #5E2E86 0%, #2E1A35 100%)',
-  'linear-gradient(140deg, #2E1A35 0%, #231029 55%, #4a2a5e 100%)',
-  'linear-gradient(140deg, #231029 0%, #3D2645 100%)',
+  'linear-gradient(150deg, #3a2145 0%, #241129 58%, #1b0d20 100%)',
+  'linear-gradient(150deg, #472a5c 0%, #2a1633 60%, #1b0d20 100%)',
+  'linear-gradient(150deg, #2e1a35 0%, #20101f 100%)',
+  'linear-gradient(150deg, #331d3f 0%, #231029 100%)',
 ]
 function hash(s: string): number {
   let h = 0
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
   return h
 }
+/* Refined, premium generative art: a deep plum field, one soft off-center gold
+   glow, and a set of fine concentric gold arcs. Calm and expensive, not busy. */
 export function CardArt({ seed, height = 190, tall = false }: { seed: string; height?: number; tall?: boolean }) {
   const h = hash(seed)
   const g = GRADS[h % GRADS.length]
-  const cx = 30 + (h % 45)      // 30–75%
-  const cy = 12 + ((h >> 3) % 30) // 12–42%
+  const cx = 60 + (h % 28)         // 60–88%
+  const cy = 16 + ((h >> 3) % 22)  // 16–38%
+  const ox = cx * 5, oy = cy * 4   // arc centre in the 500x300 viewBox
   return (
     <div style={{ position: 'relative', height: tall ? '100%' : height, minHeight: height, background: g, overflow: 'hidden' }}>
       {/* soft gold glow */}
-      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(60% 60% at ${cx}% ${cy}%, rgba(228,200,121,.28), transparent 70%)` }} />
-      {/* concentric rings */}
-      <svg viewBox="0 0 400 240" preserveAspectRatio="xMidYMid slice" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.5 }}>
-        <g fill="none" stroke="#C9A84C" strokeOpacity="0.35">
-          <circle cx={cx * 4} cy={cy * 2.4} r="46" strokeWidth="1" />
-          <circle cx={cx * 4} cy={cy * 2.4} r="88" strokeWidth="1" strokeOpacity="0.22" />
-          <circle cx={cx * 4} cy={cy * 2.4} r="132" strokeWidth="1" strokeOpacity="0.12" />
+      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(70% 70% at ${cx}% ${cy}%, rgba(228,200,121,.20), transparent 72%)` }} />
+      {/* fine concentric arcs */}
+      <svg viewBox="0 0 500 300" preserveAspectRatio="xMidYMid slice" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <g fill="none" stroke="#C9A84C" strokeWidth="0.75">
+          {[54, 96, 142, 192, 246].map((r, i) => (
+            <circle key={r} cx={ox} cy={oy} r={r} strokeOpacity={0.3 - i * 0.05} />
+          ))}
         </g>
       </svg>
-      {/* wordmark watermark */}
-      <span style={{ position: 'absolute', left: 18, bottom: 14, fontFamily: SERIF, fontStyle: 'italic', fontSize: 15, color: 'rgba(255,255,255,.4)', letterSpacing: '.02em' }}>
-        the<span style={{ color: 'rgba(228,200,121,.75)' }}>5</span>th research
+      {/* inner hairline for depth */}
+      <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.05), inset 0 -60px 80px -40px rgba(0,0,0,.35)' }} />
+      {/* wordmark */}
+      <span style={{ position: 'absolute', left: 20, bottom: 16, fontFamily: SERIF, fontStyle: 'italic', fontSize: 14, color: 'rgba(255,255,255,.34)', letterSpacing: '.03em' }}>
+        the<span style={{ color: 'rgba(228,200,121,.7)' }}>5</span>th research
       </span>
     </div>
   )
@@ -54,14 +59,15 @@ export function ResearchHeader() {
       position: 'sticky', top: 0, zIndex: 20, background: 'rgba(250,246,240,.86)', backdropFilter: 'saturate(140%) blur(10px)',
       borderBottom: `1px solid ${C.border}`,
     }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px clamp(20px,5vw,44px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+      <div style={{ maxWidth: 1180, margin: '0 auto', padding: '15px clamp(20px,5vw,56px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <a href="/" aria-label="The5th Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 38, width: 'auto', display: 'block' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
         </a>
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(16px,3vw,30px)' }}>
-          <a href="/research" style={{ color: C.plumDark, fontSize: 15, fontWeight: 700, textDecoration: 'none' }}>Research</a>
-          <a href="/" style={{ color: C.muted, fontSize: 15, fontWeight: 600, textDecoration: 'none' }}>The5th ↗</a>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px,4vw,34px)' }}>
+          <a href="/research" style={{ color: C.plumDark, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Research</a>
+          <a href="/research/study" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Study</a>
+          <a href="/" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>The5th ↗</a>
         </nav>
       </div>
     </header>

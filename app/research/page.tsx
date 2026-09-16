@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 }
 
 const SERIF = "Georgia, 'Times New Roman', serif"
+const MAXW = 1180
+const PADX = 'clamp(20px,5vw,56px)'
 
 export default function ResearchIndex() {
   const [featured, ...rest] = POSTS
@@ -26,75 +28,86 @@ export default function ResearchIndex() {
   return (
     <ResearchPage>
       {/* Hero */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(48px,7vw,88px) clamp(20px,5vw,44px) clamp(28px,4vw,44px)' }}>
-        <div style={{ fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: C.goldDeep, fontWeight: 700, marginBottom: 16 }}>Independent research · Indrodip Ghosh</div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(44px,9vw,92px)', lineHeight: 0.98, letterSpacing: '-.03em', color: C.plumDark, margin: 0 }}>Research</h1>
-        <p style={{ fontSize: 'clamp(17px,2.2vw,20px)', lineHeight: 1.6, color: C.inkSoft, maxWidth: 660, margin: '24px 0 0' }}>
-          This is my personal research journal. I am a self-taught researcher trying to work out, in plain language, how
-          artificial intelligence really works and where it is taking us. Every piece is my own investigation, written so
-          that anyone, with no background at all, can follow it and understand a little more of what is coming.
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(60px,9vw,120px) ${PADX} clamp(30px,4vw,44px)` }}>
+        <div style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, marginBottom: 22 }}>
+          The5th <span style={{ color: C.goldDeep }}>·</span> Independent Research
+        </div>
+        <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(52px,11vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
+        <p style={{ fontSize: 'clamp(18px,2.2vw,22px)', lineHeight: 1.55, color: C.inkSoft, maxWidth: 620, margin: '30px 0 0', fontWeight: 400 }}>
+          A personal research journal by Indrodip Ghosh. Long, careful essays on how artificial intelligence really works
+          and where it is taking us, written so anyone can follow, and precise enough for anyone who cannot.
         </p>
-      </section>
-
-      {/* Live study banner */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 clamp(20px,5vw,44px)' }}>
-        <a href="/research/study" style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between', flexWrap: 'wrap', textDecoration: 'none', background: 'linear-gradient(120deg, #3D2645, #231029)', borderRadius: 16, padding: '18px 22px', boxShadow: '0 20px 50px -40px rgba(46,26,53,.6)' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: '#E4C879', border: '1px solid rgba(228,200,121,.4)', borderRadius: 999, padding: '4px 11px' }}>Live study</span>
-            <span style={{ fontSize: 15.5, color: 'rgba(255,255,255,.9)' }}>Take part in my research: is AI changing how we think? About 6 minutes, anonymous.</span>
-          </span>
-          <span style={{ color: '#E4C879', fontWeight: 800, whiteSpace: 'nowrap' }}>Take the study →</span>
-        </a>
+        <div style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em' }}>
+          <span>{POSTS.length} essays</span>
+          <span aria-hidden style={{ color: C.border }}>|</span>
+          <span>Updated regularly</span>
+          <span aria-hidden style={{ color: C.border }}>|</span>
+          <a href="/research/study" style={{ color: C.goldDeep, textDecoration: 'none', fontWeight: 600 }}>Live study open ↗</a>
+        </div>
       </section>
 
       {/* Featured */}
       {featured && (
-        <section style={{ maxWidth: 1080, margin: '0 auto', padding: '0 clamp(20px,5vw,44px)' }}>
-          <a href={`/research/${featured.slug}`} className="rsch-feat" style={{
-            display: 'grid', gridTemplateColumns: '1.05fr 1fr', textDecoration: 'none', color: 'inherit',
-            border: `1px solid ${C.border}`, borderRadius: 22, overflow: 'hidden', background: C.white,
-            boxShadow: '0 26px 60px -44px rgba(46,26,53,.55)',
+        <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(20px,3vw,32px) ${PADX} 0` }}>
+          <a href={`/research/${featured.slug}`} className="r-feat" style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, textDecoration: 'none', color: 'inherit',
+            border: `1px solid ${C.border}`, borderRadius: 20, overflow: 'hidden', background: C.white,
           }}>
-            <div style={{ minHeight: 280 }}><CardArt seed={featured.slug} tall /></div>
-            <div style={{ padding: 'clamp(26px,3.5vw,40px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: '#fff', background: C.gold, borderRadius: 999, padding: '4px 12px' }}>Featured</span>
-                <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.goldDeep }}>{featured.tags[0]}</span>
+            <div className="r-feat-art" style={{ minHeight: 340 }}><CardArt seed={featured.slug} tall /></div>
+            <div style={{ padding: 'clamp(30px,4vw,56px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: C.goldDeep }}>Featured</span>
+                <span aria-hidden style={{ width: 4, height: 4, borderRadius: 4, background: C.border }} />
+                <span style={{ fontSize: 11.5, letterSpacing: '.1em', textTransform: 'uppercase', color: C.muted }}>{featured.tags[0]}</span>
               </div>
-              <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,3.2vw,34px)', lineHeight: 1.12, letterSpacing: '-.015em', color: C.plumDark, margin: '0 0 14px' }}>{featured.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.62, color: C.inkSoft, margin: '0 0 20px' }}>{featured.excerpt}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 10px', fontSize: 13.5, color: C.muted }}>
+              <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px,3.2vw,38px)', lineHeight: 1.1, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 18px', fontWeight: 400 }}>{featured.title}</h2>
+              <p style={{ fontSize: 16.5, lineHeight: 1.6, color: C.inkSoft, margin: '0 0 26px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{featured.excerpt}</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13.5, color: C.muted }}>
                 <time dateTime={featured.date}>{featured.dateLabel}</time>
-                <span aria-hidden>·</span><span>{featured.readTime}</span>
-                <span className="rsch-feat-cta" style={{ marginLeft: 'auto', color: C.goldDeep, fontWeight: 700 }}>Read →</span>
+                <span aria-hidden style={{ color: C.border }}>|</span>
+                <span>{featured.readTime}</span>
+                <span className="r-feat-cta" style={{ marginLeft: 'auto', color: C.plumDark, fontWeight: 600, borderBottom: `1px solid ${C.goldDeep}`, paddingBottom: 2 }}>Read essay</span>
               </div>
             </div>
           </a>
         </section>
       )}
 
-      {/* All posts grid */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(44px,6vw,68px) clamp(20px,5vw,44px) 0' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, paddingBottom: 14, marginBottom: 30 }}>
-          <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.plumDark, margin: 0 }}>All research</h2>
-          <span style={{ fontSize: 13.5, color: C.muted }}>{POSTS.length} {POSTS.length === 1 ? 'article' : 'articles'}</span>
+      {/* Live study, slim */}
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(20px,3vw,28px) ${PADX} 0` }}>
+        <a href="/research/study" className="r-study" style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', textDecoration: 'none', color: 'inherit', border: `1px solid ${C.border}`, borderRadius: 14, padding: '16px 22px', background: C.white }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 10.5, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: C.goldDeep }}>
+            <span aria-hidden style={{ width: 7, height: 7, borderRadius: 7, background: C.gold, boxShadow: `0 0 0 4px rgba(201,168,76,.18)` }} />
+            Live study
+          </span>
+          <span style={{ fontSize: 15, color: C.inkSoft }}>Take part in the research: is AI changing how we think? About 6 minutes, fully anonymous.</span>
+          <span className="r-study-cta" style={{ marginLeft: 'auto', fontSize: 14, fontWeight: 600, color: C.plumDark, whiteSpace: 'nowrap' }}>Take the study →</span>
+        </a>
+      </section>
+
+      {/* Index list */}
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(52px,7vw,88px) ${PADX} 0` }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+          <h2 style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, margin: 0 }}>All research</h2>
+          <span style={{ fontSize: 12.5, color: C.muted }}>{POSTS.length} essays</span>
         </div>
 
-        <div className="rsch-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
-          {(rest.length ? rest : POSTS).map((p) => (
-            <a key={p.slug} href={`/research/${p.slug}`} className="rsch-card" style={{
-              display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'inherit',
-              border: `1px solid ${C.border}`, borderRadius: 18, overflow: 'hidden', background: C.white,
-              boxShadow: '0 18px 44px -38px rgba(46,26,53,.5)',
+        <div>
+          {(rest.length ? rest : POSTS).map((p, i) => (
+            <a key={p.slug} href={`/research/${p.slug}`} className="r-row" style={{
+              display: 'grid', gridTemplateColumns: '1fr 180px', gap: 'clamp(16px,4vw,48px)', textDecoration: 'none', color: 'inherit',
+              borderTop: `1px solid ${C.border}`, padding: 'clamp(26px,3.4vw,40px) 12px', alignItems: 'start',
+              borderBottom: i === (rest.length ? rest : POSTS).length - 1 ? `1px solid ${C.border}` : 'none',
             }}>
-              <CardArt seed={p.slug} height={168} />
-              <div style={{ padding: '22px 22px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <span style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 10 }}>{p.tags[0]}</span>
-                <h3 style={{ fontFamily: SERIF, fontSize: 21, lineHeight: 1.18, letterSpacing: '-.01em', color: C.plumDark, margin: '0 0 10px' }}>{p.title}</h3>
-                <p style={{ fontSize: 14.5, lineHeight: 1.6, color: C.inkSoft, margin: '0 0 18px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.excerpt}</p>
-                <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.muted }}>
-                  <time dateTime={p.date}>{p.dateLabel}</time><span aria-hidden>·</span><span>{p.readTime}</span>
-                </div>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 12 }}>{p.tags[0]}</div>
+                <h3 className="r-row-title" style={{ fontFamily: SERIF, fontSize: 'clamp(22px,2.8vw,30px)', lineHeight: 1.14, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 12px', fontWeight: 400, transition: 'color .18s ease' }}>{p.title}</h3>
+                <p style={{ fontSize: 15.5, lineHeight: 1.6, color: C.inkSoft, margin: 0, maxWidth: 640, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.excerpt}</p>
+              </div>
+              <div className="r-row-meta" style={{ textAlign: 'right', fontSize: 13, color: C.muted, lineHeight: 1.7, paddingTop: 26 }}>
+                <time dateTime={p.date} style={{ display: 'block' }}>{p.dateLabel}</time>
+                <span style={{ display: 'block' }}>{p.readTime}</span>
+                <span className="r-row-cta" style={{ display: 'inline-block', marginTop: 10, color: C.plumDark, fontWeight: 600, opacity: 0, transition: 'opacity .18s ease' }}>Read →</span>
               </div>
             </a>
           ))}
@@ -102,23 +115,19 @@ export default function ResearchIndex() {
       </section>
 
       {/* Newsletter */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(44px,6vw,72px) clamp(20px,5vw,44px) 0' }}>
-        <div style={{
-          background: `radial-gradient(120% 120% at 85% 0%, #3D2645 0%, ${C.plumDark} 55%, #231029 100%)`,
-          borderRadius: 22, padding: 'clamp(28px,5vw,48px)', overflow: 'hidden',
-          boxShadow: '0 30px 70px -44px rgba(46,26,53,.7)',
-        }}>
-          <div className="nl-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 'clamp(24px,4vw,44px)', alignItems: 'center' }}>
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(56px,7vw,90px) ${PADX} 0` }}>
+        <div style={{ background: C.plumDark, borderRadius: 20, borderTop: `2px solid ${C.gold}`, padding: 'clamp(30px,5vw,54px)', overflow: 'hidden' }}>
+          <div className="nl-grid" style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 'clamp(28px,4vw,56px)', alignItems: 'center' }}>
             <div>
-              <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>The Research Newsletter</div>
-              <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(24px,3.6vw,34px)', lineHeight: 1.12, letterSpacing: '-.015em', color: '#fff', margin: '0 0 12px' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.2em', textTransform: 'uppercase', color: C.gold, marginBottom: 16 }}>The Research Newsletter</div>
+              <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(25px,3.4vw,36px)', lineHeight: 1.12, letterSpacing: '-.02em', color: '#fff', margin: '0 0 14px', fontWeight: 400 }}>
                 Ideas at the edge of AI, mind, and behaviour, in your inbox.
               </h2>
-              <p style={{ fontSize: 16.5, lineHeight: 1.65, color: 'rgba(255,255,255,.78)', margin: 0 }}>
-                We publish rarely and go deep. Join researchers, founders, and the plain curious who get each new piece the day it drops.
+              <p style={{ fontSize: 16, lineHeight: 1.6, color: 'rgba(255,255,255,.7)', margin: 0 }}>
+                Rare, and always in depth. Join the researchers, founders, and simply curious who read each new essay the day it drops.
               </p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 16, padding: 'clamp(20px,3vw,26px)' }}>
+            <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.12)', borderRadius: 14, padding: 'clamp(20px,3vw,26px)' }}>
               <NewsletterForm />
             </div>
           </div>
@@ -126,11 +135,25 @@ export default function ResearchIndex() {
       </section>
 
       <style>{`
-        .rsch-card, .rsch-feat{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
-        .rsch-card:hover, .rsch-feat:hover{transform:translateY(-4px);box-shadow:0 34px 70px -40px rgba(46,26,53,.55);border-color:rgba(201,168,76,.5)}
-        .rsch-feat:hover .rsch-feat-cta{text-decoration:underline}
-        @media(max-width:820px){.rsch-feat{grid-template-columns:1fr!important}}
-        @media(max-width:720px){.nl-grid{grid-template-columns:1fr!important}}
+        .r-feat{transition:border-color .2s ease, box-shadow .3s ease}
+        .r-feat:hover{border-color:rgba(201,168,76,.55);box-shadow:0 40px 90px -60px rgba(46,26,53,.5)}
+        .r-feat:hover .r-feat-art :is(div,svg){filter:saturate(1.05)}
+        .r-study{transition:border-color .18s ease, background .18s ease}
+        .r-study:hover{border-color:rgba(201,168,76,.55)}
+        .r-study:hover .r-study-cta{color:${C.goldDeep}}
+        .r-row{transition:background .18s ease}
+        .r-row:hover{background:rgba(201,168,76,.05)}
+        .r-row:hover .r-row-title{color:${C.goldDeep}}
+        .r-row:hover .r-row-cta{opacity:1}
+        @media(max-width:820px){
+          .r-feat{grid-template-columns:1fr!important}
+          .r-feat-art{min-height:220px!important}
+          .r-row{grid-template-columns:1fr!important;gap:14px!important}
+          .r-row-meta{text-align:left!important;padding-top:0!important;display:flex;gap:14px;align-items:center}
+          .r-row-meta time{display:inline!important}
+          .r-row-meta span{display:inline!important}
+          .nl-grid{grid-template-columns:1fr!important}
+        }
       `}</style>
     </ResearchPage>
   )

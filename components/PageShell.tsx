@@ -8,6 +8,7 @@ const C = {
 }
 
 const FOOTER_LINKS: { href: string; label: string }[] = [
+  { href: '/research', label: 'Research' },
   { href: '/support', label: 'Help & Support' },
   { href: '/privacy', label: 'Privacy Policy' },
   { href: '/terms', label: 'Terms of Use' },

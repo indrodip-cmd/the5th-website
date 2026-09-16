@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import PageShell from '@/components/PageShell'
 import { getPost } from '../posts'
-import { rp, Eq, Divider, M, C } from '../ui'
+import { ResearchArticleLayout } from '../shell'
+import { rp, Eq, Divider, M } from '../ui'
 
 const post = getPost('brain-ai-algorithmic-bridge')!
 
@@ -35,7 +35,7 @@ const ARTICLE_JSONLD = {
   articleSection: 'Research',
 }
 
-const TOC = [
+const TOC: [string, string][] = [
   ['align', '1. Measuring alignment: RSA, CKA, and encoding models'],
   ['credit', '2. The credit-assignment problem'],
   ['approx', '3. Biologically plausible approximations to backprop'],
@@ -47,41 +47,22 @@ const TOC = [
 ]
 
 export default function Article() {
+  const lead = (
+    <>
+      The relationship between brains and artificial neural networks is usually told as metaphor. It is no longer a
+      metaphor. Three converging results have turned it into an empirical programme: deep networks optimised only for
+      task performance are, to date, the best quantitative predictors of neural responses in sensory cortex; the
+      representations learned by wildly different systems are measurably similar and growing more so with scale; and
+      the credit-assignment algorithm we thought was uniquely artificial — backpropagation — has plausible biological
+      approximations. This piece treats the brain–AI connection as it should be treated for a technical audience: as a
+      set of alignment metrics, learning rules, geometric objects, and interface equations. No analogies stand in for
+      the mathematics.
+    </>
+  )
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }} />
-      <PageShell eyebrow={`Research · ${post.dateLabel}`} title={post.title} wide>
-        {/* Byline */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 12px', fontSize: 14, color: C.muted, margin: '-6px 0 6px' }}>
-          <span style={{ fontWeight: 700, color: C.plum }}>{post.author}</span>
-          <span aria-hidden>·</span><span>{post.authorRole}</span>
-          <span aria-hidden>·</span><span>{post.readTime}</span>
-          <a href="/research" style={{ marginLeft: 'auto', color: C.goldDeep, fontWeight: 700, textDecoration: 'none' }}>← All research</a>
-        </div>
-
-        <p style={{ ...rp.p, fontSize: 19, color: C.inkSoft, borderTop: `1px solid ${C.border}`, paddingTop: 22, marginTop: 22 }}>
-          The relationship between brains and artificial neural networks is usually told as metaphor. It is no longer a
-          metaphor. Three converging results have turned it into an empirical programme: deep networks optimised only for
-          task performance are, to date, the best quantitative predictors of neural responses in sensory cortex; the
-          representations learned by wildly different systems are measurably similar and growing more so with scale; and
-          the credit-assignment algorithm we thought was uniquely artificial — backpropagation — has plausible biological
-          approximations. This piece treats the brain–AI connection as it should be treated for a technical audience: as a
-          set of alignment metrics, learning rules, geometric objects, and interface equations. No analogies stand in for
-          the mathematics.
-        </p>
-
-        {/* TOC */}
-        <nav style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 24px', margin: '10px 0 34px' }}>
-          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 12 }}>Contents</div>
-          <ol style={{ margin: 0, paddingLeft: 20, columns: 2, columnGap: 32 }}>
-            {TOC.map(([id, label]) => (
-              <li key={id} style={{ margin: '0 0 8px', breakInside: 'avoid' }}>
-                <a href={`#${id}`} style={{ color: C.plum, fontSize: 15, textDecoration: 'none', lineHeight: 1.4 }}>{label}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-
+      <ResearchArticleLayout post={post} toc={TOC} lead={lead}>
         {/* ── 1 ── */}
         <h2 id="align" style={rp.h2}>1. Measuring alignment: RSA, CKA, and encoding models</h2>
         <p style={rp.p}>
@@ -343,17 +324,7 @@ export default function Article() {
           which a learning rule, a representational geometry, and an interface protocol are increasingly the same object
           described from two directions.
         </p>
-
-        {/* Author note */}
-        <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: 'clamp(24px, 5vw, 34px)', margin: '46px 0 0' }}>
-          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this series</div>
-          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: 'rgba(255,255,255,.86)', margin: '0 0 8px' }}>
-            <strong>Research</strong> is where The5th Consulting works out loud on the questions at the edge of
-            artificial intelligence, neuroscience, and human behaviour. Written by {post.author}, {post.authorRole}.
-          </p>
-          <a href="/research" style={{ color: C.gold, fontWeight: 700, textDecoration: 'none' }}>← Back to all research</a>
-        </div>
-      </PageShell>
+      </ResearchArticleLayout>
     </>
   )
 }

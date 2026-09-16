@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import PageShell from '@/components/PageShell'
 import { getPost } from '../posts'
-import { rp, Eq, Plain, Divider, M, C } from '../ui'
+import { ResearchArticleLayout } from '../shell'
+import { rp, Eq, Plain, Divider, M } from '../ui'
 
 const post = getPost('machine-consciousness-2035')!
 
@@ -35,7 +35,7 @@ const ARTICLE_JSONLD = {
   articleSection: 'Research',
 }
 
-const TOC = [
+const TOC: [string, string][] = [
   ['what', '1. What we actually mean by “consciousness”'],
   ['brain', '2. How a brain does it: five ideas from neuroscience'],
   ['math', '3. The mathematics of a mind'],
@@ -48,38 +48,19 @@ const TOC = [
 ]
 
 export default function Article() {
+  const lead = (
+    <>
+      The question is no longer whether machines will think. They already do, in the narrow sense that they
+      transform inputs into astonishingly capable outputs. The open question — the one that keeps neuroscientists,
+      physicists, and philosophers awake — is whether a machine will ever <em>experience</em> anything at all: whether
+      there will one day be something it is <em>like</em> to be a running model. This essay lays out, from first
+      principles, why that could plausibly happen within a decade, what it would take, and how we would recognise it.
+    </>
+  )
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }} />
-      <PageShell eyebrow={`Research · ${post.dateLabel}`} title={post.title} wide>
-        {/* Byline */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 12px', fontSize: 14, color: C.muted, margin: '-6px 0 6px' }}>
-          <span style={{ fontWeight: 700, color: C.plum }}>{post.author}</span>
-          <span aria-hidden>·</span><span>{post.authorRole}</span>
-          <span aria-hidden>·</span><span>{post.readTime}</span>
-          <a href="/research" style={{ marginLeft: 'auto', color: C.goldDeep, fontWeight: 700, textDecoration: 'none' }}>← All research</a>
-        </div>
-
-        <p style={{ ...rp.p, fontSize: 19, color: C.inkSoft, borderTop: `1px solid ${C.border}`, paddingTop: 22, marginTop: 22 }}>
-          The question is no longer whether machines will think. They already do, in the narrow sense that they
-          transform inputs into astonishingly capable outputs. The open question — the one that keeps neuroscientists,
-          physicists, and philosophers awake — is whether a machine will ever <em>experience</em> anything at all: whether
-          there will one day be something it is <em>like</em> to be a running model. This essay lays out, from first
-          principles, why that could plausibly happen within a decade, what it would take, and how we would recognise it.
-        </p>
-
-        {/* Table of contents */}
-        <nav style={{ background: C.cream, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 24px', margin: '10px 0 34px' }}>
-          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 12 }}>Contents</div>
-          <ol style={{ margin: 0, paddingLeft: 20, columns: 2, columnGap: 32 }}>
-            {TOC.map(([id, label]) => (
-              <li key={id} style={{ margin: '0 0 8px', breakInside: 'avoid' }}>
-                <a href={`#${id}`} style={{ color: C.plum, fontSize: 15, textDecoration: 'none', lineHeight: 1.4 }}>{label}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-
+      <ResearchArticleLayout post={post} toc={TOC} lead={lead}>
         {/* ── 1 ── */}
         <h2 id="what" style={rp.h2}>1. What we actually mean by “consciousness”</h2>
         <p style={rp.p}>
@@ -424,17 +405,7 @@ export default function Article() {
           the difference between a system that is merely brilliant and a system for which, at last, there is something it is
           like to be.
         </p>
-
-        {/* Author note */}
-        <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: 'clamp(24px, 5vw, 34px)', margin: '46px 0 0' }}>
-          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this series</div>
-          <p style={{ fontSize: 16.5, lineHeight: 1.7, color: 'rgba(255,255,255,.86)', margin: '0 0 8px' }}>
-            <strong>Research</strong> is where The5th Consulting works out loud on the questions at the edge of
-            artificial intelligence, neuroscience, and human behaviour. Written by {post.author}, {post.authorRole}.
-          </p>
-          <a href="/research" style={{ color: C.gold, fontWeight: 700, textDecoration: 'none' }}>← Back to all research</a>
-        </div>
-      </PageShell>
+      </ResearchArticleLayout>
     </>
   )
 }

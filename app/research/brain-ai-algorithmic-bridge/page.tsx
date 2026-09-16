@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPost } from '../posts'
 import { ResearchArticleLayout } from '../shell'
 import { rp, Eq, Divider, M } from '../ui'
+import { FigBackpropFA, FigPredictiveCoding, FigManifold } from '../figures'
 
 const post = getPost('brain-ai-algorithmic-bridge')!
 
@@ -147,6 +148,7 @@ export default function Article() {
           motivated sign-symmetry and direct-feedback-alignment variants that recover most of the performance while
           keeping the biology cheap.
         </p>
+        <FigBackpropFA />
         <p style={rp.p}>
           <strong style={rp.strong}>Target propagation</strong> (Bengio; Lee et al., 2015) takes a different route:
           instead of propagating gradients, it propagates <em>targets</em> — desirable activity patterns for each layer —
@@ -190,6 +192,7 @@ export default function Article() {
         <Eq label="local inference + learning">
           ẋ<sub>l</sub> ∝ − ∂F⁄∂x<sub>l</sub> = −(ε<sub>l</sub> ⁄ Σ<sub>l</sub>) + f′(x<sub>l</sub>) ⊙ (W<sub>l−1</sub>ᵀ ε<sub>l−1</sub> ⁄ Σ<sub>l−1</sub>) ;  ΔW<sub>l</sub> ∝ (ε<sub>l</sub> ⁄ Σ<sub>l</sub>) f(x<sub>l+1</sub>)ᵀ
         </Eq>
+        <FigPredictiveCoding />
         <p style={rp.p}>
           Whittington and Bogacz (2017) proved that when the error units settle to their equilibrium, these local updates
           equal the backpropagation gradients of the corresponding deep network to arbitrary precision — with later work
@@ -233,6 +236,7 @@ export default function Article() {
         <Eq label="manifold capacity">
           α<sub>c</sub> ≈ α<sub>0</sub>( R<sub>eff</sub> , D<sub>eff</sub> ) ,  with  α<sub>c</sub> → 2  as  R → 0
         </Eq>
+        <FigManifold />
         <p style={rp.p}>
           As information ascends a good hierarchy — biological or artificial — object manifolds shrink and untangle,
           capacity rises, and invariant categories become linearly separable. This gives a common currency: one can

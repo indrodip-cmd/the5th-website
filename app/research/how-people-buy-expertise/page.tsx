@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPost } from '../posts'
 import { ResearchArticleLayout } from '../shell'
 import { rp, Eq, Divider, M, C } from '../ui'
+import { FigProspect, FigCredence, FigTrust, FigFunnel } from '../figures'
 
 const post = getPost('how-people-buy-expertise')!
 
@@ -173,6 +174,7 @@ export default function Article() {
           which signals dominate and why.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: quality that is real but invisible does not sell; quality that is credibly signalled does.</p>
+        <FigCredence />
 
         {/* 3.2 */}
         <h3 id="f2" style={rp.h3}>3.2 Finding: the decision is produced by two interacting systems, not one</h3>
@@ -203,6 +205,7 @@ export default function Article() {
         <Eq label="value function (loss aversion)">
           v(x) = x<sup>α</sup> for x ≥ 0 ;  v(x) = −λ (−x)<sup>β</sup> for x &lt; 0 ,  λ ≈ 2.25 , 0 &lt; α, β &lt; 1
         </Eq>
+        <FigProspect />
         <p style={rp.p}>
           The coefficient <M>λ ≈ 2.25</M> means a prospective loss is felt roughly twice as intensely as an equivalent
           gain, and the probability-weighting function <M>π</M> means people overweight small probabilities (which is why a
@@ -264,6 +267,7 @@ export default function Article() {
           same logic that reappears as signaling in §3.7.
         </p>
         <p style={{ ...rp.p, fontStyle: 'italic', color: C.plum }}>Implication: trust is built fastest by supplying evidence a dishonest provider could not afford to supply.</p>
+        <FigTrust />
 
         {/* 3.6 */}
         <h3 id="f6" style={rp.h3}>3.6 Finding: under uncertainty, people substitute the crowd’s judgment for their own</h3>
@@ -410,6 +414,7 @@ export default function Article() {
           <li style={rp.li}><strong style={rp.strong}>Risk resolution.</strong> The buyer compares perceived trust against perceived risk. De-risking instruments — guarantees, small or refundable first commitments (§3.8), and well-formed option sets (§3.9) — do the heavy lifting here, because loss looms larger than gain (§3.3).</li>
           <li style={rp.li}><strong style={rp.strong}>Commitment and justification.</strong> A first action (often a small payment) recruits consistency and sunk-cost dynamics (§3.8), System 2 assembles a justification for the affective decision already reached, and follow-through — the precondition for the service actually working (§3.11) — is set in motion.</li>
         </ol>
+        <FigFunnel />
         <p style={rp.p}>
           A compact way to state the decision rule at the pivot (stage 4) is that the buyer acts when perceived trust,
           net of the risk the situation demands, turns the subjectively-weighted prospect positive:

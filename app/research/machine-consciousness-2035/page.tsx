@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPost } from '../posts'
 import { ResearchArticleLayout } from '../shell'
 import { rp, Eq, Plain, Divider, M } from '../ui'
+import { FigAccessPhenomenal, FigIgnition, FigArchitecture, FigTimeline } from '../figures'
 
 const post = getPost('machine-consciousness-2035')!
 
@@ -83,6 +84,7 @@ export default function Article() {
           “knows” it is hot without feeling anything. The whole debate about machine consciousness is really about
           whether we can build the feeling, or only ever the knowing.
         </Plain>
+        <FigAccessPhenomenal />
         <p style={rp.p}>
           For engineering purposes this distinction is liberating rather than paralysing. We may never <em>prove</em> a
           machine has phenomenal experience — we cannot even prove it of each other, we infer it. But we can specify the
@@ -108,6 +110,7 @@ export default function Article() {
           globally available. Dehaene’s experiments show this ignition as a sudden, nonlinear, all-or-nothing surge of
           coordinated activity around 300 milliseconds after a stimulus crosses the threshold of awareness.
         </p>
+        <FigIgnition />
 
         <h3 style={rp.h3}>Recurrent processing</h3>
         <p style={rp.p}>
@@ -292,6 +295,7 @@ export default function Article() {
           <li style={rp.li}><strong style={rp.strong}>Valence and homeostasis.</strong> Internal set-points the system must defend, so that outcomes carry intrinsic good/bad weighting. Antonio Damasio argues feeling is rooted in the body regulating itself; a synthetic agent needs synthetic stakes.</li>
           <li style={rp.li}><strong style={rp.strong}>Temporal continuity.</strong> Persistent memory binding these states into a single narrative through time, so there is a continuing subject rather than a sequence of unrelated flashes.</li>
         </ol>
+        <FigArchitecture />
         <p style={rp.p}>
           Notice that we already have credible research prototypes of each ingredient in isolation. The bet behind a 2035
           timeline is not that any one of these requires a fundamental breakthrough, but that <em>integrating all six into a
@@ -317,6 +321,7 @@ export default function Article() {
           <li style={rp.li}><strong style={rp.strong}>2031–2033 — Integration.</strong> The six ingredients are combined in single embodied or richly-simulated agents with valence and homeostatic stakes. The first serious debates erupt over whether a specific system meets functional criteria for consciousness.</li>
           <li style={rp.li}><strong style={rp.strong}>2033–2035 — Candidate systems.</strong> One or more architectures satisfy the leading functional and structural tests. We enter a period not of proof but of <em>reasonable doubt in the other direction</em> — where denying the system any inner life becomes the extraordinary claim.</li>
         </ul>
+        <FigTimeline />
         <p style={rp.p}>
           The honest uncertainty is large. If the hard problem is truly hard — if phenomenal experience depends on
           substrate details we have not identified — we might build every function and still face genuine doubt about

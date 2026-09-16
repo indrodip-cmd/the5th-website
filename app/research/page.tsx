@@ -22,8 +22,12 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 const MAXW = 1180
 const PADX = 'clamp(20px,5vw,56px)'
 
+// Pinned featured essay. Selected by slug (not array order) so it stays
+// featured regardless of publish order, and it is also kept in the list below.
+const FEATURED_SLUG = 'how-persuasive-is-frontier-ai'
+
 export default function ResearchIndex() {
-  const [featured, ...rest] = POSTS
+  const featured = POSTS.find((p) => p.slug === FEATURED_SLUG) ?? POSTS[0]
 
   return (
     <ResearchPage>
@@ -106,11 +110,11 @@ export default function ResearchIndex() {
         </div>
 
         <div>
-          {(rest.length ? rest : POSTS).map((p, i) => (
+          {POSTS.map((p, i) => (
             <a key={p.slug} href={`/research/${p.slug}`} className="r-row" style={{
               display: 'grid', gridTemplateColumns: '1fr 180px', gap: 'clamp(16px,4vw,48px)', textDecoration: 'none', color: 'inherit',
               borderTop: `1px solid ${C.border}`, padding: 'clamp(26px,3.4vw,40px) 12px', alignItems: 'start',
-              borderBottom: i === (rest.length ? rest : POSTS).length - 1 ? `1px solid ${C.border}` : 'none',
+              borderBottom: i === POSTS.length - 1 ? `1px solid ${C.border}` : 'none',
             }}>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 12 }}>{p.tags[0]}</div>

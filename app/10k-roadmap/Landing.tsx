@@ -39,6 +39,16 @@ function RatingRow() {
     </div>
   )
 }
+/* Inline price flourish shown inside the CTA buttons: the $27 deposit struck
+   through, waived to $0 today. `onDark` = purple/plum buttons (white text). */
+function CtaPrice({ onDark }: { onDark?: boolean }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, marginLeft: 9, paddingLeft: 11, borderLeft: `1px solid ${onDark ? 'rgba(255,255,255,.3)' : T.line}` }}>
+      <span style={{ textDecoration: 'line-through', textDecorationThickness: '1.5px', color: onDark ? 'rgba(255,255,255,.62)' : T.text3, fontWeight: 600, fontSize: '.9em' }}>$27</span>
+      <span style={{ color: onDark ? '#E4C879' : T.accentInk, fontWeight: 800 }}>$0 today</span>
+    </span>
+  )
+}
 function SectionHead({ eyebrow, heading, sub, maxW }: { eyebrow?: string; heading: string; sub?: string; maxW?: number }) {
   return (
     <div style={{ textAlign: 'center', marginBottom: 34, maxWidth: maxW || 760, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -56,7 +66,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
   useEffect(() => { track('page_view') }, [])
   useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   const go = (where: string) => { track('cta_click', { where }); router.push('/10k-roadmap/qualify') }
-  const CTA = (where: string, label?: string) => <Btn onClick={() => go(where)} style={{ padding: '18px 42px', fontSize: 17 }}>{label || LANDING.ctaPrimary} →</Btn>
+  const CTA = (where: string, label?: string) => <Btn onClick={() => go(where)} style={{ padding: '16px 34px', fontSize: 17, flexWrap: 'wrap' }}>{label || LANDING.ctaPrimary}<CtaPrice onDark /> <span aria-hidden>→</span></Btn>
 
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: T.sans, overflowX: 'hidden' }}>
@@ -218,7 +228,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           <h2 className="rm-serif" style={{ fontSize: 'clamp(26px,4.6vw,44px)', margin: '0 auto 16px', maxWidth: 720, color: '#fff', fontWeight: 800, lineHeight: 1.08 }}>{LANDING.finalCta.heading}</h2>
           {LANDING.finalCta.lines.map((l) => <p key={l} style={{ color: 'rgba(255,255,255,.8)', fontSize: 'clamp(15.5px,2vw,18px)', margin: '0 0 4px' }}>{l}</p>)}
           <p className="rm-serif" style={{ fontSize: 'clamp(20px,3vw,28px)', color: '#fff', fontWeight: 800, margin: '26px auto 30px', maxWidth: 700, lineHeight: 1.15 }}>{LANDING.finalCta.big}</p>
-          <Btn onClick={() => go('final')} variant="ghost" style={{ padding: '18px 44px', fontSize: 17.5 }}>{LANDING.finalCta.cta} →</Btn>
+          <Btn onClick={() => go('final')} variant="ghost" style={{ padding: '16px 38px', fontSize: 17.5, flexWrap: 'wrap' }}>{LANDING.finalCta.cta}<CtaPrice /> <span aria-hidden>→</span></Btn>
           <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 14 }}>{LANDING.finalCta.micro}</p>
         </Reveal>
       </section>
@@ -227,7 +237,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
 
       {/* Sticky mobile CTA */}
       <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(255,255,255,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${T.line}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(46,26,53,.5)' }}>
-        <button onClick={() => go('sticky')} className="rm-focus" style={{ width: '100%', background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: T.sans }}>{LANDING.ctaPrimary} →</button>
+        <button onClick={() => go('sticky')} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 4, background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: T.sans }}>{LANDING.ctaPrimary}<CtaPrice onDark /> <span aria-hidden>→</span></button>
       </div>
 
       <style>{`

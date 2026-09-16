@@ -134,9 +134,9 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead heading={LANDING.proof.heading} sub={LANDING.proof.sub} /></Reveal>
           <Reveal>
-            <div className="vid-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16, marginBottom: 18 }}>
+            <div className="vid-grid" style={{ marginBottom: 4 }}>
               {FEATURED_VIDEOS.map((v, k) => (
-                <figure key={k} style={{ margin: 0, background: '#000', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.line}`, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
+                <figure key={k} className="vid-card" style={{ margin: '0 0 16px', background: '#000', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.line}`, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
                   <div style={{ position: 'relative', width: '100%', aspectRatio: `${v.w} / ${v.h}` }}>
                     <iframe src={v.src} title={`Client review ${k + 1}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
                   </div>
@@ -235,8 +235,11 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         .cs-card:hover{transform:translateY(-4px);box-shadow:0 30px 64px -34px rgba(46,26,53,.55)}
         .cs-tag{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
         .rm-sticky-cta{display:none}
+        .vid-grid{column-count:3;column-gap:16px}
+        .vid-card{-webkit-column-break-inside:avoid;break-inside:avoid}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
-        @media(max-width:560px){.vid-grid{grid-template-columns:1fr!important}.cs-grid,.rm-grid3{grid-template-columns:1fr!important}}
+        @media(max-width:900px){.vid-grid{column-count:2}}
+        @media(max-width:560px){.vid-grid{column-count:1}.cs-grid,.rm-grid3{grid-template-columns:1fr!important}}
       `}</style>
     </div>
   )

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { POSTS } from './posts'
 import { C } from './ui'
-import { ResearchPage, CardArt } from './shell'
+import { ResearchPage, CardArt, AUTHOR_IMG, AUTHOR_DEGREE } from './shell'
 import NewsletterForm from './NewsletterForm'
 
 export const metadata: Metadata = {
@@ -29,20 +29,33 @@ export default function ResearchIndex() {
     <ResearchPage>
       {/* Hero */}
       <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(60px,9vw,120px) ${PADX} clamp(30px,4vw,44px)` }}>
-        <div style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, marginBottom: 22 }}>
-          The5th <span style={{ color: C.goldDeep }}>·</span> Independent Research
-        </div>
-        <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(52px,11vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
-        <p style={{ fontSize: 'clamp(18px,2.2vw,22px)', lineHeight: 1.55, color: C.inkSoft, maxWidth: 620, margin: '30px 0 0', fontWeight: 400 }}>
-          A personal research journal by Indrodip Ghosh. Long, careful essays on how artificial intelligence really works
-          and where it is taking us, written so anyone can follow, and precise enough for anyone who cannot.
-        </p>
-        <div style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em' }}>
-          <span>{POSTS.length} essays</span>
-          <span aria-hidden style={{ color: C.border }}>|</span>
-          <span>Updated regularly</span>
-          <span aria-hidden style={{ color: C.border }}>|</span>
-          <a href="/research/study" style={{ color: C.goldDeep, textDecoration: 'none', fontWeight: 600 }}>Live study open ↗</a>
+        <div className="r-hero" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 'clamp(28px,5vw,72px)', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, marginBottom: 22 }}>
+              The5th <span style={{ color: C.goldDeep }}>·</span> Independent Research
+            </div>
+            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(52px,11vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
+            <p style={{ fontSize: 'clamp(18px,2.2vw,22px)', lineHeight: 1.55, color: C.inkSoft, maxWidth: 620, margin: '30px 0 0', fontWeight: 400 }}>
+              A personal research journal by Indrodip Ghosh. Long, careful essays on how artificial intelligence really works
+              and where it is taking us, written so anyone can follow, and precise enough for anyone who cannot.
+            </p>
+            <div style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em', flexWrap: 'wrap' }}>
+              <span>{POSTS.length} essays</span>
+              <span aria-hidden style={{ color: C.border }}>|</span>
+              <span>Updated regularly</span>
+              <span aria-hidden style={{ color: C.border }}>|</span>
+              <a href="/research/study" style={{ color: C.goldDeep, textDecoration: 'none', fontWeight: 600 }}>Live study open ↗</a>
+            </div>
+          </div>
+          {/* Author */}
+          <aside className="r-hero-author" style={{ width: 210, textAlign: 'center', flexShrink: 0 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={AUTHOR_IMG} alt="Indrodip Ghosh" style={{ width: 132, height: 132, borderRadius: '50%', objectFit: 'cover', margin: '0 auto', display: 'block', border: `1px solid ${C.border}`, boxShadow: `0 0 0 5px rgba(201,168,76,.14), 0 24px 50px -30px rgba(46,26,53,.5)` }} />
+            <div style={{ fontFamily: SERIF, fontSize: 19, color: C.plumDark, marginTop: 18 }}>Indrodip Ghosh</div>
+            <div style={{ fontSize: 12.5, color: C.muted, marginTop: 4 }}>Consumer Behavior &amp; AI Researcher</div>
+            <div style={{ height: 1, width: 40, background: C.gold, margin: '12px auto' }} />
+            <div style={{ fontSize: 12.5, color: C.inkSoft, lineHeight: 1.5 }}>{AUTHOR_DEGREE}</div>
+          </aside>
         </div>
       </section>
 
@@ -146,6 +159,10 @@ export default function ResearchIndex() {
         .r-row:hover .r-row-title{color:${C.goldDeep}}
         .r-row:hover .r-row-cta{opacity:1}
         @media(max-width:820px){
+          .r-hero{grid-template-columns:1fr!important}
+          .r-hero-author{width:100%!important;display:flex;align-items:center;gap:16px;text-align:left!important;margin-top:6px}
+          .r-hero-author img{width:72px!important;height:72px!important;margin:0!important}
+          .r-hero-author > div:nth-child(4){display:none}
           .r-feat{grid-template-columns:1fr!important}
           .r-feat-art{min-height:220px!important}
           .r-row{grid-template-columns:1fr!important;gap:14px!important}

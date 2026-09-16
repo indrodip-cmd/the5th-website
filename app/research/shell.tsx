@@ -10,6 +10,10 @@ import type { ResearchPost } from './posts'
 const SANS = "'Public Sans', system-ui, -apple-system, sans-serif"
 const SERIF = "Georgia, 'Times New Roman', serif"
 
+/* Author identity, shown in article bylines and on the research home page. */
+export const AUTHOR_IMG = '/images/founder.png'
+export const AUTHOR_DEGREE = 'Human-Computer Interaction · University of California'
+
 /* ── Branded generative card art (deterministic per slug) ──────────────────*/
 const GRADS = [
   'linear-gradient(150deg, #3a2145 0%, #241129 58%, #1b0d20 100%)',
@@ -145,11 +149,14 @@ export function ResearchArticleLayout({
             ))}
           </div>
           <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(32px,5.4vw,52px)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 22px' }}>{post.title}</h1>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 12px', fontSize: 14.5, color: C.muted }}>
-            <span style={{ fontWeight: 700, color: C.plum }}>{post.author}</span>
-            <span aria-hidden>·</span><span>{post.authorRole}</span>
-            <span aria-hidden>·</span><time dateTime={post.date}>{post.dateLabel}</time>
-            <span aria-hidden>·</span><span>{post.readTime}</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 14, color: C.muted }}>
+              <div style={{ fontSize: 15.5, fontWeight: 700, color: C.plum }}>{post.author}</div>
+              <div style={{ marginTop: 3 }}>{post.authorRole} · {AUTHOR_DEGREE}</div>
+              <div style={{ marginTop: 3 }}><time dateTime={post.date}>{post.dateLabel}</time> · {post.readTime}</div>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={AUTHOR_IMG} alt={post.author} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${C.border}`, boxShadow: `0 0 0 3px rgba(201,168,76,.18)`, flexShrink: 0 }} />
           </div>
         </div>
       </div>

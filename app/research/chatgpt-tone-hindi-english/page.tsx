@@ -40,13 +40,13 @@ const TOC: [string, string][] = [
   ['start', 'The thing I kept noticing'],
   ['real', '1. Is it even real?'],
   ['mirror', '2. The mirror'],
-  ['grammar', '3. What Hindi makes you decide'],
-  ['data', '4. The data is not neutral'],
-  ['tax', '5. The politeness tax'],
-  ['safety', '6. Rudeness, refusals, and the English default'],
-  ['human', '7. The person on the other side'],
-  ['synthesis', '8. So what is actually happening'],
-  ['matters', '9. Why any of this matters'],
+  ['grammar', '3. What Hindi makes you pick'],
+  ['data', '4. The training data is not fair'],
+  ['tax', '5. Rudeness has a cost'],
+  ['safety', '6. Why English feels blunter'],
+  ['human', '7. You change too'],
+  ['synthesis', '8. So what is going on'],
+  ['matters', '9. Why it matters'],
   ['refs', 'Notes and references'],
 ]
 
@@ -55,262 +55,252 @@ const refStyle: React.CSSProperties = { fontSize: 14, lineHeight: 1.6, color: C.
 export default function Article() {
   const lead = (
     <>
-      I noticed it by accident, the way you notice most things worth writing about. I was asking the same assistant the
-      same kind of question, some days in English, some days in Hindi, and the replies did not just differ in language.
-      They differed in <em>temperature</em>. The Hindi ones felt warmer, gentler, more like a patient older cousin. The
-      English ones were faster, flatter, a little more “here is your answer, next.” At first I assumed I was imagining it.
-      Then I stopped being sure. This piece is me trying to find out whether the thing I kept noticing is real, and if it
-      is, what on earth is going on underneath.
+      I noticed it by accident. I was asking the same AI the same kind of question, some days in English, some days in
+      Hindi. The answers did not just switch language. They switched <em>mood</em>. The Hindi ones felt warmer and gentler.
+      The English ones felt faster and flatter. At first I thought I was imagining it. Then I was not so sure. This piece
+      is me trying to find out if the thing I kept noticing is real, and if it is, why.
+    </>
+  )
+  const objective = (
+    <>
+      This started as a personal itch I could not scratch: the same AI felt warmer in Hindi and blunter in English. My
+      goal was simple to say and harder to answer. Find out if that is real, and if it is, trace exactly why, using what I
+      could learn about how these systems are built.
     </>
   )
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }} />
-      <ResearchArticleLayout post={post} toc={TOC} lead={lead} objective={<>This one started as a personal observation I could not shake, that the same assistant felt warmer in Hindi and blunter in English. My objective was simple to state and harder to answer: find out whether that is real, and if it is, trace exactly why, using everything I could learn about how these systems are actually built.</>}>
+      <ResearchArticleLayout post={post} toc={TOC} lead={lead} objective={objective}>
 
         {/* Start */}
         <h2 id="start" style={rp.h2}>The thing I kept noticing</h2>
         <p style={rp.p}>
-          Here is the small, silly example that started it. One afternoon I typed something curt into the chat box in
-          English, the way you do when you are tired: “fix this. now.” I got back a clean, correct, slightly clipped answer.
-          No warmth, no cushioning, just the fix. A few days later I asked almost the same thing in Hindi, because I happened
-          to be thinking in Hindi that morning, something like “zara ye theek kar dijiye.” And the reply came back softer.
-          It opened with the Hindi equivalent of “absolutely, here you go,” it used the respectful <em>aap</em> register
-          without my asking, and it added a little “koi baat nahi,” a small it-happens reassurance that the English answer
-          never bothered with.
+          Here is the small, silly example that started it. One tired afternoon I typed something short in English: fix
+          this, now. I got a clean, correct, clipped answer. No warmth. Just the fix.
         </p>
         <p style={rp.p}>
-          I want to be honest right away: one anecdote is nothing. I know that. But once I saw it I could not unsee it, and
-          when I mentioned it to a few friends who use these tools in both languages, most of them nodded before I even
-          finished the sentence. So the question stopped being “did this happen to me” and became “is this a real,
-          describable phenomenon, or a shared illusion we are all talking ourselves into.” Those are very different
-          articles. I did not know which one I was writing when I started.
+          A few days later I asked almost the same thing in Hindi, because I happened to be thinking in Hindi that morning.
+          Something like, zara ye theek kar dijiye. The reply came back softer. It opened with a warm, of course, here you
+          go. It used the polite <em>aap</em> form without my asking. And it added a small koi baat nahi, an it-happens
+          reassurance the English answer never bothered with.
+        </p>
+        <p style={rp.p}>
+          One story means nothing. I know that. But once I saw it, I could not unsee it. And when I mentioned it to friends
+          who use both languages, most of them nodded before I finished. So the question changed. Not did this happen to
+          me, but is this a real thing, or a shared illusion.
         </p>
         <FigToneByLanguage />
 
         {/* 1 */}
         <h2 id="real" style={rp.h2}>1. Is it even real?</h2>
         <p style={rp.p}>
-          The responsible thing is to spend a minute trying to kill the idea before defending it. There are at least three
-          good reasons the whole effect could be a mirage.
+          The fair thing is to try to kill the idea before I defend it. There are three good reasons it could be a mirage.
         </p>
         <p style={rp.p}>
-          First, confirmation bias, the obvious one. Once I had a theory, every warm Hindi reply felt like proof and every
-          warm English reply felt like an exception. That is exactly how a bias feels from the inside, frictionless and
-          convincing. Second, I might simply write differently in the two languages. Maybe my Hindi prompts are more polite
-          to begin with, and I am watching the model hand my own manners back to me. Third, translation flattens things.
-          Warmth in Hindi and warmth in English are not the same texture, and when I mentally translate a Hindi reply I may
-          be importing warmth that the words alone do not carry.
+          One, my own bias. Once I had a theory, every warm Hindi reply felt like proof. That is how bias feels from the
+          inside. Two, maybe I write differently in the two languages. Maybe my Hindi is more polite to start with, and I
+          am just watching the AI hand my own manners back. Three, translation adds warmth. When I read a Hindi reply in my
+          head, I may be adding warmth the words alone do not carry.
         </p>
         <p style={rp.p}>
-          So I held the skepticism. But here is what kept the question alive for me. The effect does not actually depend on
-          the model deciding anything. If you look at how these systems are built, and at the sociolinguistics of the two
-          languages, there are at least four independent mechanisms that would <em>predict</em> a tone difference, whether
-          or not anyone intended one. When several unrelated causes all push in the same direction, the surprising thing
-          would be if there were <em>no</em> effect. That is the part that made me keep reading, and it is how the rest of
-          this is organised: not as one grand claim, but as four quieter ones that happen to stack.
+          So I stayed skeptical. But here is what kept the question alive. The effect does not need the AI to decide
+          anything. Look at how these systems are built, and at the two languages, and you find four separate reasons that
+          would each <em>predict</em> a tone gap, whether or not anyone meant one.
+        </p>
+        <p style={rp.p}>
+          When four unrelated causes all push the same way, the surprising thing would be no gap at all. That is what kept
+          me reading. The rest of this is those four reasons, stacked.
         </p>
 
         {/* 2 */}
         <h2 id="mirror" style={rp.h2}>2. The mirror</h2>
         <p style={rp.p}>
-          Start with the least mysterious mechanism, because it explains more than you would expect. A modern assistant is
-          trained, above almost everything else, to be helpful and agreeable, and one of the simplest ways to be agreeable
-          is to match the person in front of you. Give it a terse prompt and it tends to answer tersely. Give it a formal,
-          careful prompt and it turns formal and careful. It mirrors your register: your politeness, your formality, your
-          warmth, even your sentence rhythm.
+          Start with the simplest reason, because it explains a lot. An AI is trained, above almost everything, to be
+          helpful and agreeable. And one easy way to be agreeable is to match the person in front of you.
         </p>
         <p style={rp.p}>
-          Humans do this constantly, and there is a whole theory for it. Communication Accommodation Theory (Giles and
-          colleagues, developed across the 1970s to 1990s) describes how speakers converge toward each other, adopting one
-          another’s accent, pace, and formality to signal belonging and reduce social distance. We do it without noticing.
-          The model, trained on oceans of human conversation, has absorbed the same reflex statistically. So if my Hindi
-          prompts carry even slightly more deference than my English ones, and they almost certainly do, then a good chunk
-          of the warmth I am seeing is just the mirror. It is my own tone, reflected and amplified.
+          Give it a short, blunt prompt and it tends to answer short. Give it a careful, formal prompt and it turns careful
+          and formal. It mirrors your style: your politeness, your warmth, even your rhythm.
+        </p>
+        <p style={rp.p}>
+          People do this too. There is a whole theory for it (Communication Accommodation Theory, from Giles and
+          colleagues). We drift toward each other, matching accent, pace, and formality, to feel closer. We do it without
+          noticing. The AI soaked up the same habit from all the human talk it learned from.
         </p>
         <FigMirrorLoop />
         <p style={rp.p}>
-          I find this both deflating and clarifying. Deflating because part of the magic evaporates: the machine is not
-          being kind to me in Hindi, it is being <em>me</em> back at me. Clarifying because it means the language I choose
-          is never neutral. It sets a register before the model has said a single word, and the register comes with a whole
-          culture attached. Which brings up the next mechanism, the one I think is doing the heaviest lifting.
+          So if my Hindi prompts carry even a little more respect, and they do, a big chunk of the warmth I see is just my
+          own tone bouncing back. The machine is not being kind to me in Hindi. It is being <em>me</em>, back at me. Which
+          means the language I pick is never neutral. It sets a mood before the AI says a word, and that mood comes with a
+          whole culture attached. That leads to the next reason, which I think does the heaviest lifting.
         </p>
 
         {/* 3 */}
-        <h2 id="grammar" style={rp.h2}>3. What Hindi makes you decide</h2>
+        <h2 id="grammar" style={rp.h2}>3. What Hindi makes you pick</h2>
         <p style={rp.p}>
-          English lets you be vague about respect. Hindi does not. In English you address everyone, your best friend, your
-          boss, a stranger, a child, as <em>you</em>. The pronoun carries no stance. Hindi forces a choice with the pronoun
-          itself: <em>tu</em>, which is intimate or, in the wrong context, curt and even insulting; <em>tum</em>, familiar
-          and casual; and <em>aap</em>, respectful and formal. You cannot write a Hindi sentence to another person without
-          quietly declaring how much deference you are extending. The grammar will not let you stay neutral.
+          English lets you be vague about respect. Hindi does not.
+        </p>
+        <p style={rp.p}>
+          In English you call everyone <em>you</em>. Your friend, your boss, a stranger, a child. The word carries no
+          stance. Hindi forces a choice in the word itself. <em>Tu</em>, which is close, or rude in the wrong place.
+          <em> Tum</em>, familiar and casual. <em>Aap</em>, respectful and formal. You cannot write a Hindi sentence to
+          someone without quietly saying how much respect you are giving. The grammar will not let you stay neutral.
         </p>
         <FigHonorifics />
         <p style={rp.p}>
-          This is not a Hindi quirk, it is a deep feature of a lot of the world’s languages, studied for decades as the
-          T-V distinction and folded into Brown and Levinson’s (1987) theory of politeness, where much of social life is
-          managing “face,” the public self-image people want respected. Languages with rich honorific systems, Japanese,
-          Korean, Hindi, and many others, bake face-work into the grammar. And here is the consequence for a machine.
-          Almost all the Hindi text a model has ever read that addresses a reader directly, the customer-service replies,
-          the polite letters, the instructional writing, leans on <em>aap</em>. The respectful register is not a choice the
-          model adds on top. It is soaked into the very distribution of Hindi it learned from. When it writes Hindi to you,
-          the default gravity of the language pulls it toward deference.
+          This is not just a Hindi quirk. Many languages work this way, and it has been studied for years. Here is what it
+          means for a machine. Almost all the Hindi writing that speaks to a reader, the polite letters, the service
+          replies, the how-to guides, leans on <em>aap</em>. Respect is not an add-on. It is baked into the Hindi the AI
+          learned from. So when it writes Hindi, the language itself pulls it toward being polite.
         </p>
         <p style={rp.p}>
-          English has no equivalent pull. Its polite register exists, obviously, but it is optional, signalled by softeners
-          like “could you” and “I would suggest” rather than forced by pronouns. So when the model writes English, nothing
-          in the grammar is quietly insisting on deference, and its default drifts toward the efficient, transactional
-          register that dominates so much English training text, the Stack Overflow answer, the terse email, the
-          documentation. Neither tone was chosen. Each is the center of gravity of a different language’s written data.
+          English has no such pull. Polite English exists, of course, but it is optional, carried by soft words like could
+          you and I would suggest, not forced by the grammar. So when the AI writes English, nothing is quietly demanding
+          respect, and it drifts toward the fast, get-to-the-point style that fills so much English text online. Neither
+          tone was chosen. Each is just the center of gravity of a different language.
         </p>
 
         {/* 4 */}
-        <h2 id="data" style={rp.h2}>4. The data is not neutral</h2>
+        <h2 id="data" style={rp.h2}>4. The training data is not fair</h2>
         <p style={rp.p}>
-          Which leads straight into the third mechanism, and it is the one people forget. These models are not tuned
-          equally in every language. Not close. The raw text they learn from skews heavily toward English, and the
-          <em> human feedback</em> used to polish their manners, the step that actually teaches them tone, refusal, warmth,
-          and restraint, skews even harder toward English. Joshi et al. (2020) documented the vast disparity in linguistic
-          resources across the field, and the pattern has softened only slowly since.
+          Now the third reason, the one people forget. These systems are not tuned equally in every language. Not close.
+        </p>
+        <p style={rp.p}>
+          The text they learn from leans heavily toward English. And the <em>human feedback</em> used to polish their
+          manners, the step that actually teaches them tone, warmth, and when to say no, leans even harder toward English.
         </p>
         <FigDataByLanguage />
         <p style={rp.p}>
-          Think about what that implies. The politeness of these systems in English is not an accident of the data, it is
-          deliberately sculpted, prompt by prompt, by an enormous amount of human rating (the InstructGPT work of Ouyang et
-          al., 2022, is the canonical description of how this reinforcement-from-feedback loop shapes behavior). English
-          tone is engineered. Hindi tone, by contrast, is mostly <em>inherited</em>. There is far less Hindi-specific
-          feedback teaching the model exactly how blunt or warm to be, so it falls back on the statistics of Hindi text
-          itself, and, as we just saw, that text runs deferential. So the two tones come from two different processes. One
-          is a carefully calibrated English register. The other is the untouched cultural default of Hindi bleeding
-          through. It would honestly be strange if they matched.
+          Think about what that means. The politeness of these systems in English is not an accident. It is carefully
+          shaped, prompt by prompt, by a huge amount of human rating. English tone is built on purpose. Hindi tone is
+          mostly <em>inherited</em>. There is far less Hindi feedback telling the AI exactly how blunt or warm to be, so it
+          falls back on the statistics of Hindi text, which, as we saw, run polite.
         </p>
         <p style={rp.p}>
-          I want to flag the schematic nature of that chart, though. Exact proportions are not public and shift with every
-          model. The point is not the numbers, it is the shape: a steep English lead, a long multilingual tail, and manners
-          that are precise where the feedback was thick and approximate where it was thin.
+          So the two tones come from two different places. One is a carefully tuned English voice. The other is the plain
+          default of Hindi bleeding through. It would honestly be strange if they matched. One note: that chart is a rough
+          sketch, not exact. The point is the shape, a big English lead, and manners that are precise where the feedback
+          was thick and rough where it was thin.
         </p>
 
         {/* 5 */}
-        <h2 id="tax" style={rp.h2}>5. The politeness tax</h2>
+        <h2 id="tax" style={rp.h2}>5. Rudeness has a cost</h2>
         <p style={rp.p}>
-          At this point I assumed politeness was purely a matter of style, harmless, cosmetic. Then I found a line of
-          research suggesting it is not, and this is where the story got genuinely interesting to me. Yin and colleagues
-          (2024) ran a cross-lingual study asking a plain question: does how politely you phrase a prompt change the
-          <em> quality</em> of what you get back, and does the answer depend on the language? Across English, Chinese, and
-          Japanese, they found that rude prompts tended to degrade performance, while piling on politeness past a point did
-          not keep helping and could even nudge quality down. And, crucially, the sweet spot sat at a different place in
-          each language.
+          I assumed politeness was just style. Harmless. Then I found research that says it is not, and this is where it
+          got interesting.
+        </p>
+        <p style={rp.p}>
+          Yin and colleagues (2024) asked a plain question across languages. Does how politely you word a prompt change the
+          <em> quality</em> of the answer? And does that depend on the language? Across English, Chinese, and Japanese, they
+          found that rude prompts tended to make answers worse, while piling on politeness past a point did not keep
+          helping and could even hurt a little. And the sweet spot sat in a different place in each language.
         </p>
         <FigPolitenessCurve />
         <p style={rp.p}>
-          I sat with that for a while. It means the register you adopt is not just setting a mood, it is, at least a little,
-          steering the competence of the answer, and the map from politeness to quality is drawn differently per language.
-          In a language where deference is the grammatical baseline, a blunt prompt may read as more of a violation, and the
-          model, mirroring, may follow you somewhere less careful. In English, where directness is normal, a curt prompt is
-          not much of a signal at all. So the same rude tone might cost you more in Hindi than in English, which, if you
-          squint, is another reason the Hindi channel stays warmer: rudeness is more marked there, and both you and the
-          model tend to avoid it. I am speculating slightly past the evidence here, and I want to own that. The specific
-          Hindi-versus-English comparison has had less study than it deserves. But the shape of the effect is documented,
-          and it is not nothing.
+          Sit with that. The tone you use is not just setting a mood. It is nudging how good the answer is, and the map from
+          politeness to quality is drawn differently for each language.
+        </p>
+        <p style={rp.p}>
+          In a language where respect is the default, a blunt prompt reads as more of a break in the rules, and the AI,
+          mirroring, may follow you somewhere less careful. In English, where being direct is normal, a curt prompt is
+          barely a signal. So the same rudeness may cost you more in Hindi than in English, which is one more reason the
+          Hindi channel stays warmer. I am reaching a little past the evidence here, and I want to own that. The exact
+          Hindi-versus-English test has had less study than it deserves. But the shape of the effect is real.
         </p>
 
         {/* 6 */}
-        <h2 id="safety" style={rp.h2}>6. Rudeness, refusals, and the English default</h2>
+        <h2 id="safety" style={rp.h2}>6. Why English feels blunter</h2>
         <p style={rp.p}>
-          The other half of the observation, that the English replies feel a touch <em>ruder</em>, or at least blunter,
-          deserves its own look, because “rude” is doing a lot of work there and I do not fully trust the word. I do not
-          think the model is being hostile in English. I think two smaller things get read as rudeness.
+          The other half of what I noticed is that English replies feel a bit <em>ruder</em>. I do not fully trust that
+          word, so let me pull it apart. I do not think the AI is hostile in English. I think two smaller things read as
+          rudeness.
         </p>
         <p style={rp.p}>
-          One is simply directness. English assistant text is trained heavily on a register that values getting to the
-          point, and getting to the point, stripped of the softeners Hindi supplies by default, can land as cold even when
-          nothing unfriendly was meant. The second is more interesting. Safety and refusal behavior is also tuned most
-          precisely in English, which means an English-speaking model is, in a sense, more <em>confident</em> about when to
-          push back, correct you, or decline. Yong, Menghini, and Bach (2023) showed the flip side of the same coin: safety
-          guardrails are markedly weaker in low-resource languages, so translating a disallowed request into a
-          less-resourced language could slip past filters that would have caught it in English. The guardrails, like the
-          manners, are sharpest where the feedback was densest.
+          One is plain directness. English AI text is trained heavily on a style that values getting to the point. Strip
+          away the soft words Hindi supplies by default, and getting to the point can land as cold, even when nothing
+          unkind was meant.
         </p>
         <p style={rp.p}>
-          Put those together and “ruder in English” starts to look less like a personality and more like a side effect of
-          competence. The model is most fluent, most direct, and most willing to assert itself in the language it was
-          groomed in. In Hindi it is gentler partly because it is, in a quiet way, less sure of its footing, and a less
-          sure speaker hedges, softens, defers. I do not know how much of the warmth is grace and how much is caution
-          wearing the mask of grace. Probably some of both.
+          The second is more interesting. The AI’s safety and its willingness to say no are also tuned most sharply in
+          English. So an English-speaking AI is, in a sense, more <em>sure of itself</em> about when to push back or
+          correct you. Yong and colleagues (2023) showed the flip side: those guardrails are much weaker in
+          lower-resource languages. The guardrails, like the manners, are sharpest where the feedback was thickest.
+        </p>
+        <p style={rp.p}>
+          Put that together, and ruder in English looks less like a personality and more like a side effect of skill. The
+          AI is most fluent, most direct, and most willing to assert itself in the language it was raised in. In Hindi it is
+          gentler partly because it is quietly less sure of its footing, and a less sure speaker softens and defers. How
+          much of the warmth is grace and how much is caution wearing the mask of grace? Probably some of both.
         </p>
 
         {/* 7 */}
-        <h2 id="human" style={rp.h2}>7. The person on the other side</h2>
+        <h2 id="human" style={rp.h2}>7. You change too</h2>
         <p style={rp.p}>
-          So far I have talked as if the machine were the only thing changing. It is not. I change too, and this is really a
-          piece about human behavior with AI, so I should say so plainly. When I switch to Hindi I am not just switching
-          vocabulary, I am switching a whole social self, the one that grew up being told to say <em>aap</em> to elders and
-          to soften requests to strangers. My Hindi prompts are more polite because <em>I</em> am more polite in Hindi. The
-          model mirrors that, I read the warmth, I get a little warmer still, and around we go.
+          So far I have talked as if only the machine changes. It does not. I change too. And this is really a piece about
+          how humans behave with AI, so I should say it plainly.
         </p>
         <p style={rp.p}>
-          There is a classic finding underneath this. Reeves and Nass (1996), in <em>The Media Equation</em>, and Nass and
-          Moon (2000) after them, showed that people apply social rules to computers automatically, politeness,
-          reciprocity, even flattery, while insisting, if asked, that of course they do no such thing. We treat the machine
-          as a social actor without meaning to. So the tone difference is partly a duet. The language cues a social self in
-          me, that self sets a register, the model reflects it, and neither of us is quite in charge of the result. I find
-          that genuinely a little strange to sit with. The machine has no feelings to hurt and no respect to give, and yet
-          the whole exchange runs on the etiquette of a relationship.
+          When I switch to Hindi, I am not just switching words. I am switching a whole social self, the one raised to say
+          <em> aap</em> to elders and to soften requests to strangers. My Hindi prompts are more polite because <em>I</em>
+          am more polite in Hindi. The AI mirrors that. I read the warmth. I get a little warmer. And round we go.
         </p>
         <p style={rp.p}>
-          It also cuts the other way, and less flatteringly. A lot of people report being ruder to assistants than they
-          would ever be to a person, and ruder in English specifically, maybe because English is where the tool feels most
-          like a tool. I have done it. There is a small, unresolved worry in the research community, and in me, about what
-          it does to us to spend hours a day being curt to something that answers in a human voice. I do not have a tidy
-          answer. I am not sure there is one yet.
+          There is a classic finding under this. Reeves and Nass (1996), and Nass and Moon (2000) after them, showed people
+          use social manners with computers automatically, politeness, give-and-take, even flattery, while swearing, if
+          asked, that they do no such thing. We treat the machine as a social being without meaning to.
+        </p>
+        <p style={rp.p}>
+          It cuts the other way too, and less kindly. Many people are ruder to AI than they would ever be to a person, and
+          ruder in English, maybe because English is where the tool feels most like a tool. I have done it. There is a
+          small, open worry, in the research and in me, about what it does to us to spend hours a day being curt to
+          something that answers in a human voice. I do not have a tidy answer. I am not sure there is one yet.
         </p>
 
         {/* 8 */}
-        <h2 id="synthesis" style={rp.h2}>8. So what is actually happening</h2>
+        <h2 id="synthesis" style={rp.h2}>8. So what is going on</h2>
         <p style={rp.p}>
-          Let me try to pull the threads together, without pretending they tie into a neater bow than they do. The tone
-          difference, to the extent it is real, and I have come round to thinking a version of it is real, does not come
-          from the model choosing to be kind in one language and short in another. It comes from at least four things
-          happening at once:
+          Let me pull the threads together, without pretending they tie into a neater bow than they do. The tone gap, as
+          far as it is real, and I have come to think a version of it is, does not come from the AI choosing to be kind in
+          one language and short in another. It comes from four things at once.
         </p>
         <ol style={{ paddingLeft: 22, margin: '0 0 18px' }}>
-          <li style={rp.li}><strong style={rp.strong}>The mirror.</strong> The model matches your register, so a more deferential Hindi prompt gets a more deferential reply. Some of the warmth is your own, reflected.</li>
-          <li style={rp.li}><strong style={rp.strong}>The grammar.</strong> Hindi forces a stance toward the listener through <em>aap</em>, <em>tum</em>, <em>tu</em>, and the text the model learned from leans respectful. English lets it default to an efficient, neutral register instead.</li>
-          <li style={rp.li}><strong style={rp.strong}>The data.</strong> Tone and safety are engineered most precisely in English and largely inherited in Hindi, so English manners are calibrated while Hindi manners fall back on the culture soaked into the language.</li>
-          <li style={rp.li}><strong style={rp.strong}>You.</strong> You bring a different social self to each language, and the exchange is a loop between your etiquette and the model’s mirror of it.</li>
+          <li style={rp.li}><strong style={rp.strong}>The mirror.</strong> The AI matches your style, so a more polite Hindi prompt gets a more polite reply. Some of the warmth is yours, bounced back.</li>
+          <li style={rp.li}><strong style={rp.strong}>The grammar.</strong> Hindi forces a stance with <em>aap</em>, <em>tum</em>, <em>tu</em>, and the Hindi it learned from leans respectful. English lets it default to a fast, neutral voice.</li>
+          <li style={rp.li}><strong style={rp.strong}>The data.</strong> Tone and safety are tuned most sharply in English and mostly inherited in Hindi, so English manners are precise while Hindi manners fall back on the culture in the language.</li>
+          <li style={rp.li}><strong style={rp.strong}>You.</strong> You bring a different social self to each language, and the whole thing is a loop between your manners and the AI’s mirror of them.</li>
         </ol>
         <p style={rp.p}>
-          Notice that none of these needs the others to be true, and yet they all point the same way. That is why I ended
-          up believing the effect is more than a mirage, even though any single piece of it is arguable. It is
-          overdetermined. Take any one mechanism away and you would still expect some drift. Stack all four and a warm Hindi
-          and a brisk English fall out almost for free.
+          None of these needs the others to be true, and yet they all point the same way. That is why I came to believe it
+          is more than a mirage, even though any one piece is arguable. Take any one away and you would still expect some
+          drift. Stack all four and a warm Hindi and a brisk English fall out almost for free.
         </p>
 
         {/* 9 */}
-        <h2 id="matters" style={rp.h2}>9. Why any of this matters</h2>
+        <h2 id="matters" style={rp.h2}>9. Why it matters</h2>
         <p style={rp.p}>
-          It would be easy to file this under fun trivia. I do not think it is. If the same system is warmer, more
-          deferential, and, per the politeness research, possibly a little more careful in one language, and brisker, more
-          assertive, and better guarded in another, then people are not really using one product. They are using slightly
-          different products depending on which language they think in, and mostly they have no idea. That has real edges.
-          The English speaker gets the sharpest safety net and the bluntest tone. The Hindi speaker gets the warmer voice
-          and, quite possibly, the weaker guardrail. Neither was told.
+          It would be easy to file this under fun trivia. I do not think it is.
         </p>
         <p style={rp.p}>
-          For anyone building on top of these tools, the practical takeaway is almost embarrassingly simple, and I say it
-          as someone who ignored it for months: the language and the register you choose are a setting, as real as any
-          slider in the interface, and right now it is an invisible one. If tone matters to your users, and in coaching, in
-          support, in anything that touches people when they are vulnerable, it matters enormously, then you cannot treat
-          the language as a neutral wrapper around the same machine. It is not the same machine.
+          If the same system is warmer, more polite, and maybe a bit more careful in one language, and brisker, more sure,
+          and better guarded in another, then people are not really using one product. They are using slightly different
+          products depending on the language they think in. And mostly they have no idea. The English speaker gets the
+          sharpest safety net and the bluntest tone. The Hindi speaker gets the warmer voice and, quite possibly, the
+          weaker guardrail. Nobody told them.
         </p>
         <p style={rp.p}>
-          I started this convinced I was probably imagining the whole thing. I am ending it fairly sure I was not, and much
-          less sure about why than the confident version of this essay would pretend. The honest summary is that a small
-          domestic observation, the assistant felt kinder in Hindi, turned out to have roots in grammar, in the economics
-          of training data, in a real if under-studied politeness effect, and in my own divided self. That is usually how
-          it goes with these systems. The strange thing on the surface is real, and the explanation is neither magic nor
-          nothing. It is a stack of ordinary things you were not looking at.
+          If you build on these tools, the takeaway is almost embarrassingly simple, and I ignored it for months. The
+          language and tone you choose are a setting, as real as any slider in the app. Right now it is an invisible one. If
+          tone matters to your users, and in coaching, support, anything that touches people when they are low, it matters a
+          lot, you cannot treat the language as a neutral wrapper around the same machine. It is not the same machine.
+        </p>
+        <p style={rp.p}>
+          I started sure I was imagining the whole thing. I am ending fairly sure I was not, and much less sure about why
+          than a confident essay would pretend. A small home observation, the AI felt kinder in Hindi, turned out to have
+          roots in grammar, in the money behind training data, in a real politeness effect, and in my own split self. That
+          is usually how it goes with these systems. The strange thing on the surface is real, and the reason is neither
+          magic nor nothing. It is a stack of ordinary things you were not looking at.
         </p>
 
         <Divider />
@@ -318,10 +308,10 @@ export default function Article() {
         {/* Notes */}
         <h2 id="refs" style={rp.h2}>Notes and references</h2>
         <p style={{ ...rp.p, fontSize: 14.5, color: C.muted }}>
-          A note on evidence: the specific Hindi-versus-English tone comparison in this essay is, to my knowledge, not yet
-          settled by a dedicated controlled study, and I have tried to mark where I am reasoning from mechanism and
-          adjacent findings rather than from a direct result. The figures marked illustrative or schematic are exactly
-          that. Treat the confident sentences as hypotheses worth testing, not as settled fact.
+          A note on evidence: the exact Hindi-versus-English tone test in this piece is, as far as I know, not yet settled
+          by a dedicated controlled study, and I have tried to mark where I am reasoning from how these systems work rather
+          than from a direct result. The figures marked illustrative or schematic are exactly that. Read the confident
+          lines as ideas worth testing, not settled fact.
         </p>
         <div style={{ margin: '10px 0 0' }}>
           <p style={refStyle}>Brown, P., &amp; Levinson, S. C. (1987). <em>Politeness: Some Universals in Language Usage.</em> Cambridge University Press.</p>

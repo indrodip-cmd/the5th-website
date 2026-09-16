@@ -15,6 +15,18 @@ export interface ResearchPost {
 
 export const POSTS: ResearchPost[] = [
   {
+    slug: 'how-people-buy-expertise',
+    title: 'The Anatomy of a Decision: An Evidence Synthesis of How People Buy Expertise',
+    excerpt:
+      'A full findings report synthesizing five decades of research across behavioral economics, services marketing, and psychology to answer one question: what actually governs the decision to buy a coach, consultant, or expert service? Covers the credence-good problem, dual-process decision-making, loss aversion, reference prices, the trust model, social proof, signaling, commitment and pre-payment, choice architecture, and the evidence on whether these services work — closing with an integrated model of the purchase decision.',
+    date: '2026-09-16',
+    dateLabel: 'September 16, 2026',
+    readTime: '41 min read',
+    author: 'Indrodip Ghosh',
+    authorRole: 'Consumer Behavior & AI Researcher',
+    tags: ['Consumer Behavior', 'Behavioral Economics', 'Decision Science', 'Evidence Synthesis'],
+  },
+  {
     slug: 'brain-ai-algorithmic-bridge',
     title: 'The Algorithmic Bridge: How Biological and Artificial Neural Networks Converge, Align, and Connect',
     excerpt:

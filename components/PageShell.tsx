@@ -36,8 +36,9 @@ export default function PageShell({
         padding: '20px clamp(20px, 5vw, 56px)', borderBottom: `1px solid ${C.border}`,
         position: 'sticky', top: 0, background: 'rgba(250,246,240,0.9)', backdropFilter: 'blur(10px)', zIndex: 10,
       }}>
-        <a href="/" style={{ textDecoration: 'none', color: C.plumDark, fontWeight: 800, fontSize: 20, letterSpacing: '-.01em' }}>
-          The5th <span style={{ color: C.goldDeep }}>Consulting</span>
+        <a href="/" aria-label="The5th Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 40, width: 'auto', display: 'block' }} />
         </a>
         <a href="/" style={{ textDecoration: 'none', color: C.muted, fontSize: 14, fontWeight: 600 }}>← Back to home</a>
       </header>

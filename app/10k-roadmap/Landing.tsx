@@ -49,6 +49,29 @@ function CtaPrice({ onDark }: { onDark?: boolean }) {
     </span>
   )
 }
+/* Click-to-load video facade. Third-party embeds (Wistia / Facebook) ship
+   heavy JS, so mounting 24 of them on load tanks LCP/TBT. We render a cheap
+   poster + play button and only create the real iframe on click. */
+function VideoFacade({ v, index }: { v: { src: string; w: number; h: number }; index: number }) {
+  const [play, setPlay] = useState(false)
+  const src = v.src + (v.src.includes('wistia') ? '&autoPlay=true' : '&autoplay=1')
+  return (
+    <figure className="vid-card" style={{ margin: '0 0 16px', background: '#231029', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.line}`, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: `${v.w} / ${v.h}` }}>
+        {play ? (
+          <iframe src={src} title={`Client review ${index + 1}`} allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
+        ) : (
+          <button onClick={() => setPlay(true)} aria-label={`Play client review ${index + 1}`} className="rm-focus vid-poster"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(120% 90% at 50% 30%, #3a1f45, #231029)' }}>
+            <span className="vid-play" style={{ width: 62, height: 62, borderRadius: '50%', background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px -8px rgba(94,46,134,.7)', transition: 'transform .18s ease' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </button>
+        )}
+      </div>
+    </figure>
+  )
+}
 function SectionHead({ eyebrow, heading, sub, maxW }: { eyebrow?: string; heading: string; sub?: string; maxW?: number }) {
   return (
     <div style={{ textAlign: 'center', marginBottom: 34, maxWidth: maxW || 760, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -145,13 +168,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
           <Reveal><SectionHead heading={LANDING.proof.heading} sub={LANDING.proof.sub} /></Reveal>
           <Reveal>
             <div className="vid-grid" style={{ marginBottom: 4 }}>
-              {FEATURED_VIDEOS.map((v, k) => (
-                <figure key={k} className="vid-card" style={{ margin: '0 0 16px', background: '#000', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.line}`, boxShadow: '0 14px 40px -30px rgba(46,26,53,.6)' }}>
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: `${v.w} / ${v.h}` }}>
-                    <iframe src={v.src} title={`Client review ${k + 1}`} loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }} />
-                  </div>
-                </figure>
-              ))}
+              {FEATURED_VIDEOS.map((v, k) => <VideoFacade key={k} v={v} index={k} />)}
             </div>
           </Reveal>
           <Reveal>
@@ -160,7 +177,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
                 <figure key={s.slug} className="cs-card" style={{ margin: 0, background: '#fff', border: `1px solid ${T.line}`, borderRadius: 18, padding: 22, display: 'flex', flexDirection: 'column', gap: 14, boxShadow: '0 20px 50px -34px rgba(46,26,53,.5)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.image} alt={s.name} loading="lazy" style={{ width: 54, height: 54, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.surface}`, boxShadow: '0 4px 12px -4px rgba(46,26,53,.4)' }} />
+                    <img src={s.image} alt={s.name} loading="lazy" decoding="async" width={54} height={54} style={{ width: 54, height: 54, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.surface}`, boxShadow: '0 4px 12px -4px rgba(46,26,53,.4)' }} />
                     <div><div style={{ fontWeight: 700, fontSize: 15.5 }}>{s.name}</div><div style={{ color: T.text3, fontSize: 12.5, lineHeight: 1.35 }}>{s.niche}</div><div style={{ color: T.text3, fontSize: 11.5 }}>{s.location}</div></div>
                   </div>
                   <div style={{ borderTop: `1px solid ${T.line}`, paddingTop: 14 }}><div className="rm-serif" style={{ color: T.accentInk, fontSize: 28, fontWeight: 800, lineHeight: 1 }}>{s.headline.v}</div><div style={{ color: T.text2, fontSize: 12.5, marginTop: 5, fontWeight: 600 }}>{s.headline.period}</div></div>
@@ -247,6 +264,7 @@ export default function Landing({ videoUrl }: { videoUrl: string }) {
         .rm-sticky-cta{display:none}
         .vid-grid{column-count:3;column-gap:16px}
         .vid-card{-webkit-column-break-inside:avoid;break-inside:avoid}
+        .vid-poster:hover .vid-play{transform:scale(1.08)}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.vid-grid{column-count:2}}
         @media(max-width:560px){.vid-grid{column-count:1}.cs-grid,.rm-grid3{grid-template-columns:1fr!important}}

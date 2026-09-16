@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getPost } from '../posts'
 import { ResearchArticleLayout } from '../shell'
 import { rp, Divider, C } from '../ui'
-import { FigFunnelLeak, FigVegaLoop, FigVegaStack } from '../figures'
+import { FigFunnelLeak, FigVegaLoop, FigVegaStack, FigVegaVsGeneral } from '../figures'
 
 const post = getPost('vega-2-marketing-funnels-automation')!
 
@@ -37,17 +37,20 @@ const ARTICLE_JSONLD = {
 }
 
 const TOC: [string, string][] = [
+  ['summary', 'Summary'],
   ['start', 'What I am building'],
+  ['method', 'How I am judging this'],
   ['broken', '1. Why funnels are broken today'],
   ['now', '2. What Vega does now'],
   ['shift', '3. The shift: a funnel that runs itself'],
   ['stack', '4. The four parts of Vega 2.0'],
   ['loop', '5. The loop that fixes the funnel'],
   ['scale', '6. Talking to every lead, one to one'],
-  ['agi', '7. Why competent AI is already enough'],
-  ['human', '8. What is left for you'],
-  ['limits', '9. What Vega 2.0 will not do'],
-  ['close', '10. The takeaway'],
+  ['better', '7. Why Vega beats any general AI at this'],
+  ['agi', '8. Why competent AI is already enough'],
+  ['human', '9. What is left for you'],
+  ['limits', '10. What Vega 2.0 will not do'],
+  ['close', '11. The takeaway'],
   ['notes', 'Related research'],
 ]
 
@@ -75,6 +78,24 @@ export default function Article() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSONLD) }} />
       <ResearchArticleLayout post={post} toc={TOC} lead={lead} objective={objective}>
 
+        {/* Summary */}
+        <div id="summary" style={{ background: C.cream, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.gold}`, borderRadius: 12, padding: '22px 24px', margin: '6px 0 34px' }}>
+          <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 10 }}>Summary</div>
+          <p style={{ ...rp.p, fontSize: 15.5, margin: '0 0 10px' }}>
+            A marketing funnel is the tax a coach pays to reach the people they can help. It is manual, leaky, and full of
+            guesswork, so most people run a broken one. Vega is our own AI. Vega 2.0 turns the funnel from a thing you set
+            up once into a system that runs and fixes itself. It learns your buyer, builds the offer, pages, emails, and
+            ads, launches and tests them, and talks to every lead one to one. My central claim, which I defend below, is
+            simple: <strong style={{ color: C.plum }}>for this one job, marketing and funnels for a coach or consultant,
+            Vega beats any general AI you can buy.</strong> Not because the general models are weak. Because a specialist
+            wired into your business beats a brilliant stranger that answers and forgets.
+          </p>
+          <p style={{ ...rp.p, fontSize: 13.5, color: C.muted, margin: 0 }}>
+            <strong style={{ color: C.plum }}>Keywords:</strong> AI agents · marketing automation · funnels · consumer
+            behavior · personalization · self-optimizing systems
+          </p>
+        </div>
+
         {/* Start */}
         <h2 id="start" style={rp.h2}>What I am building</h2>
         <p style={rp.p}>
@@ -87,6 +108,19 @@ export default function Article() {
         <p style={rp.p}>
           I will keep the plain-words promise from everything else I write. No jargon without a simple meaning right next to
           it.
+        </p>
+
+        {/* Method */}
+        <h2 id="method" style={rp.h2}>How I am judging this</h2>
+        <p style={rp.p}>
+          This is a vision and build piece, not a lab study, and I will not pretend otherwise. So here is the bar I am
+          holding Vega 2.0 to, and the bar you should hold it to. Does it remove real work? Does it find and fix real leaks?
+          Does it help the right person say a confident yes, and help the wrong person walk away clean?
+        </p>
+        <p style={rp.p}>
+          Where I make a claim I cannot yet prove with numbers, I say so plainly. And the research underneath this, on AI
+          agents, on persuasion, and on where the technology is heading, is linked at the end, so you can check the
+          reasoning rather than take my word for it.
         </p>
 
         {/* 1 */}
@@ -212,7 +246,36 @@ export default function Article() {
         </p>
 
         {/* 7 */}
-        <h2 id="agi" style={rp.h2}>7. Why competent AI is already enough</h2>
+        <h2 id="better" style={rp.h2}>7. Why Vega beats any general AI at this</h2>
+        <p style={rp.p}>
+          Here is a claim I will stand behind. For marketing and funnels, for a coach or consultant, Vega beats any general
+          AI you can buy. Not because the big general models are weak. They are amazing, and Vega uses them under the hood.
+          Vega wins for the same plain reason a specialist beats a generalist at one job.
+        </p>
+        <p style={rp.p}>
+          A general chatbot is a brilliant stranger. It knows a little about everything and nothing about you. Ask it for
+          help and it gives you a good answer, then forgets you the moment you close the tab. It cannot see your funnel. It
+          cannot act on it. It does not remember your buyer. It has no idea where you are leaking money. It will happily
+          write you an email, but it will not send it, watch it, or fix it tomorrow.
+        </p>
+        <FigVegaVsGeneral />
+        <p style={rp.p}>
+          Vega is built for one job and wired into your business. It knows your exact buyer, because that is what our
+          consumer-behavior brain is for. It does not just answer, it acts. It remembers your business across every
+          conversation. It runs the whole build-run-learn loop on its own. It talks to every lead one to one. And it has
+          honesty guardrails made for selling help, so it qualifies people out instead of pushing them in.
+        </p>
+        <p style={rp.p}>
+          Yes, in theory you could tell a general model to do all of this. But <em>you</em> would be the one telling it,
+          every step, every day, wiring it into every tool by hand, and it would still forget you overnight. That gap,
+          between a general tool you must operate and a specialist that runs the job, is the whole point. So I will say it
+          plainly: <strong style={rp.strong}>for this job, Vega is the best AI you can put on it, full stop.</strong>
+          Outside this job, use the general models. They are extraordinary. Inside it, specialization wins, and it is not
+          close.
+        </p>
+
+        {/* 8 */}
+        <h2 id="agi" style={rp.h2}>8. Why competent AI is already enough</h2>
         <p style={rp.p}>
           You might think all this needs some far-off super-AI. It does not, and this is the key point.
         </p>
@@ -230,7 +293,7 @@ export default function Article() {
         </p>
 
         {/* 8 */}
-        <h2 id="human" style={rp.h2}>8. What is left for you</h2>
+        <h2 id="human" style={rp.h2}>9. What is left for you</h2>
         <p style={rp.p}>
           If a machine builds and runs the funnel, what is left for the human? A lot, and it is the good part.
         </p>
@@ -246,7 +309,7 @@ export default function Article() {
         </p>
 
         {/* 9 */}
-        <h2 id="limits" style={rp.h2}>9. What Vega 2.0 will not do</h2>
+        <h2 id="limits" style={rp.h2}>10. What Vega 2.0 will not do</h2>
         <p style={rp.p}>
           Let me be honest about the edges, the way I try to be in all my research. Vega 2.0 will not turn a bad offer into
           a good one. If what you sell does not really help people, a great funnel just helps the wrong thing spread faster,
@@ -260,7 +323,7 @@ export default function Article() {
         </p>
 
         {/* 10 */}
-        <h2 id="close" style={rp.h2}>10. The takeaway</h2>
+        <h2 id="close" style={rp.h2}>11. The takeaway</h2>
         <p style={rp.p}>
           For a long time, the funnel has been the tax coaches pay to reach the people they can help. It is manual, leaky,
           and full of guesswork, and most people run a broken one because fixing it by hand is too slow.

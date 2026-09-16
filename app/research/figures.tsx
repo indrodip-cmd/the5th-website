@@ -992,3 +992,36 @@ export function FigVegaStack() {
     </Figure>
   )
 }
+
+// Fig: Vega vs a general AI, for this one job
+export function FigVegaVsGeneral() {
+  const rows = [
+    'Knows your exact buyer',
+    'Builds the whole funnel',
+    'Acts, does not just answer',
+    'Runs and fixes it live',
+    'Talks to every lead one to one',
+    'Remembers your business',
+    'Honesty guardrails for selling',
+  ]
+  return (
+    <Figure n={4} caption={<>The head-to-head, for one job: marketing and funnels for a coach or consultant. A general chatbot is a brilliant stranger that answers and forgets. Vega is a specialist wired into your business that acts and remembers. For this job, that gap is decisive.</>}>
+      <svg viewBox="0 0 600 320" style={svgStyle} role="img" aria-label="Vega versus a general AI comparison">
+        <text x="322" y="24" fontFamily={SANS} fontSize="12.5" fill={F.muted} textAnchor="middle" fontWeight="700">General AI</text>
+        <text x="470" y="24" fontFamily={SERIF} fontSize="15" fill={F.plum} textAnchor="middle" fontWeight="700">Vega</text>
+        {rows.map((r, i) => {
+          const y = 44 + i * 38
+          return (
+            <g key={r}>
+              <text x="20" y={y + 15} fontFamily={SANS} fontSize="13" fill={F.ink}>{r}</text>
+              <rect x="286" y={y} width="72" height="26" rx="13" fill="#f2ede6" />
+              <text x="322" y={y + 17} fontFamily={SANS} fontSize="13" fill={F.muted} textAnchor="middle" fontWeight="700">✕</text>
+              <rect x="434" y={y} width="72" height="26" rx="13" fill={F.gold} />
+              <text x="470" y={y + 17} fontFamily={SANS} fontSize="13" fill={F.plum} textAnchor="middle" fontWeight="800">✓</text>
+            </g>
+          )
+        })}
+      </svg>
+    </Figure>
+  )
+}

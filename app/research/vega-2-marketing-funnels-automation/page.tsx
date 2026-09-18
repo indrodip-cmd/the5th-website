@@ -1,40 +1,14 @@
 import type { Metadata } from 'next'
-import { getPost } from '../posts'
+import { getPost, articleMetadata, articleJsonLd } from '../posts'
 import { ResearchArticleLayout } from '../shell'
 import { rp, Divider, C } from '../ui'
 import { FigFunnelLeak, FigVegaLoop, FigVegaStack, FigVegaVsGeneral } from '../figures'
 
 const post = getPost('vega-2-marketing-funnels-automation')!
 
-export const metadata: Metadata = {
-  title: `${post.title} | The5th Research`,
-  description: post.excerpt,
-  alternates: { canonical: `/research/${post.slug}` },
-  openGraph: {
-    type: 'article',
-    url: `https://the5th.consulting/research/${post.slug}`,
-    title: post.title,
-    description: post.excerpt,
-    publishedTime: post.date,
-    authors: [post.author],
-    tags: post.tags,
-  },
-  twitter: { card: 'summary_large_image', title: post.title, description: post.excerpt },
-}
+export const metadata: Metadata = articleMetadata(post)
 
-const ARTICLE_JSONLD = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: post.title,
-  description: post.excerpt,
-  datePublished: post.date,
-  dateModified: post.date,
-  author: { '@type': 'Person', name: post.author, jobTitle: post.authorRole },
-  publisher: { '@type': 'Organization', name: 'The5th Consulting' },
-  mainEntityOfPage: `https://the5th.consulting/research/${post.slug}`,
-  keywords: post.tags.join(', '),
-  articleSection: 'Research',
-}
+const ARTICLE_JSONLD = articleJsonLd(post)
 
 const TOC: [string, string][] = [
   ['summary', 'Summary'],

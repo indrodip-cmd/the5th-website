@@ -1,6 +1,17 @@
 /* Registry for the Research section. Add a new entry here and create a matching
    app/research/<slug>/page.tsx to publish a post. The index page reads this
-   list; each article page reads its own entry for the byline + SEO. */
+   list; each article page reads its own entry for the byline + SEO.
+
+   SEO note: `title`/`excerpt` are the editorial (on-page) versions and can be
+   long. `metaTitle`/`metaDescription`/`keywords` are the search-optimised
+   versions used for the <title> tag, meta description, Open Graph, Twitter and
+   JSON-LD. Keep metaTitle <= ~60 chars and metaDescription <= ~155 chars so
+   they render un-truncated in search results. Build metadata + JSON-LD for an
+   article page with the articleMetadata()/articleJsonLd() helpers below. */
+import type { Metadata } from 'next'
+
+const SITE = 'https://the5th.consulting'
+
 export interface ResearchPost {
   slug: string
   title: string
@@ -11,6 +22,10 @@ export interface ResearchPost {
   author: string
   authorRole: string
   tags: string[]
+  metaTitle: string       // SEO <title>, keyword-first, <= ~60 chars
+  metaDescription: string // SEO meta description, <= ~155 chars
+  keywords: string[]      // target search phrases (metadata + JSON-LD)
+  schemaType?: 'Article' | 'ScholarlyArticle'
 }
 
 export const POSTS: ResearchPost[] = [
@@ -25,6 +40,18 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Vega', 'Marketing', 'AI Agents', 'Automation'],
+    metaTitle: 'AI Marketing Automation: Self-Optimizing Funnels | The5th',
+    metaDescription:
+      'How an AI agent can run marketing end to end: building the offer, pages and emails, launching, testing, and talking to every lead one to one, at scale.',
+    keywords: [
+      'AI marketing automation',
+      'self-optimizing funnel',
+      'AI funnel automation',
+      'agentic marketing',
+      'autonomous marketing agent',
+      'AI sales funnel',
+      'AI marketing agent',
+    ],
   },
   {
     slug: 'how-persuasive-is-frontier-ai',
@@ -37,6 +64,19 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Behavioural Research', 'Persuasion', 'Artificial Intelligence', 'White Paper'],
+    metaTitle: 'How Persuasive Is AI? Can It Change Your Mind? | The5th',
+    metaDescription:
+      'An original study on how persuasive frontier AI has become at changing our minds: the evidence, the mechanism, and personalised persuasion at scale.',
+    keywords: [
+      'how persuasive is AI',
+      'can AI change your mind',
+      'AI persuasion research',
+      'AI more persuasive than humans',
+      'personalized persuasion',
+      'AI persuasion study',
+      'frontier AI persuasion',
+    ],
+    schemaType: 'ScholarlyArticle',
   },
   {
     slug: 'is-ai-eroding-critical-thinking',
@@ -49,6 +89,19 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Behavioural Research', 'Cognitive Science', 'Neuroscience', 'White Paper'],
+    metaTitle: 'Is AI Eroding Your Critical Thinking? | The5th',
+    metaDescription:
+      'Does leaning on AI weaken your thinking? A white paper on cognitive debt, cognitive offloading, and a protocol to use AI without losing your edge.',
+    keywords: [
+      'does AI erode critical thinking',
+      'AI and critical thinking',
+      'cognitive debt',
+      'cognitive offloading',
+      'AI dulling minds',
+      'critical thinking AI research',
+      'AI dependence',
+    ],
+    schemaType: 'ScholarlyArticle',
   },
   {
     slug: 'future-of-ai-from-tools-to-agents',
@@ -61,6 +114,18 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Artificial Intelligence', 'Future of AI', 'AI Agents', 'Society'],
+    metaTitle: 'The Future of AI Agents: The Next 10 Years | The5th',
+    metaDescription:
+      'A plain-language field guide to the future of AI agents: the shift from software that answers to software that acts, memory, and the next ten years.',
+    keywords: [
+      'future of AI agents',
+      'AI agents next 10 years',
+      'from tools to agents',
+      'AI agent economy',
+      'agentic AI',
+      'future of AI explained',
+      'what are AI agents',
+    ],
   },
   {
     slug: 'agi-society-and-the-end-of-b2b-agencies',
@@ -73,6 +138,18 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Artificial Intelligence', 'AGI', 'Economics', 'Marketing'],
+    metaTitle: 'Will AGI Replace B2B Marketing Agencies? | The5th',
+    metaDescription:
+      'A first-principles look at AGI, the society it reshapes, and why traditional B2B marketing agencies are first in the blast radius, and what survives.',
+    keywords: [
+      'will AGI replace marketing agencies',
+      'AGI impact on marketing',
+      'can AI replace B2B agency',
+      'AGI economy',
+      'future of marketing agencies',
+      'artificial general intelligence business',
+      'AI replacing agencies',
+    ],
   },
   {
     slug: 'chatgpt-tone-hindi-english',
@@ -85,6 +162,18 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Human Behavior', 'Artificial Intelligence', 'Language & Culture', 'Sociolinguistics'],
+    metaTitle: "Why ChatGPT's Tone Changes in Hindi vs English | The5th",
+    metaDescription:
+      'Does ChatGPT answer more warmly in Hindi and bluntly in English? An investigation into honorifics, alignment data, and the effect of prompt politeness.',
+    keywords: [
+      'ChatGPT tone Hindi vs English',
+      'does ChatGPT respond differently in Hindi',
+      'ChatGPT politeness',
+      'LLM language tone',
+      'prompt politeness',
+      'ChatGPT Hindi English difference',
+      'AI language bias',
+    ],
   },
   {
     slug: 'how-people-buy-expertise',
@@ -97,6 +186,19 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Consumer Behavior', 'Behavioral Economics', 'Decision Science', 'Evidence Synthesis'],
+    metaTitle: 'The Psychology of How People Buy Expertise | The5th',
+    metaDescription:
+      'An evidence synthesis of how people decide to buy a coach or consultant: the credence-good problem, trust, social proof, pricing, and choice architecture.',
+    keywords: [
+      'how people buy expertise',
+      'psychology of buying coaching',
+      'how clients choose consultants',
+      'buying decision consulting',
+      'credence goods',
+      'pricing expertise',
+      'social proof selling',
+    ],
+    schemaType: 'ScholarlyArticle',
   },
   {
     slug: 'brain-ai-algorithmic-bridge',
@@ -109,6 +211,18 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Neuroscience', 'Deep Learning', 'Neural Coding', 'Brain–Computer Interfaces'],
+    metaTitle: 'Brain vs AI Neural Networks: How They Converge | The5th',
+    metaDescription:
+      'A technical account of how biological and artificial neural networks align and converge: RSA, CKA, credit assignment, manifold capacity, and BCIs.',
+    keywords: [
+      'biological vs artificial neural networks',
+      'brain AI convergence',
+      'representational alignment',
+      'RSA CKA neural networks',
+      'credit assignment problem',
+      'brain-computer interface',
+      'neural manifold capacity',
+    ],
   },
   {
     slug: 'machine-consciousness-2035',
@@ -121,9 +235,99 @@ export const POSTS: ResearchPost[] = [
     author: 'Indrodip Ghosh',
     authorRole: 'Consumer Behavior & AI Researcher',
     tags: ['Artificial Intelligence', 'Neuroscience', 'Consciousness', 'Mathematics'],
+    metaTitle: 'Machine Consciousness: Will AI Wake Up by 2035? | The5th',
+    metaDescription:
+      'Can a machine ever truly feel? A first-principles map of machine consciousness: the neuroscience, the math of IIT, a blueprint, and a roadmap to 2035.',
+    keywords: [
+      'machine consciousness',
+      'will AI become conscious',
+      'artificial consciousness',
+      'conscious AI',
+      'integrated information theory',
+      'can AI feel',
+      'AI consciousness 2035',
+    ],
   },
 ]
 
 export function getPost(slug: string): ResearchPost | undefined {
   return POSTS.find((p) => p.slug === slug)
+}
+
+/* Centralised, search-optimised <head> metadata for an article page.
+   Keeps the <title>/description/OG/Twitter consistent across all posts and
+   driven by the keyword-tuned metaTitle/metaDescription/keywords. */
+export function articleMetadata(post: ResearchPost): Metadata {
+  const url = `${SITE}/research/${post.slug}`
+  return {
+    title: post.metaTitle,
+    description: post.metaDescription,
+    keywords: post.keywords,
+    authors: [{ name: post.author }],
+    alternates: { canonical: `/research/${post.slug}` },
+    openGraph: {
+      type: 'article',
+      url,
+      siteName: 'The5th Consulting',
+      title: post.metaTitle,
+      description: post.metaDescription,
+      publishedTime: post.date,
+      modifiedTime: post.date,
+      authors: [post.author],
+      tags: post.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.metaTitle,
+      description: post.metaDescription,
+      creator: '@the5th',
+    },
+  }
+}
+
+/* Rich Article/ScholarlyArticle JSON-LD for an article page. Includes the
+   image, keywords, author, publisher logo, canonical mainEntityOfPage and a
+   breadcrumb trail so search engines can render an enhanced result. */
+export function articleJsonLd(post: ResearchPost): Record<string, unknown> {
+  const url = `${SITE}/research/${post.slug}`
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': post.schemaType ?? 'Article',
+        headline: post.title,
+        name: post.title,
+        description: post.metaDescription,
+        image: `${url}/opengraph-image`,
+        datePublished: post.date,
+        dateModified: post.date,
+        author: {
+          '@type': 'Person',
+          name: post.author,
+          jobTitle: post.authorRole,
+          url: `${SITE}/about`,
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'The5th Consulting',
+          url: SITE,
+          logo: { '@type': 'ImageObject', url: `${SITE}/logo-the5th.png` },
+        },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        url,
+        keywords: post.keywords.join(', '),
+        articleSection: 'Research',
+        inLanguage: 'en',
+        isAccessibleForFree: true,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+          { '@type': 'ListItem', position: 2, name: 'Research', item: `${SITE}/research` },
+          { '@type': 'ListItem', position: 3, name: post.title, item: url },
+        ],
+      },
+    ],
+  }
 }

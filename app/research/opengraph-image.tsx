@@ -12,6 +12,9 @@ const indexCard: ResearchPost = {
   author: 'Indrodip Ghosh',
   authorRole: '',
   tags: ['Independent research'],
+  metaTitle: 'Research | The5th Consulting',
+  metaDescription: '',
+  keywords: [],
 }
 
 export const size = OG_SIZE

@@ -24,7 +24,7 @@ const MUTE = '#57505f'
 // Whop plan configured as: $1 today → $47/mo starting day 7.
 const PLAN_ID = process.env.NEXT_PUBLIC_WHOP_TRIAL_PLAN_ID || 'plan_falzVWtF41bQS'
 const RETURN_URL =
-  process.env.NEXT_PUBLIC_WHOP_TRIAL_RETURN_URL || 'https://the5th.consulting/checkout/complete?type=trial'
+  process.env.NEXT_PUBLIC_WHOP_TRIAL_RETURN_URL || 'https://the5thglobal.consulting/checkout/complete?type=trial'
 
 const CHAPTERS: { t: string; d: string }[] = [
   { t: 'The 3-Layer Why Method', d: 'So the first hard week doesn’t take you out.' },

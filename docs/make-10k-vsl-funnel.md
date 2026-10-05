@@ -66,19 +66,19 @@ tags to see each segment.
 | `TYPEFORM_WEBHOOK_SECRET` | **yes** | Shared secret for Typeform webhook signature verification. Until set, the webhook runs unsecured (payloads accepted + logged with `signature_valid=false`). |
 | `RESEND_API_KEY` | yes* | Already set — sends the admin booking notification. |
 | `ADMIN_EMAIL` | no | Recipient of booking notifications. Default `indrodip@10kroadmap.org`. |
-| `NEXT_PUBLIC_SITE_URL` | no | Base URL for the CRM link in the admin email. Default `https://the5th.consulting`. |
+| `NEXT_PUBLIC_SITE_URL` | no | Base URL for the CRM link in the admin email. Default `https://the5thglobal.consulting`. |
 
 ## Typeform setup
 
 1. In the form, add two **hidden fields**: `email` and `name`.
-2. Connect → Webhooks → add endpoint `https://the5th.consulting/api/webhooks/typeform`,
+2. Connect → Webhooks → add endpoint `https://the5thglobal.consulting/api/webhooks/typeform`,
    set the secret to match `TYPEFORM_WEBHOOK_SECRET`.
 
 ## Social proof (real, from existing repo content)
 
 The proof cards on the landing page live in `REAL_PROOF` in `config.ts`. Every
 entry is pulled verbatim from case studies **already published publicly** on
-the5th.consulting, so no new consent is required:
+the5thglobal.consulting, so no new consent is required:
 
 - `public/call/index.html` — detailed case-study cards: **Torill** ($210k single
   launch), **Laurie** ($14,193 / 60 days), **Gurpreet** ($18k / 3 months from $0).

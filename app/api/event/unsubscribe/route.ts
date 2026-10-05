@@ -14,7 +14,7 @@ function page(msg: string) {
     <div style="max-width:520px;margin:12vh auto;background:#fff;border-radius:18px;padding:40px;text-align:center;box-shadow:0 20px 50px -30px rgba(46,26,53,.5)">
       <div style="font-family:Georgia,serif;font-size:26px;color:#2E1A35;margin-bottom:10px">You're unsubscribed</div>
       <p style="font-size:15px;color:#5a5248;line-height:1.6">${msg}</p>
-      <a href="https://the5th.consulting" style="display:inline-block;margin-top:18px;color:#B0902F;text-decoration:none;font-size:14px">← the5th.consulting</a>
+      <a href="https://the5thglobal.consulting" style="display:inline-block;margin-top:18px;color:#B0902F;text-decoration:none;font-size:14px">← the5thglobal.consulting</a>
     </div>
   </body></html>`
 }

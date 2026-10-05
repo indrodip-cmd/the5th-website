@@ -12,7 +12,7 @@ const TITLE = 'Build a Predictable $10K/Month Coaching Business'
 const OG_TITLE = 'Build a Predictable $10K/Month Coaching Business'
 const DESC =
   'You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable $10K/month.'
-const URL = 'https://the5th.consulting/10k-roadmap'
+const URL = 'https://the5thglobal.consulting/10k-roadmap'
 
 export const metadata: Metadata = {
   title: TITLE,

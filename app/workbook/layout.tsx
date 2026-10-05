@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   title: 'The Knowledge Asset — Build a $10K-a-Month Digital Business',
   description:
     'Turn what you know into a digital business. The Knowledge Asset is a practical workbook that helps coaches, consultants, healers, creators, and experts build their product, offer, audience, content, and launch toward $10K/month.',
-  alternates: { canonical: 'https://the5th.consulting/workbook' },
+  alternates: { canonical: 'https://the5thglobal.consulting/workbook' },
   openGraph: {
     type: 'website',
-    url: 'https://the5th.consulting/workbook',
+    url: 'https://the5thglobal.consulting/workbook',
     title: 'The Knowledge Asset — Turn What You Already Know Into a $10K-a-Month Business',
     description: 'A build-as-you-go workbook from The5th Consulting. Build your product, offer, audience, content, and launch toward $10K months — including a 7-day free trial of The5th AI.',
   },
@@ -29,7 +29,7 @@ const PRODUCT_JSONLD = {
   bookFormat: 'https://schema.org/EBook',
   numberOfPages: 9,
   inLanguage: 'en',
-  url: 'https://the5th.consulting/workbook',
+  url: 'https://the5thglobal.consulting/workbook',
   author: [
     { '@type': 'Person', name: 'Indrodip Ghosh' },
     { '@type': 'Person', name: 'Christinee Mathison' },
@@ -42,7 +42,7 @@ const PRODUCT_JSONLD = {
     price: '7.93',
     priceCurrency: 'USD',
     availability: 'https://schema.org/InStock',
-    url: 'https://the5th.consulting/workbook',
+    url: 'https://the5thglobal.consulting/workbook',
   },
 }
 

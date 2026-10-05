@@ -8,7 +8,7 @@ const TITLE = 'Build a Predictable, Profitable Business From Your Expertise | Th
 const OG_TITLE = 'Build a Predictable Business From Your Expertise, Guaranteed'
 const DESC =
   'For Indian professionals & founders already earning ₹1 lakh+/month. You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable business income, or get 100% of your money back.'
-const URL = 'https://the5th.consulting/10k-roadmap/india'
+const URL = 'https://the5thglobal.consulting/10k-roadmap/india'
 
 export const metadata: Metadata = {
   title: TITLE,

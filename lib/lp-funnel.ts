@@ -62,7 +62,7 @@ export function revealSeconds(): number {
 type Segment = 'opted_in' | 'watched_10min' | 'call_booked'
 type Row = Record<string, unknown>
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.consulting').replace(/\/$/, '')
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5thglobal.consulting').replace(/\/$/, '')
 const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NOTIFY_EMAIL || 'indrodip@10kroadmap.org'
 

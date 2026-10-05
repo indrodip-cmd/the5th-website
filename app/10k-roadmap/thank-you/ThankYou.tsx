@@ -1,7 +1,7 @@
 'use client'
 /* Thank-you page — where cal.com redirects after the audit is booked.
    Configure the cal.com event's "redirect on booking" to:
-     https://the5th.consulting/10k-roadmap/thank-you
+     https://the5thglobal.consulting/10k-roadmap/thank-you
    cal.com appends the booking uid (and often the attendee email), which we use
    to look the booking up and show the exact date/time, a live countdown, and
    Google / Apple / Outlook calendar links. Falls back to an email lookup. */
@@ -27,7 +27,7 @@ function outlookUrl(b: Required<Pick<Booking, 'start' | 'end'>> & Booking) {
   return `https://outlook.live.com/calendar/0/deeplink/compose?${p.toString()}`
 }
 function icsBlobUrl(b: Required<Pick<Booking, 'start' | 'end'>> & Booking) {
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th//10K Roadmap Audit//EN', 'BEGIN:VEVENT', `UID:${Date.now()}@the5th.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`, `DTSTART:${icsDate(b.start)}`, `DTEND:${icsDate(b.end)}`, `SUMMARY:${THANKYOU.event.title}`, `DESCRIPTION:${THANKYOU.event.description.replace(/\n/g, '\\n')}${b.meetingUrl ? `\\n\\nJoin: ${b.meetingUrl}` : ''}`, `LOCATION:${b.meetingUrl || 'Online'}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th//10K Roadmap Audit//EN', 'BEGIN:VEVENT', `UID:${Date.now()}@the5thglobal.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`, `DTSTART:${icsDate(b.start)}`, `DTEND:${icsDate(b.end)}`, `SUMMARY:${THANKYOU.event.title}`, `DESCRIPTION:${THANKYOU.event.description.replace(/\n/g, '\\n')}${b.meetingUrl ? `\\n\\nJoin: ${b.meetingUrl}` : ''}`, `LOCATION:${b.meetingUrl || 'Online'}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
   return URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))
 }
 

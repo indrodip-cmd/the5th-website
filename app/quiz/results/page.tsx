@@ -120,7 +120,7 @@ function buildCalendarLinks(startISO: string, meetingUrl?: string | null) {
   const details = `Your Private Strategy & Coaching Session with Indrodip Ghosh. We'll walk through your full report and map your next 14 days.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}`
   const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${s}/${e}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
   const outlook = `https://outlook.office.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=${encodeURIComponent(CAL_TITLE)}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5th.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5thglobal.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
   const apple = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics)
   return { google, outlook, apple }
 }

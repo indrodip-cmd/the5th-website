@@ -7,7 +7,7 @@ import { getSlots, createBooking } from '@/lib/calcom'
 /* All booking now runs through the $10K Roadmap Audit funnel (qualify → $27
    refundable deposit → book). Carolina sends this link for any call/appointment
    request instead of booking directly or sharing a raw calendar link. */
-const BOOKING_URL = 'https://the5th.consulting/10k-roadmap'
+const BOOKING_URL = 'https://the5thglobal.consulting/10k-roadmap'
 import { sendAppointmentEmail } from '@/lib/carolina-email'
 import { loadSettings, loadActiveLeadMagnet, loadAgents, aiConfig, type LeadMagnet } from '@/lib/carolina-config'
 import { type Source } from '@/lib/retrieval'

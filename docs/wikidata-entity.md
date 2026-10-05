@@ -28,7 +28,7 @@ values are exact.
 | occupation | P106 | entrepreneur — `Q131524` |
 | occupation | P106 | businessperson — `Q43845` |
 | occupation | P106 | consultant — `Q1162163` *(verify)* |
-| official website | P856 | `https://the5th.consulting/` |
+| official website | P856 | `https://the5thglobal.consulting/` |
 | Facebook ID | P2013 | `withindrodip` |
 | LinkedIn personal profile ID | P6634 | `marketing-growth-consultant` |
 | employer / owner of | P108 / P1830 | The5th Consulting (its Q-id, once created) |
@@ -43,7 +43,7 @@ LAST	Aen	"Indradip Ghosh"
 LAST	P31	Q5
 LAST	P106	Q131524
 LAST	P106	Q43845
-LAST	P856	"https://the5th.consulting/"
+LAST	P856	"https://the5thglobal.consulting/"
 LAST	P2013	"withindrodip"
 LAST	P6634	"marketing-growth-consultant"
 ```
@@ -61,7 +61,7 @@ LAST	P6634	"marketing-growth-consultant"
 | instance of | P31 | company — `Q783794` *(or "consulting firm" — verify)* |
 | industry | P452 | management consulting — `Q192376` *(verify)* |
 | founded by | P112 | Indrodip Ghosh (Person Q-id from step 1) |
-| official website | P856 | `https://the5th.consulting/` |
+| official website | P856 | `https://the5thglobal.consulting/` |
 | Instagram username | P2003 | `the5thconsulting` |
 | Spotify show ID | P11625 | `033AYgOaBgPXGTAlNfLJfn` *(verify property id)* |
 | inception | P571 | *(founding year, if known)* |
@@ -74,7 +74,7 @@ LAST	Len	"The5th Consulting"
 LAST	Den	"Business consulting company helping coaches and consultants turn expertise into a premium business"
 LAST	Aen	"The5th"
 LAST	P31	Q783794
-LAST	P856	"https://the5th.consulting/"
+LAST	P856	"https://the5thglobal.consulting/"
 LAST	P2003	"the5thconsulting"
 LAST	P112	PERSON_QID   # replace with Indrodip Ghosh's Q-id
 ```
@@ -84,7 +84,7 @@ LAST	P112	PERSON_QID   # replace with Indrodip Ghosh's Q-id
 ## References (important)
 Wikidata prefers each statement to have a **reference**. Add "reference URL" (P854)
 = the source that supports it. Good sources here:
-- https://the5th.consulting/about (founder, brand)
+- https://the5thglobal.consulting/about (founder, brand)
 - https://www.linkedin.com/in/marketing-growth-consultant/
 - Any press: Forbes / The Guardian / HuffPost / TEDx / Yahoo Finance mentions
 - The5th Podcast on Spotify

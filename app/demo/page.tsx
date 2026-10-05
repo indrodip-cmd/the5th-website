@@ -9,7 +9,7 @@ interface Msg { role: 'user' | 'assistant'; content: string }
 
 const CREAM = '#FAF6F0', SIDE = '#F3ECE2', CARD = '#FFFDFA', LINE = '#EAE1D6'
 const FOREST = '#1C4A32', GOLD = '#C9A84C', GOLD_DK = '#a9862f', PLUM = '#3D2645', INK = '#2a2233', MUTE = '#57505f'
-const PLATFORM = 'https://platform.the5th.consulting'
+const PLATFORM = 'https://platform.the5thglobal.consulting'
 
 const PRESETS = ['Check my content', 'Plan my next $10K month', 'Fix my funnel leaks', 'Write a warm outreach', 'Package my offer']
 const PROJECTS = [
@@ -229,7 +229,7 @@ function Composer({ input, setInput, onSend, busy, big }: { input: string; setIn
 }
 
 function PayModal({ reason, blocked, plan, setPlan, onClose }: { reason: 'signup' | 'limit'; blocked?: boolean; plan: typeof PLANS[number]; setPlan: (p: typeof PLANS[number]) => void; onClose: () => void }) {
-  const redirect = `https://the5th.consulting/checkout/complete?type=${plan.type}`
+  const redirect = `https://the5thglobal.consulting/checkout/complete?type=${plan.type}`
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={onClose}>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(28,20,40,.5)', backdropFilter: 'blur(6px)' }} />

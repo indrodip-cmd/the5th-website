@@ -8,12 +8,12 @@ const SITE_JSONLD = {
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://the5th.consulting/#organization",
+      "@id": "https://the5thglobal.consulting/#organization",
       name: "The5th Consulting",
       alternateName: "The5th",
-      url: "https://the5th.consulting/",
-      logo: { "@type": "ImageObject", url: "https://the5th.consulting/images/logo.png" },
-      founder: { "@id": "https://the5th.consulting/#indrodip" },
+      url: "https://the5thglobal.consulting/",
+      logo: { "@type": "ImageObject", url: "https://the5thglobal.consulting/images/logo.png" },
+      founder: { "@id": "https://the5thglobal.consulting/#indrodip" },
       sameAs: [
         "https://www.instagram.com/the5thconsulting/",
         "https://open.spotify.com/show/033AYgOaBgPXGTAlNfLJfn",
@@ -23,12 +23,12 @@ const SITE_JSONLD = {
     },
     {
       "@type": "Person",
-      "@id": "https://the5th.consulting/#indrodip",
+      "@id": "https://the5thglobal.consulting/#indrodip",
       name: "Indrodip Ghosh",
       jobTitle: "Founder & Marketing Growth Consultant",
-      worksFor: { "@id": "https://the5th.consulting/#organization" },
-      url: "https://the5th.consulting/about",
-      image: "https://the5th.consulting/images/founder.png",
+      worksFor: { "@id": "https://the5thglobal.consulting/#organization" },
+      url: "https://the5thglobal.consulting/about",
+      image: "https://the5thglobal.consulting/images/founder.png",
       sameAs: [
         "https://www.facebook.com/withindrodip",
         "https://www.linkedin.com/in/marketing-growth-consultant/",
@@ -38,23 +38,23 @@ const SITE_JSONLD = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://the5th.consulting/#website",
-      url: "https://the5th.consulting/",
+      "@id": "https://the5thglobal.consulting/#website",
+      url: "https://the5thglobal.consulting/",
       name: "The5th Consulting",
-      publisher: { "@id": "https://the5th.consulting/#organization" },
+      publisher: { "@id": "https://the5thglobal.consulting/#organization" },
     },
     {
       "@type": "WebSite",
-      "@id": "https://the5th.consulting/#platform",
-      url: "https://platform.the5th.consulting/",
+      "@id": "https://the5thglobal.consulting/#platform",
+      url: "https://platform.the5thglobal.consulting/",
       name: "The5th Platform",
-      publisher: { "@id": "https://the5th.consulting/#organization" },
+      publisher: { "@id": "https://the5thglobal.consulting/#organization" },
     },
   ],
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://the5th.consulting"),
+  metadataBase: new URL("https://the5thglobal.consulting"),
   title: "The5th AI Business Assessment | The5th Consulting",
   description: "A premium AI assessment that reads your coaching or consulting business, gives you a Business Health Score, names your biggest opportunity, and builds your personalised 90-day roadmap. Built for professionals over 40.",
   openGraph: {

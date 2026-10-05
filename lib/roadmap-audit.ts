@@ -55,7 +55,7 @@ export function verifyPaidPass(token?: string | null): { email: string } | null 
   } catch { return null }
 }
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.consulting').replace(/\/$/, '')
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5thglobal.consulting').replace(/\/$/, '')
 const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NOTIFY_EMAIL || 'indrodip@10kroadmap.org'
 

@@ -1,6 +1,6 @@
 'use client'
 /* /event/the-shift  "The 3-Day Breakthrough Intensive", a $27 live event
-   hosted by Indrodip Ghosh (Aug 7 to 9). Built to the5th.consulting's
+   hosted by Indrodip Ghosh (Aug 7 to 9). Built to the5thglobal.consulting's
    editorial house style: Cormorant Garamond + DM Sans, plum hero, forest-green
    solid CTAs, gold hairline accents. Conversion-focused: number-driven
    headline, value stack, scarcity, oversized guarantee, sticky mobile CTA.
@@ -15,7 +15,7 @@ import { VIDEO_REVIEWS } from '@/components/VideoWall'
 const WHOP_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
 const WHOP_ACCENT = '#c3a348' // gold accent
 const WHOP_BG = '#35213c' // dark plum checkout background
-const RETURN_URL = 'https://the5th.consulting/event/the-shift/thank-you'
+const RETURN_URL = 'https://the5thglobal.consulting/event/the-shift/thank-you'
 const WHOP_HOSTED_URL = 'https://whop.com/10kroadmap-org/the-shift-b0/'
 
 /* Live session time: 11:00 AM PT (PDT, UTC-7 in August). */

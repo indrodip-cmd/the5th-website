@@ -312,7 +312,7 @@ export default function Landing() {
           </div>
           <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 360, margin: '0 auto', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
+            <img src="/images/founder-team-mvm.png" alt="Indrodip Ghosh and Manisha, The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
             <div style={{ position: 'absolute', left: -18, bottom: -18, background: '#2E1A35', borderRadius: 14, padding: '14px 18px', boxShadow: '0 18px 34px -16px rgba(46,26,53,.5)', maxWidth: 170 }}>
               <div className="rm-serif" style={{ fontSize: 26, fontWeight: 800, color: '#E4C879', lineHeight: 1 }}>{LANDING.founder.stat.value}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.75)', marginTop: 4, lineHeight: 1.35 }}>{LANDING.founder.stat.label}</div>

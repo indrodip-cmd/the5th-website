@@ -257,7 +257,7 @@ function PressStrip() {
 
 // Speero's .testimonial-wrap is unboxed: a 109px circular photo beside italic
 // quote + plain attribution line, directly on the section background, no card.
-function TestimonialCard({ index = 1 }: { index?: number }) {
+function TestimonialCard({ index = 7 }: { index?: number }) {
   const t = REAL_PROOF[index] // defaults to Laurie — has a photo, carries the hero testimonial slot
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', display: 'flex', gap: 'clamp(18px,3vw,30px)', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -461,7 +461,7 @@ export default function Landing() {
 
       {/* ── Second testimonial, mirrors Speero's two single-testimonial blocks ── */}
       <section style={{ padding: SECY_LG + ' ' + PADX }}>
-        <Reveal><TestimonialCard index={2} /></Reveal>
+        <Reveal><TestimonialCard index={8} /></Reveal>
       </section>
 
       {/* ── Video testimonials: real on-camera client reviews, same VideoWall
@@ -567,6 +567,7 @@ export default function Landing() {
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}}
+        @media(min-width:561px) and (max-width:899px){.rm-grid3{grid-template-columns:1fr!important}}
         @media(max-width:560px){.rm-grid3{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}.rm-call-row{flex-direction:column!important;justify-content:center!important;text-align:center!important}.rm-call-row>div{order:0!important;flex:none!important;width:100%!important;min-width:0!important;text-align:center!important;margin-left:0!important;margin-right:0!important}}
       `}</style>
     </div>

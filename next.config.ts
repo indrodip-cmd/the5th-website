@@ -71,9 +71,11 @@ const nextConfig: NextConfig = {
       // current $10K Roadmap Audit funnel.
       { source: '/lp/make-10k-month', destination: '/10k-roadmap', permanent: true },
       { source: '/lp/make-10k-month/:path*', destination: '/10k-roadmap', permanent: true },
-      // Booking now goes through the $10K Roadmap Audit funnel — /call points to it.
+      // Booking now goes through the $10K Roadmap Audit funnel — /call and /go point to it.
       { source: '/call', destination: '/10k-roadmap', permanent: true },
       { source: '/call/:path*', destination: '/10k-roadmap', permanent: true },
+      { source: '/go', destination: '/10k-roadmap', permanent: true },
+      { source: '/go/:path*', destination: '/10k-roadmap', permanent: true },
       // Collapse the directly-reachable static-file URLs onto their clean
       // paths so Google never indexes both /about and /about/index.html.
       { source: '/index.html', destination: '/', permanent: true },

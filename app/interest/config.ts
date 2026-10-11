@@ -8,7 +8,7 @@
 export const SOURCE = 'interest-registration'
 export const LANDING_PATH = '/interest'
 
-/* The5th Consulting brand tokens — deep aubergine + gold on warm cream,
+/* The5th Global Consulting brand tokens — deep aubergine + gold on warm cream,
    matching the marketing site (public/index.html) and Gelica display type
    (loaded in globals.css). */
 export const C = {

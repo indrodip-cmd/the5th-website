@@ -106,7 +106,7 @@ const FULL_REPORT_INCLUDES = [
 ]
 
 /* ════════ Add-to-calendar links (Google / Microsoft / Apple) ════════ */
-const CAL_TITLE = 'Private Strategy & Coaching Session · The5th Consulting'
+const CAL_TITLE = 'Private Strategy & Coaching Session · The5th Global Consulting'
 function pad(n: number) { return String(n).padStart(2, '0') }
 function toUTCStamp(d: Date) {
   return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`
@@ -120,7 +120,7 @@ function buildCalendarLinks(startISO: string, meetingUrl?: string | null) {
   const details = `Your Private Strategy & Coaching Session with Indrodip Ghosh. We'll walk through your full report and map your next 14 days.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}`
   const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${s}/${e}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
   const outlook = `https://outlook.office.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=${encodeURIComponent(CAL_TITLE)}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5thglobal.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Global Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5thglobal.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
   const apple = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics)
   return { google, outlook, apple }
 }
@@ -391,7 +391,7 @@ export default function ResultsPage() {
 
       {/* header */}
       <header style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${C.border}`, background: C.ivory }}>
-        <Image src="/logo-the5th.png" alt="The5th Consulting" width={150} height={38} style={{ objectFit: 'contain' }} />
+        <Image src="/logo-the5th.png" alt="The5th Global Consulting" width={150} height={38} style={{ objectFit: 'contain' }} />
         <span style={{ fontSize: 12, color: C.muted, letterSpacing: '.1em', textTransform: 'uppercase' }}>Business Growth Diagnostic</span>
       </header>
 
@@ -628,7 +628,7 @@ export default function ResultsPage() {
 
       {/* footer */}
       <footer style={{ padding: '28px 28px 44px', borderTop: `1px solid ${C.border}`, textAlign: 'center', marginTop: 24 }}>
-        <p style={{ fontSize: 12, color: C.muted }}>© 2026 The5th Consulting · <a href="/privacy" style={{ color: C.inkSoft, textDecoration: 'underline' }}>Privacy</a> · support@10kroadmap.org</p>
+        <p style={{ fontSize: 12, color: C.muted }}>© 2026 The5th Global Consulting · <a href="/privacy" style={{ color: C.inkSoft, textDecoration: 'underline' }}>Privacy</a> · support@10kroadmap.org</p>
       </footer>
     </div>
   )

@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════
-   The5th Consulting — Cookie / Privacy Consent Banner
+   The5th Global Consulting — Cookie / Privacy Consent Banner
    Self-contained, no dependencies. Loads on every page (static
    marketing HTML + Next app routes) via a single <script> tag.
 

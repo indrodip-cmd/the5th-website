@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   keywords: [
     'The 3-Day Breakthrough Intensive',
     'Indrodip Ghosh',
-    'The5th Consulting',
+    'The5th Global Consulting',
     'coaching business event',
     'offer creation workshop',
     'sales training for coaches',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: URL,
-    siteName: 'The5th Consulting',
+    siteName: 'The5th Global Consulting',
     title: TITLE,
     description: DESC,
   },
@@ -45,7 +45,7 @@ const EVENT_JSONLD = {
   eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
   location: { '@type': 'VirtualLocation', url: URL },
   image: [`${URL}/opengraph-image`],
-  organizer: { '@type': 'Organization', name: 'The5th Consulting', url: 'https://the5thglobal.consulting/' },
+  organizer: { '@type': 'Organization', name: 'The5th Global Consulting', url: 'https://the5thglobal.consulting/' },
   performer: { '@type': 'Person', name: 'Indrodip Ghosh' },
   offers: {
     '@type': 'Offer',

@@ -186,7 +186,7 @@ export function Logo({ variant = 'dark', height = 30 }: { variant?: 'dark' | 'wh
   const src = variant === 'white' ? '/images/logo-white.png' : '/images/the5th-logo-purple.png'
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt="The5th Consulting" style={{ height, width: 'auto', display: 'block' }} />
+    <img src={src} alt="The5th Global Consulting" style={{ height, width: 'auto', display: 'block' }} />
   )
 }
 
@@ -207,7 +207,7 @@ export function Footer() {
         </div>
         <div style={{ height: 1, background: 'rgba(246,226,155,0.14)', marginBottom: 22 }} />
         <p style={{ fontFamily: SANS, fontSize: 12.5, lineHeight: 1.7, color: 'rgba(239,231,218,0.66)', margin: 0 }}>
-          © 2026 The5th Consulting. All rights reserved. Unauthorized copying, reproduction,
+          © 2026 The5th Global Consulting. All rights reserved. Unauthorized copying, reproduction,
           distribution, use, or collection of any content or information from this website is
           strictly prohibited. Any unauthorized use may result in legal action. To the extent
           permitted by law, any dispute arising from or relating to the unauthorized use of this

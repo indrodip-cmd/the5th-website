@@ -66,7 +66,7 @@ export default function ChoseYourTime() {
         .cw-launcher,.cw-win,.cw-toast,.cw-mclose{display:none!important}`}</style>
 
       <header style={{ padding: '26px 28px', display: 'flex', justifyContent: 'center' }}>
-        <a href="/"><img src="/public/images/logo.png" alt="The5th Consulting" style={{ height: 40, width: 'auto' }} /></a>
+        <a href="/"><img src="/public/images/logo.png" alt="The5th Global Consulting" style={{ height: 40, width: 'auto' }} /></a>
       </header>
 
       <main style={{ width: '100%', maxWidth: 1080, margin: '0 auto', padding: '0 24px 70px' }}>
@@ -179,7 +179,7 @@ export default function ChoseYourTime() {
           </div>
         )}
       </main>
-      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Consulting</div>
+      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Global Consulting</div>
     </div>
   )
 }

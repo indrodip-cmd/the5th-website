@@ -9,7 +9,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const AUDIT_MINUTES = 60
-const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
+const FROM = 'The5th Global Consulting <indrodip@10kroadmap.org>'
 
 /* Re-derive the qualification verdict server-side (never trust the client). */
 function verdictFrom(answers: Record<string, string | string[]>): { verdict: 'qualified' | 'rejected'; reason: string | null } {
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
           <p style="font-size:15px;line-height:1.6;color:#645a6e">Your private 60-minute $10K Roadmap Audit is confirmed for:</p>
           <p style="font-size:17px;font-weight:700;margin:10px 0 16px">${when}</p>
           <p style="font-size:14px;line-height:1.6;color:#645a6e">I'll review your answers before we meet so we go straight to what matters. Bring three numbers: current monthly revenue, average offer price, and qualified leads per month.</p>
-          <p style="font-size:12px;color:#9a93a2;margin-top:22px">© ${new Date().getFullYear()} The5th Consulting</p>
+          <p style="font-size:12px;color:#9a93a2;margin-top:22px">© ${new Date().getFullYear()} The5th Global Consulting</p>
         </div>`,
       }).catch(() => {})
     }

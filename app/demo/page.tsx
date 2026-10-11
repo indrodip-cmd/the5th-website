@@ -117,7 +117,7 @@ export default function Demo() {
       {sidebar && <div onClick={() => setSidebar(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(20,10,30,.35)', zIndex: 55 }} />}
       <aside className={'d-side' + (sidebar ? ' open' : '')}>
         <div style={{ padding: '20px 18px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="/"><img src="/images/logo.png" alt="The5th Consulting" style={{ height: 30, width: 'auto' }} /></a>
+          <a href="/"><img src="/images/logo.png" alt="The5th Global Consulting" style={{ height: 30, width: 'auto' }} /></a>
         </div>
         <div style={{ padding: '4px 12px 10px' }}>
           <button onClick={() => { setMessages([]); setSidebar(false) }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', borderRadius: 11, border: `1px solid ${LINE}`, background: CARD, color: INK, fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -177,7 +177,7 @@ export default function Demo() {
           </div>
         )}
         <footer style={{ textAlign: 'center', padding: '8px 20px 14px', fontSize: 11.5, color: '#a99fb2', lineHeight: 1.5 }}>
-          The5th AI, designed by The5th Consulting. By using it, you agree to our <a href="/terms" style={{ color: '#a99fb2', textDecoration: 'underline' }}>Terms</a> &amp; <a href="/privacy" style={{ color: '#a99fb2', textDecoration: 'underline' }}>Privacy Policy</a>. Chats may be reviewed and used to improve our AI models. <a href="/privacy" style={{ color: GOLD_DK, textDecoration: 'underline' }}>Learn more</a>.
+          The5th AI, designed by The5th Global Consulting. By using it, you agree to our <a href="/terms" style={{ color: '#a99fb2', textDecoration: 'underline' }}>Terms</a> &amp; <a href="/privacy" style={{ color: '#a99fb2', textDecoration: 'underline' }}>Privacy Policy</a>. Chats may be reviewed and used to improve our AI models. <a href="/privacy" style={{ color: GOLD_DK, textDecoration: 'underline' }}>Learn more</a>.
         </footer>
       </main>
 

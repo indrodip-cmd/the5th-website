@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 
-const TITLE = 'The end-to-end platform to build your coaching business — The5th Consulting'
+const TITLE = 'The end-to-end platform to build your coaching business — The5th Global Consulting'
 const DESC =
   'One place to build and grow your coaching business — positioning, offers, funnels, content and automation. Tell us what you’re building and we’ll map where you are and how we can help.'
 const URL = 'https://the5thglobal.consulting/interest'
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   openGraph: {
-    type: 'website', url: URL, siteName: 'The5th Consulting', title: TITLE, description: DESC,
+    type: 'website', url: URL, siteName: 'The5th Global Consulting', title: TITLE, description: DESC,
   },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESC },
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import PageShell, { prose } from '@/components/PageShell'
 
 export const metadata: Metadata = {
-  title: 'Data Usage | The5th Consulting',
+  title: 'Data Usage | The5th Global Consulting',
   description: 'A plain-English summary of what data we collect, why we use it, who we share it with, and the choices and controls you have.',
   alternates: { canonical: '/data-usage' },
 }

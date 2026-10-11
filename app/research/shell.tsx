@@ -64,9 +64,9 @@ export function ResearchHeader() {
       borderBottom: `1px solid ${C.border}`,
     }}>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '15px clamp(20px,5vw,56px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-        <a href="/" aria-label="The5th Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <a href="/" aria-label="The5th Global Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
         </a>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px,4vw,34px)' }}>
           <a href="/research" style={{ color: C.plumDark, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Research</a>
@@ -94,7 +94,7 @@ export function ResearchFooter() {
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 24, alignItems: 'flex-start' }}>
           <div style={{ maxWidth: 320 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo-white.png" alt="The5th Consulting" style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 14 }} />
+            <img src="/images/logo-white.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 14 }} />
             <p style={{ fontSize: 14.5, lineHeight: 1.7, color: 'rgba(255,255,255,.6)', margin: 0 }}>
               Research at the edge of artificial intelligence, neuroscience, and human behaviour.
             </p>
@@ -106,7 +106,7 @@ export function ResearchFooter() {
           </div>
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,.14)', marginTop: 34, paddingTop: 20, fontSize: 13, color: 'rgba(255,255,255,.5)' }}>
-          © 2026 The5th Consulting. All rights reserved.
+          © 2026 The5th Global Consulting. All rights reserved.
         </div>
       </div>
     </footer>

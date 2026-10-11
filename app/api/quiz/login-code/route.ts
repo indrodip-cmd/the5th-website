@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           to: email,
           subject: `${otp} is your code to sign in`,
           html: otpEmail(firstName, otp, []),
-          text: `Hi ${firstName},\n\nYour 6-digit sign-in code is: ${otp}\n\nIt expires in 30 minutes.\n\nIf you did not request this, you can ignore this email.\n\nThe5th Consulting · noreply@10kroadmap.org`,
+          text: `Hi ${firstName},\n\nYour 6-digit sign-in code is: ${otp}\n\nIt expires in 30 minutes.\n\nIf you did not request this, you can ignore this email.\n\nThe5th Global Consulting · noreply@10kroadmap.org`,
         })
       } catch (e) {
         console.error('login-code send failed', e)

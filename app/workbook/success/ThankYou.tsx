@@ -170,8 +170,8 @@ export default function ThankYou() {
       <footer style={{ background: PLUM_DEEP, color: 'rgba(246,239,227,.6)', padding: '2.4rem 1.25rem', textAlign: 'center', borderTop: `1px solid ${GOLD_LINE}` }}>
         <div style={{ fontFamily: SERIF, fontSize: '1.35rem', fontWeight: 600, color: CREAM }}>The Knowledge <em style={{ fontStyle: 'italic', color: GOLD_LT }}>Asset</em></div>
         <p style={{ fontSize: 12.5, marginTop: 8 }}>Read it. Do the work. Build the business.</p>
-        <a href="/" style={{ display: 'inline-block', marginTop: 14, fontSize: 13, color: GOLD_LT, textDecoration: 'none' }}>← Back to The5th Consulting</a>
-        <div style={{ marginTop: 16, fontSize: 11, color: 'rgba(246,239,227,.4)' }}>© 2026 The5th Consulting</div>
+        <a href="/" style={{ display: 'inline-block', marginTop: 14, fontSize: 13, color: GOLD_LT, textDecoration: 'none' }}>← Back to The5th Global Consulting</a>
+        <div style={{ marginTop: 16, fontSize: 11, color: 'rgba(246,239,227,.4)' }}>© 2026 The5th Global Consulting</div>
       </footer>
 
       {/* Fallback download link if the button is blocked */}

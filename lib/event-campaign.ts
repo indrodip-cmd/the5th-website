@@ -70,7 +70,7 @@ function footer(unsubUrl: string | undefined, muted: string) {
   <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.65;color:${muted}">
     You're receiving this email because you joined the $10K Roadmap Community and purchased access to the membership.
     <br><br>
-    &copy; 2026 @ The5th Consulting (Formerly Known as 10kRoadmap)<br>
+    &copy; 2026 @ The5th Global Consulting (Formerly Known as 10kRoadmap)<br>
     15 Central Park West<br>
     NYC, NY 10023, United States of America
     <br><br>
@@ -111,7 +111,7 @@ ${preheader(opts.preheaderText)}
   <tr><td align="center" style="padding:26px 14px">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(46,26,53,.5)">
       <tr><td style="background:linear-gradient(140deg,${C.plumMid},${C.plum} 62%,#1f1128);padding:30px 40px 26px;text-align:center">
-        <img src="${EVENT.logo}" alt="The5th Consulting" height="26" style="height:26px;margin-bottom:14px">
+        <img src="${EVENT.logo}" alt="The5th Global Consulting" height="26" style="height:26px;margin-bottom:14px">
         <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${C.gold}">${opts.kicker}</div>
         <div style="font-family:Georgia,serif;font-size:27px;line-height:1.2;color:#ffffff;margin-top:8px">${opts.title}</div>
       </td></tr>
@@ -122,7 +122,7 @@ ${preheader(opts.preheaderText)}
         <div style="border-top:1px solid ${C.border};padding-top:18px">
           See you in the room,<br>
           <b style="color:${C.plum}">${EVENT.host}</b><br>
-          <span style="font-size:13px;color:${C.goldDk}">Founder, The5th Consulting</span>
+          <span style="font-size:13px;color:${C.goldDk}">Founder, The5th Global Consulting</span>
         </div>
       </td></tr>
       <tr><td style="background:#f6f0e8;padding:22px 40px">

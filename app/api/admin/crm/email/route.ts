@@ -7,7 +7,7 @@ import { logActivity } from '@/lib/crm'
 
 export const dynamic = 'force-dynamic'
 
-const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
+const FROM = 'The5th Global Consulting <indrodip@10kroadmap.org>'
 
 function wrap(name: string, bodyHtml: string): string {
   const firstName = (name || 'there').split(' ')[0]
@@ -15,13 +15,13 @@ function wrap(name: string, bodyHtml: string): string {
 <body style="margin:0;padding:0;background:#FAF6F0;font-family:Georgia,serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F0;padding:32px 16px;"><tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:12px;overflow:hidden;">
-  <tr><td style="background:#2E1A35;padding:20px 40px;"><span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH CONSULTING</span></td></tr>
+  <tr><td style="background:#2E1A35;padding:20px 40px;"><span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH GLOBAL CONSULTING</span></td></tr>
   <tr><td style="padding:34px 40px;color:#3d3d3d;font-size:15px;line-height:1.7;">
     <p style="margin:0 0 14px;">Hi ${firstName},</p>
     ${bodyHtml}
     <p style="margin:22px 0 0;">— The5th team</p>
   </td></tr>
-  <tr><td style="padding:20px 40px 30px;border-top:1px solid #eee;"><p style="color:#8A8075;font-size:11px;margin:0;font-family:sans-serif;">The5th Consulting · Reply to this email to reach us.</p></td></tr>
+  <tr><td style="padding:20px 40px 30px;border-top:1px solid #eee;"><p style="color:#8A8075;font-size:11px;margin:0;font-family:sans-serif;">The5th Global Consulting · Reply to this email to reach us.</p></td></tr>
 </table></td></tr></table></body></html>`
 }
 

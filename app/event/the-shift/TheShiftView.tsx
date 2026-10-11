@@ -204,8 +204,8 @@ export default function TheShiftView() {
       {/* Nav */}
       <nav className="ts-nav">
         <div className="ts-nav__in">
-          <a href="/" aria-label="The5th Consulting">
-            <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" className="ts-nav__logo" />
+          <a href="/" aria-label="The5th Global Consulting">
+            <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" className="ts-nav__logo" />
           </a>
           <a href="#reserve" className="ts-btn ts-btn--green ts-btn--sm">
             Save my seat · $27
@@ -588,7 +588,7 @@ export default function TheShiftView() {
       {/* Final CTA (plum) */}
       <section className="ts-band ts-band--plum ts-final">
         <div className="ts-sec ts-narrow ts-center">
-          <img src="/images/logo-white.png" alt="The5th Consulting" className="ts-final__logo" />
+          <img src="/images/logo-white.png" alt="The5th Global Consulting" className="ts-final__logo" />
           <hr className="ts-rule" />
           <h2 className="ts-h1 ts-final__h">
             3 days from now, you could have your <em>why</em>, your offer, and your next $5,000 plan.
@@ -604,7 +604,7 @@ export default function TheShiftView() {
 
       {/* Footer */}
       <footer className="ts-footer">
-        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" className="ts-footer__logo" />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" className="ts-footer__logo" />
         <div className="ts-footer__links">
           <a href="/privacy">Privacy</a>
           <span>·</span>
@@ -612,7 +612,7 @@ export default function TheShiftView() {
           <span>·</span>
           <a href="/refund">Refund</a>
         </div>
-        © 2026 The5th Consulting · Hosted by Indrodip Ghosh
+        © 2026 The5th Global Consulting · Hosted by Indrodip Ghosh
       </footer>
 
       {/* Sticky mobile CTA */}

@@ -150,7 +150,7 @@ export default function StudyPage() {
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px clamp(20px,5vw,44px)', borderBottom: `1px solid ${C.border}`, background: 'rgba(250,246,240,.9)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 10 }}>
         <a href="/research" aria-label="The5th Research" style={{ display: 'inline-flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
         </a>
         <span style={{ fontSize: 12, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, fontWeight: 700 }}>The5th Original Research</span>
       </header>

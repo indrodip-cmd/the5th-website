@@ -225,7 +225,7 @@ export default function ResultsPage() {
 
       {/* top bar — stays fixed at the top while the page scrolls */}
       <header className="rhead" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, borderBottom: `1px solid ${C.border}`, background: 'rgba(251,248,242,.92)', position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(10px)' }}>
-        <a href="/" style={{ display: 'inline-flex', flexShrink: 1, minWidth: 0 }}><Image src="/images/the5th-logo-purple.png" alt="The5th Consulting" width={212} height={83} priority className="rlogo" style={{ objectFit: 'contain' }} /></a>
+        <a href="/" style={{ display: 'inline-flex', flexShrink: 1, minWidth: 0 }}><Image src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" width={212} height={83} priority className="rlogo" style={{ objectFit: 'contain' }} /></a>
         <a href="/quiz" className="rcta" style={{ fontWeight: 600, color: C.plum, textDecoration: 'none', border: `1px solid ${C.goldLine}`, borderRadius: 50, flexShrink: 0 }}>
           Take the assessment →
         </a>
@@ -333,7 +333,7 @@ export default function ResultsPage() {
       {/* footer */}
       <footer style={{ padding: '36px 28px 52px', textAlign: 'center', marginTop: 24 }}>
         <p style={{ fontSize: 12.5, color: C.muted }}>
-          © 2026 The5th Consulting · Individual results; every business and timeline differs · <a href="/privacy" style={{ color: C.inkSoft, textDecoration: 'underline' }}>Privacy</a>
+          © 2026 The5th Global Consulting · Individual results; every business and timeline differs · <a href="/privacy" style={{ color: C.inkSoft, textDecoration: 'underline' }}>Privacy</a>
         </p>
       </footer>
 

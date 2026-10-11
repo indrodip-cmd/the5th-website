@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og'
 /* Branded 1200x630 share card. Next auto-wires this as og:image + twitter:image
    for /results, so sharing the link (WhatsApp, iMessage, LinkedIn, etc.) shows
    the case-study library — not the generic assessment card. */
-export const alt = 'Client case studies & results — The5th Consulting'
+export const alt = 'Client case studies & results — The5th Global Consulting'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -78,7 +78,7 @@ export default function OpengraphImage() {
           }}
         >
           <span style={{ display: 'flex', width: 12, height: 12, borderRadius: 6, background: GOLD, marginRight: 14 }} />
-          The5th Consulting · with Indrodip Ghosh
+          The5th Global Consulting · with Indrodip Ghosh
         </div>
       </div>
     ),

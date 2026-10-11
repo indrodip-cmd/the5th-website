@@ -1,4 +1,4 @@
-# The5th Consulting — robots.txt
+# The5th Global Consulting — robots.txt
 # Founder: Indrodip Ghosh · https://the5thglobal.consulting
 
 User-agent: *

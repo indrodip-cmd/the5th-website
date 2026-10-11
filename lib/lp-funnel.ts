@@ -63,7 +63,7 @@ type Segment = 'opted_in' | 'watched_10min' | 'call_booked'
 type Row = Record<string, unknown>
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5thglobal.consulting').replace(/\/$/, '')
-const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
+const FROM = 'The5th Global Consulting <indrodip@10kroadmap.org>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NOTIFY_EMAIL || 'indrodip@10kroadmap.org'
 
 /* CRM tag applied per segment so /admin/crm can filter the funnel by stage. */
@@ -348,7 +348,7 @@ export async function sendAdminBookingEmail(lead: Row): Promise<boolean> {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F0;padding:32px 16px;"><tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;">
   <tr><td style="background:#2E1A35;padding:22px 40px;">
-    <span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH CONSULTING</span>
+    <span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH GLOBAL CONSULTING</span>
     <span style="color:#C9A84C;font-size:10px;font-weight:700;letter-spacing:1px;font-family:sans-serif;float:right;">NEW CALL BOOKED</span>
   </td></tr>
   <tr><td style="padding:34px 40px 8px;">
@@ -363,7 +363,7 @@ export async function sendAdminBookingEmail(lead: Row): Promise<boolean> {
     <a href="${crmLink}" style="display:inline-block;padding:12px 24px;background:#C9A84C;color:#2E1A35;font-weight:700;font-size:14px;border-radius:8px;text-decoration:none;font-family:sans-serif;margin:0 0 10px 0;">Open CRM record →</a>
   </td></tr>
   <tr><td style="padding:22px 40px 30px;border-top:1px solid #eee;">
-    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting · Make-$10k VSL funnel · ${FUNNEL_SOURCE}</p>
+    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Global Consulting · Make-$10k VSL funnel · ${FUNNEL_SOURCE}</p>
   </td></tr>
 </table></td></tr></table></body></html>`
 

@@ -33,9 +33,9 @@ export function marketingFooter(email: string): string {
   </td></tr>
   <tr><td align="center" style="padding:28px 24px 32px">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;max-width:480px;border-collapse:collapse">
-      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#26202b;font-weight:700">&copy; 2026 The5th Consulting ($10k Roadmap), All rights reserved.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#26202b;font-weight:700">&copy; 2026 The5th Global Consulting ($10k Roadmap), All rights reserved.</td></tr>
       <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#3d3742;padding-top:8px">15 Central Park West, NYC, NY 10023, United States</td></tr>
-      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#5a5550;padding-top:16px">You were sent this message because you opted in and subscribed to The5th Consulting product, services, and Indrodip's $10K Newsletter.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#5a5550;padding-top:16px">You were sent this message because you opted in and subscribed to The5th Global Consulting product, services, and Indrodip's $10K Newsletter.</td></tr>
       <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#5a5550;padding-top:10px">If you believe this message was sent to you in error, you can safely ignore it, or you can <a href="${unsub}" style="color:#1a1a2e;font-weight:700;text-decoration:underline">Unsubscribe</a>.</td></tr>
     </table>
   </td></tr>
@@ -53,7 +53,7 @@ const SYSTEM_FOOTER = `
   </td></tr>
   <tr><td align="center" style="padding:22px 24px 26px">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;max-width:480px;border-collapse:collapse">
-      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#3d3742;font-weight:700">&copy; 2026 The5th Consulting ($10k Roadmap), All rights reserved.</td></tr>
+      <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#3d3742;font-weight:700">&copy; 2026 The5th Global Consulting ($10k Roadmap), All rights reserved.</td></tr>
       <tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#5a5550;padding-top:6px">15 Central Park West, NYC, NY 10023, United States &middot; support@10kroadmap.org</td></tr>
     </table>
   </td></tr>

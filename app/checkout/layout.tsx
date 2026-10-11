@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 /* Checkout — not for the index. */
 export const metadata: Metadata = {
-  title: 'Checkout | The5th Consulting',
+  title: 'Checkout | The5th Global Consulting',
   robots: { index: false, follow: true },
 }
 

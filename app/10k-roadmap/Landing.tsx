@@ -298,21 +298,21 @@ export default function Landing() {
               <p style={{ color: TEXT2, fontSize: 'clamp(15.5px,1.8vw,18px)', lineHeight: 1.55, maxWidth: 520, margin: '16px 0 0', fontWeight: 500 }}>{LANDING.headlineSub}</p>
             </Reveal>
             <Reveal delay={100} style={{ marginTop: 24 }}>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <div className="rm-hero-ctas" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 {CTA('hero')}
                 <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById('proof')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
-              <p style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <p className="rm-hero-guarantee" style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
                 {LANDING.guarantee}
               </p>
-              <div style={{ marginTop: 16 }}><RatingRow /></div>
+              <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
             </Reveal>
           </div>
           <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 360, margin: '0 auto', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
+            <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
             <div style={{ position: 'absolute', left: -18, bottom: -18, background: '#2E1A35', borderRadius: 14, padding: '14px 18px', boxShadow: '0 18px 34px -16px rgba(46,26,53,.5)', maxWidth: 170 }}>
               <div className="rm-serif" style={{ fontSize: 26, fontWeight: 800, color: '#E4C879', lineHeight: 1 }}>{LANDING.founder.stat.value}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.75)', marginTop: 4, lineHeight: 1.35 }}>{LANDING.founder.stat.label}</div>
@@ -581,7 +581,7 @@ export default function Landing() {
       <style>{`
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
-        @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}}
+        @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-guarantee,.rm-hero-rating>div{justify-content:center!important}}
         @media(min-width:561px) and (max-width:899px){.rm-grid3{grid-template-columns:1fr!important}}
         @media(max-width:560px){.rm-grid3{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}.rm-call-row{flex-direction:column!important;justify-content:center!important;text-align:center!important}.rm-call-row>div{order:0!important;flex:none!important;width:100%!important;min-width:0!important;text-align:center!important;margin-left:0!important;margin-right:0!important}}
       `}</style>

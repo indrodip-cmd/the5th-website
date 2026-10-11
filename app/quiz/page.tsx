@@ -961,7 +961,7 @@ function SiteHeader({ screen, currentQ }: { screen: string; currentQ: number }) 
       padding: '12px 40px 10px', gap: 8,
     }}>
       {/* Logo centered */}
-      <Image className="site-logo" src="/logo-the5th.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
+      <Image className="site-logo" src="/logo-the5th.png" alt="The5th Global Consulting" width={240} height={54} style={{ objectFit: 'contain' }} />
 
       {/* Progress dots + tag row */}
       <div style={{ width: '100%', maxWidth: 640, display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -1002,11 +1002,11 @@ function Footer() {
   return (
     <footer style={{ background: '#0a1a0f', padding: '60px 40px 40px' }}>
       <div style={{ width: '100%', textAlign: 'center', fontSize: 'clamp(64px, 12vw, 140px)', fontWeight: 900, color: '#fff', letterSpacing: '-4px', lineHeight: 1, marginBottom: 40 }}>
-        THE5TH CONSULTING
+        THE5TH GLOBAL CONSULTING
       </div>
       <div style={{ height: 1, background: '#225840', marginBottom: 28 }} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-        <span style={{ fontSize: 14, color: '#aaa' }}>© 2026 The5th Consulting. All rights reserved.</span>
+        <span style={{ fontSize: 14, color: '#aaa' }}>© 2026 The5th Global Consulting. All rights reserved.</span>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           {[
             { label: 'Privacy Policy', href: '/privacy' },
@@ -1633,7 +1633,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
 
       {/* ══ NAV ══ */}
       <motion.nav className="qp-nav" initial={{ y:-64, opacity:0 }} animate={{ y:0, opacity:1 }} transition={tr(0)}>
-        <div className="qp-logo"><Image src="/logo-white2.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
+        <div className="qp-logo"><Image src="/logo-white2.png" alt="The5th Global Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
       </motion.nav>
 
       {/* ══ HERO ══ */}
@@ -2242,7 +2242,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
       {/* ══ FOOTER ══ */}
       <footer className="qp-footer">
         <div className="qp-footer-top">
-          <div className="qp-footer-logo"><Image src="/logo-white2.png" alt="The5th Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
+          <div className="qp-footer-logo"><Image src="/logo-white2.png" alt="The5th Global Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
           <div className="qp-footer-avs">
             {[
               '/illustrations/advocate.png',
@@ -2271,7 +2271,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
           </div>
         </div>
         <div className="qp-footer-bottom">
-          &copy; 2026 The5th Consulting. All rights reserved.
+          &copy; 2026 The5th Global Consulting. All rights reserved.
         </div>
       </footer>
 

@@ -120,7 +120,7 @@ export default function CheckoutComplete() {
         @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}`}</style>
 
       <header style={{ padding: '26px 28px', display: 'flex', justifyContent: 'center' }}>
-        <a href="/"><img src="/public/images/logo.png" alt="The5th Consulting" style={{ height: 40, width: 'auto' }} /></a>
+        <a href="/"><img src="/public/images/logo.png" alt="The5th Global Consulting" style={{ height: 40, width: 'auto' }} /></a>
       </header>
 
       <main style={{ maxWidth: 640, margin: '0 auto', padding: '10px 24px 70px', textAlign: 'center' }}>
@@ -167,7 +167,7 @@ export default function CheckoutComplete() {
         )}
       </main>
 
-      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Consulting</div>
+      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Global Consulting</div>
     </div>
   )
 }

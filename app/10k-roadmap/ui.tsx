@@ -137,7 +137,7 @@ export function Header({ nav, showFounder }: { nav?: { label: string; href: stri
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
           {showFounder && (
             <>
               <span style={{ width: 1, height: 22, background: T.line }} />
@@ -164,7 +164,7 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; lin
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 20 }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 20 }} />
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>

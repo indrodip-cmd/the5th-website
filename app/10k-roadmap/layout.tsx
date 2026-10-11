@@ -18,7 +18,7 @@ const URL = 'https://the5thglobal.consulting/10k-roadmap'
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
-  keywords: ['coaching business', 'consultant growth', '$10K per month', 'strategy audit', 'coaching for coaches', 'predictable revenue', 'The5th Consulting'],
+  keywords: ['coaching business', 'consultant growth', '$10K per month', 'strategy audit', 'coaching for coaches', 'predictable revenue', 'The5th Global Consulting'],
   alternates: { canonical: '/10k-roadmap' },
   robots: {
     index: true, follow: true,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: URL,
-    siteName: 'The5th Consulting',
+    siteName: 'The5th Global Consulting',
     title: OG_TITLE,
     description: DESC,
     // Actual landing-page hero screenshot (1200x630), not a generated card.

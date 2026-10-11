@@ -5,14 +5,14 @@ import { ResearchPage, CardArt, AUTHOR_IMG, AUTHOR_DEGREE } from './shell'
 import NewsletterForm from './NewsletterForm'
 
 export const metadata: Metadata = {
-  title: 'Research | The5th Consulting',
+  title: 'Research | The5th Global Consulting',
   description:
-    'Long-form research from The5th Consulting on artificial intelligence, consumer behavior, neuroscience, and the science of machine minds. In-depth, first-principles writing for the curious and the technical alike.',
+    'Long-form research from The5th Global Consulting on artificial intelligence, consumer behavior, neuroscience, and the science of machine minds. In-depth, first-principles writing for the curious and the technical alike.',
   alternates: { canonical: '/research' },
   openGraph: {
     type: 'website',
     url: 'https://the5thglobal.consulting/research',
-    title: 'Research | The5th Consulting',
+    title: 'Research | The5th Global Consulting',
     description:
       'In-depth research on artificial intelligence, neuroscience, and the science of machine minds, written for the curious layperson and the working researcher.',
   },

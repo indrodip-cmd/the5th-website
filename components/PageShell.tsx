@@ -36,9 +36,9 @@ export default function PageShell({
         padding: '20px clamp(20px, 5vw, 56px)', borderBottom: `1px solid ${C.border}`,
         position: 'sticky', top: 0, background: 'rgba(250,246,240,0.9)', backdropFilter: 'blur(10px)', zIndex: 10,
       }}>
-        <a href="/" aria-label="The5th Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <a href="/" aria-label="The5th Global Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 40, width: 'auto', display: 'block' }} />
+          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 40, width: 'auto', display: 'block' }} />
         </a>
         <a href="/" style={{ textDecoration: 'none', color: C.muted, fontSize: 14, fontWeight: 600 }}>← Back to home</a>
       </header>
@@ -70,7 +70,7 @@ export default function PageShell({
             ))}
             <a href="mailto:support@10kroadmap.org" style={{ color: C.muted, fontSize: 14, textDecoration: 'none' }}>Contact</a>
           </div>
-          <div style={{ fontSize: 13, color: C.muted }}>© 2026 The5th Consulting. All rights reserved.</div>
+          <div style={{ fontSize: 13, color: C.muted }}>© 2026 The5th Global Consulting. All rights reserved.</div>
         </div>
       </footer>
     </div>

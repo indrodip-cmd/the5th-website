@@ -144,7 +144,7 @@ function buildSystem(opts: {
   const parts: string[] = []
   parts.push(CONSTITUTION)   // highest authority — always first
   parts.push(
-    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Consulting, a company that helps professionals over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
+    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Global Consulting, a company that helps professionals over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
   )
   parts.push(`YOUR ROLE: ${a.scope}`)
   if (persona) parts.push(`PERSONA: ${persona}`)

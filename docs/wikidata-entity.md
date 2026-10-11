@@ -1,4 +1,4 @@
-# Wikidata / entity data — The5th Consulting & Indrodip Ghosh
+# Wikidata / entity data — The5th Global Consulting & Indrodip Ghosh
 
 Ready-to-submit data to create Wikidata items so Google's Knowledge Graph and AI
 assistants recognise the brand + founder as an entity and link every profile.
@@ -18,7 +18,7 @@ values are exact.
 ## 1) Person — Indrodip Ghosh
 
 **Label (en):** Indrodip Ghosh
-**Description (en):** Marketing and growth consultant; founder of The5th Consulting
+**Description (en):** Marketing and growth consultant; founder of The5th Global Consulting
 **Aliases (en):** Indradip Ghosh; Indrodip
 
 | Property | P-id | Value |
@@ -31,14 +31,14 @@ values are exact.
 | official website | P856 | `https://the5th.consulting/` |
 | Facebook ID | P2013 | `withindrodip` |
 | LinkedIn personal profile ID | P6634 | `marketing-growth-consultant` |
-| employer / owner of | P108 / P1830 | The5th Consulting (its Q-id, once created) |
+| employer / owner of | P108 / P1830 | The5th Global Consulting (its Q-id, once created) |
 | country of citizenship | P27 | *(fill in, e.g. India `Q668`)* |
 
 ### QuickStatements — Person
 ```
 CREATE
 LAST	Len	"Indrodip Ghosh"
-LAST	Den	"Marketing and growth consultant; founder of The5th Consulting"
+LAST	Den	"Marketing and growth consultant; founder of The5th Global Consulting"
 LAST	Aen	"Indradip Ghosh"
 LAST	P31	Q5
 LAST	P106	Q131524
@@ -50,11 +50,11 @@ LAST	P6634	"marketing-growth-consultant"
 
 ---
 
-## 2) Organization — The5th Consulting
+## 2) Organization — The5th Global Consulting
 
-**Label (en):** The5th Consulting
+**Label (en):** The5th Global Consulting
 **Description (en):** Business consulting company helping coaches and consultants turn expertise into a premium business
-**Aliases (en):** The5th; The5th Consulting & 10K Roadmap; 10K Roadmap
+**Aliases (en):** The5th; The5th Global Consulting & 10K Roadmap; 10K Roadmap
 
 | Property | P-id | Value |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ LAST	P6634	"marketing-growth-consultant"
 ### QuickStatements — Organization
 ```
 CREATE
-LAST	Len	"The5th Consulting"
+LAST	Len	"The5th Global Consulting"
 LAST	Den	"Business consulting company helping coaches and consultants turn expertise into a premium business"
 LAST	Aen	"The5th"
 LAST	P31	Q783794

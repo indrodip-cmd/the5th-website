@@ -12,12 +12,12 @@ const indexCard: ResearchPost = {
   author: 'Indrodip Ghosh',
   authorRole: '',
   tags: ['Independent research'],
-  metaTitle: 'Research | The5th Consulting',
+  metaTitle: 'Research | The5th Global Consulting',
   metaDescription: '',
   keywords: [],
 }
 
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
-export const alt = 'Research · The5th Consulting'
+export const alt = 'Research · The5th Global Consulting'
 export default function Image() { return researchOg(indexCard) }

@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
         html: otpEmail(firstName, otp, []),
         // A plain-text alternative markedly improves inbox placement for
         // transactional codes (a missing text/plain part is a spam signal).
-        text: `Hi ${firstName},\n\nYour 6-digit code is: ${otp}\n\nIt expires in 30 minutes. Enter it on the page to unlock your roadmap.\n\nIf you did not request this, you can ignore this email.\n\nThe5th Consulting · noreply@10kroadmap.org`,
+        text: `Hi ${firstName},\n\nYour 6-digit code is: ${otp}\n\nIt expires in 30 minutes. Enter it on the page to unlock your roadmap.\n\nIf you did not request this, you can ignore this email.\n\nThe5th Global Consulting · noreply@10kroadmap.org`,
       })
     } catch (e) {
       console.error('send-otp: OTP email send failed', e)

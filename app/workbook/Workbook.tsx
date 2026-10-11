@@ -1,6 +1,6 @@
 'use client'
 /* ─────────────────────────────────────────────────────────────────────────
-   THE KNOWLEDGE ASSET — rebuilt to live inside The5th Consulting family.
+   THE KNOWLEDGE ASSET — rebuilt to live inside The5th Global Consulting family.
 
    Mirrors the homepage design system 1:1: warm parchment surfaces, plum
    Cormorant Garamond headings with italic emphasis, DM Sans body, GREEN as the
@@ -329,7 +329,7 @@ export default function Workbook({ planId }: { planId: string }) {
       <header style={{ position: 'sticky', top: 0, zIndex: 40, background: `linear-gradient(180deg,${PLUM_DK} 0%,#241229 100%)`, borderBottom: `1px solid ${GOLD_LINE}` }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '.7rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
           <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-            <img src="/images/logo-header-white.png" alt="The5th Consulting" style={{ height: 34, width: 'auto' }} />
+            <img src="/images/logo-header-white.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto' }} />
           </a>
           <nav className="ka-nav-links" aria-label="Sections">
             {NAV.map(([l, h]) => <a key={h} href={h} style={{ fontSize: '.72rem', fontWeight: 500, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,.8)', textDecoration: 'none', padding: '0 1.1em' }}>{l}</a>)}
@@ -353,7 +353,7 @@ export default function Workbook({ planId }: { planId: string }) {
                 <span style={{ fontFamily: SANS, fontSize: 14.5, color: '#fff', fontWeight: 500, lineHeight: 1.4 }}><strong style={{ color: GOLD, fontWeight: 700 }}>Our promise:</strong> build it with this workbook, or get every penny back.</span>
               </div>
               <p style={{ fontFamily: SANS, fontSize: 'clamp(1rem,1.5vw,1.2rem)', fontWeight: 300, color: 'rgba(255,255,255,.82)', marginTop: '1.4rem', maxWidth: 500, lineHeight: 1.7 }}>
-                <strong style={{ fontWeight: 600, color: WHITE }}>The Knowledge Asset</strong> is a build-as-you-go workbook. You don&apos;t just read it — you build your product, offer, audience, content, and launch inside it. From the team behind The5th Consulting.
+                <strong style={{ fontWeight: 600, color: WHITE }}>The Knowledge Asset</strong> is a build-as-you-go workbook. You don&apos;t just read it — you build your product, offer, audience, content, and launch inside it. From the team behind The5th Global Consulting.
               </p>
               <div style={{ marginTop: '1.8rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
                 <Btn label={`Get the book — ${PRICE}`} href="#buy" />
@@ -813,7 +813,7 @@ export default function Workbook({ planId }: { planId: string }) {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ fontFamily: SERIF, fontSize: '1.5rem', fontWeight: 600, color: WHITE }}>The Knowledge <em style={{ fontStyle: 'italic', color: GOLD }}>Asset</em></div>
-              <div style={{ fontFamily: SANS, fontSize: 13.5, marginTop: 8 }}>By Indrodip Ghosh &amp; Christinee Mathison · The5th Consulting</div>
+              <div style={{ fontFamily: SANS, fontSize: 13.5, marginTop: 8 }}>By Indrodip Ghosh &amp; Christinee Mathison · The5th Global Consulting</div>
               <a href="https://10kroadmap.org" style={{ fontFamily: SANS, fontSize: 13.5, color: GOLD, textDecoration: 'none', display: 'inline-block', marginTop: 4 }}>10kroadmap.org</a>
             </div>
             <nav style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px' }} aria-label="Footer">
@@ -823,7 +823,7 @@ export default function Workbook({ planId }: { planId: string }) {
             </nav>
           </div>
           <div style={{ borderTop: `1px solid ${GOLD_LINE}`, marginTop: 30, paddingTop: 22, fontFamily: SANS, fontSize: 12, color: 'rgba(250,246,240,.55)', lineHeight: 1.7 }}>
-            <p>© 2026 The5th Consulting. All rights reserved.</p>
+            <p>© 2026 The5th Global Consulting. All rights reserved.</p>
             <p style={{ marginTop: 8, maxWidth: 800 }}>Business results vary. This book provides educational information and practical exercises; it does not guarantee financial results.</p>
           </div>
         </div>

@@ -122,7 +122,7 @@ async function grantDiagnostic(email: string, name: string | null, receiptId: st
         <p style="font-size:15px;line-height:1.6;color:#5a5550">Your full Business Growth Diagnostic is unlocked. It includes your complete diagnosis, your prioritised fixes, your personalised 30-day action plan, and a free 1:1 strategy call.</p>
         <p style="margin:24px 0"><a href="https://the5thglobal.consulting/quiz/results" style="display:inline-block;background:#C9A84C;color:#1a1206;font-weight:700;font-size:15px;padding:14px 30px;border-radius:10px;text-decoration:none">Open your full report →</a></p>
         <p style="font-size:13px;line-height:1.6;color:#8A8075">Open it on the device you took the quiz on. Need help getting back in? Just reply to this email.</p>
-        <p style="font-size:12px;color:#b3abbb;margin-top:24px">© 2026 The5th Consulting</p>
+        <p style="font-size:12px;color:#b3abbb;margin-top:24px">© 2026 The5th Global Consulting</p>
       </div>`,
     })
   } catch (e) {

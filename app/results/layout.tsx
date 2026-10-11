@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
    export metadata, so this route-segment layout sets title/description/OG,
    overriding the root layout's "assessment" copy that was showing on shared
    links (WhatsApp, iMessage, etc.). og:image comes from opengraph-image.tsx. */
-const title = 'Client Case Studies & Results | The5th Consulting'
+const title = 'Client Case Studies & Results | The5th Global Consulting'
 const description =
   'Real coaches and consultants, real revenue. Browse documented case studies — from a first $2,500 to $210,000 — showing exactly what we built and what it produced.'
 
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/results',
-    siteName: 'The5th Consulting',
+    siteName: 'The5th Global Consulting',
     title,
     description,
   },

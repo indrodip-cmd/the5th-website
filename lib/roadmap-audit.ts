@@ -56,7 +56,7 @@ export function verifyPaidPass(token?: string | null): { email: string } | null 
 }
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5thglobal.consulting').replace(/\/$/, '')
-const FROM = 'The5th Consulting <indrodip@10kroadmap.org>'
+const FROM = 'The5th Global Consulting <indrodip@10kroadmap.org>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NOTIFY_EMAIL || 'indrodip@10kroadmap.org'
 
 type Row = Record<string, unknown>

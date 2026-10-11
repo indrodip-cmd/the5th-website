@@ -9,7 +9,7 @@ const SITE_JSONLD = {
     {
       "@type": "Organization",
       "@id": "https://the5thglobal.consulting/#organization",
-      name: "The5th Consulting",
+      name: "The5th Global Consulting",
       alternateName: "The5th",
       url: "https://the5thglobal.consulting/",
       logo: { "@type": "ImageObject", url: "https://the5thglobal.consulting/images/logo.png" },
@@ -40,7 +40,7 @@ const SITE_JSONLD = {
       "@type": "WebSite",
       "@id": "https://the5thglobal.consulting/#website",
       url: "https://the5thglobal.consulting/",
-      name: "The5th Consulting",
+      name: "The5th Global Consulting",
       publisher: { "@id": "https://the5thglobal.consulting/#organization" },
     },
     {
@@ -55,14 +55,14 @@ const SITE_JSONLD = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://the5thglobal.consulting"),
-  title: "The5th AI Business Assessment | The5th Consulting",
+  title: "The5th AI Business Assessment | The5th Global Consulting",
   description: "A premium AI assessment that reads your coaching or consulting business, gives you a Business Health Score, names your biggest opportunity, and builds your personalised 90-day roadmap. Built for professionals over 40.",
   openGraph: {
-    title: "The5th AI Business Assessment | The5th Consulting",
+    title: "The5th AI Business Assessment | The5th Global Consulting",
     description: "Get a Business Health Score, your biggest opportunity, and a personalised 90-day roadmap, built by AI for professionals turning expertise into income.",
   },
   twitter: {
-    title: "The5th AI Business Assessment | The5th Consulting",
+    title: "The5th AI Business Assessment | The5th Global Consulting",
     description: "Get a Business Health Score, your biggest opportunity, and a personalised 90-day roadmap, built by AI for professionals turning expertise into income.",
   },
   icons: {

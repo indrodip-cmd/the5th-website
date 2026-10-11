@@ -184,7 +184,7 @@ export type Meta = { name: string; firstName: string; archetypeLabel: string; pe
 /* White wordmark for dark pages — width-constrained so a wide logo never
    stretches across the page. Falls back to a text mark if unavailable. */
 const logoMark = (m: Meta, w: number) => m.logo
-  ? `<img src="${m.logo}" alt="The5th Consulting" style="width:${w}px;height:auto;max-width:100%;display:block"/>`
+  ? `<img src="${m.logo}" alt="The5th Global Consulting" style="width:${w}px;height:auto;max-width:100%;display:block"/>`
   : `<div style="font-family:'DM Sans';font-size:${Math.round(w * 0.15)}px;font-weight:800;color:#fff">The<span style="color:${P.gold}">5th</span></div>`
 
 export const buildPremiumReport = (roadmap: string, m: Meta): string => {
@@ -199,8 +199,8 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
   const study = pickStudy(constraint.label)
 
   const conf = `Confidential · Prepared exclusively for ${esc(m.name)}`
-  const foot = `<div class="foot"><span>The5th Consulting · Business Growth Diagnostic</span><span class="pg"></span></div>`
-  const footDark = `<div class="foot dark"><span>The5th Consulting · Business Growth Diagnostic</span><span class="pg"></span></div>`
+  const foot = `<div class="foot"><span>The5th Global Consulting · Business Growth Diagnostic</span><span class="pg"></span></div>`
+  const footDark = `<div class="foot dark"><span>The5th Global Consulting · Business Growth Diagnostic</span><span class="pg"></span></div>`
   const eyebrow = (t: string, light = false) => `<div style="font-family:'DM Sans';font-size:10px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:${light ? P.goldSoft : P.goldDeep};margin-bottom:14px">${t}</div>`
   const h2 = (t: string, light = false) => `<h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.08;letter-spacing:-.01em;color:${light ? '#fff' : P.ink};margin:0 0 18px">${t}</h2>`
   const ctaBar = `<a href="${BOOKING_URL}" style="display:block;margin-top:22px;text-decoration:none;background:#FBF8F2;border:1px solid ${P.line};border-left:3px solid ${P.gold};border-radius:8px;padding:14px 18px;font-family:'DM Sans';font-size:13px;color:${P.sub}"><b style="color:${P.ink}">Want help implementing this?</b> Your complimentary strategy session is available. <span style="color:${P.goldDeep};font-weight:700">Book your session →</span></a>`
@@ -218,12 +218,12 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
       <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:#fff">${esc(m.name)}</div>
     </div>
     <div style="display:flex;justify-content:space-between;font-family:'DM Sans';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5)">
-      <span>The5th Consulting</span><span>${esc(m.dateStr)}</span></div>
+      <span>The5th Global Consulting</span><span>${esc(m.dateStr)}</span></div>
   </section>`)
 
   /* 02 — EXECUTIVE LETTER */
   sheets.push(`<section class="sheet">
-    ${eyebrow('A note from The5th Consulting')}
+    ${eyebrow('A note from The5th Global Consulting')}
     ${h2(`Your business is not a collection of<br/><span style="font-style:italic;color:${P.goldDeep}">disconnected problems.</span>`)}
     <div style="max-width:560px">
       <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">Dear ${esc(m.firstName)},</p>
@@ -231,7 +231,7 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
       <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">This assessment was built to do exactly that: to identify where your business stands today, where the largest opportunities sit, and what you should prioritize next, given your stage and your goal of ${esc(m.goal.toLowerCase())}.</p>
       <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 22px">Read it the way you would a strategic review. The scorecard tells you where you are. The diagnostic explains why. The priorities tell you what to do first.</p>
       <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:${P.ink}">Indrodip Ghosh</div>
-      <div style="font-family:'DM Sans';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${P.muted}">Founder · The5th Consulting</div>
+      <div style="font-family:'DM Sans';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${P.muted}">Founder · The5th Global Consulting</div>
     </div>${foot}</section>`)
 
   /* 03 — TABLE OF CONTENTS */
@@ -240,7 +240,7 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
     ['04', 'A Strategic Insight'], ['05', 'Your Priority Matrix'], ['06', 'Your Signature Offer'],
     ['07', 'Pricing & Money Psychology'], ['08', 'Your 30-Day Plan'], ['09', 'Content & Growth Assets'],
     ['10', 'Your 7-Day Homework'], ['11', 'If We Were Running Your Business'], ['12', 'A Relevant Result'],
-    ['13', 'About The5th Consulting'], ['14', 'Your Strategy Session'],
+    ['13', 'About The5th Global Consulting'], ['14', 'Your Strategy Session'],
   ]
   sheets.push(`<section class="sheet">
     ${eyebrow('Contents')}
@@ -411,7 +411,7 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
 
   /* 12 — ABOUT THE5TH */
   sheets.push(`<section class="sheet">
-    ${eyebrow('13 · About The5th Consulting')}
+    ${eyebrow('13 · About The5th Global Consulting')}
     ${h2(`We help experts turn a<br/>lifetime of experience into<br/><span style="font-style:italic;color:${P.goldDeep}">a business that lasts.</span>`)}
     <div style="max-width:560px">
       <p style="font-size:15px;color:${P.sub};line-height:1.85;margin:0 0 14px">The5th works with coaches, consultants and experts, most of them established in their field, who know they are sitting on real value but have not yet built the offer, positioning and system to monetize it with confidence.</p>
@@ -439,13 +439,13 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
         <a href="${BOOKING_URL}" style="color:${P.goldSoft};text-decoration:none">Book a strategy session</a><br/>
         support@10kroadmap.org</div>
     </div>
-    <div style="font-family:'DM Sans';font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">© 2026 The5th Consulting · ${conf}</div>
+    <div style="font-family:'DM Sans';font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:center">© 2026 The5th Global Consulting · ${conf}</div>
   </section>`)
 
   const total = sheets.length
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
   <title>The5th Business Growth Diagnostic</title>
-  <meta name="author" content="The5th Consulting">
+  <meta name="author" content="The5th Global Consulting">
   <meta name="subject" content="Personalized Business Growth Assessment">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap');

@@ -155,9 +155,9 @@ export const LANDING = {
     eyebrow: 'Who You’ll Speak With',
     heading: 'Who will you speak with on the call?',
     quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
-    body: 'Indrodip Ghosh founded The5th Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every Roadmap Session is run by Indrodip personally, not a sales rep, not a junior coach.',
+    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every Roadmap Session is run by Indrodip personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
-    role: 'Founder, The5th Consulting',
+    role: 'Founder, The5th Global Consulting',
     stat: { value: '93%', label: 'of clients who implement the method earn $14,000+' },
   },
 
@@ -522,5 +522,5 @@ export const LEGAL = {
     { label: 'Code of Ethics', href: '/ethics' },
   ],
   copyright:
-    '© 2026 The5th Consulting. All rights reserved. Unauthorized copying, reproduction, distribution, use, or collection of any content or information from this website is strictly prohibited. Any unauthorized use may result in legal action. To the extent permitted by law, any dispute arising from or relating to the unauthorized use of this website or its content shall be subject to the jurisdiction of the courts located in the State of New York.',
+    '© 2026 The5th Global Consulting. All rights reserved. Unauthorized copying, reproduction, distribution, use, or collection of any content or information from this website is strictly prohibited. Any unauthorized use may result in legal action. To the extent permitted by law, any dispute arising from or relating to the unauthorized use of this website or its content shall be subject to the jurisdiction of the courts located in the State of New York.',
 }

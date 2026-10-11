@@ -86,7 +86,7 @@ function icsFor(sessions: typeof SESSIONS) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//The5th Consulting//Breakthrough Intensive//EN',
+    'PRODID:-//The5th Global Consulting//Breakthrough Intensive//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
   ]
@@ -129,7 +129,7 @@ export default function ThankYouView() {
       `}</style>
 
       <header style={{ padding: '22px', display: 'flex', justifyContent: 'center' }}>
-        <a href="/"><img src="/images/logo.png" alt="The5th Consulting" style={{ height: 34 }} /></a>
+        <a href="/"><img src="/images/logo.png" alt="The5th Global Consulting" style={{ height: 34 }} /></a>
       </header>
 
       <main style={{ maxWidth: 640, margin: '0 auto', padding: '18px 22px 70px', animation: 'rise .5s ease' }}>

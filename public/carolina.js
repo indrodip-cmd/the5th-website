@@ -1661,7 +1661,7 @@
       + '<a data-ak="nav" data-av="/privacy">Privacy</a><span>·</span>'
       + '<a data-ak="nav" data-av="/terms">Terms</a><span>·</span>'
       + '<a data-ak="seed" data-av="I need help from a person.">Contact</a></div>'
-      + '<div class="cw-foot2-meta">The5th AI · v2 · © ' + year + ' The5th Consulting</div></div>';
+      + '<div class="cw-foot2-meta">The5th AI · v2 · © ' + year + ' The5th Global Consulting</div></div>';
   }
 
   function renderHome() {

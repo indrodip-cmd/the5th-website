@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import PageShell, { prose } from '@/components/PageShell'
 
 export const metadata: Metadata = {
-  title: 'Code of Ethics | The5th Consulting',
+  title: 'Code of Ethics | The5th Global Consulting',
   description: 'The principles we hold ourselves to: honesty, respect for your autonomy, and no manipulation, false urgency, or exaggerated promises.',
   alternates: { canonical: '/ethics' },
 }

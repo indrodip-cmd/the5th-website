@@ -80,7 +80,7 @@ function buildEmail(name: string, content: string): string {
       <tr>
         <td style="color:#ffffff;font-weight:700;font-size:12px;
           letter-spacing:2px;font-family:sans-serif;">
-          THE5TH CONSULTING
+          THE5TH GLOBAL CONSULTING
         </td>
         <td align="right" style="color:#C9A84C;font-size:10px;
           font-weight:700;letter-spacing:1px;font-family:sans-serif;">
@@ -99,7 +99,7 @@ function buildEmail(name: string, content: string): string {
     </div>
     <p style="margin:32px 0 0;font-size:14px;color:#3d3d3d;font-family:sans-serif;">
       Indrodip<br>
-      <span style="color:#888;font-size:12px;">The5th Consulting</span>
+      <span style="color:#888;font-size:12px;">The5th Global Consulting</span>
     </p>
   </td></tr>
 

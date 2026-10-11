@@ -13,7 +13,7 @@ const URL = 'https://the5thglobal.consulting/10k-roadmap/india'
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
-  keywords: ['coaching business India', 'consultant growth India', 'predictable income', 'strategy audit', 'business roadmap', 'side business India', 'The5th Consulting'],
+  keywords: ['coaching business India', 'consultant growth India', 'predictable income', 'strategy audit', 'business roadmap', 'side business India', 'The5th Global Consulting'],
   alternates: { canonical: '/10k-roadmap/india' },
   robots: {
     index: true, follow: true,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: URL,
-    siteName: 'The5th Consulting',
+    siteName: 'The5th Global Consulting',
     title: OG_TITLE,
     description: DESC,
     images: [{ url: '/og/10k-roadmap-india-hero.png', width: 1200, height: 630, alt: OG_TITLE }],

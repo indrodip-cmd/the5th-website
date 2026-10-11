@@ -3,7 +3,7 @@ import PageShell, { prose } from '@/components/PageShell'
 import TicketForm from '@/components/TicketForm'
 
 export const metadata: Metadata = {
-  title: 'Help & Support | The5th Consulting',
+  title: 'Help & Support | The5th Global Consulting',
   description: 'Get help, find answers to common questions, or report a bug. Open a support ticket and a real person will get back to you.',
   alternates: { canonical: '/support' },
 }

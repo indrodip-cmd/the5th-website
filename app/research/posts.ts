@@ -266,7 +266,7 @@ export function articleMetadata(post: ResearchPost): Metadata {
     openGraph: {
       type: 'article',
       url,
-      siteName: 'The5th Consulting',
+      siteName: 'The5th Global Consulting',
       title: post.metaTitle,
       description: post.metaDescription,
       publishedTime: post.date,
@@ -305,7 +305,7 @@ export function articleJsonLd(post: ResearchPost): Record<string, unknown> {
         },
         publisher: {
           '@type': 'Organization',
-          name: 'The5th Consulting',
+          name: 'The5th Global Consulting',
           url: SITE,
           logo: { '@type': 'ImageObject', url: `${SITE}/logo-the5th.png` },
         },

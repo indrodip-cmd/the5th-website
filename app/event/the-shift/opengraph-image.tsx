@@ -78,7 +78,7 @@ export default function OpengraphImage() {
           }}
         >
           <span style={{ display: 'flex', width: 12, height: 12, borderRadius: 6, background: GOLD, marginRight: 14 }} />
-          Hosted by Indrodip Ghosh · The5th Consulting
+          Hosted by Indrodip Ghosh · The5th Global Consulting
         </div>
       </div>
     ),

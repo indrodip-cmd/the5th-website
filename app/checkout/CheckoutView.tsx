@@ -97,7 +97,7 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
         @media(max-width:900px){.co-grid{grid-template-columns:1fr;gap:28px}.co-sticky{position:static!important}}`}</style>
 
       <header style={{ padding: '24px 28px', display: 'flex', justifyContent: 'center' }}>
-        <a href="/"><img src="/public/images/logo.png" alt="The5th Consulting" style={{ height: 38, width: 'auto' }} /></a>
+        <a href="/"><img src="/public/images/logo.png" alt="The5th Global Consulting" style={{ height: 38, width: 'auto' }} /></a>
       </header>
 
       <main style={{ maxWidth: 1040, margin: '0 auto', padding: '8px 24px 70px' }}>
@@ -187,7 +187,7 @@ export default function CheckoutView({ config }: { config: CheckoutConfig }) {
         </div>
       </main>
 
-      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Consulting</div>
+      <div style={{ textAlign: 'center', fontSize: 12, color: '#b3abbb', padding: '0 0 22px' }}>© 2026 The5th Global Consulting</div>
     </div>
   )
 }

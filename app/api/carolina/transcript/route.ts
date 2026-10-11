@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF6F0;padding:32px 16px;"><tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:12px;overflow:hidden;">
   <tr><td style="background:#2E1A35;padding:22px 40px;">
-    <span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH CONSULTING</span>
+    <span style="color:#fff;font-weight:700;font-size:12px;letter-spacing:2px;font-family:sans-serif;">THE5TH GLOBAL CONSULTING</span>
     <span style="color:#C9A84C;font-size:10px;font-weight:700;letter-spacing:1px;font-family:sans-serif;float:right;">YOUR CONVERSATION</span>
   </td></tr>
   <tr><td style="padding:32px 40px 6px;">
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
   </td></tr>
   <tr><td style="padding:8px 40px 20px;"><table width="100%" cellpadding="0" cellspacing="0">${rows}</table></td></tr>
   <tr><td style="padding:22px 40px 34px;border-top:1px solid #eee;">
-    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Consulting &middot; Helping professionals 40+ turn expertise into income.</p>
+    <p style="color:#8A8075;font-size:11px;line-height:1.6;margin:0;font-family:sans-serif;">The5th Global Consulting &middot; Helping professionals 40+ turn expertise into income.</p>
   </td></tr>
 </table></td></tr></table></body></html>`
 

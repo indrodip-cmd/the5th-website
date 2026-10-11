@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 /* Booking utility step — not for the index. */
 export const metadata: Metadata = {
-  title: 'Choose Your Time | The5th Consulting',
+  title: 'Choose Your Time | The5th Global Consulting',
   robots: { index: false, follow: true },
 }
 

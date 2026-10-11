@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://the5thglobal.consulting/workbook',
     title: 'The Knowledge Asset — Turn What You Already Know Into a $10K-a-Month Business',
-    description: 'A build-as-you-go workbook from The5th Consulting. Build your product, offer, audience, content, and launch toward $10K months — including a 7-day free trial of The5th AI.',
+    description: 'A build-as-you-go workbook from The5th Global Consulting. Build your product, offer, audience, content, and launch toward $10K months — including a 7-day free trial of The5th AI.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'The Knowledge Asset — Turn What You Already Know Into a $10K-a-Month Business',
-    description: 'A build-as-you-go workbook from The5th Consulting. Build toward $10K months — includes a 7-day free trial of The5th AI. $7.93.',
+    description: 'A build-as-you-go workbook from The5th Global Consulting. Build toward $10K months — includes a 7-day free trial of The5th AI. $7.93.',
   },
 }
 
@@ -34,7 +34,7 @@ const PRODUCT_JSONLD = {
     { '@type': 'Person', name: 'Indrodip Ghosh' },
     { '@type': 'Person', name: 'Christinee Mathison' },
   ],
-  publisher: { '@type': 'Organization', name: 'The5th Consulting' },
+  publisher: { '@type': 'Organization', name: 'The5th Global Consulting' },
   description:
     'A practical, build-as-you-go workbook that helps coaches, consultants, healers, creators, and experts turn what they know into a digital business — building their product, offer, audience, content, and launch toward $10K/month.',
   offers: {

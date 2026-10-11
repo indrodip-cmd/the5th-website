@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Page not found · The5th Consulting' }
+export const metadata = { title: 'Page not found · The5th Global Consulting' }
 
 /* Animated, on-brand 404. The giant "404" (with a spinning ring for the middle
    zero) sits over a slowly drifting field of gold orbs — the same "big number +

@@ -57,7 +57,7 @@ ${preheader(opts.preview)}
   <tr><td align="center" style="padding:26px 14px">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(46,26,53,.5)">
       <tr><td style="background:linear-gradient(140deg,${C.plumMid},${C.plum} 62%,#1f1128);padding:28px 40px 24px;text-align:center">
-        <img src="${WB.logo}" alt="The5th Consulting" height="24" style="height:24px;margin-bottom:12px">
+        <img src="${WB.logo}" alt="The5th Global Consulting" height="24" style="height:24px;margin-bottom:12px">
         <div style="font-family:Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${C.gold}">${opts.kicker}</div>
         <div style="font-family:Georgia,serif;font-size:26px;line-height:1.25;color:#ffffff;margin-top:8px">${opts.title}</div>
       </td></tr>
@@ -68,13 +68,13 @@ ${preheader(opts.preview)}
         <div style="border-top:1px solid ${C.border};padding-top:16px">
           Keep building,<br>
           <b style="color:${C.plum}">Indrodip &amp; the team at The5th</b><br>
-          <span style="font-size:13px;color:${C.goldDk}">The5th Consulting</span>
+          <span style="font-size:13px;color:${C.goldDk}">The5th Global Consulting</span>
         </div>
       </td></tr>
       <tr><td style="background:#f6f0e8;padding:20px 40px">
         <div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.65;color:#9a9186">
           You're receiving this because you purchased <b>The Knowledge Asset</b> and started your 7-day The5th AI trial.
-          <br><br>&copy; 2026 The5th Consulting · 15 Central Park West, NYC, NY 10023, USA<br>
+          <br><br>&copy; 2026 The5th Global Consulting · 15 Central Park West, NYC, NY 10023, USA<br>
           <a href="${link}" style="color:#9a9186;text-decoration:underline">Unsubscribe</a>
         </div>
       </td></tr>

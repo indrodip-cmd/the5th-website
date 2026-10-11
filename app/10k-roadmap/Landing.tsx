@@ -317,6 +317,14 @@ export default function Landing() {
               <div className="rm-serif" style={{ fontSize: 26, fontWeight: 800, color: '#E4C879', lineHeight: 1 }}>{LANDING.founder.stat.value}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.75)', marginTop: 4, lineHeight: 1.35 }}>{LANDING.founder.stat.label}</div>
             </div>
+            <div style={{ position: 'absolute', top: -16, right: -16, display: 'flex', alignItems: 'center', gap: 8, background: '#fff', borderRadius: 999, padding: '6px 14px 6px 6px', boxShadow: '0 14px 28px -14px rgba(46,26,53,.5)' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={LANDING.founder2.photo} alt={LANDING.founder2.name} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '2px solid #E4C879' }} />
+              <div>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: '#2E1A35', lineHeight: 1.2 }}>{LANDING.founder2.name}</div>
+                <div style={{ fontSize: 10, color: TEXT3, lineHeight: 1.2 }}>Managing Director</div>
+              </div>
+            </div>
           </Reveal>
         </section>
       </div>

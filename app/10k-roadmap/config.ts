@@ -168,7 +168,7 @@ export const LANDING = {
     quote: 'I’ve sat across the table with founders at every stage, from their first dollar to their first ten million, and the pattern is always the same. The plan was already there. What was missing was the execution discipline to run it like a real business.',
     body: 'Manisha is a business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. She brings that operating experience directly into your Roadmap Session, pressure-testing your plan the way she would a real P&L, not handing you advice in theory.',
     name: 'Manisha',
-    role: 'Business Consultant, The5th Consulting',
+    role: 'Managing Director, The5th Global Consulting',
   },
 
   faq: {

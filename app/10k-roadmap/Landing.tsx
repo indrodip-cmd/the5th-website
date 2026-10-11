@@ -82,9 +82,11 @@ function Rule() {
 function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
   const days = [0, 20, 40, 60, 80, 100]
   const values = [0, 0, 2.1, 4.6, 8.4, 14.2]
-  // The DIY baseline: most people trying to figure this out alone plateau
-  // around $2-3K/month by day 100 — slow, linear, no compounding.
-  const valuesAlone = [0, 0.3, 0.7, 1.2, 1.8, 2.4]
+  // The DIY baseline: most people trying to figure this out alone don't get
+  // a steady climb — a good month, then a dead one, with no system behind
+  // it to repeat the good month. Deliberately erratic, not a smooth ramp,
+  // landing around the same $2-3K/month most people plateau at.
+  const valuesAlone = [0, 2, 5, 0.8, 3.2, 2.4]
   const w = 640, h = 280, padL = 34, padR = 10, padT = 56, padB = 30
   const max = 16
   const x = (i: number) => padL + (i / (days.length - 1)) * (w - padL - padR)
@@ -148,7 +150,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
           On your own
         </span>
       </div>
-    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days, compared to going it alone: working with us, flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor; on your own, a slow, flat climb that plateaus around $2-3K/month. Annotated with what's taught at each stage">
+    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days, compared to going it alone: working with us, flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor; on your own, an erratic up-and-down income with no steady system, landing around $2-3K/month. Annotated with what's taught at each stage">
       <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#EDE7F0" strokeWidth={1} />
       <text x={padL - 8} y={y(5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$5K</text>
       <text x={padL - 8} y={h - padB + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$0</text>

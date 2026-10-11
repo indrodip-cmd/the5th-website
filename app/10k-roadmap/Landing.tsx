@@ -82,6 +82,9 @@ function Rule() {
 function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
   const days = [0, 20, 40, 60, 80, 100]
   const values = [0, 0, 2.1, 4.6, 8.4, 14.2]
+  // The DIY baseline: most people trying to figure this out alone plateau
+  // around $2-3K/month by day 100 — slow, linear, no compounding.
+  const valuesAlone = [0, 0.3, 0.7, 1.2, 1.8, 2.4]
   const w = 640, h = 280, padL = 34, padR = 10, padT = 56, padB = 30
   const max = 16
   const x = (i: number) => padL + (i / (days.length - 1)) * (w - padL - padR)
@@ -105,12 +108,17 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
     return d
   }
   const line = smoothPath(xs, ys)
+  const xsAlone = valuesAlone.map((_, i) => x(i))
+  const ysAlone = valuesAlone.map((v) => y(v))
+  const lineAlone = smoothPath(xsAlone, ysAlone)
   const area = `${line} L ${x(values.length - 1)} ${h - padB} L ${x(0)} ${h - padB} Z`
   const markerIdx = [1, 3, 5]
   const labelHalfW = (tag: string) => Math.max(36, tag.length * 4.6 + 12)
 
   const lastV = values[values.length - 1]
   const lastX = x(values.length - 1), lastY = y(lastV)
+  const lastVAlone = valuesAlone[valuesAlone.length - 1]
+  const lastXAlone = x(valuesAlone.length - 1), lastYAlone = y(lastVAlone)
 
   // Draw the line in (left-to-right) the moment the chart scrolls into view,
   // then keep a small comet + pulsing end-dot moving so the chart reads as
@@ -129,7 +137,18 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
   }, [])
 
   return (
-    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days: flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor, annotated with what's taught at each stage">
+    <div>
+      <div style={{ display: 'flex', gap: 18, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 8, fontSize: 12.5, fontWeight: 700, color: TEXT2 }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 18, height: 3, borderRadius: 2, background: PURPLE, display: 'inline-block' }} aria-hidden />
+          Working with us
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 18, borderTop: `2.5px dashed ${TEXT3}`, display: 'inline-block' }} aria-hidden />
+          On your own
+        </span>
+      </div>
+    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days, compared to going it alone: working with us, flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor; on your own, a slow, flat climb that plateaus around $2-3K/month. Annotated with what's taught at each stage">
       <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#EDE7F0" strokeWidth={1} />
       <text x={padL - 8} y={y(5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$5K</text>
       <text x={padL - 8} y={h - padB + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$0</text>
@@ -142,6 +161,20 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
         </linearGradient>
       </defs>
       <path d={area} fill="url(#gchart)" style={{ opacity: visible ? 1 : 0, transition: 'opacity 1.4s ease .3s' }} />
+      {/* The DIY baseline: a muted dashed line fading in after the main line
+          draws, so the gap reads as earned rather than competing for attention. */}
+      <path
+        d={lineAlone}
+        fill="none"
+        stroke={TEXT3}
+        strokeWidth={2.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="5 5"
+        style={{ opacity: visible ? 0.8 : 0, transition: 'opacity 1s ease 2.1s' }}
+      />
+      <circle cx={lastXAlone} cy={lastYAlone} r={4} fill={TEXT3} style={{ opacity: visible ? 0.9 : 0, transition: 'opacity .5s ease 2.3s' }} />
+      <text x={lastXAlone - 10} y={lastYAlone - 10} textAnchor="end" fontSize="12" fontWeight={800} fill={TEXT3} style={{ opacity: visible ? 1 : 0, transition: 'opacity .5s ease 2.4s' }}>${lastVAlone.toFixed(1)}K alone</text>
       <path
         ref={pathRef}
         d={line}
@@ -196,6 +229,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
         )
       })}
     </svg>
+    </div>
   )
 }
 

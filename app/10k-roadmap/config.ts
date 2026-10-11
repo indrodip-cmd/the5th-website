@@ -80,153 +80,110 @@ export const PRESS = {
   items: ['Forbes', 'The New York Times', 'HuffPost', 'TEDx', 'The Guardian', 'Yahoo Finance'],
 }
 
-/* ── Landing copy ──────────────────────────────────────────────────────────*/
+/* ── Landing copy ──────────────────────────────────────────────────────────
+   Speero-style (speero.com/experimentation-services/full-service-experimentation-program):
+   press strip, proof stats, a 3-column eligibility block ("is this for you"),
+   a trajectory graph that is itself annotated with what's being taught at each
+   stage, a numbered program-flow section for the call, detailed case-study
+   cards, a founder/team credibility section, an FAQ accordion, then the
+   application form itself with the footer directly below it, one page, no
+   separate /qualify hop. Same plum/cream/purple palette throughout, no navy
+   or gold. No video, the founder photo carries the hero. */
 export const LANDING = {
-  eyebrow: 'From the desk of a Consumer Behavior & AI Researcher:',
-  // Hero: headline + the "without the nonsense" sub + the write-the-cheque line.
-  headline: 'Build a Predictable $10K/Month Coaching Business in 6-12 Months.',
-  headlineSub: 'Without fancy funnels, cold DMs, or chasing people for appointments.',
-  guaranteeLine: 'Hit $10K/month, or get every dollar you invested back. ',
-  guaranteeEmphasis: 'Yes, I’ll write the cheque.',
-  guaranteeBadge: '100% Money-Back Guarantee',
-  ctaPrimary: 'See If You Qualify',
-  ctaMicro: '2-minute qualification · Book your free session if you qualify',
-  ctaMicroShort: '2-minute qualification',
-
-  recognition: {
-    heading: 'Your expertise isn’t the problem.',
-    lines: [
-      'You know your stuff. You can help people. You may even have clients and testimonials.',
-      'But if your revenue still looks like this:',
-    ],
-    rollercoaster: '$3K → $7K → $2K → $0 → $5K…',
-    after: 'you don’t have a predictable client-acquisition system. Posting more content won’t fix it. Neither will another funnel. Or another course. Or another 100 cold DMs.',
-    turn: 'You have a ',
-    turnEmphasis: 'bottleneck.',
-    close: ['We find it.', 'We fix it.', 'Then we build the system around it.'],
-  },
-
-  roadmap: {
-    eyebrow: 'The 10K Roadmap',
-    heading: 'A data-driven approach to a $10K/month coaching business.',
-    sub: 'Instead of throwing random tactics at your business, we analyze the six areas that decide whether prospects become clients.',
-    steps: [
-      { n: '01', t: 'Consumer Behavior', d: 'What your ideal client actually wants, fears, believes, and needs to see before they buy.' },
-      { n: '02', t: 'Positioning', d: 'Make your expertise immediately relevant to the people you want to attract.' },
-      { n: '03', t: 'Offer', d: 'Turn your knowledge into an offer people understand, value, and want.' },
-      { n: '04', t: 'Acquisition', d: 'A predictable way to get qualified prospects into your world, without living in your DMs.' },
-      { n: '05', t: 'Conversion', d: 'Turn attention and conversations into paying clients.' },
-      { n: '06', t: 'AI-Powered Optimization', d: 'Use AI to research, analyze, personalize, test, and improve your marketing faster.' },
-    ],
-    close: 'The objective isn’t more marketing. ',
-    closeEmphasis: 'It’s more qualified buyers.',
-  },
-
-  stop: {
-    heading: 'Stop doing what doesn’t work.',
-    nots: [
-      'Fancy 20-step funnels',
-      'Cold-DMing strangers all day',
-      'Begging people to book appointments',
-      'Posting three times a day for “the algorithm”',
-      'Constantly changing your offer',
-      'Buying another course',
-    ],
-    lead: 'You need a simple system that answers four questions:',
-    questions: ['Who do I sell to?', 'What do I sell them?', 'How do I get them interested?', 'How do I turn that interest into revenue?'],
-    close: 'That’s the 10K Roadmap.',
-  },
-
-  results: {
-    heading: 'And it’s not just theory.',
-    sub: 'Coaches and consultants we’ve worked with have generated results including:',
-    stats: ['$21K+ in 2 months', '$14,193 in 60 days', '$18K in 3 months', '$120K in 8 months', '$180K in 5 months'],
-    principle: 'Different businesses. Different markets. Different starting points. The same principle: find what’s preventing growth, fix it, scale what works.',
-    disclaimer: 'Individual results vary. Past results are not typical and do not guarantee future results.',
-  },
+  eyebrow: 'For coaches, consultants and experienced professionals 40+',
+  headline: 'In 60 Minutes, I’ll Show You How to Build a $10,000/Month Business in the Next 100 Days',
+  headlineSub: 'A free Roadmap Session for coaches, consultants and experienced professionals 40+. You leave with your offer, your buyer and your first 100-day plan.',
+  ctaPrimary: 'Apply for Your Roadmap Session',
+  ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
+  ctaMicro: 'Free · No credit card · 60-minute 1:1 Roadmap Session with Indrodip Ghosh',
 
   proof: {
-    heading: 'Don’t take my word for it.',
-    sub: 'Watch what happened when other experts fixed the bottleneck.',
-    disclaimer: 'Real client outcomes. Individual results are not typical and depend on your offer, market and effort.',
+    eyebrow: 'Proven, not theoretical',
+    heading: 'Real client outcomes, not projections.',
+    stats: ['$180K in 5 months', '$120K in 8 months', '$21K+ in 2 months', '$18K in 3 months', '$14,193 in 60 days'],
+    disclaimer: 'Documented individual client results. Not typical. Results vary.',
   },
 
-  afterProof: {
-    big: 'Your problem probably isn’t that you need more information.',
-    line: 'You need to know what to fix first.',
-    cta: 'See If You Qualify',
-  },
-
-  forYou: {
-    heading: 'This is for you if…',
-    yes: [
-      'You’re already a coach, consultant, expert, or service provider.',
-      'You have an offer, or expertise you can monetize.',
-      'You’ve made money before but can’t consistently repeat it.',
-      'You’re tired of unpredictable revenue.',
-      'You want consistent $10K months without chasing clients.',
-      'You’re willing to implement.',
+  eligibility: {
+    eyebrow: 'Is This For You?',
+    heading: 'Who’s the Roadmap Session for?',
+    cols: [
+      { label: 'Who’s it for?', body: 'Coaches, consultants and service experts, usually 40+, with real expertise already helping people, even if you don’t have a “real business” yet.' },
+      { label: 'Where are you now?', body: 'Anywhere from $0 to $10K+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
+      { label: 'What’s the commitment?', body: 'The Roadmap Session itself is free, 60 minutes, no credit card. The only cost is honesty: showing up ready to look at what isn’t working and the intent to act on what we find. Nothing is pitched upfront.' },
     ],
-    notHeading: 'This is not for you if…',
-    no: [
-      'You want someone to magically build the business for you.',
-      'You’re unwilling to sell.',
-      'You won’t implement.',
-      'You’re looking for another course to watch.',
-      'You want guaranteed results without doing the work.',
-    ],
-    close: 'You don’t need to be perfect. You do need to be serious.',
+    not: 'Not for you if you’re not currently running, or seriously building, your own business, or you’re only after free advice with no intent to act on it.',
   },
 
-  how: {
-    heading: 'Here’s how it works.',
+  reach: {
+    stat: '76 coaches and consultants',
+    body: 'across 12 nations, coached remotely, one call at a time.',
+  },
+
+  graph: {
+    eyebrow: 'The Path',
+    heading: 'What will your path to $10K/month look like?',
+    sub: 'The graph below is also the agenda, each stage is something we map on your call, in this order.',
+    points: [
+      { tag: 'Offer', m: 'Day 1–20', t: 'What you sell', learn: 'We find the part of your expertise people actually pay for', d: 'Rarely the part you’d choose yourself. This is where the $10K/month ceiling usually starts.' },
+      { tag: 'Buyer', m: 'Day 21–60', t: 'Who buys it', learn: 'We define the one buyer with one expensive problem', d: 'Not “everyone who could benefit.” One buyer, specific enough that your next message writes itself.' },
+      { tag: 'Start Sales', m: 'Day 61–100', t: 'How you reach them', learn: 'We build a repeatable way to reach them', d: 'Real conversations with people who already trust you. No daily posting, no audience required.' },
+    ],
+    axisNote: '$10K/month is the floor, not the ceiling: our documented client results above range from $14,193 to $180K. Illustrative trajectory: the first ~15–20 days rebuilding the offer before the first client closes, then compounding from there. Your starting point, market and effort change the timeline.',
+  },
+
+  call: {
+    eyebrow: 'On The Call',
+    heading: 'What happens in your 60 minutes?',
+    sub: 'The same five-part structure every Roadmap Session follows, in order.',
     steps: [
-      { n: '01', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
-      { n: '02', t: 'Get your diagnosis', d: 'If invited, book your private strategy session, free of charge.' },
-      { n: '03', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and $10K/month.' },
-      { n: '04', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
-      { n: '05', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
+      { n: '01', icon: 'search', t: 'Diagnose your positioning', d: 'We look at how you currently describe what you do, and where it’s losing buyers before they ever hear your offer.' },
+      { n: '02', icon: 'tag', t: 'Reframe what you’re actually selling', d: 'The gap between what you know and what people pay for. We find the sellable version of your expertise.' },
+      { n: '03', icon: 'target', t: 'Identify your real buyer', d: 'One buyer, one expensive problem, specific enough to build a message and an offer around.' },
+      { n: '04', icon: 'compass', t: 'Find the one bottleneck', d: 'Out of positioning, offer, leads, sales and conversion, the single thing actually standing between you and $10K/month.' },
+      { n: '05', icon: 'calendar', t: 'Build your next 100 days', d: 'A short, ordered plan for what to do first, second and third, so you leave with a next step, not just insight.' },
     ],
   },
 
-  diagnosis: {
-    heading: 'This isn’t another “pick my brain” call.',
-    body: 'The call itself isn’t the product. The diagnosis is.',
-    youLeave: ['What’s holding your business back.', 'Why it’s happening.', 'What needs to change.', 'What to prioritize.', 'And what to do next.'],
-    close: 'No generic advice. No motivational speech. A diagnosis of your actual business.',
-    cta: 'Get Your Business Diagnosed',
+  caseStudies: {
+    eyebrow: 'Case Studies',
+    heading: '$10K Roadmap Case Studies',
   },
 
-  guarantee: {
-    heading: 'I’m putting my money where my mouth is.',
-    body: 'You’ve heard coaches make big promises before. So I’m making the risk simple.',
-    terms: ['You do the work.', 'You follow the agreed strategy.', 'You meet the written eligibility requirements.'],
-    payoff: 'And you don’t hit the guaranteed $10K/month outcome?',
-    big: 'You get every dollar of your investment back.',
-    cheque: 'Yes. I’ll write the cheque.',
-    fine: 'The guarantee is subject to the specific written terms, milestones, implementation requirements, and eligibility criteria provided before you commit.',
+  founder: {
+    eyebrow: 'Who You’ll Work With',
+    heading: 'Who will you be working with?',
+    quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
+    body: 'Indrodip Ghosh founded The5th Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every Roadmap Session is run by Indrodip personally, not a sales rep, not a junior coach.',
+    name: 'Indrodip Ghosh',
+    role: 'Founder, The5th Consulting',
+    stat: { value: '93%', label: 'of clients who implement the method earn $14,000+' },
   },
 
-  faq: [
-    { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
-    { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
-    { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
-  ],
+  faq: {
+    eyebrow: 'Questions',
+    heading: 'Roadmap Session FAQs',
+    items: [
+      { q: 'Is the call actually free?', a: 'Yes. The 60-minute Roadmap Session has no cost and no credit card required. We only ask qualifying questions first so the time is well spent on both sides.' },
+      { q: 'Is this a sales pitch disguised as a strategy session?', a: 'No. It’s a working session, we’re diagnosing your positioning, offer and bottleneck live. If it becomes clear that working together further would help, we’ll say so directly, it won’t be a surprise pitch.' },
+      { q: 'What if I’m not qualified?', a: 'The short application tells you immediately. If it’s not the right fit yet, we’ll say so and point you to a better next step instead of booking a call that won’t help you.' },
+      { q: 'What do I need to prepare?', a: 'Nothing elaborate. Just know roughly your current monthly revenue, your average offer price, and how many qualified conversations you’re having each month. We do the rest together on the call.' },
+      { q: 'What happens after the call?', a: 'You leave with a specific bottleneck identified and an ordered 100-day plan. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
+    ],
+  },
 
-  finalCta: {
-    heading: 'Ready to build your $10K/month coaching business?',
-    lines: ['Stop guessing. Stop chasing. Stop rebuilding your funnel.', 'Start building a predictable acquisition system.'],
-    big: 'Build your predictable $10K/month coaching business in 6-12 months.',
-    guarantee: 'Hit $10K/month, or get every dollar you invested back.',
-    cheque: 'Yes, I’ll write the cheque.',
-    cta: 'See If You Qualify',
-    micro: '2-minute qualification · Book your free session if you qualify',
+  apply: {
+    eyebrow: 'Apply Now',
+    heading: 'Let’s find out if you qualify.',
+    micro: 'Free · No pressure · If we’re not the right fit, we’ll say so and point you to a better next step.',
   },
 
   nav: [
-    { label: 'The Roadmap', href: '#how' },
     { label: 'Proof', href: '#proof' },
+    { label: 'The Path', href: '#path' },
+    { label: 'The Call', href: '#call' },
     { label: 'FAQ', href: '#faq' },
+    { label: 'Apply', href: '#apply' },
   ],
 }
 
@@ -240,8 +197,18 @@ export const REAL_PROOF: Proof[] = [
   // (mirrors the case-study page). The card renders a branded monogram instead.
   { name: 'Torill', role: 'Leadership Coach · returned after 15 years', result: '$210,000 from a single launch', quote: 'Came back with no current audience, we structured a $7,000 program and turned her reputation into revenue.' },
   { name: 'Laurie', role: 'Dating Coach · TEDx speaker', result: '$14,193 in her first 60 days', quote: 'Repositioned from $79 to $249, 57 buyers and a 600-strong community within two months.', photo: '/clients/laurie.jpg' },
-  { name: 'Angela', role: '10K Roadmap Accelerator', result: '$12,000 in 9 weeks', quote: '“I had never earned that from my own business in my life. The framework works if you work it.”', photo: '/clients/angela.jpg' },
-  { name: 'Jeanne', role: '10K Roadmap Accelerator', result: '$8,000 in 8 weeks', quote: '“Eight weeks later I had closed my first two clients and was earning more than I ever imagined possible.”', photo: '/clients/jeanne.jpg' },
+  { name: 'Angela', role: '10K Roadmap Accelerator', result: '$12,000 in 63 days', quote: '“I had never earned that from my own business in my life. The framework works if you work it.”', photo: '/clients/angela.jpg' },
+  { name: 'Jeanne', role: '10K Roadmap Accelerator', result: '$8,000 in 56 days', quote: '“56 days later I had closed my first two clients and was earning more than I ever imagined possible.”', photo: '/clients/jeanne.jpg' },
+  { name: 'Seth', role: '10K Roadmap Member', result: '2 clients in 42 days', quote: '“After revamping my offer with the framework, I sold two high-ticket packages within weeks. The clarity alone was worth more than I paid.”', photo: '/clients/seth.jpg' },
+  { name: 'Abbas Jamie', role: 'Executive & Conscious-Living Coach · Indonesia', result: '$21,000+ in 2 months', quote: 'We built a full book-launch funnel: a free first chapter to warm the audience, a path to the full book, then a consultation offer into his premium $3,000 coaching program.', photo: '/clients/cases/abbas-jamie.jpeg' },
+  { name: 'Bharti Chauhan', role: 'Marriage & Couples Retreats · TEDx speaker, India', result: '$18,000+ from one challenge', quote: 'We built a paid challenge funnel: a $2.99 webinar ticket, a dedicated landing page and WhatsApp community, automated show-up reminders, then a retreat pitch with phone follow-up to convert.', photo: '/clients/cases/bharti-chauhan.png' },
+  { name: 'Gurpreet', role: 'Law of Attraction & Self Development Coach', result: '$18,000 in 3 months', quote: 'After $16,000 spent elsewhere with no return, we stripped everything back to fundamentals: clarified her offer, identified her ideal client, and built a simple outreach and conversion system she could run consistently.', photo: '/clients/cases/gurpreet.png' },
+  { name: 'Shyama Prasad Goswami', role: 'B2B Growth Consultant · ex-Fortune 500 CEO', result: '$180,000 in 5 months', quote: 'We built his consulting practice from the ground up: a clear positioning statement around his credibility, an offer at a premium price point, and a client-acquisition approach leveraging his network and reputation.', photo: '/clients/cases/shyama-prasad-goswami.jpg' },
+  { name: 'Amalia', role: 'Fitness Coach · 13-year Army veteran, Canada', result: '$16,000 in 5 months', quote: 'We built her business from the foundation: a unique positioning as a fitness coach with real military-grade discipline, an $8,000 premium program, and the funnel and outreach system to fill it.', photo: '/clients/cases/amalia.png' },
+  { name: 'Girish', role: 'Celebrity Law of Attraction Coach · India', result: '$120,000 in 8 months', quote: 'We launched him inside the 10K Roadmap program and built a two-tier offer, an entry tier at $200/year and a platinum tier at $3,500/year, now running as his core revenue engine.', photo: '/clients/cases/girish.png' },
+  { name: 'Maham Kabani', role: 'Social Media & Personal Branding Coach · Dubai', result: '$12,000 in 2 months', quote: 'After her first launch converted at 0%, we rebuilt her funnel from the ground up and repositioned her community as the core product instead of a side offer.', photo: '/clients/cases/maham-kabani.png' },
+  { name: 'Max', role: 'Divorce Coach for Men · Vietnam War veteran, USA', result: '$9,000 in 3.5 months', quote: 'We built his divorce coaching practice from the ground up: positioning around authenticity and lived experience, an accessible price point, and a simple, direct outreach and conversion system.', photo: '/clients/cases/max.jpg' },
+  { name: 'Susan Taylor', role: 'Personal Finance Coach for Homemakers', result: '$8,000 in 3 months', quote: 'After $20,000+ spent across other programs with no results, inside the 10K Roadmap program we taught her how to create content, sell, and pitch without overwhelming herself. She built real confidence in the process.', photo: '/clients/cases/susan-taylor.jpg' },
 ]
 
 /* ── Qualification screen (pre-payment) ────────────────────────────────────*/

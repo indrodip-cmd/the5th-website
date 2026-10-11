@@ -50,7 +50,8 @@ function VideoReviewCard({ review, index }: { review: VideoReview; index: number
 }
 
 /** Masonry wall of video testimonials. Provide your own heading around it. */
-export default function VideoWall({ columns = 3 }: { columns?: number }) {
+export default function VideoWall({ columns = 3, limit }: { columns?: number; limit?: number }) {
+  const reviews = typeof limit === 'number' ? VIDEO_REVIEWS.slice(0, limit) : VIDEO_REVIEWS
   return (
     <>
       <style>{`
@@ -61,7 +62,7 @@ export default function VideoWall({ columns = 3 }: { columns?: number }) {
         @media(max-width:560px){.vw-masonry{column-count:1}}
       `}</style>
       <div className="vw-masonry">
-        {VIDEO_REVIEWS.map((r, i) => <VideoReviewCard key={r.src} review={r} index={i} />)}
+        {reviews.map((r, i) => <VideoReviewCard key={r.src} review={r} index={i} />)}
       </div>
     </>
   )

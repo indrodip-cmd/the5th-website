@@ -95,7 +95,7 @@ export function Reveal({ children, delay = 0, style, id }: { children: React.Rea
 
 /* ── Buttons ───────────────────────────────────────────────────────────────*/
 export function Btn({ children, onClick, href, variant = 'primary', full, type = 'button', disabled, style }: {
-  children: React.ReactNode; onClick?: () => void; href?: string; variant?: 'primary' | 'ghost'; full?: boolean; type?: 'button' | 'submit'; disabled?: boolean; style?: React.CSSProperties
+  children: React.ReactNode; onClick?: () => void; href?: string; variant?: 'primary' | 'ghost' | 'outline'; full?: boolean; type?: 'button' | 'submit'; disabled?: boolean; style?: React.CSSProperties
 }) {
   const base: React.CSSProperties = {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
@@ -103,13 +103,15 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     padding: '16px 32px', minHeight: 54, borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
     border: '1px solid transparent', textDecoration: 'none', width: full ? '100%' : undefined,
     transition: 'transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, filter .18s ease',
-    opacity: disabled ? 0.55 : 1, WebkitTapHighlightColor: 'transparent', ...style,
+    opacity: disabled ? 0.55 : 1, WebkitTapHighlightColor: 'transparent',
   }
   const skin: React.CSSProperties = variant === 'primary'
     ? { background: 'linear-gradient(180deg,#6b39a0 0%,#5a2c86 55%,#4c2472 100%)', color: '#fff', boxShadow: '0 16px 32px -14px rgba(94,46,134,.7), inset 0 1px 0 rgba(255,255,255,.22)' }
+    : variant === 'outline'
+    ? { background: 'transparent', color: T.text, borderColor: T.lineStrong }
     : { background: '#fff', color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(46,26,53,.4)' }
   const props = {
-    className: 'rm-focus rm-btn', style: { ...base, ...skin },
+    className: 'rm-focus rm-btn', style: { ...base, ...skin, ...style },
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.06)' } },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' },
   }
@@ -127,15 +129,23 @@ function HelpContact() {
   )
 }
 
-export function Header({ nav }: { nav?: { label: string; href: string }[] }) {
+export function Header({ nav, showFounder }: { nav?: { label: string; href: string }[]; showFounder?: boolean }) {
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.9)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
-        <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/the5th-logo-purple.png" alt="The5th Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
+          {showFounder && (
+            <>
+              <span style={{ width: 1, height: 22, background: T.line }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
+              <span style={{ fontSize: 13, fontWeight: 700, color: T.text2, whiteSpace: 'nowrap' }} className="rm-founder-name">Indrodip Ghosh</span>
+            </>
+          )}
         </a>
         {nav && (
           <nav className="rm-nav" style={{ display: 'flex', gap: 28 }}>
@@ -144,7 +154,7 @@ export function Header({ nav }: { nav?: { label: string; href: string }[] }) {
         )}
         <HelpContact />
       </div>
-      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}`}</style>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:560px){.rm-founder-name{display:none!important}}`}</style>
     </header>
   )
 }

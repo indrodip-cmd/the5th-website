@@ -477,20 +477,27 @@ export default function Landing() {
       <section style={{ background: '#2E1A35', color: '#fff', padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.founder.eyebrow} heading={LANDING.founder.heading} dark maxW={640} /></Reveal>
-          <Reveal>
-            <div style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rm-founder-row">
-              <div style={{ flexShrink: 0, textAlign: 'center', width: 140, margin: '0 auto' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
-              </div>
-              <div style={{ flex: 1, minWidth: 260 }}>
-                <blockquote style={{ margin: '0 0 14px', paddingLeft: 16, borderLeft: '3px solid #E4C879', color: '#fff', fontSize: 16.5, lineHeight: 1.55, fontStyle: 'italic' }}>&ldquo;{LANDING.founder.quote}&rdquo;</blockquote>
-                <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14.5, lineHeight: 1.65, margin: '0 0 14px' }}>{LANDING.founder.body}</p>
-                <div style={{ fontWeight: 800, fontSize: 14.5 }}>{LANDING.founder.name}</div>
-                <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 12.5 }}>{LANDING.founder.role}</div>
-              </div>
-            </div>
-          </Reveal>
+          <div style={{ display: 'grid', gap: 20, marginTop: 4 }}>
+            {[
+              { photo: '/images/founder.png', ...LANDING.founder },
+              { ...LANDING.founder2 },
+            ].map((p) => (
+              <Reveal key={p.name}>
+                <div style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rm-founder-row">
+                  <div style={{ flexShrink: 0, textAlign: 'center', width: 140, margin: '0 auto' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.photo} alt={p.name} style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 260 }}>
+                    <blockquote style={{ margin: '0 0 14px', paddingLeft: 16, borderLeft: '3px solid #E4C879', color: '#fff', fontSize: 16.5, lineHeight: 1.55, fontStyle: 'italic' }}>&ldquo;{p.quote}&rdquo;</blockquote>
+                    <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14.5, lineHeight: 1.65, margin: '0 0 14px' }}>{p.body}</p>
+                    <div style={{ fontWeight: 800, fontSize: 14.5 }}>{p.name}</div>
+                    <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 12.5 }}>{p.role}</div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

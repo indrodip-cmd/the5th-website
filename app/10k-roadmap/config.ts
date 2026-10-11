@@ -152,13 +152,23 @@ export const LANDING = {
   },
 
   founder: {
-    eyebrow: 'Who You’ll Work With',
-    heading: 'Who will you be working with?',
+    eyebrow: 'Who You’ll Speak With',
+    heading: 'Who will you speak with on the call?',
     quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
     body: 'Indrodip Ghosh founded The5th Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every Roadmap Session is run by Indrodip personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Consulting',
     stat: { value: '93%', label: 'of clients who implement the method earn $14,000+' },
+  },
+
+  // Second voice on the call: brought in for the operating/scaling side of
+  // the conversation alongside Indrodip's positioning/offer expertise.
+  founder2: {
+    photo: '/images/manisha.png',
+    quote: 'I’ve sat across the table with founders at every stage, from their first dollar to their first ten million, and the pattern is always the same. The plan was already there. What was missing was the execution discipline to run it like a real business.',
+    body: 'Manisha is a business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. She brings that operating experience directly into your Roadmap Session, pressure-testing your plan the way she would a real P&L, not handing you advice in theory.',
+    name: 'Manisha',
+    role: 'Business Consultant, The5th Consulting',
   },
 
   faq: {

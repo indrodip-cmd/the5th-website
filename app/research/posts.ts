@@ -10,7 +10,7 @@
    article page with the articleMetadata()/articleJsonLd() helpers below. */
 import type { Metadata } from 'next'
 
-const SITE = 'https://the5th.consulting'
+const SITE = 'https://the5thglobal.consulting'
 
 export interface ResearchPost {
   slug: string

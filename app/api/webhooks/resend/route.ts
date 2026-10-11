@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 /* Resend event webhook for the Breakthrough campaign. Verifies the Svix
    signature (RESEND_WEBHOOK_SECRET), then updates event_email_log with
    delivered / opened / clicked / bounced / complained. Point a Resend webhook
-   at https://the5th.consulting/api/webhooks/resend and subscribe to the
+   at https://the5thglobal.consulting/api/webhooks/resend and subscribe to the
    email.* events. Always 200s fast so Resend doesn't retry-storm. */
 export async function POST(req: NextRequest) {
   const raw = await req.text()

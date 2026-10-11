@@ -76,7 +76,7 @@ function WhopCheckout({ planId, email }: { planId: string; email: string }) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [mounted, setMounted] = useState(false)
   const [slow, setSlow] = useState(false)
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://the5th.consulting'
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://the5thglobal.consulting'
   const redirect = `${origin}/10k-roadmap/questions?email=${encodeURIComponent(email)}`
   const hosted = `https://whop.com/checkout/${planId}?email=${encodeURIComponent(email)}`
 

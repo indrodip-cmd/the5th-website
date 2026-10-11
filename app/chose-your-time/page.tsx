@@ -188,7 +188,7 @@ const gold: React.CSSProperties = { display: 'inline-block', background: 'linear
 
 // Fire-and-forget relay of the booking to the platform, so the $1-trial
 // fulfilment email can greet the member with their real call date/time.
-const PLATFORM_ORIGIN = process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5th.consulting'
+const PLATFORM_ORIGIN = process.env.NEXT_PUBLIC_PLATFORM_ORIGIN || 'https://platform.the5thglobal.consulting'
 function relayBooking(email: string, name: string, start: string, meetingUrl: string | null) {
   try {
     fetch(`${PLATFORM_ORIGIN}/api/trial-booking`, {

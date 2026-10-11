@@ -20,7 +20,7 @@ function outlookUrl(b: FullB) {
   return `https://outlook.live.com/calendar/0/deeplink/compose?${p.toString()}`
 }
 function icsBlobUrl(b: FullB) {
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th//10K Roadmap Audit//EN', 'BEGIN:VEVENT', `UID:${Date.now()}@the5th.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`, `DTSTART:${icsDate(b.start)}`, `DTEND:${icsDate(b.end)}`, `SUMMARY:${THANKYOU.event.title}`, `DESCRIPTION:${THANKYOU.event.description.replace(/\n/g, '\\n')}`, `LOCATION:${b.meetingUrl || 'Online'}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th//10K Roadmap Audit//EN', 'BEGIN:VEVENT', `UID:${Date.now()}@the5thglobal.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`, `DTSTART:${icsDate(b.start)}`, `DTEND:${icsDate(b.end)}`, `SUMMARY:${THANKYOU.event.title}`, `DESCRIPTION:${THANKYOU.event.description.replace(/\n/g, '\\n')}`, `LOCATION:${b.meetingUrl || 'Online'}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
   return URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }))
 }
 

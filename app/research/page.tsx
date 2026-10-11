@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/research' },
   openGraph: {
     type: 'website',
-    url: 'https://the5th.consulting/research',
+    url: 'https://the5thglobal.consulting/research',
     title: 'Research | The5th Consulting',
     description:
       'In-depth research on artificial intelligence, neuroscience, and the science of machine minds, written for the curious layperson and the working researcher.',

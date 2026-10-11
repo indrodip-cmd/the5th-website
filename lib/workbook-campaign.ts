@@ -21,13 +21,13 @@ import { getBookedEmails } from './calcom'
 import { ctaButton, FROM, REPLY_TO } from './event-campaign'
 import { resolveOrCreateContact, addTag, logActivity } from './crm'
 
-const SITE = 'https://the5th.consulting'
+const SITE = 'https://the5thglobal.consulting'
 export const WB = {
   book: `${SITE}/downloads/the-knowledge-asset.pdf`,
   quiz: `${SITE}/quiz`,
   ai: `${SITE}/ai`,
   aiCheckout: `${SITE}/ai-checkout`,
-  platform: 'https://platform.the5th.consulting',
+  platform: 'https://platform.the5thglobal.consulting',
   call: 'https://cal.com/indrodip-ghosh-ut1vxh/60min',
   thankyou: `${SITE}/workbook/success`,
   logo: `${SITE}/images/logo-white.png`,

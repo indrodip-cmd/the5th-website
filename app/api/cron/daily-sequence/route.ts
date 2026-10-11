@@ -9,7 +9,7 @@ const getSupabase = () => createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-const BASE_URL = 'https://quiz.the5th.consulting'
+const BASE_URL = 'https://quiz.the5thglobal.consulting'
 
 /* Pull cal.com bookings once per run and return the set of attendee emails
    that have a live (non-cancelled) booking. Fails open (empty set) so a

@@ -22,7 +22,7 @@ export function verifyUnsub(token: string): string | null {
 }
 
 export function unsubscribeUrl(email: string): string {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5th.consulting').replace(/\/$/, '')
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://the5thglobal.consulting').replace(/\/$/, '')
   return `${base}/api/unsubscribe?token=${encodeURIComponent(signUnsub(email))}`
 }
 

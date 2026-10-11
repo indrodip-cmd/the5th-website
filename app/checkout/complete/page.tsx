@@ -11,7 +11,7 @@ const GOLD_DK = '#a9862f'
 const INK = '#2a2233'
 const MUTE = '#57505f'
 
-const PLATFORM_URL = 'https://platform.the5th.consulting'
+const PLATFORM_URL = 'https://platform.the5thglobal.consulting'
 
 type Step = { icon: string; t: string; d: string }
 type Offer = { eyebrow: string; title: string; subtitle: string; steps: Step[]; billing?: string }

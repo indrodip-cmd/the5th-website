@@ -1,5 +1,5 @@
 # The5th Consulting — robots.txt
-# Founder: Indrodip Ghosh · https://the5th.consulting
+# Founder: Indrodip Ghosh · https://the5thglobal.consulting
 
 User-agent: *
 Allow: /
@@ -42,4 +42,4 @@ Disallow: /admin
 Disallow: /api
 Disallow: /legacy
 
-Sitemap: https://the5th.consulting/sitemap.xml
+Sitemap: https://the5thglobal.consulting/sitemap.xml

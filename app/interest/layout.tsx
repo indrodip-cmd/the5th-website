@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 const TITLE = 'The end-to-end platform to build your coaching business — The5th Consulting'
 const DESC =
   'One place to build and grow your coaching business — positioning, offers, funnels, content and automation. Tell us what you’re building and we’ll map where you are and how we can help.'
-const URL = 'https://the5th.consulting/interest'
+const URL = 'https://the5thglobal.consulting/interest'
 
 export const metadata: Metadata = {
   title: TITLE,

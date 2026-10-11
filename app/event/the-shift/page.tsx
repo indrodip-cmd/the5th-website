@@ -4,7 +4,7 @@ import TheShiftView from './TheShiftView'
 const TITLE = 'The 3-Day Breakthrough Intensive with Indrodip Ghosh'
 const DESC =
   'Three live days (Aug 7 to 9) to clear the block that’s kept you stuck, build an offer you actually believe in, and learn to sell it without ever feeling pushy. Just $27.'
-const URL = 'https://the5th.consulting/event/the-shift'
+const URL = 'https://the5thglobal.consulting/event/the-shift'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -45,7 +45,7 @@ const EVENT_JSONLD = {
   eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
   location: { '@type': 'VirtualLocation', url: URL },
   image: [`${URL}/opengraph-image`],
-  organizer: { '@type': 'Organization', name: 'The5th Consulting', url: 'https://the5th.consulting/' },
+  organizer: { '@type': 'Organization', name: 'The5th Consulting', url: 'https://the5thglobal.consulting/' },
   performer: { '@type': 'Person', name: 'Indrodip Ghosh' },
   offers: {
     '@type': 'Offer',

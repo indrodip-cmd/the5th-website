@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { EMAIL_BY_KEY, FROM, REPLY_TO } from '@/lib/event-campaign'
 import { resolveOrCreateContact, addTag, logActivity } from '@/lib/crm'
 
-const SITE = 'https://the5th.consulting'
+const SITE = 'https://the5thglobal.consulting'
 
 /* Mirror an event registrant into the native CRM so The Shift (Breakthrough
    Intensive) sign-ups show up alongside every other contact. Non-destructive:

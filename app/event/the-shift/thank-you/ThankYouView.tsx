@@ -93,7 +93,7 @@ function icsFor(sessions: typeof SESSIONS) {
   for (const s of sessions) {
     lines.push(
       'BEGIN:VEVENT',
-      `UID:the-shift-${s.start}@the5th.consulting`,
+      `UID:the-shift-${s.start}@the5thglobal.consulting`,
       `DTSTAMP:${stamp}`,
       `DTSTART:${s.start}`,
       `DTEND:${s.end}`,
@@ -256,7 +256,7 @@ export default function ThankYouView() {
 
         <div style={{ textAlign: 'center', marginTop: 30 }}>
           <a href="/" style={{ fontSize: 14, color: GOLD_DK, textDecoration: 'none' }}>
-            ← Back to the5th.consulting
+            ← Back to the5thglobal.consulting
           </a>
         </div>
       </main>

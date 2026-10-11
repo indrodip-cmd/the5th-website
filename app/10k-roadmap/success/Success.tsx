@@ -34,7 +34,7 @@ function outlookUrl(b: Booking) {
 function icsBlobUrl(b: Booking) {
   const ics = [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th//10K Roadmap Audit//EN', 'BEGIN:VEVENT',
-    `UID:${Date.now()}@the5th.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`,
+    `UID:${Date.now()}@the5thglobal.consulting`, `DTSTAMP:${icsDate(new Date().toISOString())}`,
     `DTSTART:${icsDate(b.start!)}`, `DTEND:${icsDate(b.end!)}`,
     `SUMMARY:${SUCCESS.event.title}`,
     `DESCRIPTION:${SUCCESS.event.description.replace(/\n/g, '\\n')}${b.meetingUrl ? `\\n\\nJoin: ${b.meetingUrl}` : ''}`,

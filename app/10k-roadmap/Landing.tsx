@@ -21,7 +21,7 @@
      business is explicitly solo-founder-led ("not a sales rep, not a junior
      coach" in the founder copy itself), so faking two more team members would
      contradict the page's own claim. */
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, QUALIFICATION, QUALIFY } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm, QuestionFlow, saveQualAnswers } from './ui'
@@ -112,8 +112,24 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
   const lastV = values[values.length - 1]
   const lastX = x(values.length - 1), lastY = y(lastV)
 
+  // Draw the line in (left-to-right) the moment the chart scrolls into view,
+  // then keep a small comet + pulsing end-dot moving so the chart reads as
+  // "live" rather than a static image.
+  const pathRef = useRef<SVGPathElement | null>(null)
+  const svgRef = useRef<SVGSVGElement | null>(null)
+  const [pathLen, setPathLen] = useState(0)
+  const [visible, setVisible] = useState(false)
+  useLayoutEffect(() => { if (pathRef.current) setPathLen(pathRef.current.getTotalLength()) }, [line])
+  useEffect(() => {
+    const el = svgRef.current
+    if (!el) return
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { setVisible(true); io.disconnect() } }), { threshold: 0.25 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days: flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor, annotated with what's taught at each stage">
+    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days: flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor, annotated with what's taught at each stage">
       <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#EDE7F0" strokeWidth={1} />
       <text x={padL - 8} y={y(5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$5K</text>
       <text x={padL - 8} y={h - padB + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$0</text>
@@ -125,10 +141,44 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
           <stop offset="100%" stopColor={PURPLE} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={area} fill="url(#gchart)" />
-      <path d={line} fill="none" stroke={PURPLE} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-      {values.map((v, i) => <circle key={i} cx={x(i)} cy={y(v)} r={i === values.length - 1 ? 5 : 3.5} fill={i === values.length - 1 ? '#E4C879' : PURPLE} />)}
-      <text x={lastX - 10} y={lastY - 12} textAnchor="end" fontSize="13" fontWeight={800} fill="#2E1A35">${lastV.toFixed(1)}K</text>
+      <path d={area} fill="url(#gchart)" style={{ opacity: visible ? 1 : 0, transition: 'opacity 1.4s ease .3s' }} />
+      <path
+        ref={pathRef}
+        d={line}
+        fill="none"
+        stroke={PURPLE}
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{
+          strokeDasharray: pathLen || 1,
+          strokeDashoffset: visible ? 0 : pathLen || 1,
+          transition: pathLen ? 'stroke-dashoffset 1.8s cubic-bezier(.3,.7,.2,1)' : 'none',
+        }}
+      />
+      {/* Comet: a small dot that travels the drawn line on a loop, the "it's moving" cue. */}
+      {visible && pathLen > 0 && (
+        <circle r={4} fill="#E4C879" stroke="#fff" strokeWidth={1}>
+          <animateMotion dur="3.2s" begin="1.8s" repeatCount="indefinite" path={line} />
+        </circle>
+      )}
+      {values.map((v, i) => (
+        <circle
+          key={i}
+          cx={x(i)}
+          cy={y(v)}
+          r={i === values.length - 1 ? 5 : 3.5}
+          fill={i === values.length - 1 ? '#E4C879' : PURPLE}
+          style={{ opacity: visible ? 1 : 0, transition: `opacity .4s ease ${0.3 + i * 0.28}s` }}
+        />
+      ))}
+      {visible && (
+        <circle cx={lastX} cy={lastY} r={5} fill="none" stroke="#E4C879" strokeWidth={2}>
+          <animate attributeName="r" values="5;11;5" dur="1.8s" begin="2.1s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" begin="2.1s" repeatCount="indefinite" />
+        </circle>
+      )}
+      <text x={lastX - 10} y={lastY - 12} textAnchor="end" fontSize="13" fontWeight={800} fill="#2E1A35" style={{ opacity: visible ? 1 : 0, transition: 'opacity .5s ease 1.9s' }}>${lastV.toFixed(1)}K</text>
       {days.map((d, i) => <text key={d} x={x(i)} y={h - 8} textAnchor={i === 0 ? 'start' : i === days.length - 1 ? 'end' : 'middle'} fontSize="12" fill={TEXT3}>Day {d}</text>)}
       {markerIdx.map((idx, i) => {
         const p = points[i]
@@ -138,7 +188,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
         const boxCx = Math.min(Math.max(cx, padL + hw), w - padR - hw)
         const ly = padT - 18
         return (
-          <g key={p.tag}>
+          <g key={p.tag} style={{ opacity: visible ? 1 : 0, transition: `opacity .5s ease ${0.5 + i * 0.3}s` }}>
             <line x1={cx} y1={cy - 6} x2={boxCx} y2={ly + 13} stroke={LINE} strokeWidth={1} />
             <rect x={boxCx - hw} y={ly - 13} width={hw * 2} height={20} rx={10} fill="#fff" stroke={PURPLE} strokeWidth={1.3} />
             <text x={boxCx} y={ly + 1} textAnchor="middle" fontSize="11" fontWeight={800} fill={PURPLE}>{p.tag}</text>
@@ -219,6 +269,10 @@ export default function Landing() {
                 <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById('proof')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
+              <p style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
+                {LANDING.guarantee}
+              </p>
               <div style={{ marginTop: 16 }}><RatingRow /></div>
             </Reveal>
           </div>
@@ -286,6 +340,10 @@ export default function Landing() {
             <div style={{ background: '#fff', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: 'clamp(16px,3.5vw,32px)', marginBottom: 24 }}>
               <GrowthChart points={LANDING.graph.points} />
               <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 6 }}>{LANDING.graph.axisNote}</p>
+              <p style={{ color: PURPLE, fontSize: 14, fontWeight: 800, textAlign: 'center', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
+                Didn’t hit it? Take your investment back, 100% guaranteed.
+              </p>
             </div>
           </Reveal>
           <Reveal>
@@ -324,14 +382,14 @@ export default function Landing() {
               const iconRight = i % 2 === 1
               return (
                 <Reveal key={s.n}>
-                  <div style={{ display: 'flex', gap: 'clamp(20px,4vw,40px)', alignItems: 'center', flexWrap: 'wrap', flexDirection: iconRight ? 'row-reverse' : 'row' }} className="rm-call-row">
-                    <div style={{ flexShrink: 0, width: 96, height: 96, borderRadius: 20, background: '#FAF6F0', border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
+                  <div style={{ display: 'flex', gap: 'clamp(20px,4vw,40px)', alignItems: 'center', flexWrap: 'wrap', justifyContent: iconRight ? 'flex-end' : 'flex-start' }} className="rm-call-row">
+                    <div style={{ order: iconRight ? 1 : 0, flexShrink: 0, width: 96, height: 96, borderRadius: 20, background: '#FAF6F0', border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <StepIcon kind={s.icon} />
                     </div>
-                    <div style={{ flex: '1 1 320px', minWidth: 260 }}>
+                    <div style={{ flex: '0 1 420px', minWidth: 260, textAlign: iconRight ? 'right' : 'left' }}>
                       <div style={{ fontSize: 12, fontWeight: 800, color: TEXT3, letterSpacing: '.06em', marginBottom: 6 }}>STEP {s.n}</div>
                       <h3 style={{ fontSize: 19, fontWeight: 800, margin: '0 0 8px' }}>{s.t}</h3>
-                      <p style={{ color: TEXT2, fontSize: 15, lineHeight: 1.6, margin: 0, maxWidth: 520 }}>{s.d}</p>
+                      <p style={{ color: TEXT2, fontSize: 15, lineHeight: 1.6, margin: 0, maxWidth: 520, marginLeft: iconRight ? 'auto' : 0, marginRight: iconRight ? 0 : 'auto' }}>{s.d}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -452,6 +510,7 @@ export default function Landing() {
               />
             </div>
             <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 20, maxWidth: 680, margin: '20px auto 0' }}>{LANDING.apply.micro}</p>
+            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 10, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guarantee}</p>
           </Reveal>
         </div>
       </section>
@@ -474,7 +533,7 @@ export default function Landing() {
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}}
-        @media(max-width:560px){.rm-grid3{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}.rm-call-row{flex-direction:column!important;text-align:center}.rm-call-row>div{flex:none!important;width:100%!important;min-width:0!important}}
+        @media(max-width:560px){.rm-grid3{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}.rm-call-row{flex-direction:column!important;justify-content:center!important;text-align:center!important}.rm-call-row>div{order:0!important;flex:none!important;width:100%!important;min-width:0!important;text-align:center!important;margin-left:0!important;margin-right:0!important}}
       `}</style>
     </div>
   )

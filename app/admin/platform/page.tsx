@@ -358,7 +358,7 @@ function WhopTab() {
       <div style={{ fontSize: 13, fontWeight: 700, color: T.ink, marginBottom: 8 }}>Whop integration</div>
       <p style={{ fontSize: 13, color: T.sub, lineHeight: 1.6 }}>Billing runs through Whop. Live revenue appears in <b>Business HQ</b>. Manage the API key in Vercel → the5th-website → Environment Variables (<code style={code}>WHOP_API_KEY</code>).</p>
       <div style={{ fontSize: 12.5, color: T.muted, marginTop: 12 }}>Webhook endpoint (still served by the platform):</div>
-      <code style={{ ...code, display: 'block', marginTop: 6, wordBreak: 'break-all' }}>https://platform.the5th.consulting/api/whop-webhook</code>
+      <code style={{ ...code, display: 'block', marginTop: 6, wordBreak: 'break-all' }}>https://platform.the5thglobal.consulting/api/whop-webhook</code>
     </Card>
   )
 }

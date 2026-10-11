@@ -20,7 +20,7 @@ import { limit, clientIp } from '@/lib/rateLimit';
    the primary controls; this layer is defence-in-depth on top of them.
    ══════════════════════════════════════════════════════════════════════════ */
 
-const CANONICAL_HOST = 'the5th.consulting';
+const CANONICAL_HOST = 'the5thglobal.consulting';
 
 // Extension-less scanner/exploit probes. Dotted probes (/.env, /wp-login.php)
 // carry a file extension and are excluded by the matcher below, where Next.js

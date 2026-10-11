@@ -48,7 +48,7 @@ export function auditPlanId(): string {
 
 /* The Whop hosted checkout page qualified applicants are sent to for the $27
    commitment deposit. Configure Whop's post-payment redirect to send buyers to
-   https://the5th.consulting/10k-roadmap/reserved (the post-payment page). */
+   https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
 export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
@@ -96,6 +96,7 @@ export const LANDING = {
   ctaPrimary: 'Apply for Your Roadmap Session',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
   ctaMicro: 'Free · No credit card · 60-minute 1:1 Roadmap Session with Indrodip Ghosh',
+  guarantee: '100% money-back guarantee on every dollar you invest with us.',
 
   proof: {
     eyebrow: 'Proven, not theoretical',
@@ -188,7 +189,7 @@ export const LANDING = {
 }
 
 /* ── Real social proof ─────────────────────────────────────────────────────
-   Verbatim from case studies ALREADY published on the5th.consulting
+   Verbatim from case studies ALREADY published on the5thglobal.consulting
    (public/call, public/index.html). First names only (consent already
    exercised on the live site). No numbers/names invented. */
 export type Proof = { name: string; role: string; result: string; quote: string; photo?: string }

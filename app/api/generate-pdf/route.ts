@@ -8,7 +8,7 @@ import { marketingFooter } from '@/lib/email-templates'
 
 export const dynamic = 'force-dynamic'
 
-const SITE = 'https://the5th.consulting'
+const SITE = 'https://the5thglobal.consulting'
 const BOOKING_URL = 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
 
 const getResend = () => {
@@ -435,7 +435,7 @@ export const buildPremiumReport = (roadmap: string, m: Meta): string => {
       <div style="margin-bottom:26px">${logoMark(m, 168)}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;color:${P.gold};margin-bottom:30px">Business Strategy · Marketing · Growth</div>
       <div style="font-family:'DM Sans';font-size:15px;color:rgba(255,255,255,.7);line-height:2">
-        <a href="${SITE}" style="color:#fff;text-decoration:none">the5th.consulting</a><br/>
+        <a href="${SITE}" style="color:#fff;text-decoration:none">the5thglobal.consulting</a><br/>
         <a href="${BOOKING_URL}" style="color:${P.goldSoft};text-decoration:none">Book a strategy session</a><br/>
         support@10kroadmap.org</div>
     </div>
@@ -521,7 +521,7 @@ export async function POST(req: NextRequest) {
     }
 
     const firstName = name.split(' ')[0]
-    const videoUrl = `https://quiz.the5th.consulting/video/${videoSlug || 'v1'}`
+    const videoUrl = `https://quiz.the5thglobal.consulting/video/${videoSlug || 'v1'}`
     const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     const filename = `${name} Business Blueprint.pdf`
     let pdfAttachment: Array<{ filename: string; content: string }> | undefined = undefined

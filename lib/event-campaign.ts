@@ -22,11 +22,11 @@ export const EVENT = {
   price: '$27',
   dates: 'August 7 to 9, 2026',
   timeLine: '11:00 AM PT · 1:00 PM CT · 2:00 PM ET · 6:00 PM GMT',
-  pageUrl: 'https://the5th.consulting/event/the-shift',
-  reserveUrl: 'https://the5th.consulting/event/the-shift#reserve',
-  thankYouUrl: 'https://the5th.consulting/event/the-shift/thank-you',
+  pageUrl: 'https://the5thglobal.consulting/event/the-shift',
+  reserveUrl: 'https://the5thglobal.consulting/event/the-shift#reserve',
+  thankYouUrl: 'https://the5thglobal.consulting/event/the-shift/thank-you',
   whatsappUrl: 'https://chat.whatsapp.com/BDStDEgHpXeC2hNaxfXCpR',
-  logo: 'https://the5th.consulting/images/logo-white.png',
+  logo: 'https://the5thglobal.consulting/images/logo-white.png',
   days: [
     { n: 'Day 1', title: 'Overcome Your Mental & Money Blocks', date: 'Thursday, Aug 7' },
     { n: 'Day 2', title: 'Create Your Offer', date: 'Friday, Aug 8' },
@@ -212,7 +212,7 @@ export const EMAILS: EventEmail[] = [
         ${p(`Here's the plan:`)}
         <div style="margin:0 0 16px">${dayLines()}</div>
         ${p(`It runs ${EVENT.dates}, live at ${EVENT.timeLine}. It's just ${EVENT.price} to hold your seat, and if it isn't worth far more than that, you can ask for every cent back.`)}
-        ${p(`If you want in, here's where to grab a seat: ${a('the5th.consulting/event/the-shift', EVENT.pageUrl)}`)}
+        ${p(`If you want in, here's where to grab a seat: ${a('the5thglobal.consulting/event/the-shift', EVENT.pageUrl)}`)}
         ${p(`Either way, glad to have you in the community. Reply if you have any questions, I read these.`)}`,
       }),
   },
@@ -231,7 +231,7 @@ export const EMAILS: EventEmail[] = [
         <div style="margin:0 0 16px">${dayLines()}</div>
         ${p(`Most people don't have a traffic problem or an effort problem. They have a clarity problem. The offer isn't sharp, the pricing is scared, and the close is apologetic. These 3 days fix that.`)}
         ${p(`It's for coaches, consultants and service providers who are good at the work but tired of inconsistent income. It's not for anyone looking for a magic button.`)}
-        ${p(`If that sounds like you, you can reserve a seat here: ${a('the5th.consulting/event/the-shift', EVENT.pageUrl)}`)}
+        ${p(`If that sounds like you, you can reserve a seat here: ${a('the5thglobal.consulting/event/the-shift', EVENT.pageUrl)}`)}
         ${p(`It's ${EVENT.price}, fully guaranteed, and doors close when we go live on Aug 7.`)}`,
       }),
   },
@@ -249,7 +249,7 @@ export const EMAILS: EventEmail[] = [
         ${p(`Quick and honest one. We go live Thursday, Aug 7, and enrollment closes the moment the first session starts. After that the room is sealed so the coaching stays intimate.`)}
         ${p(`If you've been meaning to grab your seat, this is the moment. Three days, one decision, ${EVENT.price}:`)}
         <div style="margin:0 0 16px">${dayLines()}</div>
-        ${p(`Here's the link to save your seat before doors close: ${a('the5th.consulting/event/the-shift', EVENT.reserveUrl)}`)}
+        ${p(`Here's the link to save your seat before doors close: ${a('the5thglobal.consulting/event/the-shift', EVENT.reserveUrl)}`)}
         ${p(`It's risk-free. Worth far more than ${EVENT.price} or your money back, no questions.`)}`,
       }),
   },

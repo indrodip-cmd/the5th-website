@@ -965,7 +965,7 @@ export async function POST(req: NextRequest) {
       ? (sequence as string)
       : (STAGE_SEQ[String(stage || '').toLowerCase()] || 'PIONEER')
 
-    const videoUrl = `https://quiz.the5th.consulting/video/${video_slug || 'v1'}`
+    const videoUrl = `https://quiz.the5thglobal.consulting/video/${video_slug || 'v1'}`
     const emailData = sequences[seqKey]?.[day as number]
 
     if (!emailData) {

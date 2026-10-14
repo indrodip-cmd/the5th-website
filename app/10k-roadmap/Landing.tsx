@@ -279,6 +279,10 @@ export default function Landing() {
   useUtm()
   useEffect(() => { track('page_view'); track('qualification_started') }, [])
   useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
+  // Prefetch the two destinations the embedded qualification form can route
+  // to, so the final answer navigates instantly instead of stalling on the
+  // first-ever fetch/compile of that route's chunk.
+  useEffect(() => { router.prefetch('/10k-roadmap/schedule'); router.prefetch('/10k-roadmap/not-a-fit') }, [router])
   const goApply = (where: string) => {
     track('cta_click', { where })
     document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth', block: 'start' })

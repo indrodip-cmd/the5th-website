@@ -9,7 +9,7 @@
 
    Positioning (per brief):
      • Audience  — Indian working professionals & business owners.
-     • Floor     — must ALREADY earn ≥ ₹1 lakh/month from a job or business to
+     • Floor     — must ALREADY earn ≥ ₹50,000/month from a job or business to
                    qualify (the income question rejects below that).
      • Promise   — build a predictable, profitable business from your expertise.
      • Free      — no payment step, mirroring the current live parent funnel.
@@ -50,7 +50,7 @@ export const LANDING = {
   guaranteeShort: 'Build a predictable income from your own business, or get every rupee you invested back.',
   ctaPrimary: 'See If You Qualify',
   ctaSecondary: { label: 'See How It Works', href: '#how' },
-  ctaMicro: '2-minute qualification · For professionals & founders already earning ₹1 lakh+/month',
+  ctaMicro: '2-minute qualification · For professionals & founders already earning ₹50,000+/month',
   ctaMicroShort: '2-minute qualification',
 
   recognition: {
@@ -121,7 +121,7 @@ export const LANDING = {
   forYou: {
     heading: 'This is for you if…',
     yes: [
-      'You already earn at least ₹1 lakh/month from a job or a business.',
+      'You already earn at least ₹50,000/month from a job or a business.',
       'You have expertise, a skill, or a service you can monetise.',
       'You want a predictable income from your own business, not just your salary.',
       'You’re tired of unpredictable, feast-or-famine results.',
@@ -175,7 +175,7 @@ export const LANDING = {
     items: [
       { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
       { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
-      { q: 'Who is this for?', a: 'Professionals and business owners in India already earning at least ₹1 lakh/month from a job or a business, who want to turn their expertise into a predictable income of their own.' },
+      { q: 'Who is this for?', a: 'Professionals and business owners in India already earning at least ₹50,000/month from a job or a business, who want to turn their expertise into a predictable income of their own.' },
       { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
     ],
   },
@@ -184,8 +184,8 @@ export const LANDING = {
     eyebrow: 'Is This For You?',
     heading: 'Who’s the Business Roadmap Audit for?',
     cols: [
-      { label: 'Who’s it for?', body: 'Working professionals and business owners in India already earning ₹1 lakh+/month from a job or business, with real expertise to build on.' },
-      { label: 'Where are you now?', body: 'Anywhere from ₹1L to ₹10L+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
+      { label: 'Who’s it for?', body: 'Working professionals and business owners in India already earning ₹50,000+/month from a job or business, with real expertise to build on.' },
+      { label: 'Where are you now?', body: 'Anywhere from ₹50,000 to ₹10L+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
       { label: 'What’s the commitment?', body: 'The audit itself is free, 60 minutes, no payment. The only cost is honesty: showing up ready to look at what isn’t working, and the intent to act on what we find.' },
     ],
     not: 'Not for you if you’re not yet earning from a job or a business, or you’re only after free advice with no intent to implement.',
@@ -251,7 +251,7 @@ export const LANDING = {
     guarantee: 'Build a predictable income from your own business, or get every rupee you invested back.',
     cheque: 'Yes, I’ll write the cheque.',
     cta: 'See If You Qualify',
-    micro: '2-minute qualification · For professionals & founders already earning ₹1 lakh+/month',
+    micro: '2-minute qualification · For professionals & founders already earning ₹50,000+/month',
   },
 
   nav: [
@@ -284,10 +284,10 @@ export const QUALIFICATION: Q[] = [
   {
     id: 'income', key: 'income', type: 'single',
     prompt: 'Roughly what do you earn each month right now, from your job or business?',
-    helper: 'This audit is built for people with a stable base of at least ₹1 lakh/month.',
+    helper: 'This audit is built for people with a stable base of at least ₹50,000/month.',
     options: [
       { value: 'u50k', label: 'Under ₹50,000 / month', reject: true },
-      { value: '50k-1l', label: '₹50,000 – ₹1,00,000 / month', reject: true },
+      { value: '50k-1l', label: '₹50,000 – ₹1,00,000 / month' },
       { value: '1-2l', label: '₹1,00,000 – ₹2,00,000 / month' },
       { value: '2-3l', label: '₹2,00,000 – ₹3,00,000 / month' },
       { value: '3-5l', label: '₹3,00,000 – ₹5,00,000 / month' },
@@ -388,7 +388,7 @@ export const REJECT = {
   sub: 'The Business Roadmap Audit is designed for professionals and business owners who already have a stable income base and are ready to solve a specific growth bottleneck.',
   reasons: {
     no_business: 'Based on your answers, you’re still building the foundation. If you’re not yet earning from a job or a business, there are earlier, better-fitting steps than a private strategy audit.',
-    income: 'Based on your answers, you’re not yet at a stable ₹1 lakh/month base. The audit is built for people with that foundation to build on, so there are earlier, better-fitting steps for you right now.',
+    income: 'Based on your answers, you’re not yet at a stable ₹50,000/month base. The audit is built for people with that foundation to build on, so there are earlier, better-fitting steps for you right now.',
     free_advice: 'Based on your answers, you’re looking for free advice right now, and that’s completely fair. The audit is built for people ready to implement, so it wouldn’t create enough value for you today.',
     default: 'Based on your answers, I don’t think we’d create enough value for you right now.',
   } as Record<string, string>,

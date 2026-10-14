@@ -47,7 +47,7 @@ export const LANDING = {
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
-  guarantee: 'Build a predictable income from your own business, or get every rupee you invested back.',
+  guaranteeShort: 'Build a predictable income from your own business, or get every rupee you invested back.',
   ctaPrimary: 'See If You Qualify',
   ctaSecondary: { label: 'See How It Works', href: '#how' },
   ctaMicro: '2-minute qualification · For professionals & founders already earning ₹1 lakh+/month',

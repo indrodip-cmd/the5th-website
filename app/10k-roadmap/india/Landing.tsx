@@ -260,7 +260,7 @@ export default function Landing() {
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
               <p className="rm-hero-guarantee" style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
-                {LANDING.guarantee}
+                {LANDING.guaranteeShort}
               </p>
               <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
             </Reveal>
@@ -459,7 +459,7 @@ export default function Landing() {
               />
             </div>
             <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 20, maxWidth: 680, margin: '20px auto 0' }}>{LANDING.apply.micro}</p>
-            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 10, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guarantee}</p>
+            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 10, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guaranteeShort}</p>
           </Reveal>
         </div>
       </section>

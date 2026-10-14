@@ -47,7 +47,9 @@ export const LANDING = {
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
+  guarantee: 'Build a predictable income from your own business, or get every rupee you invested back.',
   ctaPrimary: 'See If You Qualify',
+  ctaSecondary: { label: 'See How It Works', href: '#how' },
   ctaMicro: '2-minute qualification · For professionals & founders already earning ₹1 lakh+/month',
   ctaMicroShort: '2-minute qualification',
 
@@ -167,12 +169,72 @@ export const LANDING = {
     fine: 'The guarantee is subject to the specific written terms, milestones, implementation requirements, and eligibility criteria provided before you commit.',
   },
 
-  faq: [
-    { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
-    { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
-    { q: 'Who is this for?', a: 'Professionals and business owners in India already earning at least ₹1 lakh/month from a job or a business, who want to turn their expertise into a predictable income of their own.' },
-    { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
-  ],
+  faq: {
+    eyebrow: 'Questions',
+    heading: 'Business Roadmap Audit FAQs',
+    items: [
+      { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
+      { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
+      { q: 'Who is this for?', a: 'Professionals and business owners in India already earning at least ₹1 lakh/month from a job or a business, who want to turn their expertise into a predictable income of their own.' },
+      { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
+    ],
+  },
+
+  eligibility: {
+    eyebrow: 'Is This For You?',
+    heading: 'Who’s the Business Roadmap Audit for?',
+    cols: [
+      { label: 'Who’s it for?', body: 'Working professionals and business owners in India already earning ₹1 lakh+/month from a job or business, with real expertise to build on.' },
+      { label: 'Where are you now?', body: 'Anywhere from ₹1L to ₹10L+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
+      { label: 'What’s the commitment?', body: 'The audit itself is free, 60 minutes, no payment. The only cost is honesty: showing up ready to look at what isn’t working, and the intent to act on what we find.' },
+    ],
+    not: 'Not for you if you’re not yet earning from a job or a business, or you’re only after free advice with no intent to implement.',
+  },
+
+  reach: {
+    stat: 'Professionals and business owners across India',
+    body: 'advised remotely, one call at a time.',
+  },
+
+  graph: {
+    eyebrow: 'The Path',
+    heading: 'What will your path to ₹5 lakh/month look like?',
+    sub: 'The graph below is also the agenda, each phase is something we map on your call, in this order.',
+    points: [
+      { tag: 'Position', m: 'Month 1–2', t: 'Clarify your edge', learn: 'We find the part of your expertise people actually pay for', d: 'We map what your ideal client wants, and make your expertise immediately relevant to them.' },
+      { tag: 'Offer', m: 'Month 3–6', t: 'Build the offer & system', learn: 'We turn your knowledge into an offer people want, and a predictable way to reach them', d: 'Package your knowledge into a clear offer, then build a repeatable way to get qualified prospects into your world.' },
+      { tag: 'Scale', m: 'Month 7–12', t: 'Convert & optimize', learn: 'We turn conversations into paying clients, and use AI to keep improving', d: 'Turn attention and conversations into paying clients, then use AI to research, test and improve faster.' },
+    ],
+    axisNote: '₹5 lakh/month is the target, not the ceiling. Illustrative trajectory: the first 1–2 months rebuilding positioning and offer before predictable clients start, then compounding from there. Your starting point, market and effort change the timeline.',
+  },
+
+  call: {
+    eyebrow: 'The Process',
+    heading: 'What happens across your Business Roadmap Audit?',
+    sub: 'The same five-part process every Business Roadmap Audit follows, in order.',
+    steps: [
+      { n: '01', icon: 'search', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
+      { n: '02', icon: 'target', t: 'Get your diagnosis', d: 'If invited, book your private strategy session, free of charge.' },
+      { n: '03', icon: 'compass', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and a predictable business income.' },
+      { n: '04', icon: 'tag', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
+      { n: '05', icon: 'calendar', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
+    ],
+  },
+
+  founder: {
+    eyebrow: 'Who You’ll Speak With',
+    heading: 'Who will you speak with on the call?',
+    quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
+    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every audit is run by Indrodip personally, not a sales rep, not a junior coach.',
+    name: 'Indrodip Ghosh',
+    role: 'Founder, The5th Global Consulting',
+  },
+
+  apply: {
+    eyebrow: 'Apply Now',
+    heading: 'Let’s find out if you qualify.',
+    micro: 'Free · No pressure · If we’re not the right fit, we’ll say so and point you to a better next step.',
+  },
 
   finalCta: {
     heading: 'Ready to build a predictable business from your expertise?',
@@ -185,9 +247,11 @@ export const LANDING = {
   },
 
   nav: [
-    { label: 'The Roadmap', href: '#how' },
     { label: 'Proof', href: '#proof' },
+    { label: 'The Path', href: '#path' },
+    { label: 'The Call', href: '#call' },
     { label: 'FAQ', href: '#faq' },
+    { label: 'Apply', href: '#apply' },
   ],
 }
 

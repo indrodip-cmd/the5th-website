@@ -4,18 +4,21 @@
    language exactly: header → left-aligned 2-col hero (text + founder photo)
    → logo/press strip → dark proof strip → 3-col eligibility → annotated
    growth graph (₹, months instead of $/days) → mid CTA → alternating
-   icon+text program-flow rows → real on-camera video testimonials → founder
-   section (Indrodip only, no second voice) → plain FAQ list → centered dark
-   application section with the qualification form embedded (no /qualify hop)
-   → remote-reach line → footer. Reuses the shared UI kit and tracking from
-   the parent funnel; only the copy (./config) is India-specific.
-   Dropped versus the parent: the dollar-figure case-study list and the
-   single-quote testimonial blocks, India has no equivalent verified photo
-   + quote proof set, and the reach stat is phrased without a specific count
-   for the same reason, everything shown here is real. */
+   icon+text program-flow rows → stacked case-study list (same verified
+   client results as the parent, kept in USD, real amounts) → real
+   on-camera video testimonials → founder section (Indrodip only, no
+   second voice) → plain FAQ list → centered dark application section
+   with the qualification form embedded (no /qualify hop) → remote-reach
+   line → footer. Reuses the shared UI kit and tracking from the parent
+   funnel; only the copy (./config) is India-specific.
+   Dropped versus the parent: the single-quote testimonial blocks, India
+   has no equivalent verified photo + quote proof set beyond the case
+   studies, and the reach stat is phrased without a specific count for
+   the same reason, everything shown here is real. */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS, QUALIFICATION, QUALIFY } from './config'
+import { REAL_PROOF } from '../config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm, QuestionFlow, saveQualAnswers } from '../ui'
 import { track } from '../track'
 import VideoWall from '@/components/VideoWall'
@@ -64,10 +67,10 @@ function Rule() {
    feast-or-famine pattern described above it on the page. */
 function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
   const months = [0, 2, 4, 6, 9, 12]
-  const values = [0, 0.3, 1.2, 2.4, 3.8, 5.2]
-  const valuesAlone = [0, 1.3, 0.4, 1.8, 0.6, 1.2]
+  const values = [0, 0.6, 2.4, 4.8, 7.6, 10.4]
+  const valuesAlone = [0, 2.6, 0.8, 3.6, 1.2, 2.4]
   const w = 640, h = 280, padL = 34, padR = 10, padT = 56, padB = 30
-  const max = 7
+  const max = 12
   const x = (i: number) => padL + (i / (months.length - 1)) * (w - padL - padR)
   const y = (v: number) => padT + (1 - v / max) * (h - padT - padB)
 
@@ -124,12 +127,12 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
           On your own
         </span>
       </div>
-    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic income trajectory over 12 months, compared to going it alone: working with us, flat for the first couple of months while positioning and the offer are rebuilt, then compounding client growth that climbs toward ₹5 lakh/month; on your own, an erratic up-and-down income with no steady system. Annotated with what's taught at each phase">
-      <line x1={padL} y1={y(2.5)} x2={w - padR} y2={y(2.5)} stroke="#EDE7F0" strokeWidth={1} />
-      <text x={padL - 8} y={y(2.5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>₹2.5L</text>
+    <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic income trajectory over 12 months, compared to going it alone: working with us, flat for the first couple of months while positioning and the offer are rebuilt, then compounding client growth that climbs toward ₹10 lakh/month; on your own, an erratic up-and-down income with no steady system. Annotated with what's taught at each phase">
+      <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#EDE7F0" strokeWidth={1} />
+      <text x={padL - 8} y={y(5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>₹5L</text>
       <text x={padL - 8} y={h - padB + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>₹0</text>
-      <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#E4C879" strokeWidth={1.5} strokeDasharray="4 5" />
-      <text x={padL} y={y(5) - 8} textAnchor="start" fontSize="12" fontWeight={700} fill="#B9962F">₹5L target</text>
+      <line x1={padL} y1={y(10)} x2={w - padR} y2={y(10)} stroke="#E4C879" strokeWidth={1.5} strokeDasharray="4 5" />
+      <text x={padL} y={y(10) - 8} textAnchor="start" fontSize="12" fontWeight={700} fill="#B9962F">₹10L target</text>
       <defs>
         <linearGradient id="gchart-in" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={PURPLE} stopOpacity="0.22" />
@@ -346,7 +349,7 @@ export default function Landing() {
           </Reveal>
           <Reveal>
             <div style={{ textAlign: 'center', marginTop: 32 }}>
-              <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>Take the first step toward your ₹5L/month plan.</p>
+              <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 16 }}>Take the first step toward your ₹10L/month plan.</p>
               {CTA('path_cta')}
             </div>
           </Reveal>
@@ -376,6 +379,33 @@ export default function Landing() {
               )
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ── Case studies: plain stacked proof-item list, same verified
+             results as the parent funnel (kept in USD, these are the real
+             amounts clients earned) ── */}
+      <section style={{ background: '#fff', padding: SECY_LG + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.heading} maxW={640} /></Reveal>
+          <Reveal>
+            <div style={{ maxWidth: 714, margin: '0 auto' }}>
+              {REAL_PROOF.map((c, i) => (
+                <div key={c.name} style={{ borderTop: `1px solid ${LINE}`, paddingTop: SECY, paddingBottom: i === REAL_PROOF.length - 1 ? 0 : SECY }}>
+                  {c.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={c.photo} alt={c.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', marginBottom: 16 }} />
+                  ) : (
+                    <span style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 19, marginBottom: 16 }}>{c.name[0]}</span>
+                  )}
+                  <div className="rm-serif" style={{ color: PURPLE, fontWeight: 800, fontSize: 'clamp(20px,2.8vw,25px)', margin: '0 0 10px' }}>{c.result}</div>
+                  <p style={{ color: TEXT2, fontSize: 15, lineHeight: 1.65, margin: '0 0 10px', fontStyle: 'italic' }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
+                  <div style={{ fontWeight: 800, fontSize: 14 }}>{c.name}</div>
+                  <div style={{ color: TEXT3, fontSize: 12.5 }}>{c.role}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 

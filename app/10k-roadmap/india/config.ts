@@ -42,7 +42,7 @@ export const RATING = { score: '4.8', text: 'from the founders and professionals
 /* ── Landing copy (INR, India) ─────────────────────────────────────────────*/
 export const LANDING = {
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headline: 'Build a Predictable ₹5 Lakh/Month Business From Your Expertise, in 6–12 Months.',
+  headline: 'Build a Predictable ₹10 Lakh/Month Business From Your Expertise, in 6–12 Months.',
   headlineSub: 'Without quitting your job, running fancy funnels, cold DMs, or chasing people for appointments.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
@@ -198,14 +198,14 @@ export const LANDING = {
 
   graph: {
     eyebrow: 'The Path',
-    heading: 'What will your path to ₹5 lakh/month look like?',
+    heading: 'What will your path to ₹10 lakh/month look like?',
     sub: 'The graph below is also the agenda, each phase is something we map on your call, in this order.',
     points: [
       { tag: 'Position', m: 'Month 1–2', t: 'Clarify your edge', learn: 'We find the part of your expertise people actually pay for', d: 'We map what your ideal client wants, and make your expertise immediately relevant to them.' },
       { tag: 'Offer', m: 'Month 3–6', t: 'Build the offer & system', learn: 'We turn your knowledge into an offer people want, and a predictable way to reach them', d: 'Package your knowledge into a clear offer, then build a repeatable way to get qualified prospects into your world.' },
       { tag: 'Scale', m: 'Month 7–12', t: 'Convert & optimize', learn: 'We turn conversations into paying clients, and use AI to keep improving', d: 'Turn attention and conversations into paying clients, then use AI to research, test and improve faster.' },
     ],
-    axisNote: '₹5 lakh/month is the target, not the ceiling. Illustrative trajectory: the first 1–2 months rebuilding positioning and offer before predictable clients start, then compounding from there. Your starting point, market and effort change the timeline.',
+    axisNote: '₹10 lakh/month is the target, not the ceiling. Illustrative trajectory: the first 1–2 months rebuilding positioning and offer before predictable clients start, then compounding from there. Your starting point, market and effort change the timeline.',
   },
 
   call: {
@@ -219,6 +219,14 @@ export const LANDING = {
       { n: '04', icon: 'tag', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
       { n: '05', icon: 'calendar', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
     ],
+  },
+
+  // Real, documented client results (same verified case studies as the
+  // parent funnel — kept in USD, the figures are the actual amounts
+  // clients earned, not a currency-converted estimate).
+  caseStudies: {
+    eyebrow: 'Case Studies',
+    heading: 'Real Client Results',
   },
 
   founder: {

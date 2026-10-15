@@ -18,7 +18,7 @@ export default function Qualify() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
-      <Header />
+      <Header homeHref="/10k-roadmap/india" />
       <main style={{ maxWidth: 720, margin: '0 auto', padding: 'clamp(30px,6vw,64px) 22px 80px' }}>
         <QuestionFlow
           questions={QUALIFICATION}

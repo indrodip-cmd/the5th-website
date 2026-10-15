@@ -129,13 +129,13 @@ function HelpContact() {
   )
 }
 
-export function Header({ nav, showFounder }: { nav?: { label: string; href: string }[]; showFounder?: boolean }) {
+export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string }) {
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.9)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
-        <a href="/10k-roadmap" aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
           {showFounder && (
@@ -392,11 +392,11 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
 }
 
 /* Shared frame for wizard steps: chrome + persistent progress indicator. */
-export function StepFrame({ current, children, wide }: { current: number; children: React.ReactNode; wide?: boolean }) {
+export function StepFrame({ current, children, wide, homeHref }: { current: number; children: React.ReactNode; wide?: boolean; homeHref?: string }) {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
-      <Header />
+      <Header homeHref={homeHref} />
       <main style={{ flex: 1, width: '100%', maxWidth: wide ? 1040 : 720, margin: '0 auto', padding: 'clamp(28px,5vw,44px) clamp(20px,4vw,22px) 48px' }}>
         <Stepper current={current} />
         {children}

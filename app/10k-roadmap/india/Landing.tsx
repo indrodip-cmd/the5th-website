@@ -248,7 +248,7 @@ export default function Landing() {
   return (
     <div style={{ background: '#ffffff', color: '#2E1A35', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
       <Fonts />
-      <Header nav={LANDING.nav} showFounder />
+      <Header nav={LANDING.nav} showFounder homeHref="/10k-roadmap/india" />
 
       {/* ── Hero: left-aligned 2-col, text + founder photo ── */}
       <div style={{ background: 'radial-gradient(110% 60% at 15% -6%, #FBF6EF 0%, #ffffff 62%)' }}>

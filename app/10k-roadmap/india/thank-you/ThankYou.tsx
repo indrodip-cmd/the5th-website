@@ -121,7 +121,7 @@ export default function ThankYou() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
-      <Header />
+      <Header homeHref="/10k-roadmap/india" />
       <main style={{ flex: 1, width: '100%', maxWidth: 640, margin: '0 auto', padding: 'clamp(40px,7vw,72px) 22px 56px', textAlign: 'center' }}>
         <Reveal>
           <svg width="82" height="82" viewBox="0 0 86 86" style={{ margin: '0 auto 22px', display: 'block' }} aria-hidden>

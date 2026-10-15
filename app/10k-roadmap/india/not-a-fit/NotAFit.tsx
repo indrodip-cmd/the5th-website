@@ -44,7 +44,7 @@ export default function NotAFit() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
-      <Header />
+      <Header homeHref="/10k-roadmap/india" />
       <div style={{ flex: 1 }}>
         <Suspense fallback={null}><Body /></Suspense>
       </div>

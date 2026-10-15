@@ -77,7 +77,7 @@ export const RATING = { score: '4.8', text: 'from 76 coaches across 12 nations' 
 /* "As featured in" press strip (styled wordmarks — same set as the /call page). */
 export const PRESS = {
   label: 'Our clients have been featured in',
-  items: ['Forbes', 'The New York Times', 'HuffPost', 'TEDx', 'The Guardian', 'Yahoo Finance'],
+  items: ['Forbes', 'The New York Times', 'HuffPost', 'Psychology Today', 'The Wall Street Journal', 'The Guardian', 'Yahoo Finance'],
 }
 
 /* ── Landing copy ──────────────────────────────────────────────────────────

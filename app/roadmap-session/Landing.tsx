@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { LANDING, RATING, FEATURED_CASES, MORE_CASES, T, type CaseStudy } from './content'
 import { Fonts, Header, Footer, Btn, Reveal, QuizProvider, QuizSection, OptionGrid, useQuiz, useUtm } from './ui'
 import { track, watchScrollViewContent } from './track'
@@ -70,8 +71,7 @@ function CaseCard({ c }: { c: CaseStudy }) {
   return (
     <div style={{ borderTop: `1px solid ${LINE}`, paddingTop: SECY, paddingBottom: SECY }}>
       {c.photo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={c.photo} alt={`${c.name}, client`} width={56} height={56} loading="lazy" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', marginBottom: 16 }} />
+        <Image src={c.photo} alt={`${c.name}, client`} width={56} height={56} loading="lazy" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', marginBottom: 16 }} />
       ) : (
         <span aria-hidden style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 19, marginBottom: 16 }}>{c.name[0]}</span>
       )}
@@ -138,8 +138,7 @@ function PageBody() {
               <p style={{ color: T.accentInk, fontWeight: 800, fontSize: 13.5, marginTop: 12 }}>{LANDING.heroMicro}</p>
             </Reveal>
             <Reveal delay={100} style={{ marginTop: 18, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/founder.png" alt="Indrodip Ghosh, founder of The5th Global Consulting" width={56} height={56} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.line}` }} />
+              <Image src="/images/founder.png" alt="Indrodip Ghosh, founder of The5th Global Consulting" width={56} height={56} priority style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.line}` }} />
               <RatingRow />
             </Reveal>
           </div>
@@ -279,8 +278,7 @@ function PageBody() {
               <Reveal key={p.name}>
                 <div style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 20, padding: 'clamp(20px,4vw,30px)', display: 'flex', gap: 22, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rs-founder-row">
                   <div style={{ flexShrink: 0, textAlign: 'center', width: 120, margin: '0 auto' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.photo} alt={p.name} width={100} height={100} style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
+                    <Image src={p.photo} alt={p.name} width={100} height={100} loading="lazy" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 260 }}>
                     <blockquote style={{ margin: '0 0 12px', paddingLeft: 16, borderLeft: `3px solid ${T.gold}`, color: '#fff', fontSize: 16, lineHeight: 1.55, fontStyle: 'italic' }}>&ldquo;{p.quote}&rdquo;</blockquote>

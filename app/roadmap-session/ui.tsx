@@ -5,6 +5,7 @@
    not depend on, or risk changing, that funnel's behavior. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { T, QUIZ, QUIZ_INTRO, LEGAL, HELP, type Step } from './content'
 import { track } from './track'
 
@@ -129,8 +130,7 @@ export function Header() {
     <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s', background: solid ? 'rgba(255,255,255,.92)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}` }}>
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href="/roadmap-session" aria-label="The5th Global Consulting home" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, minHeight: 44 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting logo" width={140} height={40} style={{ height: 'clamp(32px,5vw,40px)', width: 'auto' }} />
+          <Image src="/images/the5th-logo-purple.png" alt="The5th Global Consulting logo" width={140} height={40} priority style={{ height: 'clamp(32px,5vw,40px)', width: 'auto' }} />
         </a>
         <p style={{ textAlign: 'right', fontSize: 12.5, lineHeight: 1.45, color: T.text2, maxWidth: 260, margin: 0 }}>
           Need help? Text <a href={HELP.phoneHref} style={{ color: T.accentInk, fontWeight: 700 }}>{HELP.phone}</a>
@@ -144,8 +144,7 @@ export function Footer() {
   return (
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 100px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting logo" width={140} height={34} style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 20 }} />
+        <Image src="/images/the5th-logo-purple.png" alt="The5th Global Consulting logo" width={140} height={34} loading="lazy" style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 20 }} />
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {LEGAL.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none', minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>{l.label}</a>)}
         </div>

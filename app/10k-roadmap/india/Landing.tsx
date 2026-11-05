@@ -274,7 +274,7 @@ export default function Landing() {
           </div>
           <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 360, margin: '0 auto', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder.png" alt="Indrodip Ghosh, Founder of The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
+            <img src="/images/founder-mvm.jpg" alt="Indrodip Ghosh, Founder of The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
           </Reveal>
         </section>
       </div>

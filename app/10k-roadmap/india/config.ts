@@ -240,7 +240,7 @@ export const LANDING = {
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
-      { v: '14+ Yrs', l: 'Marketing & Funnel Strategy' },
+      { v: '5+ Yrs', l: 'Marketing & Funnel Strategy' },
       { v: '100%', l: 'Audits Run Personally' },
     ],
   },

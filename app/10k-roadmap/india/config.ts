@@ -72,7 +72,7 @@ export const LANDING = {
   guaranteeShort: 'If we don’t agree on a clear next step by the end of the call, your ₹199 is refunded in full, no questions asked.',
   ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199, fully refundable · 60-minute private call with Indrodip Ghosh, not a rep',
+  ctaMicro: '₹199, fully refundable · Indrodip personally runs every call, so slots are limited by his calendar, not a quota',
   ctaMicroShort: '₹199, fully refundable',
 
   /* ── Pain / agitation: named before the solution, in the reader's own
@@ -125,7 +125,7 @@ export const LANDING = {
       'You’ve had feast-or-famine months before, one good month, then nothing, and you’re done gambling on that pattern.',
       'You’re willing to actually implement a plan, not just collect one more piece of information.',
     ],
-    bannerHeading: 'If 3 or more of these are true for you, don’t close this tab. This is exactly who the audit is built for.',
+    bannerHeading: 'If 3 or more of these are true for you, the only inconsistent move now is closing this tab and doing nothing about it.',
   },
 
   // The 4-part clarity framework, mirrored directly on the call.
@@ -158,7 +158,7 @@ export const LANDING = {
       'Imagine handling unexpected expenses with real confidence.',
       'Imagine your next 90 days of revenue being a plan, not a guess.',
     ],
-    close: 'This is exactly what you’ll map out on the call.',
+    close: 'Every month you leave this unanswered is another month of the same unpredictable income. This is exactly what you’ll map out on the call.',
   },
 
   results: {
@@ -174,6 +174,12 @@ export const LANDING = {
   proof: {
     eyebrow: 'Real Results, Real People',
     heading: 'See What Other Professionals Have Discovered From Our 1:1 Audits.',
+    // Conservative sum of the dollar figures actually documented in
+    // REAL_PROOF (app/10k-roadmap/config.ts) — $646,193, several marked
+    // "+" so the true total is at least this. Swap for a verified figure
+    // from the revenue dashboard if/when one is confirmed; never round up
+    // past what's documented.
+    revenueLine: 'Clients have generated over $646,000 in documented, verifiable results.',
     disclaimer: 'Real client outcomes. Individual results are not typical and depend on your offer, market and effort.',
   },
 

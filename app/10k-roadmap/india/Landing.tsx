@@ -267,6 +267,11 @@ export default function Landing() {
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.proof.eyebrow} heading={LANDING.proof.heading} dark maxW={680} /></Reveal>
           <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <span style={{ display: 'inline-block', background: 'rgba(228,200,121,.12)', border: '1px solid rgba(228,200,121,.4)', borderRadius: 999, padding: '10px 22px', color: '#E4C879', fontWeight: 800, fontSize: 'clamp(14px,2vw,16px)' }}>{LANDING.proof.revenueLine}</span>
+            </div>
+          </Reveal>
+          <Reveal>
             <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(14px,2.5vw,24px)' }}>
               {testimonialProof.map((c) => (
                 <div key={c.name} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>

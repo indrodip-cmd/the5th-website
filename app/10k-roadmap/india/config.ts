@@ -128,6 +128,22 @@ export const LANDING = {
     bannerHeading: 'If 3 or more of these are true for you, the only inconsistent move now is closing this tab and doing nothing about it.',
   },
 
+  /* ── The named mechanism: HOW the coaching business actually gets built,
+     distinct from the "clarity" section below (which is the AGENDA for the
+     audit call itself). Without this, the page explains the call but never
+     explains the method — the single biggest gap in a sales landing page. */
+  mechanism: {
+    eyebrow: 'The Method',
+    heading: 'The 3-Part System Behind A Predictable ₹10 Lakh/Month Coaching Business.',
+    sub: 'Not a philosophy. This is the exact order we work in on every audit, and the order you’ll execute in afterward.',
+    steps: [
+      { n: '01', t: 'Package', d: 'Turn your expertise into one coaching offer people immediately understand and want, priced for ₹10L/month math, not guesswork.' },
+      { n: '02', t: 'Pipeline', d: 'Build one simple, repeatable way to get qualified people on a call with you, without living in your DMs or quitting your job.' },
+      { n: '03', t: 'Prove & Scale', d: 'Deliver a result you can point to, then build the system around what actually worked, and cut everything that didn’t.' },
+    ],
+    close: 'This is the system. The audit maps exactly where you currently stand inside it.',
+  },
+
   // The 4-part clarity framework, mirrored directly on the call.
   clarity: {
     eyebrow: 'No Fluff, Real Clarity',

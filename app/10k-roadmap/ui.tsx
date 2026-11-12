@@ -159,7 +159,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
   )
 }
 
-export function Footer({ legal }: { legal: { earnings: string; meta: string; links: { label: string; href: string }[] } }) {
+export function Footer({ legal }: { legal: { earnings: string; meta: string; copyright?: string; links: { label: string; href: string }[] } }) {
   return (
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
@@ -170,16 +170,20 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; lin
         </div>
         <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.7, maxWidth: 720, margin: '0 auto 14px' }}>{legal.earnings}</p>
         <p style={{ color: T.text3, fontSize: 11.5, lineHeight: 1.7, maxWidth: 720, margin: '0 auto 18px' }}>{legal.meta}</p>
-        <LegalNote />
+        <LegalNote copyright={legal.copyright} />
       </div>
     </footer>
   )
 }
 
-/* Copyright + jurisdiction notice, shown at the foot of every funnel page. */
-export function LegalNote() {
+/* Copyright + jurisdiction notice, shown at the foot of every funnel page.
+   Defaults to the parent funnel's text for StepLegal's no-prop callers;
+   Footer always passes its own `legal.copyright` through explicitly so an
+   India (or any other localised) page shows its own jurisdiction, not the
+   parent's. */
+export function LegalNote({ copyright }: { copyright?: string } = {}) {
   return (
-    <p style={{ color: T.text2, fontSize: 13, lineHeight: 1.75, maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>{LEGAL.copyright}</p>
+    <p style={{ color: T.text2, fontSize: 13, lineHeight: 1.75, maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>{copyright || LEGAL.copyright}</p>
   )
 }
 

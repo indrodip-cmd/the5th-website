@@ -39,62 +39,126 @@ export function auditCalUrl(): string {
    India-specific counts). */
 export const RATING = { score: '4.8', text: 'from the founders and professionals we advise' }
 
-/* ── Landing copy (INR, India) ─────────────────────────────────────────────*/
+/* The ₹199 audit deposit (India). Mirrors the parent funnel's $27 pattern —
+   a small, refundable commitment fee that filters tire-kickers and raises
+   show-up rate, not a real price for the advisory itself. Requires a real
+   INR plan created in Whop; see auditIndiaPlanId() below. */
+export const DEPOSIT_INDIA = { amount: 199, label: '₹199', currency: 'INR' } as const
+export function auditIndiaPlanId(): string {
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID_INDIA || ''
+}
+
+/* ── Landing copy (INR, India) ─────────────────────────────────────────────
+   Restructured to mirror the proven "clarity call" funnel pattern: a
+   hyper-specific attention line, a risk-reversed headline, a self-qualifying
+   checklist, a 4-part clarity framework, a before/after transformation list,
+   proof, authority, then an objection-handling FAQ, with the CTA repeated
+   after every section. */
 export const LANDING = {
+  // No claim about the reader's own income/financial status in the ad-facing
+  // copy (Meta's Personal Attributes policy disallows asserting or implying
+  // a viewer's financial status). This names the AUDIENCE by role/intent
+  // instead of asserting a fact about the specific person reading it.
+  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR WORKING PROFESSIONALS & BUSINESS OWNERS IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
+  headlinePre: 'Stop Trading Time For Money. Learn How To Build A ',
+  headlineHighlight: 'Predictable ₹10 Lakh/Month Business',
+  headlinePost: ' From Your Own Expertise, Without Quitting Your Job.',
   headline: 'Build a Predictable ₹10 Lakh/Month Business From Your Expertise, in 6–12 Months.',
-  headlineSub: 'Without quitting your job, running fancy funnels, cold DMs, or chasing people for appointments.',
+  headlineSub: 'For professionals and business owners who are good at what they do, but tired of a month-to-month income that depends entirely on someone else’s decisions.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
-  guaranteeShort: 'Build a predictable income from your own business, or get every rupee you invested back.',
-  ctaPrimary: 'See If You Qualify',
-  ctaSecondary: { label: 'See How It Works', href: '#how' },
-  ctaMicro: '2-minute qualification · For professionals & founders already earning ₹50,000+/month',
-  ctaMicroShort: '2-minute qualification',
+  guaranteeShort: 'If we don’t agree on a clear next step by the end of the call, your ₹199 is refunded in full, no questions asked.',
+  ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
+  ctaSecondary: { label: 'See How It Works', href: '#clarity' },
+  ctaMicro: '₹199, fully refundable · Indrodip personally runs every call, so slots are limited by his calendar, not a quota',
+  ctaMicroShort: '₹199, fully refundable',
 
-  recognition: {
-    heading: 'Your expertise isn’t the problem.',
+  /* ── Pain / agitation: named before the solution, in the reader's own
+     words, not the brand's. This is deliberately the first substantial copy
+     block below the hero — the goal is for the reader to feel understood
+     before being sold anything. No personal-attribute assertions: these
+     are open pain statements, not claims about the specific reader. */
+  pain: {
+    eyebrow: 'Sound Familiar?',
+    heading: 'You’re good at what you do. So why does your income still depend entirely on someone else?',
     lines: [
-      'You know your craft. You already earn well from your job or business. You may even have people who’d happily pay for your knowledge.',
-      'But when you try to turn that expertise into your own predictable income, it looks like this:',
+      'A client cancels, a boss reshuffles the budget, a slow month happens, and suddenly the plan you had for this year is on hold again.',
+      'You’ve thought about building something of your own. But every time, it turns into either a side-hustle that never grows past pocket money, or a plan so big it never actually starts.',
+      'The truth is, you don’t need another course, another framework, or more hours in your day. You need to know exactly where your specific income is leaking, and what to fix first.',
     ],
-    rollercoaster: '₹2L → ₹0 → ₹1L → ₹0 → ₹3L…',
-    after: 'you don’t have a predictable client-acquisition system. Posting more content won’t fix it. Neither will another funnel. Or another course. Or another 100 cold DMs.',
-    turn: 'You have a ',
-    turnEmphasis: 'bottleneck.',
-    close: ['We find it.', 'We fix it.', 'Then we build the system around it.'],
+    close: 'That’s the one thing a free YouTube video, a WhatsApp forward, or a generic course can never give you: a plan built around your actual numbers, not someone else’s case study.',
   },
 
-  roadmap: {
-    eyebrow: 'The Business Roadmap',
-    heading: 'A data-driven approach to a predictable, profitable business.',
-    sub: 'Instead of throwing random tactics at your business, we analyse the six areas that decide whether prospects become paying clients.',
-    steps: [
-      { n: '01', t: 'Consumer Behaviour', d: 'What your ideal client actually wants, fears, believes, and needs to see before they buy.' },
-      { n: '02', t: 'Positioning', d: 'Make your expertise immediately relevant to the people you want to attract.' },
-      { n: '03', t: 'Offer', d: 'Turn your knowledge into an offer people understand, value, and want.' },
-      { n: '04', t: 'Acquisition', d: 'A predictable way to get qualified prospects into your world, without living in your DMs.' },
-      { n: '05', t: 'Conversion', d: 'Turn attention and conversations into paying clients.' },
-      { n: '06', t: 'AI-Powered Optimization', d: 'Use AI to research, analyse, personalise, test, and improve your marketing faster.' },
+  // Hero card: the live 1:1 session details, shown next to the founder photo.
+  heroCard: {
+    name: 'Indrodip Ghosh',
+    role: 'Founder & Business Growth Strategist',
+    chips: [
+      { t: '1-on-1 Zoom Session', s: '60 Minutes' },
+      { t: '₹199 Only', s: 'Fully Refundable' },
     ],
-    close: 'The objective isn’t more marketing. ',
-    closeEmphasis: 'It’s more qualified buyers.',
   },
 
-  stop: {
-    heading: 'Stop doing what doesn’t work.',
-    nots: [
-      'Fancy 20-step funnels',
-      'Cold-DMing strangers all day',
-      'Begging people to book appointments',
-      'Posting three times a day for “the algorithm”',
-      'Constantly changing your offer',
-      'Buying another course',
+  // Stat strip directly under the hero. No invented headcounts, and no
+  // absolute "0%/100%" guarantee-style claims — only verifiable facts about
+  // the format itself.
+  stats: [
+    { v: '60 Min', l: 'Focused Business Audit' },
+    { v: 'No Quitting', l: 'Keep Your Job While You Build' },
+    { v: '1:1', l: 'Personal, Not A Webinar' },
+    { v: '₹199', l: 'Fully Refundable Deposit' },
+  ],
+
+  // "Who is this for?" self-qualifying checklist, phrased as reflective
+  // questions rather than assertions about the specific reader's finances.
+  whoIsThis: {
+    eyebrow: 'Is This You?',
+    heading: 'Who is this for?',
+    sub: 'Ask yourself honestly. If several of these land, this audit was built for exactly this moment in your career.',
+    items: [
+      'Your income from your job or business has plateaued, and you don’t have a clear plan to change that.',
+      'Your expenses keep rising faster than your income does.',
+      'You have real expertise or a skill people already respect, but no clear way to turn it into income of your own.',
+      'You want a second, predictable income stream, without quitting the job that currently pays your bills.',
+      'You’ve had feast-or-famine months before, one good month, then nothing, and you’re done gambling on that pattern.',
+      'You’re willing to actually implement a plan, not just collect one more piece of information.',
     ],
-    lead: 'You need a simple system that answers four questions:',
-    questions: ['Who do I sell to?', 'What do I sell them?', 'How do I get them interested?', 'How do I turn that interest into revenue?'],
-    close: 'That’s the Business Roadmap.',
+    bannerHeading: 'If 3 or more of these are true for you, the only inconsistent move now is closing this tab and doing nothing about it.',
+  },
+
+  // The 4-part clarity framework, mirrored directly on the call.
+  clarity: {
+    eyebrow: 'No Fluff, Real Clarity',
+    heading: 'This 1:1 Business Audit Is Designed To Give You Clarity.',
+    sub: 'This isn’t another generic webinar or motivational session. It’s about understanding your current business and figuring out the next real step toward a predictable income.',
+    boxes: [
+      { n: '01', t: 'Where You Are Now', d: 'Your current income, offer, positioning and client-acquisition reality, mapped honestly, not assumed.' },
+      { n: '02', t: 'Where You Want To Go', d: 'What a predictable, profitable business income actually looks like for you, beyond just your salary.' },
+      { n: '03', t: 'What’s Holding You Back', d: 'The single biggest bottleneck standing between where you are and consistent monthly revenue.' },
+      { n: '04', t: 'Your Possible Path Forward', d: 'A realistic plan based on your real constraints, income and expertise, not a generic script.' },
+    ],
+    nextStep: {
+      eyebrow: 'Your Ultimate Outcome',
+      heading: 'Your Next Step',
+      sub: 'You’ll leave knowing exactly what to fix next, whether or not you ever continue working with us.',
+    },
+  },
+
+  // Before/after transformation checklist.
+  transformation: {
+    eyebrow: 'The Transformation',
+    heading: 'Imagine Having A Predictable Second Income Stream.',
+    items: [
+      'Imagine waking up knowing exactly where your next client is coming from.',
+      'Imagine having income beyond your salary, without ever quitting your job.',
+      'Imagine no longer feeling dependent on one paycheck or one client.',
+      'Imagine feeling genuinely secure about your financial future.',
+      'Imagine handling unexpected expenses with real confidence.',
+      'Imagine your next 90 days of revenue being a plan, not a guess.',
+    ],
+    close: 'Every month you leave this unanswered is another month of the same unpredictable income. This is exactly what you’ll map out on the call.',
   },
 
   results: {
@@ -106,16 +170,17 @@ export const LANDING = {
     disclaimer: 'Individual results vary. Past results are not typical and do not guarantee future results.',
   },
 
+  // Testimonial section heading (cards pull from REAL_PROOF in the parent config).
   proof: {
-    heading: 'Don’t take my word for it.',
-    sub: 'Watch what happened when other experts fixed the bottleneck.',
+    eyebrow: 'Real Results, Real People',
+    heading: 'See What Other Professionals Have Discovered From Our 1:1 Audits.',
+    // Conservative sum of the dollar figures actually documented in
+    // REAL_PROOF (app/10k-roadmap/config.ts) — $646,193, several marked
+    // "+" so the true total is at least this. Swap for a verified figure
+    // from the revenue dashboard if/when one is confirmed; never round up
+    // past what's documented.
+    revenueLine: 'Clients have generated over $646,000 in documented, verifiable results.',
     disclaimer: 'Real client outcomes. Individual results are not typical and depend on your offer, market and effort.',
-  },
-
-  afterProof: {
-    big: 'Your problem probably isn’t that you need more information.',
-    line: 'You need to know what to fix first.',
-    cta: 'See If You Qualify',
   },
 
   forYou: {
@@ -140,55 +205,16 @@ export const LANDING = {
     close: 'You don’t need to be perfect. You do need to be serious.',
   },
 
-  how: {
-    heading: 'Here’s how it works.',
-    steps: [
-      { n: '01', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
-      { n: '02', t: 'Get your diagnosis', d: 'If invited, book your private strategy session, free of charge.' },
-      { n: '03', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and a predictable business income.' },
-      { n: '04', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
-      { n: '05', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
-    ],
-  },
-
-  diagnosis: {
-    heading: 'This isn’t another “pick my brain” call.',
-    body: 'The call itself isn’t the product. The diagnosis is.',
-    youLeave: ['What’s holding your business back.', 'Why it’s happening.', 'What needs to change.', 'What to prioritize.', 'And what to do next.'],
-    close: 'No generic advice. No motivational speech. A diagnosis of your actual business.',
-    cta: 'Get Your Business Diagnosed',
-  },
-
-  guarantee: {
-    heading: 'I’m putting my money where my mouth is.',
-    body: 'You’ve heard people make big promises before. So I’m making the risk simple.',
-    terms: ['You do the work.', 'You follow the agreed strategy.', 'You meet the written eligibility requirements.'],
-    payoff: 'And you don’t hit the guaranteed outcome we agree on?',
-    big: 'You get every rupee of your investment back.',
-    cheque: 'Yes. I’ll write the cheque.',
-    fine: 'The guarantee is subject to the specific written terms, milestones, implementation requirements, and eligibility criteria provided before you commit.',
-  },
-
   faq: {
-    eyebrow: 'Questions',
-    heading: 'Business Roadmap Audit FAQs',
+    eyebrow: 'Clearing Your Doubts',
+    heading: 'Frequently Asked Questions',
     items: [
-      { q: 'What happens on the audit?', a: '60 minutes. We examine your positioning, offer, acquisition, and conversion, identify the bottleneck, and map the strategy I’d recommend.' },
-      { q: 'How much does it cost?', a: 'Nothing right now. We’re running these audits at no charge while we refine the process. All we ask is that you qualify and actually show up.' },
-      { q: 'Who is this for?', a: 'Professionals and business owners in India already earning at least ₹50,000/month from a job or a business, who want to turn their expertise into a predictable income of their own.' },
-      { q: 'What if I’m not a fit?', a: 'If I determine that you’re genuinely not a fit for the process, I’ll point you to a better next step. No hard feelings.' },
+      { q: 'How much does this audit cost?', a: 'Just ₹199, a refundable booking deposit, not a fee. It keeps the call serious on both sides. If we don’t land on a clear next step for you, you get every rupee back.' },
+      { q: 'What happens during the call?', a: 'We look at your positioning, offer and client-acquisition process, find the one bottleneck costing you the most, and map a realistic path forward.' },
+      { q: 'Do I need business or marketing skills?', a: 'No. Most people we audit have real expertise but no marketing background. That gap is exactly what the audit addresses.' },
+      { q: 'Can I start without quitting my job?', a: 'Yes. This is built for people who want a second, predictable income stream alongside their current job, not a risky replacement for it on day one.' },
+      { q: 'Is my ₹199 really refundable?', a: 'Yes. If you show up and we agree the audit genuinely isn’t a fit for you, we refund it in full. We’d rather lose ₹199 than waste an hour of your time.' },
     ],
-  },
-
-  eligibility: {
-    eyebrow: 'Is This For You?',
-    heading: 'Who’s the Business Roadmap Audit for?',
-    cols: [
-      { label: 'Who’s it for?', body: 'Working professionals and business owners in India already earning ₹50,000+/month from a job or business, with real expertise to build on.' },
-      { label: 'Where are you now?', body: 'Anywhere from ₹50,000 to ₹10L+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
-      { label: 'What’s the commitment?', body: 'The audit itself is free, 60 minutes, no payment. The only cost is honesty: showing up ready to look at what isn’t working, and the intent to act on what we find.' },
-    ],
-    not: 'Not for you if you’re not yet earning from a job or a business, or you’re only after free advice with no intent to implement.',
   },
 
   reach: {
@@ -196,68 +222,62 @@ export const LANDING = {
     body: 'advised remotely, one call at a time.',
   },
 
-  graph: {
-    eyebrow: 'The Path',
-    heading: 'What will your path to ₹10 lakh/month look like?',
-    sub: 'The graph below is also the agenda, each phase is something we map on your call, in this order.',
-    points: [
-      { tag: 'Position', m: 'Month 1–2', t: 'Clarify your edge', learn: 'We find the part of your expertise people actually pay for', d: 'We map what your ideal client wants, and make your expertise immediately relevant to them.' },
-      { tag: 'Offer', m: 'Month 3–6', t: 'Build the offer & system', learn: 'We turn your knowledge into an offer people want, and a predictable way to reach them', d: 'Package your knowledge into a clear offer, then build a repeatable way to get qualified prospects into your world.' },
-      { tag: 'Scale', m: 'Month 7–12', t: 'Convert & optimize', learn: 'We turn conversations into paying clients, and use AI to keep improving', d: 'Turn attention and conversations into paying clients, then use AI to research, test and improve faster.' },
-    ],
-    axisNote: '₹10 lakh/month is the target, not the ceiling. Illustrative trajectory: the first 1–2 months rebuilding positioning and offer before predictable clients start, then compounding from there. Your starting point, market and effort change the timeline.',
-  },
-
-  call: {
-    eyebrow: 'The Process',
-    heading: 'What happens across your Business Roadmap Audit?',
-    sub: 'The same five-part process every Business Roadmap Audit follows, in order.',
-    steps: [
-      { n: '01', icon: 'search', t: 'Apply', d: 'Complete the short qualification form. We’ll determine whether you’re a fit.' },
-      { n: '02', icon: 'target', t: 'Get your diagnosis', d: 'If invited, book your private strategy session, free of charge.' },
-      { n: '03', icon: 'compass', t: 'Find the bottleneck', d: 'We identify the highest-leverage constraint between where you are and a predictable business income.' },
-      { n: '04', icon: 'tag', t: 'Get the roadmap', d: 'You’ll know exactly what to fix, what to stop doing, and what to focus on next.' },
-      { n: '05', icon: 'calendar', t: 'Implement', d: 'Turn the strategy into a predictable client-acquisition system.' },
-    ],
-  },
-
   // Real, documented client results (same verified case studies as the
   // parent funnel — kept in USD, the figures are the actual amounts
-  // clients earned, not a currency-converted estimate).
+  // clients earned, not a currency-converted estimate). Entries used on this
+  // page: shyama-prasad-goswami, girish, bharti-chauhan — all India-based.
   caseStudies: {
     eyebrow: 'Case Studies',
     heading: 'Real Client Results',
+    names: ['Torill', 'Shyama Prasad Goswami', 'Girish', 'Abbas Jamie', 'Bharti Chauhan', 'Gurpreet', 'Susan Taylor'],
   },
 
   founder: {
-    eyebrow: 'Who You’ll Speak With',
-    heading: 'Who will you speak with on the call?',
+    eyebrow: 'Someone You Can Trust',
+    heading: 'Meet Your Mentor',
     quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
-    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every audit is run by Indrodip personally, not a sales rep, not a junior coach.',
+    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every audit is run by Indrodip personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
+    stats: [
+      { v: '14+ Yrs', l: 'Marketing & Funnel Strategy' },
+      { v: '100%', l: 'Audits Run Personally' },
+    ],
   },
 
   apply: {
-    eyebrow: 'Apply Now',
-    heading: 'Let’s find out if you qualify.',
-    micro: 'Free · No pressure · If we’re not the right fit, we’ll say so and point you to a better next step.',
+    eyebrow: 'Book Your Slot',
+    heading: 'Ready to see exactly what’s holding your income back?',
+    sub: 'Indrodip personally runs every audit, so slots are limited by how many hours are in his week, not by a fake countdown timer.',
+    priceLine: '₹199 today, fully refundable',
+    micro: 'No pressure · If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
   },
 
-  finalCta: {
-    heading: 'Ready to build a predictable business from your expertise?',
-    lines: ['Stop guessing. Stop chasing. Stop rebuilding your funnel.', 'Start building a predictable acquisition system.'],
-    big: 'Build your predictable, profitable business in 6–12 months.',
-    guarantee: 'Build a predictable income from your own business, or get every rupee you invested back.',
-    cheque: 'Yes, I’ll write the cheque.',
-    cta: 'See If You Qualify',
-    micro: '2-minute qualification · For professionals & founders already earning ₹50,000+/month',
+  /* ── Pay step copy (new): the page the primary CTA leads to. Mirrors the
+     parent funnel's $27-deposit pattern, priced in INR. Requires a real
+     ₹199 Whop plan — see auditIndiaPlanId() above. */
+  pay: {
+    eyebrow: 'Last Step',
+    headline: 'Reserve your 1:1 Business Audit.',
+    sub: 'A 60-minute private call with Indrodip Ghosh, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
+    notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
+    coverLead: 'Your ₹199 reserves:',
+    points: [
+      'A 60-minute 1:1 call with Indrodip personally',
+      'A clear picture of your current bottleneck',
+      'A realistic next step, whether or not you ever work with us again',
+    ],
+    fit: 'This is for working professionals and business owners in India who have real expertise or a skill, and want a predictable income of their own alongside it.',
+    deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
+    guaranteeTitle: 'Our Promise',
+    guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',
+    micro: 'Secure checkout · Refundable · No recurring charge.',
   },
 
   nav: [
+    { label: 'Who It’s For', href: '#who' },
+    { label: 'The Call', href: '#clarity' },
     { label: 'Proof', href: '#proof' },
-    { label: 'The Path', href: '#path' },
-    { label: 'The Call', href: '#call' },
     { label: 'FAQ', href: '#faq' },
     { label: 'Apply', href: '#apply' },
   ],

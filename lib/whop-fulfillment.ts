@@ -16,7 +16,7 @@ import { enrollBuyer } from '@/lib/event-enroll'
 import { enrollWorkbookBuyer } from '@/lib/workbook-campaign'
 import { resolveOrCreateContact, logActivity, addTag } from '@/lib/crm'
 import { recordPurchase } from '@/lib/purchases'
-import { markAuditPaid, AUDIT_PLAN_ID } from '@/lib/roadmap-audit'
+import { markAuditPaid, AUDIT_PLAN_ID, AUDIT_PLAN_ID_INDIA } from '@/lib/roadmap-audit'
 import { Resend } from 'resend'
 
 // Whop plan/product ids we react to. Env-overridable where the product may change.
@@ -77,6 +77,11 @@ export async function dispatchWhopEvent(body: Record<string, unknown>, raw: stri
       try { await grantDiagnostic(email, name, receiptId) } catch (e) { emitEvent('diagnostic_grant_failed', { provider: 'whop', error: String(e) }) }
     }
     if (email && AUDIT_PLAN_ID && raw.includes(AUDIT_PLAN_ID)) {
+      try { await markAuditPaid(email, name, receiptId) } catch (e) { emitEvent('audit_grant_failed', { provider: 'whop', error: String(e) }) }
+    }
+    // India ₹199 audit deposit — same grant, a separate plan id so it reports
+    // distinctly in revenue/CRM. No-ops until WHOP_AUDIT_PLAN_ID_INDIA is set.
+    if (email && AUDIT_PLAN_ID_INDIA && raw.includes(AUDIT_PLAN_ID_INDIA)) {
       try { await markAuditPaid(email, name, receiptId) } catch (e) { emitEvent('audit_grant_failed', { provider: 'whop', error: String(e) }) }
     }
   }

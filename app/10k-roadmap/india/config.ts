@@ -269,7 +269,7 @@ export const LANDING = {
     ],
     fit: 'This is for working professionals and business owners in India who have real expertise or a skill, and want a predictable income of their own alongside it.',
     deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
-    guaranteeTitle: 'Our Promise',
+    guaranteeTitle: '100% Money-Back Guarantee',
     guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',
     micro: 'Secure checkout · Refundable · No recurring charge.',
   },

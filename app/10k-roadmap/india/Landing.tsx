@@ -136,9 +136,9 @@ export default function Landing() {
                 <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
-              <p className="rm-hero-guarantee" style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <p className="rm-hero-guarantee" style={{ color: PURPLE, fontSize: 13, fontWeight: 800, marginTop: 8, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                 <CheckIcon />
-                {LANDING.guaranteeShort}
+                <span>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</span>
               </p>
               <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
             </Reveal>
@@ -355,12 +355,16 @@ export default function Landing() {
           </Reveal>
           <Reveal>
             <div style={{ maxWidth: 420, margin: '28px auto 0', background: '#fff', borderRadius: 20, padding: 'clamp(24px,5vw,34px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.5)' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(94,46,134,.08)', border: `1px solid ${PURPLE}`, borderRadius: 999, padding: '6px 14px', marginBottom: 14 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
+                <span style={{ color: PURPLE, fontWeight: 800, fontSize: 12.5 }}>{LANDING.guaranteeBadge}</span>
+              </div>
               <div className="rm-serif" style={{ fontSize: 44, fontWeight: 800, color: PURPLE }}>₹199</div>
               <div style={{ color: TEXT3, fontSize: 13, fontWeight: 700, marginBottom: 20 }}>{LANDING.apply.priceLine}</div>
               <Btn onClick={() => goApply('apply_section')} full style={{ padding: '17px 28px', fontSize: 17 }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14, lineHeight: 1.5 }}>{LANDING.apply.micro}</p>
             </div>
-            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 20, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guaranteeShort}</p>
+            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 20, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</p>
           </Reveal>
         </div>
       </section>

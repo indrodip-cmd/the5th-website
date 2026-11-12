@@ -216,6 +216,29 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── Mechanism: the named 3-step method (HOW the business gets
+             built), distinct from the Clarity section below (the AGENDA
+             for the audit call itself). ── */}
+      <section id="mechanism" style={{ background: '#2E1A35', padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.mechanism.eyebrow} heading={LANDING.mechanism.heading} sub={LANDING.mechanism.sub} dark maxW={680} /></Reveal>
+          <Reveal>
+            <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(14px,2.5vw,24px)' }}>
+              {LANDING.mechanism.steps.map((s) => (
+                <div key={s.n} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+                  <span style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(180deg,#E4C879,#C9A84C)', color: '#2E1A35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, marginBottom: 14 }}>{s.n}</span>
+                  <h3 style={{ color: '#fff', fontSize: 18, fontWeight: 800, margin: '0 0 8px' }}>{s.t}</h3>
+                  <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>{s.d}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal>
+            <p style={{ color: '#E4C879', fontWeight: 700, fontSize: 15, textAlign: 'center', margin: '28px 0 0' }}>{LANDING.mechanism.close}</p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ── Clarity: 4-box framework + dark "Your Next Step" banner ── */}
       <section id="clarity" style={{ background: '#FAF6F0', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>

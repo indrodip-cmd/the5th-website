@@ -272,23 +272,18 @@ export default function Landing() {
             </div>
           </Reveal>
           <Reveal>
-            <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(14px,2.5vw,24px)' }}>
+            <div className="rm-grid2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 'clamp(12px,2vw,18px)' }}>
               {testimonialProof.map((c) => (
-                <div key={c.name} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-                  <div style={{ marginBottom: 12 }}><Stars /></div>
-                  <div className="rm-serif" style={{ color: '#E4C879', fontWeight: 800, fontSize: 'clamp(17px,2.2vw,20px)', margin: '0 0 10px' }}>{c.result}</div>
-                  <p style={{ color: 'rgba(255,255,255,.78)', fontSize: 14.5, lineHeight: 1.6, margin: '0 0 16px', fontStyle: 'italic' }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    {c.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.photo} alt={c.name} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} />
-                    ) : (
-                      <span style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 15 }}>{c.name[0]}</span>
-                    )}
-                    <div>
-                      <div style={{ fontWeight: 800, fontSize: 13.5 }}>{c.name}</div>
-                      <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 11.5 }}>{c.role}</div>
-                    </div>
+                <div key={c.name} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 18, padding: '18px 20px', display: 'flex', gap: 14, alignItems: 'center' }}>
+                  {c.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={c.photo} alt={c.name} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                  ) : (
+                    <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 17, flexShrink: 0 }}>{c.name[0]}</span>
+                  )}
+                  <div style={{ minWidth: 0 }}>
+                    <div className="rm-serif" style={{ color: '#E4C879', fontWeight: 800, fontSize: 15.5, marginBottom: 2 }}>{c.result}</div>
+                    <div style={{ fontWeight: 800, fontSize: 13 }}>{c.name} <span style={{ fontWeight: 500, color: 'rgba(255,255,255,.5)', fontSize: 11.5 }}>· {c.role.split('·')[0].trim()}</span></div>
                   </div>
                 </div>
               ))}
@@ -389,7 +384,7 @@ export default function Landing() {
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-guarantee,.rm-hero-rating>div{justify-content:center!important}}
         @media(min-width:561px) and (max-width:899px){.rm-grid3{grid-template-columns:1fr!important}}
-        @media(max-width:560px){.rm-grid2,.rm-grid3,.rm-grid4{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
+        @media(max-width:560px){.rm-grid2,.rm-grid3,.rm-grid4,.rm-grid2col{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
       `}</style>
     </div>
   )

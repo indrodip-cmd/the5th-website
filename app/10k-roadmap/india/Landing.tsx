@@ -1,18 +1,23 @@
 'use client'
 /* The Business Roadmap Audit — INDIA landing page.
-   Rebuilt to mirror a proven high-converting "clarity call" layout: a
-   hyper-specific attention line, a risk-reversed headline, a hero card with
-   concrete session details, a stat strip, a self-qualifying checklist, a
-   4-part clarity framework, a before/after transformation list, testimonial
-   proof, a founder/authority section, an objection-handling FAQ accordion,
-   then the embedded qualification form, with the CTA repeated after nearly
-   every section. Reuses the shared UI kit, tracking and real case-study
-   proof from the parent funnel; only the copy (./config) is India-specific. */
+   Mirrors a proven high-converting "clarity call" layout: a pain/agitation
+   block in the reader's own voice, a risk-reversed headline, a hero card
+   with concrete session details, a stat strip, a self-qualifying checklist,
+   a 4-part clarity framework, a before/after transformation list, dense
+   testimonial proof (real case studies + real on-camera video reviews), a
+   founder/authority section, an objection-handling FAQ accordion, then a
+   direct ₹199 booking CTA — no embedded qualification quiz, the booking
+   deposit itself is the filter. Copy avoids asserting the reader's own
+   financial status (Meta's Personal Attributes policy) and avoids absolute
+   "0%/guaranteed" claims; income claims carry "results vary" disclaimers
+   throughout, per Meta's business-opportunity / unrealistic-outcomes rules.
+   Reuses the shared UI kit, tracking and real case-study proof from the
+   parent funnel; only the copy (./config) is India-specific. */
 import { useEffect, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS, QUALIFICATION, QUALIFY } from './config'
+import { LANDING, LEGAL, RATING, PRESS } from './config'
 import { REAL_PROOF } from '../config'
-import { Fonts, Header, Footer, Btn, Reveal, useUtm, QuestionFlow, saveQualAnswers } from '../ui'
+import { Fonts, Header, Footer, Btn, Reveal, useUtm } from '../ui'
 import { track } from '../track'
 import VideoWall from '@/components/VideoWall'
 
@@ -69,8 +74,11 @@ function CheckRow({ children, dark }: { children: ReactNode; dark?: boolean }) {
 function PressStrip() {
   return (
     <div style={{ padding: '22px ' + PADX + ' 0' }}>
-      <div style={{ maxWidth: MAXW, margin: '0 auto', display: 'flex', gap: 'clamp(16px,4vw,40px)', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-        {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 'clamp(13px,2vw,16px)', color: TEXT2, opacity: 0.6, whiteSpace: 'nowrap' }}>{p}</span>)}
+      <div style={{ maxWidth: MAXW, margin: '0 auto 16px', textAlign: 'center' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: TEXT3 }}>{PRESS.label}</span>
+      </div>
+      <div style={{ maxWidth: MAXW, margin: '0 auto', display: 'flex', gap: 'clamp(22px,5vw,52px)', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+        {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 'clamp(16px,2.8vw,22px)', color: TEXT2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
       </div>
     </div>
   )
@@ -93,15 +101,14 @@ export default function Landing() {
   const router = useRouter()
   const [showSticky, setShowSticky] = useState(false)
   useUtm()
-  useEffect(() => { track('page_view'); track('qualification_started') }, [])
+  useEffect(() => { track('page_view') }, [])
   useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
-  // Prefetch the two destinations the embedded qualification form can route
-  // to, so the final answer navigates instantly instead of stalling on the
-  // first-ever fetch/compile of that route's chunk.
-  useEffect(() => { router.prefetch('/10k-roadmap/india/schedule'); router.prefetch('/10k-roadmap/india/not-a-fit') }, [router])
+  // Prefetch the ₹199 booking step so the CTA navigates instantly instead of
+  // stalling on the first-ever fetch/compile of that route's chunk.
+  useEffect(() => { router.prefetch('/10k-roadmap/india/pay') }, [router])
   const goApply = (where: string) => {
     track('cta_click', { where })
-    document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    router.push('/10k-roadmap/india/pay')
   }
   const CTA = (where: string, label?: string) => <Btn onClick={() => goApply(where)} style={{ padding: '16px 34px', fontSize: 17 }}>{label || LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
 
@@ -158,6 +165,22 @@ export default function Landing() {
       </div>
 
       <PressStrip />
+
+      {/* ── Pain / agitation: named in the reader's own voice before any
+             pitch, so they feel understood before they're sold anything. ── */}
+      <section style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: 760, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.pain.eyebrow} heading={LANDING.pain.heading} maxW={680} /></Reveal>
+          <Reveal>
+            <div style={{ display: 'grid', gap: 16 }}>
+              {LANDING.pain.lines.map((l) => <p key={l} style={{ color: TEXT2, fontSize: 16, lineHeight: 1.7, margin: 0 }}>{l}</p>)}
+            </div>
+          </Reveal>
+          <Reveal>
+            <p style={{ color: '#2E1A35', fontWeight: 700, fontSize: 16.5, lineHeight: 1.6, marginTop: 20, paddingLeft: 16, borderLeft: `3px solid ${PURPLE}` }}>{LANDING.pain.close}</p>
+          </Reveal>
+        </div>
+      </section>
 
       {/* ── Stat strip ── */}
       <section style={{ padding: SECY + ' ' + PADX + ' 0' }}>
@@ -275,7 +298,7 @@ export default function Landing() {
       <section style={{ background: '#FAF6F0', borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow="On-Camera · Client Reviews" heading="Hear it from them directly." sub="Unscripted reactions from clients. Tap any clip to play." maxW={620} /></Reveal>
-          <Reveal><VideoWall columns={3} limit={6} /></Reveal>
+          <Reveal><VideoWall columns={3} limit={12} /></Reveal>
         </div>
       </section>
 
@@ -321,36 +344,23 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Apply: centered header + form, footer directly below ── */}
+      {/* ── Apply: direct ₹199 booking CTA, no qualification quiz — the
+             refundable deposit itself is the filter. ── */}
       <section id="apply" style={{ background: '#2E1A35', padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: MAXW, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
           <Reveal>
-            <div style={{ marginBottom: 28, maxWidth: 560, margin: '0 auto 28px' }}>
-              <div className="rm-eyebrow" style={{ marginBottom: 12, color: '#E4C879' }}>{LANDING.apply.eyebrow}</div>
-              <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,36px)', margin: 0, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>{LANDING.apply.heading}</h2>
-            </div>
+            <div className="rm-eyebrow" style={{ marginBottom: 12, color: '#E4C879' }}>{LANDING.apply.eyebrow}</div>
+            <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,36px)', margin: 0, fontWeight: 800, color: '#fff', lineHeight: 1.15 }}>{LANDING.apply.heading}</h2>
+            <p style={{ color: 'rgba(255,255,255,.65)', fontSize: 15, lineHeight: 1.6, maxWidth: 520, margin: '14px auto 0' }}>{LANDING.apply.sub}</p>
           </Reveal>
           <Reveal>
-            <div style={{ maxWidth: 680, margin: '0 auto', background: '#fff', borderRadius: 20, padding: 'clamp(20px,4vw,32px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.5)', textAlign: 'left' }}>
-              <QuestionFlow
-                questions={QUALIFICATION}
-                eyebrow={QUALIFY.eyebrow}
-                onReject={(reason, answers) => {
-                  saveQualAnswers(answers)
-                  const q = QUALIFICATION.find((x) => 'options' in x && x.options.some((o) => o.reject && o.value === reason))
-                  const bucket = q?.id === 'business_type' ? 'no_business' : q?.id === 'income' ? 'income' : q?.id === 'readiness' ? 'free_advice' : 'default'
-                  track('qualification_completed'); track('qualification_rejected', { reason: bucket })
-                  router.push(`/10k-roadmap/india/not-a-fit?r=${bucket}`)
-                }}
-                onComplete={(answers) => {
-                  saveQualAnswers(answers)
-                  track('qualification_completed'); track('qualification_accepted')
-                  router.push('/10k-roadmap/india/schedule')
-                }}
-              />
+            <div style={{ maxWidth: 420, margin: '28px auto 0', background: '#fff', borderRadius: 20, padding: 'clamp(24px,5vw,34px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.5)' }}>
+              <div className="rm-serif" style={{ fontSize: 44, fontWeight: 800, color: PURPLE }}>₹199</div>
+              <div style={{ color: TEXT3, fontSize: 13, fontWeight: 700, marginBottom: 20 }}>{LANDING.apply.priceLine}</div>
+              <Btn onClick={() => goApply('apply_section')} full style={{ padding: '17px 28px', fontSize: 17 }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
+              <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14, lineHeight: 1.5 }}>{LANDING.apply.micro}</p>
             </div>
-            <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 20, maxWidth: 680, margin: '20px auto 0' }}>{LANDING.apply.micro}</p>
-            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 10, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guaranteeShort}</p>
+            <p style={{ color: '#E4C879', fontSize: 13, fontWeight: 800, marginTop: 20, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guaranteeShort}</p>
           </Reveal>
         </div>
       </section>

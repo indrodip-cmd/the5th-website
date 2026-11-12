@@ -39,6 +39,15 @@ export function auditCalUrl(): string {
    India-specific counts). */
 export const RATING = { score: '4.8', text: 'from the founders and professionals we advise' }
 
+/* The ₹199 audit deposit (India). Mirrors the parent funnel's $27 pattern —
+   a small, refundable commitment fee that filters tire-kickers and raises
+   show-up rate, not a real price for the advisory itself. Requires a real
+   INR plan created in Whop; see auditIndiaPlanId() below. */
+export const DEPOSIT_INDIA = { amount: 199, label: '₹199', currency: 'INR' } as const
+export function auditIndiaPlanId(): string {
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID_INDIA || ''
+}
+
 /* ── Landing copy (INR, India) ─────────────────────────────────────────────
    Restructured to mirror the proven "clarity call" funnel pattern: a
    hyper-specific attention line, a risk-reversed headline, a self-qualifying
@@ -46,21 +55,41 @@ export const RATING = { score: '4.8', text: 'from the founders and professionals
    proof, authority, then an objection-handling FAQ, with the CTA repeated
    after every section. */
 export const LANDING = {
-  eyebrowAttention: 'ATTENTION: INDIAN PROFESSIONALS & BUSINESS OWNERS ALREADY EARNING ₹50,000+/MONTH',
+  // No claim about the reader's own income/financial status in the ad-facing
+  // copy (Meta's Personal Attributes policy disallows asserting or implying
+  // a viewer's financial status). This names the AUDIENCE by role/intent
+  // instead of asserting a fact about the specific person reading it.
+  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR WORKING PROFESSIONALS & BUSINESS OWNERS IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headlinePre: 'Learn How to Build a ',
+  headlinePre: 'Stop Trading Time For Money. Learn How To Build A ',
   headlineHighlight: 'Predictable ₹10 Lakh/Month Business',
   headlinePost: ' From Your Own Expertise, Without Quitting Your Job.',
   headline: 'Build a Predictable ₹10 Lakh/Month Business From Your Expertise, in 6–12 Months.',
-  headlineSub: 'Even if you have limited time, no funnel experience, and don’t want to risk the income you already have.',
+  headlineSub: 'For professionals and business owners who are good at what they do, but tired of a month-to-month income that depends entirely on someone else’s decisions.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
-  guaranteeShort: 'Build a predictable income from your own business, or get every rupee you invested back.',
-  ctaPrimary: 'Apply For My Free Business Audit',
+  guaranteeShort: 'If we don’t agree on a clear next step by the end of the call, your ₹199 is refunded in full, no questions asked.',
+  ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '2-minute qualification · For professionals & founders already earning ₹50,000+/month',
-  ctaMicroShort: '2-minute qualification',
+  ctaMicro: '₹199, fully refundable · 60-minute private call with Indrodip Ghosh, not a rep',
+  ctaMicroShort: '₹199, fully refundable',
+
+  /* ── Pain / agitation: named before the solution, in the reader's own
+     words, not the brand's. This is deliberately the first substantial copy
+     block below the hero — the goal is for the reader to feel understood
+     before being sold anything. No personal-attribute assertions: these
+     are open pain statements, not claims about the specific reader. */
+  pain: {
+    eyebrow: 'Sound Familiar?',
+    heading: 'You’re good at what you do. So why does your income still depend entirely on someone else?',
+    lines: [
+      'A client cancels, a boss reshuffles the budget, a slow month happens, and suddenly the plan you had for this year is on hold again.',
+      'You’ve thought about building something of your own. But every time, it turns into either a side-hustle that never grows past pocket money, or a plan so big it never actually starts.',
+      'The truth is, you don’t need another course, another framework, or more hours in your day. You need to know exactly where your specific income is leaking, and what to fix first.',
+    ],
+    close: 'That’s the one thing a free YouTube video, a WhatsApp forward, or a generic course can never give you: a plan built around your actual numbers, not someone else’s case study.',
+  },
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
@@ -68,33 +97,35 @@ export const LANDING = {
     role: 'Founder & Business Growth Strategist',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
-      { t: '100% Free', s: 'No Pitch, No Pressure' },
+      { t: '₹199 Only', s: 'Fully Refundable' },
     ],
   },
 
-  // Stat strip directly under the hero. No invented headcounts — only
-  // verifiable facts about the format itself.
+  // Stat strip directly under the hero. No invented headcounts, and no
+  // absolute "0%/100%" guarantee-style claims — only verifiable facts about
+  // the format itself.
   stats: [
     { v: '60 Min', l: 'Focused Business Audit' },
-    { v: '0%', l: 'Risk To Your Job' },
+    { v: 'No Quitting', l: 'Keep Your Job While You Build' },
     { v: '1:1', l: 'Personal, Not A Webinar' },
-    { v: 'Free', l: 'No Payment Required' },
+    { v: '₹199', l: 'Fully Refundable Deposit' },
   ],
 
-  // "Who is this for?" self-qualifying checklist.
+  // "Who is this for?" self-qualifying checklist, phrased as reflective
+  // questions rather than assertions about the specific reader's finances.
   whoIsThis: {
-    eyebrow: 'Target Audience',
+    eyebrow: 'Is This You?',
     heading: 'Who is this for?',
-    sub: 'If any of the following statements match your current situation, this session is vital for your future.',
+    sub: 'Ask yourself honestly. If several of these land, this audit was built for exactly this moment in your career.',
     items: [
-      'You already earn ₹50,000+/month from a job or a business, but it still isn’t predictable.',
-      'Your expenses keep rising, but your income isn’t keeping up.',
-      'You have real expertise or a skill, but no clear way to turn it into income of your own.',
-      'You want a second, predictable income stream without quitting your job.',
-      'You’re tired of feast-or-famine months, one good, then nothing.',
-      'You’re willing to implement a plan, not just collect more information.',
+      'Your income from your job or business has plateaued, and you don’t have a clear plan to change that.',
+      'Your expenses keep rising faster than your income does.',
+      'You have real expertise or a skill people already respect, but no clear way to turn it into income of your own.',
+      'You want a second, predictable income stream, without quitting the job that currently pays your bills.',
+      'You’ve had feast-or-famine months before, one good month, then nothing, and you’re done gambling on that pattern.',
+      'You’re willing to actually implement a plan, not just collect one more piece of information.',
     ],
-    bannerHeading: 'If 3 or more sound like you, this audit is built for exactly this moment.',
+    bannerHeading: 'If 3 or more of these are true for you, don’t close this tab. This is exactly who the audit is built for.',
   },
 
   // The 4-part clarity framework, mirrored directly on the call.
@@ -172,10 +203,11 @@ export const LANDING = {
     eyebrow: 'Clearing Your Doubts',
     heading: 'Frequently Asked Questions',
     items: [
-      { q: 'How much does this audit cost?', a: 'Nothing right now. It’s a free, 60-minute 1:1 strategy call. No credit card, and no hidden pitch at the end.' },
+      { q: 'How much does this audit cost?', a: 'Just ₹199, a refundable booking deposit, not a fee. It keeps the call serious on both sides. If we don’t land on a clear next step for you, you get every rupee back.' },
       { q: 'What happens during the call?', a: 'We look at your positioning, offer and client-acquisition process, find the one bottleneck costing you the most, and map a realistic path forward.' },
       { q: 'Do I need business or marketing skills?', a: 'No. Most people we audit have real expertise but no marketing background. That gap is exactly what the audit addresses.' },
       { q: 'Can I start without quitting my job?', a: 'Yes. This is built for people who want a second, predictable income stream alongside their current job, not a risky replacement for it on day one.' },
+      { q: 'Is my ₹199 really refundable?', a: 'Yes. If you show up and we agree the audit genuinely isn’t a fit for you, we refund it in full. We’d rather lose ₹199 than waste an hour of your time.' },
     ],
   },
 
@@ -191,7 +223,7 @@ export const LANDING = {
   caseStudies: {
     eyebrow: 'Case Studies',
     heading: 'Real Client Results',
-    names: ['Shyama Prasad Goswami', 'Girish', 'Bharti Chauhan'],
+    names: ['Torill', 'Shyama Prasad Goswami', 'Girish', 'Abbas Jamie', 'Bharti Chauhan', 'Gurpreet', 'Susan Taylor'],
   },
 
   founder: {
@@ -208,9 +240,32 @@ export const LANDING = {
   },
 
   apply: {
-    eyebrow: 'Apply Now',
-    heading: 'Let’s find out if you qualify.',
-    micro: 'Free · No pressure · If we’re not the right fit, we’ll say so and point you to a better next step.',
+    eyebrow: 'Book Your Slot',
+    heading: 'Ready to see exactly what’s holding your income back?',
+    sub: 'Indrodip personally runs every audit, so slots are limited by how many hours are in his week, not by a fake countdown timer.',
+    priceLine: '₹199 today, fully refundable',
+    micro: 'No pressure · If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
+  },
+
+  /* ── Pay step copy (new): the page the primary CTA leads to. Mirrors the
+     parent funnel's $27-deposit pattern, priced in INR. Requires a real
+     ₹199 Whop plan — see auditIndiaPlanId() above. */
+  pay: {
+    eyebrow: 'Last Step',
+    headline: 'Reserve your 1:1 Business Audit.',
+    sub: 'A 60-minute private call with Indrodip Ghosh, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
+    notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
+    coverLead: 'Your ₹199 reserves:',
+    points: [
+      'A 60-minute 1:1 call with Indrodip personally',
+      'A clear picture of your current bottleneck',
+      'A realistic next step, whether or not you ever work with us again',
+    ],
+    fit: 'This is for working professionals and business owners in India who have real expertise or a skill, and want a predictable income of their own alongside it.',
+    deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
+    guaranteeTitle: 'Our Promise',
+    guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',
+    micro: 'Secure checkout · Refundable · No recurring charge.',
   },
 
   nav: [

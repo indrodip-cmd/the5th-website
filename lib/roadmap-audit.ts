@@ -25,6 +25,10 @@ export const AUDIT_SOURCE = '10k-roadmap-audit'
 // Defaults to the shared $27 plan so the webhook marks audit leads paid out of
 // the box; override with a dedicated plan via WHOP_AUDIT_PLAN_ID for clean CRM.
 export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+// The India ₹199 audit deposit. No default — this plan must be created in
+// Whop (INR, ₹199) and its id set via env before the India pay step can
+// actually charge anyone. Empty string means "not configured yet".
+export const AUDIT_PLAN_ID_INDIA = process.env.WHOP_AUDIT_PLAN_ID_INDIA || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID_INDIA || ''
 
 /* ── Signed "paid" pass (server-side step gating) ───────────────────────────
    After payment is verified against the DB, we hand the browser an HttpOnly,

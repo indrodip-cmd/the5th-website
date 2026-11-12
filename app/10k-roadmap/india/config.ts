@@ -59,13 +59,13 @@ export const LANDING = {
   // copy (Meta's Personal Attributes policy disallows asserting or implying
   // a viewer's financial status). This names the AUDIENCE by role/intent
   // instead of asserting a fact about the specific person reading it.
-  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR WORKING PROFESSIONALS & BUSINESS OWNERS IN INDIA',
+  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR FULL-TIME COACHES IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headlinePre: 'Stop Trading Time For Money. Learn How To Build A ',
+  headlinePre: 'Stop Guessing Where Your Next Client Comes From. Learn How To Build A ',
   headlineHighlight: 'Predictable ₹10 Lakh/Month Coaching Business',
-  headlinePost: ' From Your Own Expertise, Without Quitting Your Job.',
+  headlinePost: ' From The Expertise You Already Have.',
   headline: 'Build a Predictable ₹10 Lakh/Month Coaching Business From Your Expertise, in 6–12 Months.',
-  headlineSub: 'For professionals and business owners who are good at what they do, but tired of a month-to-month income that depends entirely on someone else’s decisions.',
+  headlineSub: 'For full-time coaches who are genuinely good at what they do, but tired of a month-to-month income that depends on whichever client happens to show up next.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '100% Money-Back Guarantee',
@@ -82,11 +82,11 @@ export const LANDING = {
      are open pain statements, not claims about the specific reader. */
   pain: {
     eyebrow: 'Sound Familiar?',
-    heading: 'You’re good at what you do. So why does your income still depend entirely on someone else?',
+    heading: 'You’re good at coaching. So why does your income still swing month to month?',
     lines: [
-      'A client cancels, a boss reshuffles the budget, a slow month happens, and suddenly the plan you had for this year is on hold again.',
-      'You’ve thought about building something of your own. But every time, it turns into either a side-hustle that never grows past pocket money, or a plan so big it never actually starts.',
-      'The truth is, you don’t need another course, another framework, or more hours in your day. You need to know exactly where your specific income is leaking, and what to fix first.',
+      'A client finishes their program, a referral goes quiet, a slow month happens, and suddenly you’re back to wondering where the next client is coming from.',
+      'You’ve tried posting more, tweaking your offer, chasing one more certification. Each one helps for a moment, then the same pattern returns: a great month, then a dry one.',
+      'The truth is, you don’t need another course, another framework, or more hours in your day. You need to know exactly where your specific business is leaking clients and revenue, and what to fix first.',
     ],
     close: 'That’s the one thing a free YouTube video, a WhatsApp forward, or a generic course can never give you: a plan built around your actual numbers, not someone else’s case study.',
   },
@@ -106,7 +106,7 @@ export const LANDING = {
   // the format itself.
   stats: [
     { v: '60 Min', l: 'Focused Business Audit' },
-    { v: 'No Quitting', l: 'Keep Your Job While You Build' },
+    { v: 'Full-Time', l: 'Built For Coaches, Not Side-Hustlers' },
     { v: '1:1', l: 'Personal, Not A Webinar' },
     { v: '₹199', l: 'Fully Refundable Deposit' },
   ],
@@ -118,10 +118,10 @@ export const LANDING = {
     heading: 'Who is this for?',
     sub: 'Ask yourself honestly. If several of these land, this audit was built for exactly this moment in your career.',
     items: [
-      'Your income from your job or business has plateaued, and you don’t have a clear plan to change that.',
-      'Your expenses keep rising faster than your income does.',
-      'You have real expertise or a skill people already respect, but no clear way to turn it into income of your own.',
-      'You want a second, predictable income stream, without quitting the job that currently pays your bills.',
+      'You’re coaching full-time, but your monthly income has plateaued and you don’t have a clear plan to change that.',
+      'You have real expertise and happy clients, but no predictable, repeatable way to bring in new ones every month.',
+      'You’re relying mostly on referrals or word-of-mouth, and you know that alone won’t get you to ₹10L/month.',
+      'You’re not fully sure your current offer or pricing actually supports a predictable, profitable business.',
       'You’ve had feast-or-famine months before, one good month, then nothing, and you’re done gambling on that pattern.',
       'You’re willing to actually implement a plan, not just collect one more piece of information.',
     ],
@@ -138,7 +138,7 @@ export const LANDING = {
     sub: 'Not a philosophy. This is the exact order we work in on every audit, and the order you’ll execute in afterward.',
     steps: [
       { n: '01', t: 'Package', d: 'Turn your expertise into one coaching offer people immediately understand and want, priced for ₹10L/month math, not guesswork.' },
-      { n: '02', t: 'Pipeline', d: 'Build one simple, repeatable way to get qualified people on a call with you, without living in your DMs or quitting your job.' },
+      { n: '02', t: 'Pipeline', d: 'Build one simple, repeatable way to get qualified people on a call with you, without living in your DMs all day.' },
       { n: '03', t: 'Prove & Scale', d: 'Deliver a result you can point to, then build the system around what actually worked, and cut everything that didn’t.' },
     ],
     close: 'This is the system. The audit maps exactly where you currently stand inside it.',
@@ -151,7 +151,7 @@ export const LANDING = {
     sub: 'This isn’t another generic webinar or motivational session. It’s about understanding your current business and figuring out the next real step toward a predictable income.',
     boxes: [
       { n: '01', t: 'Where You Are Now', d: 'Your current income, offer, positioning and client-acquisition reality, mapped honestly, not assumed.' },
-      { n: '02', t: 'Where You Want To Go', d: 'What a predictable, profitable business income actually looks like for you, beyond just your salary.' },
+      { n: '02', t: 'Where You Want To Go', d: 'What a predictable, profitable coaching business actually looks like for you, beyond good months and bad ones.' },
       { n: '03', t: 'What’s Holding You Back', d: 'The single biggest bottleneck standing between where you are and consistent monthly revenue.' },
       { n: '04', t: 'Your Possible Path Forward', d: 'A realistic plan based on your real constraints, income and expertise, not a generic script.' },
     ],
@@ -165,13 +165,13 @@ export const LANDING = {
   // Before/after transformation checklist.
   transformation: {
     eyebrow: 'The Transformation',
-    heading: 'Imagine Having A Predictable Second Income Stream.',
+    heading: 'Imagine Having A Truly Predictable Coaching Business.',
     items: [
       'Imagine waking up knowing exactly where your next client is coming from.',
-      'Imagine having income beyond your salary, without ever quitting your job.',
-      'Imagine no longer feeling dependent on one paycheck or one client.',
-      'Imagine feeling genuinely secure about your financial future.',
-      'Imagine handling unexpected expenses with real confidence.',
+      'Imagine charging what you’re actually worth, and hearing yes more often than no.',
+      'Imagine no longer feeling dependent on one referral or one client.',
+      'Imagine feeling genuinely secure about your business’s financial future.',
+      'Imagine handling a slow month with real confidence, not panic.',
       'Imagine your next 90 days of revenue being a plan, not a guess.',
     ],
     close: 'Every month you leave this unanswered is another month of the same unpredictable income. This is exactly what you’ll map out on the call.',
@@ -179,7 +179,7 @@ export const LANDING = {
 
   results: {
     heading: 'And it’s not just theory.',
-    sub: 'The professionals and business owners we’ve worked with build something most never do:',
+    sub: 'The coaches we’ve worked with build something most never do:',
     // No currency figures — real, qualitative outcomes only (India edition).
     stats: ['Consistent monthly clients', 'A predictable pipeline', 'Premium pricing that holds', 'Systems, not daily hustle'],
     principle: 'Different businesses. Different markets. Different starting points. The same principle: find what’s preventing growth, fix it, scale what works.',
@@ -189,7 +189,7 @@ export const LANDING = {
   // Testimonial section heading (cards pull from REAL_PROOF in the parent config).
   proof: {
     eyebrow: 'Real Results, Real People',
-    heading: 'See What Other Professionals Have Discovered From Our 1:1 Audits.',
+    heading: 'See What Other Coaches Have Discovered From Our 1:1 Audits.',
     // Conservative sum of the dollar figures actually documented in
     // REAL_PROOF (app/10k-roadmap/config.ts) — $646,193, several marked
     // "+" so the true total is at least this. Swap for a verified figure
@@ -227,14 +227,14 @@ export const LANDING = {
     items: [
       { q: 'How much does this audit cost?', a: 'Just ₹199, a refundable booking deposit, not a fee. It keeps the call serious on both sides. If we don’t land on a clear next step for you, you get every rupee back.' },
       { q: 'What happens during the call?', a: 'We look at your positioning, offer and client-acquisition process, find the one bottleneck costing you the most, and map a realistic path forward.' },
-      { q: 'Do I need business or marketing skills?', a: 'No. Most people we audit have real expertise but no marketing background. That gap is exactly what the audit addresses.' },
-      { q: 'Can I start without quitting my job?', a: 'Yes. This is built for people who want a second, predictable income stream alongside their current job, not a risky replacement for it on day one.' },
+      { q: 'Do I need marketing skills to do this?', a: 'No. Most coaches we audit have real expertise with clients but no marketing background. That gap is exactly what the audit addresses.' },
+      { q: 'What if I’m still early as a full-time coach?', a: 'That’s exactly who this is for. The earlier the bottleneck is found, the less time and money you waste working around it instead of fixing it.' },
       { q: 'Is my ₹199 really refundable?', a: 'Yes. If you show up and we agree the audit genuinely isn’t a fit for you, we refund it in full. We’d rather lose ₹199 than waste an hour of your time.' },
     ],
   },
 
   reach: {
-    stat: 'Professionals and business owners across India',
+    stat: 'Full-time coaches across India',
     body: 'advised remotely, one call at a time.',
   },
 
@@ -283,7 +283,7 @@ export const LANDING = {
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],
-    fit: 'This is for working professionals and business owners in India who have real expertise or a skill, and want a predictable income of their own alongside it.',
+    fit: 'This is for full-time coaches in India who have real expertise and happy clients, and want a predictable, ₹10L/month business instead of a feast-or-famine one.',
     deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
     guaranteeTitle: '100% Money-Back Guarantee',
     guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',

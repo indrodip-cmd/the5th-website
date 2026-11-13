@@ -10,13 +10,14 @@
    claims; income claims carry "results vary" disclaimers, per Meta's
    business-opportunity rules. */
 import './landing.css'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING } from './config'
 import { useUtm } from '../ui'
 import { track } from '../track'
 import CaseStudies from './CaseStudies'
 import VideoReveal from './VideoReveal'
+import CelestialScroll from './CelestialScroll'
 
 /* Content renders visible immediately, always. A full-page capture tool
    (and some real browsers) never fires an IntersectionObserver for content
@@ -123,6 +124,7 @@ export default function Landing() {
   // Prefetch the ₹199 booking step so the CTA navigates instantly instead of
   // stalling on the first-ever fetch/compile of that route's chunk.
   useEffect(() => { router.prefetch('/10k-roadmap/india/pay') }, [router])
+  const celestialRef = useRef<HTMLDivElement>(null)
   const goApply = (where: string) => {
     track('cta_click', { where })
     router.push('/10k-roadmap/india/pay')
@@ -204,6 +206,10 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ── Pain → Mechanism: one scroll-linked signature (the sun
+               setting into a moon) runs the height of both sections. ── */}
+        <div className="celestial-wrap" ref={celestialRef}>
+        <div className="celestial"><CelestialScroll targetRef={celestialRef} /></div>
         {/* ── Pain: named in the reader's own voice before any pitch ──
             The session facts and the trust row open the section, just below
             the fold, outside the hero's own screen (layout.md § 6: the hero
@@ -284,9 +290,10 @@ export default function Landing() {
             </Reveal>
           </div>
         </section>
+        </div>
 
         {/* ── What you can build: the real flow, not a revenue promise ── */}
-        <section id="build">
+        <section id="build" className="band-s">
           <div className="container">
             <Reveal>
               <div className="steps__head">
@@ -309,7 +316,7 @@ export default function Landing() {
         </section>
 
         {/* ── Who should book: good fit, not a fit ── */}
-        <section id="who">
+        <section id="who" className="band-s">
           <div className="container">
             <Reveal>
               <div className="qualify__head">

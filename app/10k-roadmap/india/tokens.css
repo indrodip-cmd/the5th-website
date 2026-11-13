@@ -23,6 +23,7 @@
   --color-accent-deep: oklch(74% 0.13 305); --color-accent-soft: oklch(30% 0.06 305); --color-focus: oklch(70% 0.15 305);
   --color-accent-2: oklch(88% 0.006 280); --color-accent-2-ink: oklch(20% 0.012 280); --color-dusk: oklch(70% 0.12 330);
   --color-accent-ink-deep: oklch(40% 0.14 305);
+  --color-sun: oklch(80% 0.15 75); --color-sun-glow: oklch(80% 0.15 75 / 0.35);
   --color-day-ink: oklch(20% 0.012 280); --color-day-muted: oklch(63% 0.018 85); --color-fog: oklch(15% 0.014 300);
   --color-well: oklch(97% 0.012 80); --color-well-2: oklch(94% 0.014 80); --color-well-ink: oklch(18% 0.02 300); --color-well-muted: oklch(45% 0.02 290); --color-well-rule: oklch(88% 0.012 80); --color-card: oklch(99% 0.006 80);
 

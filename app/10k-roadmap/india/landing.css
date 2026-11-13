@@ -145,6 +145,20 @@
   .trust__row span { font-size: var(--text-sm); }
 }
 
+/* ── Celestial: the sun-to-moon scroll signature, a thin rail beside the
+   pain→mechanism run. Decorative only (aria-hidden), hidden until there is
+   room beside the text column. ──────────────────────────────────────────── */
+.celestial-wrap { position: relative; }
+.celestial { display: none; }
+@media (min-width: 72rem) {
+  .celestial {
+    display: block; position: fixed; top: 50vh; width: 32px; height: 32px; margin-top: calc(var(--space-md) * -1);
+    right: max(var(--gutter), calc((100vw - min(100vw, var(--container))) / 2 + var(--gutter)));
+    pointer-events: none; z-index: var(--z-sticky); filter: drop-shadow(0 0 10px var(--color-sun-glow));
+  }
+  .celestial svg { display: block; }
+}
+
 /* ── Pain (Corridor) ─────────────────────────────────────────────────────── */
 .pain { background: var(--color-paper-2); }
 .india-landing .pain__inner { max-width: 44rem; margin-inline: auto; margin-top: var(--space-2xl); text-align: center; }

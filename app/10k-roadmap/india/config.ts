@@ -57,23 +57,29 @@ export function auditIndiaPlanId(): string {
 export const LANDING = {
   // The launch framing: a global consulting practice (real international
   // clients across the US, Canada, the UAE, Indonesia and Vietnam are
-  // already in REAL_PROOF) opening its 1:1 audit to India for the first
+  // already in REAL_PROOF) opening its 1:1 session to India for the first
   // time. "Global" is the brand's own name, not an invented superlative.
   launch: {
     badge: 'First time in India',
-    kicker: 'A private 1:1 business audit for full-time coaches, from a global consulting practice.',
+    kicker: 'Your ₹10 Lakh/Month Business Roadmap',
   },
+  // The founder's credibility strip (hero + founder section). Every claim
+  // here must stay exactly this careful: the valuation is the startup's,
+  // approximate, and not personal wealth; the UC line says "alumni", never
+  // that the university itself backs, funds or endorses the startup.
+  founderCreds: ['AI Startup Founder', '~$6M Startup Valuation', 'Backed by University of California Alumni'],
+  founderCredsNote: 'Valuation is an approximate estimate of the startup, not personal net worth, and does not guarantee outcomes for consulting clients.',
   // No claim about the reader's own income/financial status in the ad-facing
   // copy (Meta's Personal Attributes policy disallows asserting or implying
   // a viewer's financial status). This names the AUDIENCE by role/intent
   // instead of asserting a fact about the specific person reading it.
-  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR FULL-TIME COACHES IN INDIA',
+  eyebrowAttention: 'A PRIVATE 1:1 STRATEGY SESSION FOR FULL-TIME COACHES IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headlinePre: 'Stop Guessing Where Your Next Client Comes From. Learn How To Build A ',
-  headlineHighlight: 'Predictable ₹10 Lakh/Month Coaching Business',
-  headlinePost: ' From The Expertise You Already Have.',
-  headline: 'Build a Predictable ₹10 Lakh/Month Coaching Business From Your Expertise, in 6–12 Months.',
-  headlineSub: 'For full-time coaches tired of income that depends on whoever shows up next.',
+  headlinePre: 'Turn Your Expertise Into A ',
+  headlineHighlight: 'Predictable Coaching Business',
+  headlinePost: '.',
+  headline: 'Turn Your Expertise Into A Predictable Coaching Business.',
+  headlineSub: 'Build a powerful offer, attract qualified prospects, and convert them into paying clients with a structured business growth system.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '200% Money-Back Guarantee',
@@ -87,23 +93,25 @@ export const LANDING = {
     sub: 'Your satisfaction matters more than the booking fee.',
     terms: 'T&Cs apply. Refund eligibility, request deadline and processing terms are explained before booking.',
   },
-  ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
+  ctaPrimary: 'Book Your ₹199 Strategy Session',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
   ctaMicro: '₹199, fully refundable. Slots limited to his calendar.',
   ctaMicroShort: '₹199, fully refundable',
 
-  /* ── Pain / agitation: named before the solution, in the reader's own
-     words, not the brand's. This is deliberately the first substantial copy
-     block below the hero — the goal is for the reader to feel understood
-     before being sold anything. No personal-attribute assertions: these
-     are open pain statements, not claims about the specific reader. */
+  /* ── The problem: four short, scannable statements, then the one line
+     that reframes it — named before the solution, in the reader's own
+     words, not the brand's. No personal-attribute assertions: these are
+     open pain statements, not claims about the specific reader. */
   pain: {
     eyebrow: 'Sound Familiar?',
     heading: 'A great month. Then a quiet one. Then you’re guessing again.',
     lines: [
-      'You don’t need another course. You need to know exactly where your business is leaking clients and revenue.',
+      'You have expertise, but struggle to get consistent clients.',
+      'Most of your business comes through referrals.',
+      'You post content, but struggle to convert followers into customers.',
+      'Your monthly revenue is unpredictable.',
     ],
-    close: 'A plan built around your actual numbers, not someone else’s case study.',
+    close: 'You don’t need more random marketing activities. You need a system.',
   },
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
@@ -121,55 +129,28 @@ export const LANDING = {
   // absolute "0%/100%" guarantee-style claims — only verifiable facts about
   // the format itself.
   stats: [
-    { v: '60 Min', l: 'Focused Business Audit' },
+    { v: '60 Min', l: 'Focused Strategy Session' },
     { v: 'Full-Time', l: 'Built For Coaches, Not Side-Hustlers' },
     { v: '1:1', l: 'Personal, Not A Webinar' },
     { v: '₹199', l: 'Fully Refundable Deposit' },
   ],
 
-  // "Who is this for?" self-qualifying checklist, phrased as reflective
-  // questions rather than assertions about the specific reader's finances.
-  whoIsThis: {
-    eyebrow: 'Is This You?',
-    heading: 'Who is this for?',
-    sub: 'If this sounds like you, keep reading.',
-    items: [
-      'Coaching full-time. Income has plateaued.',
-      'Real expertise, no repeatable new clients.',
-      'Relying on referrals, not a system.',
-      'Feast-or-famine months. Done gambling on it.',
-    ],
-    bannerHeading: 'If two or more are true, this audit is for you.',
-  },
-
-  /* ── The named mechanism: HOW the coaching business actually gets built,
-     distinct from the "clarity" section below (which is the AGENDA for the
-     audit call itself). Without this, the page explains the call but never
-     explains the method — the single biggest gap in a sales landing page. */
+  /* ── The named system: HOW the coaching business actually gets built,
+     distinct from the "clarity" next-step banner below. Without this, the
+     page explains the call but never explains the method. */
   mechanism: {
     eyebrow: 'The Method',
-    heading: 'The 3-part system.',
-    sub: 'The exact order we work in, on every audit.',
+    heading: 'The 3-part business growth system.',
+    sub: 'The exact order we work in, on every session.',
     steps: [
-      { n: '01', t: 'Package', d: 'One offer, priced for ₹10L/month.' },
-      { n: '02', t: 'Pipeline', d: 'One repeatable way to get on calls.' },
-      { n: '03', t: 'Prove & Scale', d: 'Deliver, then scale what works.' },
+      { n: '01', t: 'Position', d: 'Build an offer that communicates your value and attracts the right customers.' },
+      { n: '02', t: 'Attract', d: 'Create a marketing system that generates qualified enquiries.' },
+      { n: '03', t: 'Convert', d: 'Turn qualified prospects into paying clients using strategic sales processes.' },
     ],
-    close: 'On the call: where you stand, what’s blocking you, your next step.',
+    close: 'On the session: where you stand, what’s blocking you, your next step.',
   },
 
-  // The 4-part clarity framework. Rendered as a compact caption row under the
-  // mechanism flow rather than its own heavy section (kept short on request).
   clarity: {
-    eyebrow: 'No Fluff, Real Clarity',
-    heading: 'This 1:1 Business Audit Is Designed To Give You Clarity.',
-    sub: 'Understand your business. Find the next real step.',
-    boxes: [
-      { n: '01', t: 'Where You Are Now', d: 'Mapped honestly, not assumed.' },
-      { n: '02', t: 'Where You Want To Go', d: 'Beyond good months and bad ones.' },
-      { n: '03', t: 'What’s Holding You Back', d: 'The one bottleneck costing you most.' },
-      { n: '04', t: 'Your Possible Path Forward', d: 'Realistic, not a generic script.' },
-    ],
     nextStep: {
       eyebrow: 'Your Ultimate Outcome',
       heading: 'Your Next Step',
@@ -177,17 +158,14 @@ export const LANDING = {
     },
   },
 
-  // Before/after transformation checklist.
-  transformation: {
-    eyebrow: 'The Transformation',
-    heading: 'Imagine a predictable coaching business.',
-    items: [
-      'Know where your next client is coming from.',
-      'Charge what you’re actually worth.',
-      'No longer dependent on one client.',
-      'Your next 90 days: a plan, not a guess.',
-    ],
-    close: 'This is what you’ll map out on the call.',
+  // What the system builds, as a flow, not a promise: real steps the system
+  // actually moves through, never a guaranteed-revenue claim.
+  buildFlow: {
+    eyebrow: 'What You Can Build',
+    heading: 'A structured path to a predictable business.',
+    sub: 'The same flow we map out together, step by step.',
+    steps: ['Expertise', 'Positioning', 'Marketing', 'Enquiries', 'Sales', 'Growth'],
+    close: 'Not a guarantee. A structure you execute, step by step.',
   },
 
   results: {
@@ -210,37 +188,37 @@ export const LANDING = {
     disclaimer: 'Real client outcomes. Individual results are not typical and depend on your offer, market and effort.',
   },
 
-  forYou: {
-    heading: 'This is for you if…',
-    yes: [
-      'You already earn at least ₹50,000/month from a job or a business.',
-      'You have expertise, a skill, or a service you can monetise.',
-      'You want a predictable income from your own business, not just your salary.',
-      'You’re tired of unpredictable, feast-or-famine results.',
-      'You want consistent clients without chasing people all day.',
-      'You’re willing to implement.',
+  whoBook: {
+    heading: 'Who should book?',
+    goodFitHeading: 'Good fit',
+    goodFit: [
+      'Coaches',
+      'Consultants',
+      'Freelancers',
+      'Service providers',
+      'Experts wanting to monetise their knowledge',
+      'Entrepreneurs looking for more consistent clients',
     ],
-    notHeading: 'This is not for you if…',
-    no: [
-      'You’re not yet earning from a job or a business.',
-      'You want someone to magically build the business for you.',
-      'You’re unwilling to sell.',
-      'You won’t implement.',
-      'You’re looking for another course to watch.',
-      'You want guaranteed results without doing the work.',
+    notFitHeading: 'Not a fit',
+    notFit: [
+      'People expecting overnight success',
+      'People looking for guaranteed income',
+      'People unwilling to take action',
+      'People searching for shortcuts',
     ],
-    close: 'You don’t need to be perfect. You do need to be serious.',
   },
 
   faq: {
     eyebrow: 'Clearing Your Doubts',
     heading: 'Frequently Asked Questions',
     items: [
-      { q: 'How much does this audit cost?', a: '₹199, fully refundable. It keeps the call serious on both sides.' },
-      { q: 'What happens during the call?', a: 'We find the one bottleneck costing you the most, and map a realistic path forward.' },
-      { q: 'Do I need marketing skills to do this?', a: 'No. Most coaches we audit have expertise, not a marketing background.' },
-      { q: 'What if I’m still early as a full-time coach?', a: 'That’s exactly who this is for.' },
-      { q: 'Is my ₹199 really refundable?', a: 'Yes. If it’s not a fit, you get it back in full.' },
+      { q: 'What exactly happens during the ₹199 strategy session?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
+      { q: 'How long does the session last?', a: 'Sixty minutes, one-on-one with Indrodip personally.' },
+      { q: 'Is this suitable for beginners?', a: 'Yes, if you already have some expertise or clients. It isn’t built for people with no business or income yet.' },
+      { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
+      { q: 'Will you help me get clients?', a: 'The session maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
+      { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a refundable booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },
+      { q: 'Why does the session cost ₹199?', a: 'It’s a small refundable deposit that keeps the call serious on both sides, not a fee for the advice itself. If we’re not a fit, you get it back in full.' },
     ],
   },
 
@@ -261,21 +239,21 @@ export const LANDING = {
 
   founder: {
     eyebrow: 'Someone You Can Trust',
-    heading: 'Meet Your Mentor',
+    heading: 'Learn From Someone Building Businesses, Not Just Teaching Them.',
     quote: 'Talented professionals rarely got paid for the value they created. That gap is what built The5th.',
-    body: 'Every audit is run by Indrodip personally. Not a sales rep. Not a junior coach.',
+    body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M. Building that company, not just studying business, is what shapes how I help coaches and consultants position their offer, build a marketing system, and convert leads into clients.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
       { v: '5+ Yrs', l: 'Marketing & Funnel Strategy' },
-      { v: '100%', l: 'Audits Run Personally' },
+      { v: '100%', l: 'Sessions Run Personally' },
     ],
   },
 
   apply: {
     eyebrow: 'Book Your Slot',
-    heading: 'Ready to see exactly what’s holding your income back?',
-    sub: 'Indrodip runs every audit personally. Slots are limited by his week, not a countdown timer.',
+    heading: 'Your Next Client Shouldn’t Depend On Luck.',
+    sub: 'Let’s identify what’s holding your business back and map out your next steps.',
     priceLine: '₹199 today, fully refundable',
     micro: 'No pressure. If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
     // What the session itself leaves you with, same facts as the pay step's
@@ -310,8 +288,8 @@ export const LANDING = {
   },
 
   nav: [
+    { label: 'The System', href: '#clarity' },
     { label: 'Who It’s For', href: '#who' },
-    { label: 'The Call', href: '#clarity' },
     { label: 'Proof', href: '#proof' },
     { label: 'FAQ', href: '#faq' },
     { label: 'Apply', href: '#apply' },

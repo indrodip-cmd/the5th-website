@@ -36,6 +36,14 @@ function CheckIcon() {
     </svg>
   )
 }
+function CrossIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.5 9.5l5 5M14.5 9.5l-5 5" />
+    </svg>
+  )
+}
 function GuaranteeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -63,11 +71,11 @@ function Rating() {
     </span>
   )
 }
-function CheckList({ items }: { items: string[] }) {
+function CheckList({ items, cross }: { items: string[]; cross?: boolean }) {
   return (
     <ul className="check-list">
       {items.map((it) => (
-        <li key={it} className="check-item"><CheckIcon /><span>{it}</span></li>
+        <li key={it} className={`check-item${cross ? ' check-item--cross' : ''}`}>{cross ? <CrossIcon /> : <CheckIcon />}<span>{it}</span></li>
       ))}
     </ul>
   )
@@ -121,9 +129,7 @@ export default function Landing() {
   }
 
   const testimonialProof = REAL_PROOF.filter((c) => LANDING.caseStudies.names.includes(c.name))
-  // Shortened for the button itself (49a: a control must not wrap); the full line,
-  // LANDING.ctaPrimary, still reads in the hero's and the apply card's fine print.
-  const CTA_LABEL = 'Book the audit — ₹199'
+  const CTA_LABEL = LANDING.ctaPrimary
 
   return (
     <div className="india-landing">
@@ -140,7 +146,7 @@ export default function Landing() {
             {LANDING.nav.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
           </nav>
           <div className="nav__right">
-            <button className="btn" onClick={() => goApply('nav')}>Book the audit</button>
+            <button className="btn" onClick={() => goApply('nav')}>Book Session</button>
           </div>
         </div>
       </header>
@@ -169,7 +175,10 @@ export default function Landing() {
                 </button>
               </div>
               <p className="hero__fineprint">{LANDING.ctaMicro}</p>
-              <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</span></p>
+              <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
+              <div className="hero__creds">
+                {LANDING.founderCreds.map((c) => <span key={c}>{c}</span>)}
+              </div>
               <div className="hero__rating"><Rating /></div>
             </Reveal>
           </div>
@@ -219,19 +228,19 @@ export default function Landing() {
               </div>
             </Reveal>
             <div className="trust">
+              <p className="trust__label">{PRESS.label}</p>
               <div className="trust__row">
                 {PRESS.items.map((p) => <span key={p}>{p}</span>)}
               </div>
-              <p className="trust__label">{PRESS.label}</p>
             </div>
           </div>
           <div className="container pain__inner">
             <Reveal><h2>{LANDING.pain.heading}</h2></Reveal>
             <Reveal i={1}><IncomeGraphic /></Reveal>
             <Reveal i={1}>
-              <div className="pain__lines">
-                {LANDING.pain.lines.map((l) => <p key={l}>{l}</p>)}
-              </div>
+              <ul className="pain__lines check-list">
+                {LANDING.pain.lines.map((l) => <li key={l} className="check-item"><CheckIcon /><span>{l}</span></li>)}
+              </ul>
             </Reveal>
             <Reveal i={2}><p className="pain__close">{LANDING.pain.close}</p></Reveal>
           </div>
@@ -273,28 +282,49 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ── Who it's for, and what changes once the bottleneck is fixed ── */}
+        {/* ── What you can build: the real flow, not a revenue promise ── */}
+        <section id="build">
+          <div className="container">
+            <Reveal>
+              <div className="steps__head">
+                <h2>{LANDING.buildFlow.heading}</h2>
+                <p className="lede">{LANDING.buildFlow.sub}</p>
+              </div>
+            </Reveal>
+            <Reveal i={1}>
+              <div className="build-flow">
+                {LANDING.buildFlow.steps.map((s, i) => (
+                  <span className="build-flow__step" key={s}>
+                    {s}
+                    {i < LANDING.buildFlow.steps.length - 1 && <span className="build-flow__arrow" aria-hidden>→</span>}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+            <Reveal i={2}><p className="steps__close">{LANDING.buildFlow.close}</p></Reveal>
+          </div>
+        </section>
+
+        {/* ── Who should book: good fit, not a fit ── */}
         <section id="who">
           <div className="container">
             <Reveal>
               <div className="qualify__head">
-                <h2>{LANDING.whoIsThis.heading}</h2>
-                <p className="lede">{LANDING.whoIsThis.sub}</p>
+                <h2>{LANDING.whoBook.heading}</h2>
               </div>
             </Reveal>
             <Reveal i={1}>
               <div className="qualify__cols">
                 <div className="qualify__col">
-                  <h3>Is this you?</h3>
-                  <CheckList items={LANDING.whoIsThis.items} />
+                  <h3>{LANDING.whoBook.goodFitHeading}</h3>
+                  <CheckList items={LANDING.whoBook.goodFit} />
                 </div>
                 <div className="qualify__col">
-                  <h3>{LANDING.transformation.heading}</h3>
-                  <CheckList items={LANDING.transformation.items} />
+                  <h3>{LANDING.whoBook.notFitHeading}</h3>
+                  <CheckList items={LANDING.whoBook.notFit} cross />
                 </div>
               </div>
-              <div className="qualify__banner">
-                <p>{LANDING.whoIsThis.bannerHeading}</p>
+              <div className="qualify__cta">
                 <button className="btn" onClick={() => goApply('who_banner')}>{CTA_LABEL}</button>
               </div>
             </Reveal>
@@ -362,10 +392,14 @@ export default function Landing() {
                   </div>
                 </div>
                 <div>
+                  <div className="founder__creds">
+                    {LANDING.founderCreds.map((c) => <span key={c}>{c}</span>)}
+                  </div>
                   <blockquote>&ldquo;{LANDING.founder.quote}&rdquo;</blockquote>
                   <p className="founder__body">{LANDING.founder.body}</p>
                   <div className="founder__name">{LANDING.founder.name}</div>
                   <div className="founder__role">{LANDING.founder.role}</div>
+                  <p className="founder__note">{LANDING.founderCredsNote}</p>
                 </div>
               </div>
             </Reveal>

@@ -128,15 +128,19 @@
 /* ── Pain (Corridor) ─────────────────────────────────────────────────────── */
 .pain { background: var(--color-paper-2); }
 .pain__inner { max-width: 52rem; margin-inline: auto; margin-top: var(--space-2xl); }
-.pain h2 { font-size: var(--text-section); max-width: 22ch; }
+.pain h2 { font-size: var(--text-display-s); max-width: 16ch; }
 .pain__lines { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); }
 .pain__lines p { font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink-2); max-width: none; }
 .pain__close { margin-top: var(--space-lg); padding-left: var(--space-lg); border-left: 2px solid var(--color-accent); font-weight: 700; font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink); }
+.pain__graphic { display: block; width: 100%; max-width: 32rem; height: auto; margin: var(--space-xl) 0; }
 
 /* ── Mechanism (Steps) ───────────────────────────────────────────────────── */
 .steps__head { max-width: 42rem; }
 .steps__head .lede { margin-top: var(--space-md); }
-.steps__list { counter-reset: step; list-style: none; margin: var(--space-2xl) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xl); }
+.steps__flow { margin-top: var(--space-2xl); }
+.steps__graphic { display: block; width: 100%; height: 24px; margin-bottom: var(--space-md); }
+@media (max-width: 60rem) { .steps__graphic { display: none; } }
+.steps__list { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xl); }
 .step { counter-increment: step; }
 .step__num { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--color-accent-2); color: var(--color-day-ink); font-weight: 700; font-size: var(--text-md); margin-bottom: var(--space-lg); }
 .step__num::before { content: counter(step, decimal-leading-zero); }
@@ -145,19 +149,11 @@
 .steps__close { margin-top: var(--space-2xl); padding-top: var(--space-xl); border-top: 1px solid var(--color-rule); font-size: var(--text-lead); color: var(--color-ink-2); max-width: 48ch; }
 @media (max-width: 60rem) { .steps__list { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); } }
 
-/* ── Clarity (Grid + Band) ───────────────────────────────────────────────── */
+/* ── Clarity band: the mechanism's close + next-step banner ──────────────── */
 .clarity-band { background: var(--color-paper-2); color: var(--color-ink); }
-.clarity__head { max-width: 46rem; }
-.clarity__head .lede { margin-top: var(--space-md); }
-.clarity__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin-top: var(--space-2xl); background: var(--color-rule); border: 1px solid var(--color-rule); border-radius: var(--radius-card); overflow: hidden; }
-.clarity__box { background: var(--color-paper); padding: var(--space-xl); }
-.clarity__box .label { display: block; margin-bottom: var(--space-sm); }
-.clarity__box h3 { margin-bottom: var(--space-sm); }
-.clarity__box p { color: var(--color-muted); max-width: 48ch; }
 .clarity__next { margin-top: var(--space-xl); border-radius: var(--radius-card); background: var(--color-paper-3); padding: var(--space-2xl); display: flex; align-items: center; justify-content: space-between; gap: var(--space-xl); flex-wrap: wrap; }
 .clarity__next h3 { font-size: var(--text-xl); margin-bottom: var(--space-xs); }
 .clarity__next p { color: var(--color-ink-2); max-width: 46ch; }
-@media (max-width: 54rem) { .clarity__grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* ── Qualify (two columns of checks) ─────────────────────────────────────── */
 .qualify__head { max-width: 48rem; }
@@ -176,6 +172,7 @@
 /* ── Proof ───────────────────────────────────────────────────────────────── */
 .proof { background: var(--color-paper-2); }
 .proof__head { max-width: 46rem; }
+.proof__head h2 { font-size: var(--text-display-s); }
 .proof__banner { margin-top: var(--space-xl); text-align: center; }
 .proof__banner span { display: inline-block; border-radius: var(--radius-pill); border: 1px solid color-mix(in oklab, var(--color-accent) 55%, transparent); padding: var(--space-xs) var(--space-lg); font-weight: 700; font-size: var(--text-sm); color: var(--color-accent-deep); }
 .proof__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-2xl); }

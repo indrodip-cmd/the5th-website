@@ -65,7 +65,7 @@ export const LANDING = {
   headlineHighlight: 'Predictable ₹10 Lakh/Month Coaching Business',
   headlinePost: ' From The Expertise You Already Have.',
   headline: 'Build a Predictable ₹10 Lakh/Month Coaching Business From Your Expertise, in 6–12 Months.',
-  headlineSub: 'For full-time coaches who are genuinely good at what they do, but tired of a month-to-month income that depends on whichever client happens to show up next.',
+  headlineSub: 'For full-time coaches tired of income that depends on whoever shows up next.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '200% Money-Back Guarantee',
@@ -81,7 +81,7 @@ export const LANDING = {
   },
   ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199, fully refundable · Indrodip personally runs every call, so slots are limited by his calendar, not a quota',
+  ctaMicro: '₹199, fully refundable. Slots limited to his calendar.',
   ctaMicroShort: '₹199, fully refundable',
 
   /* ── Pain / agitation: named before the solution, in the reader's own
@@ -91,13 +91,11 @@ export const LANDING = {
      are open pain statements, not claims about the specific reader. */
   pain: {
     eyebrow: 'Sound Familiar?',
-    heading: 'You’re good at coaching. So why does your income still swing month to month?',
+    heading: 'A great month. Then a quiet one. Then you’re guessing again.',
     lines: [
-      'A client finishes their program, a referral goes quiet, a slow month happens, and suddenly you’re back to wondering where the next client is coming from.',
-      'You’ve tried posting more, tweaking your offer, chasing one more certification. Each one helps for a moment, then the same pattern returns: a great month, then a dry one.',
-      'The truth is, you don’t need another course, another framework, or more hours in your day. You need to know exactly where your specific business is leaking clients and revenue, and what to fix first.',
+      'You don’t need another course. You need to know exactly where your business is leaking clients and revenue.',
     ],
-    close: 'That’s the one thing a free YouTube video, a WhatsApp forward, or a generic course can never give you: a plan built around your actual numbers, not someone else’s case study.',
+    close: 'A plan built around your actual numbers, not someone else’s case study.',
   },
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
@@ -125,16 +123,14 @@ export const LANDING = {
   whoIsThis: {
     eyebrow: 'Is This You?',
     heading: 'Who is this for?',
-    sub: 'Ask yourself honestly. If several of these land, this audit was built for exactly this moment in your career.',
+    sub: 'If this sounds like you, keep reading.',
     items: [
-      'You’re coaching full-time, but your monthly income has plateaued and you don’t have a clear plan to change that.',
-      'You have real expertise and happy clients, but no predictable, repeatable way to bring in new ones every month.',
-      'You’re relying mostly on referrals or word-of-mouth, and you know that alone won’t get you to ₹10L/month.',
-      'You’re not fully sure your current offer or pricing actually supports a predictable, profitable business.',
-      'You’ve had feast-or-famine months before, one good month, then nothing, and you’re done gambling on that pattern.',
-      'You’re willing to actually implement a plan, not just collect one more piece of information.',
+      'Coaching full-time. Income has plateaued.',
+      'Real expertise, no repeatable new clients.',
+      'Relying on referrals, not a system.',
+      'Feast-or-famine months. Done gambling on it.',
     ],
-    bannerHeading: 'If 3 or more of these are true for you, the only inconsistent move now is closing this tab and doing nothing about it.',
+    bannerHeading: 'If two or more are true, this audit is for you.',
   },
 
   /* ── The named mechanism: HOW the coaching business actually gets built,
@@ -143,47 +139,46 @@ export const LANDING = {
      explains the method — the single biggest gap in a sales landing page. */
   mechanism: {
     eyebrow: 'The Method',
-    heading: 'The 3-Part System Behind A Predictable ₹10 Lakh/Month Coaching Business.',
-    sub: 'Not a philosophy. This is the exact order we work in on every audit, and the order you’ll execute in afterward.',
+    heading: 'The 3-part system.',
+    sub: 'The exact order we work in, on every audit.',
     steps: [
-      { n: '01', t: 'Package', d: 'Turn your expertise into one coaching offer people immediately understand and want, priced for ₹10L/month math, not guesswork.' },
-      { n: '02', t: 'Pipeline', d: 'Build one simple, repeatable way to get qualified people on a call with you, without living in your DMs all day.' },
-      { n: '03', t: 'Prove & Scale', d: 'Deliver a result you can point to, then build the system around what actually worked, and cut everything that didn’t.' },
+      { n: '01', t: 'Package', d: 'One offer, priced for ₹10L/month.' },
+      { n: '02', t: 'Pipeline', d: 'One repeatable way to get on calls.' },
+      { n: '03', t: 'Prove & Scale', d: 'Deliver, then scale what works.' },
     ],
-    close: 'This is the system. The audit maps exactly where you currently stand inside it.',
+    close: 'On the call: where you stand, what’s blocking you, your next step.',
   },
 
-  // The 4-part clarity framework, mirrored directly on the call.
+  // The 4-part clarity framework. Rendered as a compact caption row under the
+  // mechanism flow rather than its own heavy section (kept short on request).
   clarity: {
     eyebrow: 'No Fluff, Real Clarity',
     heading: 'This 1:1 Business Audit Is Designed To Give You Clarity.',
-    sub: 'This isn’t another generic webinar or motivational session. It’s about understanding your current business and figuring out the next real step toward a predictable income.',
+    sub: 'Understand your business. Find the next real step.',
     boxes: [
-      { n: '01', t: 'Where You Are Now', d: 'Your current income, offer, positioning and client-acquisition reality, mapped honestly, not assumed.' },
-      { n: '02', t: 'Where You Want To Go', d: 'What a predictable, profitable coaching business actually looks like for you, beyond good months and bad ones.' },
-      { n: '03', t: 'What’s Holding You Back', d: 'The single biggest bottleneck standing between where you are and consistent monthly revenue.' },
-      { n: '04', t: 'Your Possible Path Forward', d: 'A realistic plan based on your real constraints, income and expertise, not a generic script.' },
+      { n: '01', t: 'Where You Are Now', d: 'Mapped honestly, not assumed.' },
+      { n: '02', t: 'Where You Want To Go', d: 'Beyond good months and bad ones.' },
+      { n: '03', t: 'What’s Holding You Back', d: 'The one bottleneck costing you most.' },
+      { n: '04', t: 'Your Possible Path Forward', d: 'Realistic, not a generic script.' },
     ],
     nextStep: {
       eyebrow: 'Your Ultimate Outcome',
       heading: 'Your Next Step',
-      sub: 'You’ll leave knowing exactly what to fix next, whether or not you ever continue working with us.',
+      sub: 'You’ll leave knowing exactly what to fix next.',
     },
   },
 
   // Before/after transformation checklist.
   transformation: {
     eyebrow: 'The Transformation',
-    heading: 'Imagine Having A Truly Predictable Coaching Business.',
+    heading: 'Imagine a predictable coaching business.',
     items: [
-      'Imagine waking up knowing exactly where your next client is coming from.',
-      'Imagine charging what you’re actually worth, and hearing yes more often than no.',
-      'Imagine no longer feeling dependent on one referral or one client.',
-      'Imagine feeling genuinely secure about your business’s financial future.',
-      'Imagine handling a slow month with real confidence, not panic.',
-      'Imagine your next 90 days of revenue being a plan, not a guess.',
+      'Know where your next client is coming from.',
+      'Charge what you’re actually worth.',
+      'No longer dependent on one client.',
+      'Your next 90 days: a plan, not a guess.',
     ],
-    close: 'Every month you leave this unanswered is another month of the same unpredictable income. This is exactly what you’ll map out on the call.',
+    close: 'This is what you’ll map out on the call.',
   },
 
   results: {
@@ -198,7 +193,7 @@ export const LANDING = {
   // Testimonial section heading (cards pull from REAL_PROOF in the parent config).
   proof: {
     eyebrow: 'Real Results, Real People',
-    heading: 'See What Other Coaches Have Discovered From Our 1:1 Audits.',
+    heading: 'Real results.',
     // Figure confirmed directly by the business owner (Indrodip), 2026-11-13:
     // total documented client revenue across the full client base, not only
     // the cases shown below (those sum to a conservative $646,000+).
@@ -232,11 +227,11 @@ export const LANDING = {
     eyebrow: 'Clearing Your Doubts',
     heading: 'Frequently Asked Questions',
     items: [
-      { q: 'How much does this audit cost?', a: 'Just ₹199, a refundable booking deposit, not a fee. It keeps the call serious on both sides. If we don’t land on a clear next step for you, you get every rupee back.' },
-      { q: 'What happens during the call?', a: 'We look at your positioning, offer and client-acquisition process, find the one bottleneck costing you the most, and map a realistic path forward.' },
-      { q: 'Do I need marketing skills to do this?', a: 'No. Most coaches we audit have real expertise with clients but no marketing background. That gap is exactly what the audit addresses.' },
-      { q: 'What if I’m still early as a full-time coach?', a: 'That’s exactly who this is for. The earlier the bottleneck is found, the less time and money you waste working around it instead of fixing it.' },
-      { q: 'Is my ₹199 really refundable?', a: 'Yes. If you show up and we agree the audit genuinely isn’t a fit for you, we refund it in full. We’d rather lose ₹199 than waste an hour of your time.' },
+      { q: 'How much does this audit cost?', a: '₹199, fully refundable. It keeps the call serious on both sides.' },
+      { q: 'What happens during the call?', a: 'We find the one bottleneck costing you the most, and map a realistic path forward.' },
+      { q: 'Do I need marketing skills to do this?', a: 'No. Most coaches we audit have expertise, not a marketing background.' },
+      { q: 'What if I’m still early as a full-time coach?', a: 'That’s exactly who this is for.' },
+      { q: 'Is my ₹199 really refundable?', a: 'Yes. If it’s not a fit, you get it back in full.' },
     ],
   },
 
@@ -258,8 +253,8 @@ export const LANDING = {
   founder: {
     eyebrow: 'Someone You Can Trust',
     heading: 'Meet Your Mentor',
-    quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
-    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every audit is run by Indrodip personally, not a sales rep, not a junior coach.',
+    quote: 'Talented professionals rarely got paid for the value they created. That gap is what built The5th.',
+    body: 'Every audit is run by Indrodip personally. Not a sales rep. Not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
@@ -271,7 +266,7 @@ export const LANDING = {
   apply: {
     eyebrow: 'Book Your Slot',
     heading: 'Ready to see exactly what’s holding your income back?',
-    sub: 'Indrodip personally runs every audit, so slots are limited by how many hours are in his week, not by a fake countdown timer.',
+    sub: 'Indrodip runs every audit personally. Slots are limited by his week, not a countdown timer.',
     priceLine: '₹199 today, fully refundable',
     micro: 'No pressure. If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
     // What the session itself leaves you with, same facts as the pay step's

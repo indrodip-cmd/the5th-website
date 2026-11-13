@@ -73,6 +73,33 @@ function CheckList({ items }: { items: string[] }) {
   )
 }
 
+/* A jagged income line settling into a flat one: the one fact the pain
+   section is about, shown instead of explained in three paragraphs. */
+function IncomeGraphic() {
+  return (
+    <svg className="pain__graphic" viewBox="0 0 640 160" fill="none" aria-hidden>
+      <path d="M8 60 L100 100 L180 40 L260 120 L340 55 L420 115 L480 70" stroke="var(--color-muted)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M480 70 L560 68 L632 66" stroke="var(--color-accent-deep)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 10" />
+      <circle cx="8" cy="60" r="5" fill="var(--color-muted)" />
+      <circle cx="480" cy="70" r="5" fill="var(--color-ink)" />
+      <circle cx="632" cy="66" r="6" fill="var(--color-accent)" />
+    </svg>
+  )
+}
+
+/* The 3-part method as a line, not a list: one connected flow instead of
+   three separate paragraphs. */
+function MethodGraphic() {
+  return (
+    <svg className="steps__graphic" viewBox="0 0 640 24" fill="none" aria-hidden>
+      <line x1="20" y1="12" x2="620" y2="12" stroke="var(--color-rule)" strokeWidth="2" />
+      <circle cx="20" cy="12" r="7" fill="var(--color-accent)" />
+      <circle cx="320" cy="12" r="7" fill="var(--color-accent)" />
+      <circle cx="620" cy="12" r="7" fill="var(--color-accent)" />
+    </svg>
+  )
+}
+
 export default function Landing() {
   const router = useRouter()
   const [solid, setSolid] = useState(false)
@@ -141,7 +168,7 @@ export default function Landing() {
                       {LANDING.ctaSecondary.label}
                     </button>
                   </div>
-                  <p className="hero__fineprint">{LANDING.ctaMicro.replace(/ · /g, '. ')}</p>
+                  <p className="hero__fineprint">{LANDING.ctaMicro}</p>
                   <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</span></p>
                   <div className="hero__rating"><Rating /></div>
                 </Reveal>
@@ -193,6 +220,7 @@ export default function Landing() {
           </div>
           <div className="container pain__inner">
             <Reveal><h2>{LANDING.pain.heading}</h2></Reveal>
+            <Reveal i={1}><IncomeGraphic /></Reveal>
             <Reveal i={1}>
               <div className="pain__lines">
                 {LANDING.pain.lines.map((l) => <p key={l}>{l}</p>)}
@@ -202,8 +230,8 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ── Mechanism: the named 3-step method (HOW the business gets built) ── */}
-        <section id="mechanism">
+        {/* ── Mechanism: the named 3-step method, then the next step ── */}
+        <section id="clarity" className="clarity-band band-s">
           <div className="container">
             <Reveal>
               <div className="steps__head">
@@ -212,41 +240,21 @@ export default function Landing() {
               </div>
             </Reveal>
             <Reveal i={1}>
-              <ol className="steps__list">
-                {LANDING.mechanism.steps.map((s) => (
-                  <li key={s.n} className="step">
-                    <span className="step__num" />
-                    <h3>{s.t}</h3>
-                    <p>{s.d}</p>
-                  </li>
-                ))}
-              </ol>
+              <div className="steps__flow">
+                <MethodGraphic />
+                <ol className="steps__list">
+                  {LANDING.mechanism.steps.map((s) => (
+                    <li key={s.n} className="step">
+                      <span className="step__num" />
+                      <h3>{s.t}</h3>
+                      <p>{s.d}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </Reveal>
             <Reveal i={2}><p className="steps__close">{LANDING.mechanism.close}</p></Reveal>
-          </div>
-        </section>
-
-        {/* ── Clarity: the 4-part framework mirrored on the call, then the next step ── */}
-        <section id="clarity" className="clarity-band band-s">
-          <div className="container">
-            <Reveal>
-              <div className="clarity__head">
-                <h2>{LANDING.clarity.heading}</h2>
-                <p className="lede">{LANDING.clarity.sub}</p>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="clarity__grid">
-                {LANDING.clarity.boxes.map((b) => (
-                  <div key={b.n} className="clarity__box">
-                    <span className="label">{b.n}</span>
-                    <h3>{b.t}</h3>
-                    <p>{b.d}</p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-            <Reveal i={2}>
+            <Reveal i={3}>
               <div className="clarity__next">
                 <div>
                   <h3>{LANDING.clarity.nextStep.heading}</h3>

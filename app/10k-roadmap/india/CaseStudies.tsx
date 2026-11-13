@@ -20,7 +20,7 @@ function CaseCard({ study, onOpen }: { study: Study; onOpen: () => void }) {
       <div className="cs-card__media">
         {study.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={study.image} alt={study.name} loading="lazy" />
+          <img src={study.image} alt={study.name} />
         ) : (
           <Initials name={study.name} />
         )}

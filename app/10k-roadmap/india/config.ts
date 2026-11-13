@@ -117,6 +117,7 @@ export const LANDING = {
       'Most of your business comes through referrals.',
       'You post content, but struggle to convert followers into customers.',
       'Your monthly revenue is unpredictable.',
+      'You’ve paid for coaching or courses before, and nothing really stuck.',
     ],
     close: 'You don’t need more random marketing activities. You need a system.',
   },
@@ -205,6 +206,7 @@ export const LANDING = {
       'Service providers',
       'Experts wanting to monetise their knowledge',
       'Entrepreneurs looking for more consistent clients',
+      'Already tried coaching or courses before, with no real result',
     ],
     notFitHeading: 'Not a fit',
     notFit: [
@@ -222,6 +224,7 @@ export const LANDING = {
       { q: 'What exactly happens during the ₹199 strategy session?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
       { q: 'How long does the session last?', a: 'Sixty minutes, one-on-one with Indrodip personally.' },
       { q: 'Is this suitable for beginners?', a: 'Yes, if you already have some expertise or clients. It isn’t built for people with no business or income yet.' },
+      { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. It’s one diagnostic session to find the specific thing blocking your growth, so you can judge for yourself whether the plan makes sense, with zero obligation to continue.' },
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
       { q: 'Will you help me get clients?', a: 'The session maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
       { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a refundable booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },

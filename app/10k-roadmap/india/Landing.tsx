@@ -342,7 +342,7 @@ export default function Landing() {
         </section>
 
         {/* ── Proof: real case studies and real on-camera reviews ── */}
-        <section id="proof" className="proof">
+        <section id="proof" className="proof band-s">
           <div className="container">
             <Reveal>
               <div className="proof__head">
@@ -372,7 +372,7 @@ export default function Landing() {
         </section>
 
         {/* ── Meet your mentor ── */}
-        <section className="founder-band">
+        <section className="founder-band band-s">
           <div className="container">
             <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '44rem', marginInline: 'auto', textAlign: 'center', fontSize: 'var(--text-display-s)' }}>{LANDING.founder.heading}</h2></Reveal>
             <Reveal i={1}>

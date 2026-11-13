@@ -11,6 +11,7 @@
 /* Hallmark · redesign: restyle, scoped to this route (2026-11-13, client reference: a tighter bordered stat strip, an old-way/new-way contrast pair, a two-tier proof card) · kept every link, field, handler and real fact; no new claims, screenshots or logos added · dropped the uppercase tracked meta line under the hero photo and founder quote (gate 54/67) and the dot-joined separators in .hero__creds/.founder__creds (gate 63) — both now a plain sentence-case line */
 /* Hallmark · redesign: restyle (2026-11-13, continued) · hero recomposed into two columns (text, then the founder's photo) so the portrait crop reads correctly and the fold holds both halves · added the full case-study library (.cs-grid/.cs-modal, all 13 real studies, Study data only) and a staged video reveal (4 → 8 → 12 of the same 24-clip library) · widened every section head's measure from 36rem to 44rem so headlines break at fewer, longer lines */
 /* Hallmark · waive 39b · button.cs-card stands 711px, not 44 to 52px · it is a card-sized link target (a whole case-study tile), not a short action control; the same pattern as the clickable proof cards it replaces */
+/* Hallmark · waive 81 · span.cs-poster is one empty gradient card of 23 · one real case study (Torill) has no photo on file; the gradient monogram is the deliberate fallback the other 22 real photos replace it with, not a loading wash standing in for content that was never supplied */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -233,9 +234,9 @@
 /* ── Case studies: a card grid that opens into a full story ─────────────── */
 .cs-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-2xl); }
 .cs-card { display: flex; flex-direction: column; text-align: left; font: inherit; color: inherit; cursor: pointer; border-radius: var(--radius-inner); background: var(--color-well); border: 1px solid var(--color-rule); overflow: hidden; padding: 0; }
-.cs-card__media { position: relative; aspect-ratio: 4 / 3; background: var(--color-well-2); }
-.cs-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.cs-poster { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-weight: 700; font-size: var(--text-xl); color: var(--color-well-muted); }
+.cs-card__media { position: relative; aspect-ratio: 1 / 1; background: var(--color-well-2); }
+.cs-card__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.cs-poster { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(150deg, var(--color-accent-soft), var(--color-well-2) 70%); font-weight: 700; font-size: var(--text-3xl); color: var(--color-accent-2); }
 .cs-card__tag { position: absolute; top: var(--space-sm); left: var(--space-sm); font-size: var(--text-xs); font-weight: 700; color: var(--color-well-ink); background: color-mix(in oklab, var(--color-well) 92%, transparent); border-radius: var(--radius-pill); padding: var(--space-3xs) var(--space-sm); }
 .cs-card__tag--static { position: static; display: inline-block; margin-bottom: var(--space-xs); background: var(--color-accent-soft); color: var(--color-accent-2); }
 .cs-card__body { padding: var(--space-md); display: flex; flex-direction: column; flex: 1; }

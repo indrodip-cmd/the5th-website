@@ -63,15 +63,15 @@ export default function CelestialScroll({ targetRef }: { targetRef: React.RefObj
   const moonOpacity = useTransform([visibility, moonPhase], ([v, m]: number[]) => v * m)
 
   if (!mounted || reduceMotion) {
-    return <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden style={!mounted ? { opacity: 0 } : undefined}><MoonMark /></svg>
+    return <svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden style={!mounted ? { opacity: 0 } : undefined}><MoonMark /></svg>
   }
 
   return (
     <>
-      <motion.svg viewBox="0 0 32 32" width="32" height="32" aria-hidden style={{ opacity: sunOpacity, y: sunY, position: 'absolute', inset: 0 }}>
+      <motion.svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden style={{ opacity: sunOpacity, y: sunY, position: 'absolute', inset: 0 }}>
         <SunMark />
       </motion.svg>
-      <motion.svg viewBox="0 0 32 32" width="32" height="32" aria-hidden style={{ opacity: moonOpacity, y: moonY, position: 'absolute', inset: 0 }}>
+      <motion.svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden style={{ opacity: moonOpacity, y: moonY, position: 'absolute', inset: 0 }}>
         <MoonMark />
       </motion.svg>
     </>

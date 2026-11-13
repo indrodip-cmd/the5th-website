@@ -101,7 +101,7 @@ export const LANDING = {
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
     name: 'Indrodip Ghosh',
-    role: 'Founder & Business Growth Strategist',
+    role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Applied Psychology in Consumer Behaviour, University of California, Davis',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },

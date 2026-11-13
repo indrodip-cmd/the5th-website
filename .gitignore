@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Hallmark design-skill scratch state (screenshots, logs, salt)
+.hallmark/
+**/.hallmark/

@@ -111,7 +111,7 @@ export default function Landing() {
         <div className="container nav__inner">
           <a className="nav__brand" href="/10k-roadmap/india" aria-label="The5th Global Consulting">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/the5th-consulting-header-tight-white-187x80.png" alt="The5th Global Consulting" />
+            <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" />
           </a>
           <nav className="nav__links" aria-label="Page sections">
             {LANDING.nav.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
@@ -153,7 +153,7 @@ export default function Landing() {
               <Reveal i={2}>
                 <div className="hero__visual">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="hero__photo" src="/images/founder-mvm.jpg" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                  <img className="hero__photo" src="/images/founder.png" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
                   <div className="hero__card">
                     <div className="hero__card-name">{LANDING.heroCard.name}</div>
                     <div className="hero__card-role">{LANDING.heroCard.role}</div>
@@ -231,7 +231,7 @@ export default function Landing() {
         </section>
 
         {/* ── Clarity: the 4-part framework mirrored on the call, then the next step ── */}
-        <section id="clarity" className="band-s">
+        <section id="clarity" className="clarity-band band-s">
           <div className="container">
             <Reveal>
               <div className="clarity__head">
@@ -336,14 +336,14 @@ export default function Landing() {
         </section>
 
         {/* ── Meet your mentor ── */}
-        <section>
+        <section className="founder-band">
           <div className="container">
             <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '36rem' }}>{LANDING.founder.heading}</h2></Reveal>
             <Reveal i={1}>
               <div className="founder founder__row">
                 <div className="founder__photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="founder__photo" src="/images/founder-mvm.jpg" alt={LANDING.founder.name} />
+                  <img className="founder__photo" src="/images/founder.png" alt={LANDING.founder.name} />
                   <div className="founder__stats">
                     {LANDING.founder.stats.map((s) => (
                       <div key={s.l} className="founder__stat"><b>{s.v}</b><span>{s.l}</span></div>
@@ -362,7 +362,7 @@ export default function Landing() {
         </section>
 
         {/* ── FAQ ── */}
-        <section id="faq" className="band-s">
+        <section id="faq" className="faq-band band-s">
           <div className="container">
             <Reveal>
               <div className="faq__head">
@@ -390,14 +390,27 @@ export default function Landing() {
               <p className="lede">{LANDING.apply.sub}</p>
             </Reveal>
             <Reveal i={1}>
+              <ul className="apply__points">
+                {LANDING.apply.points.map((p) => <li key={p}><CheckIcon /><span>{p}</span></li>)}
+              </ul>
+            </Reveal>
+            <Reveal i={2}>
               <div className="apply__card">
                 <span className="apply__badge"><GuaranteeIcon />{LANDING.guaranteeBadge}</span>
                 <div className="apply__price">₹199</div>
                 <div className="apply__price-line">{LANDING.apply.priceLine}</div>
                 <button className="btn btn--full" onClick={() => goApply('apply_section')}>{CTA_LABEL}</button>
-                <p className="apply__micro">{LANDING.apply.micro.replace(/ · /g, '. ')}</p>
+                <p className="apply__micro">{LANDING.apply.micro}</p>
               </div>
-              <p className="apply__guarantee">{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</p>
+            </Reveal>
+            <Reveal i={3}>
+              <div className="apply__guarantee-full">
+                <span className="apply__guarantee-badge">{LANDING.guaranteeBadge}</span>
+                <h3>{LANDING.guaranteeFull.heading}</h3>
+                <p>{LANDING.guaranteeFull.body}</p>
+                <p className="apply__guarantee-sub">{LANDING.guaranteeFull.sub}</p>
+                <p className="apply__guarantee-terms">{LANDING.guaranteeFull.terms}</p>
+              </div>
             </Reveal>
           </div>
         </section>
@@ -409,7 +422,7 @@ export default function Landing() {
         <div className="container site-footer__inner">
           <p className="reach"><b>{LANDING.reach.stat}</b> {LANDING.reach.body}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="site-footer__brand" src="/images/logo-white.png" alt="The5th Global Consulting" />
+          <img className="site-footer__brand" src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" />
           <div className="site-footer__links">
             {LEGAL.links.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
           </div>

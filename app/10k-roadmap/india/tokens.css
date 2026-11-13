@@ -1,26 +1,36 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
   --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
   --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
   --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(72% 0.15 27); --color-success: oklch(76% 0.13 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --color-error: oklch(55% 0.17 27); --color-success: oklch(55% 0.11 150);
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 96px; --section-gap: 120px; --section-gap-l: 144px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-  --color-paper: oklch(17.5% 0.014 268); --color-paper-2: oklch(21% 0.016 268); --color-paper-3: oklch(25% 0.017 268);
-  --color-ink: oklch(96% 0.006 75); --color-ink-2: oklch(85% 0.010 262); --color-muted: oklch(70% 0.016 262);
-  --color-rule: oklch(30% 0.016 266); --color-light: oklch(100% 0 0); --color-shade: oklch(10% 0.022 268);
-  --color-accent: oklch(77% 0.10 274); --color-accent-ink: oklch(19% 0.035 274); --color-accent-hi: oklch(84% 0.085 274);
-  --color-accent-deep: oklch(44% 0.13 274); --color-accent-soft: oklch(91% 0.038 274); --color-focus: oklch(80% 0.10 274);
-  --color-accent-2: oklch(83% 0.095 62); --color-dusk: oklch(70% 0.12 330);
-  --color-day-ink: oklch(22% 0.022 268); --color-day-muted: oklch(38% 0.022 266); --color-fog: oklch(94% 0.012 70);
-  --color-well: oklch(95.5% 0.008 75); --color-well-2: oklch(92% 0.010 75); --color-well-ink: oklch(21% 0.016 268); --color-well-muted: oklch(47% 0.016 265); --color-well-rule: oklch(87.5% 0.009 75); --color-card: oklch(99.5% 0.003 75);
-  --glass: oklch(22% 0.018 268 / 0.58); --glass-blur: 22px;
-  --glass-hi: inset 0 1px 0 oklch(100% 0 0 / 0.10), inset 0 0 0 1px oklch(100% 0 0 / 0.06);
-  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.06) inset, 0 40px 80px -32px oklch(8% 0.02 268 / 0.7);
+
+  /* A white, premium-consulting field: warm near-white paper, deep plum-black
+     ink (the brand's own #2E1A35 hue), one rich purple accent (the brand's
+     own #5E2E86) and one warm gold signal (the brand's own #E4C879) — never
+     the dark Dusk surface this page started from. */
+  --color-paper: oklch(98.5% 0.004 75); --color-paper-2: oklch(96% 0.009 75); --color-paper-3: oklch(93% 0.012 75);
+  --color-ink: oklch(23% 0.035 307); --color-ink-2: oklch(40% 0.03 300); --color-muted: oklch(54% 0.022 295);
+  --color-rule: oklch(88% 0.012 80); --color-light: oklch(100% 0 0); --color-shade: oklch(10% 0.02 268);
+  --color-accent: oklch(38% 0.135 305); --color-accent-ink: oklch(99% 0.004 75); --color-accent-hi: oklch(46% 0.145 304);
+  --color-accent-deep: oklch(30% 0.11 305); --color-accent-soft: oklch(94% 0.025 300); --color-focus: oklch(50% 0.15 304);
+  --color-accent-2: oklch(78% 0.11 83); --color-accent-2-ink: oklch(45% 0.1 68); --color-dusk: oklch(70% 0.12 330);
+  --color-day-ink: oklch(23% 0.035 307); --color-day-muted: oklch(54% 0.022 295); --color-fog: oklch(96% 0.012 75);
+  --color-well: oklch(100% 0 0); --color-well-2: oklch(97% 0.006 75); --color-well-ink: oklch(23% 0.035 307); --color-well-muted: oklch(54% 0.022 295); --color-well-rule: oklch(90% 0.01 80); --color-card: oklch(100% 0 0);
+  --glass: oklch(100% 0 0 / 0.78); --glass-blur: 20px;
+  --glass-hi: inset 0 1px 0 oklch(100% 0 0 / 0.9), inset 0 0 0 1px oklch(23% 0.035 307 / 0.06);
+  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.6) inset, 0 30px 60px -30px oklch(23% 0.035 307 / 0.22);
   --font-display: "Wix Madefor Display", ui-sans-serif, system-ui, sans-serif; --font-body: "Wix Madefor Text", ui-sans-serif, system-ui, sans-serif;
   --radius-card: 18px; --radius-inner: 10px; --radius-pill: 999px; --rule-hair: 1px;
-  --tracking-display: -0.022em; --display-weight: 500;
+  --tracking-display: -0.02em; --display-weight: 500;
+
+  /* The one dark close (the apply band): the brand's own plum-black, not a
+     generic dark-mode inversion. */
+  --color-surface-dark: oklch(20% 0.035 307); --color-surface-dark-2: oklch(25% 0.038 305);
+  --color-on-dark: oklch(97% 0.006 75); --color-on-dark-muted: oklch(78% 0.02 300);
 }

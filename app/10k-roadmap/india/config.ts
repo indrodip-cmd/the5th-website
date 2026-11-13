@@ -68,8 +68,17 @@ export const LANDING = {
   headlineSub: 'For full-time coaches who are genuinely good at what they do, but tired of a month-to-month income that depends on whichever client happens to show up next.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
-  guaranteeBadge: '100% Money-Back Guarantee',
-  guaranteeShort: 'If we don’t agree on a clear next step by the end of the call, your ₹199 is refunded in full, no questions asked.',
+  guaranteeBadge: '200% Money-Back Guarantee',
+  guaranteeShort: 'Not happy with your strategy session? We’ll refund ₹400, double your ₹199, no questions asked.',
+  // The full guarantee block, set out near the booking decision (apply section).
+  // T&Cs line kept verbatim: refund eligibility, request deadline and processing
+  // terms are the business's own disclosure and must not be reworded or dropped.
+  guaranteeFull: {
+    heading: 'Not happy with your strategy session? We’ll refund ₹400.',
+    body: 'That’s right. If you genuinely feel the session wasn’t valuable, simply request a refund and we’ll return ₹400 instead of the ₹199 you paid.',
+    sub: 'Your satisfaction matters more than the booking fee.',
+    terms: 'T&Cs apply. Refund eligibility, request deadline and processing terms are explained before booking.',
+  },
   ctaPrimary: 'Book My 1:1 Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
   ctaMicro: '₹199, fully refundable · Indrodip personally runs every call, so slots are limited by his calendar, not a quota',
@@ -190,12 +199,10 @@ export const LANDING = {
   proof: {
     eyebrow: 'Real Results, Real People',
     heading: 'See What Other Coaches Have Discovered From Our 1:1 Audits.',
-    // Conservative sum of the dollar figures actually documented in
-    // REAL_PROOF (app/10k-roadmap/config.ts) — $646,193, several marked
-    // "+" so the true total is at least this. Swap for a verified figure
-    // from the revenue dashboard if/when one is confirmed; never round up
-    // past what's documented.
-    revenueLine: 'Clients have generated over $646,000 in documented, verifiable results.',
+    // Figure confirmed directly by the business owner (Indrodip), 2026-11-13:
+    // total documented client revenue across the full client base, not only
+    // the cases shown below (those sum to a conservative $646,000+).
+    revenueLine: 'Clients have generated over $15,000,000 in documented business growth.',
     disclaimer: 'Real client outcomes. Individual results are not typical and depend on your offer, market and effort.',
   },
 
@@ -266,7 +273,15 @@ export const LANDING = {
     heading: 'Ready to see exactly what’s holding your income back?',
     sub: 'Indrodip personally runs every audit, so slots are limited by how many hours are in his week, not by a fake countdown timer.',
     priceLine: '₹199 today, fully refundable',
-    micro: 'No pressure · If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
+    micro: 'No pressure. If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
+    // What the session itself leaves you with, same facts as the pay step's
+    // `points` below, kept here so the apply section can show them before
+    // the click, not only after it.
+    points: [
+      'A 60-minute 1:1 call with Indrodip personally',
+      'A clear picture of your current bottleneck',
+      'A realistic next step, whether or not you ever work with us again',
+    ],
   },
 
   /* ── Pay step copy (new): the page the primary CTA leads to. Mirrors the

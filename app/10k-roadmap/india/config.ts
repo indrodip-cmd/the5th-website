@@ -102,7 +102,7 @@ export const LANDING = {
   heroCard: {
     name: 'Indrodip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
-    credential: 'Applied Psychology in Consumer Behaviour, University of California, Davis',
+    credential: 'Consumer Psychology, University of California, Berkeley',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
       { t: '₹199 Only', s: 'Fully Refundable' },

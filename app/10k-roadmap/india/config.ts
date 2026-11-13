@@ -55,6 +55,14 @@ export function auditIndiaPlanId(): string {
    proof, authority, then an objection-handling FAQ, with the CTA repeated
    after every section. */
 export const LANDING = {
+  // The launch framing: a global consulting practice (real international
+  // clients across the US, Canada, the UAE, Indonesia and Vietnam are
+  // already in REAL_PROOF) opening its 1:1 audit to India for the first
+  // time. "Global" is the brand's own name, not an invented superlative.
+  launch: {
+    badge: 'First time in India',
+    kicker: 'A private 1:1 business audit for full-time coaches, from a global consulting practice.',
+  },
   // No claim about the reader's own income/financial status in the ad-facing
   // copy (Meta's Personal Attributes policy disallows asserting or implying
   // a viewer's financial status). This names the AUDIENCE by role/intent

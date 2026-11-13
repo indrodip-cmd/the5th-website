@@ -76,7 +76,8 @@
 .india-landing section.hero { padding-top: var(--space-3xl); padding-bottom: var(--space-2xl); text-align: center; }
 .india-landing section.hero-stage { padding-top: 0; }
 .hero__center { max-width: 44rem; margin-inline: auto; }
-.hero__kicker { margin: 0 0 var(--space-md); font-size: var(--text-sm); color: var(--color-muted); }
+.hero__badge { display: inline-flex; align-items: center; margin-bottom: var(--space-lg); padding: var(--space-2xs) var(--space-lg); border: 1px solid var(--color-accent-deep); border-radius: var(--radius-pill); color: var(--color-accent-deep); font-size: var(--text-sm); font-weight: 700; }
+.hero__kicker { margin: 0 0 var(--space-md); font-size: var(--text-sm); color: var(--color-muted); max-width: 32ch; margin-inline: auto; }
 /* The headline is one Meta-ad-policy-reviewed sentence the redesign keeps verbatim (craft.md copy rules
    do not reach text a legal review already shaped). Centred and set near the display scale now that the
    hero is one statement, not a column beside a photo. */

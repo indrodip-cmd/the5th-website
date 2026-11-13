@@ -151,7 +151,8 @@ export default function Landing() {
         <section className="hero">
           <div className="container hero__center">
             <Reveal>
-              <p className="hero__kicker">A private 1:1 business audit for full-time coaches in India.</p>
+              <span className="hero__badge">{LANDING.launch.badge}</span>
+              <p className="hero__kicker">{LANDING.launch.kicker}</p>
               <h1>
                 {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
               </h1>
@@ -396,6 +397,7 @@ export default function Landing() {
         <section id="apply" className="apply">
           <div className="container apply__inner">
             <Reveal>
+              <span className="hero__badge apply__badge-top">{LANDING.launch.badge}</span>
               <h2>{LANDING.apply.heading}</h2>
               <p className="lede">{LANDING.apply.sub}</p>
             </Reveal>

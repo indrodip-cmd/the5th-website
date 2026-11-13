@@ -95,7 +95,7 @@
 .hero__card { border-radius: var(--radius-card); padding: var(--space-lg); }
 .hero__card-name { font-weight: 700; font-size: var(--text-md); color: var(--color-ink); }
 .hero__card-role { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-3xs); }
-.hero__card-credential { font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--space-xs); line-height: 1.4; }
+.hero__card-credential { font-size: var(--text-md); font-weight: 700; color: var(--color-ink); margin-top: var(--space-sm); line-height: 1.4; }
 .hero__card-chips { display: flex; gap: var(--space-sm); margin-top: var(--space-md); }
 .hero__chip { flex: 1 1 0; min-width: 0; border-radius: var(--radius-inner); background: var(--glass-chip); padding: var(--space-sm) var(--space-md); }
 .hero__chip-t { font-weight: 700; font-size: var(--text-sm); color: var(--color-ink); }

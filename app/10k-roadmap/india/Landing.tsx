@@ -180,6 +180,7 @@ export default function Landing() {
                   <div className="hero__card glass-panel">
                     <div className="hero__card-name">{LANDING.heroCard.name}</div>
                     <div className="hero__card-role">{LANDING.heroCard.role}</div>
+                    <div className="hero__card-credential">{LANDING.heroCard.credential}</div>
                     <div className="hero__card-chips">
                       {LANDING.heroCard.chips.map((c) => (
                         <div key={c.t} className="hero__chip">

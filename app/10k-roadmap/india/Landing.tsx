@@ -10,7 +10,7 @@
    claims; income claims carry "results vary" disclaimers, per Meta's
    business-opportunity rules. */
 import './landing.css'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS } from './config'
 import { REAL_PROOF } from '../config'
@@ -18,18 +18,14 @@ import { useUtm } from '../ui'
 import { track } from '../track'
 import VideoWall from '@/components/VideoWall'
 
-/* ── Reveal: one entrance pattern, reused everywhere, visible without JS ──── */
-function Reveal({ children, i = 0 }: { children: ReactNode; i?: number }) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  useEffect(() => {
-    document.documentElement.classList.add('js')
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('is-in'); io.disconnect() } }), { rootMargin: '0px 0px -10% 0px' })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return <div ref={ref} data-reveal style={{ ['--i' as string]: i }}>{children}</div>
+/* Content renders visible immediately, always. A full-page capture tool
+   (and some real browsers) never fires an IntersectionObserver for content
+   outside the original viewport, which previously left whole sections of
+   this booking page invisible — worse than losing a scroll-fade-in. This
+   wrapper is kept only so call sites don't need to change if a safer
+   reveal pattern is reintroduced later. */
+function Reveal({ children }: { children: ReactNode; i?: number }) {
+  return <>{children}</>
 }
 
 function CheckIcon() {
@@ -111,7 +107,7 @@ export default function Landing() {
         <div className="container nav__inner">
           <a className="nav__brand" href="/10k-roadmap/india" aria-label="The5th Global Consulting">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" />
+            <img src="/images/the5th-consulting-header-tight-white-187x80.png" alt="The5th Global Consulting" />
           </a>
           <nav className="nav__links" aria-label="Page sections">
             {LANDING.nav.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
@@ -153,8 +149,8 @@ export default function Landing() {
               <Reveal i={2}>
                 <div className="hero__visual">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="hero__photo" src="/images/founder.png" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-                  <div className="hero__card">
+                  <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                  <div className="hero__card glass-panel">
                     <div className="hero__card-name">{LANDING.heroCard.name}</div>
                     <div className="hero__card-role">{LANDING.heroCard.role}</div>
                     <div className="hero__card-chips">
@@ -281,7 +277,7 @@ export default function Landing() {
                   <h3>{LANDING.transformation.heading}</h3>
                   <CheckList items={LANDING.transformation.items} />
                 </div>
-                <div className="qualify__banner">
+                <div className="qualify__banner glass-panel glass-panel--accent">
                   <p>{LANDING.whoIsThis.bannerHeading}</p>
                   <button className="btn" onClick={() => goApply('who_banner')}>{CTA_LABEL}</button>
                 </div>
@@ -340,7 +336,7 @@ export default function Landing() {
           <div className="container">
             <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '36rem' }}>{LANDING.founder.heading}</h2></Reveal>
             <Reveal i={1}>
-              <div className="founder founder__row">
+              <div className="founder founder__row glass-panel">
                 <div className="founder__photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="founder__photo" src="/images/founder.png" alt={LANDING.founder.name} />
@@ -395,7 +391,7 @@ export default function Landing() {
               </ul>
             </Reveal>
             <Reveal i={2}>
-              <div className="apply__card">
+              <div className="apply__card glass-panel">
                 <span className="apply__badge"><GuaranteeIcon />{LANDING.guaranteeBadge}</span>
                 <div className="apply__price">₹199</div>
                 <div className="apply__price-line">{LANDING.apply.priceLine}</div>
@@ -422,7 +418,7 @@ export default function Landing() {
         <div className="container site-footer__inner">
           <p className="reach"><b>{LANDING.reach.stat}</b> {LANDING.reach.body}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="site-footer__brand" src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" />
+          <img className="site-footer__brand" src="/images/logo-white.png" alt="The5th Global Consulting" />
           <div className="site-footer__links">
             {LEGAL.links.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
           </div>

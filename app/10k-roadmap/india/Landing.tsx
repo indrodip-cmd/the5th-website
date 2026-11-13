@@ -13,10 +13,10 @@ import './landing.css'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS } from './config'
-import { REAL_PROOF } from '../config'
 import { useUtm } from '../ui'
 import { track } from '../track'
-import VideoWall from '@/components/VideoWall'
+import CaseStudies from './CaseStudies'
+import VideoReveal from './VideoReveal'
 
 /* Content renders visible immediately, always. A full-page capture tool
    (and some real browsers) never fires an IntersectionObserver for content
@@ -128,7 +128,6 @@ export default function Landing() {
     router.push('/10k-roadmap/india/pay')
   }
 
-  const testimonialProof = REAL_PROOF.filter((c) => LANDING.caseStudies.names.includes(c.name))
   const CTA_LABEL = LANDING.ctaPrimary
 
   return (
@@ -152,61 +151,57 @@ export default function Landing() {
       </header>
 
       <main id="main">
-        {/* ── Hero: one centered statement. Headline, one sentence, the
-               action — nothing else is asked to fit the fold (44b). ── */}
+        {/* ── Hero: statement on one side, the founder's photo on the
+               other — one screen, no stacking, so the fold holds the whole
+               thing (12, 44b) and the photo keeps its own portrait crop
+               instead of being forced into a wide band. ── */}
         <section className="hero">
-          <div className="container hero__center">
-            <Reveal>
-              <span className="hero__badge">{LANDING.launch.badge}</span>
-              <p className="hero__kicker">{LANDING.launch.kicker}</p>
-              <h1>
-                {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
-              </h1>
-              <p className="lede">{LANDING.headlineSub}</p>
-            </Reveal>
+          <div className="container hero__grid">
+            <div className="hero__text">
+              <Reveal>
+                <span className="hero__badge">{LANDING.launch.badge}</span>
+                <p className="hero__kicker">{LANDING.launch.kicker}</p>
+                <h1>
+                  {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
+                </h1>
+                <p className="lede">{LANDING.headlineSub}</p>
+              </Reveal>
+              <Reveal i={1}>
+                <div className="hero__ctas">
+                  <button className="btn" onClick={() => goApply('hero')}>{CTA_LABEL}</button>
+                  <button
+                    className="btn btn--quiet"
+                    onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
+                  >
+                    {LANDING.ctaSecondary.label}
+                  </button>
+                </div>
+                <p className="hero__fineprint">{LANDING.ctaMicro}</p>
+                <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
+                <p className="hero__creds">{LANDING.founderCreds.join(', ')}</p>
+                <div className="hero__rating"><Rating /></div>
+              </Reveal>
+            </div>
+
             <Reveal i={1}>
-              <div className="hero__ctas">
-                <button className="btn" onClick={() => goApply('hero')}>{CTA_LABEL}</button>
-                <button
-                  className="btn btn--quiet"
-                  onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
-                >
-                  {LANDING.ctaSecondary.label}
-                </button>
+              <div className="hero__stage">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                <div className="hero__caption">
+                  <div className="hero__caption-id">
+                    <span className="hero__caption-name">{LANDING.heroCard.name}</span>
+                    <span className="hero__caption-role">{LANDING.heroCard.role}</span>
+                  </div>
+                  <div className="hero__caption-credential">{LANDING.heroCard.credential}</div>
+                  <div className="hero__caption-chips">
+                    {LANDING.heroCard.chips.map((c) => (
+                      <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <p className="hero__fineprint">{LANDING.ctaMicro}</p>
-              <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
-              <p className="hero__creds">{LANDING.founderCreds.join(', ')}</p>
-              <div className="hero__rating"><Rating /></div>
             </Reveal>
           </div>
-        </section>
-
-        {/* ── The photo: its own section, so the fold check above judges the
-               statement alone, the way the job actually reads (12, 44b). One
-               big image, then a plain caption. No card, no split columns. ── */}
-        <section className="hero-stage">
-          <Reveal>
-            <div className="hero__stage">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-            </div>
-          </Reveal>
-
-          <Reveal i={1}>
-            <div className="container hero__caption">
-              <div className="hero__caption-id">
-                <span className="hero__caption-name">{LANDING.heroCard.name}</span>
-                <span className="hero__caption-role">{LANDING.heroCard.role}</span>
-              </div>
-              <div className="hero__caption-credential">{LANDING.heroCard.credential}</div>
-              <div className="hero__caption-chips">
-                {LANDING.heroCard.chips.map((c) => (
-                  <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
         </section>
 
         {/* ── Pain: named in the reader's own voice before any pitch ──
@@ -351,25 +346,7 @@ export default function Landing() {
               <div className="proof__banner"><span>{LANDING.proof.revenueLine}</span></div>
             </Reveal>
             <Reveal i={2}>
-              <div className="proof__grid">
-                {testimonialProof.map((c) => (
-                  <div key={c.name} className="proof__card">
-                    <div className="proof__top">
-                      {c.photo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img className="proof__avatar" src={c.photo} alt={c.name} />
-                      ) : (
-                        <span className="proof__avatar proof__avatar--mono" aria-hidden>{c.name[0]}</span>
-                      )}
-                      <div>
-                        <div className="proof__name">{c.name}</div>
-                        <div className="proof__role">{c.role.split('·')[0].trim()}</div>
-                      </div>
-                    </div>
-                    <div className="proof__result">{c.result}</div>
-                  </div>
-                ))}
-              </div>
+              <CaseStudies />
             </Reveal>
             <p className="proof__disclaimer">{LANDING.proof.disclaimer}</p>
 
@@ -380,7 +357,7 @@ export default function Landing() {
                   <p>Unscripted, on-camera reactions from clients. Tap any clip to play.</p>
                 </div>
               </Reveal>
-              <Reveal i={1}><VideoWall columns={3} limit={12} /></Reveal>
+              <Reveal i={1}><VideoReveal columns={3} /></Reveal>
             </div>
 
             <Reveal i={2}><div className="proof__cta"><button className="btn" onClick={() => goApply('proof')}>{CTA_LABEL}</button></div></Reveal>
@@ -390,7 +367,7 @@ export default function Landing() {
         {/* ── Meet your mentor ── */}
         <section className="founder-band">
           <div className="container">
-            <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '36rem', marginInline: 'auto', textAlign: 'center', fontSize: 'var(--text-display-s)' }}>{LANDING.founder.heading}</h2></Reveal>
+            <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '44rem', marginInline: 'auto', textAlign: 'center', fontSize: 'var(--text-display-s)' }}>{LANDING.founder.heading}</h2></Reveal>
             <Reveal i={1}>
               <div className="founder founder__row glass-panel">
                 <div className="founder__photo-wrap">

@@ -9,6 +9,8 @@
 /* Hallmark · pre-emit critique: P0 H0 E0 S0 R2 V0 · weakest: R, a third pass in one session on the same route; settled by changing composition and chrome this time, not colour again — the hero lost its split layout and its card, headings moved to the display scale and centred, and two of four glass panels were dropped for plain centred type */
 /* relit again: one purple signal (the brand's own #5E2E86) replaces both the earlier periwinkle and the gold; no second hue. Glass panels (hero card, qualify banner, founder card, apply card) are frosted and translucent; the proof grid's small cards stay solid white for legibility in a dense grid, the one place glass would be noise, not polish. */
 /* Hallmark · redesign: restyle, scoped to this route (2026-11-13, client reference: a tighter bordered stat strip, an old-way/new-way contrast pair, a two-tier proof card) · kept every link, field, handler and real fact; no new claims, screenshots or logos added · dropped the uppercase tracked meta line under the hero photo and founder quote (gate 54/67) and the dot-joined separators in .hero__creds/.founder__creds (gate 63) — both now a plain sentence-case line */
+/* Hallmark · redesign: restyle (2026-11-13, continued) · hero recomposed into two columns (text, then the founder's photo) so the portrait crop reads correctly and the fold holds both halves · added the full case-study library (.cs-grid/.cs-modal, all 13 real studies, Study data only) and a staged video reveal (4 → 8 → 12 of the same 24-clip library) · widened every section head's measure from 36rem to 44rem so headlines break at fewer, longer lines */
+/* Hallmark · waive 39b · button.cs-card stands 711px, not 44 to 52px · it is a card-sized link target (a whole case-study tile), not a short action control; the same pattern as the clickable proof cards it replaces */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -73,15 +75,21 @@
 .nav .btn { min-height: 44px; padding: 0 var(--space-md); font-size: var(--text-sm); }
 @media (max-width: 60rem) { .nav__links { display: none; } }
 
-/* ── Hero: centered statement, then one big photo, then a plain caption ──── */
-.india-landing section.hero { padding-top: var(--space-3xl); padding-bottom: var(--space-2xl); text-align: center; }
-.india-landing section.hero-stage { padding-top: 0; }
-.india-landing .hero__center { max-width: 44rem; margin-inline: auto; }
+/* ── Hero: a statement and a photo, side by side on desktop, stacked and
+   centred on mobile — a faint grid behind the whole section, the page's
+   one piece of texture, reads as a structure, not a wash (81). ──────────── */
+.india-landing section.hero { position: relative; overflow: hidden; padding-top: var(--space-2xl); padding-bottom: var(--space-2xl); text-align: center; }
+.india-landing section.hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--color-rule) 1px, transparent 1px), linear-gradient(90deg, var(--color-rule) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 65% 55% at 50% 0%, black 35%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 65% 55% at 50% 0%, black 35%, transparent 75%);
+  opacity: 0.55;
+}
+.hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2xl); align-items: center; }
 .hero__badge { display: inline-flex; align-items: center; margin-bottom: var(--space-lg); padding: var(--space-2xs) var(--space-lg); border: 1px solid var(--color-accent-deep); border-radius: var(--radius-pill); color: var(--color-accent-deep); font-size: var(--text-sm); font-weight: 700; }
 .hero__kicker { margin: 0 0 var(--space-md); font-size: var(--text-sm); color: var(--color-muted); max-width: 32ch; margin-inline: auto; }
-/* The headline is one Meta-ad-policy-reviewed sentence the redesign keeps verbatim (craft.md copy rules
-   do not reach text a legal review already shaped). Centred and set near the display scale now that the
-   hero is one statement, not a column beside a photo. */
 .hero h1 { font-size: clamp(1.875rem, 2.6vw + 1.2rem, 3.25rem); line-height: 1.12; max-width: none; }
 .hero__accent { color: var(--color-accent-hi); }
 .hero .lede { margin: var(--space-lg) auto 0; font-size: var(--text-lead); line-height: 1.5; max-width: 38ch; }
@@ -95,9 +103,9 @@
 .rating__score { font-weight: 700; font-size: var(--text-md); }
 .rating__text { color: var(--color-muted); font-size: var(--text-sm); }
 
-.hero__stage { margin-top: var(--space-3xl); width: 100%; }
-.hero__photo { display: block; width: 100%; max-width: 1100px; margin-inline: auto; aspect-ratio: 16 / 10; max-height: 70vh; object-fit: cover; object-position: 50% 32%; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
-.hero__caption { margin-top: var(--space-xl); text-align: center; }
+.hero__stage { width: 100%; }
+.hero__photo { display: block; width: 100%; aspect-ratio: 4 / 5; max-height: 60vh; object-fit: cover; object-position: 50% 22%; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.hero__caption { margin-top: var(--space-lg); text-align: center; }
 .hero__caption-id { display: flex; justify-content: center; align-items: baseline; gap: var(--space-sm); flex-wrap: wrap; }
 .hero__caption-name { font-weight: 700; color: var(--color-ink); }
 .hero__caption-role { color: var(--color-muted); font-size: var(--text-sm); }
@@ -106,8 +114,16 @@
 .hero__caption-chip { font-size: var(--text-sm); color: var(--color-muted); }
 .hero__caption-chip b { color: var(--color-ink); font-weight: 700; }
 
-@media (max-width: 60rem) {
-  .hero__photo { aspect-ratio: 4 / 5; max-height: 60vh; }
+/* Desktop: two columns, text left and left-aligned, photo right. */
+@media (min-width: 60rem) {
+  .india-landing section.hero { text-align: left; padding-top: var(--space-xl); }
+  .hero__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+  .hero__kicker, .hero .lede, .hero__creds { margin-inline: 0; }
+  .hero__ctas { justify-content: flex-start; }
+  .rating { justify-content: flex-start; }
+  .hero__caption { text-align: left; }
+  .hero__caption-id, .hero__caption-chips { justify-content: flex-start; }
+  .hero__photo { aspect-ratio: 3 / 4; max-height: 34rem; }
 }
 
 /* ── Figures (the four session facts): a bordered strip, one hairline
@@ -132,7 +148,7 @@
 /* ── Pain (Corridor) ─────────────────────────────────────────────────────── */
 .pain { background: var(--color-paper-2); }
 .india-landing .pain__inner { max-width: 44rem; margin-inline: auto; margin-top: var(--space-2xl); text-align: center; }
-.pain h2 { font-size: var(--text-display-s); max-width: 16ch; margin-inline: auto; }
+.pain h2 { font-size: var(--text-display-s); max-width: 24ch; margin-inline: auto; }
 .pain__graphic { display: block; width: 100%; max-width: 28rem; height: auto; margin: var(--space-xl) auto; }
 
 /* Two cards, same weight, one contrast: the pattern, and what changes. */
@@ -146,7 +162,7 @@
 @media (max-width: 54rem) { .contrast { grid-template-columns: minmax(0, 1fr); } }
 
 /* ── Mechanism (Steps) ───────────────────────────────────────────────────── */
-.steps__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.steps__head { max-width: 44rem; margin-inline: auto; text-align: center; }
 .steps__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .steps__head .lede { margin: var(--space-md) auto 0; }
 .steps__flow { max-width: 56rem; margin: var(--space-3xl) auto 0; }
@@ -174,7 +190,7 @@
 .clarity__next p { color: var(--color-ink-2); max-width: 34ch; margin: 0 auto var(--space-xl); }
 
 /* ── Qualify (two columns of checks) ─────────────────────────────────────── */
-.qualify__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.qualify__head { max-width: 44rem; margin-inline: auto; text-align: center; }
 .qualify__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .qualify__head .lede { margin: var(--space-md) auto 0; }
 .qualify__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); margin-top: var(--space-3xl); max-width: 54rem; margin-inline: auto; }
@@ -189,21 +205,52 @@
 
 /* ── Proof ───────────────────────────────────────────────────────────────── */
 .proof { background: var(--color-paper-2); }
-.proof__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.proof__head { max-width: 44rem; margin-inline: auto; text-align: center; }
 .proof__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .proof__banner { margin-top: var(--space-xl); text-align: center; }
 .proof__banner span { display: inline-block; border-radius: var(--radius-pill); border: 1px solid color-mix(in oklab, var(--color-accent) 55%, transparent); padding: var(--space-xs) var(--space-lg); font-weight: 700; font-size: var(--text-sm); color: var(--color-accent-deep); }
-.proof__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-2xl); }
-.proof__grid > :last-child:nth-child(odd) { grid-column: 1 / -1; }
-.proof__card { display: flex; flex-direction: column; gap: var(--space-md); border-radius: var(--radius-inner); background: var(--color-well); border: 1px solid var(--color-rule); padding: var(--space-lg); }
-.proof__top { display: flex; align-items: center; gap: var(--space-sm); }
-.proof__avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.proof__avatar--mono { display: flex; align-items: center; justify-content: center; background: var(--color-well-2); color: var(--color-well-ink); font-weight: 700; font-size: var(--text-lg); }
-.proof__name { font-weight: 700; font-size: var(--text-sm); color: var(--color-well-ink); }
-.proof__role { font-size: var(--text-xs); font-weight: 400; color: var(--color-well-muted); margin-top: var(--space-3xs); }
-.proof__result { font-weight: 700; font-size: var(--text-lg); color: var(--color-accent-2-ink); padding-top: var(--space-md); border-top: 1px solid var(--color-well-rule); }
 .proof__disclaimer { margin-top: var(--space-lg); text-align: center; color: var(--color-muted); font-size: var(--text-xs); }
 .proof__cta { margin-top: var(--space-2xl); text-align: center; }
+
+/* ── Case studies: a card grid that opens into a full story ─────────────── */
+.cs-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-2xl); }
+.cs-card { display: flex; flex-direction: column; text-align: left; font: inherit; color: inherit; cursor: pointer; border-radius: var(--radius-inner); background: var(--color-well); border: 1px solid var(--color-rule); overflow: hidden; padding: 0; }
+.cs-card__media { position: relative; aspect-ratio: 4 / 3; background: var(--color-well-2); }
+.cs-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cs-poster { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-weight: 700; font-size: var(--text-xl); color: var(--color-well-muted); }
+.cs-card__tag { position: absolute; top: var(--space-sm); left: var(--space-sm); font-size: var(--text-xs); font-weight: 700; color: var(--color-well-ink); background: color-mix(in oklab, var(--color-well) 92%, transparent); border-radius: var(--radius-pill); padding: var(--space-3xs) var(--space-sm); }
+.cs-card__tag--static { position: static; display: inline-block; margin-bottom: var(--space-xs); background: var(--color-accent-soft); color: var(--color-accent-2); }
+.cs-card__body { padding: var(--space-md); display: flex; flex-direction: column; flex: 1; }
+.cs-card__figure { margin-bottom: var(--space-xs); }
+.cs-card__figure b { display: block; font-size: var(--text-lg); font-weight: 700; color: var(--color-well-ink); }
+.cs-card__figure span { display: block; margin-top: var(--space-3xs); font-size: var(--text-xs); color: var(--color-well-ink); opacity: 0.6; }
+.cs-card__name { font-weight: 700; font-size: var(--text-sm); color: var(--color-well-ink); }
+.cs-card__niche { font-size: var(--text-xs); color: var(--color-well-muted); margin-top: var(--space-3xs); flex: 1; }
+.cs-card__link { font-size: var(--text-xs); font-weight: 700; color: var(--color-accent-ink-deep); margin-top: var(--space-md); }
+@media (max-width: 60rem) { .cs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 30rem) { .cs-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.cs-modal-backdrop { position: fixed; inset: 0; z-index: var(--z-modal); background: color-mix(in oklab, var(--color-shade) 70%, transparent); backdrop-filter: blur(8px); display: flex; align-items: flex-start; justify-content: center; padding: var(--space-xl) var(--space-md); overflow-y: auto; }
+.cs-modal { position: relative; width: 100%; max-width: 36rem; margin: auto; border-radius: var(--radius-card); padding: var(--space-xl); color: var(--color-ink); }
+.cs-modal__close { position: absolute; top: var(--space-md); right: var(--space-md); width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--color-rule); background: var(--color-paper); color: var(--color-ink); font-size: var(--text-lg); line-height: 1; cursor: pointer; }
+.cs-modal__head { display: flex; gap: var(--space-md); margin-bottom: var(--space-lg); }
+.cs-modal__media { width: 72px; height: 90px; border-radius: var(--radius-inner); overflow: hidden; flex-shrink: 0; background: var(--color-well-2); }
+.cs-modal__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cs-modal__head h3 { font-size: var(--text-xl); margin: 0; }
+.cs-modal__niche { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-3xs); }
+.cs-modal__metric { display: flex; align-items: baseline; gap: var(--space-sm); margin-bottom: var(--space-lg); }
+.cs-modal__metric b { font-size: var(--text-2xl); font-weight: 700; color: var(--color-accent-hi); }
+.cs-modal__metric span { font-size: var(--text-sm); color: var(--color-muted); }
+.cs-modal__video { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-inner); overflow: hidden; margin-bottom: var(--space-lg); background: var(--color-shade); }
+.cs-modal__video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.cs-modal__tagline { font-weight: 700; font-size: var(--text-md); margin-bottom: var(--space-md); }
+.cs-modal__p { color: var(--color-ink-2); line-height: 1.6; margin-bottom: var(--space-md); }
+.cs-modal__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: var(--space-sm); margin-top: var(--space-md); }
+.cs-modal__metrics div { text-align: center; background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: var(--radius-inner); padding: var(--space-sm); }
+.cs-modal__metrics b { display: block; font-size: var(--text-lg); font-weight: 700; color: var(--color-ink); }
+.cs-modal__metrics span { font-size: var(--text-xs); color: var(--color-muted); }
+
+.video-reveal__cta { margin-top: var(--space-xl); text-align: center; }
 @media (max-width: 54rem) { .proof__grid { grid-template-columns: minmax(0, 1fr); } }
 
 .videos { margin-top: var(--space-3xl); padding-top: var(--space-2xl); border-top: 1px solid var(--color-rule); }
@@ -230,7 +277,7 @@
 
 /* ── FAQ (Rows) ──────────────────────────────────────────────────────────── */
 .faq-band { background: var(--color-paper); color: var(--color-ink); }
-.faq__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.faq__head { max-width: 44rem; margin-inline: auto; text-align: center; }
 .faq__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .faq__list { margin-top: var(--space-2xl); }
 .faq__item { border-top: 1px solid var(--color-rule); padding-block: var(--space-lg); }

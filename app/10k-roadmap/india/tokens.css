@@ -18,7 +18,7 @@
      flat cards. */
   --color-paper: oklch(11% 0.012 300); --color-paper-2: oklch(15% 0.014 300); --color-paper-3: oklch(19% 0.015 300);
   --color-ink: oklch(95% 0.008 75); --color-ink-2: oklch(80% 0.012 80); --color-muted: oklch(63% 0.018 85);
-  --color-rule: oklch(27% 0.016 300); --color-light: oklch(100% 0 0); --color-shade: oklch(6% 0.01 300);
+  --color-rule: oklch(27% 0.016 300); --color-light: oklch(98% 0.006 300); --color-shade: oklch(6% 0.01 300);
   --color-accent: oklch(58% 0.17 305); --color-accent-ink: oklch(99% 0.004 300); --color-accent-hi: oklch(64% 0.16 304);
   --color-accent-deep: oklch(74% 0.13 305); --color-accent-soft: oklch(30% 0.06 305); --color-focus: oklch(70% 0.15 305);
   --color-accent-2: oklch(88% 0.006 280); --color-accent-2-ink: oklch(20% 0.012 280); --color-dusk: oklch(70% 0.12 330);

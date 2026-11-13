@@ -176,9 +176,7 @@ export default function Landing() {
               </div>
               <p className="hero__fineprint">{LANDING.ctaMicro}</p>
               <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
-              <div className="hero__creds">
-                {LANDING.founderCreds.map((c) => <span key={c}>{c}</span>)}
-              </div>
+              <p className="hero__creds">{LANDING.founderCreds.join(', ')}</p>
               <div className="hero__rating"><Rating /></div>
             </Reveal>
           </div>
@@ -237,12 +235,22 @@ export default function Landing() {
           <div className="container pain__inner">
             <Reveal><h2>{LANDING.pain.heading}</h2></Reveal>
             <Reveal i={1}><IncomeGraphic /></Reveal>
+          </div>
+          <div className="container">
             <Reveal i={1}>
-              <ul className="pain__lines check-list">
-                {LANDING.pain.lines.map((l) => <li key={l} className="check-item"><CheckIcon /><span>{l}</span></li>)}
-              </ul>
+              <div className="contrast">
+                <div className="contrast__card">
+                  <div className="contrast__tag">What this usually looks like</div>
+                  <ul className="check-list">
+                    {LANDING.pain.lines.map((l) => <li key={l} className="check-item check-item--cross"><CrossIcon /><span>{l}</span></li>)}
+                  </ul>
+                </div>
+                <div className="contrast__card contrast__card--good">
+                  <div className="contrast__tag">What changes on the call</div>
+                  <p className="contrast__statement">{LANDING.pain.close}</p>
+                </div>
+              </div>
             </Reveal>
-            <Reveal i={2}><p className="pain__close">{LANDING.pain.close}</p></Reveal>
           </div>
         </section>
 
@@ -346,16 +354,19 @@ export default function Landing() {
               <div className="proof__grid">
                 {testimonialProof.map((c) => (
                   <div key={c.name} className="proof__card">
-                    {c.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img className="proof__avatar" src={c.photo} alt={c.name} />
-                    ) : (
-                      <span className="proof__avatar proof__avatar--mono" aria-hidden>{c.name[0]}</span>
-                    )}
-                    <div>
-                      <div className="proof__result">{c.result}</div>
-                      <div className="proof__name">{c.name} <span className="proof__role">{c.role.split('·')[0].trim()}</span></div>
+                    <div className="proof__top">
+                      {c.photo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img className="proof__avatar" src={c.photo} alt={c.name} />
+                      ) : (
+                        <span className="proof__avatar proof__avatar--mono" aria-hidden>{c.name[0]}</span>
+                      )}
+                      <div>
+                        <div className="proof__name">{c.name}</div>
+                        <div className="proof__role">{c.role.split('·')[0].trim()}</div>
+                      </div>
                     </div>
+                    <div className="proof__result">{c.result}</div>
                   </div>
                 ))}
               </div>
@@ -392,9 +403,7 @@ export default function Landing() {
                   </div>
                 </div>
                 <div>
-                  <div className="founder__creds">
-                    {LANDING.founderCreds.map((c) => <span key={c}>{c}</span>)}
-                  </div>
+                  <p className="founder__creds">{LANDING.founderCreds.join(', ')}</p>
                   <blockquote>&ldquo;{LANDING.founder.quote}&rdquo;</blockquote>
                   <p className="founder__body">{LANDING.founder.body}</p>
                   <div className="founder__name">{LANDING.founder.name}</div>

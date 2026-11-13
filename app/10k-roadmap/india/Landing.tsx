@@ -12,7 +12,7 @@
 import './landing.css'
 import { useEffect, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS } from './config'
+import { LANDING, LEGAL, RATING } from './config'
 import { useUtm } from '../ui'
 import { track } from '../track'
 import CaseStudies from './CaseStudies'
@@ -221,9 +221,9 @@ export default function Landing() {
               </div>
             </Reveal>
             <div className="trust">
-              <p className="trust__label">{PRESS.label}</p>
+              <p className="trust__label">{LANDING.founderOffers.label}</p>
               <div className="trust__row">
-                {PRESS.items.map((p) => <span key={p}>{p}</span>)}
+                {LANDING.founderOffers.items.map((p) => <span key={p}>{p}</span>)}
               </div>
             </div>
           </div>

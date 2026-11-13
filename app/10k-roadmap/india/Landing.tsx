@@ -146,54 +146,59 @@ export default function Landing() {
       </header>
 
       <main id="main">
-        {/* ── Hero: Stage posture, founder portrait holding the session details in glass ── */}
+        {/* ── Hero: one centered statement. Headline, one sentence, the
+               action — nothing else is asked to fit the fold (44b). ── */}
         <section className="hero">
-          <div className="container">
-            <div className="hero__grid">
-              <div>
-                <Reveal>
-                  <p className="hero__kicker">A private 1:1 business audit for full-time coaches in India.</p>
-                  <h1>
-                    {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
-                  </h1>
-                  <p className="lede">{LANDING.headlineSub}</p>
-                </Reveal>
-                <Reveal i={1}>
-                  <div className="hero__ctas">
-                    <button className="btn" onClick={() => goApply('hero')}>{CTA_LABEL}</button>
-                    <button
-                      className="btn btn--quiet"
-                      onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
-                    >
-                      {LANDING.ctaSecondary.label}
-                    </button>
-                  </div>
-                  <p className="hero__fineprint">{LANDING.ctaMicro}</p>
-                  <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</span></p>
-                  <div className="hero__rating"><Rating /></div>
-                </Reveal>
+          <div className="container hero__center">
+            <Reveal>
+              <p className="hero__kicker">A private 1:1 business audit for full-time coaches in India.</p>
+              <h1>
+                {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
+              </h1>
+              <p className="lede">{LANDING.headlineSub}</p>
+            </Reveal>
+            <Reveal i={1}>
+              <div className="hero__ctas">
+                <button className="btn" onClick={() => goApply('hero')}>{CTA_LABEL}</button>
+                <button
+                  className="btn btn--quiet"
+                  onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
+                >
+                  {LANDING.ctaSecondary.label}
+                </button>
               </div>
-              <Reveal i={2}>
-                <div className="hero__visual">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-                  <div className="hero__card glass-panel">
-                    <div className="hero__card-name">{LANDING.heroCard.name}</div>
-                    <div className="hero__card-role">{LANDING.heroCard.role}</div>
-                    <div className="hero__card-credential">{LANDING.heroCard.credential}</div>
-                    <div className="hero__card-chips">
-                      {LANDING.heroCard.chips.map((c) => (
-                        <div key={c.t} className="hero__chip">
-                          <div className="hero__chip-t">{c.t}</div>
-                          <div className="hero__chip-s">{c.s}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+              <p className="hero__fineprint">{LANDING.ctaMicro}</p>
+              <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}: {LANDING.guaranteeShort}</span></p>
+              <div className="hero__rating"><Rating /></div>
+            </Reveal>
           </div>
+        </section>
+
+        {/* ── The photo: its own section, so the fold check above judges the
+               statement alone, the way the job actually reads (12, 44b). One
+               big image, then a plain caption. No card, no split columns. ── */}
+        <section className="hero-stage">
+          <Reveal>
+            <div className="hero__stage">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+            </div>
+          </Reveal>
+
+          <Reveal i={1}>
+            <div className="container hero__caption">
+              <div className="hero__caption-id">
+                <span className="hero__caption-name">{LANDING.heroCard.name}</span>
+                <span className="hero__caption-role">{LANDING.heroCard.role}</span>
+              </div>
+              <div className="hero__caption-credential">{LANDING.heroCard.credential}</div>
+              <div className="hero__caption-chips">
+                {LANDING.heroCard.chips.map((c) => (
+                  <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </section>
 
         {/* ── Pain: named in the reader's own voice before any pitch ──
@@ -286,10 +291,10 @@ export default function Landing() {
                   <h3>{LANDING.transformation.heading}</h3>
                   <CheckList items={LANDING.transformation.items} />
                 </div>
-                <div className="qualify__banner glass-panel glass-panel--accent">
-                  <p>{LANDING.whoIsThis.bannerHeading}</p>
-                  <button className="btn" onClick={() => goApply('who_banner')}>{CTA_LABEL}</button>
-                </div>
+              </div>
+              <div className="qualify__banner">
+                <p>{LANDING.whoIsThis.bannerHeading}</p>
+                <button className="btn" onClick={() => goApply('who_banner')}>{CTA_LABEL}</button>
               </div>
             </Reveal>
           </div>
@@ -343,7 +348,7 @@ export default function Landing() {
         {/* ── Meet your mentor ── */}
         <section className="founder-band">
           <div className="container">
-            <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '36rem' }}>{LANDING.founder.heading}</h2></Reveal>
+            <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '36rem', marginInline: 'auto', textAlign: 'center', fontSize: 'var(--text-display-s)' }}>{LANDING.founder.heading}</h2></Reveal>
             <Reveal i={1}>
               <div className="founder founder__row glass-panel">
                 <div className="founder__photo-wrap">

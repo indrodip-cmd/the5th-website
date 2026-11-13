@@ -1,11 +1,12 @@
-/* Hallmark · shape: Clarity Call, kept content reordered around the audit itself · genre: modern-minimal · theme: Dusk, relit to a true-black field with frosted glass panels (client direction, 2026-11-13: a restrained black-and-white consulting brand, one purple signal, no gold, Apple-style glass for the signature moments) · redesign: full
- * hero: Stage (founder portrait + session card on 7 cols) · nav: edge-aligned, black glass on scroll · footer: mast · imagery: the founder's own photograph at the Golden Gate Bridge, real case-study photos, the real video wall · signature: the frosted session card beneath the founder's own photo
- * axes: dark/grotesk-sans/cool · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · shape: Clarity Call, recomposed as a product-page scroll (client direction, 2026-11-13: "doesn't feel like apple.com" — one centred statement and one big image per screen, no card chrome, no split columns) · genre: modern-minimal · theme: Dusk, relit to a true-black field, one purple signal, frosted glass only where a real surface earns it · redesign: full
+ * hero: Poster-adjacent — a centred statement, then one full-width photo, then a plain caption (no card) · nav: edge-aligned, black glass on scroll · footer: mast · imagery: the founder's own photograph at the Golden Gate Bridge, real case-study photos, the real video wall · signature: the giant centred headline over the full-bleed photo
+ * axes: dark/grotesk-sans/cool · posture: committed · contrast: pass · fold: waived (below) · v2.0.0 */
 /* Hallmark · waive 59 · 10 sections against a 9-section guideline · every block is real, distinct content from a Meta-ad-policy-reviewed funnel (redesign.md keeps content and wiring); none is a filler default, each paced with its own gap */
-/* Hallmark · waive 44c · hero visual centre sits close to but not exactly on the text block's centre · the text column (kicker, long kept headline, lede, two actions, guarantee, rating) and the stacked photo+card do not share a height at this content length */
-/* Hallmark · waive 29 · .glass-panel uses --glass-hi for a lit top edge, not an improvised glow · a deliberate frosted-glass surface, asked for directly, in the Apple-style idiom of a control panel over a dark field */
+/* Hallmark · waive 25 · .step p, .clarity__next p and .qualify__banner p sit at 32 to 36ch, under the 45ch prose minimum · each is a one-line centred caption under a big statement, not a prose paragraph; a product page's captions run short on purpose, the way a spec page never stretches "Deliver, then scale what works." out to 45 characters */
+/* Hallmark · waive 77 · the qualify section's two-column checklist is 54rem (not ten of twelve columns) · a narrow, centred measure is the point for a short scannable list, the same way a product page keeps a spec list centred rather than stretched edge to edge */
+/* Hallmark · waive 29 · .glass-panel uses --glass-hi for a lit top edge, not an improvised glow · a deliberate frosted-glass surface, kept only for the apply price card and the founder quote, where a real surface (a price, a quote) earns it */
 /* Hallmark · answered F24 · .glass-panel pairs --glass-border with --shadow-card on purpose: the hairline is the frosted edge catching light, the shadow is the pane lifting off the page; together they are what makes it read as glass rather than a flat tinted box */
-/* Hallmark · pre-emit critique: P0 H0 E0 S0 R2 V0 · weakest: R, a second full repaint in one session (white, then black); settled by keeping the structure and scale fixed throughout and only ever changing colour tokens, so each pass stays a recolour, not a rebuild */
+/* Hallmark · pre-emit critique: P0 H0 E0 S0 R2 V0 · weakest: R, a third pass in one session on the same route; settled by changing composition and chrome this time, not colour again — the hero lost its split layout and its card, headings moved to the display scale and centred, and two of four glass panels were dropped for plain centred type */
 /* relit again: one purple signal (the brand's own #5E2E86) replaces both the earlier periwinkle and the gold; no second hue. Glass panels (hero card, qualify banner, founder card, apply card) are frosted and translucent; the proof grid's small cards stay solid white for legibility in a dense grid, the one place glass would be noise, not polish. */
 @import url("./tokens.css");
 @import url("./base.css");
@@ -71,44 +72,39 @@
 .nav .btn { min-height: 44px; padding: 0 var(--space-md); font-size: var(--text-sm); }
 @media (max-width: 60rem) { .nav__links { display: none; } }
 
-/* ── Hero (Stage) ────────────────────────────────────────────────────────── */
-.india-landing section.hero { padding-top: var(--space-2xl); padding-bottom: 0; }
-.hero__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-2xl); align-items: center; }
-.hero__kicker { margin: 0 0 var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); max-width: 46ch; }
+/* ── Hero: centered statement, then one big photo, then a plain caption ──── */
+.india-landing section.hero { padding-top: var(--space-3xl); padding-bottom: var(--space-2xl); text-align: center; }
+.india-landing section.hero-stage { padding-top: 0; }
+.hero__center { max-width: 44rem; margin-inline: auto; }
+.hero__kicker { margin: 0 0 var(--space-md); font-size: var(--text-sm); color: var(--color-muted); }
 /* The headline is one Meta-ad-policy-reviewed sentence the redesign keeps verbatim (craft.md copy rules
-   do not reach text a legal review already shaped); sized down from --text-display, and the hero's
-   rhythm tightened throughout, so headline, lede and action still clear the fold (12, 44b). */
-.hero h1 { font-size: clamp(1.5rem, 1.3vw + 1.05rem, 2.125rem); line-height: 1.16; max-width: 27ch; }
+   do not reach text a legal review already shaped). Centred and set near the display scale now that the
+   hero is one statement, not a column beside a photo. */
+.hero h1 { font-size: clamp(1.875rem, 2.6vw + 1.2rem, 3.25rem); line-height: 1.12; max-width: none; }
 .hero__accent { color: var(--color-accent-hi); }
-.hero .lede { margin-top: var(--space-md); font-size: var(--text-md); line-height: 1.5; max-width: 46ch; }
-.hero__ctas { display: flex; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xl); }
-.hero__fineprint { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); max-width: 48ch; }
-.hero__guarantee { display: inline-flex; align-items: flex-start; gap: var(--space-xs); margin-top: var(--space-xs); font-size: var(--text-sm); font-weight: 700; color: var(--color-accent-hi); max-width: 48ch; }
-.hero__rating { margin-top: var(--space-md); }
-.rating { display: inline-flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
+.hero .lede { margin: var(--space-lg) auto 0; font-size: var(--text-lead); line-height: 1.5; max-width: 38ch; }
+.hero__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-md); margin-top: var(--space-xl); }
+.hero__fineprint { margin-top: var(--space-md); font-size: var(--text-sm); color: var(--color-muted); }
+.hero__guarantee { display: inline-flex; align-items: flex-start; gap: var(--space-xs); margin-top: var(--space-sm); font-size: var(--text-sm); font-weight: 700; color: var(--color-accent-hi); }
+.hero__rating { margin-top: var(--space-lg); }
+.rating { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-sm); flex-wrap: wrap; }
 .rating__stars { display: inline-flex; gap: var(--space-3xs); }
 .rating__score { font-weight: 700; font-size: var(--text-md); }
 .rating__text { color: var(--color-muted); font-size: var(--text-sm); }
 
-.hero__visual { display: flex; flex-direction: column; gap: var(--space-md); }
-.hero__photo { width: 100%; aspect-ratio: 4 / 5; max-height: min(48dvh, 440px); object-fit: cover; object-position: 50% 28%; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
-.hero__card { border-radius: var(--radius-card); padding: var(--space-lg); }
-.hero__card-name { font-weight: 700; font-size: var(--text-md); color: var(--color-ink); }
-.hero__card-role { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-3xs); }
-.hero__card-credential { font-size: var(--text-md); font-weight: 700; color: var(--color-ink); margin-top: var(--space-sm); line-height: 1.4; }
-.hero__card-chips { display: flex; gap: var(--space-sm); margin-top: var(--space-md); }
-.hero__chip { flex: 1 1 0; min-width: 0; border-radius: var(--radius-inner); background: var(--glass-chip); padding: var(--space-sm) var(--space-md); }
-.hero__chip-t { font-weight: 700; font-size: var(--text-sm); color: var(--color-ink); }
-.hero__chip-s { font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--space-3xs); }
+.hero__stage { margin-top: var(--space-3xl); width: 100%; }
+.hero__photo { display: block; width: 100%; max-width: 1100px; margin-inline: auto; aspect-ratio: 16 / 10; max-height: 70vh; object-fit: cover; object-position: 50% 32%; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.hero__caption { margin-top: var(--space-xl); text-align: center; }
+.hero__caption-id { display: flex; justify-content: center; align-items: baseline; gap: var(--space-sm); flex-wrap: wrap; }
+.hero__caption-name { font-weight: 700; color: var(--color-ink); }
+.hero__caption-role { color: var(--color-muted); font-size: var(--text-sm); }
+.hero__caption-credential { margin-top: var(--space-2xs); font-weight: 700; color: var(--color-ink); }
+.hero__caption-chips { margin-top: var(--space-sm); display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-lg); }
+.hero__caption-chip { font-size: var(--text-sm); color: var(--color-muted); }
+.hero__caption-chip b { color: var(--color-ink); font-weight: 700; }
 
 @media (max-width: 60rem) {
-  .hero__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xl); text-align: center; }
-  .hero h1 { max-width: none; margin-inline: auto; }
-  .hero .lede { margin-inline: auto; }
-  .hero__ctas, .hero__fineprint, .hero__guarantee { justify-content: center; margin-inline: auto; }
-  .hero__rating .rating { justify-content: center; }
-  .hero__photo { max-height: 380px; }
-  .hero__visual { max-width: 420px; margin-inline: auto; }
+  .hero__photo { aspect-ratio: 4 / 5; max-height: 60vh; }
 }
 
 /* ── Figures (the four session facts) ───────────────────────────────────── */
@@ -128,52 +124,53 @@
 
 /* ── Pain (Corridor) ─────────────────────────────────────────────────────── */
 .pain { background: var(--color-paper-2); }
-.pain__inner { max-width: 52rem; margin-inline: auto; margin-top: var(--space-2xl); }
-.pain h2 { font-size: var(--text-display-s); max-width: 16ch; }
+.pain__inner { max-width: 44rem; margin-inline: auto; margin-top: var(--space-2xl); text-align: center; }
+.pain h2 { font-size: var(--text-display-s); max-width: 16ch; margin-inline: auto; }
+.pain__graphic { display: block; width: 100%; max-width: 28rem; height: auto; margin: var(--space-xl) auto; }
 .pain__lines { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); }
-.pain__lines p { font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink-2); max-width: none; }
-.pain__close { margin-top: var(--space-lg); padding-left: var(--space-lg); border-left: 2px solid var(--color-accent); font-weight: 700; font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink); }
-.pain__graphic { display: block; width: 100%; max-width: 32rem; height: auto; margin: var(--space-xl) 0; }
+.pain__lines p { font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink-2); max-width: 36ch; margin-inline: auto; }
+.pain__close { margin-top: var(--space-lg); font-weight: 700; font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink); max-width: 32ch; margin-inline: auto; }
 
 /* ── Mechanism (Steps) ───────────────────────────────────────────────────── */
-.steps__head { max-width: 42rem; }
-.steps__head .lede { margin-top: var(--space-md); }
-.steps__flow { margin-top: var(--space-2xl); }
+.steps__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.steps__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
+.steps__head .lede { margin: var(--space-md) auto 0; }
+.steps__flow { margin-top: var(--space-3xl); }
 .steps__graphic { display: block; width: 100%; height: 24px; margin-bottom: var(--space-md); }
 @media (max-width: 60rem) { .steps__graphic { display: none; } }
-.steps__list { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xl); }
-.step { counter-increment: step; }
+.steps__list { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xl); text-align: center; }
+.step { counter-increment: step; display: flex; flex-direction: column; align-items: center; }
 .step__num { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--color-accent-2); color: var(--color-day-ink); font-weight: 700; font-size: var(--text-md); margin-bottom: var(--space-lg); }
 .step__num::before { content: counter(step, decimal-leading-zero); }
 .step h3 { margin-bottom: var(--space-sm); }
-.step p { color: var(--color-muted); max-width: 48ch; }
-.steps__close { margin-top: var(--space-2xl); padding-top: var(--space-xl); border-top: 1px solid var(--color-rule); font-size: var(--text-lead); color: var(--color-ink-2); max-width: 48ch; }
+.step p { color: var(--color-muted); max-width: 32ch; }
+.steps__close { margin: var(--space-2xl) auto 0; padding-top: var(--space-xl); border-top: 1px solid var(--color-rule); font-size: var(--text-lead); color: var(--color-ink-2); max-width: 36ch; text-align: center; }
 @media (max-width: 60rem) { .steps__list { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); } }
 
 /* ── Clarity band: the mechanism's close + next-step banner ──────────────── */
 .clarity-band { background: var(--color-paper-2); color: var(--color-ink); }
-.clarity__next { margin-top: var(--space-xl); border-radius: var(--radius-card); background: var(--color-paper-3); padding: var(--space-2xl); display: flex; align-items: center; justify-content: space-between; gap: var(--space-xl); flex-wrap: wrap; }
-.clarity__next h3 { font-size: var(--text-xl); margin-bottom: var(--space-xs); }
-.clarity__next p { color: var(--color-ink-2); max-width: 46ch; }
+.clarity__next { margin-top: var(--space-3xl); text-align: center; }
+.clarity__next h3 { font-size: var(--text-2xl); margin-bottom: var(--space-sm); }
+.clarity__next p { color: var(--color-ink-2); max-width: 34ch; margin: 0 auto var(--space-xl); }
 
 /* ── Qualify (two columns of checks) ─────────────────────────────────────── */
-.qualify__head { max-width: 48rem; }
-.qualify__head .lede { margin-top: var(--space-md); }
-.qualify__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); margin-top: var(--space-2xl); }
-.qualify__col h3 { font-size: var(--text-title); margin-bottom: var(--space-lg); }
-.check-list { display: grid; gap: var(--space-sm); list-style: none; margin: 0; padding: 0; }
-.check-item { display: flex; align-items: flex-start; gap: var(--space-sm); padding-block: var(--space-sm); border-top: 1px solid var(--color-rule); }
-.check-item:first-child { border-top: 0; }
+.qualify__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.qualify__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
+.qualify__head .lede { margin: var(--space-md) auto 0; }
+.qualify__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); margin-top: var(--space-3xl); max-width: 54rem; margin-inline: auto; }
+.qualify__col h3 { font-size: var(--text-title); margin-bottom: var(--space-lg); text-align: center; }
+.check-list { display: grid; gap: var(--space-lg); list-style: none; margin: 0; padding: 0; }
+.check-item { display: flex; align-items: flex-start; gap: var(--space-sm); }
 .check-item svg { flex-shrink: 0; margin-top: var(--space-3xs); color: var(--color-accent-hi); }
 .check-item span { color: var(--color-ink-2); line-height: 1.55; }
-.qualify__banner { grid-column: 1 / -1; margin-top: var(--space-xl); border-radius: var(--radius-card); padding: var(--space-xl); text-align: center; }
-.qualify__banner p { max-width: 46ch; margin-inline: auto; margin-bottom: var(--space-lg); font-weight: 700; font-size: var(--text-lg); color: var(--color-ink); }
+.qualify__banner { margin-top: var(--space-3xl); text-align: center; }
+.qualify__banner p { max-width: 36ch; margin: 0 auto var(--space-xl); font-weight: 700; font-size: var(--text-2xl); color: var(--color-ink); }
 @media (max-width: 54rem) { .qualify__cols { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xl); } }
 
 /* ── Proof ───────────────────────────────────────────────────────────────── */
 .proof { background: var(--color-paper-2); }
-.proof__head { max-width: 46rem; }
-.proof__head h2 { font-size: var(--text-display-s); }
+.proof__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.proof__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .proof__banner { margin-top: var(--space-xl); text-align: center; }
 .proof__banner span { display: inline-block; border-radius: var(--radius-pill); border: 1px solid color-mix(in oklab, var(--color-accent) 55%, transparent); padding: var(--space-xs) var(--space-lg); font-weight: 700; font-size: var(--text-sm); color: var(--color-accent-deep); }
 .proof__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); margin-top: var(--space-2xl); }
@@ -210,7 +207,8 @@
 
 /* ── FAQ (Rows) ──────────────────────────────────────────────────────────── */
 .faq-band { background: var(--color-paper); color: var(--color-ink); }
-.faq__head { max-width: 40rem; }
+.faq__head { max-width: 36rem; margin-inline: auto; text-align: center; }
+.faq__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .faq__list { margin-top: var(--space-2xl); }
 .faq__item { border-top: 1px solid var(--color-rule); padding-block: var(--space-lg); }
 .faq__list .faq__item:last-child { border-bottom: 1px solid var(--color-rule); }

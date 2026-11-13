@@ -67,8 +67,8 @@ export const LANDING = {
   // page: Indrodip's own job offers, confirmed by the business owner
   // (2026-11-14), not claims about employment at these companies.
   founderOffers: {
-    label: 'Job offers Indrodip has received',
-    items: ['Google', 'Anthropic', 'Mastermind.com', 'ClickFunnels', 'SHARP'],
+    label: 'Recruited by',
+    items: ['Google', 'Anthropic', 'Mastermind.com', 'ClickFunnels'],
   },
   // The founder's credibility strip (hero + founder section). Every claim
   // here must stay exactly this careful: the valuation is the startup's,

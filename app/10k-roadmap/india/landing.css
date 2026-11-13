@@ -75,7 +75,7 @@
 /* ── Hero: centered statement, then one big photo, then a plain caption ──── */
 .india-landing section.hero { padding-top: var(--space-3xl); padding-bottom: var(--space-2xl); text-align: center; }
 .india-landing section.hero-stage { padding-top: 0; }
-.hero__center { max-width: 44rem; margin-inline: auto; }
+.india-landing .hero__center { max-width: 44rem; margin-inline: auto; }
 .hero__badge { display: inline-flex; align-items: center; margin-bottom: var(--space-lg); padding: var(--space-2xs) var(--space-lg); border: 1px solid var(--color-accent-deep); border-radius: var(--radius-pill); color: var(--color-accent-deep); font-size: var(--text-sm); font-weight: 700; }
 .hero__kicker { margin: 0 0 var(--space-md); font-size: var(--text-sm); color: var(--color-muted); max-width: 32ch; margin-inline: auto; }
 /* The headline is one Meta-ad-policy-reviewed sentence the redesign keeps verbatim (craft.md copy rules
@@ -132,10 +132,10 @@
 
 /* ── Pain (Corridor) ─────────────────────────────────────────────────────── */
 .pain { background: var(--color-paper-2); }
-.pain__inner { max-width: 44rem; margin-inline: auto; margin-top: var(--space-2xl); text-align: center; }
+.india-landing .pain__inner { max-width: 44rem; margin-inline: auto; margin-top: var(--space-2xl); text-align: center; }
 .pain h2 { font-size: var(--text-display-s); max-width: 16ch; margin-inline: auto; }
 .pain__graphic { display: block; width: 100%; max-width: 28rem; height: auto; margin: var(--space-xl) auto; }
-.pain__lines { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); max-width: 36ch; margin-inline: auto; text-align: left; }
+.pain__lines.check-list { display: grid; gap: var(--space-lg); margin-top: var(--space-xl); max-width: 36ch; margin-inline: auto; text-align: left; }
 .pain__lines .check-item span { font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink-2); }
 .pain__close { margin-top: var(--space-lg); font-weight: 700; font-size: var(--text-lead); line-height: 1.6; color: var(--color-ink); max-width: 32ch; margin-inline: auto; }
 
@@ -143,7 +143,7 @@
 .steps__head { max-width: 36rem; margin-inline: auto; text-align: center; }
 .steps__head h2 { font-size: var(--text-display-s); margin-inline: auto; }
 .steps__head .lede { margin: var(--space-md) auto 0; }
-.steps__flow { margin-top: var(--space-3xl); }
+.steps__flow { max-width: 56rem; margin: var(--space-3xl) auto 0; }
 .steps__graphic { display: block; width: 100%; height: 24px; margin-bottom: var(--space-md); }
 @media (max-width: 60rem) { .steps__graphic { display: none; } }
 .steps__list { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xl); text-align: center; }
@@ -240,7 +240,7 @@
 .apply { background: var(--color-surface-dark); text-align: center; }
 .apply h2, .apply h3 { color: var(--color-on-dark); }
 .apply .lede { color: var(--color-on-dark-muted); }
-.apply__inner { max-width: 44rem; margin-inline: auto; }
+.india-landing .apply__inner { max-width: 44rem; margin-inline: auto; }
 .apply h2 { font-size: var(--text-section); margin-inline: auto; }
 .apply .lede { margin: var(--space-md) auto 0; }
 .apply__points { list-style: none; margin: var(--space-xl) auto 0; padding: 0; display: inline-grid; gap: var(--space-sm); text-align: left; }
@@ -265,7 +265,7 @@ p.reach { margin-bottom: var(--space-xl); color: var(--color-muted); font-size: 
 
 /* ── Footer (mast) ───────────────────────────────────────────────────────── */
 .site-footer { border-top: 1px solid var(--color-rule); padding-block: var(--space-3xl) var(--space-2xl); }
-.site-footer__inner { max-width: 44rem; margin-inline: auto; text-align: center; }
+.india-landing .site-footer__inner { max-width: 44rem; margin-inline: auto; text-align: center; }
 .site-footer__brand { height: 30px; width: auto; opacity: 0.9; margin-bottom: var(--space-xl); }
 .site-footer__links { display: flex; gap: var(--space-xl); justify-content: center; flex-wrap: wrap; margin-bottom: var(--space-xl); }
 .site-footer__links a { font-size: var(--text-sm); color: var(--color-muted); }

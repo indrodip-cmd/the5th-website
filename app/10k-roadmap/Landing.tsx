@@ -15,7 +15,7 @@
      priority #4) → Section 08 founder/credibility (two-column editorial) →
      Section 09 FAQ accordion + final booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
@@ -42,6 +42,42 @@ const CARD_PAD = 'clamp(22px,4vw,32px)'
 function Stars() {
   return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={ACCENT}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>
 }
+/* Counts up from 0 once scrolled into view — preserves any prefix/suffix
+   (e.g. "$29", "4.8") and decimal precision. Shows the final value instantly
+   when the visitor prefers reduced motion. */
+function AnimatedStat({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [display, setDisplay] = useState(value)
+  useEffect(() => {
+    const el = ref.current
+    const m = /^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/.exec(value)
+    if (!el || !m) return
+    const [, prefix, numStr, suffix] = m
+    const target = parseFloat(numStr)
+    const decimals = numStr.includes('.') ? numStr.split('.')[1].length : 0
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) return
+    let frame = 0
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (!e.isIntersecting) return
+        io.disconnect()
+        const start = performance.now()
+        const dur = 1100
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / dur)
+          const eased = 1 - Math.pow(1 - t, 3)
+          setDisplay(prefix + (target * eased).toFixed(decimals) + suffix)
+          if (t < 1) frame = requestAnimationFrame(tick)
+        }
+        frame = requestAnimationFrame(tick)
+      })
+    }, { threshold: 0.4 })
+    io.observe(el)
+    return () => { io.disconnect(); cancelAnimationFrame(frame) }
+  }, [value])
+  return <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>{display}</span>
+}
 function RatingRow() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -65,23 +101,23 @@ function SectionHead({ eyebrow, heading, sub, maxW, dark, align }: { eyebrow?: s
 function StepIcon({ kind }: { kind: string }) {
   const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const box = { width: 48, height: 48, viewBox: '0 0 56 56' }
-  if (kind === 'search') return <svg {...box}><circle cx={24} cy={24} r={13} {...c} /><line x1={33.5} y1={33.5} x2={46} y2={46} {...c} /></svg>
-  if (kind === 'tag') return <svg {...box}><rect x={14} y={14} width={28} height={28} rx={6} transform="rotate(45 28 28)" {...c} /><circle cx={28} cy={18} r={2} fill={ACCENT} stroke="none" /></svg>
-  if (kind === 'target') return <svg {...box}><circle cx={28} cy={28} r={18} {...c} /><circle cx={28} cy={28} r={10} {...c} /><circle cx={28} cy={28} r={3} fill={ACCENT} stroke="none" /></svg>
-  if (kind === 'compass') return <svg {...box}><circle cx={28} cy={28} r={18} {...c} /><polygon points="28,16 32,28 28,40 24,28" fill={ACCENT} stroke="none" /></svg>
-  return <svg {...box}><rect x={10} y={14} width={36} height={30} rx={5} {...c} /><line x1={10} y1={24} x2={46} y2={24} {...c} /><line x1={19} y1={9} x2={19} y2={18} {...c} /><line x1={37} y1={9} x2={37} y2={18} {...c} /><polyline points="19,34 25,40 38,27" {...c} /></svg>
+  if (kind === 'search') return <svg {...box} aria-hidden="true"><circle cx={24} cy={24} r={13} {...c} /><line x1={33.5} y1={33.5} x2={46} y2={46} {...c} /></svg>
+  if (kind === 'tag') return <svg {...box} aria-hidden="true"><rect x={14} y={14} width={28} height={28} rx={6} transform="rotate(45 28 28)" {...c} /><circle cx={28} cy={18} r={2} fill={ACCENT} stroke="none" /></svg>
+  if (kind === 'target') return <svg {...box} aria-hidden="true"><circle cx={28} cy={28} r={18} {...c} /><circle cx={28} cy={28} r={10} {...c} /><circle cx={28} cy={28} r={3} fill={ACCENT} stroke="none" /></svg>
+  if (kind === 'compass') return <svg {...box} aria-hidden="true"><circle cx={28} cy={28} r={18} {...c} /><polygon points="28,16 32,28 28,40 24,28" fill={ACCENT} stroke="none" /></svg>
+  return <svg {...box} aria-hidden="true"><rect x={10} y={14} width={36} height={30} rx={5} {...c} /><line x1={10} y1={24} x2={46} y2={24} {...c} /><line x1={19} y1={9} x2={19} y2={18} {...c} /><line x1={37} y1={9} x2={37} y2={18} {...c} /><polyline points="19,34 25,40 38,27" {...c} /></svg>
 }
 
 /* Deliverable icons — matched to the six "what you receive" cards. */
 function DeliverableIcon({ kind }: { kind: string }) {
   const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const box = { width: 30, height: 30, viewBox: '0 0 24 24' }
-  if (kind === 'video') return <svg {...box}><rect x={2.5} y={5.5} width={13} height={13} rx={2.2} {...c} /><path d="M15.5 10l6-3.5v11l-6-3.5" {...c} /></svg>
-  if (kind === 'file') return <svg {...box}><path d="M6 2.5h8l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1v-17a1 1 0 011-1z" {...c} /><path d="M14 2.5v4h4" {...c} /><path d="M8 13h8M8 16.5h8M8 9.5h4" {...c} /></svg>
-  if (kind === 'map') return <svg {...box}><path d="M9 3L3 5.5v15L9 18l6 2.5 6-2.5v-15l-6 2.5L9 3z" {...c} /><path d="M9 3v15M15 5.5v15" {...c} /></svg>
-  if (kind === 'calculator') return <svg {...box}><rect x={4} y={2.5} width={16} height={19} rx={2.2} {...c} /><line x1={7} y1={6.5} x2={17} y2={6.5} {...c} /><circle cx={7.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={7.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /></svg>
-  if (kind === 'brain') return <svg {...box}><path d="M9 3a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 003 3M9 3a3 3 0 013 3v12a3 3 0 01-3 3M15 3a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-3 3" {...c} /></svg>
-  return <svg {...box}><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
+  if (kind === 'video') return <svg {...box} aria-hidden="true"><rect x={2.5} y={5.5} width={13} height={13} rx={2.2} {...c} /><path d="M15.5 10l6-3.5v11l-6-3.5" {...c} /></svg>
+  if (kind === 'file') return <svg {...box} aria-hidden="true"><path d="M6 2.5h8l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1v-17a1 1 0 011-1z" {...c} /><path d="M14 2.5v4h4" {...c} /><path d="M8 13h8M8 16.5h8M8 9.5h4" {...c} /></svg>
+  if (kind === 'map') return <svg {...box} aria-hidden="true"><path d="M9 3L3 5.5v15L9 18l6 2.5 6-2.5v-15l-6 2.5L9 3z" {...c} /><path d="M9 3v15M15 5.5v15" {...c} /></svg>
+  if (kind === 'calculator') return <svg {...box} aria-hidden="true"><rect x={4} y={2.5} width={16} height={19} rx={2.2} {...c} /><line x1={7} y1={6.5} x2={17} y2={6.5} {...c} /><circle cx={7.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={7.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /></svg>
+  if (kind === 'brain') return <svg {...box} aria-hidden="true"><path d="M9 3a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 003 3M9 3a3 3 0 013 3v12a3 3 0 01-3 3M15 3a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-3 3" {...c} /></svg>
+  return <svg {...box} aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
 }
 
 function PressStrip() {
@@ -111,7 +147,7 @@ function TestimonialCard({ index = 7 }: { index?: number }) {
 /* A single documented-result proof card: photo, name, business type, result, quote. */
 function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
   return (
-    <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+    <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {c.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -192,16 +228,16 @@ function Calculators() {
         <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Numbers</div>
           <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} style={sliderStyle} />
+            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} />
           </Field>
           <Field label="Average offer price" display={fmt(offerPrice)}>
-            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} style={sliderStyle} />
+            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} className="rm-range" style={sliderStyle} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} style={sliderStyle} />
+            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} className="rm-range" style={sliderStyle} />
           </Field>
           <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} style={sliderStyle} />
+            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} className="rm-range" style={sliderStyle} />
           </Field>
 
           <div style={{ marginTop: 22, paddingTop: 18, borderTop: `1px solid ${LINE}` }}>
@@ -222,8 +258,13 @@ function Calculators() {
               const widthPct = i === 3 ? 100 : Math.max(18, Math.min(100, (s.value / maxV) * 100))
               return (
                 <div key={s.label}>
-                  <div style={{ width: `${widthPct}%`, minWidth: '46%', marginLeft: 'auto', marginRight: 'auto', background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, borderRadius: 10, padding: '12px 16px', transition: 'width .25s ease' }}>
-                    <strong style={{ display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#0B0F08', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
+                  {/* The fill narrows via a scaled, centered background layer —
+                      never the `width` property — so resizing it as the
+                      visitor drags a slider stays off the motion floor's
+                      banned list and animates on the GPU instead of layout. */}
+                  <div style={{ position: 'relative', padding: '12px 16px', borderRadius: 10 }}>
+                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
+                    <strong style={{ position: 'relative', display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#F2F6EC', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 6 }}>
                     <span style={{ fontSize: 12.5, fontWeight: 700, color: '#F2F6EC' }}>{s.label}</span>
@@ -258,13 +299,19 @@ function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
       {items.map((it, i) => {
         const isOpen = open === i
         return (
-          <div key={it.q} style={{ background: CARD, border: `1px solid ${isOpen ? LINE2 : LINE}`, borderRadius: 14, overflow: 'hidden' }}>
+          <div key={it.q} className="rm-lift" style={{ background: CARD, border: `1px solid ${isOpen ? LINE2 : LINE}`, borderRadius: 14, overflow: 'hidden' }}>
             <button onClick={() => setOpen(isOpen ? -1 : i)} className="rm-focus" aria-expanded={isOpen}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '18px 20px', fontFamily: 'inherit' }}>
               <span style={{ fontSize: 15.5, fontWeight: 700, color: '#F2F6EC' }}>{it.q}</span>
-              <span aria-hidden style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', border: `1px solid ${LINE2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, fontSize: 15, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform .2s' }}>+</span>
+              <span aria-hidden style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', border: `1px solid ${LINE2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, fontSize: 15, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform .3s cubic-bezier(.16,1,.3,1)' }}>+</span>
             </button>
-            {isOpen && <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, padding: '0 20px 18px', maxWidth: 640 }}>{it.a}</p>}
+            {/* Smooth expand/collapse via an animated grid-track (not `height`),
+                so the Floor's never-animate-height rule still holds. */}
+            <div style={{ display: 'grid', gridTemplateRows: isOpen ? '1fr' : '0fr', transition: 'grid-template-rows .4s cubic-bezier(.16,1,.3,1)' }}>
+              <div style={{ overflow: 'hidden', minHeight: 0 }}>
+                <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, padding: '0 20px 18px', maxWidth: 640 }}>{it.a}</p>
+              </div>
+            </div>
           </div>
         )
       })}
@@ -364,21 +411,21 @@ export default function Landing() {
               <h2 className="rm-serif" style={{ fontSize: 'clamp(20px,3.2vw,28px)', margin: 0, fontWeight: 800, color: '#fff' }}>{LANDING.proof.heading}</h2>
             </div>
           </Reveal>
-          <Reveal>
-            <div className="rm-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, overflow: 'hidden' }}>
-              {[
-                { b: '76', s: 'Coaches & consultants served' },
-                { b: '12', s: 'Nations, coached remotely' },
-                { b: RATING.score, s: 'Average client rating' },
-                { b: '$29', s: 'The entire audit, refundable' },
-              ].map((s) => (
-                <div key={s.s} style={{ background: INK2, padding: '22px 18px' }}>
-                  <strong className="rm-serif" style={{ display: 'block', fontSize: 'clamp(26px,3.6vw,36px)', fontWeight: 800, color: ACCENT, lineHeight: 1 }}>{s.b}</strong>
+          <div className="rm-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, overflow: 'hidden' }}>
+            {[
+              { b: '76', s: 'Coaches & consultants served' },
+              { b: '12', s: 'Nations, coached remotely' },
+              { b: RATING.score, s: 'Average client rating' },
+              { b: '$29', s: 'The entire audit, refundable' },
+            ].map((s, i) => (
+              <Reveal key={s.s} delay={i * 90}>
+                <div className="rm-lift" style={{ background: INK2, padding: '22px 18px', height: '100%' }}>
+                  <strong className="rm-serif" style={{ display: 'block', fontSize: 'clamp(26px,3.6vw,36px)', fontWeight: 800, color: ACCENT, lineHeight: 1 }}><AnimatedStat value={s.b} /></strong>
                   <span style={{ display: 'block', marginTop: 9, fontSize: 12.5, color: 'rgba(255,255,255,.6)', lineHeight: 1.4 }}>{s.s}</span>
                 </div>
-              ))}
-            </div>
-          </Reveal>
+              </Reveal>
+            ))}
+          </div>
           <Reveal>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginTop: 20 }}>
               {LANDING.proof.stats.map((st) => (
@@ -396,9 +443,9 @@ export default function Landing() {
       <section style={{ padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.problem.eyebrow} heading={LANDING.problem.heading} sub={LANDING.problem.sub} maxW={720} /></Reveal>
-          <Reveal>
-            <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)' }}>
-              <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+          <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)' }}>
+            <Reveal>
+              <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>{LANDING.problem.moreAdvice.title}</div>
                 <div style={{ display: 'grid', gap: 12 }}>
                   {LANDING.problem.moreAdvice.items.map((it) => (
@@ -408,7 +455,9 @@ export default function Landing() {
                   ))}
                 </div>
               </div>
-              <div style={{ background: 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')', border: '1px solid rgba(201,255,72,.28)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+            </Reveal>
+            <Reveal delay={90}>
+              <div className="rm-lift" style={{ background: 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')', border: '1px solid rgba(201,255,72,.28)', borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: ACCENT, marginBottom: 16 }}>{LANDING.problem.diagnosis.title}</div>
                 <div style={{ display: 'grid', gap: 12 }}>
                   {LANDING.problem.diagnosis.items.map((it) => (
@@ -418,8 +467,8 @@ export default function Landing() {
                   ))}
                 </div>
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
           <Reveal>
             <div style={{ textAlign: 'center', marginTop: 32 }}>
               <p style={{ fontWeight: 700, fontSize: 16.5, marginBottom: 18 }}>{LANDING.problem.close}</p>
@@ -433,18 +482,18 @@ export default function Landing() {
       <section id="call" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.call.eyebrow} heading={LANDING.call.heading} sub={LANDING.call.sub} maxW={640} /></Reveal>
-          <Reveal>
-            <div className="rm-steps5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginTop: 12 }}>
-              {LANDING.call.steps.map((s) => (
-                <div key={s.n} style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 16, padding: 18 }}>
+          <div className="rm-steps5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginTop: 12 }}>
+            {LANDING.call.steps.map((s, i) => (
+              <Reveal key={s.n} delay={i * 70}>
+                <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 16, padding: 18, height: '100%' }}>
                   <div style={{ marginBottom: 12 }}><StepIcon kind={s.icon} /></div>
                   <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '.08em', marginBottom: 8 }}>STEP {s.n}</div>
                   <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 6px' }}>{s.t}</h3>
                   <p style={{ color: TEXT2, fontSize: 13, lineHeight: 1.5, margin: 0 }}>{s.d}</p>
                 </div>
-              ))}
-            </div>
-          </Reveal>
+              </Reveal>
+            ))}
+          </div>
           <Reveal>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '28px auto 0' }}>{LANDING.call.note}</p>
           </Reveal>
@@ -455,10 +504,10 @@ export default function Landing() {
       <section id="deliverables" style={{ padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.deliverables.eyebrow} heading={LANDING.deliverables.heading} sub={LANDING.deliverables.sub} maxW={680} /></Reveal>
-          <Reveal>
-            <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
-              {LANDING.deliverables.items.map((d, i) => (
-                <div key={d.t} style={{ background: i < 2 ? 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')' : CARD, border: `1px solid ${i < 2 ? 'rgba(201,255,72,.28)' : LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {LANDING.deliverables.items.map((d, i) => (
+              <Reveal key={d.t} delay={(i % 3) * 80}>
+                <div className="rm-lift" style={{ background: i < 2 ? 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')' : CARD, border: `1px solid ${i < 2 ? 'rgba(201,255,72,.28)' : LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                   <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                     <DeliverableIcon kind={d.icon} />
                   </div>
@@ -466,14 +515,14 @@ export default function Landing() {
                   <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.55, margin: 0 }}>{d.d}</p>
                   {d.icon === 'download' && (
                     <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf' })}
-                      className="rm-focus" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '9px 16px' }}>
+                      className="rm-focus rm-pop" style={{ alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '9px 16px', boxShadow: '0 10px 24px -12px rgba(201,255,72,.5)' }}>
                       {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
                     </a>
                   )}
                 </div>
-              ))}
-            </div>
-          </Reveal>
+              </Reveal>
+            ))}
+          </div>
           <Reveal>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '18px auto 0' }}>{LANDING.deliverables.sampleNote}</p>
             <p style={{ textAlign: 'center', color: TEXT2, fontSize: 13.5, lineHeight: 1.6, maxWidth: 620, margin: '10px auto 0', fontWeight: 600 }}>{LANDING.deliverables.note}</p>
@@ -493,22 +542,18 @@ export default function Landing() {
       <section style={{ padding: SECY_LG + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.heading} maxW={640} /></Reveal>
-          <Reveal>
-            <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
-              {featuredProof.map((c) => <ProofCard key={c.name} c={c} />)}
-            </div>
-          </Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {featuredProof.map((c, i) => <Reveal key={c.name} delay={(i % 3) * 80}><ProofCard c={c} /></Reveal>)}
+          </div>
           {restProof.length > 0 && (
             <>
               {showAllProof && (
-                <Reveal>
-                  <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)', marginTop: 'clamp(14px,2.5vw,20px)' }}>
-                    {restProof.map((c) => <ProofCard key={c.name} c={c} />)}
-                  </div>
-                </Reveal>
+                <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)', marginTop: 'clamp(14px,2.5vw,20px)' }}>
+                  {restProof.map((c, i) => <Reveal key={c.name} delay={(i % 3) * 80}><ProofCard c={c} /></Reveal>)}
+                </div>
               )}
               <div style={{ textAlign: 'center', marginTop: 28 }}>
-                <button onClick={() => setShowAllProof((v) => !v)} className="rm-focus"
+                <button onClick={() => setShowAllProof((v) => !v)} className="rm-focus rm-pop"
                   style={{ background: 'transparent', border: `1px solid ${LINE2}`, color: '#F2F6EC', borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                   {showAllProof ? 'Show fewer results' : `Show all ${orderedProof.length} client results`}
                 </button>
@@ -540,7 +585,7 @@ export default function Landing() {
               { ...LANDING.founder2 },
             ].map((p) => (
               <Reveal key={p.name}>
-                <div style={{ background: 'rgba(255,255,255,.04)', border: `1px solid ${LINE2}`, borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rm-founder-row">
+                <div style={{ background: 'rgba(255,255,255,.04)', border: `1px solid ${LINE2}`, borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rm-founder-row rm-lift">
                   <div style={{ flexShrink: 0, textAlign: 'center', width: 140, margin: '0 auto' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.photo} alt={p.name} style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
@@ -563,20 +608,26 @@ export default function Landing() {
           </div>
           {/* Two real photos backing the "recruited by" claim above: a
               ClickFunnels event and the Millionaire Mindset Mastermind. */}
-          <Reveal>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20, marginTop: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20, marginTop: 20 }}>
+            <Reveal>
               <figure style={{ margin: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }} />
+                <div className="rm-photo-frame" style={{ borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
+                </div>
                 <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At a ClickFunnels event.</figcaption>
               </figure>
+            </Reveal>
+            <Reveal delay={90}>
               <figure style={{ margin: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }} />
+                <div className="rm-photo-frame" style={{ borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
+                </div>
                 <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At the Millionaire Mindset Mastermind.</figcaption>
               </figure>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
       </section>
 

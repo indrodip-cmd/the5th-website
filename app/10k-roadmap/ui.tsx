@@ -21,13 +21,13 @@ export function Fonts() {
       .rm-serif{font-family:${T.serif};font-weight:700;letter-spacing:-.022em;line-height:1.05}
       .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
       .rm-mark{color:${T.accentInk}}
-      .rm-reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-      .rm-reveal.in{opacity:1;transform:none}
+      .rm-reveal{opacity:0;transform:translateY(22px) scale(.985);filter:blur(4px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
+      .rm-reveal.in{opacity:1;transform:none;filter:blur(0)}
       @keyframes rm-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
       @keyframes rm-spin{to{transform:rotate(360deg)}}
       @keyframes rm-draw{to{stroke-dashoffset:0}}
       @media (prefers-reduced-motion: reduce){
-        .rm-reveal{opacity:1!important;transform:none!important;transition:none!important}
+        .rm-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
         *{animation-duration:.001ms!important}
       }
       button{font-family:inherit}
@@ -35,6 +35,29 @@ export function Fonts() {
       h1,h2,h3{text-wrap:balance}
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
+      .rm-range:focus-visible{outline:2px solid ${T.accent};outline-offset:5px;border-radius:999px}
+      /* Shared premium interaction primitives — hover lift, press feedback,
+         and a button shine sweep. transform/opacity only, per the motion
+         floor (never width/height/top/left). */
+      .rm-btn{will-change:transform}
+      .rm-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+      .rm-btn:active{transform:translateY(0) scale(.975);filter:brightness(.97);transition-duration:.08s}
+      .rm-btn[disabled]{pointer-events:none}
+      .rm-btn-shine{position:relative;overflow:hidden}
+      .rm-btn-shine::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 48%,rgba(255,255,255,.4) 52%,transparent 70%);transform:translateX(-130%);transition:transform .7s cubic-bezier(.16,1,.3,1);pointer-events:none}
+      .rm-btn-shine:hover::after{transform:translateX(130%)}
+      .rm-lift{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1),border-color .3s ease;will-change:transform}
+      .rm-lift:hover{transform:translateY(-6px)}
+      .rm-pop{display:inline-flex;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s cubic-bezier(.16,1,.3,1),filter .25s ease}
+      .rm-pop:hover{transform:translateY(-2px) scale(1.025);filter:brightness(1.05)}
+      .rm-pop:active{transform:translateY(0) scale(.98)}
+      .rm-photo-frame{overflow:hidden;display:block}
+      .rm-photo-frame img{transition:transform .7s cubic-bezier(.16,1,.3,1);display:block}
+      .rm-photo-frame:hover img{transform:scale(1.045)}
+      @media (prefers-reduced-motion: reduce){
+        .rm-btn,.rm-btn:hover,.rm-btn:active,.rm-lift,.rm-lift:hover,.rm-pop,.rm-pop:hover,.rm-pop:active,.rm-photo-frame img,.rm-photo-frame:hover img{transform:none!important;transition:none!important}
+        .rm-btn-shine::after{display:none}
+      }
       /* Mobile readability: more generous leading so text never feels cramped. */
       @media (max-width:640px){
         .rm-serif{letter-spacing:-.005em!important;line-height:1.2!important}
@@ -102,7 +125,7 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     fontFamily: T.sans, fontWeight: 700, fontSize: 16, letterSpacing: '.005em',
     padding: '16px 32px', minHeight: 54, borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
     border: '1px solid transparent', textDecoration: 'none', width: full ? '100%' : undefined,
-    transition: 'transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, filter .18s ease',
+    transition: 'transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s cubic-bezier(.16,1,.3,1), filter .25s ease',
     opacity: disabled ? 0.55 : 1, WebkitTapHighlightColor: 'transparent',
   }
   const skin: React.CSSProperties = variant === 'primary'
@@ -111,9 +134,8 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     ? { background: 'transparent', color: T.text, borderColor: T.lineStrong }
     : { background: T.surface, color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(0,0,0,.4)' }
   const props = {
-    className: 'rm-focus rm-btn', style: { ...base, ...skin, ...style },
-    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.06)' } },
-    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none' },
+    className: 'rm-focus rm-btn' + (variant === 'primary' ? ' rm-btn-shine' : ''),
+    style: { ...base, ...skin, ...style },
   }
   if (href) return <a href={href} onClick={onClick} {...props}>{children}</a>
   return <button type={type} onClick={onClick} disabled={disabled} {...props}>{children}</button>
@@ -234,7 +256,7 @@ export function Stepper({ current }: { current: number }) {
                   background: done || active ? T.accent : T.surface, color: done || active ? T.accentText : T.text3,
                   border: `1.5px solid ${done || active ? 'transparent' : T.line}`,
                   boxShadow: active ? '0 8px 18px -6px rgba(201,255,72,.4)' : done ? '0 3px 8px -4px rgba(201,255,72,.3)' : 'none',
-                  transition: 'all .3s ease' }}>
+                  transition: 'background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease' }}>
                   {done ? '✓' : i + 1}
                 </span>
                 <span style={{ fontSize: 11.5, fontWeight: active ? 700 : 600, color: active ? T.text : T.text3, whiteSpace: 'nowrap' }}>{s.label}</span>
@@ -476,7 +498,7 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
           return (
             <button key={n} className="rm-focus" onClick={() => onChange(String(n))}
               style={{ flex: '1 0 auto', minWidth: 46, height: 52, borderRadius: 12, cursor: 'pointer', fontSize: 16, fontWeight: 700,
-                background: sel ? T.accent : T.surface, color: sel ? T.accentText : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
+                background: sel ? T.accent : T.surface, color: sel ? T.accentText : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'background .12s, color .12s, border-color .12s' }}>
               {n}
             </button>
           )

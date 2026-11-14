@@ -109,7 +109,7 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     ? { background: 'linear-gradient(180deg,#6b39a0 0%,#5a2c86 55%,#4c2472 100%)', color: '#fff', boxShadow: '0 16px 32px -14px rgba(94,46,134,.7), inset 0 1px 0 rgba(255,255,255,.22)' }
     : variant === 'outline'
     ? { background: 'transparent', color: T.text, borderColor: T.lineStrong }
-    : { background: '#fff', color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(46,26,53,.4)' }
+    : { background: T.surface, color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(0,0,0,.4)' }
   const props = {
     className: 'rm-focus rm-btn', style: { ...base, ...skin, ...style },
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => { if (!disabled) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.06)' } },
@@ -133,7 +133,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
   const [solid, setSolid] = useState(false)
   useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(255,255,255,.9)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(46,26,53,.4)' : 'none' }}>
+    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(11,10,16,.88)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(0,0,0,.5)' : 'none' }}>
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -217,7 +217,7 @@ export function Stepper({ current }: { current: number }) {
             <React.Fragment key={s.key}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, flex: '0 0 auto' }}>
                 <span style={{ width: 32, height: 32, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700,
-                  background: done ? T.accent : active ? 'linear-gradient(180deg,#6b39a0,#552879)' : '#fff', color: done || active ? '#fff' : T.text3,
+                  background: done ? T.accent : active ? 'linear-gradient(180deg,#6b39a0,#552879)' : T.surface, color: done || active ? '#fff' : T.text3,
                   border: `1.5px solid ${done || active ? 'transparent' : T.line}`,
                   boxShadow: active ? '0 8px 18px -6px rgba(94,46,134,.55)' : done ? '0 3px 8px -4px rgba(94,46,134,.4)' : 'none',
                   transition: 'all .3s ease' }}>
@@ -382,7 +382,7 @@ function ScaleInput({ q, value, onChange }: { q: Extract<Q, { type: 'scale' }>; 
           return (
             <button key={n} className="rm-focus" onClick={() => onChange(String(n))}
               style={{ flex: '1 0 auto', minWidth: 46, height: 52, borderRadius: 12, cursor: 'pointer', fontSize: 16, fontWeight: 700,
-                background: sel ? T.accent : '#fff', color: sel ? '#fff' : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
+                background: sel ? T.accent : T.surface, color: sel ? '#fff' : T.text, border: `1px solid ${sel ? T.accent : T.line}`, transition: 'all .12s' }}>
               {n}
             </button>
           )
@@ -480,7 +480,7 @@ export function PayGate() {
           <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 20 }}>Enter the email you used at checkout and we’ll unlock the next step.</p>
           <form onSubmit={submit} style={{ display: 'grid', gap: 10 }}>
             <input className="rm-focus" type="email" placeholder="Email used at checkout" value={emailInput} onChange={(e) => setEmailInput(e.target.value)}
-              style={{ width: '100%', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '14px 15px', fontFamily: T.sans }} />
+              style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '14px 15px', fontFamily: T.sans }} />
             {note && <p style={{ color: T.text3, fontSize: 13, margin: 0, lineHeight: 1.5 }}>{note}</p>}
             <Btn type="submit" full>Unlock my booking →</Btn>
           </form>

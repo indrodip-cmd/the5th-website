@@ -10,29 +10,30 @@
    Video is env-driven so it can change without a deploy:
      NEXT_PUBLIC_AUDIT_VIDEO_URL   YouTube / Vimeo / mp4 URL for the VSL
    Payment reuses the existing Whop infra:
-     NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID  $27 "commitment deposit" plan id
+     NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID  $97 "commitment deposit" plan id
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
-   Light, premium, high-authority, a $10K+ advisory aesthetic. White/cream
-   environment, deep plum-ink typography, restrained PURPLE accent (the brand
-   plum family, not gold). Original site display serif is Cormorant Garamond
-   (used across /results + case studies). The psychology comes from the copy +
-   structure, not from a dark interface. */
+   2026-11-14: relit to match the India page's Hallmark dark system (near-
+   black field, the brand's own purple as the one signal, off-white ink) —
+   same request, same aesthetic, this page's own research-backed copy.
+   Original site display serif is Cormorant Garamond (used across /results +
+   case studies); this funnel keeps Plus Jakarta Sans for its own headlines.
+   The psychology comes from the copy + structure as much as the interface. */
 export const T = {
-  bg: '#ffffff',
-  surface: '#FAF6F0',      // cream, section separation / cards
-  surface2: '#FBF8F2',
-  line: 'rgba(46,26,53,0.12)',
-  lineStrong: 'rgba(46,26,53,0.22)',
-  text: '#2E1A35',         // plum-ink, headings + primary copy (reads near-black)
-  text2: '#645a6e',        // muted body
-  text3: '#9a93a2',        // faint / captions
-  accent: '#5E2E86',       // brand purple (CTA fills, play buttons, badges)
-  accentInk: '#5E2E86',    // purple for emphasis text on white (AA)
-  accentSoft: 'rgba(94,46,134,0.12)',
-  brand: '#2E1A35',        // plum, primary brand colour
-  danger: '#c0392b',
+  bg: '#0B0A10',
+  surface: '#15131C',      // near-black, section separation / cards
+  surface2: '#1B1824',
+  line: 'rgba(255,255,255,0.12)',
+  lineStrong: 'rgba(255,255,255,0.22)',
+  text: '#F2EFF6',         // off-white ink, headings + primary copy
+  text2: '#B6AFC2',        // muted body
+  text3: '#8A8396',        // faint / captions
+  accent: '#7C4DBF',       // brand purple, lightened for contrast on black (CTA fills, play buttons, badges)
+  accentInk: '#B98CE8',    // lighter purple for emphasis text on black (AA)
+  accentSoft: 'rgba(124,77,191,0.18)',
+  brand: '#F2EFF6',        // ink on this dark field (was plum-on-cream)
+  danger: '#e5584a',
   radius: 16,
   // Clean, bold, modern. Headlines use Plus Jakarta Sans (700/800); body Inter.
   serif: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
@@ -46,7 +47,7 @@ export function auditPlanId(): string {
   return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
 }
 
-/* The Whop hosted checkout page qualified applicants are sent to for the $27
+/* The Whop hosted checkout page qualified applicants are sent to for the $97
    commitment deposit. Configure Whop's post-payment redirect to send buyers to
    https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
 export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
@@ -61,7 +62,7 @@ export function auditCalUrl(): string {
   return process.env.NEXT_PUBLIC_AUDIT_CAL_URL || 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
 }
 
-export const DEPOSIT = { amount: 27, label: '$27', currency: 'USD' } as const
+export const DEPOSIT = { amount: 97, label: '$97', currency: 'USD' } as const
 
 /* Support contact shown in the header of every funnel page. */
 export const HELP = {
@@ -90,35 +91,54 @@ export const PRESS = {
    separate /qualify hop. Same plum/cream/purple palette throughout, no navy
    or gold. No video, the founder photo carries the hero. */
 export const LANDING = {
-  eyebrow: 'For coaches, consultants and experienced professionals 40+',
-  headline: 'In 60 Minutes, I’ll Show You How to Build a $10,000/Month Business in the Next 100 Days',
-  headlineSub: 'A free Roadmap Session for coaches, consultants and experienced professionals 40+. You leave with your offer, your buyer and your first 100-day plan.',
-  ctaPrimary: 'Apply for Your Roadmap Session',
+  // Positioning line per the US/Canada buyer-psychology research
+  // (2026-11-14): the burned, already-spent-$10K+ coach isn't short on
+  // information, she's short on a diagnosis she can trust after being
+  // burned. Lead with "an audit, not a pitch," never an income promise.
+  eyebrow: 'For experienced coaches and consultants who are done buying programs',
+  headline: 'You Did The Work. It Didn’t Work. Let’s Find Out Why, Before You Spend Another Dollar.',
+  headlineSub: 'A 60-minute audit of your coaching business, with a written plan you keep. Camera optional. No pitch unless you ask.',
+  ctaPrimary: 'Apply for an Audit, $97, Refundable',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
-  ctaMicro: 'Free · No credit card · 60-minute 1:1 Roadmap Session with Indrodip Ghosh',
-  guarantee: '100% money-back guarantee on every dollar you invest with us.',
+  ctaMicro: '$97, fully refundable if it isn’t worth it to you. Credited toward any program if you book within 14 days.',
+  guarantee: 'Tell me within 7 days if it wasn’t worth $97 to you, and I’ll refund you. You keep the written plan either way.',
 
   proof: {
     eyebrow: 'Proven, not theoretical',
     heading: 'Real client outcomes, not projections.',
     stats: ['$180K in 5 months', '$120K in 8 months', '$21K+ in 2 months', '$18K in 3 months', '$14,193 in 60 days'],
-    disclaimer: 'Documented individual client results. Not typical. Results vary.',
+    disclaimer: 'Documented individual client results. Individual results vary; these are not typical.',
   },
 
   eligibility: {
-    eyebrow: 'Is This For You?',
-    heading: 'Who’s the Roadmap Session for?',
+    eyebrow: 'Who This Is For',
+    heading: 'An honest audit, not a pitch.',
     cols: [
-      { label: 'Who’s it for?', body: 'Coaches, consultants and service experts, usually 40+, with real expertise already helping people, even if you don’t have a “real business” yet.' },
-      { label: 'Where are you now?', body: 'Anywhere from $0 to $10K+/month. What we map on the call changes based on your stage, it isn’t a fixed script.' },
-      { label: 'What’s the commitment?', body: 'The Roadmap Session itself is free, 60 minutes, no credit card. The only cost is honesty: showing up ready to look at what isn’t working and the intent to act on what we find. Nothing is pitched upfront.' },
+      { label: 'Who it’s for', body: 'Experienced coaches and consultants who’ve already paid for the programs, the mastermind, the mentor, used AI daily trying to fix it themselves, and are done buying before getting a real diagnosis.' },
+      { label: 'What it isn’t', body: 'Not a sales call. Not a group webinar. Not a “mindset” lecture. No pressure to buy anything on the call, and no income promises, from us or about you.' },
+      { label: 'What it costs', body: '$97, fully refundable within 7 days if it wasn’t worth it to you. The only real cost is showing up ready to look at what isn’t working.' },
     ],
-    not: 'Not for you if you’re not currently running, or seriously building, your own business, or you’re only after free advice with no intent to act on it.',
+    not: 'Not for you if you’re not currently running your own coaching or consulting business, or you’re only after free advice with no intent to act on it.',
   },
 
   reach: {
     stat: '76 coaches and consultants',
     body: 'across 12 nations, coached remotely, one call at a time.',
+  },
+
+  // The "why not just ask ChatGPT" objection: ranked the #2 angle in the
+  // research (after "an audit, not a pitch"), and the most on-the-nose for
+  // a buyer who uses AI daily and is still stuck. Agree with her, then move
+  // the purchase from information to diagnosis and a second set of eyes.
+  objection: {
+    eyebrow: 'The Question Everyone Asks First',
+    heading: 'Why not just ask ChatGPT?',
+    lines: [
+      'ChatGPT can write you a plan. It can’t tell you the plan is wrong for you.',
+      'AI answers the question you ask. An audit finds the question you’re not asking.',
+      'AI is built to agree with you. You don’t need agreement. You need someone to point at the one thing that’s actually broken.',
+    ],
+    close: 'I’ll show you exactly how I’d use ChatGPT or Claude in your business, and where not to. That’s in your written plan.',
   },
 
   graph: {
@@ -130,19 +150,20 @@ export const LANDING = {
       { tag: 'Buyer', m: 'Day 21–60', t: 'Who buys it', learn: 'We define the one buyer with one expensive problem', d: 'Not “everyone who could benefit.” One buyer, specific enough that your next message writes itself.' },
       { tag: 'Start Sales', m: 'Day 61–100', t: 'How you reach them', learn: 'We build a repeatable way to reach them', d: 'Real conversations with people who already trust you. No daily posting, no audience required.' },
     ],
-    axisNote: '$10K/month is the floor, not the ceiling: our documented client results above range from $14,193 to $180K. Illustrative trajectory: the first ~15–20 days rebuilding the offer before the first client closes, then compounding from there. Your starting point, market and effort change the timeline.',
+    axisNote: '$10K/month is the floor, not the ceiling: our documented client results above range from $14,193 to $180K. Illustrative trajectory: the first ~15–20 days rebuilding the offer before the first client closes, then compounding from there. Your starting point, market and effort change the timeline. Individual results vary.',
   },
 
   call: {
     eyebrow: 'On The Call',
     heading: 'What happens in your 60 minutes?',
-    sub: 'The same five-part structure every Roadmap Session follows, in order.',
+    sub: 'Short application, then the audit itself, in this order. A written plan lands in your inbox within 48 hours.',
+    note: 'Camera optional, audio-only is completely fine. Prefer not to get on a call at all? Tell us and we’ll run it as a written-only audit instead, for the same price.',
     steps: [
       { n: '01', icon: 'search', t: 'Diagnose your positioning', d: 'We look at how you currently describe what you do, and where it’s losing buyers before they ever hear your offer.' },
       { n: '02', icon: 'tag', t: 'Reframe what you’re actually selling', d: 'The gap between what you know and what people pay for. We find the sellable version of your expertise.' },
       { n: '03', icon: 'target', t: 'Identify your real buyer', d: 'One buyer, one expensive problem, specific enough to build a message and an offer around.' },
-      { n: '04', icon: 'compass', t: 'Find the one bottleneck', d: 'Out of positioning, offer, leads, sales and conversion, the single thing actually standing between you and $10K/month.' },
-      { n: '05', icon: 'calendar', t: 'Build your next 100 days', d: 'A short, ordered plan for what to do first, second and third, so you leave with a next step, not just insight.' },
+      { n: '04', icon: 'compass', t: 'Find the one bottleneck', d: 'Out of positioning, offer, leads, sales and conversion, the single thing actually standing between you and consistent clients.' },
+      { n: '05', icon: 'calendar', t: 'Build your next 100 days', d: 'A short, ordered plan for what to do first, second and third, plus how to use ChatGPT or Claude for it, so you leave with a next step, not just insight.' },
     ],
   },
 
@@ -153,12 +174,15 @@ export const LANDING = {
 
   founder: {
     eyebrow: 'Who You’ll Speak With',
-    heading: 'Who will you speak with on the call?',
+    heading: 'An honest second opinion, not another guru.',
     quote: 'I grew up surrounded by talented professionals who spent years helping families, communities, workplaces and businesses, yet rarely got paid for the value they created. That gap is what built The5th.',
-    body: 'Indrodip Ghosh founded The5th Global Consulting after years as a marketer and funnel strategist watching the same pattern repeat: professionals with decades of real expertise believed they had nothing worth selling, while people with far less experience built thriving businesses around far less knowledge. Every Roadmap Session is run by Indrodip personally, not a sales rep, not a junior coach.',
+    // Leads with the Western-recognized credentials, then discloses the
+    // India base plainly, once, with no apology, reframed as an asset
+    // (outside-the-bubble perspective) rather than hidden or defended.
+    body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M, and I’ve been recruited by Google, Anthropic, Mastermind.com and ClickFunnels along the way. I run The5th Global Consulting from Kolkata, India, working with coaches and consultants across the US and Canada, on your time zone. Working from outside the US coaching bubble means I’m not selling you the same playbook you’ve already bought. Every audit is run by me personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
-    stat: { value: '93%', label: 'of clients who implement the method earn $14,000+' },
+    stat: { value: '$97', label: 'Refundable 1:1 Audit, Written Plan In 48 Hrs' },
   },
 
   // Second voice on the call: brought in for the operating/scaling side of
@@ -166,27 +190,28 @@ export const LANDING = {
   founder2: {
     photo: '/images/manisha.png',
     quote: 'I’ve sat across the table with founders at every stage, from their first dollar to their first ten million, and the pattern is always the same. The plan was already there. What was missing was the execution discipline to run it like a real business.',
-    body: 'Manisha is a business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. She brings that operating experience directly into your Roadmap Session, pressure-testing your plan the way she would a real P&L, not handing you advice in theory.',
+    body: 'Manisha is a business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. She brings that operating experience directly into your audit, pressure-testing your plan the way she would a real P&L, not handing you advice in theory.',
     name: 'Manisha',
     role: 'Managing Partner, The5th Global Consulting',
   },
 
   faq: {
     eyebrow: 'Questions',
-    heading: 'Roadmap Session FAQs',
+    heading: 'Audit FAQs',
     items: [
-      { q: 'Is the call actually free?', a: 'Yes. The 60-minute Roadmap Session has no cost and no credit card required. We only ask qualifying questions first so the time is well spent on both sides.' },
-      { q: 'Is this a sales pitch disguised as a strategy session?', a: 'No. It’s a working session, we’re diagnosing your positioning, offer and bottleneck live. If it becomes clear that working together further would help, we’ll say so directly, it won’t be a surprise pitch.' },
+      { q: 'Do I need to turn my camera on?', a: 'No. Audio-only is completely fine. If you’d rather not get on a call at all, tell us and we’ll run it as a written-only audit instead, for the same price.' },
+      { q: 'Will you try to sell me something on the call?', a: 'It’s a working session, not a pitch. If it becomes clear that working together further would genuinely help, I’ll say so directly. It won’t be a surprise pitch, and there’s no pressure either way.' },
+      { q: 'Where are you based?', a: 'Kolkata, India. I work with coaches and consultants across the US and Canada, on your time zone.' },
+      { q: 'What if I don’t think it was worth $97?', a: 'Tell me within 7 days and I’ll refund you in full. You keep the written plan regardless. If you book a program with us within 14 days, the $97 is credited toward it.' },
       { q: 'What if I’m not qualified?', a: 'The short application tells you immediately. If it’s not the right fit yet, we’ll say so and point you to a better next step instead of booking a call that won’t help you.' },
-      { q: 'What do I need to prepare?', a: 'Nothing elaborate. Just know roughly your current monthly revenue, your average offer price, and how many qualified conversations you’re having each month. We do the rest together on the call.' },
-      { q: 'What happens after the call?', a: 'You leave with a specific bottleneck identified and an ordered 100-day plan. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
+      { q: 'What happens after the call?', a: 'You leave with a specific bottleneck identified, a written plan within 48 hours, and a few AI prompts for the next 30 days. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
     ],
   },
 
   apply: {
     eyebrow: 'Apply Now',
-    heading: 'Let’s find out if you qualify.',
-    micro: 'Free · No pressure · If we’re not the right fit, we’ll say so and point you to a better next step.',
+    heading: 'Apply for your audit.',
+    micro: '$97, fully refundable within 7 days, credited toward any program if you book within 14 days. If we’re not the right fit, we’ll say so and point you to a better next step.',
   },
 
   nav: [
@@ -302,7 +327,7 @@ export const QUALIFICATION: Q[] = [
   },
 ]
 
-/* Post-payment deep diagnostic (AFTER the $27 commitment). */
+/* Post-payment deep diagnostic (AFTER the $97 commitment). */
 export const DEEP: Q[] = [
   { id: 'd_stuck', type: 'text', long: true, prompt: 'What is the ONE thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific, this is what we’ll go after first.' },
   { id: 'd_cost', type: 'text', long: true, prompt: 'If nothing changes over the next 6–12 months, what will staying at your current level cost you?', helper: 'Think beyond money, time, freedom, confidence, family, lifestyle and opportunities.' },
@@ -350,8 +375,8 @@ export const RESERVE = {
     'The single bottleneck I’d fix first, and the path around it',
     'Your business reviewed from your answers before we meet',
   ],
-  depositNote: 'The $27 is a commitment deposit to reserve your private audit slot, not the price of the advice.',
-  cta: 'Reserve My Audit, $27',
+  depositNote: 'The $97 is a commitment deposit to reserve your private audit slot, not the price of the advice.',
+  cta: 'Reserve My Audit, $97',
   contact: {
     heading: 'Where should we send your audit details?',
     sub: 'We’ll use this to confirm your slot and prepare your session.',
@@ -365,7 +390,7 @@ export const BOOK = {
   headline: 'Your audit is almost locked in.',
   sub: 'Choose a time that works for you. We’ll use your answers to make the 60 minutes extremely specific to your business.',
   offerTitle: 'Your $10K Roadmap Audit',
-  offerPoints: ['60 minutes', 'Private strategy session', 'Your business reviewed before the call', '$27 deposit applied per the stated terms'],
+  offerPoints: ['60 minutes', 'Private strategy session', 'Your business reviewed before the call', '$97 deposit applied per the stated terms'],
   confirmCta: 'Confirm My Audit',
 }
 
@@ -419,7 +444,7 @@ export const PAY = {
     'A clear, prioritized action plan you can start using immediately after the call',
   ],
   fit: 'This works if you’re a coach or consultant who has some traction but hasn’t cracked consistency. You know your expertise is valuable, you’re just not converting it into predictable revenue yet.',
-  deposit: 'Your $27 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
+  deposit: 'Your $97 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
   guaranteeTitle: '30-Day Money-Back Guarantee',
   guaranteeBody: 'If you attend the call and feel it didn’t give you real clarity or a usable next step, email us within 30 days for a full refund. No conditions attached.',
   micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay',
@@ -429,7 +454,7 @@ export const GATE = {
   verifying: 'Confirming your payment…',
   verifyingSub: 'This takes just a moment. Please don’t close this tab.',
   blockedHeadline: 'Payment required to continue.',
-  blockedSub: 'This step unlocks once your $27 deposit is confirmed. If you just paid, give it a few seconds and refresh. Otherwise, complete your deposit to continue.',
+  blockedSub: 'This step unlocks once your $97 deposit is confirmed. If you just paid, give it a few seconds and refresh. Otherwise, complete your deposit to continue.',
   blockedCta: 'Go to payment →',
 }
 
@@ -445,7 +470,7 @@ export const CONFIRMED = {
   badge: 'You’re booked',
   headline: 'You’re all set.',
   sub: 'Your $10K Roadmap Audit is confirmed.',
-  refundReminder: 'Reminder: your $27 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
+  refundReminder: 'Reminder: your $97 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
 }
 
 /* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/

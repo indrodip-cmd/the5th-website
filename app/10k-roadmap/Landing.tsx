@@ -34,14 +34,14 @@ const PADX = 'clamp(20px,5vw,22px)'
 const SECY = 'clamp(30px,6vw,60px)'
 // Speero's .content-block (case studies / testimonial wraps): 90px desktop, 30px mobile.
 const SECY_LG = 'clamp(30px,8vw,90px)'
-const PURPLE = '#5E2E86'
-const LINE = 'rgba(46,26,53,0.14)'
-const TEXT2 = '#645a6e'
-const TEXT3 = '#9a93a2'
+const PURPLE = '#7C4DBF'
+const LINE = 'rgba(255,255,255,0.14)'
+const TEXT2 = '#B6AFC2'
+const TEXT3 = '#8A8396'
 // Speero's .transparent-box: border-radius 50px, no border, soft 100px-blur shadow,
 // padding 60px desktop / 40px 30px mobile. Scaled for our narrower 3-col cards.
 const CARD_RADIUS = 28
-const CARD_SHADOW = '0 10px 50px -8px rgba(46,26,53,0.14)'
+const CARD_SHADOW = '0 10px 50px -8px rgba(0,0,0,0.4)'
 const CARD_PAD = 'clamp(24px,5vw,44px)'
 // Speero's .hr: 1px #d5d5d5, margin-top/bottom 70px desktop / 30px mobile.
 const HRY = 'clamp(28px,6vw,64px)'
@@ -68,7 +68,7 @@ function SectionHead({ eyebrow, heading, sub, maxW, dark, align }: { eyebrow?: s
   )
 }
 function Rule() {
-  return <div style={{ height: 1, background: '#d9d2dd', margin: `${HRY} 0` }} />
+  return <div style={{ height: 1, background: LINE, margin: `${HRY} 0` }} />
 }
 
 /* Realistic growth trajectory over the 100-day plan, annotated with what's
@@ -151,7 +151,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
         </span>
       </div>
     <svg ref={svgRef} viewBox={`0 0 ${w} ${h}`} width="100%" style={{ height: 'auto', display: 'block' }} role="img" aria-label="Realistic growth trajectory over 100 days, compared to going it alone: working with us, flat for the first few weeks while the offer and buyer are rebuilt, then compounding client growth that climbs past the $10K floor; on your own, an erratic up-and-down income with no steady system, landing around $2-3K/month. Annotated with what's taught at each stage">
-      <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="#EDE7F0" strokeWidth={1} />
+      <line x1={padL} y1={y(5)} x2={w - padR} y2={y(5)} stroke="rgba(255,255,255,0.12)" strokeWidth={1} />
       <text x={padL - 8} y={y(5) + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$5K</text>
       <text x={padL - 8} y={h - padB + 4} textAnchor="end" fontSize="10.5" fill={TEXT3}>$0</text>
       <line x1={padL} y1={y(10)} x2={w - padR} y2={y(10)} stroke="#E4C879" strokeWidth={1.5} strokeDasharray="4 5" />
@@ -213,7 +213,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
           <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" begin="2.1s" repeatCount="indefinite" />
         </circle>
       )}
-      <text x={lastX - 10} y={lastY - 12} textAnchor="end" fontSize="13" fontWeight={800} fill="#2E1A35" style={{ opacity: visible ? 1 : 0, transition: 'opacity .5s ease 1.9s' }}>${lastV.toFixed(1)}K</text>
+      <text x={lastX - 10} y={lastY - 12} textAnchor="end" fontSize="13" fontWeight={800} fill="#F2EFF6" style={{ opacity: visible ? 1 : 0, transition: 'opacity .5s ease 1.9s' }}>${lastV.toFixed(1)}K</text>
       {days.map((d, i) => <text key={d} x={x(i)} y={h - 8} textAnchor={i === 0 ? 'start' : i === days.length - 1 ? 'end' : 'middle'} fontSize="12" fill={TEXT3}>Day {d}</text>)}
       {markerIdx.map((idx, i) => {
         const p = points[i]
@@ -225,7 +225,7 @@ function GrowthChart({ points }: { points: typeof LANDING.graph.points }) {
         return (
           <g key={p.tag} style={{ opacity: visible ? 1 : 0, transition: `opacity .5s ease ${0.5 + i * 0.3}s` }}>
             <line x1={cx} y1={cy - 6} x2={boxCx} y2={ly + 13} stroke={LINE} strokeWidth={1} />
-            <rect x={boxCx - hw} y={ly - 13} width={hw * 2} height={20} rx={10} fill="#fff" stroke={PURPLE} strokeWidth={1.3} />
+            <rect x={boxCx - hw} y={ly - 13} width={hw * 2} height={20} rx={10} fill="#1B1824" stroke={PURPLE} strokeWidth={1.3} />
             <text x={boxCx} y={ly + 1} textAnchor="middle" fontSize="11" fontWeight={800} fill={PURPLE}>{p.tag}</text>
           </g>
         )
@@ -266,7 +266,7 @@ function TestimonialCard({ index = 7 }: { index?: number }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={t.photo} alt={t.name} style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
       <div style={{ flex: '1 1 380px', minWidth: 260 }}>
-        <p style={{ fontSize: 17, lineHeight: 1.65, color: '#2E1A35', fontStyle: 'italic', margin: '0 0 10px' }}>&ldquo;{t.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: '#F2EFF6', fontStyle: 'italic', margin: '0 0 10px' }}>&ldquo;{t.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
         <div style={{ fontSize: 14, lineHeight: 1.5 }}><strong style={{ fontWeight: 800 }}>{t.name}</strong>, {t.result} <span style={{ color: TEXT3 }}>· {t.role}</span></div>
       </div>
     </div>
@@ -288,14 +288,23 @@ export default function Landing() {
     document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const CTA = (where: string, label?: string) => <Btn onClick={() => goApply(where)} style={{ padding: '16px 34px', fontSize: 17 }}>{label || LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
+  // For this page's US/Canada audience, lead the proof list with named North
+  // American clients (per the buyer-trust research), without reordering the
+  // shared REAL_PROOF array other pages also read.
+  const NA_FIRST = ['Amalia', 'Max', 'Susan Taylor', 'Laurie', 'Angela', 'Jeanne', 'Seth']
+  const orderedProof = [...REAL_PROOF].sort((a, b) => {
+    const ai = NA_FIRST.includes(a.name) ? 0 : 1
+    const bi = NA_FIRST.includes(b.name) ? 0 : 1
+    return ai - bi
+  })
 
   return (
-    <div style={{ background: '#ffffff', color: '#2E1A35', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
+    <div style={{ background: '#0B0A10', color: '#F2EFF6', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
       <Fonts />
       <Header nav={LANDING.nav} showFounder />
 
       {/* ── Hero: left-aligned 2-col, text + photo/stat card (Speero: headline+CTAs left, feature image right) ── */}
-      <div style={{ background: 'radial-gradient(110% 60% at 15% -6%, #FBF6EF 0%, #ffffff 62%)' }}>
+      <div style={{ background: 'radial-gradient(110% 60% at 15% -6%, rgba(124,77,191,0.14) 0%, #0B0A10 62%)' }}>
         <section style={{ maxWidth: MAXW, margin: '0 auto', padding: 'clamp(30px,6vw,56px) ' + PADX + ' 20px', display: 'flex', gap: 'clamp(24px,5vw,56px)', alignItems: 'center', flexWrap: 'wrap' }} className="rm-hero">
           <div style={{ flex: '1 1 440px', minWidth: 300 }}>
             <Reveal>
@@ -318,8 +327,8 @@ export default function Landing() {
           </div>
           <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 360, margin: '0 auto', position: 'relative' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder-team-mvm.png" alt="Indrodip Ghosh and Manisha, The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(46,26,53,.45)' }} />
-            <div style={{ position: 'absolute', left: -18, bottom: -18, background: '#2E1A35', borderRadius: 14, padding: '14px 18px', boxShadow: '0 18px 34px -16px rgba(46,26,53,.5)', maxWidth: 170 }}>
+            <img src="/images/founder-team-mvm.png" alt="Indrodip Ghosh and Manisha, The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: 'top', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
+            <div style={{ position: 'absolute', left: -18, bottom: -18, background: '#1B1824', border: '1px solid rgba(124,77,191,.35)', borderRadius: 14, padding: '14px 18px', boxShadow: '0 18px 34px -16px rgba(0,0,0,.6)', maxWidth: 170 }}>
               <div className="rm-serif" style={{ fontSize: 26, fontWeight: 800, color: '#E4C879', lineHeight: 1 }}>{LANDING.founder.stat.value}</div>
               <div style={{ fontSize: 11, color: 'rgba(255,255,255,.75)', marginTop: 4, lineHeight: 1.35 }}>{LANDING.founder.stat.label}</div>
             </div>
@@ -359,7 +368,7 @@ export default function Landing() {
           <Reveal>
             <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: 'clamp(14px,2.5vw,24px)' }}>
               {LANDING.eligibility.cols.map((c) => (
-                <div key={c.label} style={{ background: '#fff', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: CARD_PAD }}>
+                <div key={c.label} style={{ background: '#1B1824', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: CARD_PAD }}>
                   <h3 style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.04em', color: PURPLE, margin: '0 0 10px' }}>{c.label}</h3>
                   <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>{c.body}</p>
                 </div>
@@ -373,23 +382,23 @@ export default function Landing() {
       </section>
 
       {/* ── The path: annotated growth graph (our stand-in for Speero's staircase diagram) ── */}
-      <section id="path" style={{ background: '#FAF6F0', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+      <section id="path" style={{ background: '#15131C', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.graph.eyebrow} heading={LANDING.graph.heading} sub={LANDING.graph.sub} maxW={640} /></Reveal>
           <Reveal>
-            <div style={{ background: '#fff', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: 'clamp(16px,3.5vw,32px)', marginBottom: 24 }}>
+            <div style={{ background: '#1B1824', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: 'clamp(16px,3.5vw,32px)', marginBottom: 24 }}>
               <GrowthChart points={LANDING.graph.points} />
               <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 6 }}>{LANDING.graph.axisNote}</p>
               <p style={{ color: PURPLE, fontSize: 14, fontWeight: 800, textAlign: 'center', marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={PURPLE} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-6" /></svg>
-                Didn’t hit it? Take your investment back, 100% guaranteed.
+                {LANDING.guarantee}
               </p>
             </div>
           </Reveal>
           <Reveal>
             <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 'clamp(14px,2.5vw,24px)' }}>
               {LANDING.graph.points.map((p, i) => (
-                <div key={p.t} style={{ background: '#fff', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: CARD_PAD }}>
+                <div key={p.t} style={{ background: '#1B1824', borderRadius: CARD_RADIUS, boxShadow: CARD_SHADOW, padding: CARD_PAD }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <span style={{ width: 30, height: 30, borderRadius: 9, background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{i + 1}</span>
                     <div>
@@ -423,7 +432,7 @@ export default function Landing() {
               return (
                 <Reveal key={s.n}>
                   <div style={{ display: 'flex', gap: 'clamp(20px,4vw,40px)', alignItems: 'center', flexWrap: 'wrap', justifyContent: iconRight ? 'flex-end' : 'flex-start' }} className="rm-call-row">
-                    <div style={{ order: iconRight ? 1 : 0, flexShrink: 0, width: 96, height: 96, borderRadius: 20, background: '#FAF6F0', border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ order: iconRight ? 1 : 0, flexShrink: 0, width: 96, height: 96, borderRadius: 20, background: '#1B1824', border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <StepIcon kind={s.icon} />
                     </div>
                     <div style={{ flex: '0 1 420px', minWidth: 260, textAlign: iconRight ? 'right' : 'left' }}>
@@ -436,18 +445,39 @@ export default function Landing() {
               )
             })}
           </div>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '32px auto 0' }}>{LANDING.call.note}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Objection breaker: "why not just ask ChatGPT" — the #2-ranked
+             angle in the buyer research, agrees with her before reframing. ── */}
+      <section style={{ background: '#15131C', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: 740, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.objection.eyebrow} heading={LANDING.objection.heading} maxW={620} /></Reveal>
+          <div style={{ display: 'grid', gap: 16, marginTop: 8 }}>
+            {LANDING.objection.lines.map((l) => (
+              <Reveal key={l}>
+                <p style={{ textAlign: 'center', color: '#F2EFF6', fontSize: 'clamp(16px,2vw,19px)', lineHeight: 1.55, fontWeight: 600, maxWidth: 600, margin: '0 auto' }}>{l}</p>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: TEXT2, fontSize: 15, lineHeight: 1.6, maxWidth: 560, margin: '24px auto 0' }}>{LANDING.objection.close}</p>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Case studies: plain stacked proof-item list, matches Speero exactly —
              no card wrapper, border-top divider on every item, 60px rhythm (30 mobile) ── */}
-      <section style={{ background: '#fff', padding: SECY_LG + ' ' + PADX }}>
+      <section style={{ background: '#0B0A10', padding: SECY_LG + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.heading} maxW={640} /></Reveal>
           <Reveal>
             <div style={{ maxWidth: 714, margin: '0 auto' }}>
-              {REAL_PROOF.map((c, i) => (
-                <div key={c.name} style={{ borderTop: `1px solid ${LINE}`, paddingTop: SECY, paddingBottom: i === REAL_PROOF.length - 1 ? 0 : SECY }}>
+              {orderedProof.map((c, i) => (
+                <div key={c.name} style={{ borderTop: `1px solid ${LINE}`, paddingTop: SECY, paddingBottom: i === orderedProof.length - 1 ? 0 : SECY }}>
                   {c.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={c.photo} alt={c.name} style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', marginBottom: 16 }} />
@@ -472,7 +502,7 @@ export default function Landing() {
 
       {/* ── Video testimonials: real on-camera client reviews, same VideoWall
              used on /results, curated down to a focused handful for a funnel page ── */}
-      <section style={{ background: '#FAF6F0', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+      <section style={{ background: '#15131C', borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow="On-Camera · Paid Consultation Reviews" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
           <Reveal><VideoWall columns={3} limit={6} /></Reveal>
@@ -520,7 +550,7 @@ export default function Landing() {
           {LANDING.faq.items.map((it, i) => (
             <Reveal key={it.q}>
               <div style={{ paddingBottom: 20, marginBottom: i < LANDING.faq.items.length - 1 ? 20 : 0, borderBottom: i < LANDING.faq.items.length - 1 ? `1px solid ${LINE}` : 'none' }}>
-                <h3 style={{ fontSize: 16.5, fontWeight: 800, margin: '0 0 8px', color: '#2E1A35' }}>{it.q}</h3>
+                <h3 style={{ fontSize: 16.5, fontWeight: 800, margin: '0 0 8px', color: '#F2EFF6' }}>{it.q}</h3>
                 <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, maxWidth: 620 }}>{it.a}</p>
               </div>
             </Reveal>
@@ -538,7 +568,7 @@ export default function Landing() {
             </div>
           </Reveal>
           <Reveal>
-            <div style={{ maxWidth: 680, margin: '0 auto', background: '#fff', borderRadius: 20, padding: 'clamp(20px,4vw,32px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.5)', textAlign: 'left' }}>
+            <div style={{ maxWidth: 680, margin: '0 auto', background: '#1B1824', border: '1px solid rgba(255,255,255,.12)', borderRadius: 20, padding: 'clamp(20px,4vw,32px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.6)', textAlign: 'left' }}>
               <QuestionFlow
                 questions={QUALIFICATION}
                 eyebrow={QUALIFY.eyebrow}
@@ -565,14 +595,14 @@ export default function Landing() {
       {/* ── Reach: honest stand-in for Speero's office-locations block (remote-only, no physical offices) ── */}
       <section style={{ padding: '26px ' + PADX, textAlign: 'center' }}>
         <p style={{ color: TEXT2, fontSize: 13.5, margin: 0 }}>
-          <span style={{ fontWeight: 800, color: '#2E1A35' }}>{LANDING.reach.stat}</span> {LANDING.reach.body}
+          <span style={{ fontWeight: 800, color: '#F2EFF6' }}>{LANDING.reach.stat}</span> {LANDING.reach.body}
         </p>
       </section>
 
       <Footer legal={LEGAL} />
 
       {/* Sticky mobile CTA */}
-      <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(255,255,255,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(46,26,53,.5)' }}>
+      <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(11,10,16,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(0,0,0,.6)' }}>
         <button onClick={() => goApply('sticky')} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 4, background: 'linear-gradient(180deg,#6b39a0,#552879)', color: '#fff', border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 16, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></button>
       </div>
 

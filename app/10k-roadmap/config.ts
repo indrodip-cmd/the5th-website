@@ -100,8 +100,8 @@ export const LANDING = {
   // must not be rewritten. Only the shared accent color (T.accent) changes
   // around it, so it reads as part of one consistent system.
   eyebrow: 'For experienced coaches and consultants who are done buying programs',
-  headline: 'You Did The Work. It Didn’t Work. Let’s Find Out Why, Before You Spend Another Dollar.',
-  headlineSub: 'A 60-minute audit of your coaching business, with a written plan you keep. Camera optional. No pitch unless you ask.',
+  headline: 'You’ve Tried The Strategies. You’ve Put In The Work. So Why Aren’t You Getting The Results?',
+  headlineSub: 'Before you spend another dollar on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
   ctaPrimary: 'Apply for an Audit, $29, Refundable',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
   ctaMicro: '$29, fully refundable if it isn’t worth it to you. Credited toward any program if you book within 14 days.',

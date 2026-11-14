@@ -5,7 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { T, STEPS, GATE, LEGAL, HELP, type Q } from './config'
+import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
@@ -130,20 +130,23 @@ function HelpContact() {
 }
 
 export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string }) {
-  const [solid, setSolid] = useState(false)
-  useEffect(() => { const on = () => setSolid(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
+  // Always solid, from the very first pixel: the logo and founder credential
+  // need a frame behind them on the first screen, not just after the visitor
+  // scrolls past a transparent hero. (Scroll state kept only to deepen the
+  // shadow slightly, never to toggle visibility.)
+  const [scrolled, setScrolled] = useState(false)
+  useEffect(() => { const on = () => setScrolled(window.scrollY > 40); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'background .3s, border-color .3s, box-shadow .3s', background: solid ? 'rgba(7,10,6,.88)' : 'transparent', backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none', borderBottom: `1px solid ${solid ? T.line : 'transparent'}`, boxShadow: solid ? '0 6px 24px -18px rgba(0,0,0,.5)' : 'none' }}>
+    <header style={{ position: 'sticky', top: 0, zIndex: 50, transition: 'box-shadow .3s', background: 'rgba(7,10,6,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderBottom: `1px solid ${T.line}`, boxShadow: scrolled ? '0 6px 24px -18px rgba(0,0,0,.5)' : 'none' }}>
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
+          <img src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
           {showFounder && (
             <>
               <span style={{ width: 1, height: 22, background: T.line }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
-              <span style={{ fontSize: 13, fontWeight: 700, color: T.text2, whiteSpace: 'nowrap' }} className="rm-founder-name">Indrodip Ghosh</span>
+              <img src="/images/founder.png" alt="Indrodip Ghosh, Founder" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
             </>
           )}
         </a>
@@ -154,7 +157,16 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
         )}
         <HelpContact />
       </div>
-      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:560px){.rm-founder-name{display:none!important}}`}</style>
+      {/* "As featured in" sits right under the logo, pinned to the header so
+          it reads on the first screen alongside the brand mark, not only
+          after scrolling down to the press strip further down the page. */}
+      <div className="rm-press-row" style={{ borderTop: `1px solid ${T.line}`, padding: '7px 18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: T.text3, whiteSpace: 'nowrap' }}>As Featured In</span>
+        <span style={{ display: 'flex', gap: 'clamp(10px,2vw,22px)', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 11.5, color: T.text2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
+        </span>
+      </div>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-press-row span:first-child{display:none}.rm-press-row{padding:6px 14px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}.rm-press-row::-webkit-scrollbar{display:none}.rm-press-row>span:last-child{flex-wrap:nowrap}}`}</style>
     </header>
   )
 }

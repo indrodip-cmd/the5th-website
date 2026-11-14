@@ -17,8 +17,8 @@
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, QUALIFICATION, QUALIFY } from './config'
-import { Fonts, Header, Footer, Btn, Reveal, useUtm, QuestionFlow, saveQualAnswers } from './ui'
+import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF } from './config'
+import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
 import VideoWall from '@/components/VideoWall'
 
@@ -278,12 +278,14 @@ export default function Landing() {
   const [showSticky, setShowSticky] = useState(false)
   const [showAllProof, setShowAllProof] = useState(false)
   useUtm()
-  useEffect(() => { track('page_view'); track('qualification_started') }, [])
+  useEffect(() => { track('page_view') }, [])
   useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
-  useEffect(() => { router.prefetch('/10k-roadmap/schedule'); router.prefetch('/10k-roadmap/not-a-fit') }, [router])
+  useEffect(() => { router.prefetch('/10k-roadmap/schedule') }, [router])
+  // The qualification form was removed from this page: every CTA now goes
+  // straight to booking a time, no question flow in between.
   const goApply = (where: string) => {
     track('cta_click', { where })
-    document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    router.push('/10k-roadmap/schedule')
   }
   const CTA = (where: string, label?: string) => <Btn onClick={() => goApply(where)} style={{ padding: '16px 34px', fontSize: 16.5 }}>{label || LANDING.ctaStandard} <span aria-hidden>→</span></Btn>
   // For this page's US/Canada-first audience, lead the proof list with named
@@ -525,7 +527,7 @@ export default function Landing() {
       <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow="On-Camera · Paid Consultation Reviews" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
-          <Reveal><VideoWall columns={3} limit={6} /></Reveal>
+          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
         </div>
       </section>
 
@@ -610,25 +612,7 @@ export default function Landing() {
             </div>
           </Reveal>
           <Reveal>
-            <div id="apply-form" style={{ maxWidth: 680, margin: '40px auto 0', background: CARD, border: `1px solid ${LINE2}`, borderRadius: 20, padding: 'clamp(20px,4vw,32px)', boxShadow: '0 30px 70px -30px rgba(0,0,0,.6)', textAlign: 'left' }}>
-              <QuestionFlow
-                questions={QUALIFICATION}
-                eyebrow={QUALIFY.eyebrow}
-                onReject={(reason, answers) => {
-                  saveQualAnswers(answers)
-                  const q = QUALIFICATION.find((x) => 'options' in x && x.options.some((o) => o.reject && o.value === reason))
-                  const bucket = q?.id === 'business_type' ? 'no_business' : q?.id === 'readiness' ? 'free_advice' : 'default'
-                  track('qualification_completed'); track('qualification_rejected', { reason: bucket })
-                  router.push(`/10k-roadmap/not-a-fit?r=${bucket}`)
-                }}
-                onComplete={(answers) => {
-                  saveQualAnswers(answers)
-                  track('qualification_completed'); track('qualification_accepted')
-                  router.push('/10k-roadmap/schedule')
-                }}
-              />
-            </div>
-            <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 20, maxWidth: 680, margin: '20px auto 0', textAlign: 'center' }}>{LANDING.apply.micro}</p>
+            <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 28, maxWidth: 680, margin: '28px auto 0', textAlign: 'center' }}>{LANDING.apply.micro}</p>
           </Reveal>
         </div>
       </section>

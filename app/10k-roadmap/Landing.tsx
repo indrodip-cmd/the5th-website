@@ -329,6 +329,9 @@ export default function Landing() {
                 {LANDING.heroCard.recruitedBy && (
                   <span style={{ display: 'block', marginTop: 6, fontWeight: 700, fontSize: 12.5, color: ACCENT }}>{LANDING.heroCard.recruitedBy}</span>
                 )}
+                {LANDING.heroCard.featuredIn && (
+                  <span style={{ display: 'block', marginTop: 4, fontWeight: 600, fontSize: 11.5, color: 'rgba(255,255,255,.75)' }}>{LANDING.heroCard.featuredIn}</span>
+                )}
               </div>
             </div>
             <div style={{ marginTop: 18, textAlign: 'center' }}>

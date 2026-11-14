@@ -101,7 +101,7 @@ export const LANDING = {
   // must not be rewritten. Only the shared accent color (T.accent) changes
   // around it, so it reads as part of one consistent system.
   eyebrow: 'For experienced coaches and consultants who are done buying programs',
-  headline: 'You’ve Tried The Strategies. You’ve Put In The Work. So Why Aren’t You Getting The Results?',
+  headline: 'You’ve Worked With Coaches. You’ve Gotten Business Strategies From ChatGPT And Claude. You’ve Put In The Work. So Why Aren’t You Making Money?',
   headlineSub: 'Before you spend another dollar on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
   ctaPrimary: 'Apply for an Audit, $29, Refundable',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
@@ -116,6 +116,7 @@ export const LANDING = {
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
     recruitedBy: 'Recruited by Google & Anthropic',
+    featuredIn: 'Featured in ClickFunnels and Mastermind.com',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
       { t: '$29 Only', s: 'Fully Refundable' },

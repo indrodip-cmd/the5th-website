@@ -273,7 +273,7 @@ function getSpeechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
   const w = window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike }
   return w.SpeechRecognition || w.webkitSpeechRecognition || null
 }
-function VoiceInputButton({ onTranscript }: { onTranscript: (text: string) => void }) {
+function VoiceInputButton({ onTranscript, align = 'top' }: { onTranscript: (text: string) => void; align?: 'top' | 'center' }) {
   const [listening, setListening] = useState(false)
   // Feature detection only runs after mount — the server has no `window`, so
   // rendering based on it synchronously would mismatch the client's first
@@ -305,7 +305,8 @@ function VoiceInputButton({ onTranscript }: { onTranscript: (text: string) => vo
   return (
     <button type="button" onClick={listening ? stop : start} aria-label={listening ? 'Stop voice input' : 'Answer by voice'} className="rm-focus"
       style={{
-        position: 'absolute', right: 10, top: 10, width: 36, height: 36, borderRadius: '50%', border: 'none', cursor: 'pointer',
+        position: 'absolute', right: 12, ...(align === 'center' ? { top: '50%', transform: 'translateY(-50%)' } : { top: 12 }),
+        width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer',
         background: listening ? T.danger : T.accentSoft, color: listening ? '#fff' : T.accentInk,
         display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s',
       }}>
@@ -426,11 +427,11 @@ export function QuestionFlow({ questions, onComplete, onReject, eyebrow, onStep 
         {q.type === 'text' && (
           <div style={{ position: 'relative' }}>
             {q.long
-              ? <textarea className="rm-focus" placeholder={q.placeholder || 'Type your answer, or tap the mic to talk…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} rows={4}
-                  style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 54px 15px 16px', resize: 'vertical', fontFamily: T.sans, lineHeight: 1.6 }} autoFocus />
+              ? <textarea className="rm-focus" placeholder={q.placeholder || 'Type your answer, or tap the mic to talk…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} rows={8}
+                  style={{ width: '100%', minHeight: 220, background: T.surface, border: `1px solid ${T.line}`, borderRadius: 16, color: T.text, fontSize: 17, padding: '20px 60px 20px 20px', resize: 'vertical', fontFamily: T.sans, lineHeight: 1.7 }} autoFocus />
               : <input className="rm-focus" placeholder={q.placeholder || 'Type your answer, or tap the mic to talk…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                  style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 54px 15px 16px', fontFamily: T.sans }} autoFocus />}
-            <VoiceInputButton onTranscript={(t) => setAnswers((a) => { const prev = (a[q.id] as string) || ''; return { ...a, [q.id]: prev ? `${prev} ${t}` : t } })} />
+                  style={{ width: '100%', minHeight: 64, background: T.surface, border: `1px solid ${T.line}`, borderRadius: 16, color: T.text, fontSize: 17, padding: '20px 60px 20px 20px', fontFamily: T.sans }} autoFocus />}
+            <VoiceInputButton align={q.long ? 'top' : 'center'} onTranscript={(t) => setAnswers((a) => { const prev = (a[q.id] as string) || ''; return { ...a, [q.id]: prev ? `${prev} ${t}` : t } })} />
           </div>
         )}
 

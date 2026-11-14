@@ -16,6 +16,7 @@
      Section 09 FAQ accordion + final booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { motion, AnimatePresence, useReducedMotion, useInView, useMotionValue, useSpring } from 'framer-motion'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
@@ -42,41 +43,38 @@ const CARD_PAD = 'clamp(22px,4vw,32px)'
 function Stars() {
   return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={ACCENT}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>
 }
-/* Counts up from 0 once scrolled into view — preserves any prefix/suffix
-   (e.g. "$29", "4.8") and decimal precision. Shows the final value instantly
-   when the visitor prefers reduced motion. */
+/* Counts up from 0 once scrolled into view, settling with a real spring
+   (a hair of overshoot-free deceleration) rather than a linear/eased tween —
+   preserves any prefix/suffix (e.g. "$29", "4.8") and decimal precision.
+   Shows the final value instantly when the visitor prefers reduced motion. */
 function AnimatedStat({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const [display, setDisplay] = useState(value)
+  const isInView = useInView(ref, { once: true, amount: 0.4 })
+  const shouldReduceMotion = useReducedMotion()
+  const m = /^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/.exec(value)
+  const prefix = m?.[1] || ''
+  const numStr = m?.[2] || '0'
+  const suffix = m?.[3] || ''
+  const target = parseFloat(numStr)
+  const decimals = numStr.includes('.') ? numStr.split('.')[1].length : 0
+  const motionVal = useMotionValue(0)
+  const spring = useSpring(motionVal, { stiffness: 90, damping: 20, mass: 1 })
+  // Always "0" on first paint (never gated on shouldReduceMotion, which
+  // framer-motion can resolve synchronously on the client but not during
+  // SSR) — server and client must render identically or React throws a
+  // hydration mismatch. The effect below corrects it immediately after mount.
+  const [display, setDisplay] = useState('0')
   useEffect(() => {
-    const el = ref.current
-    const m = /^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/.exec(value)
-    if (!el || !m) return
-    const [, prefix, numStr, suffix] = m
-    const target = parseFloat(numStr)
-    const decimals = numStr.includes('.') ? numStr.split('.')[1].length : 0
-    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceMotion) return
-    let frame = 0
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => {
-        if (!e.isIntersecting) return
-        io.disconnect()
-        const start = performance.now()
-        const dur = 1100
-        const tick = (now: number) => {
-          const t = Math.min(1, (now - start) / dur)
-          const eased = 1 - Math.pow(1 - t, 3)
-          setDisplay(prefix + (target * eased).toFixed(decimals) + suffix)
-          if (t < 1) frame = requestAnimationFrame(tick)
-        }
-        frame = requestAnimationFrame(tick)
-      })
-    }, { threshold: 0.4 })
-    io.observe(el)
-    return () => { io.disconnect(); cancelAnimationFrame(frame) }
-  }, [value])
-  return <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>{display}</span>
+    if (!m) return
+    if (shouldReduceMotion) { setDisplay(numStr); return }
+    if (isInView) motionVal.set(target)
+  }, [isInView, shouldReduceMotion, target, numStr, m, motionVal])
+  useEffect(() => {
+    if (shouldReduceMotion) return
+    return spring.on('change', (v) => setDisplay(v.toFixed(decimals)))
+  }, [spring, decimals, shouldReduceMotion])
+  if (!m) return <span>{value}</span>
+  return <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>{prefix}{display}{suffix}</span>
 }
 function RatingRow() {
   return (
@@ -146,8 +144,12 @@ function TestimonialCard({ index = 7 }: { index?: number }) {
 
 /* A single documented-result proof card: photo, name, business type, result, quote. */
 function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
+  const shouldReduceMotion = useReducedMotion()
   return (
-    <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+    <motion.div
+      whileHover={shouldReduceMotion ? undefined : { y: -8, borderColor: LINE2, boxShadow: '0 24px 48px -20px rgba(0,0,0,.5)' }}
+      transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+      style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {c.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -162,7 +164,7 @@ function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
       </div>
       <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: 0, flex: 1 }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
       <div className="rm-serif" style={{ color: ACCENT, fontWeight: 800, fontSize: 'clamp(18px,2.2vw,22px)' }}>{c.result}</div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -263,7 +265,8 @@ function Calculators() {
                       visitor drags a slider stays off the motion floor's
                       banned list and animates on the GPU instead of layout. */}
                   <div style={{ position: 'relative', padding: '12px 16px', borderRadius: 10 }}>
-                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
+                    <motion.div aria-hidden animate={{ scaleX: Math.max(widthPct, 46) / 100 }} transition={{ type: 'spring', stiffness: 170, damping: 24 }}
+                      style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%' }} />
                     <strong style={{ position: 'relative', display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#F2F6EC', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 6 }}>
@@ -303,15 +306,20 @@ function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
             <button onClick={() => setOpen(isOpen ? -1 : i)} className="rm-focus" aria-expanded={isOpen}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '18px 20px', fontFamily: 'inherit' }}>
               <span style={{ fontSize: 15.5, fontWeight: 700, color: '#F2F6EC' }}>{it.q}</span>
-              <span aria-hidden style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', border: `1px solid ${LINE2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, fontSize: 15, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform .3s cubic-bezier(.16,1,.3,1)' }}>+</span>
+              <motion.span aria-hidden animate={{ rotate: isOpen ? 45 : 0 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', border: `1px solid ${LINE2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, fontSize: 15 }}>+</motion.span>
             </button>
-            {/* Smooth expand/collapse via an animated grid-track (not `height`),
-                so the Floor's never-animate-height rule still holds. */}
-            <div style={{ display: 'grid', gridTemplateRows: isOpen ? '1fr' : '0fr', transition: 'grid-template-rows .4s cubic-bezier(.16,1,.3,1)' }}>
-              <div style={{ overflow: 'hidden', minHeight: 0 }}>
-                <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, padding: '0 20px 18px', maxWidth: 640 }}>{it.a}</p>
-              </div>
-            </div>
+            {/* The idiomatic Motion exit pattern: animate straight to
+                height: "auto" inside AnimatePresence, instead of a manual
+                measured-height or grid-track trick. */}
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div key="a" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                  transition={{ height: { type: 'spring', stiffness: 260, damping: 28 }, opacity: { duration: 0.2 } }} style={{ overflow: 'hidden' }}>
+                  <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, padding: '0 20px 18px', maxWidth: 640 }}>{it.a}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )
       })}

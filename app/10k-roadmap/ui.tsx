@@ -5,6 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion, useReducedMotion } from 'framer-motion'
 import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
@@ -21,13 +22,10 @@ export function Fonts() {
       .rm-serif{font-family:${T.serif};font-weight:700;letter-spacing:-.022em;line-height:1.05}
       .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
       .rm-mark{color:${T.accentInk}}
-      .rm-reveal{opacity:0;transform:translateY(22px) scale(.985);filter:blur(4px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
-      .rm-reveal.in{opacity:1;transform:none;filter:blur(0)}
       @keyframes rm-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
       @keyframes rm-spin{to{transform:rotate(360deg)}}
       @keyframes rm-draw{to{stroke-dashoffset:0}}
       @media (prefers-reduced-motion: reduce){
-        .rm-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
         *{animation-duration:.001ms!important}
       }
       button{font-family:inherit}
@@ -36,12 +34,10 @@ export function Fonts() {
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
       .rm-range:focus-visible{outline:2px solid ${T.accent};outline-offset:5px;border-radius:999px}
-      /* Shared premium interaction primitives — hover lift, press feedback,
-         and a button shine sweep. transform/opacity only, per the motion
+      /* Shared premium interaction primitives. Hover/press live on Btn as
+         Motion spring gestures now; the shine sweep stays CSS (Motion has
+         no clean ::after hook) and transform/opacity only, per the motion
          floor (never width/height/top/left). */
-      .rm-btn{will-change:transform}
-      .rm-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
-      .rm-btn:active{transform:translateY(0) scale(.975);filter:brightness(.97);transition-duration:.08s}
       .rm-btn[disabled]{pointer-events:none}
       .rm-btn-shine{position:relative;overflow:hidden}
       .rm-btn-shine::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 48%,rgba(255,255,255,.4) 52%,transparent 70%);transform:translateX(-130%);transition:transform .7s cubic-bezier(.16,1,.3,1);pointer-events:none}
@@ -55,7 +51,7 @@ export function Fonts() {
       .rm-photo-frame img{transition:transform .7s cubic-bezier(.16,1,.3,1);display:block}
       .rm-photo-frame:hover img{transform:scale(1.045)}
       @media (prefers-reduced-motion: reduce){
-        .rm-btn,.rm-btn:hover,.rm-btn:active,.rm-lift,.rm-lift:hover,.rm-pop,.rm-pop:hover,.rm-pop:active,.rm-photo-frame img,.rm-photo-frame:hover img{transform:none!important;transition:none!important}
+        .rm-lift,.rm-lift:hover,.rm-pop,.rm-pop:hover,.rm-pop:active,.rm-photo-frame img,.rm-photo-frame:hover img{transform:none!important;transition:none!important}
         .rm-btn-shine::after{display:none}
       }
       /* Mobile readability: more generous leading so text never feels cramped. */
@@ -103,29 +99,38 @@ export function getAuditId(): string {
 export function saveQualAnswers(a: Record<string, unknown>) { try { sessionStorage.setItem('audit_qual', JSON.stringify(a)) } catch { /* noop */ } }
 export function loadQualAnswers(): Record<string, unknown> { try { return JSON.parse(sessionStorage.getItem('audit_qual') || '{}') } catch { return {} } }
 
-/* ── Scroll reveal ─────────────────────────────────────────────────────────*/
+/* ── Scroll reveal ─────────────────────────────────────────────────────────
+   Spring-settled rise with a soft blur-in — the one entrance every section
+   on the funnel shares, so the whole site reads as one considered system
+   rather than a CSS fade bolted onto each block. Triggers once, respects
+   reduced motion, and never blocks content if JS is slow to hydrate. */
 export function Reveal({ children, delay = 0, style, id }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties; id?: string }) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect() } }), { threshold: 0.14 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return <div id={id} ref={ref} className="rm-reveal" style={{ transitionDelay: `${delay}ms`, ...style }}>{children}</div>
+  const shouldReduceMotion = useReducedMotion()
+  if (shouldReduceMotion) return <div id={id} style={style}>{children}</div>
+  return (
+    <motion.div
+      id={id}
+      style={style}
+      initial={{ opacity: 0, y: 26, scale: 0.98, filter: 'blur(6px)' }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+      viewport={{ once: true, amount: 0.14 }}
+      transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 0.9, delay: delay / 1000 }}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 /* ── Buttons ───────────────────────────────────────────────────────────────*/
 export function Btn({ children, onClick, href, variant = 'primary', full, type = 'button', disabled, style }: {
   children: React.ReactNode; onClick?: () => void; href?: string; variant?: 'primary' | 'ghost' | 'outline'; full?: boolean; type?: 'button' | 'submit'; disabled?: boolean; style?: React.CSSProperties
 }) {
+  const shouldReduceMotion = useReducedMotion()
   const base: React.CSSProperties = {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
     fontFamily: T.sans, fontWeight: 700, fontSize: 16, letterSpacing: '.005em',
     padding: '16px 32px', minHeight: 54, borderRadius: 999, cursor: disabled ? 'not-allowed' : 'pointer',
     border: '1px solid transparent', textDecoration: 'none', width: full ? '100%' : undefined,
-    transition: 'transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s cubic-bezier(.16,1,.3,1), filter .25s ease',
     opacity: disabled ? 0.55 : 1, WebkitTapHighlightColor: 'transparent',
   }
   const skin: React.CSSProperties = variant === 'primary'
@@ -133,12 +138,21 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
     : variant === 'outline'
     ? { background: 'transparent', color: T.text, borderColor: T.lineStrong }
     : { background: T.surface, color: T.text, borderColor: T.lineStrong, boxShadow: '0 6px 18px -12px rgba(0,0,0,.4)' }
+  // Spring-based hover/press — the tactile, slightly-overshooting feel that
+  // reads as "expensive" rather than a flat CSS ease. Disabled entirely for
+  // reduced-motion, and never on a disabled control.
+  const gestures = (disabled || shouldReduceMotion) ? {} : {
+    whileHover: { y: -3, filter: 'brightness(1.07)' },
+    whileTap: { scale: 0.96, y: 0 },
+    transition: { type: 'spring' as const, stiffness: 420, damping: 24, mass: 0.6 },
+  }
   const props = {
     className: 'rm-focus rm-btn' + (variant === 'primary' ? ' rm-btn-shine' : ''),
     style: { ...base, ...skin, ...style },
+    ...gestures,
   }
-  if (href) return <a href={href} onClick={onClick} {...props}>{children}</a>
-  return <button type={type} onClick={onClick} disabled={disabled} {...props}>{children}</button>
+  if (href) return <motion.a href={href} onClick={onClick} {...props}>{children}</motion.a>
+  return <motion.button type={type} onClick={onClick} disabled={disabled} {...props}>{children}</motion.button>
 }
 
 /* ── Minimal funnel header + footer ────────────────────────────────────────*/

@@ -301,6 +301,14 @@
 .founder__note { margin-top: var(--space-md); font-size: var(--text-xs); color: var(--color-muted); max-width: 60ch; }
 @media (max-width: 42rem) { .founder__row { grid-template-columns: minmax(0, 1fr); text-align: center; } .founder blockquote, .founder__body, .founder__note, .founder__creds { margin-inline: auto; } .founder blockquote { padding-left: 0; padding-top: var(--space-md); border-left: 0; border-top: 2px solid var(--color-accent-deep); } }
 
+/* ── Founder moments: two real photos backing the "recruited and featured
+   in" line, same card width as the founder panel above. ──────────────────── */
+.founder__moments { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); margin-top: var(--space-lg); }
+.founder__moments figure { margin: 0; }
+.founder__moments img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.founder__moments figcaption { margin-top: var(--space-sm); text-align: center; font-size: var(--text-sm); color: var(--color-muted); }
+@media (max-width: 30rem) { .founder__moments { grid-template-columns: minmax(0, 1fr); } }
+
 /* ── FAQ (Rows) ──────────────────────────────────────────────────────────── */
 .faq-band { background: var(--color-paper); color: var(--color-ink); }
 .faq__head { max-width: 44rem; margin-inline: auto; text-align: center; }

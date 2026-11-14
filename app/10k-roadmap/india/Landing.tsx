@@ -398,6 +398,20 @@ export default function Landing() {
                 </div>
               </div>
             </Reveal>
+            <Reveal i={2}>
+              <div className="founder__moments">
+                <figure>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" />
+                  <figcaption>At a ClickFunnels event</figcaption>
+                </figure>
+                <figure>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" />
+                  <figcaption>At the Millionaire Mindset Mastermind</figcaption>
+                </figure>
+              </div>
+            </Reveal>
           </div>
         </section>
 

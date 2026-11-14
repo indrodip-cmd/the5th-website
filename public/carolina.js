@@ -214,7 +214,7 @@
 
   // Nav badge state (data-driven; number | 'NEW' | 'dot' | null). None by default.
   var badges = { home: null, chat: null, knowledge: null, discover: null, account: null };
-  var NAV_ORDER = ['home', 'chat', 'knowledge', 'discover', 'account'];
+  var NAV_ORDER = ['home', 'chat', 'knowledge', 'discover'];
   function navBadge(b) {
     if (!b) return '';
     if (b === 'dot') return '<span class="cw-nav-dot"></span>';
@@ -526,7 +526,7 @@
       '.cw-kitem span{font:500 14.5px/1.4 "Inter";color:rgba(255,255,255,.9);}',
       '.cw-kitem .cw-card-go{color:var(--mut);}.cw-kitem:hover .cw-card-go{color:var(--acc);}',
       // chat
-      '.cw-chead{display:flex;align-items:center;gap:12px;padding:16px 18px;background:linear-gradient(160deg,#241531,#130C17);border-bottom:1px solid var(--bd);}',
+      '.cw-chead{display:flex;align-items:center;gap:12px;padding:16px 18px;background:linear-gradient(160deg,#182014,#0D120B);border-bottom:1px solid var(--bd);}',
       '.cw-iconbtn{width:32px;height:32px;border-radius:10px;border:none;background:rgba(255,255,255,.06);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;flex-shrink:0;}',
       '.cw-iconbtn:hover{background:rgba(255,255,255,.14);}.cw-iconbtn svg{width:18px;height:18px;}',
       '.cw-chead-ava{width:36px;height:36px;border-radius:50%;overflow:hidden;background:linear-gradient(145deg,var(--acc),#5C8A1E);display:flex;align-items:center;justify-content:center;color:#1a1206;font:700 15px "Inter";flex-shrink:0;}',
@@ -835,7 +835,7 @@
       '.cw-hstack>:first-child{margin-left:0;}',
       '.cw-hs-face{background:linear-gradient(145deg,var(--acc),#5C8A1E);color:#1a1206;font:700 12px "Inter";}',
       '.cw-hs-face img{width:100%;height:100%;object-fit:cover;}',
-      '.cw-hs-ai{background:linear-gradient(145deg,#2A1830,#141b2e);color:var(--acc);}.cw-hs-ai svg{width:16px;height:16px;}',
+      '.cw-hs-ai{background:linear-gradient(145deg,#182014,#0D120B);color:var(--acc);}.cw-hs-ai svg{width:16px;height:16px;}',
       '@keyframes cwHF{from{opacity:0;}to{opacity:1;}}',
       '@keyframes cwHD{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}',
       '@keyframes cwHU{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}',
@@ -900,7 +900,7 @@
       '.cw-cm-face{width:32px;height:32px;border-radius:50%;overflow:hidden;border:2px solid var(--card);margin-left:-10px;background:linear-gradient(145deg,var(--acc),#5C8A1E);color:#1a1206;font:700 12px/28px "Inter";text-align:center;}',
       '.cw-cm-face:first-child{margin-left:0;}.cw-cm-face img{width:100%;height:100%;object-fit:cover;}',
       // newsletter
-      '.cw-news{position:relative;overflow:hidden;background:linear-gradient(150deg,#241530,#141414);border:1px solid var(--bd);border-radius:24px;padding:24px 22px;}',
+      '.cw-news{position:relative;overflow:hidden;background:linear-gradient(150deg,#182014,#141414);border:1px solid var(--bd);border-radius:24px;padding:24px 22px;}',
       '.cw-news-glow{position:absolute;top:-50%;left:-20%;width:70%;height:140%;background:radial-gradient(ellipse,rgba(201,168,76,.14),transparent 70%);pointer-events:none;}',
       '.cw-news h4{position:relative;z-index:1;display:flex;align-items:center;gap:8px;font:700 19px/1.2 "Inter";color:#fff;margin:0 0 8px;}',
       '.cw-news h4 svg{width:20px;height:20px;color:var(--acc);}',
@@ -1150,7 +1150,7 @@
       '.cw-artbar #cw-bm{font-size:18px;line-height:1;color:var(--acc);}',
       // ── Part 3E in-chat booking calendar ──
       '.cw-book{align-self:flex-start;width:100%;max-width:340px;background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow:hidden;}',
-      '.cw-book-h{display:flex;align-items:center;gap:8px;padding:13px 15px;font:600 14px "Inter";color:#fff;background:linear-gradient(150deg,#241531,#141414);border-bottom:1px solid var(--bd);}',
+      '.cw-book-h{display:flex;align-items:center;gap:8px;padding:13px 15px;font:600 14px "Inter";color:#fff;background:linear-gradient(150deg,#182014,#141414);border-bottom:1px solid var(--bd);}',
       '.cw-book-h svg{width:17px;height:17px;color:var(--acc);}',
       '.cw-book-body{padding:13px 14px;font:400 13px "Inter";color:var(--tx2);}',
       '.cw-book-body a{color:var(--acc2);}',
@@ -1581,7 +1581,7 @@
     // Video card (horizontal)
     if (t === 'video') {
       return '<div class="cw-vcard" ' + actAttr(m.primaryAction || m.cardAction) + '>'
-        + '<div class="cw-vthumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '>'
+        + '<div class="cw-vthumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#182014,#0D120B)') + '"') + '>'
         + '<div class="cw-play">▶</div>' + (m.duration ? '<span class="cw-dur">' + esc(m.duration) + '</span>' : '') + '</div>'
         + '<div class="cw-vbody"><h5>' + esc(m.title) + '</h5><p>' + esc(m.speaker || '') + (m.views ? ' · ' + esc(m.views) + ' views' : '') + '</p></div></div>';
     }
@@ -1595,7 +1595,7 @@
     // Article card (compact horizontal)
     if (t === 'article') {
       return '<div class="cw-acard" ' + actAttr(m.primaryAction || m.cardAction) + '>'
-        + '<div class="cw-athumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"') + '></div>'
+        + '<div class="cw-athumb" ' + (m.coverImage ? 'style="background-image:url(' + esc(m.coverImage) + ')"' : 'style="background:' + (m.cover || 'linear-gradient(135deg,#182014,#0D120B)') + '"') + '></div>'
         + '<div class="cw-abody">' + badgeHtml(m) + '<h5>' + esc(m.title) + '</h5>' + metaHtml(m) + '</div></div>';
     }
     // hero / promotion / base — full card. With a cover image, the title +
@@ -1781,7 +1781,7 @@
     var emoji = d.emoji ? d.emoji + ' ' : '';
     var cover = item.cover_image
       ? '<div class="cw-cover cw-cover-lg"><img class="cw-cov-img" src="' + esc(item.cover_image) + '" alt="" onerror="this.style.display=\'none\'"/><div class="cw-cover-grad"></div></div>'
-      : '<div class="cw-cover cw-cover-lg" style="background:' + (d.cover || 'linear-gradient(135deg,#241528,#141b2e)') + '"><span class="cw-cover-emoji">' + (d.emoji || '✦') + '</span><div class="cw-cover-grad"></div></div>';
+      : '<div class="cw-cover cw-cover-lg" style="background:' + (d.cover || 'linear-gradient(135deg,#182014,#0D120B)') + '"><span class="cw-cover-emoji">' + (d.emoji || '✦') + '</span><div class="cw-cover-grad"></div></div>';
     var metaLine = '<span class="cw-ctype">' + esc(meta.badge) + '</span>'
       + (item.reading_time ? '<span class="cw-readtime">' + ICON.book + ' ' + item.reading_time + ' min read</span>' : '')
       + (item.author ? '<span class="cw-cauthor">' + esc(item.author) + '</span>' : '');
@@ -1990,12 +1990,15 @@
   }
 
   // Five-item floating glass navigation. Icons are Lucide-style, 1.8 stroke.
+  // Four tabs, matching Intercom's own Home / Messages / Help / News —
+  // Account (settings/preferences) is dropped from the nav; its genuinely
+  // useful bits (Privacy/Terms, "book a call", "contact support") already
+  // live in the Home footer and are reachable from any chat reply.
   var NAV_ITEMS = [
     { id: 'home', ic: 'home', label: 'Home' },
-    { id: 'chat', ic: 'msg', label: 'Chat' },
-    { id: 'knowledge', ic: 'book', label: 'Knowledge' },
-    { id: 'discover', ic: 'compass', label: 'Discover' },
-    { id: 'account', ic: 'user', label: 'Account' }
+    { id: 'chat', ic: 'msg', label: 'Messages' },
+    { id: 'knowledge', ic: 'book', label: 'Help' },
+    { id: 'discover', ic: 'compass', label: 'News' }
   ];
   function navHtml() {
     var html = '<nav class="cw-nav" id="cw-nav" role="tablist" aria-label="Primary">';
@@ -2658,20 +2661,26 @@
       .catch(function () { toast('Network error — try again'); if (btn) { btn.disabled = false; btn.textContent = 'Confirm booking'; } });
   }
   // Premium first-open welcome: avatar, headline, description + big cards.
+  // A single plain greeting bubble — "Hi there 👋 You are now speaking with
+  // Carolina. How can I help?" — matching Intercom's minimal Fin intro, not
+  // a big heading + paragraph + suggestion-card grid. Never persisted into
+  // conv.messages (it's a canned local greeting, not a real AI turn), so it
+  // never gets replayed back to the model as fake prior context.
   function renderWelcome() {
-    var head = document.createElement('div'); head.className = 'cw-welcome';
-    head.innerHTML = '<div class="cw-wava">' + agentAva('carolina') + '</div>'
-      + '<h3>' + esc(T('welcome')) + '</h3>'
-      + '<p>I\'m your business advisor. I can answer questions, recommend the right program, explain what\'s included, point you to resources, and book you a strategy call — all right here. What would you like to work on?</p>';
-    els.msgs.appendChild(head);
-    var grid = document.createElement('div'); grid.className = 'cw-wgrid';
-    WELCOME_CARDS.forEach(function (c) {
-      var b = document.createElement('button'); b.className = 'cw-wcard';
-      b.innerHTML = '<span class="cw-wcard-ic">' + (ICON[c.ic] || ICON.spark) + '</span><span class="cw-wcard-t">' + esc(c.title) + '</span>';
-      b.addEventListener('click', function () { sendMessage(c.seed); });
-      grid.appendChild(b);
-    });
-    els.msgs.appendChild(grid); maybeScroll(false);
+    var wrap = document.createElement('div'); wrap.className = 'cw-m bot';
+    var av = document.createElement('div'); av.className = 'cw-m-ava'; av.innerHTML = agentAva('carolina');
+    wrap.appendChild(av);
+    var col = document.createElement('div'); col.className = 'cw-mcol';
+    var bub = document.createElement('div'); bub.className = 'cw-bub';
+    bub.innerHTML = renderMd('Hi there 👋\n\nYou are now speaking with Carolina. How can I help?');
+    col.appendChild(bub);
+    var cap = document.createElement('p');
+    cap.style.cssText = 'font-size:11.5px;color:var(--mut);margin:6px 0 0 2px;';
+    cap.textContent = 'Carolina · AI Agent · Just now';
+    col.appendChild(cap);
+    wrap.appendChild(col);
+    els.msgs.appendChild(wrap);
+    maybeScroll(false);
   }
   function clearThink() { if (thinkTimer) { clearInterval(thinkTimer); thinkTimer = null; } }
   var THINK_MSGS = ['Searching knowledge…', 'Reviewing your business…', 'Finding the best resources…', 'Preparing recommendations…', 'Building your strategy…'];

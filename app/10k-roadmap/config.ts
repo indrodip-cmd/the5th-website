@@ -373,40 +373,24 @@ export const QUALIFICATION: Q[] = [
   },
 ]
 
-/* Post-payment deep diagnostic (AFTER the $29 commitment). */
+/* Post-payment intake (AFTER the $29 commitment, BEFORE picking a time).
+   Deliberately short — three questions, each answerable by typing or by
+   voice — so we have just enough context to make the 60 minutes specific,
+   without turning the moment right after payment into a long form. */
 export const DEEP: Q[] = [
-  { id: 'd_stuck', type: 'text', long: true, prompt: 'What is the ONE thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific, this is what we’ll go after first.' },
-  { id: 'd_cost', type: 'text', long: true, prompt: 'If nothing changes over the next 6–12 months, what will staying at your current level cost you?', helper: 'Think beyond money, time, freedom, confidence, family, lifestyle and opportunities.' },
-  { id: 'd_change', type: 'text', long: true, prompt: 'If you built a predictable path to $10K/month, what would that actually change in your life?' },
+  { id: 'd_business', type: 'text', prompt: 'What’s your business called, and what do you help people do?', placeholder: 'e.g. “Clarity Coaching — I help new managers lead with confidence.”' },
+  { id: 'd_stuck', type: 'text', long: true, prompt: 'What’s the one thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific, this is what we’ll go after first on the call.' },
   {
-    id: 'd_tried', type: 'multi', prompt: 'What have you already tried to fix this?', helper: 'Select all that apply.',
+    id: 'd_revenue', type: 'single', prompt: 'What best describes your current average monthly revenue?',
     options: [
-      'posting', 'ads', 'courses', 'coach', 'offer', 'positioning', 'outreach', 'networking', 'webinars', 'leadmagnets', 'funnels', 'referrals', 'other',
-    ].map((v) => ({ value: v, label: ({
-      posting: 'Posting more content', ads: 'Running ads', courses: 'Buying courses', coach: 'Hiring a coach/consultant',
-      offer: 'Changing my offer', positioning: 'Changing my positioning', outreach: 'Cold outreach', networking: 'Networking',
-      webinars: 'Webinars / workshops', leadmagnets: 'Lead magnets', funnels: 'Funnels', referrals: 'Referrals', other: 'Other',
-    } as Record<string, string>)[v] })),
-  },
-  { id: 'd_tried_result', type: 'text', long: true, prompt: 'What happened?', helper: 'A sentence or two on the result of what you tried above.' },
-  {
-    id: 'd_source', type: 'single', prompt: 'Where are your clients currently coming from?',
-    options: [
-      'referrals', 'organic', 'linkedin', 'facebook', 'instagram', 'youtube', 'email', 'ads', 'outreach', 'networking', 'partnerships', 'other',
-    ].map((v) => ({ value: v, label: ({
-      referrals: 'Referrals', organic: 'Organic social media', linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram',
-      youtube: 'YouTube', email: 'Email', ads: 'Paid advertising', outreach: 'Cold outreach', networking: 'Networking',
-      partnerships: 'Partnerships', other: 'Other',
-    } as Record<string, string>)[v] })),
-  },
-  {
-    id: 'd_leads', type: 'single', prompt: 'Roughly how many qualified leads or sales conversations are you generating each month?',
-    options: [
-      { value: '0', label: '0' }, { value: '1-5', label: '1–5' }, { value: '6-10', label: '6–10' },
-      { value: '11-20', label: '11–20' }, { value: '21-50', label: '21–50' }, { value: '50+', label: '50+' },
+      { value: 'pre', label: 'Not generating revenue yet' },
+      { value: 'u1k', label: 'Under $1,000/month' },
+      { value: '1-3k', label: '$1,000–$3,000/month' },
+      { value: '3-5k', label: '$3,000–$5,000/month' },
+      { value: '5-10k', label: '$5,000–$10,000/month' },
+      { value: '10k+', label: '$10,000+/month' },
     ],
   },
-  { id: 'd_commitment', type: 'scale', prompt: 'How committed are you to solving this now, not someday?', min: 1, max: 10, minLabel: 'Just exploring', maxLabel: 'I’m ready to act' },
 ]
 
 /* ── Qualified transition + reserve screen ─────────────────────────────────*/
@@ -519,19 +503,16 @@ export const CONFIRMED = {
   refundReminder: 'Reminder: your $29 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
 }
 
-/* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/
+/* ── Post-payment intake + booking (native question flow, then Cal inline) ──*/
 export const RESERVED_WHY = {
-  eyebrow: 'Time reserved',
-  headline: 'Your time is held. One essential step before your call.',
-  body: 'This isn’t a formality. Your answers here are exactly how we prepare a personalised audit for YOUR business, so on the call we pinpoint the specific fix you need, not vague, generic advice.',
-  points: [
-    'It’s how we understand your exact situation before we meet.',
-    'It’s what lets us pinpoint the one specific fix, instead of generic advice.',
-    'The more honest you are, the more valuable your 60 minutes will be.',
-  ],
-  footnote: 'Take two minutes. As soon as you finish, your booking is locked in.',
-  loadingHint: 'Loading your questions…',
-  errorHint: 'The questions couldn’t load. Please refresh the page to continue.',
+  eyebrow: 'You’re In — One Quick Step',
+  headline: 'Just three quick questions before we pick a time.',
+  body: 'Type your answers, or tap the mic and just talk. This is how we make your 60 minutes specific to your business instead of generic.',
+  footnote: 'Takes about a minute. Then you’ll pick the time that works for you.',
+  bookingEyebrow: 'Last Step',
+  bookingHeadline: 'Pick a time that works for you.',
+  bookingSub: 'Your audit is reserved — choose the slot below and you’re fully booked.',
+  errorHint: 'The booking calendar couldn’t load. Please refresh the page to continue.',
   errorCta: 'Refresh',
 }
 

@@ -255,6 +255,69 @@ export function Stepper({ current }: { current: number }) {
   )
 }
 
+/* ── Voice-to-text answer button ───────────────────────────────────────────
+   Progressive enhancement on top of a text/textarea field: tap to talk, tap
+   again to stop, the transcript is appended to whatever's already typed.
+   Feature-detects the Web Speech API and renders nothing where it's
+   unavailable (Firefox, Safari on some versions, etc.) — typing still works
+   everywhere regardless. */
+type SpeechRecognitionLike = {
+  lang: string; continuous: boolean; interimResults: boolean
+  start: () => void; stop: () => void
+  onresult: ((e: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null
+  onerror: (() => void) | null
+  onend: (() => void) | null
+}
+function getSpeechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
+  if (typeof window === 'undefined') return null
+  const w = window as unknown as { SpeechRecognition?: new () => SpeechRecognitionLike; webkitSpeechRecognition?: new () => SpeechRecognitionLike }
+  return w.SpeechRecognition || w.webkitSpeechRecognition || null
+}
+function VoiceInputButton({ onTranscript }: { onTranscript: (text: string) => void }) {
+  const [listening, setListening] = useState(false)
+  // Feature detection only runs after mount — the server has no `window`, so
+  // rendering based on it synchronously would mismatch the client's first
+  // render (a React hydration error). Render nothing until mounted, exactly
+  // matching the server's output, then switch on if the browser supports it.
+  const [Ctor, setCtor] = useState<(new () => SpeechRecognitionLike) | null>(null)
+  const recRef = useRef<SpeechRecognitionLike | null>(null)
+  useEffect(() => { setCtor(() => getSpeechRecognitionCtor()) }, [])
+  useEffect(() => () => { recRef.current?.stop() }, [])
+  if (!Ctor) return null
+
+  const stop = () => { recRef.current?.stop(); setListening(false) }
+  const start = () => {
+    const rec = new Ctor()
+    rec.lang = 'en-US'; rec.continuous = true; rec.interimResults = false
+    rec.onresult = (e) => {
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i]
+        if (r.isFinal) onTranscript(r[0].transcript.trim())
+      }
+    }
+    rec.onerror = () => setListening(false)
+    rec.onend = () => setListening(false)
+    recRef.current = rec
+    rec.start()
+    setListening(true)
+  }
+
+  return (
+    <button type="button" onClick={listening ? stop : start} aria-label={listening ? 'Stop voice input' : 'Answer by voice'} className="rm-focus"
+      style={{
+        position: 'absolute', right: 10, top: 10, width: 36, height: 36, borderRadius: '50%', border: 'none', cursor: 'pointer',
+        background: listening ? T.danger : T.accentSoft, color: listening ? '#fff' : T.accentInk,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s',
+      }}>
+      {listening && <span aria-hidden style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: `2px solid ${T.danger}`, opacity: .6, animation: 'rm-voice-pulse 1.4s ease-out infinite' }} />}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><line x1="12" y1="19" x2="12" y2="22" />
+      </svg>
+      <style>{`@keyframes rm-voice-pulse{from{transform:scale(1);opacity:.6}to{transform:scale(1.5);opacity:0}}`}</style>
+    </button>
+  )
+}
+
 /* ── One-question-at-a-time flow engine ────────────────────────────────────
    Handles single / multi / scale / text with keyboard support. A `reject`
    option fires onReject immediately. Emits onComplete(answers) at the end. */
@@ -361,11 +424,14 @@ export function QuestionFlow({ questions, onComplete, onReject, eyebrow, onStep 
         )}
 
         {q.type === 'text' && (
-          q.long
-            ? <textarea className="rm-focus" placeholder={q.placeholder || 'Type your answer…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} rows={4}
-                style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 16px', resize: 'vertical', fontFamily: T.sans, lineHeight: 1.6 }} autoFocus />
-            : <input className="rm-focus" placeholder={q.placeholder || 'Type your answer…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 16px', fontFamily: T.sans }} autoFocus />
+          <div style={{ position: 'relative' }}>
+            {q.long
+              ? <textarea className="rm-focus" placeholder={q.placeholder || 'Type your answer, or tap the mic to talk…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} rows={4}
+                  style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 54px 15px 16px', resize: 'vertical', fontFamily: T.sans, lineHeight: 1.6 }} autoFocus />
+              : <input className="rm-focus" placeholder={q.placeholder || 'Type your answer, or tap the mic to talk…'} value={(answers[q.id] as string) || ''} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
+                  style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, color: T.text, fontSize: 16, padding: '15px 54px 15px 16px', fontFamily: T.sans }} autoFocus />}
+            <VoiceInputButton onTranscript={(t) => setAnswers((a) => { const prev = (a[q.id] as string) || ''; return { ...a, [q.id]: prev ? `${prev} ${t}` : t } })} />
+          </div>
         )}
 
         {(q.type === 'text' || q.type === 'scale' || q.type === 'multi') && (

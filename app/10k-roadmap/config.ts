@@ -524,7 +524,7 @@ export const THANKYOU = {
   countdownLabel: 'Your call starts in',
   liveLabel: 'Your call is starting now',
   passedLabel: 'This call time has passed. Check your email, or rebook if you need to.',
-  addHeading: 'Add it to your calendar',
+  addHeading: 'Add it to your calendar, so you get a reminder',
   joinNote: 'Save this link — it’s where you’ll join when it’s time.',
   joinPending: 'Your video call link is being generated and will be in your confirmation email and calendar invite. It’ll also appear here in a moment.',
   saveTitle: 'Save this page',

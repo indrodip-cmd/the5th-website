@@ -138,7 +138,12 @@ export default function ThankYou() {
         {/* Booking + countdown */}
         {b?.start ? (
           <>
-            <Reveal delay={120} style={{ marginTop: 30 }}>
+            <Reveal delay={100}>
+              <p style={{ fontSize: 'clamp(17px,2.4vw,20px)', fontWeight: 700, marginTop: 24, color: T.text }}>
+                We’ll see you on <span style={{ color: T.accentInk }}>{fmt(b.start, { weekday: 'long', month: 'long', day: 'numeric' })}</span> at <span style={{ color: T.accentInk }}>{fmt(b.start, { hour: 'numeric', minute: '2-digit' })}</span> ({tz.replace(/_/g, ' ')}).
+              </p>
+            </Reveal>
+            <Reveal delay={120} style={{ marginTop: 18 }}>
               <div style={{ background: T.surface, border: `1px solid ${T.accent}`, borderRadius: 20, padding: '24px 22px', textAlign: 'left' }}>
                 <div style={{ display: 'grid', gap: 12 }}>
                   <Row label="Date" value={fmt(b.start, { weekday: 'long', month: 'long', day: 'numeric' })} />

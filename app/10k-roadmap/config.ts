@@ -14,27 +14,30 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
-   2026-11-14: relit to match the India page's Hallmark dark system (near-
-   black field, the brand's own purple as the one signal, off-white ink) —
-   same request, same aesthetic, this page's own research-backed copy.
+   2026-11-14: relit a second time to the premium dark-forest / acid-lime
+   system specified for the global page (near-black + deep green undertones,
+   lime as the one accent, pill CTAs) — replaces the earlier purple-on-black
+   pass. Hero copy/layout/photo stay locked; only the shared accent color
+   changes so the hero reads as part of one consistent system.
    Original site display serif is Cormorant Garamond (used across /results +
    case studies); this funnel keeps Plus Jakarta Sans for its own headlines.
    The psychology comes from the copy + structure as much as the interface. */
 export const T = {
-  bg: '#0B0A10',
-  surface: '#15131C',      // near-black, section separation / cards
-  surface2: '#1B1824',
-  line: 'rgba(255,255,255,0.12)',
-  lineStrong: 'rgba(255,255,255,0.22)',
-  text: '#F2EFF6',         // off-white ink, headings + primary copy
-  text2: '#B6AFC2',        // muted body
-  text3: '#8A8396',        // faint / captions
-  accent: '#7C4DBF',       // brand purple, lightened for contrast on black (CTA fills, play buttons, badges)
-  accentInk: '#B98CE8',    // lighter purple for emphasis text on black (AA)
-  accentSoft: 'rgba(124,77,191,0.18)',
-  brand: '#F2EFF6',        // ink on this dark field (was plum-on-cream)
+  bg: '#070A06',
+  surface: '#121810',      // near-black forest, section separation / cards
+  surface2: '#182014',
+  line: 'rgba(255,255,255,0.09)',
+  lineStrong: 'rgba(255,255,255,0.18)',
+  text: '#F2F6EC',          // off-white ink, headings + primary copy
+  text2: '#9AA79A',         // muted body
+  text3: '#6F7D6F',         // faint / captions
+  accent: '#C9FF48',        // acid lime, the one signal color (CTA fills, play buttons, badges)
+  accentInk: '#C9FF48',     // same lime for emphasis text on black (AA on this bg)
+  accentSoft: 'rgba(201,255,72,0.14)',
+  accentText: '#0B0F08',    // near-black text used ON lime fills
+  brand: '#F2F6EC',         // ink on this dark field
   danger: '#e5584a',
-  radius: 16,
+  radius: 18,
   // Clean, bold, modern. Headlines use Plus Jakarta Sans (700/800); body Inter.
   serif: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
   sans: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
@@ -91,10 +94,11 @@ export const PRESS = {
    separate /qualify hop. Same plum/cream/purple palette throughout, no navy
    or gold. No video, the founder photo carries the hero. */
 export const LANDING = {
-  // Positioning line per the US/Canada buyer-psychology research
-  // (2026-11-14): the burned, already-spent-$10K+ coach isn't short on
-  // information, she's short on a diagnosis she can trust after being
-  // burned. Lead with "an audit, not a pitch," never an income promise.
+  // ── HERO (locked) ─────────────────────────────────────────────────────
+  // Per the 2026-11-14 brief: headline, subheadline, CTA wording, founder
+  // image, layout and composition here are explicitly non-negotiable and
+  // must not be rewritten. Only the shared accent color (T.accent) changes
+  // around it, so it reads as part of one consistent system.
   eyebrow: 'For experienced coaches and consultants who are done buying programs',
   headline: 'You Did The Work. It Didn’t Work. Let’s Find Out Why, Before You Spend Another Dollar.',
   headlineSub: 'A 60-minute audit of your coaching business, with a written plan you keep. Camera optional. No pitch unless you ask.',
@@ -105,7 +109,7 @@ export const LANDING = {
 
   // Hero photo card: the credential badge sits on the photo itself, then
   // the session facts sit in a plain caption below it — same layout as
-  // the India page's hero.
+  // the India page's hero. Locked alongside the rest of the hero.
   heroCard: {
     name: 'Indrodip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
@@ -116,6 +120,10 @@ export const LANDING = {
     ],
   },
 
+  // Every CTA OUTSIDE the locked hero uses this single, unambiguous wording,
+  // so there is never a question what the $29 is for.
+  ctaStandard: 'Book My 60-Minute Business Audit — $29',
+
   proof: {
     eyebrow: 'Proven, not theoretical',
     heading: 'Real client outcomes, not projections.',
@@ -123,66 +131,66 @@ export const LANDING = {
     disclaimer: 'Documented individual client results. Individual results vary; these are not typical.',
   },
 
-  eligibility: {
-    eyebrow: 'Who This Is For',
-    heading: 'An honest audit, not a pitch.',
-    cols: [
-      { label: 'Who it’s for', body: 'Experienced coaches and consultants who’ve already paid for the programs, the mastermind, the mentor, used AI daily trying to fix it themselves, and are done buying before getting a real diagnosis.' },
-      { label: 'What it isn’t', body: 'Not a sales call. Not a group webinar. Not a “mindset” lecture. No pressure to buy anything on the call, and no income promises, from us or about you.' },
-      { label: 'What it costs', body: '$29, fully refundable within 7 days if it wasn’t worth it to you. The only real cost is showing up ready to look at what isn’t working.' },
-    ],
-    not: 'Not for you if you’re not currently running your own coaching or consulting business, or you’re only after free advice with no intent to act on it.',
+  // ── Section 03: the problem — more advice vs. an actual diagnosis ──────
+  problem: {
+    eyebrow: 'Sound Familiar?',
+    heading: 'You’ve Already Tried The Strategies. Maybe It’s Time To Examine The Business.',
+    sub: 'Another course. Another marketing strategy. Another AI-generated action plan. But when you don’t know what’s actually holding your business back, more information can create more confusion.',
+    moreAdvice: {
+      title: 'More Advice',
+      items: ['Another marketing course', 'Another generic funnel', 'Another list of AI-generated ideas', 'Another strategy to implement', 'More information', 'No clear priorities'],
+    },
+    diagnosis: {
+      title: 'Actual Business Diagnosis',
+      items: ['Examine your actual business', 'Review your positioning and offer', 'Identify your ideal buyer', 'Find your biggest bottleneck', 'Establish clear priorities', 'Receive a personalized action plan'],
+    },
+    close: 'Stop collecting strategies. Start understanding your business.',
   },
 
-  reach: {
-    stat: '76 coaches and consultants',
-    body: 'across 12 nations, coached remotely, one call at a time.',
-  },
-
-  // The "why not just ask ChatGPT" objection: ranked the #2 angle in the
-  // research (after "an audit, not a pitch"), and the most on-the-nose for
-  // a buyer who uses AI daily and is still stuck. Agree with her, then move
-  // the purchase from information to diagnosis and a second set of eyes.
-  objection: {
-    eyebrow: 'The Question Everyone Asks First',
-    heading: 'Why not just ask ChatGPT?',
-    lines: [
-      'ChatGPT can write you a plan. It can’t tell you the plan is wrong for you.',
-      'AI answers the question you ask. An audit finds the question you’re not asking.',
-      'AI is built to agree with you. You don’t need agreement. You need someone to point at the one thing that’s actually broken.',
-    ],
-    close: 'I’ll show you exactly how I’d use ChatGPT or Claude in your business, and where not to. That’s in your written plan.',
-  },
-
-  graph: {
-    eyebrow: 'The Path',
-    heading: 'What will your path to $10K/month look like?',
-    sub: 'The graph below is also the agenda, each stage is something we map on your call, in this order.',
-    points: [
-      { tag: 'Offer', m: 'Day 1–20', t: 'What you sell', learn: 'We find the part of your expertise people actually pay for', d: 'Rarely the part you’d choose yourself. This is where the $10K/month ceiling usually starts.' },
-      { tag: 'Buyer', m: 'Day 21–60', t: 'Who buys it', learn: 'We define the one buyer with one expensive problem', d: 'Not “everyone who could benefit.” One buyer, specific enough that your next message writes itself.' },
-      { tag: 'Start Sales', m: 'Day 61–100', t: 'How you reach them', learn: 'We build a repeatable way to reach them', d: 'Real conversations with people who already trust you. No daily posting, no audience required.' },
-    ],
-    axisNote: '$10K/month is the floor, not the ceiling: our documented client results above range from $14,193 to $180K. Illustrative trajectory: the first ~15–20 days rebuilding the offer before the first client closes, then compounding from there. Your starting point, market and effort change the timeline. Individual results vary.',
-  },
-
+  // ── Section 04: the 60-minute audit process ─────────────────────────────
   call: {
-    eyebrow: 'On The Call',
-    heading: 'What happens in your 60 minutes?',
-    sub: 'Short application, then the audit itself, in this order. A written plan lands in your inbox within 48 hours.',
+    eyebrow: 'The 60-Minute Audit',
+    heading: 'One Hour. Your Business. One Clear Direction.',
+    sub: 'A short application, then the audit itself, in this order. Your personalized audit lands in your inbox within 48 hours.',
     note: 'Camera optional, audio-only is completely fine. Prefer not to get on a call at all? Tell us and we’ll run it as a written-only audit instead, for the same price.',
     steps: [
-      { n: '01', icon: 'search', t: 'Diagnose your positioning', d: 'We look at how you currently describe what you do, and where it’s losing buyers before they ever hear your offer.' },
-      { n: '02', icon: 'tag', t: 'Reframe what you’re actually selling', d: 'The gap between what you know and what people pay for. We find the sellable version of your expertise.' },
-      { n: '03', icon: 'target', t: 'Identify your real buyer', d: 'One buyer, one expensive problem, specific enough to build a message and an offer around.' },
-      { n: '04', icon: 'compass', t: 'Find the one bottleneck', d: 'Out of positioning, offer, leads, sales and conversion, the single thing actually standing between you and consistent clients.' },
-      { n: '05', icon: 'calendar', t: 'Build your next 100 days', d: 'A short, ordered plan for what to do first, second and third, plus how to use ChatGPT or Claude for it, so you leave with a next step, not just insight.' },
+      { n: '01', icon: 'search', t: 'Understand your business', d: 'We start with what’s actually happening in your business right now, no assumptions carried over from a past program.' },
+      { n: '02', icon: 'tag', t: 'Review your offer & positioning', d: 'How you currently describe what you do, your pricing, and where it’s losing buyers before they ever hear the offer.' },
+      { n: '03', icon: 'target', t: 'Identify your ideal buyer', d: 'One buyer, one expensive problem, specific enough to build a message and an offer around.' },
+      { n: '04', icon: 'compass', t: 'Find your biggest bottleneck', d: 'Out of positioning, offer, leads, sales and conversion, the single thing actually standing between you and consistent clients.' },
+      { n: '05', icon: 'calendar', t: 'Build your action plan', d: 'A short, ordered plan for what to fix first, second and third, so you leave with a next step, not just insight.' },
     ],
+  },
+
+  // ── Section 05: everything you receive ──────────────────────────────────
+  deliverables: {
+    eyebrow: 'What You Receive',
+    heading: 'More Than Just a 60-Minute Call.',
+    sub: 'You’ll receive the recording, a personalized business audit and practical resources you can revisit and use after our conversation.',
+    items: [
+      { icon: 'video', t: 'Private Call Recording', d: 'Your complete 60-minute session recording so you can revisit the discussion, recommendations and important insights. Provided only when you’ve consented to recording.' },
+      { icon: 'file', t: 'Personalized Business Audit PDF', d: 'A professional written assessment covering your current business position, offer and positioning, ideal customer analysis, biggest bottleneck, recommended changes and a priority action plan.' },
+      { icon: 'map', t: 'Personalized 100-Day Roadmap', d: 'A structured action plan: what to fix first, what to prioritize next, what to stop doing, which marketing activities to focus on, and your next implementation milestones.' },
+      { icon: 'calculator', t: 'Business Growth Calculators', d: 'Access to interactive tools, a revenue goal calculator, offer pricing calculator and client acquisition calculator, to help you understand your own numbers.' },
+      { icon: 'brain', t: 'AI Implementation Toolkit', d: 'Relevant ChatGPT and Claude prompts to help you execute your audit recommendations.' },
+      { icon: 'download', t: 'Downloadable Sample Report', d: 'See exactly what your personalized audit will look like before you book, an illustrative sample, not an actual client’s audit.' },
+    ],
+    sampleCta: 'Download Sample Audit PDF',
+    sampleNote: 'Illustrative sample only, built to show the format and depth of your real audit. Not an actual client’s report.',
+    note: 'The $29 covers the 60-minute session and the deliverables above, not 100 days of coaching or implementation. What you do with the roadmap afterward is up to you.',
+  },
+
+  // ── Section 06: interactive business calculators ───────────────────────
+  calculators: {
+    eyebrow: 'Know Your Numbers',
+    heading: 'Understand Your Business Numbers.',
+    sub: 'Before deciding what to change, understand the numbers behind your business. Adjust the inputs, nothing here is a guarantee, it’s simple math on the numbers you give it.',
+    disclaimer: 'For planning only. These are illustrative calculations based on the numbers you enter, not a prediction or a guarantee of revenue, clients or conversion rates.',
   },
 
   caseStudies: {
-    eyebrow: 'Case Studies',
-    heading: '$10K Roadmap Case Studies',
+    eyebrow: 'Client Results',
+    heading: 'Real Businesses. Real Client Outcomes.',
   },
 
   founder: {
@@ -215,30 +223,47 @@ export const LANDING = {
   },
 
   faq: {
-    eyebrow: 'Questions',
-    heading: 'Audit FAQs',
+    eyebrow: 'Before You Book',
+    heading: 'Everything You Should Know.',
     items: [
+      { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip, plus your personalized audit PDF, your 100-day roadmap, the business growth calculators and an AI implementation toolkit. That’s the entire product.' },
+      { q: 'Who conducts the session?', a: 'Indrodip Ghosh, founder of The5th Global Consulting, personally. Not a sales rep, not a junior coach.' },
+      { q: 'Will I receive the recording?', a: 'Yes, if you consent to being recorded. We ask explicitly before the session starts. If you’d rather not be recorded, the session still runs, you just won’t get a video back.' },
+      { q: 'When will I receive my PDF?', a: 'Your personalized business audit PDF and 100-day roadmap land in your inbox within 48 hours of the session.' },
+      { q: 'Is this a sales call?', a: 'No. It’s a working session, not a pitch. If it becomes clear that working together further would genuinely help, I’ll say so directly, there’s no surprise pitch and no pressure either way.' },
+      { q: 'What if I’ve already spent thousands on coaching?', a: 'That’s exactly who this is built for. The audit isn’t another program to buy into, it’s a second, honest set of eyes on what you’ve already built, from someone with no stake in repeating advice you’ve already paid for.' },
+      { q: 'What if the session isn’t worth $29 to me?', a: 'Tell me within 7 days and I’ll refund you in full. You keep the written plan regardless. If you book a program with us within 14 days, the $29 is credited toward it.' },
+      { q: 'Can you guarantee $10K/month?', a: 'No, and anyone who promises that is selling you something other than an honest audit. We’ll show you documented results from real clients, your own results depend on your effort, your offer and your market.' },
+      { q: 'What happens after the session?', a: 'You leave with a specific bottleneck identified, a written plan within 48 hours, and a few AI prompts for the next 30 days. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
       { q: 'Do I need to turn my camera on?', a: 'No. Audio-only is completely fine. If you’d rather not get on a call at all, tell us and we’ll run it as a written-only audit instead, for the same price.' },
-      { q: 'Will you try to sell me something on the call?', a: 'It’s a working session, not a pitch. If it becomes clear that working together further would genuinely help, I’ll say so directly. It won’t be a surprise pitch, and there’s no pressure either way.' },
-      { q: 'Where are you based?', a: 'Kolkata, India. I work with coaches and consultants across the US and Canada, on your time zone.' },
-      { q: 'What if I don’t think it was worth $29?', a: 'Tell me within 7 days and I’ll refund you in full. You keep the written plan regardless. If you book a program with us within 14 days, the $29 is credited toward it.' },
-      { q: 'What if I’m not qualified?', a: 'The short application tells you immediately. If it’s not the right fit yet, we’ll say so and point you to a better next step instead of booking a call that won’t help you.' },
-      { q: 'What happens after the call?', a: 'You leave with a specific bottleneck identified, a written plan within 48 hours, and a few AI prompts for the next 30 days. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
+      { q: 'Where are you based?', a: 'Kolkata, India. I work with coaches and consultants across the US, UK, Canada and Australia, on your time zone.' },
     ],
   },
 
+  // ── Section 09: final booking card ──────────────────────────────────────
   apply: {
-    eyebrow: 'Apply Now',
-    heading: 'Apply for your audit.',
+    eyebrow: 'Your Next Step',
+    heading: 'Before You Spend Another Dollar on Your Business, Let’s Take a Look.',
+    includes: [
+      'A private 60-minute session with Indrodip',
+      'Your personalized audit PDF',
+      'Your call recording, subject to consent',
+      'Your personalized 100-day action roadmap',
+      'Interactive business growth calculators',
+      'An AI implementation toolkit',
+      'A 7-day full refund promise',
+    ],
+    priceNote: '$29 USD, one-time payment. No subscription, no long-term commitment.',
     micro: '$29, fully refundable within 7 days, credited toward any program if you book within 14 days. If we’re not the right fit, we’ll say so and point you to a better next step.',
   },
 
   nav: [
     { label: 'Proof', href: '#proof' },
-    { label: 'The Path', href: '#path' },
-    { label: 'The Call', href: '#call' },
+    { label: 'The Process', href: '#call' },
+    { label: 'What You Get', href: '#deliverables' },
+    { label: 'Results', href: '#proof2' },
     { label: 'FAQ', href: '#faq' },
-    { label: 'Apply', href: '#apply' },
+    { label: 'Book Your Audit', href: '#apply' },
   ],
 }
 

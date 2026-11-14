@@ -617,7 +617,7 @@ export default function Landing() {
 
       {/* Sticky mobile CTA */}
       <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(7,10,6,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(0,0,0,.6)' }}>
-        <a href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'sticky' })} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 4, background: ACCENT, color: ACCENT_TEXT, border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 15.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none' }}>{LANDING.ctaStandard} <span aria-hidden>→</span></a>
+        <a href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'sticky' })} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, whiteSpace: 'nowrap', background: ACCENT, color: ACCENT_TEXT, border: 'none', borderRadius: 999, padding: '15px 18px', fontSize: 'clamp(13.5px,4vw,15.5px)', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none' }}>Book My Audit — $29 <span aria-hidden>→</span></a>
       </div>
 
       <style>{`

@@ -143,11 +143,11 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
           {showFounder && (
-            <>
+            <span className="rm-header-founder" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 1, height: 22, background: T.line }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/founder.png" alt="Indrodip Ghosh, Founder" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
-            </>
+            </span>
           )}
         </a>
         {nav && (
@@ -155,18 +155,20 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
             {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
-        <HelpContact />
+        <span className="rm-header-help"><HelpContact /></span>
       </div>
       {/* "As featured in" sits right under the logo, pinned to the header so
           it reads on the first screen alongside the brand mark, not only
-          after scrolling down to the press strip further down the page. */}
+          after scrolling down to the press strip further down the page.
+          Mobile keeps the header down to just the logo (see below), so this
+          row is hidden there rather than squeezed into a scrolling strip. */}
       <div className="rm-press-row" style={{ borderTop: `1px solid ${T.line}`, padding: '7px 18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: T.text3, whiteSpace: 'nowrap' }}>Our Clients Featured In</span>
         <span style={{ display: 'flex', gap: 'clamp(10px,2vw,22px)', flexWrap: 'wrap', justifyContent: 'center' }}>
           {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 11.5, color: T.text2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
         </span>
       </div>
-      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-press-row span:first-child{display:none}.rm-press-row{padding:6px 14px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}.rm-press-row::-webkit-scrollbar{display:none}.rm-press-row>span:last-child{flex-wrap:nowrap}}`}</style>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-header-founder,.rm-header-help,.rm-press-row{display:none!important}}`}</style>
     </header>
   )
 }

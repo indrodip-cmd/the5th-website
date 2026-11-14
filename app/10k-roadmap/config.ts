@@ -176,10 +176,10 @@ export const LANDING = {
       { icon: 'map', t: 'Personalized 100-Day Roadmap', d: 'A structured action plan: what to fix first, what to prioritize next, what to stop doing, which marketing activities to focus on, and your next implementation milestones.' },
       { icon: 'calculator', t: 'Business Growth Calculators', d: 'Access to interactive tools, a revenue goal calculator, offer pricing calculator and client acquisition calculator, to help you understand your own numbers.' },
       { icon: 'brain', t: 'AI Implementation Toolkit', d: 'Relevant ChatGPT and Claude prompts to help you execute your audit recommendations.' },
-      { icon: 'download', t: 'Downloadable Sample Report', d: 'See exactly what your personalized audit will look like before you book, an illustrative sample, not an actual client’s audit.' },
+      { icon: 'download', t: 'Downloadable Sample Report', d: 'A full 6-page sample audit, every section filled out end to end, so you see exactly what your personalized audit will look like before you book.' },
     ],
-    sampleCta: 'Download Sample Audit PDF',
-    sampleNote: 'Illustrative sample only, built to show the format and depth of your real audit. Not an actual client’s report.',
+    sampleCta: 'Download The Full Sample Audit (6 Pages)',
+    sampleNote: 'Illustrative sample only, built section-by-section to match the exact format and depth of your real audit. Not an actual client’s report.',
     note: 'The $29 covers the 60-minute session and the deliverables above, not 100 days of coaching or implementation. What you do with the roadmap afterward is up to you.',
   },
 

@@ -10,7 +10,7 @@
    Video is env-driven so it can change without a deploy:
      NEXT_PUBLIC_AUDIT_VIDEO_URL   YouTube / Vimeo / mp4 URL for the VSL
    Payment reuses the existing Whop infra:
-     NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID  $97 "commitment deposit" plan id
+     NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID  $29 "commitment deposit" plan id
    ───────────────────────────────────────────────────────────────────────── */
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
@@ -47,7 +47,7 @@ export function auditPlanId(): string {
   return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
 }
 
-/* The Whop hosted checkout page qualified applicants are sent to for the $97
+/* The Whop hosted checkout page qualified applicants are sent to for the $29
    commitment deposit. Configure Whop's post-payment redirect to send buyers to
    https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
 export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
@@ -62,7 +62,7 @@ export function auditCalUrl(): string {
   return process.env.NEXT_PUBLIC_AUDIT_CAL_URL || 'https://cal.com/indrodip-ghosh-ut1vxh/60min'
 }
 
-export const DEPOSIT = { amount: 97, label: '$97', currency: 'USD' } as const
+export const DEPOSIT = { amount: 29, label: '$29', currency: 'USD' } as const
 
 /* Support contact shown in the header of every funnel page. */
 export const HELP = {
@@ -98,10 +98,23 @@ export const LANDING = {
   eyebrow: 'For experienced coaches and consultants who are done buying programs',
   headline: 'You Did The Work. It Didn’t Work. Let’s Find Out Why, Before You Spend Another Dollar.',
   headlineSub: 'A 60-minute audit of your coaching business, with a written plan you keep. Camera optional. No pitch unless you ask.',
-  ctaPrimary: 'Apply for an Audit, $97, Refundable',
+  ctaPrimary: 'Apply for an Audit, $29, Refundable',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
-  ctaMicro: '$97, fully refundable if it isn’t worth it to you. Credited toward any program if you book within 14 days.',
-  guarantee: 'Tell me within 7 days if it wasn’t worth $97 to you, and I’ll refund you. You keep the written plan either way.',
+  ctaMicro: '$29, fully refundable if it isn’t worth it to you. Credited toward any program if you book within 14 days.',
+  guarantee: 'Tell me within 7 days if it wasn’t worth $29 to you, and I’ll refund you. You keep the written plan either way.',
+
+  // Hero photo card: the credential badge sits on the photo itself, then
+  // the session facts sit in a plain caption below it — same layout as
+  // the India page's hero.
+  heroCard: {
+    name: 'Indrodip Ghosh',
+    role: 'Founder, Business Growth Strategist & AI Researcher',
+    credential: 'Consumer Psychologist, University of California, Berkeley',
+    chips: [
+      { t: '1-on-1 Zoom Session', s: '60 Minutes' },
+      { t: '$29 Only', s: 'Fully Refundable' },
+    ],
+  },
 
   proof: {
     eyebrow: 'Proven, not theoretical',
@@ -116,7 +129,7 @@ export const LANDING = {
     cols: [
       { label: 'Who it’s for', body: 'Experienced coaches and consultants who’ve already paid for the programs, the mastermind, the mentor, used AI daily trying to fix it themselves, and are done buying before getting a real diagnosis.' },
       { label: 'What it isn’t', body: 'Not a sales call. Not a group webinar. Not a “mindset” lecture. No pressure to buy anything on the call, and no income promises, from us or about you.' },
-      { label: 'What it costs', body: '$97, fully refundable within 7 days if it wasn’t worth it to you. The only real cost is showing up ready to look at what isn’t working.' },
+      { label: 'What it costs', body: '$29, fully refundable within 7 days if it wasn’t worth it to you. The only real cost is showing up ready to look at what isn’t working.' },
     ],
     not: 'Not for you if you’re not currently running your own coaching or consulting business, or you’re only after free advice with no intent to act on it.',
   },
@@ -182,7 +195,7 @@ export const LANDING = {
     body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M, and I’ve been recruited by Google, Anthropic, Mastermind.com and ClickFunnels along the way. I run The5th Global Consulting from Kolkata, India, working with coaches and consultants across the US and Canada, on your time zone. Working from outside the US coaching bubble means I’m not selling you the same playbook you’ve already bought. Every audit is run by me personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
-    stat: { value: '$97', label: 'Refundable 1:1 Audit, Written Plan In 48 Hrs' },
+    stat: { value: '$29', label: 'Refundable 1:1 Audit, Written Plan In 48 Hrs' },
     // Western-recognized credentials, shown as a compact strip above the
     // quote (same credibility line used on the India page). The valuation
     // is the startup's, confirmed by the business owner, not personal
@@ -208,7 +221,7 @@ export const LANDING = {
       { q: 'Do I need to turn my camera on?', a: 'No. Audio-only is completely fine. If you’d rather not get on a call at all, tell us and we’ll run it as a written-only audit instead, for the same price.' },
       { q: 'Will you try to sell me something on the call?', a: 'It’s a working session, not a pitch. If it becomes clear that working together further would genuinely help, I’ll say so directly. It won’t be a surprise pitch, and there’s no pressure either way.' },
       { q: 'Where are you based?', a: 'Kolkata, India. I work with coaches and consultants across the US and Canada, on your time zone.' },
-      { q: 'What if I don’t think it was worth $97?', a: 'Tell me within 7 days and I’ll refund you in full. You keep the written plan regardless. If you book a program with us within 14 days, the $97 is credited toward it.' },
+      { q: 'What if I don’t think it was worth $29?', a: 'Tell me within 7 days and I’ll refund you in full. You keep the written plan regardless. If you book a program with us within 14 days, the $29 is credited toward it.' },
       { q: 'What if I’m not qualified?', a: 'The short application tells you immediately. If it’s not the right fit yet, we’ll say so and point you to a better next step instead of booking a call that won’t help you.' },
       { q: 'What happens after the call?', a: 'You leave with a specific bottleneck identified, a written plan within 48 hours, and a few AI prompts for the next 30 days. For some people, that’s enough to execute alone. For others, we’ll talk about what working together further could look like.' },
     ],
@@ -217,7 +230,7 @@ export const LANDING = {
   apply: {
     eyebrow: 'Apply Now',
     heading: 'Apply for your audit.',
-    micro: '$97, fully refundable within 7 days, credited toward any program if you book within 14 days. If we’re not the right fit, we’ll say so and point you to a better next step.',
+    micro: '$29, fully refundable within 7 days, credited toward any program if you book within 14 days. If we’re not the right fit, we’ll say so and point you to a better next step.',
   },
 
   nav: [
@@ -333,7 +346,7 @@ export const QUALIFICATION: Q[] = [
   },
 ]
 
-/* Post-payment deep diagnostic (AFTER the $97 commitment). */
+/* Post-payment deep diagnostic (AFTER the $29 commitment). */
 export const DEEP: Q[] = [
   { id: 'd_stuck', type: 'text', long: true, prompt: 'What is the ONE thing you’ve been trying to fix that still hasn’t changed?', placeholder: 'Be specific, this is what we’ll go after first.' },
   { id: 'd_cost', type: 'text', long: true, prompt: 'If nothing changes over the next 6–12 months, what will staying at your current level cost you?', helper: 'Think beyond money, time, freedom, confidence, family, lifestyle and opportunities.' },
@@ -381,8 +394,8 @@ export const RESERVE = {
     'The single bottleneck I’d fix first, and the path around it',
     'Your business reviewed from your answers before we meet',
   ],
-  depositNote: 'The $97 is a commitment deposit to reserve your private audit slot, not the price of the advice.',
-  cta: 'Reserve My Audit, $97',
+  depositNote: 'The $29 is a commitment deposit to reserve your private audit slot, not the price of the advice.',
+  cta: 'Reserve My Audit, $29',
   contact: {
     heading: 'Where should we send your audit details?',
     sub: 'We’ll use this to confirm your slot and prepare your session.',
@@ -396,7 +409,7 @@ export const BOOK = {
   headline: 'Your audit is almost locked in.',
   sub: 'Choose a time that works for you. We’ll use your answers to make the 60 minutes extremely specific to your business.',
   offerTitle: 'Your $10K Roadmap Audit',
-  offerPoints: ['60 minutes', 'Private strategy session', 'Your business reviewed before the call', '$97 deposit applied per the stated terms'],
+  offerPoints: ['60 minutes', 'Private strategy session', 'Your business reviewed before the call', '$29 deposit applied per the stated terms'],
   confirmCta: 'Confirm My Audit',
 }
 
@@ -450,7 +463,7 @@ export const PAY = {
     'A clear, prioritized action plan you can start using immediately after the call',
   ],
   fit: 'This works if you’re a coach or consultant who has some traction but hasn’t cracked consistency. You know your expertise is valuable, you’re just not converting it into predictable revenue yet.',
-  deposit: 'Your $97 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
+  deposit: 'Your $29 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
   guaranteeTitle: '30-Day Money-Back Guarantee',
   guaranteeBody: 'If you attend the call and feel it didn’t give you real clarity or a usable next step, email us within 30 days for a full refund. No conditions attached.',
   micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay',
@@ -460,7 +473,7 @@ export const GATE = {
   verifying: 'Confirming your payment…',
   verifyingSub: 'This takes just a moment. Please don’t close this tab.',
   blockedHeadline: 'Payment required to continue.',
-  blockedSub: 'This step unlocks once your $97 deposit is confirmed. If you just paid, give it a few seconds and refresh. Otherwise, complete your deposit to continue.',
+  blockedSub: 'This step unlocks once your $29 deposit is confirmed. If you just paid, give it a few seconds and refresh. Otherwise, complete your deposit to continue.',
   blockedCta: 'Go to payment →',
 }
 
@@ -476,7 +489,7 @@ export const CONFIRMED = {
   badge: 'You’re booked',
   headline: 'You’re all set.',
   sub: 'Your $10K Roadmap Audit is confirmed.',
-  refundReminder: 'Reminder: your $97 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
+  refundReminder: 'Reminder: your $29 is a refundable commitment deposit. If you’re genuinely unqualified for the process, it’s refunded per our policy.',
 }
 
 /* ── Post-payment Typeform page (why it matters + no skipping) ──────────────*/

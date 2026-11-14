@@ -1,5 +1,5 @@
 'use client'
-/* Post-payment page (the URL Whop redirects to after the $97 deposit).
+/* Post-payment page (the URL Whop redirects to after the $29 deposit).
    This step is REQUIRED and cannot be skipped: the deep answers are how we
    prepare a specific audit instead of vague advice. Two things:
      1. A "why this matters" frame + the embedded deep-questions Typeform.

@@ -325,12 +325,24 @@ export default function Landing() {
               <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
             </Reveal>
           </div>
-          <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 360, margin: '0 auto', position: 'relative' }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder-golden-gate.webp" alt="Indrodip Ghosh, Founder, The5th Global Consulting" style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
-            <div style={{ position: 'absolute', left: -18, bottom: -18, background: '#1B1824', border: '1px solid rgba(124,77,191,.35)', borderRadius: 14, padding: '14px 18px', boxShadow: '0 18px 34px -16px rgba(0,0,0,.6)', maxWidth: 170 }}>
-              <div className="rm-serif" style={{ fontSize: 26, fontWeight: 800, color: '#E4C879', lineHeight: 1 }}>{LANDING.founder.stat.value}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.75)', marginTop: 4, lineHeight: 1.35 }}>{LANDING.founder.stat.label}</div>
+          <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 400, margin: '0 auto' }}>
+            <div style={{ position: 'relative' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
+              <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(11,10,16,.55)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)', textAlign: 'center' }}>
+                <span style={{ fontWeight: 800, fontSize: 15.5, color: '#fff' }}>{LANDING.heroCard.credential}</span>
+              </div>
+            </div>
+            <div style={{ marginTop: 18, textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 800, fontSize: 15 }}>{LANDING.heroCard.name}</span>
+                <span style={{ color: TEXT3, fontSize: 13 }}>{LANDING.heroCard.role}</span>
+              </div>
+              <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 18 }}>
+                {LANDING.heroCard.chips.map((c) => (
+                  <span key={c.t} style={{ fontSize: 13, color: TEXT3 }}><strong style={{ color: '#fff', fontWeight: 800 }}>{c.t}</strong> {c.s}</span>
+                ))}
+              </div>
             </div>
           </Reveal>
         </section>

@@ -1,5 +1,5 @@
 'use client'
-/* Step 2 — Payment. Whop embedded checkout for the $97 refundable deposit.
+/* Step 2 — Payment. Whop embedded checkout for the $29 refundable deposit.
    On success Whop redirects to Step 3 (?email=…); the Whop webhook marks the
    lead paid, which the gated steps verify server-side. Skeleton + hosted
    fallback so a blocked embed never strands the buyer. */

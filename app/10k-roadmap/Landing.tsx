@@ -131,150 +131,122 @@ function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
   )
 }
 
-/* ── Section 06: three business-growth calculators, one slider panel ──────
-   Transparent, editable math on the numbers the visitor enters. No
-   guarantees, no email-gate, division-by-zero guarded throughout. */
-type CalcTab = 'revenue' | 'pricing' | 'acquisition'
+/* ── Section 06: one unified revenue-engine calculator ────────────────────
+   Every input (revenue goal, offer price, and both funnel conversion rates)
+   feeds a single cascading model — goal → clients → booked calls → leads —
+   rendered as one real funnel, plus a live pricing-leverage readout. One
+   complex, meaningful tool instead of three disconnected tabs. Transparent,
+   editable math on the numbers the visitor enters; division-by-zero guarded
+   throughout, no email-gate, no guarantees implied. */
 function Calculators() {
-  const [tab, setTab] = useState<CalcTab>('revenue')
-  // Calculator A: revenue goal
   const [goal, setGoal] = useState(10000)
   const [offerPrice, setOfferPrice] = useState(1500)
-  // Calculator B: offer pricing
-  const [currentPrice, setCurrentPrice] = useState(1500)
-  const [desiredRevenue, setDesiredRevenue] = useState(10000)
-  // Calculator C: client acquisition
-  const [salesTarget, setSalesTarget] = useState(5)
-  const [closeRate, setCloseRate] = useState(25)
-  const [bookRate, setBookRate] = useState(40)
+  const [closeRate, setCloseRate] = useState(25) // booked call → client
+  const [bookRate, setBookRate] = useState(40)   // lead → booked call
 
   const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
   const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US')
+  const fmtK = (n: number) => n >= 1000 ? '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'K' : fmt(n)
 
-  const revenueOut = useMemo(() => {
-    const monthly = safeDiv(goal, offerPrice)
-    return { monthly, weekly: monthly / 4.33, daily: monthly / 30 }
-  }, [goal, offerPrice])
-
-  const pricingOut = useMemo(() => {
-    const salesAtCurrent = safeDiv(desiredRevenue, currentPrice)
-    return { salesAtCurrent }
-  }, [desiredRevenue, currentPrice])
-
-  const acquisitionOut = useMemo(() => {
+  const model = useMemo(() => {
     const close = closeRate / 100, book = bookRate / 100
-    const bookedCalls = safeDiv(salesTarget, close)
+    const clients = safeDiv(goal, offerPrice)
+    const bookedCalls = safeDiv(clients, close)
     const leads = safeDiv(bookedCalls, book)
-    return { leads, bookedCalls }
-  }, [salesTarget, closeRate, bookRate])
-
-  const tabs: { id: CalcTab; label: string }[] = [
-    { id: 'revenue', label: 'Revenue Goal' },
-    { id: 'pricing', label: 'Offer Pricing' },
-    { id: 'acquisition', label: 'Client Acquisition' },
-  ]
+    const revenuePerLead = safeDiv(goal, leads)
+    // Pricing leverage: the same revenue goal at offer price +25%, holding
+    // conversion rates constant, shows how many fewer clients (and calls,
+    // and leads) a higher price would require.
+    const higherPrice = Math.round(offerPrice * 1.25)
+    const clientsAtHigherPrice = safeDiv(goal, higherPrice)
+    const leadsAtHigherPrice = safeDiv(safeDiv(clientsAtHigherPrice, close), book)
+    const leadsSaved = Math.max(0, leads - leadsAtHigherPrice)
+    return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved }
+  }, [goal, offerPrice, closeRate, bookRate])
 
   const sliderStyle: React.CSSProperties = { width: '100%', height: 5, borderRadius: 999, accentColor: ACCENT, background: 'rgba(255,255,255,.13)' }
-  const Field = ({ label, value, display, children }: { label: string; value?: string; display?: string; children: React.ReactNode }) => (
+  const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 10 }}>
         <span style={{ fontSize: 13.5, color: TEXT2 }}>{label}</span>
-        <span style={{ fontSize: 15, fontWeight: 800, color: ACCENT, fontVariantNumeric: 'tabular-nums' }}>{display ?? value}</span>
+        <span style={{ fontSize: 15, fontWeight: 800, color: ACCENT, fontVariantNumeric: 'tabular-nums' }}>{display}</span>
       </div>
       {children}
     </div>
   )
 
+  // The funnel itself: leads at the top (widest), narrowing down to clients
+  // and the revenue goal at the bottom. Bar widths are proportional to the
+  // top-of-funnel lead count so the shrink is visually honest, not stylized.
+  const stages = [
+    { label: 'Leads needed', value: model.leads, display: Math.ceil(model.leads).toLocaleString('en-US'), note: 'per month, at your lead→call rate' },
+    { label: 'Booked calls needed', value: model.bookedCalls, display: Math.ceil(model.bookedCalls).toLocaleString('en-US'), note: 'per month, at your call→client rate' },
+    { label: 'Clients needed', value: model.clients, display: model.clients.toFixed(1), note: `per month at ${fmt(offerPrice)}/client` },
+    { label: 'Monthly revenue', value: 0, display: fmt(goal), note: 'your stated goal' },
+  ]
+  const maxV = Math.max(model.leads, 1)
+
   return (
     <div>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 20 }}>
-        {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className="rm-focus"
-            style={{ padding: '10px 18px', borderRadius: 999, fontSize: 13.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-              background: tab === t.id ? ACCENT : 'transparent', color: tab === t.id ? ACCENT_TEXT : TEXT2,
-              border: `1px solid ${tab === t.id ? ACCENT : LINE2}` }}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-
       <div className="rm-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,28px)', alignItems: 'start' }}>
+        {/* Controls */}
         <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          {tab === 'revenue' && (
-            <>
-              <Field label="Monthly revenue goal" display={fmt(goal)}>
-                <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} style={sliderStyle} />
-              </Field>
-              <Field label="Average offer price" display={fmt(offerPrice)}>
-                <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} style={sliderStyle} />
-              </Field>
-            </>
-          )}
-          {tab === 'pricing' && (
-            <>
-              <Field label="Current offer price" display={fmt(currentPrice)}>
-                <input type="range" min={50} max={10000} step={50} value={currentPrice} onChange={(e) => setCurrentPrice(+e.target.value)} style={sliderStyle} />
-              </Field>
-              <Field label="Desired monthly revenue" display={fmt(desiredRevenue)}>
-                <input type="range" min={1000} max={100000} step={500} value={desiredRevenue} onChange={(e) => setDesiredRevenue(+e.target.value)} style={sliderStyle} />
-              </Field>
-            </>
-          )}
-          {tab === 'acquisition' && (
-            <>
-              <Field label="Monthly sales target" display={String(salesTarget)}>
-                <input type="range" min={1} max={30} step={1} value={salesTarget} onChange={(e) => setSalesTarget(+e.target.value)} style={sliderStyle} />
-              </Field>
-              <Field label="Booked-call → customer rate" display={closeRate + '%'}>
-                <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} style={sliderStyle} />
-              </Field>
-              <Field label="Lead → booked-call rate" display={bookRate + '%'}>
-                <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} style={sliderStyle} />
-              </Field>
-            </>
-          )}
+          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Numbers</div>
+          <Field label="Monthly revenue goal" display={fmt(goal)}>
+            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} style={sliderStyle} />
+          </Field>
+          <Field label="Average offer price" display={fmt(offerPrice)}>
+            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} style={sliderStyle} />
+          </Field>
+          <Field label="Booked call → client rate" display={closeRate + '%'}>
+            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} style={sliderStyle} />
+          </Field>
+          <Field label="Lead → booked call rate" display={bookRate + '%'}>
+            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} style={sliderStyle} />
+          </Field>
+
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `1px solid ${LINE}` }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>Pricing Leverage</div>
+            <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
+              At <strong style={{ color: '#F2F6EC' }}>{fmt(model.higherPrice)}</strong> (+25%), the same {fmt(goal)}/month goal needs only{' '}
+              <strong style={{ color: ACCENT }}>{Math.ceil(model.leadsAtHigherPrice).toLocaleString('en-US')} leads</strong> instead of{' '}
+              {Math.ceil(model.leads).toLocaleString('en-US')} — {Math.ceil(model.leadsSaved).toLocaleString('en-US')} fewer leads to find every month.
+            </p>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gap: 14 }}>
-          {tab === 'revenue' && (
-            <>
-              <div style={{ background: 'linear-gradient(150deg,rgba(201,255,72,.15),rgba(201,255,72,.04))', border: '1px solid rgba(201,255,72,.32)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-                <strong style={{ display: 'block', fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-.02em', fontVariantNumeric: 'tabular-nums' }}>{revenueOut.monthly.toFixed(1)}</strong>
-                <small style={{ display: 'block', marginTop: 8, fontSize: 13, color: TEXT2 }}>clients needed per month at {fmt(offerPrice)}</small>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
-                  <strong style={{ display: 'block', fontSize: 20, fontWeight: 800 }}>{revenueOut.weekly.toFixed(1)}</strong>
-                  <span style={{ fontSize: 12, color: TEXT3 }}>per week</span>
+        {/* The funnel */}
+        <div style={{ background: 'linear-gradient(150deg,rgba(201,255,72,.1),rgba(201,255,72,.02))', border: '1px solid rgba(201,255,72,.28)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Revenue Engine</div>
+          <div style={{ display: 'grid', gap: 10 }}>
+            {stages.map((s, i) => {
+              const widthPct = i === 3 ? 100 : Math.max(18, Math.min(100, (s.value / maxV) * 100))
+              return (
+                <div key={s.label}>
+                  <div style={{ width: `${widthPct}%`, minWidth: '46%', marginLeft: 'auto', marginRight: 'auto', background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, borderRadius: 10, padding: '12px 16px', transition: 'width .25s ease' }}>
+                    <strong style={{ display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#0B0F08', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: 6 }}>
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: '#F2F6EC' }}>{s.label}</span>
+                    <span style={{ fontSize: 11.5, color: TEXT3 }}> · {s.note}</span>
+                  </div>
                 </div>
-                <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
-                  <strong style={{ display: 'block', fontSize: 20, fontWeight: 800 }}>{revenueOut.daily.toFixed(2)}</strong>
-                  <span style={{ fontSize: 12, color: TEXT3 }}>per day (avg.)</span>
-                </div>
-              </div>
-            </>
-          )}
-          {tab === 'pricing' && (
-            <div style={{ background: 'linear-gradient(150deg,rgba(201,255,72,.15),rgba(201,255,72,.04))', border: '1px solid rgba(201,255,72,.32)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-              <strong style={{ display: 'block', fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-.02em', fontVariantNumeric: 'tabular-nums' }}>{pricingOut.salesAtCurrent.toFixed(1)}</strong>
-              <small style={{ display: 'block', marginTop: 8, fontSize: 13, color: TEXT2 }}>sales/month needed at {fmt(currentPrice)} to hit {fmt(desiredRevenue)}. Raise the price and watch this number drop.</small>
+              )
+            })}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
+            <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
+              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{(model.clients / 4.33).toFixed(1)}</strong>
+              <span style={{ fontSize: 11.5, color: TEXT3 }}>clients needed per week</span>
             </div>
-          )}
-          {tab === 'acquisition' && (
-            <>
-              <div style={{ background: 'linear-gradient(150deg,rgba(201,255,72,.15),rgba(201,255,72,.04))', border: '1px solid rgba(201,255,72,.32)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-                <strong style={{ display: 'block', fontSize: 'clamp(26px,4vw,38px)', fontWeight: 800, letterSpacing: '-.02em', fontVariantNumeric: 'tabular-nums' }}>{Math.ceil(acquisitionOut.leads)}</strong>
-                <small style={{ display: 'block', marginTop: 8, fontSize: 13, color: TEXT2 }}>leads needed per month</small>
-              </div>
-              <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
-                <strong style={{ display: 'block', fontSize: 20, fontWeight: 800 }}>{Math.ceil(acquisitionOut.bookedCalls)}</strong>
-                <span style={{ fontSize: 12, color: TEXT3 }}>booked calls needed per month, at a {closeRate}% close rate</span>
-              </div>
-            </>
-          )}
+            <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
+              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{fmtK(model.revenuePerLead)}</strong>
+              <span style={{ fontSize: 11.5, color: TEXT3 }}>revenue value per lead</span>
+            </div>
+          </div>
         </div>
       </div>
-      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
+      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 580, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
     </div>
   )
 }

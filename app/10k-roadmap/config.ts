@@ -183,8 +183,8 @@ export const LANDING = {
   // ── Section 06: interactive business calculators ───────────────────────
   calculators: {
     eyebrow: 'Know Your Numbers',
-    heading: 'Understand Your Business Numbers.',
-    sub: 'Before deciding what to change, understand the numbers behind your business. Adjust the inputs, nothing here is a guarantee, it’s simple math on the numbers you give it.',
+    heading: 'Your Entire Revenue Engine, On One Screen.',
+    sub: 'Your revenue goal, your price and both of your conversion rates, run through one connected model, leads down to booked calls, down to clients, down to revenue. Adjust any input and watch the whole chain move.',
     disclaimer: 'For planning only. These are illustrative calculations based on the numbers you enter, not a prediction or a guarantee of revenue, clients or conversion rates.',
   },
 

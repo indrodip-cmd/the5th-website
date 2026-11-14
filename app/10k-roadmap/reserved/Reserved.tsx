@@ -22,11 +22,43 @@ function parseCal(url: string): { calLink: string; namespace: string } {
   return { calLink, namespace }
 }
 
+/* Fires a short celebratory sequence — a few confetti bursts from
+   alternating sides, firework-style — then calls onDone. Lazy-imports
+   canvas-confetti (already a dependency, used the same way on
+   /checkout/complete) so it never blocks the initial page load. */
+function Celebration({ onDone }: { onDone: () => void }) {
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const mod = await import('canvas-confetti')
+        const confetti = mod.default
+        const colors = ['#C9FF48', '#F2F6EC', '#7C4DBF']
+        const burst = (x: number) => confetti({ particleCount: 70, spread: 80, startVelocity: 45, origin: { x, y: 0.4 }, colors })
+        if (!cancelled) { burst(0.2); setTimeout(() => !cancelled && burst(0.8), 250); setTimeout(() => !cancelled && confetti({ particleCount: 110, spread: 100, origin: { y: 0.3 }, colors }), 550) }
+      } catch { /* confetti is decorative only — never block the flow */ }
+    })()
+    const t = setTimeout(onDone, 2400)
+    return () => { cancelled = true; clearTimeout(t) }
+  }, [onDone])
+
+  return (
+    <Reveal style={{ textAlign: 'center', padding: '60px 0' }}>
+      <svg width="76" height="76" viewBox="0 0 86 86" style={{ margin: '0 auto 20px', display: 'block' }} aria-hidden>
+        <circle cx="43" cy="43" r="40" fill="none" stroke={T.accent} strokeWidth="2.5" strokeDasharray="252" strokeDashoffset="252" style={{ animation: 'rm-draw 0.7s ease forwards' }} />
+        <path d="M26 44 l12 12 l22 -24" fill="none" stroke={T.accent} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="60" strokeDashoffset="60" style={{ animation: 'rm-draw 0.45s 0.55s ease forwards' }} />
+      </svg>
+      <h1 className="rm-serif" style={{ fontSize: 'clamp(30px,5vw,44px)', margin: '0 0 12px', fontWeight: 800 }}>🎉 Congratulations!</h1>
+      <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>You’re officially set up for your business audit. Now let’s lock in your time.</p>
+    </Reveal>
+  )
+}
+
 export default function Reserved() {
   const router = useRouter()
   const utm = useUtm()
   const { calLink, namespace } = parseCal(auditCalUrl())
-  const [phase, setPhase] = useState<'intake' | 'booking'>('intake')
+  const [phase, setPhase] = useState<'intake' | 'celebration' | 'booking'>('intake')
   const [calReady, setCalReady] = useState(false)
   const [me] = useState<{ name: string; email: string }>(() => {
     if (typeof window === 'undefined') return { name: '', email: '' }
@@ -75,8 +107,8 @@ export default function Reserved() {
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans, display: 'flex', flexDirection: 'column' }}>
       <Fonts />
       <Header />
-      <main style={{ flex: 1, width: '100%', maxWidth: phase === 'intake' ? 680 : 900, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 44px' }}>
-        {phase === 'intake' ? (
+      <main style={{ flex: 1, width: '100%', maxWidth: phase === 'booking' ? 900 : 680, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 44px' }}>
+        {phase === 'intake' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 22 }}>
               <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{RESERVED_WHY.eyebrow}</div>
@@ -91,13 +123,17 @@ export default function Reserved() {
                   onComplete={(answers) => {
                     saveQualAnswers({ ...loadQualAnswers(), ...answers })
                     track('deep_application_completed')
-                    setPhase('booking')
+                    setPhase('celebration')
                   }}
                 />
               </div>
             </Reveal>
           </>
-        ) : (
+        )}
+
+        {phase === 'celebration' && <Celebration onDone={() => setPhase('booking')} />}
+
+        {phase === 'booking' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 20 }}>
               <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{RESERVED_WHY.bookingEyebrow}</div>

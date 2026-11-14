@@ -50,10 +50,11 @@ export function auditPlanId(): string {
   return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
 }
 
-/* The Whop hosted checkout page qualified applicants are sent to for the $29
-   commitment deposit. Configure Whop's post-payment redirect to send buyers to
+/* The Whop hosted product page every CTA on the global /10k-roadmap page
+   links to directly for the $29 audit. Configure Whop's post-payment
+   redirect to send buyers to
    https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
-export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_85pIPWE1K0uBB'
+export const AUDIT_CHECKOUT_URL = 'https://whop.com/10kroadmap-org/the5th-private-business-strategy-audit/'
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
    are auto-redirected to after they submit it. Both are env-overridable so you

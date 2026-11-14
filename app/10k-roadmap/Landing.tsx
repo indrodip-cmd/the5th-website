@@ -16,8 +16,7 @@
      Section 09 FAQ accordion + final booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF } from './config'
+import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
 import VideoWall from '@/components/VideoWall'
@@ -274,20 +273,14 @@ function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
 }
 
 export default function Landing() {
-  const router = useRouter()
   const [showSticky, setShowSticky] = useState(false)
   const [showAllProof, setShowAllProof] = useState(false)
   useUtm()
   useEffect(() => { track('page_view') }, [])
   useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
-  useEffect(() => { router.prefetch('/10k-roadmap/schedule') }, [router])
-  // The qualification form was removed from this page: every CTA now goes
-  // straight to booking a time, no question flow in between.
-  const goApply = (where: string) => {
-    track('cta_click', { where })
-    router.push('/10k-roadmap/schedule')
-  }
-  const CTA = (where: string, label?: string) => <Btn onClick={() => goApply(where)} style={{ padding: '16px 34px', fontSize: 16.5 }}>{label || LANDING.ctaStandard} <span aria-hidden>→</span></Btn>
+  // Every CTA on this page links straight to the Whop product page for the
+  // $29 audit — no internal qualification/schedule hop in between.
+  const CTA = (where: string, label?: string) => <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where })} style={{ padding: '16px 34px', fontSize: 16.5 }}>{label || LANDING.ctaStandard} <span aria-hidden>→</span></Btn>
   // For this page's US/Canada-first audience, lead the proof list with named
   // North American clients, without reordering the shared REAL_PROOF array
   // other pages also read.
@@ -316,7 +309,7 @@ export default function Landing() {
             </Reveal>
             <Reveal delay={100} style={{ marginTop: 24 }}>
               <div className="rm-hero-ctas" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <Btn onClick={() => goApply('hero')} style={{ padding: '16px 34px', fontSize: 17 }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
+                <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'hero' })} style={{ padding: '16px 34px', fontSize: 17 }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
                 <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById('proof')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
@@ -624,7 +617,7 @@ export default function Landing() {
 
       {/* Sticky mobile CTA */}
       <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(7,10,6,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(0,0,0,.6)' }}>
-        <button onClick={() => goApply('sticky')} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 4, background: ACCENT, color: ACCENT_TEXT, border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 15.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>{LANDING.ctaStandard} <span aria-hidden>→</span></button>
+        <a href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'sticky' })} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 4, background: ACCENT, color: ACCENT_TEXT, border: 'none', borderRadius: 999, padding: '15px 20px', fontSize: 15.5, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none' }}>{LANDING.ctaStandard} <span aria-hidden>→</span></a>
       </div>
 
       <style>{`

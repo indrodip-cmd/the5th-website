@@ -101,7 +101,7 @@ export const LANDING = {
   // must not be rewritten. Only the shared accent color (T.accent) changes
   // around it, so it reads as part of one consistent system.
   eyebrow: 'For experienced coaches and consultants who are done buying programs',
-  headline: 'You’ve Worked With Coaches. You’ve Gotten Business Strategies From ChatGPT And Claude. You’ve Put In The Work. So Why Aren’t You Making Consistent Money?',
+  headline: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?',
   headlineSub: 'Before you spend another dollar on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
   ctaPrimary: 'Apply for an Audit, $29, Refundable',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },

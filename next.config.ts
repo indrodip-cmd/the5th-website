@@ -20,7 +20,11 @@ const nextConfig: NextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()' },
+          // microphone=(self): the $10K Roadmap Audit intake (/10k-roadmap/reserved)
+          // offers voice-to-text answers via the Web Speech API. `self` only
+          // lets this origin's own pages request it — never third-party embeds —
+          // and the browser still prompts the visitor for consent every time.
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(self), geolocation=(), interest-cohort=(), browsing-topics=()' },
           { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
           // Isolate our browsing context but still allow the Cal.com / Whop
           // checkout popups to talk back to us.

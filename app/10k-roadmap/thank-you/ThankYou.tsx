@@ -61,6 +61,8 @@ export default function ThankYou() {
   const [b, setB] = useState<Booking | null>(null)
   const [tried, setTried] = useState(false)
   const [emailInput, setEmailInput] = useState('')
+  const [lookupError, setLookupError] = useState('')
+  const [lookingUp, setLookingUp] = useState(false)
   // Query string that re-resolves this exact booking, so "Save this page" hands
   // the attendee a link they can bookmark and re-open to the live countdown.
   const [shareParam, setShareParam] = useState('')
@@ -105,14 +107,19 @@ export default function ThankYou() {
   const lookupByEmail = async (e: React.FormEvent) => {
     e.preventDefault()
     const em = emailInput.trim().toLowerCase()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return
-    setTried(false)
+    setLookupError('')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setLookupError('That doesn’t look like a valid email — double-check it and try again.'); return }
     setShareParam(`email=${encodeURIComponent(em)}`)
+    setLookingUp(true)
     try {
       const r = await fetch(`/api/10k-roadmap/booking-lookup?email=${encodeURIComponent(em)}`, { cache: 'no-store' })
       const j = await r.json()
       if (j?.booking?.start) setB(j.booking)
-    } catch { /* noop */ }
+      else setLookupError('We couldn’t find a booking for that email. Double-check it, or if you just booked, give it a few seconds and try again.')
+    } catch {
+      setLookupError('Something went wrong looking that up — please try again.')
+    }
+    setLookingUp(false)
     setTried(true)
   }
 
@@ -198,7 +205,8 @@ export default function ThankYou() {
               <form onSubmit={lookupByEmail} style={{ display: 'grid', gap: 10, maxWidth: 360, margin: '0 auto' }}>
                 <p style={{ color: T.text3, fontSize: 13, margin: 0 }}>{THANKYOU.emailPrompt}</p>
                 <input className="rm-focus" type="email" placeholder="Email you booked with" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} style={{ width: '100%', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '13px 15px', fontFamily: T.sans }} />
-                <Btn type="submit" full>Show my countdown →</Btn>
+                <Btn type="submit" full disabled={lookingUp}>{lookingUp ? 'Looking it up…' : 'Show my countdown →'}</Btn>
+                {lookupError && <p style={{ color: T.danger, fontSize: 13.5, lineHeight: 1.5, margin: '2px 0 0', textAlign: 'center' }}>{lookupError}</p>}
               </form>
             </div>
           </Reveal>

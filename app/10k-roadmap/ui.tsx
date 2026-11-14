@@ -267,7 +267,7 @@ type SpeechRecognitionLike = {
   lang: string; continuous: boolean; interimResults: boolean
   start: () => void; stop: () => void
   onresult: ((e: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null
-  onerror: (() => void) | null
+  onerror: ((e: { error?: string }) => void) | null
   onend: (() => void) | null
 }
 function getSpeechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
@@ -277,6 +277,7 @@ function getSpeechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
 }
 function VoiceInputButton({ onTranscript, align = 'top' }: { onTranscript: (text: string) => void; align?: 'top' | 'center' }) {
   const [listening, setListening] = useState(false)
+  const [error, setError] = useState('')
   // Feature detection only runs after mount — the server has no `window`, so
   // rendering based on it synchronously would mismatch the client's first
   // render (a React hydration error). Render nothing until mounted, exactly
@@ -289,6 +290,7 @@ function VoiceInputButton({ onTranscript, align = 'top' }: { onTranscript: (text
 
   const stop = () => { recRef.current?.stop(); setListening(false) }
   const start = () => {
+    setError('')
     const rec = new Ctor()
     rec.lang = 'en-US'; rec.continuous = true; rec.interimResults = false
     rec.onresult = (e) => {
@@ -297,27 +299,38 @@ function VoiceInputButton({ onTranscript, align = 'top' }: { onTranscript: (text
         if (r.isFinal) onTranscript(r[0].transcript.trim())
       }
     }
-    rec.onerror = () => setListening(false)
+    // Surface *why* it stopped instead of reverting silently — "not-allowed"
+    // (mic permission denied or blocked by the browser/site policy) and
+    // "network" (the browser's speech service is unreachable) are the two a
+    // visitor can actually act on; anything else just quietly resets.
+    rec.onerror = (e) => {
+      setListening(false)
+      const code = e?.error
+      if (code === 'not-allowed' || code === 'service-not-allowed') setError('Mic access is blocked — check your browser/site permissions.')
+      else if (code === 'network') setError('Voice input needs an internet connection. Try typing instead.')
+    }
     rec.onend = () => setListening(false)
     recRef.current = rec
-    rec.start()
-    setListening(true)
+    try { rec.start(); setListening(true) } catch { setError('Couldn’t start voice input. Try typing instead.') }
   }
 
   return (
-    <button type="button" onClick={listening ? stop : start} aria-label={listening ? 'Stop voice input' : 'Answer by voice'} className="rm-focus"
-      style={{
-        position: 'absolute', right: 12, ...(align === 'center' ? { top: '50%', transform: 'translateY(-50%)' } : { top: 12 }),
-        width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer',
-        background: listening ? T.danger : T.accentSoft, color: listening ? '#fff' : T.accentInk,
-        display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s',
-      }}>
-      {listening && <span aria-hidden style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: `2px solid ${T.danger}`, opacity: .6, animation: 'rm-voice-pulse 1.4s ease-out infinite' }} />}
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><line x1="12" y1="19" x2="12" y2="22" />
-      </svg>
-      <style>{`@keyframes rm-voice-pulse{from{transform:scale(1);opacity:.6}to{transform:scale(1.5);opacity:0}}`}</style>
-    </button>
+    <>
+      <button type="button" onClick={listening ? stop : start} aria-label={listening ? 'Stop voice input' : 'Answer by voice'} className="rm-focus"
+        style={{
+          position: 'absolute', right: 12, ...(align === 'center' ? { top: '50%', transform: 'translateY(-50%)' } : { top: 12 }),
+          width: 38, height: 38, borderRadius: '50%', border: 'none', cursor: 'pointer',
+          background: listening ? T.danger : T.accentSoft, color: listening ? '#fff' : T.accentInk,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s',
+        }}>
+        {listening && <span aria-hidden style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: `2px solid ${T.danger}`, opacity: .6, animation: 'rm-voice-pulse 1.4s ease-out infinite' }} />}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0" /><line x1="12" y1="19" x2="12" y2="22" />
+        </svg>
+        <style>{`@keyframes rm-voice-pulse{from{transform:scale(1);opacity:.6}to{transform:scale(1.5);opacity:0}}`}</style>
+      </button>
+      {error && <span style={{ position: 'absolute', right: 0, top: '100%', marginTop: 6, fontSize: 11.5, color: T.danger, whiteSpace: 'nowrap' }}>{error}</span>}
+    </>
   )
 }
 

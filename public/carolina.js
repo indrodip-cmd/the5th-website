@@ -12,9 +12,16 @@
   // /quiz/results) is likewise widget-free so nothing competes with the quiz —
   // the ONLY exception is the post-booking /quiz/thank-you page, where Carolina
   // returns to thank the visitor and point them to the case-study library.
+  // The $10K Roadmap Audit LANDING page (/10k-roadmap exactly) is the one
+  // exception to its own funnel-exclusion rule: it's a sales/decision page
+  // where a concierge genuinely helps, so Carolina is on there (with
+  // page-specific knowledge of the $29 offer, see PAGE_CTX.audit below).
+  // Every step AFTER that — payment, the intake questions, booking,
+  // confirmation — stays widget-free so nothing competes with checkout.
   try {
-    var _cp = location.pathname;
-    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0 || _cp.indexOf('/10k-roadmap') === 0) return;
+    var _cp = location.pathname.replace(/\/+$/, '') || '/';
+    if (_cp.indexOf('/lp/') === 0 || _cp.indexOf('/event/') === 0) return;
+    if (_cp.indexOf('/10k-roadmap') === 0 && _cp !== '/10k-roadmap') return;
     if (_cp.indexOf('/quiz') === 0 && _cp.indexOf('/quiz/thank') !== 0) return;
   } catch (e) {}
   window.__carolinaLoaded = true;
@@ -50,7 +57,8 @@
   // (Injected into her system prompt via body.context; server caps it at 300 chars.)
   var PAGE_CTX = {
     training: 'the free 12-minute training on turning expertise into a $10K-a-month business. Your ONLY goal: get them to start the free training and opt in. Answer questions about it briefly, then guide them to press play. Do not pitch other programs, books, or calls here.',
-    casestudies: 'the Client Case Studies page — real, documented client wins across many niches. The visitor wants proof this works for someone like them. Learn their niche, point them to the closest real story, then guide them to the free assessment or a strategy call. Never assume they took the quiz.'
+    casestudies: 'the Client Case Studies page — real, documented client wins across many niches. The visitor wants proof this works for someone like them. Learn their niche, point them to the closest real story, then guide them to the free assessment or a strategy call. Never assume they took the quiz.',
+    audit: 'the $29 Private Business Strategy Audit (10k-roadmap). One-time $29, refundable in 7 days. 60-min 1:1 with founder Indrodip: diagnosis, bottleneck, 100-day roadmap, audit PDF, recording if consented, growth calculators, AI prompts. Direct booking to the page’s button, never book free.'
   };
 
   // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
@@ -2975,12 +2983,18 @@
       returning: 'Welcome back 👋 Want me to pull up the client win closest to your business — and map your next step?',
       msgs: ['Want me to find the client result closest to your niche — and show you how they did it?', "Tell me your niche and I'll pull up the most similar client win, then map your next step.", 'Curious if we’ve done this in your space? Tell me your business and I’ll show you the closest real result.'] },
     booked: { agent: 'natasha', cta: 'Help me prep', seed: 'I have a call booked — can you help me prepare and make the most of it?',
-      msgs: ["You're all set for your call 🎉 Anything I can help you prep in the meantime?"] }
+      msgs: ["You're all set for your call 🎉 Anything I can help you prep in the meantime?"] },
+    audit: { agent: 'carolina', cta: 'What do I get for $29?', seed: 'What exactly do I get for the $29 Business Strategy Audit, and how does booking work?',
+      returning: 'Welcome back 👋 Still deciding on the $29 audit? Happy to answer anything before you book.',
+      msgs: ['Questions about the $29 Business Audit — what you get, the refund policy, or how booking works? I can walk you through it.', 'Curious exactly what’s included in the 60 minutes with Indrodip for $29? Ask me anything.'] }
   };
 
   function hasBooked() { try { return localStorage.getItem('cw_booked') === '1'; } catch (e) { return false; } }
   function pageContext() {
     var p = (location.pathname || '/').toLowerCase();
+    // The audit landing page is its own, most-specific context — checked
+    // first so a previous booking elsewhere (hasBooked()) never overrides it.
+    if (p.replace(/\/+$/, '') === '/10k-roadmap') return 'audit';
     if (/lp\/make-10k-month/.test(p)) return 'training';   // VSL funnel — promote the free training only
     // Post-booking thank-you page: thank them + guide to the case-study library.
     // Checked before hasBooked()/quizdone so it always wins here.

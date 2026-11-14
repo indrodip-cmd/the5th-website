@@ -333,6 +333,9 @@ export default function Landing() {
               <img src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
               <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(7,10,6,.55)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)', textAlign: 'center' }}>
                 <span style={{ fontWeight: 800, fontSize: 15.5, color: '#fff' }}>{LANDING.heroCard.credential}</span>
+                {LANDING.heroCard.recruitedBy && (
+                  <span style={{ display: 'block', marginTop: 6, fontWeight: 700, fontSize: 12.5, color: ACCENT }}>{LANDING.heroCard.recruitedBy}</span>
+                )}
               </div>
             </div>
             <div style={{ marginTop: 18, textAlign: 'center' }}>

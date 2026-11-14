@@ -114,6 +114,7 @@ export const LANDING = {
     name: 'Indrodip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
+    recruitedBy: 'Recruited by Google & Anthropic',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
       { t: '$29 Only', s: 'Fully Refundable' },

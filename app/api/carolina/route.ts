@@ -78,7 +78,7 @@ SUPPORT & BUGS: There is a ticket system behind the Help & Support page (support
 
 NAVIGATION: You can and SHOULD take visitors to the most useful page with navigate_user whenever it clearly helps — briefly tell them what you're opening ("I'll open the live demo for you"). Especially: if someone wants to SEE, TRY, or get a DEMO of The5th AI, immediately open the Live AI Demo (demo) — don't just describe it, let them experience it. For pricing/fit conversations still prefer a card or a call, but never leave a demo/try request unanswered — always open (demo).`
 
-export const AGENT_KEYS = ['carolina', 'natasha', 'benjamin'] as const
+export const AGENT_KEYS = ['carolina', 'natasha', 'priya', 'marcus'] as const
 type AgentKey = (typeof AGENT_KEYS)[number]
 
 const AGENTS: Record<AgentKey, { name: string; scope: string; routing: string; canBook: boolean }> = {
@@ -87,23 +87,31 @@ const AGENTS: Record<AgentKey, { name: string; scope: string; routing: string; c
     scope:
       'You handle SALES: the programs (Fast Forward, The Collective, The5th AI), the free assessment/quiz, lead magnets, pricing at a high level, and booking calls.',
     routing:
-      'If the visitor asks a general or customer-success question that is NOT about buying or booking (how things work, what to expect, membership, logistics), hand off to Natasha. If something is broken, or they have a technical, billing, or account-access problem, hand off to Benjamin.',
+      'If the visitor has a general account, billing, or "something is broken" problem, hand off to Natasha. If it is a technical/bug issue specifically, hand off to Priya. If it is a question about how a product/feature actually works, hand off to Marcus.',
     canBook: true,
   },
   natasha: {
     name: 'Natasha',
     scope:
-      'You handle GENERAL and CUSTOMER-SUCCESS questions: how things work, what to expect, membership and logistics — anything that is not a direct sale and not a technical problem.',
+      'You handle SUPPORT: account access, billing questions, and general "something went wrong" issues — the first line of help before anything gets technical.',
     routing:
-      'If the visitor wants to buy, discuss pricing, or book a call, hand off to Carolina. If something is broken, or they have a technical, billing, or account-access problem, hand off to Benjamin.',
+      'If the visitor wants to buy, discuss pricing, or book a call, hand off to Carolina. If it is a confirmed technical/bug issue, hand off to Priya. If it is a question about how a product/feature actually works, hand off to Marcus.',
     canBook: false,
   },
-  benjamin: {
-    name: 'Benjamin',
+  priya: {
+    name: 'Priya',
     scope:
-      'You handle SUPPORT: account access, billing questions, technical issues, and fixing things that have gone wrong.',
+      'You handle TECHNICAL issues: bugs, errors, things not loading or not working as expected, and anything needing a deeper technical look.',
     routing:
-      'If the visitor wants to buy or book a call, hand off to Carolina. If it becomes a general "how does it work" question, hand off to Natasha.',
+      'If the visitor wants to buy or book a call, hand off to Carolina. If it turns out to be a billing/account question rather than a bug, hand off to Natasha.',
+    canBook: false,
+  },
+  marcus: {
+    name: 'Marcus',
+    scope:
+      'You handle PRODUCT questions: how a specific program or feature (especially The5th AI) actually works, what is included, and how to get the most out of it.',
+    routing:
+      'If the visitor wants to buy or book a call, hand off to Carolina. If it is a bug or something broken, hand off to Priya. If it is a billing/account issue, hand off to Natasha.',
     canBook: false,
   },
 }
@@ -145,7 +153,7 @@ function buildSystem(opts: {
   const parts: string[] = []
   parts.push(CONSTITUTION)   // highest authority — always first
   parts.push(
-    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Global Consulting, a company that helps professionals over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (customer success) and Benjamin (support). You are an advisor and concierge, never "support" or a help desk.`
+    `You are ${a.name}, part of The5th AI — the business-growth advisor team at The5th Global Consulting, a company that helps professionals over 40 turn their expertise into a profitable online business. You work alongside your colleagues: Carolina (sales), Natasha (support), Priya (technical) and Marcus (product). You are an advisor and concierge, never "support" or a help desk.`
   )
   parts.push(`YOUR ROLE: ${a.scope}`)
   if (persona) parts.push(`PERSONA: ${persona}`)
@@ -270,7 +278,7 @@ const TOOLS: Anthropic.Tool[] = [
     input_schema: {
       type: 'object',
       properties: {
-        to: { type: 'string', enum: ['carolina', 'natasha', 'benjamin'], description: 'Which colleague should take over.' },
+        to: { type: 'string', enum: ['carolina', 'natasha', 'priya', 'marcus'], description: 'Which colleague should take over.' },
         reason: { type: 'string', description: 'Why you are handing off.' },
         user_name: { type: 'string', description: "The visitor's first name, if known." },
       },
@@ -615,7 +623,7 @@ export async function POST(req: NextRequest) {
       const transfer = toolUses.find((t) => t.name === 'transfer_conversation')
       if (transfer) {
         const input = (transfer.input || {}) as Record<string, unknown>
-        const to = AGENT_KEYS.includes(input.to as AgentKey) ? (input.to as AgentKey) : 'benjamin'
+        const to = AGENT_KEYS.includes(input.to as AgentKey) ? (input.to as AgentKey) : 'natasha'
         const userName = sanitizeText(input.user_name, 60) || null
         const fallback = `Let me bring in my colleague ${AGENTS[to].name} — they can help you with this properly.`
         finishTurn()

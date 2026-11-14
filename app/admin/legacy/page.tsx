@@ -743,7 +743,7 @@ function CarolinaAdmin() {
       {/* Team agents */}
       <div style={card}>
         <div style={label}>Team Agents</div>
-        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>Your chat team. Carolina handles sales, Natasha customer success, Benjamin support. Conversations transfer between them automatically. Upload a photo for each so visitors see a real team.</p>
+        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16, lineHeight: 1.6 }}>Your chat team. Carolina handles sales, Natasha support, Priya technical issues, Marcus product questions. Conversations transfer between them automatically. Upload a photo for each so visitors see a real team.</p>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           {agents.map(a => (
             <div key={a.key} style={{ textAlign: 'center', width: 120 }}>

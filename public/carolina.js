@@ -61,11 +61,12 @@
     audit: 'the $29 Private Business Strategy Audit (10k-roadmap). One-time $29, refundable in 7 days. 60-min 1:1 with founder Indrodip: diagnosis, bottleneck, 100-day roadmap, audit PDF, recording if consented, growth calculators, AI prompts. Direct booking to the page’s button, never book free.'
   };
 
-  // The team. Carolina (sales) → Natasha (service) → Benjamin (support).
+  // The team. Carolina (sales) → Natasha (support) → Priya (technical) → Marcus (product).
   var AGENT_DEFAULTS = {
-    carolina: { name: 'Carolina', role: 'Sales concierge' },
-    natasha: { name: 'Natasha', role: 'Customer success' },
-    benjamin: { name: 'Benjamin', role: 'Support specialist' },
+    carolina: { name: 'Carolina', role: 'Sales concierge', avatar: '/images/agents/carolina.jpg' },
+    natasha: { name: 'Natasha', role: 'Support specialist', avatar: '/images/agents/natasha.jpg' },
+    priya: { name: 'Priya', role: 'Technical specialist', avatar: '/images/agents/priya.jpg' },
+    marcus: { name: 'Marcus', role: 'Product specialist', avatar: '/images/agents/marcus.jpg' },
     indrodip: { name: 'Indrodip', role: 'Founder · here with you', avatar: '/images/founder.png' }
   };
   function agentInfo(key) {
@@ -82,7 +83,7 @@
   // Indrodip (founder) leads the cluster so visitors see a real person is here.
   function teamCluster(big) {
     var html = '<div class="cw-team' + (big ? ' cw-team-lg' : '') + '" aria-label="The5th team — online">';
-    ['indrodip', 'carolina', 'natasha', 'benjamin'].forEach(function (k) {
+    ['indrodip', 'carolina', 'natasha', 'priya', 'marcus'].forEach(function (k) {
       html += '<span class="cw-tm" title="' + esc(agentInfo(k).name) + (k === 'indrodip' ? ' · Founder' : '') + '">' + agentAva(k) + '</span>';
     });
     return html + '<span class="cw-team-dot"></span></div>';
@@ -90,7 +91,7 @@
   // Team faces + an AI badge — "both AI and humans are available".
   function heroStack() {
     var html = '<div class="cw-hstack">';
-    ['indrodip', 'carolina', 'natasha', 'benjamin'].forEach(function (k) {
+    ['indrodip', 'carolina', 'natasha', 'priya', 'marcus'].forEach(function (k) {
       html += '<span class="cw-hs-face" title="' + esc(agentInfo(k).name) + '">' + agentAva(k) + '</span>';
     });
     return html + '<span class="cw-hs-ai" title="The5th AI">' + ICON.spark + '</span></div>';
@@ -1643,7 +1644,7 @@
   }
 
   function communityCard() {
-    var faces = ['carolina', 'natasha', 'benjamin'].map(function (k) { return '<span class="cw-cm-face">' + agentAva(k) + '</span>'; }).join('');
+    var faces = ['carolina', 'natasha', 'priya', 'marcus'].map(function (k) { return '<span class="cw-cm-face">' + agentAva(k) + '</span>'; }).join('');
     var p = getProgram('the-collective') || {};
     var ac = p.accent || '#C9FF48';
     var art = p.coverImage
@@ -2741,7 +2742,8 @@
 
   function joinGreeting(agentKey, name) {
     var n = name ? name : 'there';
-    if (agentKey === 'benjamin') return 'Hey ' + n + ' 👋 Give me a few seconds to read through your chat so I can help you properly…';
+    if (agentKey === 'priya') return 'Hey ' + n + ' 👋 Give me a few seconds to read through your chat so I can help you properly…';
+    if (agentKey === 'marcus') return 'Hi ' + n + ' 👋 Happy to walk you through it — one sec while I catch up on your chat.';
     if (agentKey === 'natasha') return 'Hi ' + n + ' 👋 Carolina filled me in — let me take it from here.';
     return 'Hi ' + n + ' 👋 Happy to help — one sec while I catch up on your chat.';
   }
@@ -2945,7 +2947,7 @@
     quizthankyou: { agent: 'carolina', cta: 'See real client wins', href: '/results',
       returning: 'Thank you again 🙏 Want to see the client story closest to your situation while you wait for your call?',
       msgs: ['Thank you so much for booking 🙏 While you wait for your call, come see the real client stories closest to your situation — I’ll take you there.'] },
-    blog: { agent: 'benjamin', cta: 'Ask a question', seed: 'I have a question about this article.',
+    blog: { agent: 'marcus', cta: 'Ask a question', seed: 'I have a question about this article.',
       msgs: ['Have a question about this article? Ask me anything.', 'Want me to recommend the next read based on what you’re looking at?'] },
     fastforward: { agent: 'carolina', cta: 'Tell me more', seed: 'Tell me about Fast Forward — the guarantee, case studies, and how a strategy call works.',
       msgs: ['Questions about Fast Forward? I can share the guarantee, real case studies, or book you a strategy call.'] },

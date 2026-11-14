@@ -84,9 +84,10 @@ export async function loadAgents(): Promise<Agent[]> {
   }
   // Fallback defaults if the table is unavailable.
   return [
-    { key: 'carolina', name: 'Carolina', role: 'Sales concierge', avatar_url: null, persona: null },
-    { key: 'natasha', name: 'Natasha', role: 'Customer success', avatar_url: null, persona: null },
-    { key: 'benjamin', name: 'Benjamin', role: 'Support specialist', avatar_url: null, persona: null },
+    { key: 'carolina', name: 'Carolina', role: 'Sales concierge', avatar_url: '/images/agents/carolina.jpg', persona: null },
+    { key: 'natasha', name: 'Natasha', role: 'Support specialist', avatar_url: '/images/agents/natasha.jpg', persona: null },
+    { key: 'priya', name: 'Priya', role: 'Technical specialist', avatar_url: '/images/agents/priya.jpg', persona: null },
+    { key: 'marcus', name: 'Marcus', role: 'Product specialist', avatar_url: '/images/agents/marcus.jpg', persona: null },
   ]
 }
 

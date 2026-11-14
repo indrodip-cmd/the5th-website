@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     if (buf.length > MAX_IMG) return NextResponse.json({ error: 'Image too large (max 5MB).' }, { status: 400 })
     if (!/^image\//.test(file.type)) return NextResponse.json({ error: 'Please upload an image file.' }, { status: 400 })
     const agentKey = sanitizeText(form.get('agent'), 40)
-    if (!['carolina', 'natasha', 'benjamin'].includes(agentKey)) return NextResponse.json({ error: 'Unknown agent.' }, { status: 400 })
+    if (!['carolina', 'natasha', 'priya', 'marcus'].includes(agentKey)) return NextResponse.json({ error: 'Unknown agent.' }, { status: 400 })
     const path = `agents/${agentKey}-${Date.now()}.${extOf(file.name, 'png')}`
     const up = await db.storage.from(BUCKET).upload(path, buf, { contentType: file.type, upsert: true })
     if (up.error) return NextResponse.json({ error: up.error.message }, { status: 500 })

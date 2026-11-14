@@ -54,7 +54,7 @@ export function auditPlanId(): string {
    links to directly for the $29 audit. Configure Whop's post-payment
    redirect to send buyers to
    https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
-export const AUDIT_CHECKOUT_URL = 'https://whop.com/10kroadmap-org/the5th-private-business-strategy-audit/'
+export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_27RBggiz8MDCo/'
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
    are auto-redirected to after they submit it. Both are env-overridable so you

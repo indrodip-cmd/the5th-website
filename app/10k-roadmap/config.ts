@@ -183,6 +183,12 @@ export const LANDING = {
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stat: { value: '$97', label: 'Refundable 1:1 Audit, Written Plan In 48 Hrs' },
+    // Western-recognized credentials, shown as a compact strip above the
+    // quote (same credibility line used on the India page). The valuation
+    // is the startup's, confirmed by the business owner, not personal
+    // wealth, and does not guarantee outcomes for audit clients.
+    creds: ['Consumer Psychologist, University of California, Berkeley', 'AI Startup Founder', '~$6M Startup Valuation'],
+    credsNote: 'Valuation is an approximate estimate of the startup, not personal net worth, and does not guarantee outcomes for audit clients.',
   },
 
   // Second voice on the call: brought in for the operating/scaling side of

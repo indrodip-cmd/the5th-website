@@ -525,15 +525,37 @@ export default function Landing() {
                     <img src={p.photo} alt={p.name} style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 260 }}>
+                    {'creds' in p && p.creds && (
+                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,.65)', margin: '0 0 14px' }}>{p.creds.join(', ')}</p>
+                    )}
                     <blockquote style={{ margin: '0 0 14px', paddingLeft: 16, borderLeft: '3px solid #E4C879', color: '#fff', fontSize: 16.5, lineHeight: 1.55, fontStyle: 'italic' }}>&ldquo;{p.quote}&rdquo;</blockquote>
                     <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14.5, lineHeight: 1.65, margin: '0 0 14px' }}>{p.body}</p>
                     <div style={{ fontWeight: 800, fontSize: 14.5 }}>{p.name}</div>
                     <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 12.5 }}>{p.role}</div>
+                    {'credsNote' in p && p.credsNote && (
+                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', marginTop: 10, maxWidth: 480 }}>{p.credsNote}</p>
+                    )}
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
+          {/* Two real photos backing the "recruited by" claim above: a
+              ClickFunnels event and the Millionaire Mindset Mastermind. */}
+          <Reveal>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20, marginTop: 20 }}>
+              <figure style={{ margin: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }} />
+                <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At a ClickFunnels event</figcaption>
+              </figure>
+              <figure style={{ margin: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }} />
+                <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At the Millionaire Mindset Mastermind</figcaption>
+              </figure>
+            </div>
+          </Reveal>
         </div>
       </section>
 

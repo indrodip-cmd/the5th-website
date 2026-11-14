@@ -72,23 +72,42 @@ export interface Agent {
   persona: string | null
 }
 
+const CANONICAL_AGENTS: Agent[] = [
+  { key: 'carolina', name: 'Carolina', role: 'Sales concierge', avatar_url: '/images/agents/carolina.jpg', persona: null },
+  { key: 'natasha', name: 'Natasha', role: 'Support specialist', avatar_url: '/images/agents/natasha.jpg', persona: null },
+  { key: 'priya', name: 'Priya', role: 'Technical specialist', avatar_url: '/images/agents/priya.jpg', persona: null },
+  { key: 'marcus', name: 'Marcus', role: 'Product specialist', avatar_url: '/images/agents/marcus.jpg', persona: null },
+]
+// A sentinel row marks that the one-time cleanup below has already run, so a
+// later admin-uploaded photo is never overwritten again.
+const MIGRATION_SENTINEL = '_agents_v2_migrated'
+
 export async function loadAgents(): Promise<Agent[]> {
   try {
-    const { data } = await getSupabaseAdmin()
-      .from('carolina_agents')
-      .select('key,name,role,avatar_url,persona')
-      .order('sort', { ascending: true })
-    if (data && data.length) return data as Agent[]
+    const db = getSupabaseAdmin()
+    const { data } = await db.from('carolina_agents').select('key,name,role,avatar_url,persona').order('sort', { ascending: true })
+    const rows = (data || []) as Agent[]
+    const alreadyMigrated = rows.some((r) => r.key === MIGRATION_SENTINEL)
+    if (!alreadyMigrated) {
+      // The team used to be Carolina/Natasha/Benjamin with placeholder
+      // avatars. It's now Carolina/Natasha/Priya/Marcus with real photos —
+      // wipe the old rows (including any stale/mismatched avatar left over
+      // from the previous lineup) and reseed once, then never touch it again.
+      await db.from('carolina_agents').delete().neq('key', '__never_matches__')
+      await db.from('carolina_agents').insert(
+        CANONICAL_AGENTS.map((a, i) => ({ ...a, sort: i })).concat([
+          { key: MIGRATION_SENTINEL, name: '', role: null, avatar_url: null, persona: null, sort: 999 } as Agent & { sort: number },
+        ])
+      )
+      return CANONICAL_AGENTS
+    }
+    const clean = rows.filter((r) => r.key !== MIGRATION_SENTINEL)
+    if (clean.length) return clean
   } catch (e) {
     console.error('loadAgents failed', e)
   }
   // Fallback defaults if the table is unavailable.
-  return [
-    { key: 'carolina', name: 'Carolina', role: 'Sales concierge', avatar_url: '/images/agents/carolina.jpg', persona: null },
-    { key: 'natasha', name: 'Natasha', role: 'Support specialist', avatar_url: '/images/agents/natasha.jpg', persona: null },
-    { key: 'priya', name: 'Priya', role: 'Technical specialist', avatar_url: '/images/agents/priya.jpg', persona: null },
-    { key: 'marcus', name: 'Marcus', role: 'Product specialist', avatar_url: '/images/agents/marcus.jpg', persona: null },
-  ]
+  return CANONICAL_AGENTS
 }
 
 export async function loadActiveLeadMagnet(settings: CarolinaSettings): Promise<LeadMagnet | null> {

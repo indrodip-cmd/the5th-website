@@ -67,7 +67,7 @@ export const LANDING = {
   // page: Indrodip's own job offers, confirmed by the business owner
   // (2026-11-14), not claims about employment at these companies.
   founderOffers: {
-    label: 'Recruited by',
+    label: 'Recruited and Featured in',
     items: ['Google', 'Anthropic', 'Mastermind.com', 'ClickFunnels'],
   },
   // The founder's credibility strip (hero + founder section). Every claim
@@ -126,7 +126,7 @@ export const LANDING = {
   heroCard: {
     name: 'Indrodip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
-    credential: 'Consumer Psychology, University of California, Berkeley',
+    credential: 'Consumer Psychologist, University of California, Berkeley',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
       { t: '₹199 Only', s: 'Fully Refundable' },
@@ -210,10 +210,12 @@ export const LANDING = {
     ],
     notFitHeading: 'Not a fit',
     notFit: [
-      'People expecting overnight success',
-      'People looking for guaranteed income',
-      'People unwilling to take action',
-      'People searching for shortcuts',
+      'Treating this as a side hustle, not a full-time business',
+      'Expecting overnight success with no real effort',
+      'Looking for guaranteed income, not a system to build',
+      'Not willing to implement what gets mapped on the call',
+      'Searching for a shortcut instead of a repeatable process',
+      'Still deciding if they even want to coach or consult',
     ],
   },
 

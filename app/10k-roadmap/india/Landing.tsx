@@ -187,14 +187,16 @@ export default function Landing() {
 
             <Reveal i={1}>
               <div className="hero__stage">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                <div className="hero__photo-wrap">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                  <div className="hero__photo-badge">{LANDING.heroCard.credential}</div>
+                </div>
                 <div className="hero__caption">
                   <div className="hero__caption-id">
                     <span className="hero__caption-name">{LANDING.heroCard.name}</span>
                     <span className="hero__caption-role">{LANDING.heroCard.role}</span>
                   </div>
-                  <div className="hero__caption-credential">{LANDING.heroCard.credential}</div>
                   <div className="hero__caption-chips">
                     {LANDING.heroCard.chips.map((c) => (
                       <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>

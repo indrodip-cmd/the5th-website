@@ -1702,55 +1702,16 @@
         + '<div class="cw-conv-t">' + timeAgo(conv.updatedAt) + '</div></div></div>';
     }
 
-    // 1) Featured Program — Fast Forward (hero card)
-    var ffP = getProgram('fast-forward');
-    var featured = ffP ? '<div class="cw-sect">' + sectionTitle('Featured Program') + renderCard(ffP) + '</div>' : '';
-
-    // 2) The5th AI — distinct product layout
-    var aiP = getProgram('the5th-ai');
-    var product = aiP ? '<div class="cw-sect">' + sectionTitle('The5th AI') + productCard(aiP) + '</div>' : '';
-
-    // 3) Latest Updates
-    var updates = ANNOUNCEMENTS.length
-      ? '<div class="cw-sect">' + sectionTitle('Latest updates') + ANNOUNCEMENTS.map(function (a) { a.type = 'announcement'; return renderCard(a); }).join('') + '</div>'
-      : '';
-
-    // 4) Knowledge Center — header + category grid
-    var kb = '<div class="cw-sect">' + sectionTitle('Knowledge Center')
-      + '<p class="cw-ssub">Browse everything, instantly.</p>'
-      + '<div class="cw-searchcard cw-ksrch" data-ak="seed" data-av="I have a question about The5th.">'
-      + '<span class="cw-sc-ic">' + ICON.search + '</span>'
-      + '<span class="cw-sc-tx"><b>Search the knowledge base</b><i>Ask our AI anything</i></span></div>'
-      + knowledgeGrid() + '</div>';
-
-    // 5) Latest Articles — editorial (data-driven)
-    var articles = '<div class="cw-sect">' + sectionTitle('Latest articles')
-      + (BLOG.length
-        ? BLOG.slice(0, 3).map(function (b) { b.type = 'article'; return renderCard(b); }).join('')
-        : emptyState(ICON.book, 'No articles yet', 'Ask The5th AI for a recommendation and I’ll point you to the right next step.',
-          '<button class="cw-btn cw-btn-ghost" data-ak="seed" data-av="Can you recommend where I should start?" style="margin-top:14px">Ask for a recommendation</button>'))
-      + '</div>';
-
-    // 6) Client Success — carousel (data-driven)
-    var success = '<div class="cw-sect">' + sectionTitle('Client success')
-      + (STORIES.length
-        ? '<div class="cw-carousel" id="cw-carousel"><div class="cw-track" id="cw-track">' + STORIES.map(function (s) { s.type = 'casestudy'; return renderCard(s); }).join('') + '</div><div class="cw-dots" id="cw-dots"></div></div>'
-        : emptyState(ICON.spark, 'Client stories coming soon', 'Real results from professionals building with The5th, shared here shortly.'))
-      + '</div>';
-
-    // 8) Upcoming Events (data-driven)
-    var events = '<div class="cw-sect">' + sectionTitle('Upcoming events')
-      + (EVENTS.length
-        ? EVENTS.map(function (e) { e.type = 'promotion'; return renderCard(e); }).join('')
-        : emptyState(ICON.spark, 'No events scheduled', 'Check back later — live workshops are announced here.'))
-      + '</div>';
-
-    // 9) Community  10) Newsletter  11) Footer
-    var community = '<div class="cw-sect">' + sectionTitle('Community') + communityCard() + '</div>';
-    var newsletter = '<div class="cw-sect">' + newsletterCard() + '</div>';
+    // Kept minimal by design (Intercom-style): greeting, the "ask a
+    // question" entry, and a way back into an existing conversation —
+    // not a promotional feed. The Featured Program / product / updates /
+    // knowledge grid / articles / client success / events / community /
+    // newsletter sections that used to render here are gone; that content
+    // still lives on its own pages and tabs, it just doesn't greet every
+    // visitor as a wall of cards the moment they open the widget.
     var footer = footerHtml();
 
-    return heroBlock + '<div class="cw-home">' + recent + featured + product + updates + kb + articles + success + events + community + newsletter + footer + '</div>';
+    return heroBlock + '<div class="cw-home">' + recent + footer + '</div>';
   }
 
   // ── Unified in-chat content viewer (Part 3D) — every CMS type ──
@@ -3063,35 +3024,12 @@
     });
   }
 
-  function maybeShowPromo() {
-    if (promoScheduled || isOpen) return;
-    if (!notifEnabled()) return;
-    if (cfg.proactive && cfg.proactive.enabled === false) return;     // admin opt-out
-    try { if (sessionStorage.getItem(PROACTIVE_FLAG) === '1') return; } catch (e) {}   // one per session
-    if (store.conversations.some(function (c) { return c.messages.length > 0; })) return;  // never interrupt active chatters
-
-    var g = greetingFor(pageContext()); if (!g) return;
-    var dkey = 'cw_px_' + g.ctx;
-    try { if (localStorage.getItem(dkey) === '1') return; } catch (e) {}    // remembered dismissal
-    promoScheduled = true;
-
-    var MIN = 2500, fired = false, startedAt = Date.now();
-    var baseDelay = Math.max(4000, Math.min(60000, ((cfg.proactive && cfg.proactive.delay) || 9) * 1000));
-    if (pageContext() === 'training' || pageContext() === 'quizthankyou') baseDelay = 6000;   // funnel/thank-you: nudge sooner
-    function fire() { if (fired || isOpen) return; fired = true; cleanup(); showPromoBubble(g, dkey); }
-    function cleanup() { clearTimeout(baseT); clearTimeout(idleT); window.removeEventListener('scroll', onScroll); document.removeEventListener('mousemove', onAct); document.removeEventListener('keydown', onAct); document.removeEventListener('touchstart', onAct); }
-    var baseT = setTimeout(fire, baseDelay);   // Smart trigger 1: base dwell delay (fallback)
-    var idleT;                                  // Smart trigger 2: 5s idle
-    function armIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (Date.now() - startedAt >= MIN) fire(); }, 5000); }
-    function onAct() { armIdle(); }
-    armIdle();
-    document.addEventListener('mousemove', onAct, { passive: true }); document.addEventListener('keydown', onAct); document.addEventListener('touchstart', onAct, { passive: true });
-    function onScroll() {   // Smart trigger 3: scrolled 70% of the page
-      var h = document.documentElement, d = h.scrollHeight - h.clientHeight;
-      if (d > 200 && ((h.scrollTop || document.body.scrollTop) / d) >= 0.7 && Date.now() - startedAt >= MIN) fire();
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-  }
+  // Never opens automatically, on any device — the widget only opens when
+  // the visitor clicks the launcher themselves. (Previously this scheduled
+  // a proactive greeting bubble after a dwell/idle/scroll delay; removed
+  // per the "only if users ask" direction, regardless of any admin-config
+  // proactive settings.)
+  function maybeShowPromo() { return; }
 
   // ── Build shell ──
   function build() {

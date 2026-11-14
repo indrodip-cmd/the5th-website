@@ -25,8 +25,10 @@ function parseCal(url: string): { calLink: string; namespace: string } {
 /* Fires a short celebratory sequence — a few confetti bursts from
    alternating sides, firework-style — then calls onDone. Lazy-imports
    canvas-confetti (already a dependency, used the same way on
-   /checkout/complete) so it never blocks the initial page load. */
-function Celebration({ onDone }: { onDone: () => void }) {
+   /checkout/complete) so it never blocks the initial page load. Reused for
+   both the payment-received welcome and the post-intake hand-off, each
+   with its own copy. */
+function Celebration({ emoji, headline, body, sub, duration = 2400, onDone }: { emoji: string; headline: string; body: string; sub?: string; duration?: number; onDone: () => void }) {
   useEffect(() => {
     let cancelled = false
     ;(async () => {
@@ -34,13 +36,13 @@ function Celebration({ onDone }: { onDone: () => void }) {
         const mod = await import('canvas-confetti')
         const confetti = mod.default
         const colors = ['#C9FF48', '#F2F6EC', '#7C4DBF']
-        const burst = (x: number) => confetti({ particleCount: 70, spread: 80, startVelocity: 45, origin: { x, y: 0.4 }, colors })
-        if (!cancelled) { burst(0.2); setTimeout(() => !cancelled && burst(0.8), 250); setTimeout(() => !cancelled && confetti({ particleCount: 110, spread: 100, origin: { y: 0.3 }, colors }), 550) }
+        const burst = (x: number) => confetti({ particleCount: 80, spread: 85, startVelocity: 48, origin: { x, y: 0.4 }, colors })
+        if (!cancelled) { burst(0.15); setTimeout(() => !cancelled && burst(0.85), 220); setTimeout(() => !cancelled && confetti({ particleCount: 130, spread: 110, origin: { y: 0.3 }, colors }), 480); setTimeout(() => !cancelled && confetti({ particleCount: 60, spread: 70, startVelocity: 40, origin: { x: 0.5, y: 0.25 }, colors }), 900) }
       } catch { /* confetti is decorative only — never block the flow */ }
     })()
-    const t = setTimeout(onDone, 2400)
+    const t = setTimeout(onDone, duration)
     return () => { cancelled = true; clearTimeout(t) }
-  }, [onDone])
+  }, [onDone, duration])
 
   return (
     <Reveal style={{ textAlign: 'center', padding: '60px 0' }}>
@@ -48,8 +50,9 @@ function Celebration({ onDone }: { onDone: () => void }) {
         <circle cx="43" cy="43" r="40" fill="none" stroke={T.accent} strokeWidth="2.5" strokeDasharray="252" strokeDashoffset="252" style={{ animation: 'rm-draw 0.7s ease forwards' }} />
         <path d="M26 44 l12 12 l22 -24" fill="none" stroke={T.accent} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="60" strokeDashoffset="60" style={{ animation: 'rm-draw 0.45s 0.55s ease forwards' }} />
       </svg>
-      <h1 className="rm-serif" style={{ fontSize: 'clamp(30px,5vw,44px)', margin: '0 0 12px', fontWeight: 800 }}>🎉 Congratulations!</h1>
-      <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.6, maxWidth: 440, margin: '0 auto' }}>You’re officially set up for your business audit. Now let’s lock in your time.</p>
+      <h1 className="rm-serif" style={{ fontSize: 'clamp(30px,5vw,44px)', margin: '0 0 12px', fontWeight: 800 }}>{emoji} {headline}</h1>
+      <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.6, maxWidth: 460, margin: '0 auto' }}>{body}</p>
+      {sub && <p style={{ color: T.accentInk, fontSize: 14, fontWeight: 700, marginTop: 14 }}>{sub}</p>}
     </Reveal>
   )
 }
@@ -58,7 +61,7 @@ export default function Reserved() {
   const router = useRouter()
   const utm = useUtm()
   const { calLink, namespace } = parseCal(auditCalUrl())
-  const [phase, setPhase] = useState<'intake' | 'celebration' | 'booking'>('intake')
+  const [phase, setPhase] = useState<'welcome' | 'intake' | 'celebration' | 'booking'>('welcome')
   const [calReady, setCalReady] = useState(false)
   const [me] = useState<{ name: string; email: string }>(() => {
     if (typeof window === 'undefined') return { name: '', email: '' }
@@ -108,6 +111,17 @@ export default function Reserved() {
       <Fonts />
       <Header />
       <main style={{ flex: 1, width: '100%', maxWidth: phase === 'booking' ? 900 : 680, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 44px' }}>
+        {phase === 'welcome' && (
+          <Celebration
+            emoji="🎉"
+            headline="Congratulations — we've received your payment!"
+            body="You're officially booked in for your Private Business Strategy Audit with Indrodip. In just a minute, you'll pick your exact time — but first, three quick questions so your 60 minutes are built around your business, not a generic script."
+            sub="You've joined 76 coaches and consultants across 12 nations — real diagnoses, real plans, real results."
+            duration={2600}
+            onDone={() => setPhase('intake')}
+          />
+        )}
+
         {phase === 'intake' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 22 }}>
@@ -131,7 +145,14 @@ export default function Reserved() {
           </>
         )}
 
-        {phase === 'celebration' && <Celebration onDone={() => setPhase('booking')} />}
+        {phase === 'celebration' && (
+          <Celebration
+            emoji="🎉"
+            headline="Perfect — that's everything we need!"
+            body="You're fully set up for your business audit. Next, pick the time that works best for you, and we'll see you on the call."
+            onDone={() => setPhase('booking')}
+          />
+        )}
 
         {phase === 'booking' && (
           <>

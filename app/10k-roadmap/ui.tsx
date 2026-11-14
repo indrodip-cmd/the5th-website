@@ -161,7 +161,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
           it reads on the first screen alongside the brand mark, not only
           after scrolling down to the press strip further down the page. */}
       <div className="rm-press-row" style={{ borderTop: `1px solid ${T.line}`, padding: '7px 18px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: T.text3, whiteSpace: 'nowrap' }}>As Featured In</span>
+        <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: T.text3, whiteSpace: 'nowrap' }}>Our Clients Featured In</span>
         <span style={{ display: 'flex', gap: 'clamp(10px,2vw,22px)', flexWrap: 'wrap', justifyContent: 'center' }}>
           {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 11.5, color: T.text2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
         </span>

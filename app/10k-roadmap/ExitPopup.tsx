@@ -11,8 +11,9 @@
        playing; the 10 seconds restart after the last moment any of those
        was true.
 
-   Touch/mobile devices never see it: the check is a media query on width,
-   hover and pointer, so a narrow desktop window or a tablet is excluded too.
+   Touch/mobile devices never see it: a media query on width, hover and
+   pointer plus a device-type check, so phones, tablets (including iPad in
+   landscape) and phones in "desktop site" mode are all excluded.
    Plain CSS animation only (no animation library, no backdrop-filter): both
    have caused real-device render failures on this page before. */
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -40,6 +41,14 @@ export default function ExitPopup() {
     try { seen = sessionStorage.getItem(SEEN_KEY) === '1' } catch { /* noop */ }
     if (seen) return
     const desktop = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)')
+    // Second, independent guard: phones and tablets are excluded by device
+    // type too (iPadOS reports itself as a Mac, hence the touch-points test),
+    // so a phone in "desktop site" mode can never slip through on width alone.
+    const nav = navigator as Navigator & { userAgentData?: { mobile?: boolean } }
+    const touchDevice = nav.userAgentData?.mobile === true
+      || /Android|iPhone|iPad|iPod|Mobile|Silk|Tablet/i.test(navigator.userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    if (touchDevice) return
 
     let done = false
     let armed = false

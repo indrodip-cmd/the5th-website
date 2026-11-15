@@ -82,15 +82,15 @@ export const LANDING = {
   // instead of asserting a fact about the specific person reading it.
   eyebrowAttention: 'A PRIVATE 1:1 STRATEGY SESSION FOR FULL-TIME COACHES IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  // Simplified for an Indian audience that reads fast on a phone: a short
-  // "what if" question (curiosity, not a claim about the reader's own
-  // income), then one plain-language promise. Short words, short sentences,
-  // no business jargon ("structured growth system," "qualified prospects").
-  headlinePre: 'What If You Could Finally Earn ',
-  headlineHighlight: 'Steady Money',
-  headlinePost: ' From Your Coaching?',
-  headline: 'What If You Could Finally Earn Steady Money From Your Coaching?',
-  headlineSub: 'No more guessing. A simple, step-by-step system to get clients every month, not just when you get lucky.',
+  // Mirrors the US page's own headline pattern ("You've Tried Coaches,
+  // ChatGPT And Claude. So Why Aren't You Making Consistent Money?") —
+  // names the tension (good at the work, money still isn't there) instead
+  // of a "what if" tease, while staying short-sentence, no-jargon.
+  headlinePre: "You're Good At What You Do. So Why Is Making Money From Your Coaching ",
+  headlineHighlight: 'Still So Difficult?',
+  headlinePost: '',
+  headline: "You're Good At What You Do. So Why Is Making Money From Your Coaching Still So Difficult?",
+  headlineSub: 'Build a coaching business that brings you consistent clients and predictable revenue, not one more random marketing activity.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '200% Money-Back Guarantee',
@@ -184,7 +184,7 @@ export const LANDING = {
     heading: 'And it’s not just theory.',
     sub: 'The coaches we’ve worked with build something most never do:',
     // No currency figures — real, qualitative outcomes only (India edition).
-    stats: ['Consistent monthly clients', 'A predictable pipeline', 'Premium pricing that holds', 'Systems, not daily hustle'],
+    stats: ['New clients booking in every month', 'A pipeline that never runs dry', 'Prices you never have to discount', 'A system that runs without daily hustle'],
     principle: 'Different businesses. Different markets. Different starting points. The same principle: find what’s preventing growth, fix it, scale what works.',
     disclaimer: 'Individual results vary. Past results are not typical and do not guarantee future results.',
   },

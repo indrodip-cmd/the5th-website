@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 
 /* Paid audit funnel ($29, refundable): full share/SEO metadata per-route
-   (title, desc, Open Graph, Twitter card). The 1200x630 og:image +
-   twitter:image are a real screenshot of this page's current hero
-   (public/og/10k-roadmap-hero.png) — recapture it (scripts/capture-og.mjs)
-   whenever the hero headline or photo changes, so link previews on
-   Facebook/WhatsApp/iMessage/Slack never show a stale offer.
+   (title, desc, Open Graph, Twitter card). og:image + twitter:image come
+   from the sibling opengraph-image.tsx (Next's file convention, same as
+   /results, /event/the-shift and /research/*) — a composed, crop-safe card,
+   not a raw page screenshot, so every surface that reads Open Graph tags
+   (Facebook, WhatsApp, iMessage, Slack, Zoom chat, LinkedIn, ...) shows the
+   same correct preview with nothing to configure per platform.
    metadataBase is set on the root layout, so relative URLs resolve absolute.
 
    Indexable so AI assistants/search (ChatGPT, Claude, Perplexity, Gemini, etc.)
@@ -34,14 +35,11 @@ export const metadata: Metadata = {
     siteName: 'The5th Global Consulting',
     title: OG_TITLE,
     description: DESC,
-    // Actual landing-page hero screenshot (1200x630), not a generated card.
-    images: [{ url: '/og/10k-roadmap-hero.png', width: 1200, height: 630, alt: OG_TITLE }],
   },
   twitter: {
     card: 'summary_large_image',
     title: OG_TITLE,
     description: DESC,
-    images: ['/og/10k-roadmap-hero.png'],
   },
 }
 

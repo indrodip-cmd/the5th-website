@@ -52,6 +52,29 @@ export function Fonts() {
       .rm-photo-frame{overflow:hidden;display:block}
       .rm-photo-frame img{transition:transform .7s cubic-bezier(.16,1,.3,1);display:block}
       .rm-photo-frame:hover img{transform:scale(1.045)}
+      /* Apple-style frosted glass — a translucent, blurred surface with a
+         bright top edge (the "specular" line glass catches light on) and a
+         soft diffused shadow, instead of a flat solid card. .rm-glass is
+         the neutral tone, .rm-glass-accent the lime-tinted one used where
+         a card was already on the green accent. Browsers without
+         backdrop-filter (vanishingly rare now) fall back to a solid card
+         via @supports, so nothing goes invisible or illegible. */
+      .rm-glass{
+        background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+        -webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);
+        border:1px solid rgba(255,255,255,.14);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.015), 0 24px 50px -28px rgba(0,0,0,.6);
+      }
+      .rm-glass-accent{
+        background:linear-gradient(155deg,rgba(201,255,72,.16),rgba(201,255,72,.03));
+        -webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);
+        border:1px solid rgba(201,255,72,.32);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 24px 50px -28px rgba(0,0,0,.6);
+      }
+      @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+        .rm-glass{background:#121810}
+        .rm-glass-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
+      }
       @media (prefers-reduced-motion: reduce){
         .rm-btn,.rm-btn:hover,.rm-btn:active,.rm-lift,.rm-lift:hover,.rm-pop,.rm-pop:hover,.rm-pop:active,.rm-photo-frame img,.rm-photo-frame:hover img{transform:none!important;transition:none!important}
         .rm-btn-shine::after{display:none}

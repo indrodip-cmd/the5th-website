@@ -147,7 +147,7 @@ function TestimonialCard({ index = 7 }: { index?: number }) {
 /* A single documented-result proof card: photo, name, business type, result, quote. */
 function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
   return (
-    <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+    <div className="rm-lift rm-glass" style={{ borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {c.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -225,7 +225,7 @@ function Calculators() {
     <div>
       <div className="rm-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,28px)', alignItems: 'start' }}>
         {/* Controls */}
-        <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+        <div className="rm-glass" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Numbers</div>
           <Field label="Monthly revenue goal" display={fmt(goal)}>
             <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} />
@@ -251,7 +251,7 @@ function Calculators() {
         </div>
 
         {/* The funnel */}
-        <div style={{ background: 'linear-gradient(150deg,rgba(201,255,72,.1),rgba(201,255,72,.02))', border: '1px solid rgba(201,255,72,.28)', borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+        <div className="rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Revenue Engine</div>
           <div style={{ display: 'grid', gap: 10 }}>
             {stages.map((s, i) => {
@@ -275,11 +275,11 @@ function Calculators() {
             })}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
-            <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
+            <div className="rm-glass" style={{ borderRadius: 14, padding: '14px 16px' }}>
               <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{(model.clients / 4.33).toFixed(1)}</strong>
               <span style={{ fontSize: 11.5, color: TEXT3 }}>clients needed per week</span>
             </div>
-            <div style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 14, padding: '14px 16px' }}>
+            <div className="rm-glass" style={{ borderRadius: 14, padding: '14px 16px' }}>
               <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{fmtK(model.revenuePerLead)}</strong>
               <span style={{ fontSize: 11.5, color: TEXT3 }}>revenue value per lead</span>
             </div>
@@ -299,7 +299,7 @@ function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
       {items.map((it, i) => {
         const isOpen = open === i
         return (
-          <div key={it.q} className="rm-lift" style={{ background: CARD, border: `1px solid ${isOpen ? LINE2 : LINE}`, borderRadius: 14, overflow: 'hidden' }}>
+          <div key={it.q} className="rm-lift rm-glass" style={{ borderRadius: 14, overflow: 'hidden' }}>
             <button onClick={() => setOpen(isOpen ? -1 : i)} className="rm-focus" aria-expanded={isOpen}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '18px 20px', fontFamily: 'inherit' }}>
               <span style={{ fontSize: 15.5, fontWeight: 700, color: '#F2F6EC' }}>{it.q}</span>
@@ -419,7 +419,7 @@ export default function Landing() {
               { b: '$29', s: 'The entire audit, refundable' },
             ].map((s, i) => (
               <Reveal key={s.s} delay={i * 90}>
-                <div className="rm-lift" style={{ background: INK2, padding: '22px 18px', height: '100%' }}>
+                <div className="rm-lift rm-glass" style={{ padding: '22px 18px', height: '100%' }}>
                   <strong className="rm-serif" style={{ display: 'block', fontSize: 'clamp(26px,3.6vw,36px)', fontWeight: 800, color: ACCENT, lineHeight: 1 }}><AnimatedStat value={s.b} /></strong>
                   <span style={{ display: 'block', marginTop: 9, fontSize: 12.5, color: 'rgba(255,255,255,.6)', lineHeight: 1.4 }}>{s.s}</span>
                 </div>
@@ -445,7 +445,7 @@ export default function Landing() {
           <Reveal><SectionHead eyebrow={LANDING.problem.eyebrow} heading={LANDING.problem.heading} sub={LANDING.problem.sub} maxW={720} /></Reveal>
           <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)' }}>
             <Reveal>
-              <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+              <div className="rm-lift rm-glass" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>{LANDING.problem.moreAdvice.title}</div>
                 <div style={{ display: 'grid', gap: 12 }}>
                   {LANDING.problem.moreAdvice.items.map((it) => (
@@ -457,7 +457,7 @@ export default function Landing() {
               </div>
             </Reveal>
             <Reveal delay={90}>
-              <div className="rm-lift" style={{ background: 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')', border: '1px solid rgba(201,255,72,.28)', borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+              <div className="rm-lift rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                 <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: ACCENT, marginBottom: 16 }}>{LANDING.problem.diagnosis.title}</div>
                 <div style={{ display: 'grid', gap: 12 }}>
                   {LANDING.problem.diagnosis.items.map((it) => (
@@ -485,7 +485,7 @@ export default function Landing() {
           <div className="rm-steps5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginTop: 12 }}>
             {LANDING.call.steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 70}>
-                <div className="rm-lift" style={{ background: CARD, border: `1px solid ${LINE}`, borderRadius: 16, padding: 18, height: '100%' }}>
+                <div className="rm-lift rm-glass" style={{ borderRadius: 16, padding: 18, height: '100%' }}>
                   <div style={{ marginBottom: 12 }}><StepIcon kind={s.icon} /></div>
                   <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '.08em', marginBottom: 8 }}>STEP {s.n}</div>
                   <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 6px' }}>{s.t}</h3>
@@ -507,7 +507,7 @@ export default function Landing() {
           <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
             {LANDING.deliverables.items.map((d, i) => (
               <Reveal key={d.t} delay={(i % 3) * 80}>
-                <div className="rm-lift" style={{ background: i < 2 ? 'linear-gradient(180deg,rgba(201,255,72,.055),' + CARD + ')' : CARD, border: `1px solid ${i < 2 ? 'rgba(201,255,72,.28)' : LINE}`, borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                <div className={"rm-lift " + (i < 2 ? 'rm-glass-accent' : 'rm-glass')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                   <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                     <DeliverableIcon kind={d.icon} />
                   </div>
@@ -585,7 +585,7 @@ export default function Landing() {
               { ...LANDING.founder2 },
             ].map((p) => (
               <Reveal key={p.name}>
-                <div style={{ background: 'rgba(255,255,255,.04)', border: `1px solid ${LINE2}`, borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }} className="rm-founder-row rm-lift">
+                <div className="rm-founder-row rm-lift rm-glass" style={{ borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
                   <div style={{ flexShrink: 0, textAlign: 'center', width: 140, margin: '0 auto' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.photo} alt={p.name} style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
@@ -648,7 +648,7 @@ export default function Landing() {
             </div>
           </Reveal>
           <Reveal>
-            <div style={{ background: 'linear-gradient(160deg,rgba(201,255,72,.11),rgba(201,255,72,.02))', border: '1px solid rgba(201,255,72,.24)', borderRadius: 26, padding: 'clamp(26px,5vw,48px)', textAlign: 'center' }}>
+            <div className="rm-glass-accent" style={{ borderRadius: 26, padding: 'clamp(26px,5vw,48px)', textAlign: 'center' }}>
               <div className="rm-cols2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 30px', textAlign: 'left', maxWidth: 560, margin: '0 auto 24px' }}>
                 {LANDING.apply.includes.map((it) => (
                   <div key={it} style={{ display: 'flex', gap: 10, fontSize: 14, color: '#DBE3D6', lineHeight: 1.4 }}>

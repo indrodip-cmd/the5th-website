@@ -2,7 +2,7 @@
 
 /* Shared video-testimonial wall — used on /results and /chose-your-time.
    Single source of truth for the client review clips (Wistia + Facebook). */
-import React from 'react'
+import React, { useState } from 'react'
 
 export interface VideoReview { src: string; w: number; h: number }
 
@@ -32,18 +32,46 @@ export const VIDEO_REVIEWS: VideoReview[] = [
   { src: 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fthinkwithindrodip%2Fvideos%2F450258107449460%2F&show_text=false&width=560&t=0', w: 560, h: 314 },
 ]
 
+/* Facebook's video plugin renders its own preview frame via a script that
+   Safari's cross-site tracking prevention often blocks until the visitor
+   has interacted with the page — the iframe sits there blank until tapped.
+   Wistia's embeds don't have this problem, so only Facebook clips get a
+   click-to-load placeholder; Wistia keeps its native (working) lazy embed. */
 function VideoReviewCard({ review, index }: { review: VideoReview; index: number }) {
+  const isFacebook = review.src.includes('facebook.com')
+  const [loaded, setLoaded] = useState(!isFacebook)
   return (
     <figure className="vw-card" style={{ breakInside: 'avoid', marginBottom: 20, background: '#231029', borderRadius: 16, overflow: 'hidden', boxShadow: '0 14px 34px -30px rgba(46,26,53,.6)' }}>
       <div style={{ position: 'relative', width: '100%', aspectRatio: `${review.w} / ${review.h}` }}>
-        <iframe
-          src={review.src}
-          title={`Client review ${index + 1}`}
-          loading="lazy"
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          allowFullScreen
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
-        />
+        {loaded ? (
+          <iframe
+            src={review.src}
+            title={`Client review ${index + 1}`}
+            loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowFullScreen
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setLoaded(true)}
+            aria-label={`Play client review ${index + 1}`}
+            style={{
+              position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none', cursor: 'pointer',
+              background: 'radial-gradient(130% 130% at 30% 20%, #3a1f45 0%, #231029 60%, #170a1c 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <span style={{
+              width: 56, height: 56, borderRadius: '50%', background: 'rgba(255,255,255,.14)',
+              border: '1px solid rgba(255,255,255,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backdropFilter: 'blur(4px)',
+            }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" aria-hidden><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </button>
+        )}
       </div>
     </figure>
   )

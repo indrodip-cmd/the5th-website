@@ -132,6 +132,14 @@ export const LANDING = {
   // so there is never a question what the $29 is for.
   ctaStandard: 'Book My 60-Minute Business Audit — $29',
 
+  // Compact trust strip, shown right after the hero/press strip, pulled
+  // forward from the closing line of founder.body below so the "it's
+  // personally run by the founder" claim lands early, not just at the
+  // bottom of the page.
+  founderBadge: {
+    line: 'Every audit is conducted personally, 1-on-1, by founder Indrodip Ghosh — never a sales rep, never a junior coach.',
+  },
+
   proof: {
     eyebrow: 'Proven, not theoretical',
     heading: 'Real client outcomes, not projections.',
@@ -186,6 +194,15 @@ export const LANDING = {
     sampleCta: 'Download The Full Sample Audit (6 Pages)',
     sampleNote: 'Illustrative sample only, built section-by-section to match the exact format and depth of your real audit. Not an actual client’s report.',
     note: 'The $29 covers the 60-minute session and the deliverables above, not 100 days of coaching or implementation. What you do with the roadmap afterward is up to you.',
+    // Featured banner shown above the 6-card grid — the sample is the single
+    // best way to show what $29 buys before anyone is asked to pay it, so it
+    // gets its own prominent callout rather than sitting as one of six
+    // equal-weight cards.
+    sampleHighlight: {
+      eyebrow: 'See It Before You Buy It',
+      heading: 'This Is Exactly What Your $29 Gets You.',
+      sub: 'A full 6-page sample audit, every section filled out end to end, built to the same format and depth as your real one.',
+    },
   },
 
   // ── Section 06: interactive business calculators ───────────────────────
@@ -199,6 +216,9 @@ export const LANDING = {
   caseStudies: {
     eyebrow: 'Client Results',
     heading: 'Real Businesses. Real Client Outcomes.',
+    // Shown in a compact teaser right after the hero; the full grid (below,
+    // further down the page) uses `heading` instead.
+    teaserHeading: 'Real People. Real Revenue. Real Fast.',
   },
 
   founder: {

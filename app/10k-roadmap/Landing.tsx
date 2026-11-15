@@ -3,17 +3,25 @@
    2026-11-14 design upgrade: premium dark-forest / acid-lime system, borrowed
    from a reference landing page's visual language (tokens, pill CTAs, stat
    strip, rounded cards, slider calculators) — not its brand, copy or images.
-   Structure, tightened to ~8 sections after the LOCKED hero:
+
+   2026-11-15 reorder (conversion-review priorities): client results and the
+   sample audit both moved up, ahead of the problem/process sections, and a
+   founder-credibility line now sits right after the hero instead of only
+   appearing in the Section-08 editorial at the bottom. Structure:
      Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → press
-     strip → proof/stats strip (76 clients · 12 nations · 4.8 rating · results)
-     → Section 03 "more advice vs. actual diagnosis" (two contrasting cards)
-     → Section 04 the 60-minute audit process (5 numbered steps) → Section 05
-     everything you receive (6 deliverable cards + sample PDF download) →
-     Section 06 interactive business calculators (3 tools, one slider panel)
-     → Section 07 client results (featured proof cards + expandable grid) →
-     real on-camera video testimonials (before the founder section, per
-     priority #4) → Section 08 founder/credibility (two-column editorial) →
-     Section 09 FAQ accordion + final booking card → footer.
+     strip → founder-credibility strip (NEW, moved up from Section 08) →
+     3 featured client results (NEW, moved up from the full case-studies
+     section further down) → proof/stats strip (76 clients · 12 nations ·
+     4.8 rating · results) → everything you receive incl. the sample audit
+     PDF, now with a prominent "see it before you buy it" banner (MOVED UP
+     from after the process section) → Section 03 "more advice vs. actual
+     diagnosis" (two contrasting cards) → Section 04 the 60-minute audit
+     process (5 numbered steps) → Section 06 interactive business
+     calculators (3 tools, one slider panel) → Section 07 the rest of client
+     results (expandable grid, picks up where the top-3 teaser left off) →
+     real on-camera video testimonials → Section 08 founder/credibility
+     (two-column editorial, unchanged) → Section 09 FAQ accordion + final
+     booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from './config'
@@ -420,8 +428,11 @@ export default function Landing() {
     const bi = NA_FIRST.includes(b.name) ? 0 : 1
     return ai - bi
   })
-  const featuredProof = orderedProof.slice(0, 6)
-  const restProof = orderedProof.slice(6)
+  // The top 3 go in the teaser right after the hero; the full-grid section
+  // further down picks up where that teaser left off, so no result repeats.
+  const topProof = orderedProof.slice(0, 3)
+  const featuredProof = orderedProof.slice(3, 9)
+  const restProof = orderedProof.slice(9)
 
   return (
     <div style={{ background: '#070A06', color: '#F2F6EC', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
@@ -481,8 +492,29 @@ export default function Landing() {
 
       <PressStrip />
 
-      <section style={{ padding: SECY_LG + ' ' + PADX }}>
-        <Reveal><TestimonialCard /></Reveal>
+      {/* ── Founder-credibility strip: moved up from the Section-08 editorial
+             so "this is run by the founder personally" lands immediately,
+             not only after scrolling most of the page ── */}
+      <section style={{ padding: '28px ' + PADX + ' 0' }}>
+        <Reveal>
+          <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', background: 'rgba(201,255,72,.08)', border: `1px solid rgba(201,255,72,.3)`, borderRadius: 999, padding: '14px 24px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}`, flexShrink: 0 }} />
+            <span style={{ fontSize: 14.5, fontWeight: 700, color: '#F2F6EC', textAlign: 'center', lineHeight: 1.4 }}>{LANDING.founderBadge.line}</span>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ── Client results teaser: 3 featured cases, moved up from the full
+             case-studies section (now further down the page) so results show
+             right after the hero instead of waiting until mid-scroll ── */}
+      <section style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.teaserHeading} maxW={640} /></Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {topProof.map((c, i) => <Reveal key={c.name} delay={i * 80}><ProofCard c={c} /></Reveal>)}
+          </div>
+        </div>
       </section>
 
       {/* ── Section 02: social proof — compact stats strip + result pills ── */}
@@ -518,6 +550,49 @@ export default function Landing() {
               ))}
             </div>
             <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 11.5, textAlign: 'center', marginTop: 14 }}>{LANDING.proof.disclaimer}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Section 05: everything you receive ── */}
+      <section id="deliverables" style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.deliverables.eyebrow} heading={LANDING.deliverables.heading} sub={LANDING.deliverables.sub} maxW={680} /></Reveal>
+          <Reveal>
+            <div className="rm-lift rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, display: 'flex', gap: 24, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: 'clamp(20px,3vw,32px)' }}>
+              <div style={{ flex: '1 1 320px', minWidth: 260 }}>
+                <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>{LANDING.deliverables.sampleHighlight.eyebrow}</div>
+                <h3 className="rm-serif" style={{ fontSize: 'clamp(20px,2.6vw,26px)', fontWeight: 800, margin: '0 0 8px' }}>{LANDING.deliverables.sampleHighlight.heading}</h3>
+                <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.6, margin: 0, maxWidth: 440 }}>{LANDING.deliverables.sampleHighlight.sub}</p>
+              </div>
+              <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf_banner' })}
+                className="rm-focus rm-pop" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 8, fontSize: 15, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '15px 26px', boxShadow: '0 14px 30px -14px rgba(201,255,72,.5)', textDecoration: 'none', maxWidth: '100%', boxSizing: 'border-box' }}>
+                {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
+              </a>
+            </div>
+          </Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {LANDING.deliverables.items.map((d, i) => (
+              <Reveal key={d.t} delay={(i % 3) * 80}>
+                <div className={"rm-lift " + (i < 2 ? 'rm-glass-accent' : 'rm-glass')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                  <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                    <DeliverableIcon kind={d.icon} />
+                  </div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 8px' }}>{d.t}</h3>
+                  <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.55, margin: 0 }}>{d.d}</p>
+                  {d.icon === 'download' && (
+                    <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf' })}
+                      className="rm-focus rm-pop" style={{ alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '9px 16px', boxShadow: '0 10px 24px -12px rgba(201,255,72,.5)' }}>
+                      {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
+                    </a>
+                  )}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '18px auto 0' }}>{LANDING.deliverables.sampleNote}</p>
+            <p style={{ textAlign: 'center', color: TEXT2, fontSize: 13.5, lineHeight: 1.6, maxWidth: 620, margin: '10px auto 0', fontWeight: 600 }}>{LANDING.deliverables.note}</p>
           </Reveal>
         </div>
       </section>
@@ -579,36 +654,6 @@ export default function Landing() {
           </div>
           <Reveal>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '28px auto 0' }}>{LANDING.call.note}</p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Section 05: everything you receive ── */}
-      <section id="deliverables" style={{ padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow={LANDING.deliverables.eyebrow} heading={LANDING.deliverables.heading} sub={LANDING.deliverables.sub} maxW={680} /></Reveal>
-          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
-            {LANDING.deliverables.items.map((d, i) => (
-              <Reveal key={d.t} delay={(i % 3) * 80}>
-                <div className={"rm-lift " + (i < 2 ? 'rm-glass-accent' : 'rm-glass')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
-                  <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                    <DeliverableIcon kind={d.icon} />
-                  </div>
-                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 8px' }}>{d.t}</h3>
-                  <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.55, margin: 0 }}>{d.d}</p>
-                  {d.icon === 'download' && (
-                    <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf' })}
-                      className="rm-focus rm-pop" style={{ alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '9px 16px', boxShadow: '0 10px 24px -12px rgba(201,255,72,.5)' }}>
-                      {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
-                    </a>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal>
-            <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '18px auto 0' }}>{LANDING.deliverables.sampleNote}</p>
-            <p style={{ textAlign: 'center', color: TEXT2, fontSize: 13.5, lineHeight: 1.6, maxWidth: 620, margin: '10px auto 0', fontWeight: 600 }}>{LANDING.deliverables.note}</p>
           </Reveal>
         </div>
       </section>

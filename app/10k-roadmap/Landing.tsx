@@ -466,15 +466,6 @@ export default function Landing() {
             <div style={{ position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
-              {/* Second director, on every call: inset in the photo's open sky area */}
-              <div style={{ position: 'absolute', top: 14, right: 14, width: '34%', borderRadius: 18, overflow: 'hidden', border: `3px solid ${ACCENT}`, boxShadow: '0 14px 34px -12px rgba(0,0,0,.7)', background: '#0E130C' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={MANISHA.hero} alt={`${MANISHA.name}, ${MANISHA.shortRole}`} style={{ display: 'block', width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 20%' }} />
-                <div style={{ padding: '7px 6px 8px', textAlign: 'center', lineHeight: 1.25 }}>
-                  <div style={{ fontWeight: 800, fontSize: 12.5, color: '#fff' }}>{MANISHA.name}</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT }}>{MANISHA.shortRole}</div>
-                </div>
-              </div>
               <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(7,10,6,.55)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)', textAlign: 'center' }}>
                 <span style={{ fontWeight: 800, fontSize: 15.5, color: '#fff' }}>{LANDING.heroCard.credential}</span>
                 {LANDING.heroCard.recruitedBy && (
@@ -490,7 +481,6 @@ export default function Landing() {
                 <span style={{ fontWeight: 800, fontSize: 15 }}>{LANDING.heroCard.name}</span>
                 <span style={{ color: TEXT3, fontSize: 13 }}>{LANDING.heroCard.role}</span>
               </div>
-              <div style={{ marginTop: 6, fontSize: 13, color: TEXT2 }}>on every call with <strong style={{ color: '#fff', fontWeight: 800 }}>{MANISHA.name}</strong>, {MANISHA.shortRole}</div>
               <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 18 }}>
                 {LANDING.heroCard.chips.map((c) => (
                   <span key={c.t} style={{ fontSize: 13, color: TEXT3 }}><strong style={{ color: '#fff', fontWeight: 800 }}>{c.t}</strong> {c.s}</span>

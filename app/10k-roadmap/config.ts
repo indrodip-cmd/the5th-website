@@ -106,7 +106,6 @@ export const MANISHA = {
   first: 'Manisha',
   role: 'Director & Managing Partner, The5th Global Consulting',
   shortRole: 'Director',
-  hero: '/images/manisha-hero.webp',
   avatar: '/images/manisha-avatar.jpg',
   event: '/images/manisha-event.webp',
   bio: 'Business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue.',

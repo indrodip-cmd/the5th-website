@@ -197,11 +197,6 @@ export default function Landing() {
                 <div className="hero__photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-                  <div className="hero__duo">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img className="hero__duo-photo" src={MANISHA.hero} alt={`${MANISHA.name}, ${MANISHA.shortRole}`} />
-                    <div className="hero__duo-label"><b>{MANISHA.name}</b><span>{MANISHA.shortRole}</span></div>
-                  </div>
                   <div className="hero__photo-badge">
                     <span className="hero__photo-badge-credential">{LANDING.heroCard.credential}</span>
                     {LANDING.heroCard.recruitedBy && <span className="hero__photo-badge-recruited">{LANDING.heroCard.recruitedBy}</span>}
@@ -213,7 +208,6 @@ export default function Landing() {
                     <span className="hero__caption-name">{LANDING.heroCard.name}</span>
                     <span className="hero__caption-role">{LANDING.heroCard.role}</span>
                   </div>
-                  <p className="hero__caption-with">on every call with <b>{MANISHA.name}</b>, {MANISHA.shortRole}</p>
                   <div className="hero__caption-chips">
                     {LANDING.heroCard.chips.map((c) => (
                       <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>

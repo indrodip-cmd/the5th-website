@@ -1,19 +1,11 @@
 'use client'
-/* Two-step, in-site checkout. Deliberately NOT styled like the rest of
-   /10k-roadmap's black/lime funnel: this is the payment screen, so it reads
-   like a neutral, generic processor page (think Razorpay/Stripe's own
-   checkout chrome) — the familiar, unbranded look buyers already trust with
-   their card, rather than a marketing page asking for one. */
+/* Two-step, in-site checkout — same dark/lime visual system as the rest of
+   /10k-roadmap (shared Fonts/Header/Btn/Reveal kit from ../10k-roadmap/ui),
+   so landing on this page never feels like leaving the site. */
 import { useEffect, useRef, useState } from 'react'
-import { PAY, DEPOSIT, HELP, auditDirectPlanId } from '../10k-roadmap/config'
+import { PAY, DEPOSIT, HELP, T, auditDirectPlanId } from '../10k-roadmap/config'
+import { Fonts, Header, Btn, Reveal, StepLegal } from '../10k-roadmap/ui'
 import { track } from '../10k-roadmap/track'
-
-const INK = '#16181d'
-const MUTE = '#6b7280'
-const LINE = '#e5e7eb'
-const BLUE = '#2f6fed'
-const BLUE_DK = '#1e4fc4'
-const BG = '#f4f5f7'
 
 function isValidEmail(v: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) }
 function isValidPhone(v: string) { return v.replace(/\D/g, '').length >= 7 }
@@ -79,69 +71,64 @@ export default function AuditCheckout() {
   }
 
   return (
-    <div style={{ minHeight: '100dvh', background: BG, fontFamily: 'Inter, system-ui, -apple-system, sans-serif', color: INK }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        .ac-grid{display:grid;grid-template-columns:1.05fr minmax(0,440px);gap:40px;align-items:start}
-        @media(max-width:880px){.ac-grid{grid-template-columns:1fr;gap:24px}.ac-sticky{position:static!important}}
-        @keyframes ac-spin{to{transform:rotate(360deg)}}`}</style>
-
-      <header style={{ padding: '18px 20px', borderBottom: `1px solid ${LINE}`, background: '#fff' }}>
-        <div style={{ maxWidth: 1040, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={MUTE} strokeWidth="2"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-          <span style={{ fontSize: 13.5, color: MUTE, fontWeight: 600 }}>Secure checkout</span>
-        </div>
-      </header>
-
-      <main style={{ maxWidth: 1040, margin: '0 auto', padding: 'clamp(20px,4vw,40px) 20px 60px' }}>
-        <div className="ac-grid">
+    <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
+      <Fonts />
+      <Header />
+      <main style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(26px,5vw,48px) clamp(16px,4vw,22px) 80px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(460px,540px)', gap: 40, alignItems: 'start' }} className="ac-grid">
           {/* Left — what they're paying for */}
-          <div>
+          <Reveal>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/founder-og.jpg" alt="Indrodip Ghosh" width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover', border: `1px solid ${LINE}` }} />
+              <img src="/images/founder-og.jpg" alt="Indrodip Ghosh" width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700 }}>Indrodip Ghosh</div>
-                <div style={{ fontSize: 12.5, color: MUTE }}>The5th Global Consulting</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>Indrodip Ghosh</div>
+                <div style={{ fontSize: 12.5, color: T.text2 }}>The5th Global Consulting</div>
               </div>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(22px,3vw,28px)', fontWeight: 800, lineHeight: 1.25, margin: '0 0 6px' }}>{PAY.headline}</h1>
-            <div style={{ width: 46, height: 4, borderRadius: 2, background: BLUE, margin: '10px 0 16px' }} />
-            <p style={{ fontSize: 15, color: '#374151', lineHeight: 1.65, marginBottom: 18 }}>{PAY.sub}</p>
+            <div className="rm-eyebrow" style={{ marginBottom: 12 }}>{PAY.eyebrow}</div>
+            <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4.2vw,40px)', margin: '0 0 14px', fontWeight: 700, lineHeight: 1.08 }}>{PAY.headline}</h1>
+            <p style={{ color: T.text2, fontSize: 16.5, lineHeight: 1.6, marginBottom: 16 }}>{PAY.sub}</p>
+            <p style={{ color: T.text, fontSize: 15.5, lineHeight: 1.55, marginBottom: 20, fontWeight: 600 }}>{PAY.notPitch}</p>
 
-            <p style={{ fontSize: 14.5, fontWeight: 700, margin: '0 0 10px' }}>{PAY.coverLead}</p>
-            <div style={{ display: 'grid', gap: 10, marginBottom: 20 }}>
+            <p style={{ color: T.text, fontSize: 15, fontWeight: 700, margin: '0 0 12px' }}>{PAY.coverLead}</p>
+            <div style={{ display: 'grid', gap: 11, marginBottom: 20 }}>
               {PAY.points.map((p) => (
-                <div key={p} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={BLUE} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: 2, flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
-                  <span style={{ fontSize: 14.5, lineHeight: 1.5, color: '#374151' }}>{p}</span>
+                <div key={p} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: 2, flexShrink: 0 }}><polyline points="20 6 9 17 4 12" /></svg>
+                  <span style={{ fontSize: 15, lineHeight: 1.5 }}>{p}</span>
                 </div>
               ))}
             </div>
 
-            <div style={{ background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, padding: '14px 16px', marginBottom: 20 }}>
-              <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.6, color: '#374151' }}>
-                <b style={{ color: INK }}>{PAY.guaranteeTitle}:</b> {PAY.guaranteeBody}
+            <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.fit}</p>
+            <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.deposit}</p>
+
+            <div style={{ background: T.surface, border: `1px solid ${T.accent}`, borderRadius: 14, padding: '16px 18px', display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 22 }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
+              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: T.text }}>
+                <b style={{ color: T.accentInk, fontWeight: 800 }}>{PAY.guaranteeTitle}:</b> {PAY.guaranteeBody}
               </p>
             </div>
 
-            <div style={{ fontSize: 13, color: MUTE, lineHeight: 1.8 }}>
-              <div style={{ fontWeight: 700, color: INK, marginBottom: 2 }}>Contact</div>
-              <div><a href={HELP.emailHref} style={{ color: MUTE, textDecoration: 'none' }}>{HELP.email}</a></div>
-              <div><a href={HELP.phoneHref} style={{ color: MUTE, textDecoration: 'none' }}>{HELP.phone}</a></div>
+            <div style={{ fontSize: 13, color: T.text2, lineHeight: 1.8 }}>
+              <div style={{ fontWeight: 700, color: T.text, marginBottom: 2 }}>Contact</div>
+              <div><a href={HELP.emailHref} style={{ color: T.text2, textDecoration: 'none' }}>{HELP.email}</a></div>
+              <div><a href={HELP.phoneHref} style={{ color: T.text2, textDecoration: 'none' }}>{HELP.phone}</a></div>
             </div>
-          </div>
+          </Reveal>
 
           {/* Right — payment */}
-          <div className="ac-sticky" style={{ position: 'sticky', top: 20 }}>
-            <div style={{ background: '#fff', border: `1px solid ${LINE}`, borderRadius: 14, boxShadow: '0 10px 30px rgba(16,24,40,.06)', padding: '22px 20px' }}>
-              <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>Payment Details</div>
-              <div style={{ width: 36, height: 3, borderRadius: 2, background: BLUE, marginBottom: 18 }} />
+          <Reveal delay={80}>
+            <div className="rm-glass" style={{ borderRadius: 20, padding: 'clamp(20px,3vw,28px) clamp(16px,2.5vw,22px)', position: 'sticky', top: 90 }}>
+              <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 4, color: T.text }}>Payment Details</div>
+              <div style={{ width: 36, height: 3, borderRadius: 2, background: T.accent, marginBottom: 18 }} />
 
               {step === 'details' ? (
                 <>
                   <Field label="Amount">
-                    <input value={`$${DEPOSIT.amount}.00`} readOnly style={{ ...inputStyle, background: '#f9fafb', color: MUTE, fontWeight: 600 }} />
+                    <input value={`$${DEPOSIT.amount}.00`} readOnly style={{ ...inputStyle, color: T.text2, fontWeight: 700 }} />
                   </Field>
                   <Field label="Email" error={touched && !emailOk ? 'Enter a valid email address.' : ''}>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" style={inputStyle} autoComplete="email" />
@@ -153,44 +140,45 @@ export default function AuditCheckout() {
                     <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" style={inputStyle} autoComplete="name" />
                   </Field>
 
-                  {error && <p style={{ color: '#c0352b', fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
+                  {error && <p style={{ color: T.danger, fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
 
-                  <button type="button" onClick={handlePay} disabled={submitting}
-                    style={{ width: '100%', marginTop: 6, background: submitting ? BLUE_DK : BLUE, color: '#fff', border: 'none', borderRadius: 9, padding: '14px 16px', fontSize: 15.5, fontWeight: 700, cursor: submitting ? 'default' : 'pointer', fontFamily: 'inherit', opacity: submitting ? 0.8 : 1 }}>
+                  <Btn onClick={handlePay} disabled={submitting} full style={{ marginTop: 6 }}>
                     {submitting ? 'Please wait…' : `Pay $${DEPOSIT.amount}.00`}
-                  </button>
-                  <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 11.5, color: MUTE, marginTop: 10 }}>
+                  </Btn>
+                  <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 11.5, color: T.text3, marginTop: 10 }}>
                     <LockIcon /> Your bank may ask you to verify this payment (3D Secure).
                   </p>
                 </>
               ) : (
                 <>
                   <button type="button" onClick={() => setStep('details')}
-                    style={{ background: 'none', border: 'none', color: MUTE, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', padding: 0, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={MUTE} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+                    style={{ background: 'none', border: 'none', color: T.text2, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', padding: 0, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
                     Edit details
                   </button>
-                  <div style={{ background: '#f9fafb', border: `1px solid ${LINE}`, borderRadius: 10, padding: '12px 14px', marginBottom: 16, fontSize: 13, color: '#374151', display: 'grid', gap: 3 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: MUTE }}>Amount</span><b>${DEPOSIT.amount}.00</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: MUTE }}>Email</span><span>{email}</span></div>
+                  <div className="rm-glass-flat" style={{ borderRadius: 10, padding: '12px 14px', marginBottom: 16, fontSize: 13, color: T.text, display: 'grid', gap: 3 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: T.text2 }}>Amount</span><b>${DEPOSIT.amount}.00</b></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: T.text2 }}>Email</span><span>{email}</span></div>
                   </div>
                   <WhopEmbed planId={auditDirectPlanId()} email={email} />
                 </>
               )}
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 18, paddingTop: 16, borderTop: `1px solid ${LINE}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 18, paddingTop: 16, borderTop: `1px solid ${T.line}` }}>
                 {PAYMENT_LOGOS.map((l) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img key={l.name} src={l.src} alt={l.name} style={{ height: l.h, width: 'auto' }} />
                 ))}
               </div>
-              <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, textAlign: 'center', fontSize: 11.5, color: '#9ca3af', marginTop: 10, lineHeight: 1.5 }}>
+              <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, textAlign: 'center', fontSize: 11.5, color: T.text3, marginTop: 10, lineHeight: 1.5 }}>
                 <LockIcon /> 256-bit SSL encrypted · 3D Secure authentication · Powered by Whop
               </p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </main>
+      <StepLegal />
+      <style>{`@media(max-width:1000px){.ac-grid{grid-template-columns:1fr!important;max-width:600px;margin:0 auto}}`}</style>
     </div>
   )
 }
@@ -198,23 +186,27 @@ export default function AuditCheckout() {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: '#374151', marginBottom: 6 }}>{label}</label>
+      <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: T.text2, marginBottom: 6 }}>{label}</label>
       {children}
-      {error && <p style={{ color: '#c0352b', fontSize: 12, margin: '5px 0 0' }}>{error}</p>}
+      {error && <p style={{ color: T.danger, fontSize: 12, margin: '5px 0 0' }}>{error}</p>}
     </div>
   )
 }
 
 const inputStyle: React.CSSProperties = {
   width: '100%', boxSizing: 'border-box', padding: '11px 13px', fontSize: 14.5,
-  border: `1px solid ${LINE}`, borderRadius: 9, fontFamily: 'inherit', color: INK, outline: 'none',
+  background: 'rgba(255,255,255,.04)', border: `1px solid ${T.line}`, borderRadius: 9,
+  fontFamily: 'inherit', color: T.text, outline: 'none',
 }
 
 /* Mounts Whop's embedded card form once step 2 is shown. Same defensive
    pattern as the rest of the funnel's checkout embeds: a loading skeleton,
    and a hosted-checkout fallback link if the iframe doesn't mount in time
    (ad-blockers, CSP, slow network) — so a blocked embed never strands a
-   buyer who already entered their details. */
+   buyer who already entered their details. Whop's own widget renders a
+   white card regardless of host theme, same as every other embed in this
+   funnel (see ../pay/Pay.tsx) — it sits as a light "insert" inside the
+   dark glass panel rather than trying to force it dark. */
 function WhopEmbed({ planId, email }: { planId: string; email: string }) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -238,7 +230,7 @@ function WhopEmbed({ planId, email }: { planId: string; email: string }) {
   }, [planId, email])
 
   return (
-    <div style={{ position: 'relative', minHeight: 110 }}>
+    <div style={{ position: 'relative', minHeight: 110, background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
       <div ref={ref} key={`${planId}:${email}`}
         data-whop-checkout-plan-id={planId}
         data-whop-checkout-theme="light"
@@ -246,18 +238,16 @@ function WhopEmbed({ planId, email }: { planId: string; email: string }) {
         data-whop-checkout-email={email || undefined}
         style={{ width: '100%', minHeight: 110 }} />
       {!mounted && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#fff', borderRadius: 10 }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#fff' }}>
           {!slow ? (
             <>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', border: `3px solid ${LINE}`, borderTopColor: BLUE, animation: 'ac-spin .8s linear infinite' }} />
-              <p style={{ fontSize: 13, color: MUTE, margin: 0 }}>Loading secure payment form…</p>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', border: '3px solid #e5e7eb', borderTopColor: T.accentInk, animation: 'rm-spin .8s linear infinite' }} />
+              <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>Loading secure payment form…</p>
             </>
           ) : (
             <>
-              <p style={{ fontSize: 13.5, color: INK, margin: 0, textAlign: 'center', fontWeight: 600 }}>Checkout is taking a moment.</p>
-              <a href={hosted} target="_top" style={{ display: 'inline-block', background: BLUE, color: '#fff', fontWeight: 700, fontSize: 14.5, padding: '11px 22px', borderRadius: 9, textDecoration: 'none' }}>
-                Pay ${DEPOSIT.amount}.00 securely →
-              </a>
+              <p style={{ fontSize: 13.5, color: '#16181d', margin: 0, textAlign: 'center', fontWeight: 600 }}>Checkout is taking a moment.</p>
+              <Btn href={hosted}>Pay ${DEPOSIT.amount}.00 securely →</Btn>
             </>
           )}
         </div>

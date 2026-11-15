@@ -58,18 +58,31 @@ export function Fonts() {
          the neutral tone, .rm-glass-accent the lime-tinted one used where
          a card was already on the green accent. Browsers without
          backdrop-filter (vanishingly rare now) fall back to a solid card
-         via @supports, so nothing goes invisible or illegible. */
+         via @supports, so nothing goes invisible or illegible.
+
+         2026-11-15: blur dropped from 30px to 14px (now matching
+         .rm-glass-calc below) after this page went blank below the first
+         unblurred section on real iPhone/iPad Safari — confirmed in
+         production, not reproducible in this sandbox's Chromium-only
+         testing. This page renders 30-60+ simultaneously-visible
+         backdrop-filter surfaces (every card in the problem/process/
+         deliverables/stats/case-studies/founder sections); that many
+         concurrent blurred layers at a heavy radius is a known WebKit
+         compositor stall, and it lines up with the timeline: Reveal's
+         visibility safety net was confirmed working on real devices
+         BEFORE this glass treatment shipped. Keep future glass additions
+         at this same lighter weight. */
       .rm-glass,.rm-glass-accent,.rm-glass-calc,.rm-glass-calc-accent{position:relative;isolation:isolate}
       .rm-glass::before,.rm-glass-accent::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.03) 22%,transparent 46%)}
       .rm-glass{
         background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
-        -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
         border:1px solid rgba(255,255,255,.18);
         box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 0 26px rgba(255,255,255,.025), 0 26px 54px -28px rgba(0,0,0,.6);
       }
       .rm-glass-accent{
         background:linear-gradient(155deg,rgba(201,255,72,.2),rgba(201,255,72,.04));
-        -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
         border:1px solid rgba(201,255,72,.38);
         box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 26px rgba(201,255,72,.03), 0 26px 54px -28px rgba(0,0,0,.6);
       }

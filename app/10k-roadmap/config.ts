@@ -481,8 +481,8 @@ export const PAY = {
   ],
   fit: 'This works if you’re a coach or consultant who has some traction but hasn’t cracked consistency. You know your expertise is valuable, you’re just not converting it into predictable revenue yet.',
   deposit: 'Your $29 deposit reserves your spot and is fully refundable: attend the call and it’s returned to you either way.',
-  guaranteeTitle: '30-Day Money-Back Guarantee',
-  guaranteeBody: 'If you attend the call and feel it didn’t give you real clarity or a usable next step, email us within 30 days for a full refund. No conditions attached.',
+  guaranteeTitle: '7-Day Money-Back Guarantee',
+  guaranteeBody: 'If you attend the call and feel it didn’t give you real clarity or a usable next step, email us within 7 days for a full refund. No conditions attached.',
   micro: 'Secure checkout · Powered by Whop · Apple Pay & Google Pay',
 }
 

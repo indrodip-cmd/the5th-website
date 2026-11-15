@@ -5,6 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
@@ -21,13 +22,10 @@ export function Fonts() {
       .rm-serif{font-family:${T.serif};font-weight:700;letter-spacing:-.022em;line-height:1.05}
       .rm-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:${T.accentInk}}
       .rm-mark{color:${T.accentInk}}
-      .rm-reveal{opacity:0;transform:translateY(22px) scale(.985);filter:blur(4px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
-      .rm-reveal.in{opacity:1;transform:none;filter:blur(0)}
       @keyframes rm-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
       @keyframes rm-spin{to{transform:rotate(360deg)}}
       @keyframes rm-draw{to{stroke-dashoffset:0}}
       @media (prefers-reduced-motion: reduce){
-        .rm-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
         *{animation-duration:.001ms!important}
       }
       button{font-family:inherit}
@@ -103,17 +101,40 @@ export function getAuditId(): string {
 export function saveQualAnswers(a: Record<string, unknown>) { try { sessionStorage.setItem('audit_qual', JSON.stringify(a)) } catch { /* noop */ } }
 export function loadQualAnswers(): Record<string, unknown> { try { return JSON.parse(sessionStorage.getItem('audit_qual') || '{}') } catch { return {} } }
 
-/* ── Scroll reveal ─────────────────────────────────────────────────────────*/
+/* ── Scroll reveal ─────────────────────────────────────────────────────────
+   A spring-settled rise, driven by framer-motion. A previous version of
+   this used Motion's `whileInView` prop directly and shipped a real
+   production incident: on real iPhone/iPad Safari (never reproduced in this
+   sandbox's Chromium-only testing), the in-view trigger sometimes never
+   fired, leaving every section permanently at its invisible initial state —
+   the whole page past the header read as blank. The fix here is structural,
+   not a guess at the exact WebKit timing quirk: `useInView` drives
+   visibility explicitly, AND a plain setTimeout safety net forces content
+   visible regardless, so no single trigger failing can ever hide content
+   forever. */
 export function Reveal({ children, delay = 0, style, id }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties; id?: string }) {
   const ref = useRef<HTMLDivElement | null>(null)
+  const shouldReduceMotion = useReducedMotion()
+  const inView = useInView(ref, { once: true, amount: 0 })
+  const [timedOut, setTimedOut] = useState(false)
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect() } }), { threshold: 0.14 })
-    io.observe(el)
-    return () => io.disconnect()
+    const t = setTimeout(() => setTimedOut(true), 900)
+    return () => clearTimeout(t)
   }, [])
-  return <div id={id} ref={ref} className="rm-reveal" style={{ transitionDelay: `${delay}ms`, ...style }}>{children}</div>
+  const visible = inView || timedOut
+  if (shouldReduceMotion) return <div id={id} ref={ref} style={style}>{children}</div>
+  return (
+    <motion.div
+      id={id}
+      ref={ref}
+      style={style}
+      initial={{ opacity: 0, y: 22 }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+      transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 0.9, delay: delay / 1000 }}
+    >
+      {children}
+    </motion.div>
+  )
 }
 
 /* ── Buttons ───────────────────────────────────────────────────────────────*/

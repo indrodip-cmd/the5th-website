@@ -5,7 +5,6 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
@@ -168,38 +167,62 @@ export function saveQualAnswers(a: Record<string, unknown>) { try { sessionStora
 export function loadQualAnswers(): Record<string, unknown> { try { return JSON.parse(sessionStorage.getItem('audit_qual') || '{}') } catch { return {} } }
 
 /* ── Scroll reveal ─────────────────────────────────────────────────────────
-   A spring-settled rise, driven by framer-motion. A previous version of
-   this used Motion's `whileInView` prop directly and shipped a real
-   production incident: on real iPhone/iPad Safari (never reproduced in this
-   sandbox's Chromium-only testing), the in-view trigger sometimes never
-   fired, leaving every section permanently at its invisible initial state —
-   the whole page past the header read as blank. The fix here is structural,
-   not a guess at the exact WebKit timing quirk: `useInView` drives
-   visibility explicitly, AND a plain setTimeout safety net forces content
-   visible regardless, so no single trigger failing can ever hide content
-   forever. */
+   Plain CSS fade+rise, no animation library. History here, twice over:
+
+   v1 used Framer Motion's `whileInView` prop directly and shipped a real
+   production incident — on real iPhone/iPad Safari (never reproduced in
+   this sandbox's Chromium-only testing), the in-view trigger sometimes
+   never fired, leaving every section permanently at its invisible initial
+   state, the whole page past the header reading as blank.
+
+   v2 switched to Framer's `useInView` hook plus a setTimeout safety net
+   (900ms) that forces visibility regardless of the observer. That shipped,
+   was confirmed working on a real device at the time — then the page went
+   blank below the fold again after later commits added a heavy
+   `backdrop-filter` "glass" treatment to 40+ cards on this same page.
+   Reducing the blur and the simultaneous composited-layer count did not
+   fully resolve it on a real device, and with two separate real-device
+   failures now on record for this exact component, Framer Motion itself
+   is removed as a variable rather than debugged around again: this is a
+   vanilla IntersectionObserver (same safety-net shape as v2) driving a
+   plain CSS transition on a plain div — no animation library, no
+   WebKit-specific library behavior left to misfire. */
 export function Reveal({ children, delay = 0, style, id }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties; id?: string }) {
   const ref = useRef<HTMLDivElement | null>(null)
-  const shouldReduceMotion = useReducedMotion()
-  const inView = useInView(ref, { once: true, amount: 0 })
-  const [timedOut, setTimedOut] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
+
   useEffect(() => {
-    const t = setTimeout(() => setTimedOut(true), 900)
-    return () => clearTimeout(t)
+    try { setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches) } catch { /* noop */ }
   }, [])
-  const visible = inView || timedOut
-  if (shouldReduceMotion) return <div id={id} ref={ref} style={style}>{children}</div>
+
+  useEffect(() => {
+    let shown = false
+    const show = () => { if (!shown) { shown = true; setVisible(true) } }
+    const t = setTimeout(show, 900)
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') return () => clearTimeout(t)
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { show(); io.disconnect() } })
+    }, { threshold: 0 })
+    io.observe(el)
+    return () => { clearTimeout(t); io.disconnect() }
+  }, [])
+
+  if (reduceMotion) return <div id={id} ref={ref} style={style}>{children}</div>
   return (
-    <motion.div
+    <div
       id={id}
       ref={ref}
-      style={style}
-      initial={{ opacity: 0, y: 22 }}
-      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
-      transition={{ type: 'spring', stiffness: 110, damping: 20, mass: 0.9, delay: delay / 1000 }}
+      style={{
+        ...style,
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(22px)',
+        transition: `opacity .6s cubic-bezier(.16,1,.3,1) ${delay}ms, transform .6s cubic-bezier(.16,1,.3,1) ${delay}ms`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 

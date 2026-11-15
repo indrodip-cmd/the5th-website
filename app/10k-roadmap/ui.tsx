@@ -279,6 +279,8 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
               <span style={{ width: 1, height: 22, background: T.line }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/founder.png" alt="Indrodip Ghosh, Founder" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/manisha-avatar.jpg" alt="Manisha Satpute, Director" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}`, marginLeft: -14 }} />
             </span>
           )}
         </a>

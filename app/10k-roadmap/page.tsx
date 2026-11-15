@@ -19,7 +19,7 @@ const SERVICE_JSONLD = {
   '@type': 'Service',
   serviceType: 'Business strategy audit',
   name: 'The $10K Roadmap: Private 60-Minute Business Audit',
-  description: 'A private 60-minute 1:1 business audit for coaches and consultants, conducted personally by founder Indrodip Ghosh. Includes a personalized audit PDF, a 100-day roadmap, business growth calculators and an AI implementation toolkit.',
+  description: 'A private 60-minute 1:1 business audit for coaches and consultants, conducted personally by founder Indrodip Ghosh and director Manisha Satpute. Includes a personalized audit PDF, a 100-day roadmap, business growth calculators and an AI implementation toolkit.',
   provider: { '@type': 'Organization', name: 'The5th Global Consulting', url: 'https://the5thglobal.consulting' },
   areaServed: ['United States', 'Canada', 'United Kingdom', 'Australia'].map((name) => ({ '@type': 'Country', name })),
   offers: {

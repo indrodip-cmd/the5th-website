@@ -22,7 +22,7 @@
 import type { Q } from '../config'
 
 // Design tokens + press strip are brand-level and identical — reuse verbatim.
-export { T, PRESS } from '../config'
+export { T, PRESS, MANISHA } from '../config'
 export type { Q, Opt } from '../config'
 
 export function videoUrl(): string {
@@ -99,7 +99,7 @@ export const LANDING = {
   },
   ctaPrimary: 'Book Your ₹199 Strategy Session',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199, fully refundable. Slots limited to his calendar.',
+  ctaMicro: '₹199, fully refundable. Slots are limited.',
   ctaMicroShort: '₹199, fully refundable',
 
   /* ── The problem: four short, scannable statements, then the one line
@@ -126,7 +126,7 @@ export const LANDING = {
     heading: 'Everything you get for ₹199.',
     sub: 'Not just a call. You leave with real things you can use.',
     items: [
-      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indrodip himself. Not a team member.' },
+      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indrodip and Manisha. Not a team member.' },
       { t: 'Your Business Audit PDF', d: 'A written report on your offer, your buyer and your biggest problem.' },
       { t: 'Your 100-Day Roadmap', d: 'What to fix first, second and third. Step by step.' },
       { t: 'Call Recording', d: 'Watch it again any time. Sent only if you agree to recording.' },
@@ -241,7 +241,7 @@ export const LANDING = {
     heading: 'Frequently Asked Questions',
     items: [
       { q: 'What exactly happens during the ₹199 strategy session?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
-      { q: 'How long does the session last?', a: 'Sixty minutes, one-on-one with Indrodip personally.' },
+      { q: 'How long does the session last?', a: 'Sixty minutes, with Indrodip and Manisha personally.' },
       { q: 'Is this suitable for beginners?', a: 'Yes, if you already have some expertise or clients. It isn’t built for people with no business or income yet.' },
       { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. It’s one diagnostic session to find the specific thing blocking your growth, so you can judge for yourself whether the plan makes sense, with zero obligation to continue.' },
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
@@ -289,7 +289,7 @@ export const LANDING = {
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
     points: [
-      'A 60-minute 1:1 call with Indrodip personally',
+      'A 60-minute 1:1 call with Indrodip and Manisha personally',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],
@@ -301,11 +301,11 @@ export const LANDING = {
   pay: {
     eyebrow: 'Last Step',
     headline: 'Reserve your 1:1 Business Audit.',
-    sub: 'A 60-minute private call with Indrodip Ghosh, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
+    sub: 'A 60-minute private call with Indrodip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
     notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
     coverLead: 'Your ₹199 reserves:',
     points: [
-      'A 60-minute 1:1 call with Indrodip personally',
+      'A 60-minute 1:1 call with Indrodip and Manisha personally',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],

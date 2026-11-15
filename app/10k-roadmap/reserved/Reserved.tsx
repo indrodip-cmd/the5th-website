@@ -115,7 +115,7 @@ export default function Reserved() {
           <Celebration
             emoji="🎉"
             headline="Congratulations — we've received your payment!"
-            body="You're officially booked in for your Private Business Strategy Audit with Indrodip. In just a minute, you'll pick your exact time — but first, three quick questions so your 60 minutes are built around your business, not a generic script."
+            body="You're officially booked in for your Private Business Strategy Audit with Indrodip and Manisha. In just a minute, you'll pick your exact time — but first, three quick questions so your 60 minutes are built around your business, not a generic script."
             sub="You've joined 76 coaches and consultants across 12 nations — real diagnoses, real plans, real results."
             duration={2600}
             onDone={() => setPhase('intake')}

@@ -80,9 +80,13 @@ export default function AuditCheckout() {
           <Reveal>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/founder-og.jpg" alt="Indrodip Ghosh" width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
+              <span style={{ display: 'inline-flex', flexShrink: 0 }}>
+                <img src="/images/founder-og.jpg" alt="Indrodip Ghosh" width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}` }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/manisha-avatar.jpg" alt="Manisha Satpute" width={48} height={48} style={{ borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${T.line}`, marginLeft: -14 }} />
+              </span>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>Indrodip Ghosh</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>Indrodip Ghosh &amp; Manisha Satpute</div>
                 <div style={{ fontSize: 12.5, color: T.text2 }}>The5th Global Consulting</div>
               </div>
             </div>

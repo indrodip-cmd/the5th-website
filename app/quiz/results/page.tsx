@@ -117,7 +117,7 @@ function buildCalendarLinks(startISO: string, meetingUrl?: string | null) {
   const end = new Date(start.getTime() + 60 * 60 * 1000) // 60-min session
   const s = toUTCStamp(start), e = toUTCStamp(end)
   const location = meetingUrl || 'Online — link in your confirmation email'
-  const details = `Your Private Strategy & Coaching Session with Indrodip Ghosh. We'll walk through your full report and map your next 14 days.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}`
+  const details = `Your Private Strategy & Coaching Session with Indrodip Ghosh and Manisha Satpute. We'll walk through your full report and map your next 14 days.${meetingUrl ? `\n\nJoin: ${meetingUrl}` : ''}`
   const google = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(CAL_TITLE)}&dates=${s}/${e}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
   const outlook = `https://outlook.office.com/calendar/0/deeplink/compose?path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=${encodeURIComponent(CAL_TITLE)}&startdt=${start.toISOString()}&enddt=${end.toISOString()}&body=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`
   const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//The5th Global Consulting//Session//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'BEGIN:VEVENT', `UID:${s}-the5th@the5thglobal.consulting`, `DTSTAMP:${toUTCStamp(new Date())}`, `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${CAL_TITLE}`, `DESCRIPTION:${details.replace(/\n/g, '\\n')}`, `LOCATION:${location}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n')
@@ -555,14 +555,14 @@ export default function ResultsPage() {
                   <span style={{ ...eyebrow, color: C.gold }}>Included Bonus · Free 1:1</span>
                   <h2 style={{ ...h2, color: '#fff', maxWidth: 660, margin: '0 auto 16px' }}>Want help implementing this? Book your <em style={{ fontStyle: 'italic', color: C.gold }}>free strategy call.</em></h2>
                   <p style={{ fontSize: 16.5, fontWeight: 300, color: 'rgba(255,255,255,.74)', maxWidth: 580, margin: '0 auto 26px', lineHeight: 1.75 }}>
-                    As a bonus with your diagnostic, Indrodip will walk through your complete report with you and map the exact moves to solve the one challenge you came here for. Pick a time below.
+                    As a bonus with your diagnostic, Indrodip and Manisha will walk through your complete report with you and map the exact moves to solve the one challenge you came here for. Pick a time below.
                   </p>
 
                   <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', maxWidth: 900, margin: '0 auto', boxShadow: '0 20px 50px -30px rgba(0,0,0,.6)' }}>
                     <Cal namespace="60min" calLink="indrodip-ghosh-ut1vxh/60min" style={{ width: '100%', height: '660px', overflow: 'scroll' }} config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', name, email }} />
                   </div>
 
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · You&apos;ll review this report with Indrodip personally · You leave with clarity either way</p>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,.5)', marginTop: 16 }}>Free · You&apos;ll review this report with Indrodip and Manisha personally · You leave with clarity either way</p>
 
                   <div style={{ maxWidth: 560, margin: '36px auto 0', textAlign: 'left', borderTop: '1px solid rgba(255,255,255,.12)', paddingTop: 28 }}>
                     <span style={{ ...eyebrow, color: C.gold }}>What We&apos;ll Do Together</span>

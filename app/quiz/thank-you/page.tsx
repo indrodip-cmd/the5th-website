@@ -87,7 +87,7 @@ function ThankYouContent() {
               You are booked, {firstName}.
             </h1>
             <p style={{ fontSize: 17, color: '#555', lineHeight: 1.7, marginBottom: 36 }}>
-              Indrodip is looking forward to speaking with you. Check your email for a calendar confirmation with everything you need.
+              Indrodip and Manisha are looking forward to speaking with you. Check your email for a calendar confirmation with everything you need.
             </p>
           </div>
 

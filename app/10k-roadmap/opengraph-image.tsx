@@ -15,7 +15,7 @@ import path from 'node:path'
    WhatsApp among them) cut the photo off at the side. Everything here sits
    centered with generous margin on all sides so a center-crop never loses
    the subject or the headline. */
-export const alt = "You've Tried Coaches, ChatGPT And Claude. So Why Aren't You Making Consistent Money? | The5th $29 Private Business Audit"
+export const alt = "You've Tried Coaches, ChatGPT And Claude. So Why Aren't You Making Consistent Money? | The5th $29 Private Business Audit with Indrodip Ghosh and Manisha Satpute"
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -24,6 +24,7 @@ const ACCENT = '#C9FF48'
 
 export default function OpengraphImage() {
   const photo = fs.readFileSync(path.join(process.cwd(), 'public', 'images', 'founder-og.jpg')).toString('base64')
+  const photo2 = fs.readFileSync(path.join(process.cwd(), 'public', 'images', 'manisha-avatar.jpg')).toString('base64')
 
   return new ImageResponse(
     (
@@ -82,15 +83,23 @@ export default function OpengraphImage() {
             padding: '12px 28px 12px 12px',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`data:image/jpeg;base64,${photo}`}
-            width={64}
-            height={64}
-            style={{ borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}` }}
-          />
+          <div style={{ display: 'flex' }}>
+            <img
+              src={`data:image/jpeg;base64,${photo}`}
+              width={64}
+              height={64}
+              style={{ borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}` }}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`data:image/jpeg;base64,${photo2}`}
+              width={64}
+              height={64}
+              style={{ borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}`, marginLeft: -16 }}
+            />
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#fff' }}>Indrodip Ghosh</div>
+            <div style={{ display: 'flex', fontSize: 22, fontWeight: 700, color: '#fff' }}>Indrodip Ghosh &amp; Manisha Satpute</div>
             <div style={{ display: 'flex', fontSize: 17, color: 'rgba(255,255,255,.62)' }}>$29 Private Business Audit, Refundable</div>
           </div>
         </div>

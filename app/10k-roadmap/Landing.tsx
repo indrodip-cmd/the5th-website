@@ -24,7 +24,7 @@
      booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from './config'
+import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL, MANISHA } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
 import VideoWall from '@/components/VideoWall'
@@ -466,6 +466,15 @@ export default function Landing() {
             <div style={{ position: 'relative' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
+              {/* Second director, on every call: inset in the photo's open sky area */}
+              <div style={{ position: 'absolute', top: 14, right: 14, width: '34%', borderRadius: 18, overflow: 'hidden', border: `3px solid ${ACCENT}`, boxShadow: '0 14px 34px -12px rgba(0,0,0,.7)', background: '#0E130C' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={MANISHA.hero} alt={`${MANISHA.name}, ${MANISHA.shortRole}`} style={{ display: 'block', width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 20%' }} />
+                <div style={{ padding: '7px 6px 8px', textAlign: 'center', lineHeight: 1.25 }}>
+                  <div style={{ fontWeight: 800, fontSize: 12.5, color: '#fff' }}>{MANISHA.name}</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT }}>{MANISHA.shortRole}</div>
+                </div>
+              </div>
               <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(7,10,6,.55)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)', textAlign: 'center' }}>
                 <span style={{ fontWeight: 800, fontSize: 15.5, color: '#fff' }}>{LANDING.heroCard.credential}</span>
                 {LANDING.heroCard.recruitedBy && (
@@ -481,6 +490,7 @@ export default function Landing() {
                 <span style={{ fontWeight: 800, fontSize: 15 }}>{LANDING.heroCard.name}</span>
                 <span style={{ color: TEXT3, fontSize: 13 }}>{LANDING.heroCard.role}</span>
               </div>
+              <div style={{ marginTop: 6, fontSize: 13, color: TEXT2 }}>on every call with <strong style={{ color: '#fff', fontWeight: 800 }}>{MANISHA.name}</strong>, {MANISHA.shortRole}</div>
               <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 18 }}>
                 {LANDING.heroCard.chips.map((c) => (
                   <span key={c.t} style={{ fontSize: 13, color: TEXT3 }}><strong style={{ color: '#fff', fontWeight: 800 }}>{c.t}</strong> {c.s}</span>
@@ -498,10 +508,14 @@ export default function Landing() {
              not only after scrolling most of the page ── */}
       <section style={{ padding: '28px ' + PADX + ' 0' }}>
         <Reveal>
-          <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', background: 'rgba(201,255,72,.08)', border: `1px solid rgba(201,255,72,.3)`, borderRadius: 999, padding: '14px 24px' }}>
+          <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', background: 'rgba(201,255,72,.08)', border: `1px solid rgba(201,255,72,.3)`, borderRadius: 28, padding: '14px 24px' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}`, flexShrink: 0 }} />
-            <span style={{ fontSize: 14.5, fontWeight: 700, color: '#F2F6EC', textAlign: 'center', lineHeight: 1.4 }}>{LANDING.founderBadge.line}</span>
+            <span style={{ display: 'inline-flex', flexShrink: 0 }}>
+              <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}` }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={MANISHA.avatar} alt={MANISHA.name} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}`, marginLeft: -10 }} />
+            </span>
+            <span style={{ flex: '1 1 300px', fontSize: 14.5, fontWeight: 700, color: '#F2F6EC', textAlign: 'left', lineHeight: 1.4 }}>{LANDING.founderBadge.line}</span>
           </div>
         </Reveal>
       </section>

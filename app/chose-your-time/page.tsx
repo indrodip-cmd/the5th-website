@@ -82,18 +82,21 @@ export default function ChoseYourTime() {
                 You’ve done the hard part. Now let’s map your next <span style={{ color: '#C9A84C' }}>$10K month.</span>
               </h1>
               <p style={{ fontSize: 16.5, color: '#57505f', lineHeight: 1.65, marginTop: 18 }}>
-                Pick a time below and you’re locked in. You’ll talk <b style={{ color: '#3D2645' }}>1-on-1 with Indrodip</b> — not a sales rep — about exactly what’s holding your business back and the fastest path forward. It’s free, and there’s <b style={{ color: '#3D2645' }}>zero pressure</b> to buy anything.
+                Pick a time below and you’re locked in. You’ll talk <b style={{ color: '#3D2645' }}>1-on-1 with Indrodip and Manisha</b> — not a sales rep — about exactly what’s holding your business back and the fastest path forward. It’s free, and there’s <b style={{ color: '#3D2645' }}>zero pressure</b> to buy anything.
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 20px', margin: '22px 0' }}>
-                {['1-on-1 with Indrodip', 'Completely free', 'No pitch, no pressure'].map((t) => (
+                {['1-on-1 with Indrodip and Manisha', 'Completely free', 'No pitch, no pressure'].map((t) => (
                   <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 14, color: '#3D2645', fontWeight: 600 }}><span style={{ color: '#C9A84C' }}>✓</span>{t}</span>
                 ))}
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#fff', border: '1px solid #ece7f0', borderRadius: 16, padding: 16, boxShadow: '0 8px 30px rgba(40,20,50,.05)' }}>
-                <img src="/public/images/founder.png" alt="Indrodip Ghosh" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                <div style={{ fontSize: 13.5, color: '#57505f', lineHeight: 1.5 }}><b style={{ color: '#2a2233' }}>You’ll speak with Indrodip personally.</b><br />He’s helped 76+ professionals turn expertise into income.</div>
+                <span style={{ display: 'inline-flex', flexShrink: 0 }}>
+                  <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover' }} />
+                  <img src="/images/manisha-avatar.jpg" alt="Manisha Satpute" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', marginLeft: -16, border: '2px solid #fff' }} />
+                </span>
+                <div style={{ fontSize: 13.5, color: '#57505f', lineHeight: 1.5 }}><b style={{ color: '#2a2233' }}>You’ll speak with Indrodip and Manisha personally.</b><br />Together they’ve helped 76+ professionals turn expertise into income.</div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 20 }}>
@@ -150,7 +153,7 @@ export default function ChoseYourTime() {
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C4A32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                   </div>
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a8380' }}>Your call with Indrodip</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a8380' }}>Your call with Indrodip and Manisha</div>
                     <div style={{ fontSize: 17.5, fontWeight: 800, color: '#3D2645', marginTop: 2 }}>{when}</div>
                   </div>
                 </div>

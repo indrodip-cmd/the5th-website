@@ -16,7 +16,7 @@ const config: CheckoutConfig = {
     'Your signature offer, pricing strategy, and the language to hold your price',
     'Your personalised 30-day action plan and 7-day content plan',
     'Your prioritised fixes and the fastest path forward',
-    'A free 1:1 strategy call with Indrodip, included',
+    'A free 1:1 strategy call with Indrodip and Manisha, included',
   ],
   plans: [
     { key: 'diagnostic', label: 'Full Diagnostic', price: '$27', cadence: 'one-time', note: 'Instant access · yours to keep', planId: process.env.NEXT_PUBLIC_WHOP_DIAGNOSTIC_PLAN_ID || 'plan_85pIPWE1K0uBB' },

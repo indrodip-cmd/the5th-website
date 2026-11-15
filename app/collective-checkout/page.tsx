@@ -11,7 +11,7 @@ const config: CheckoutConfig = {
   subtitle:
     'The full platform plus the people. Weekly live calls, unlimited The5th AI, Vega, every course, the member community, and custom action plans built around your business.',
   features: [
-    'Weekly live community calls with Indrodip',
+    'Weekly live community calls with Indrodip and Manisha',
     'The5th AI coaching — no limits',
     'Vega — your full creative engine',
     'Custom 30 / 60 / 90-day action plans',

@@ -12,7 +12,7 @@
 import './landing.css'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS } from './config'
+import { LANDING, LEGAL, RATING, PRESS, MANISHA } from './config'
 import { REAL_PROOF } from '../config'
 import { useUtm } from '../ui'
 import { track } from '../track'
@@ -197,6 +197,11 @@ export default function Landing() {
                 <div className="hero__photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
+                  <div className="hero__duo">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img className="hero__duo-photo" src={MANISHA.hero} alt={`${MANISHA.name}, ${MANISHA.shortRole}`} />
+                    <div className="hero__duo-label"><b>{MANISHA.name}</b><span>{MANISHA.shortRole}</span></div>
+                  </div>
                   <div className="hero__photo-badge">
                     <span className="hero__photo-badge-credential">{LANDING.heroCard.credential}</span>
                     {LANDING.heroCard.recruitedBy && <span className="hero__photo-badge-recruited">{LANDING.heroCard.recruitedBy}</span>}
@@ -208,6 +213,7 @@ export default function Landing() {
                     <span className="hero__caption-name">{LANDING.heroCard.name}</span>
                     <span className="hero__caption-role">{LANDING.heroCard.role}</span>
                   </div>
+                  <p className="hero__caption-with">on every call with <b>{MANISHA.name}</b>, {MANISHA.shortRole}</p>
                   <div className="hero__caption-chips">
                     {LANDING.heroCard.chips.map((c) => (
                       <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>
@@ -438,6 +444,19 @@ export default function Landing() {
                   <div className="founder__name">{LANDING.founder.name}</div>
                   <div className="founder__role">{LANDING.founder.role}</div>
                   <p className="founder__note">{LANDING.founderCredsNote}</p>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal i={2}>
+              <div className="founder founder__row glass-panel founder__row--second">
+                <div className="founder__photo-wrap">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="founder__photo" src={MANISHA.event} alt={MANISHA.name} />
+                </div>
+                <div>
+                  <div className="founder__name">{MANISHA.name}</div>
+                  <div className="founder__role">{MANISHA.role}</div>
+                  <p className="founder__body">{MANISHA.bio} She joins every call.</p>
                 </div>
               </div>
             </Reveal>

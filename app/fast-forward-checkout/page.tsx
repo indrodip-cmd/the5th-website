@@ -10,7 +10,7 @@ const config: CheckoutConfig = {
   subtitle:
     'The guided group-coaching program that takes you from expertise to a launched, selling offer — with the full platform, live coaching, and a proven path beside you the whole way.',
   features: [
-    'Live group coaching with Indrodip',
+    'Live group coaching with Indrodip and Manisha',
     'The complete The5th platform — AI, Vega & My Journey',
     'Weekly calls, community & performance tracking',
     'Custom 30 / 60 / 90-day action plans',

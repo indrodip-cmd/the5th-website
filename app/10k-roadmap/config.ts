@@ -99,6 +99,19 @@ export const PRESS = {
    application form itself with the footer directly below it, one page, no
    separate /qualify hop. Same plum/cream/purple palette throughout, no navy
    or gold. No video, the founder photo carries the hero. */
+/* Second director, on every audit call alongside Indrodip. The bio line is
+   the claim already published in LANDING.founder2.body, not a new one. */
+export const MANISHA = {
+  name: 'Manisha Satpute',
+  first: 'Manisha',
+  role: 'Director & Managing Partner, The5th Global Consulting',
+  shortRole: 'Director',
+  hero: '/images/manisha-hero.webp',
+  avatar: '/images/manisha-avatar.jpg',
+  event: '/images/manisha-event.webp',
+  bio: 'Business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue.',
+} as const
+
 export const LANDING = {
   // ── HERO (locked) ─────────────────────────────────────────────────────
   // Per the 2026-11-14 brief: headline, subheadline, CTA wording, founder
@@ -137,7 +150,7 @@ export const LANDING = {
   // personally run by the founder" claim lands early, not just at the
   // bottom of the page.
   founderBadge: {
-    line: 'Every audit is conducted personally, 1-on-1, by founder Indrodip Ghosh — never a sales rep, never a junior coach.',
+    line: 'Every audit is conducted personally by founder Indrodip Ghosh and director Manisha Satpute, together on your call. Never a sales rep, never a junior coach.',
   },
 
   proof: {
@@ -228,7 +241,7 @@ export const LANDING = {
     // Leads with the Western-recognized credentials, then discloses the
     // India base plainly, once, with no apology, reframed as an asset
     // (outside-the-bubble perspective) rather than hidden or defended.
-    body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M, and I’ve been recruited by Google, Anthropic, Mastermind.com and ClickFunnels along the way. I run The5th Global Consulting from Kolkata, India, working with coaches and consultants across the US and Canada, on your time zone. Working from outside the US coaching bubble means I’m not selling you the same playbook you’ve already bought. Every audit is run by me personally, not a sales rep, not a junior coach.',
+    body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M, and I’ve been recruited by Google, Anthropic, Mastermind.com and ClickFunnels along the way. I run The5th Global Consulting from Kolkata, India, working with coaches and consultants across the US and Canada, on your time zone. Working from outside the US coaching bubble means I’m not selling you the same playbook you’ve already bought. Every audit is run by me and my co-director Manisha Satpute personally, not a sales rep, not a junior coach.',
     name: 'Indrodip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stat: { value: '$29', label: 'Refundable 1:1 Audit, Written Plan In 48 Hrs' },
@@ -243,19 +256,19 @@ export const LANDING = {
   // Second voice on the call: brought in for the operating/scaling side of
   // the conversation alongside Indrodip's positioning/offer expertise.
   founder2: {
-    photo: '/images/manisha.png',
+    photo: '/images/manisha-event.webp',
     quote: 'I’ve sat across the table with founders at every stage, from their first dollar to their first ten million, and the pattern is always the same. The plan was already there. What was missing was the execution discipline to run it like a real business.',
     body: 'Manisha is a business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. She brings that operating experience directly into your audit, pressure-testing your plan the way she would a real P&L, not handing you advice in theory.',
-    name: 'Manisha',
-    role: 'Managing Partner, The5th Global Consulting',
+    name: 'Manisha Satpute',
+    role: 'Director & Managing Partner, The5th Global Consulting',
   },
 
   faq: {
     eyebrow: 'Before You Book',
     heading: 'Everything You Should Know.',
     items: [
-      { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip, plus your personalized audit PDF, your 100-day roadmap, the business growth calculators and an AI implementation toolkit. That’s the entire product.' },
-      { q: 'Who conducts the session?', a: 'Indrodip Ghosh, founder of The5th Global Consulting, personally. Not a sales rep, not a junior coach.' },
+      { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip and Manisha, plus your personalized audit PDF, your 100-day roadmap, the business growth calculators and an AI implementation toolkit. That’s the entire product.' },
+      { q: 'Who conducts the session?', a: 'Indrodip Ghosh, founder, and Manisha Satpute, director of The5th Global Consulting, together on every call. Not a sales rep, not a junior coach.' },
       { q: 'Will I receive the recording?', a: 'Yes, if you consent to being recorded. We ask explicitly before the session starts. If you’d rather not be recorded, the session still runs, you just won’t get a video back.' },
       { q: 'When will I receive my PDF?', a: 'Your personalized business audit PDF and 100-day roadmap land in your inbox within 48 hours of the session.' },
       { q: 'Is this a sales call?', a: 'No. It’s a working session, not a pitch. If it becomes clear that working together further would genuinely help, I’ll say so directly, there’s no surprise pitch and no pressure either way.' },
@@ -273,7 +286,7 @@ export const LANDING = {
     eyebrow: 'Your Next Step',
     heading: 'Before You Spend Another Dollar on Your Business, Let’s Take a Look.',
     includes: [
-      'A private 60-minute session with Indrodip',
+      'A private 60-minute session with Indrodip and Manisha',
       'Your personalized audit PDF',
       'Your call recording, subject to consent',
       'Your personalized 100-day action roadmap',
@@ -492,7 +505,7 @@ export const PAY = {
   eyebrow: 'Step 1 of 4 · Commitment deposit',
   headline: 'Book a 1:1 Call to Map Your Exact Path to $10K/Month',
   sub: 'A focused strategy session where we diagnose what’s blocking your coaching or consulting business from consistent $10K months, and build your plan to fix it.',
-  notPitch: 'This is a 1:1 call with Indrodip, not a sales pitch disguised as a strategy session.',
+  notPitch: 'This is a 1:1 call with Indrodip and Manisha, not a sales pitch disguised as a strategy session.',
   coverLead: 'In 60 minutes, we’ll cover:',
   points: [
     'Where your current offer, pricing, or positioning is leaking revenue',

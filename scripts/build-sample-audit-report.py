@@ -202,7 +202,7 @@ def cover_page():
 
     info = table([
         [Paragraph("Prepared for", s_coverInfoLabel), Paragraph("Jordan Avery · Jordan Avery Coaching", s_coverInfoVal)],
-        [Paragraph("Audit type", s_coverInfoLabel), Paragraph("Private 1:1, 60 minutes, conducted personally by founder Indrodip Ghosh", s_coverInfoVal)],
+        [Paragraph("Audit type", s_coverInfoLabel), Paragraph("Private 1:1, 60 minutes, conducted personally by Indrodip Ghosh and Manisha Satpute", s_coverInfoVal)],
         [Paragraph("Delivered", s_coverInfoLabel), Paragraph("Written report + recording (if consented) within 48 hours", s_coverInfoVal)],
         [Paragraph("This sample", s_coverInfoLabel), Paragraph("Jordan Avery is a fictional business, used to illustrate the real format and depth of your audit.", s_coverInfoVal)],
     ], col_widths=[1.5 * inch, inner_w - 1.5 * inch], header=False)
@@ -619,10 +619,11 @@ def build():
         "side by side so the real constraint is found rather than the loudest symptom, and build an ordered "
         "plan where each step makes the next one work better.", s_body))
     flow.append(Paragraph(
-        "Your audit is conducted personally, 1-on-1, by founder Indrodip Ghosh, never handed to a sales rep "
-        "or a junior coach. Indrodip is a consumer psychologist (University of California, Berkeley) and the "
-        "founder of The5th Global Consulting, which has worked with 76 coaches and consultants across 12 "
-        "nations. Running The5th from outside the US coaching bubble means the diagnosis you receive is not "
+        "Your audit is conducted personally, 1-on-1, by founder Indrodip Ghosh and director Manisha Satpute, "
+        "together on your call, never handed to a sales rep or a junior coach. Indrodip is a consumer "
+        "psychologist (University of California, Berkeley) and the founder of The5th Global Consulting, which "
+        "has worked with 76 coaches and consultants across 12 nations. Manisha is a business consultant who "
+        "has helped scale multiple companies from $0 to $1M, and on to $10M in revenue. Running The5th from outside the US coaching bubble means the diagnosis you receive is not "
         "the same recycled playbook you may have already bought elsewhere.", s_body))
     flow.append(callout(
         "Why this matters for your audit",

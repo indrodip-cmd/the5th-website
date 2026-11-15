@@ -46,7 +46,7 @@ const OFFERS: Record<string, Offer> = {
     subtitle: 'Everything just unlocked — the platform and the people. This is where the real momentum happens.',
     steps: [
       { icon: '📬', t: 'Check your inbox', d: 'Your login details are on the way — sign in with the email you just used, no password needed.' },
-      { icon: '📅', t: 'Weekly live calls', d: 'Your seat at every live community call with Indrodip — the schedule is in the Weekly Calls tab.' },
+      { icon: '📅', t: 'Weekly live calls', d: 'Your seat at every live community call with Indrodip and Manisha — the schedule is in the Weekly Calls tab.' },
       { icon: '🤖', t: 'The5th AI + Vega, no limits', d: 'Full AI coaching and the Vega creative engine, whenever you need them.' },
       { icon: '🗺️', t: 'Your custom action plans', d: 'Build your 30 / 60 / 90-day plan and work it with the room beside you.' },
     ],
@@ -57,7 +57,7 @@ const OFFERS: Record<string, Offer> = {
     subtitle: 'Group coaching plus the full platform — everything you need to turn expertise into $10K months, together.',
     steps: [
       { icon: '📬', t: 'Check your inbox', d: 'Your login and onboarding details are on the way — sign in with the email you just used.' },
-      { icon: '📅', t: 'Live group coaching', d: 'Your place in the coaching calls with Indrodip — details are in your welcome email.' },
+      { icon: '📅', t: 'Live group coaching', d: 'Your place in the coaching calls with Indrodip and Manisha — details are in your welcome email.' },
       { icon: '🚀', t: 'The full platform', d: 'The5th AI, Vega, My Journey, community and tracker — all unlocked from day one.' },
       { icon: '🛡️', t: 'Backed for a full year', d: 'Your 365-day money-back guarantee gives you a whole year to put it to work.' },
     ],

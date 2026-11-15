@@ -17,7 +17,7 @@ const TITLE = '$29 Private Business Audit for Coaches & Consultants | The5th'
 // exactly what the visitor sees when the link opens, never a different pitch.
 const OG_TITLE = "You've Tried Coaches, ChatGPT And Claude. So Why Aren't You Making Consistent Money?"
 const DESC =
-  'A private 60-minute business audit with founder Indrodip Ghosh. $29, fully refundable within 7 days. Leave with your offer, your buyer and a 100-day plan. Rated 4.8 from 76 coaches across 12 nations.'
+  'A private 60-minute business audit with Indrodip Ghosh and Manisha Satpute. $29, fully refundable within 7 days. Leave with your offer, your buyer and a 100-day plan. Rated 4.8 from 76 coaches across 12 nations.'
 const URL = 'https://the5thglobal.consulting/10k-roadmap'
 
 export const metadata: Metadata = {

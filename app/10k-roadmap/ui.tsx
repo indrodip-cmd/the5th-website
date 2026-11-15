@@ -44,7 +44,12 @@ export function Fonts() {
       .rm-btn-shine{position:relative;overflow:hidden}
       .rm-btn-shine::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.4) 48%,rgba(255,255,255,.4) 52%,transparent 70%);transform:translateX(-130%);transition:transform .7s cubic-bezier(.16,1,.3,1);pointer-events:none}
       .rm-btn-shine:hover::after{transform:translateX(130%)}
-      .rm-lift{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1),border-color .3s ease;will-change:transform}
+      /* No will-change here on purpose: with 40+ .rm-lift cards on this page,
+         a blanket will-change:transform permanently promotes every one of
+         them to its own GPU layer — compounding with backdrop-filter below,
+         that's a likely contributor to the real-device render stall this
+         page has twice now shipped with. A hover transition doesn't need it. */
+      .rm-lift{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1),border-color .3s ease}
       .rm-lift:hover{transform:translateY(-6px)}
       .rm-pop{display:inline-flex;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s cubic-bezier(.16,1,.3,1),filter .25s ease}
       .rm-pop:hover{transform:translateY(-2px) scale(1.025);filter:brightness(1.05)}
@@ -107,6 +112,7 @@ export function Fonts() {
          nested inside another one (a blur inside a blur doubles the paint
          cost for no visible benefit). */
       .rm-glass-flat{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14)}
+      .rm-glass-flat-accent{background:rgba(201,255,72,.08);border:1px solid rgba(201,255,72,.28)}
       @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
         .rm-glass,.rm-glass-calc{background:#121810}
         .rm-glass-accent,.rm-glass-calc-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}

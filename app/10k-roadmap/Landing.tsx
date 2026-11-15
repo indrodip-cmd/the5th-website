@@ -155,7 +155,7 @@ function TestimonialCard({ index = 7 }: { index?: number }) {
 /* A single documented-result proof card: photo, name, business type, result, quote. */
 function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
   return (
-    <div className="rm-lift rm-glass" style={{ borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+    <div className="rm-lift rm-glass-flat" style={{ borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {c.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -390,7 +390,7 @@ function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
       {items.map((it, i) => {
         const isOpen = open === i
         return (
-          <div key={it.q} className="rm-lift rm-glass" style={{ borderRadius: 14, overflow: 'hidden' }}>
+          <div key={it.q} className="rm-lift rm-glass-flat" style={{ borderRadius: 14, overflow: 'hidden' }}>
             <button onClick={() => setOpen(isOpen ? -1 : i)} className="rm-focus" aria-expanded={isOpen}
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '18px 20px', fontFamily: 'inherit' }}>
               <span style={{ fontSize: 15.5, fontWeight: 700, color: '#F2F6EC' }}>{it.q}</span>
@@ -534,7 +534,7 @@ export default function Landing() {
               { b: '$29', s: 'The entire audit, refundable' },
             ].map((s, i) => (
               <Reveal key={s.s} delay={i * 90}>
-                <div className="rm-lift rm-glass" style={{ padding: '22px 18px', height: '100%' }}>
+                <div className="rm-lift rm-glass-flat" style={{ padding: '22px 18px', height: '100%' }}>
                   <strong className="rm-serif" style={{ display: 'block', fontSize: 'clamp(26px,3.6vw,36px)', fontWeight: 800, color: ACCENT, lineHeight: 1 }}><AnimatedStat value={s.b} /></strong>
                   <span style={{ display: 'block', marginTop: 9, fontSize: 12.5, color: 'rgba(255,255,255,.6)', lineHeight: 1.4 }}>{s.s}</span>
                 </div>
@@ -574,7 +574,7 @@ export default function Landing() {
           <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
             {LANDING.deliverables.items.map((d, i) => (
               <Reveal key={d.t} delay={(i % 3) * 80}>
-                <div className={"rm-lift " + (i < 2 ? 'rm-glass-accent' : 'rm-glass')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                <div className={"rm-lift " + (i < 2 ? 'rm-glass-flat-accent' : 'rm-glass-flat')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
                   <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                     <DeliverableIcon kind={d.icon} />
                   </div>
@@ -643,7 +643,7 @@ export default function Landing() {
           <div className="rm-steps5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginTop: 12 }}>
             {LANDING.call.steps.map((s, i) => (
               <Reveal key={s.n} delay={i * 70}>
-                <div className="rm-lift rm-glass" style={{ borderRadius: 16, padding: 18, height: '100%' }}>
+                <div className="rm-lift rm-glass-flat" style={{ borderRadius: 16, padding: 18, height: '100%' }}>
                   <div style={{ marginBottom: 12 }}><StepIcon kind={s.icon} /></div>
                   <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '.08em', marginBottom: 8 }}>STEP {s.n}</div>
                   <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 6px' }}>{s.t}</h3>

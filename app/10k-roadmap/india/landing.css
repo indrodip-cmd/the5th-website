@@ -120,8 +120,11 @@
   padding: var(--space-sm) var(--space-md); border-radius: var(--radius-inner);
   background: color-mix(in oklab, var(--color-shade) 55%, transparent); backdrop-filter: blur(6px);
   border: 1px solid color-mix(in oklab, var(--color-light) 18%, transparent);
+  display: flex; flex-direction: column; gap: var(--space-3xs);
   font-weight: 700; font-size: var(--text-md); color: var(--color-light); text-align: center;
 }
+.hero__photo-badge-recruited { font-size: var(--text-sm); color: var(--color-accent-hi); }
+.hero__photo-badge-featured { font-size: var(--text-xs); font-weight: 600; color: color-mix(in oklab, var(--color-light) 75%, transparent); }
 .hero__caption { margin-top: var(--space-lg); text-align: center; }
 .hero__caption-id { display: flex; justify-content: center; align-items: baseline; gap: var(--space-sm); flex-wrap: wrap; }
 .hero__caption-name { font-weight: 700; color: var(--color-ink); }
@@ -152,13 +155,18 @@
 @media (max-width: 30rem) { .figures { grid-template-columns: minmax(0, 1fr); } }
 
 /* ── Trust row ───────────────────────────────────────────────────────────── */
-.trust { margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-rule); }
-.trust__label { text-align: center; margin-bottom: var(--space-lg); font-size: var(--text-lg); font-weight: 700; color: var(--color-ink); }
-.trust__row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: var(--space-xl); row-gap: var(--space-md); }
-.trust__row span { font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); color: var(--color-ink-2); opacity: 0.92; white-space: nowrap; }
+/* ── Featured testimonial, right after the hero figures — one real quote
+   with a photo, same placement/purpose as the US page's own single-quote
+   card. .glass-panel is the surface this page already reserves for "a
+   real quote earns it" (see note above). ── */
+.testimonial { margin-top: var(--space-md); padding: var(--space-lg); display: flex; gap: var(--space-lg); align-items: center; flex-wrap: wrap; justify-content: center; }
+.testimonial__photo { width: 5.5rem; height: 5.5rem; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.testimonial__body { flex: 1 1 20rem; min-width: 0; }
+.testimonial blockquote { margin: 0 0 var(--space-xs); font-style: italic; font-size: var(--text-lead); line-height: 1.55; color: var(--color-ink); }
+.testimonial__name { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.testimonial__name b { font-weight: 700; color: var(--color-ink); }
 @media (max-width: 40rem) {
-  .trust__row { column-gap: var(--space-md); row-gap: var(--space-sm); }
-  .trust__row span { font-size: var(--text-sm); }
+  .testimonial { text-align: center; justify-content: center; }
 }
 
 /* ── Celestial: the sun-to-moon scroll signature. A small corner mark on

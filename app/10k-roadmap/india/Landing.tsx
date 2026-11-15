@@ -13,6 +13,7 @@ import './landing.css'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { LANDING, LEGAL, RATING, PRESS } from './config'
+import { REAL_PROOF } from '../config'
 import { useUtm } from '../ui'
 import { track } from '../track'
 import CaseStudies from './CaseStudies'
@@ -196,7 +197,11 @@ export default function Landing() {
                 <div className="hero__photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-                  <div className="hero__photo-badge">{LANDING.heroCard.credential}</div>
+                  <div className="hero__photo-badge">
+                    <span className="hero__photo-badge-credential">{LANDING.heroCard.credential}</span>
+                    {LANDING.heroCard.recruitedBy && <span className="hero__photo-badge-recruited">{LANDING.heroCard.recruitedBy}</span>}
+                    {LANDING.heroCard.featuredIn && <span className="hero__photo-badge-featured">{LANDING.heroCard.featuredIn}</span>}
+                  </div>
                 </div>
                 <div className="hero__caption">
                   <div className="hero__caption-id">
@@ -234,12 +239,19 @@ export default function Landing() {
                 ))}
               </div>
             </Reveal>
-            <div className="trust">
-              <p className="trust__label">{LANDING.founderOffers.label}</p>
-              <div className="trust__row">
-                {LANDING.founderOffers.items.map((p) => <span key={p}>{p}</span>)}
+            {/* Featured testimonial, right after the hero, same placement as
+                the US page's own single-quote card — Shyama Prasad Goswami
+                (ex-Fortune 500 CEO, India) from the shared REAL_PROOF dataset. */}
+            <Reveal>
+              <div className="testimonial glass-panel">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="testimonial__photo" src={REAL_PROOF[1].photo} alt={REAL_PROOF[1].name} />
+                <div className="testimonial__body">
+                  <blockquote>&ldquo;{REAL_PROOF[1].quote}&rdquo;</blockquote>
+                  <p className="testimonial__name"><b>{REAL_PROOF[1].name}</b>, {REAL_PROOF[1].result} <span>· {REAL_PROOF[1].role}</span></p>
+                </div>
               </div>
-            </div>
+            </Reveal>
           </div>
           <div className="container pain__inner">
             <Reveal><h2>{LANDING.pain.heading}</h2></Reveal>

@@ -63,13 +63,6 @@ export const LANDING = {
     badge: 'First time in India',
     kicker: 'Your ₹10 Lakh/Month Business Roadmap',
   },
-  // Replaces the shared funnel's "clients featured in" press strip on this
-  // page: Indrodip's own job offers, confirmed by the business owner
-  // (2026-11-14), not claims about employment at these companies.
-  founderOffers: {
-    label: 'Recruited and Featured in',
-    items: ['Google', 'Anthropic', 'Mastermind.com', 'ClickFunnels'],
-  },
   // The founder's credibility strip (hero + founder section). Every claim
   // here must stay exactly this careful: the valuation is the startup's,
   // approximate, and not personal wealth; the UC line says "alumni", never
@@ -131,6 +124,8 @@ export const LANDING = {
     name: 'Indrodip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
+    recruitedBy: 'Recruited by Google & Anthropic',
+    featuredIn: 'Featured in ClickFunnels and Mastermind.com',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
       { t: '₹199 Only', s: 'Fully Refundable' },

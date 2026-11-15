@@ -1,24 +1,28 @@
 import type { Metadata } from 'next'
 
-/* Cold-traffic free-call funnel: full share/SEO metadata per-route (title,
-   desc, Open Graph, Twitter card). The 1200x630 og:image + twitter:image are
-   a real screenshot of this page's hero (public/og/10k-roadmap-hero.png),
-   kept in sync with the live headline below. metadataBase is set on the root
-   layout, so relative URLs resolve absolute.
+/* Paid audit funnel ($29, refundable): full share/SEO metadata per-route
+   (title, desc, Open Graph, Twitter card). The 1200x630 og:image +
+   twitter:image are a real screenshot of this page's current hero
+   (public/og/10k-roadmap-hero.png) — recapture it (scripts/capture-og.mjs)
+   whenever the hero headline or photo changes, so link previews on
+   Facebook/WhatsApp/iMessage/Slack never show a stale offer.
+   metadataBase is set on the root layout, so relative URLs resolve absolute.
 
    Indexable so AI assistants/search (ChatGPT, Claude, Perplexity, Gemini, etc.)
    and Google can fetch, index and cite it. robots.txt already welcomes AI bots;
    the content is server-rendered (in the HTML), so fetchers read the full copy. */
-const TITLE = 'Build a $10,000/Month Business in the Next 100 Days | Free Roadmap Session'
-const OG_TITLE = 'In 60 Minutes, I’ll Show You How to Build a $10,000/Month Business in the Next 100 Days'
+const TITLE = '$29 Private Business Audit for Coaches & Consultants | The5th'
+// The on-page hero headline, verbatim — what the link preview should say is
+// exactly what the visitor sees when the link opens, never a different pitch.
+const OG_TITLE = "You've Tried Coaches, ChatGPT And Claude. So Why Aren't You Making Consistent Money?"
 const DESC =
-  'A free 60-minute 1:1 Roadmap Session for coaches, consultants and experienced professionals 40+. You leave with your offer, your buyer and your first 100-day plan.'
+  'A private 60-minute business audit with founder Indrodip Ghosh. $29, fully refundable within 7 days. Leave with your offer, your buyer and a 100-day plan. Rated 4.8 from 76 coaches across 12 nations.'
 const URL = 'https://the5thglobal.consulting/10k-roadmap'
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
-  keywords: ['coaching business', 'consultant growth', '$10K per month', 'strategy audit', 'coaching for coaches', 'predictable revenue', 'The5th Global Consulting'],
+  keywords: ['business audit for coaches', 'consultant growth audit', '$29 business audit', 'coaching business strategy', 'predictable revenue coaching', 'business growth calculator', 'The5th Global Consulting'],
   alternates: { canonical: '/10k-roadmap' },
   robots: {
     index: true, follow: true,

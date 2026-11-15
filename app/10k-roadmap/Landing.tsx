@@ -28,6 +28,7 @@ import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL } from '.
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
 import VideoWall from '@/components/VideoWall'
+import ExitPopup from './ExitPopup'
 
 const MAXW = 1180
 const PADX = 'clamp(20px,5vw,22px)'
@@ -804,6 +805,7 @@ export default function Landing() {
         @media(max-width:768px){.rm-grid2,.rm-grid3,.rm-steps5,.rm-stats,.rm-calc-grid,.rm-cols2,.rm-cap-grid{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
         @media(min-width:769px) and (max-width:1024px){.rm-cap-grid{grid-template-columns:1fr 1fr!important}}
       `}</style>
+      <ExitPopup />
     </div>
   )
 }

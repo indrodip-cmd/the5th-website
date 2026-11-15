@@ -144,7 +144,6 @@ export default function ExitPopup() {
         .xp-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;background:${LIME};color:#0B0F08;font-weight:800;font-size:16.5px;text-decoration:none;padding:16px 24px;border-radius:999px;box-shadow:0 14px 30px -14px rgba(201,255,72,.55);transition:transform .2s,filter .2s}
         .xp-cta:hover{transform:translateY(-2px);filter:brightness(1.06)}
         .xp-micro{margin:12px 0 0;text-align:center;font-size:12px;color:#8E9B8B}
-        .xp-fine{margin:10px 0 0;text-align:center;font-size:10.5px;line-height:1.4;color:#6F7D6F}
         @keyframes xp-fade{from{opacity:0}to{opacity:1}}
         @keyframes xp-rise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
         @media (prefers-reduced-motion:reduce){.xp-overlay,.xp-card{animation:none}.xp-cta{transition:none}}
@@ -169,7 +168,6 @@ export default function ExitPopup() {
           Get My $29 Business Audit <span aria-hidden>→</span>
         </a>
         <p className="xp-micro">Refundable within 7 days. You keep the written plan either way.</p>
-        <p className="xp-fine">Starbucks is a trademark of its owner. Not affiliated with or endorsed by Starbucks.</p>
       </div>
     </div>
   )

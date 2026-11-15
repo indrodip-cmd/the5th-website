@@ -18,6 +18,21 @@ const BG = '#f4f5f7'
 function isValidEmail(v: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) }
 function isValidPhone(v: string) { return v.replace(/\D/g, '').length >= 7 }
 
+const PAYMENT_LOGOS = [
+  { name: 'Visa', src: '/images/payment/visa.png', h: 15 },
+  { name: 'Mastercard', src: '/images/payment/mastercard.png', h: 22 },
+  { name: 'American Express', src: '/images/payment/amex.png', h: 26 },
+  { name: 'Cash App', src: '/images/payment/cashapp.png', h: 18 },
+]
+
+function LockIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <rect x="4" y="11" width="16" height="9" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  )
+}
+
 type Step = 'details' | 'pay'
 
 export default function AuditCheckout() {
@@ -144,6 +159,9 @@ export default function AuditCheckout() {
                     style={{ width: '100%', marginTop: 6, background: submitting ? BLUE_DK : BLUE, color: '#fff', border: 'none', borderRadius: 9, padding: '14px 16px', fontSize: 15.5, fontWeight: 700, cursor: submitting ? 'default' : 'pointer', fontFamily: 'inherit', opacity: submitting ? 0.8 : 1 }}>
                     {submitting ? 'Please wait…' : `Pay $${DEPOSIT.amount}.00`}
                   </button>
+                  <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 11.5, color: MUTE, marginTop: 10 }}>
+                    <LockIcon /> Your bank may ask you to verify this payment (3D Secure).
+                  </p>
                 </>
               ) : (
                 <>
@@ -160,7 +178,15 @@ export default function AuditCheckout() {
                 </>
               )}
 
-              <p style={{ textAlign: 'center', fontSize: 11.5, color: '#9ca3af', marginTop: 14, lineHeight: 1.5 }}>{PAY.micro}</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 18, paddingTop: 16, borderTop: `1px solid ${LINE}` }}>
+                {PAYMENT_LOGOS.map((l) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={l.name} src={l.src} alt={l.name} style={{ height: l.h, width: 'auto' }} />
+                ))}
+              </div>
+              <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, textAlign: 'center', fontSize: 11.5, color: '#9ca3af', marginTop: 10, lineHeight: 1.5 }}>
+                <LockIcon /> 256-bit SSL encrypted · 3D Secure authentication · Powered by Whop
+              </p>
             </div>
           </div>
         </div>

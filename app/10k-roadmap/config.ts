@@ -50,11 +50,16 @@ export function auditPlanId(): string {
   return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
 }
 
-/* The Whop hosted product page every CTA on the global /10k-roadmap page
-   links to directly for the $29 audit. Configure Whop's post-payment
-   redirect to send buyers to
-   https://the5thglobal.consulting/10k-roadmap/reserved (the post-payment page). */
-export const AUDIT_CHECKOUT_URL = 'https://whop.com/checkout/plan_27RBggiz8MDCo/'
+/* Every CTA on the global /10k-roadmap page links here: an in-site, two-step
+   checkout (/audit-checkout) that embeds Whop's checkout instead of sending
+   buyers to a hosted whop.com page. Whop's own post-payment redirect is also
+   configured to https://the5thglobal.consulting/10k-roadmap/reserved, but the
+   embed passes that same URL explicitly so it works regardless. */
+export const AUDIT_CHECKOUT_URL = 'https://the5thglobal.consulting/audit-checkout'
+
+export function auditDirectPlanId(): string {
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_DIRECT_PLAN_ID || 'plan_27RBggiz8MDCo'
+}
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
    are auto-redirected to after they submit it. Both are env-overridable so you

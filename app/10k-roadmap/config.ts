@@ -189,9 +189,9 @@ export const LANDING = {
       { icon: 'map', t: 'Personalized 100-Day Roadmap', d: 'A structured action plan: what to fix first, what to prioritize next, what to stop doing, which marketing activities to focus on, and your next implementation milestones.' },
       { icon: 'calculator', t: 'Business Growth Calculators', d: 'Access to interactive tools, a revenue goal calculator, offer pricing calculator and client acquisition calculator, to help you understand your own numbers.' },
       { icon: 'brain', t: 'AI Implementation Toolkit', d: 'Relevant ChatGPT and Claude prompts to help you execute your audit recommendations.' },
-      { icon: 'download', t: 'Downloadable Sample Report', d: 'A full 6-page sample audit, every section filled out end to end, so you see exactly what your personalized audit will look like before you book.' },
+      { icon: 'download', t: 'Downloadable Sample Report', d: 'A full 17-page sample audit, every section filled out end to end, so you see exactly what your personalized audit will look like before you book.' },
     ],
-    sampleCta: 'Download The Full Sample Audit (6 Pages)',
+    sampleCta: 'Download The Full Sample Audit (17 Pages)',
     sampleNote: 'Illustrative sample only, built section-by-section to match the exact format and depth of your real audit. Not an actual client’s report.',
     note: 'The $29 covers the 60-minute session and the deliverables above, not 100 days of coaching or implementation. What you do with the roadmap afterward is up to you.',
     // Featured banner shown above the 6-card grid — the sample is the single
@@ -201,7 +201,7 @@ export const LANDING = {
     sampleHighlight: {
       eyebrow: 'See It Before You Buy It',
       heading: 'This Is Exactly What Your $29 Gets You.',
-      sub: 'A full 6-page sample audit, every section filled out end to end, built to the same format and depth as your real one.',
+      sub: 'A full 17-page sample audit, every section filled out end to end, built to the same format and depth as your real one.',
     },
   },
 

@@ -580,12 +580,6 @@ export default function Landing() {
                   </div>
                   <h3 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 8px' }}>{d.t}</h3>
                   <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.55, margin: 0 }}>{d.d}</p>
-                  {d.icon === 'download' && (
-                    <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf' })}
-                      className="rm-focus rm-pop" style={{ alignItems: 'center', gap: 8, marginTop: 14, fontSize: 13, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '9px 16px', boxShadow: '0 10px 24px -12px rgba(201,255,72,.5)' }}>
-                      {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
-                    </a>
-                  )}
                 </div>
               </Reveal>
             ))}

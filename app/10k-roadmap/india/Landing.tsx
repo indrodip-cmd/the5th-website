@@ -12,7 +12,7 @@
 import './landing.css'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING } from './config'
+import { LANDING, LEGAL, RATING, PRESS } from './config'
 import { useUtm } from '../ui'
 import { track } from '../track'
 import CaseStudies from './CaseStudies'
@@ -182,6 +182,12 @@ export default function Landing() {
                 <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
                 <p className="hero__creds">{LANDING.founderCreds.join(', ')}</p>
                 <div className="hero__rating"><Rating /></div>
+                <div className="hero__press">
+                  <p className="hero__press-label">{PRESS.label}</p>
+                  <div className="hero__press-row">
+                    {PRESS.items.map((p) => <span key={p}>{p}</span>)}
+                  </div>
+                </div>
               </Reveal>
             </div>
 

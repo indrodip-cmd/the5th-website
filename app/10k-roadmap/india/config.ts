@@ -82,11 +82,15 @@ export const LANDING = {
   // instead of asserting a fact about the specific person reading it.
   eyebrowAttention: 'A PRIVATE 1:1 STRATEGY SESSION FOR FULL-TIME COACHES IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
-  headlinePre: 'Turn Your Expertise Into A ',
-  headlineHighlight: 'Predictable Coaching Business',
-  headlinePost: '.',
-  headline: 'Turn Your Expertise Into A Predictable Coaching Business.',
-  headlineSub: 'Build a powerful offer, attract qualified prospects, and convert them into paying clients with a structured business growth system.',
+  // Simplified for an Indian audience that reads fast on a phone: a short
+  // "what if" question (curiosity, not a claim about the reader's own
+  // income), then one plain-language promise. Short words, short sentences,
+  // no business jargon ("structured growth system," "qualified prospects").
+  headlinePre: 'What If You Could Finally Earn ',
+  headlineHighlight: 'Steady Money',
+  headlinePost: ' From Your Coaching?',
+  headline: 'What If You Could Finally Earn Steady Money From Your Coaching?',
+  headlineSub: 'No more guessing. A simple, step-by-step system to get clients every month, not just when you get lucky.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '200% Money-Back Guarantee',
@@ -151,9 +155,9 @@ export const LANDING = {
     heading: 'The 3-part business growth system.',
     sub: 'The exact order we work in, on every session.',
     steps: [
-      { n: '01', t: 'Position', d: 'Build an offer that communicates your value and attracts the right customers.' },
-      { n: '02', t: 'Attract', d: 'Create a marketing system that generates qualified enquiries.' },
-      { n: '03', t: 'Convert', d: 'Turn qualified prospects into paying clients using strategic sales processes.' },
+      { n: '01', t: 'Position', d: 'A simple, clear offer that the right customers actually want.' },
+      { n: '02', t: 'Attract', d: 'A way to bring in new enquiries every week, not just when you post.' },
+      { n: '03', t: 'Convert', d: 'A simple sales conversation that turns enquiries into paying clients.' },
     ],
     close: 'On the session: where you stand, what’s blocking you, your next step.',
   },

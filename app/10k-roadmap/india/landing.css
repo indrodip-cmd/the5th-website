@@ -380,3 +380,22 @@ p.reach { margin-bottom: var(--space-xl); color: var(--color-muted); font-size: 
 .sticky-cta.is-visible { transform: translateY(0); }
 @media (max-width: 48rem) { .sticky-cta { display: block; } .site-footer { padding-bottom: calc(var(--space-3xl) + var(--space-2xl)); } }
 @media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+
+/* ── Compact pass (2026-11-15): the default tokens put 240px between
+   stacked band-s sections on desktop, which read as blank screens. Scoped
+   to this page only; tokens.css is untouched. ── */
+.india-landing { --section-gap-s: 56px; --section-gap: 72px; --space-3xl: 56px; --space-2xl: 36px; }
+@media (max-width: 60rem) { .india-landing { --section-gap-s: 44px; --section-gap: 56px; --space-3xl: 44px; --space-2xl: 30px; } }
+@media (max-width: 40rem) { .india-landing { --section-gap-s: 32px; --section-gap: 44px; --space-3xl: 36px; --space-2xl: 24px; } }
+
+/* ── What you get: six short deliverable cards, flat surfaces (no blur). ── */
+.get__grid { list-style: none; margin: var(--space-2xl) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); }
+.get__card { background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: var(--radius-inner); padding: var(--space-lg); }
+.get__num { display: block; font: var(--display-weight) var(--text-sm)/1 var(--font-display); color: var(--color-accent-hi); margin-bottom: var(--space-sm); font-variant-numeric: tabular-nums; }
+.get__card h3 { margin: 0 0 var(--space-xs); font-size: var(--text-lg); color: var(--color-ink); }
+.get__card p { margin: 0; font-size: var(--text-md); line-height: 1.5; color: var(--color-ink-2); }
+.get__cta { margin-top: var(--space-2xl); display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
+.get__cta a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.get__note { margin: var(--space-sm) auto 0; text-align: center; font-size: var(--text-xs); color: var(--color-muted); }
+@media (max-width: 54rem) { .get__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 34rem) { .get__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-sm); } .get__card { padding: var(--space-md); } .get__num { margin-bottom: var(--space-xs); } }

@@ -119,6 +119,24 @@ export const LANDING = {
     close: 'You don’t need more random marketing activities. You need a system.',
   },
 
+  /* ── What you get: shown right after the hero, before any selling. The
+     same tangible deliverables as the global audit, in short plain lines. */
+  get: {
+    eyebrow: 'What You Get',
+    heading: 'Everything you get for ₹199.',
+    sub: 'Not just a call. You leave with real things you can use.',
+    items: [
+      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indrodip himself. Not a team member.' },
+      { t: 'Your Business Audit PDF', d: 'A written report on your offer, your buyer and your biggest problem.' },
+      { t: 'Your 100-Day Roadmap', d: 'What to fix first, second and third. Step by step.' },
+      { t: 'Call Recording', d: 'Watch it again any time. Sent only if you agree to recording.' },
+      { t: 'AI Prompt Toolkit', d: 'Ready ChatGPT and Claude prompts made for your plan.' },
+      { t: 'Growth Calculators', d: 'Simple tools to know your numbers: revenue, pricing, clients.' },
+    ],
+    sampleCta: 'See A Sample Audit (17 Pages)',
+    sampleNote: 'Sample only. A made-up business, shown in dollars, so you can see the format.',
+  },
+
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
     name: 'Indrodip Ghosh',

@@ -219,6 +219,31 @@ export default function Landing() {
           </div>
         </section>
 
+        {/* ── What you get: the tangible deliverables, shown before any
+               selling starts ── */}
+        <section id="get" className="get band-s">
+          <div className="container">
+            <div className="steps__head">
+              <h2>{LANDING.get.heading}</h2>
+              <p className="lede">{LANDING.get.sub}</p>
+            </div>
+            <ol className="get__grid">
+              {LANDING.get.items.map((it, i) => (
+                <li key={it.t} className="get__card">
+                  <span className="get__num">{String(i + 1).padStart(2, '0')}</span>
+                  <h3>{it.t}</h3>
+                  <p>{it.d}</p>
+                </li>
+              ))}
+            </ol>
+            <div className="get__cta">
+              <button className="btn" onClick={() => goApply('get')}>{CTA_LABEL}</button>
+              <a className="btn btn--quiet" href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'india_sample_pdf' })}>{LANDING.get.sampleCta}</a>
+            </div>
+            <p className="get__note">{LANDING.get.sampleNote}</p>
+          </div>
+        </section>
+
         {/* ── Pain → Mechanism: one scroll-linked signature (the sun
                setting into a moon) runs the height of both sections. ── */}
         <div className="celestial-wrap" ref={celestialRef}>

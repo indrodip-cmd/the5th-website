@@ -187,7 +187,7 @@ export const LANDING = {
   calculators: {
     eyebrow: 'Know Your Numbers',
     heading: 'Your Entire Revenue Engine, On One Screen.',
-    sub: 'Your revenue goal, your price and both of your conversion rates, run through one connected model, leads down to booked calls, down to clients, down to revenue. Adjust any input and watch the whole chain move.',
+    sub: 'Your revenue goal, your price, both conversion rates, and your real capacity (hours per week, content pace) run through one connected model, leads down to booked calls, down to clients, down to revenue. Adjust any input and watch the whole chain move.',
     disclaimer: 'For planning only. These are illustrative calculations based on the numbers you enter, not a prediction or a guarantee of revenue, clients or conversion rates.',
   },
 

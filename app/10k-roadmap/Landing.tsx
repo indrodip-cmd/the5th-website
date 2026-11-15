@@ -178,6 +178,22 @@ function Calculators() {
   const [offerPrice, setOfferPrice] = useState(1500)
   const [closeRate, setCloseRate] = useState(25) // booked call → client
   const [bookRate, setBookRate] = useState(40)   // lead → booked call
+  const [hoursPerWeek, setHoursPerWeek] = useState(8)   // time spent on marketing/sales
+  const [postsPerWeek, setPostsPerWeek] = useState(5)   // content volume
+  const [leadsPerPost, setLeadsPerPost] = useState(1)   // the visitor's own estimate, not our claim
+
+  // One shared "is a slider being dragged right now" flag. The funnel bars'
+  // transition is switched off while true — see the note below on why.
+  const [dragging, setDragging] = useState(false)
+  useEffect(() => {
+    if (!dragging) return
+    const stop = () => setDragging(false)
+    window.addEventListener('pointerup', stop)
+    window.addEventListener('mouseup', stop)
+    window.addEventListener('touchend', stop)
+    return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('mouseup', stop); window.removeEventListener('touchend', stop) }
+  }, [dragging])
+  const dragHandlers = { onPointerDown: () => setDragging(true), onMouseDown: () => setDragging(true), onTouchStart: () => setDragging(true) }
 
   const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
   const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US')
@@ -196,8 +212,18 @@ function Calculators() {
     const clientsAtHigherPrice = safeDiv(goal, higherPrice)
     const leadsAtHigherPrice = safeDiv(safeDiv(clientsAtHigherPrice, close), book)
     const leadsSaved = Math.max(0, leads - leadsAtHigherPrice)
-    return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved }
-  }, [goal, offerPrice, closeRate, bookRate])
+    // Capacity reality check: what your own stated content pace and your own
+    // estimated leads-per-post actually produce, set against what the funnel
+    // above says you need. We never assert a leads-per-post rate ourselves —
+    // it's the visitor's own slider — so this stays an honest "your numbers,
+    // run through the same math," not a fabricated benchmark.
+    const weeklyContentLeads = postsPerWeek * leadsPerPost
+    const leadsFromContent = weeklyContentLeads * 4.33
+    const gapLeads = Math.max(0, leads - leadsFromContent)
+    const surplusLeads = Math.max(0, leadsFromContent - leads)
+    const hoursPerLead = weeklyContentLeads > 0 ? hoursPerWeek / weeklyContentLeads : 0
+    return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved, leadsFromContent, gapLeads, surplusLeads, hoursPerLead }
+  }, [goal, offerPrice, closeRate, bookRate, hoursPerWeek, postsPerWeek, leadsPerPost])
 
   const sliderStyle: React.CSSProperties = { width: '100%', height: 5, borderRadius: 999, accentColor: ACCENT, background: 'rgba(255,255,255,.13)' }
   const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
@@ -220,27 +246,41 @@ function Calculators() {
     { label: 'Monthly revenue', value: 0, display: fmt(goal), note: 'your stated goal' },
   ]
   const maxV = Math.max(model.leads, 1)
+  const postsPerDay = postsPerWeek / 7
 
   return (
     <div>
       <div className="rm-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,28px)', alignItems: 'start' }}>
         {/* Controls */}
-        <div className="rm-glass" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Numbers</div>
+        <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
           <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} />
+            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Average offer price" display={fmt(offerPrice)}>
-            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} className="rm-range" style={sliderStyle} />
+            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} className="rm-range" style={sliderStyle} />
+            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} className="rm-range" style={sliderStyle} />
+            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
 
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `1px solid ${LINE}` }}>
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
+            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Capacity</div>
+            <Field label="Hours/week on marketing & sales" display={hoursPerWeek + ' hrs'}>
+              <input type="range" min={1} max={40} step={1} value={hoursPerWeek} onChange={(e) => setHoursPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            </Field>
+            <Field label="Content posts per week" display={postsPerWeek + '/wk · ~' + postsPerDay.toFixed(1) + '/day'}>
+              <input type="range" min={0} max={21} step={1} value={postsPerWeek} onChange={(e) => setPostsPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            </Field>
+            <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
+              <input type="range" min={0} max={5} step={0.5} value={leadsPerPost} onChange={(e) => setLeadsPerPost(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            </Field>
+          </div>
+
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>Pricing Leverage</div>
             <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
               At <strong style={{ color: '#F2F6EC' }}>{fmt(model.higherPrice)}</strong> (+25%), the same {fmt(goal)}/month goal needs only{' '}
@@ -251,7 +291,7 @@ function Calculators() {
         </div>
 
         {/* The funnel */}
-        <div className="rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
+        <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Revenue Engine</div>
           <div style={{ display: 'grid', gap: 10 }}>
             {stages.map((s, i) => {
@@ -261,9 +301,14 @@ function Calculators() {
                   {/* The fill narrows via a scaled, centered background layer —
                       never the `width` property — so resizing it as the
                       visitor drags a slider stays off the motion floor's
-                      banned list and animates on the GPU instead of layout. */}
+                      banned list and animates on the GPU instead of layout.
+                      The transition itself is switched off mid-drag: letting
+                      a CSS transition keep chasing a target that changes
+                      every pointer-move is what made dragging feel sticky —
+                      it now snaps 1:1 with the thumb while held, then eases
+                      in on release. */}
                   <div style={{ position: 'relative', padding: '12px 16px', borderRadius: 10 }}>
-                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
+                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: dragging ? 'none' : 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
                     <strong style={{ position: 'relative', display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#F2F6EC', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 6 }}>
@@ -275,18 +320,56 @@ function Calculators() {
             })}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
-            <div className="rm-glass" style={{ borderRadius: 14, padding: '14px 16px' }}>
+            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
               <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{(model.clients / 4.33).toFixed(1)}</strong>
               <span style={{ fontSize: 11.5, color: TEXT3 }}>clients needed per week</span>
             </div>
-            <div className="rm-glass" style={{ borderRadius: 14, padding: '14px 16px' }}>
+            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
               <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{fmtK(model.revenuePerLead)}</strong>
               <span style={{ fontSize: 11.5, color: TEXT3 }}>revenue value per lead</span>
             </div>
           </div>
         </div>
       </div>
-      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 580, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
+
+      {/* Capacity Reality Check — the USP: not just "here's the math," but
+          "here's your gap, and here's what closes it faster." */}
+      <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, marginTop: 'clamp(18px,3vw,28px)' }}>
+        <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>Capacity Reality Check</div>
+        <div className="rm-cap-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+          <div>
+            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{Math.round(model.leadsFromContent).toLocaleString('en-US')}</strong>
+            <span style={{ fontSize: 12.5, color: TEXT3 }}>leads/month at your current content pace</span>
+          </div>
+          <div>
+            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: model.gapLeads > 0 ? '#E8806F' : ACCENT, fontVariantNumeric: 'tabular-nums' }}>
+              {model.gapLeads > 0 ? '−' : '+'}{Math.round(model.gapLeads > 0 ? model.gapLeads : model.surplusLeads).toLocaleString('en-US')}
+            </strong>
+            <span style={{ fontSize: 12.5, color: TEXT3 }}>{model.gapLeads > 0 ? 'leads/month short of your goal' : 'leads/month more than you need'}</span>
+          </div>
+          <div>
+            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{model.hoursPerLead > 0 ? model.hoursPerLead.toFixed(1) : '—'}</strong>
+            <span style={{ fontSize: 12.5, color: TEXT3 }}>hours invested per lead, at your pace</span>
+          </div>
+        </div>
+        <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.16)' }}>
+          <p style={{ color: '#F2F6EC', fontSize: 15, lineHeight: 1.6, margin: '0 0 10px', fontWeight: 700, maxWidth: 640 }}>
+            {model.gapLeads > 0
+              ? <>At this pace, you're short about <span style={{ color: ACCENT }}>{Math.round(model.gapLeads)} leads a month</span> to hit {fmt(goal)}.</>
+              : <>Your content pace already covers your lead target. The real gap is usually offer, pricing or follow-up, not volume.</>}
+          </p>
+          <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>
+            This runs on the numbers you enter plus our general experience working with coaches and consultants. Your actual numbers will differ, and that's expected. In the audit, we find exactly where your version of this gap is, then build the 100-day plan around closing it. With that kind of 1:1 execution support, clients typically close a gap like this <strong style={{ color: '#F2F6EC' }}>20 to 50% faster</strong> than working it out alone (the exact range depends on where you're starting and how consistently you execute afterward).
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+            <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'calculator_gap' })} style={{ padding: '14px 30px', fontSize: 15.5 }}>
+              Close This Gap With Me — $29 <span aria-hidden>→</span>
+            </Btn>
+          </div>
+        </div>
+      </div>
+
+      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
     </div>
   )
 }
@@ -679,7 +762,8 @@ export default function Landing() {
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-guarantee,.rm-hero-rating>div{justify-content:center!important}}
         @media(min-width:769px) and (max-width:1024px){.rm-grid3{grid-template-columns:1fr 1fr!important}.rm-steps5{grid-template-columns:1fr 1fr 1fr!important}}
-        @media(max-width:768px){.rm-grid2,.rm-grid3,.rm-steps5,.rm-stats,.rm-calc-grid,.rm-cols2{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
+        @media(max-width:768px){.rm-grid2,.rm-grid3,.rm-steps5,.rm-stats,.rm-calc-grid,.rm-cols2,.rm-cap-grid{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
+        @media(min-width:769px) and (max-width:1024px){.rm-cap-grid{grid-template-columns:1fr 1fr!important}}
       `}</style>
     </div>
   )

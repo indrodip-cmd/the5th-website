@@ -59,21 +59,45 @@ export function Fonts() {
          a card was already on the green accent. Browsers without
          backdrop-filter (vanishingly rare now) fall back to a solid card
          via @supports, so nothing goes invisible or illegible. */
+      .rm-glass,.rm-glass-accent,.rm-glass-calc,.rm-glass-calc-accent{position:relative;isolation:isolate}
+      .rm-glass::before,.rm-glass-accent::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.03) 22%,transparent 46%)}
       .rm-glass{
-        background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-        -webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);
-        border:1px solid rgba(255,255,255,.14);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.015), 0 24px 50px -28px rgba(0,0,0,.6);
+        background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
+        -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+        border:1px solid rgba(255,255,255,.18);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.22), inset 0 0 26px rgba(255,255,255,.025), 0 26px 54px -28px rgba(0,0,0,.6);
       }
       .rm-glass-accent{
-        background:linear-gradient(155deg,rgba(201,255,72,.16),rgba(201,255,72,.03));
-        -webkit-backdrop-filter:blur(24px) saturate(150%);backdrop-filter:blur(24px) saturate(150%);
-        border:1px solid rgba(201,255,72,.32);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 24px 50px -28px rgba(0,0,0,.6);
+        background:linear-gradient(155deg,rgba(201,255,72,.2),rgba(201,255,72,.04));
+        -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+        border:1px solid rgba(201,255,72,.38);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 26px rgba(201,255,72,.03), 0 26px 54px -28px rgba(0,0,0,.6);
       }
+      /* Lighter-weight glass for the one spot on the page that redraws on
+         every pointer-move (the calculator, dragged live) — a 30px blur
+         recomposited on every slider tick is what made it feel sticky.
+         Visually still glass (gradient tint + bright edge + soft shadow),
+         just without the heaviest blur radius or the extra glare layer. */
+      .rm-glass-calc{
+        background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+        border:1px solid rgba(255,255,255,.16);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 20px 44px -26px rgba(0,0,0,.55);
+      }
+      .rm-glass-calc-accent{
+        background:linear-gradient(155deg,rgba(201,255,72,.17),rgba(201,255,72,.03));
+        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+        border:1px solid rgba(201,255,72,.34);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 20px 44px -26px rgba(0,0,0,.55);
+      }
+      /* Flat translucent tile — used only when a glass surface would sit
+         nested inside another one (a blur inside a blur doubles the paint
+         cost for no visible benefit). */
+      .rm-glass-flat{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14)}
       @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-        .rm-glass{background:#121810}
-        .rm-glass-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
+        .rm-glass,.rm-glass-calc{background:#121810}
+        .rm-glass-accent,.rm-glass-calc-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
+        .rm-glass::before,.rm-glass-accent::before{display:none}
       }
       @media (prefers-reduced-motion: reduce){
         .rm-btn,.rm-btn:hover,.rm-btn:active,.rm-lift,.rm-lift:hover,.rm-pop,.rm-pop:hover,.rm-pop:active,.rm-photo-frame img,.rm-photo-frame:hover img{transform:none!important;transition:none!important}

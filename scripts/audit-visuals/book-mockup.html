@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Book mockup</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1200px;height:760px;overflow:hidden;background:#0A1F15}
+.stage{position:relative;width:1200px;height:760px;font-family:'Inter',sans-serif;
+ background:radial-gradient(60% 70% at 50% 42%,#1D5A3E 0%,#0F3A27 45%,#07180F 100%)}
+.floor{position:absolute;left:0;right:0;bottom:0;height:150px;background:linear-gradient(#0000,#04100A 90%)}
+.shadow{position:absolute;left:400px;top:628px;width:420px;height:46px;border-radius:50%;background:radial-gradient(#000c,#0000 70%);filter:blur(6px)}
+/* pages */
+.pg{position:absolute;width:360px;height:262px;background:#fff;border-radius:6px;box-shadow:0 18px 40px #0008;overflow:hidden;padding:20px 22px;color:#0B2A1C}
+.pg .mk{display:flex;align-items:center;gap:7px;font:800 8px/1 Inter;letter-spacing:.22em;color:#2c6a4a;text-transform:uppercase}
+.pg .mk i{width:14px;height:14px;border-radius:4px;background:#C9FF48;display:block;color:#0A2A1B;font:900 9px/14px Inter;text-align:center;font-style:normal}
+.pg .rule{height:3px;width:44px;background:#9BE02A;margin:12px 0 10px}
+.pg .ico{position:absolute;right:20px;top:18px;width:44px;height:44px;border-radius:50%;background:#EAF8C8;display:flex;align-items:center;justify-content:center;font-size:21px}
+.pg h4{font:900 24px/1.02 'Inter Display';letter-spacing:-.02em;text-transform:uppercase;max-width:250px}
+.pg h4 b{color:#3E9A0F}
+.pg .ln{height:7px;border-radius:4px;background:#DDE6DF;margin-top:9px}
+.pg .n{position:absolute;left:22px;bottom:14px;font:800 9px Inter;color:#8AA595;letter-spacing:.14em}
+.p1{left:20px;top:130px;transform:rotate(-8deg);z-index:1}
+.p2{left:150px;top:290px;transform:rotate(-4deg);z-index:2}
+.p3{right:20px;top:130px;transform:rotate(8deg);z-index:1}
+.p4{right:150px;top:290px;transform:rotate(4deg);z-index:2}
+/* book */
+.scene{position:absolute;left:430px;top:100px;width:340px;height:510px;perspective:2200px;z-index:5}
+.book{position:relative;width:340px;height:510px;transform-style:preserve-3d;transform:rotateY(-24deg) rotateX(2deg)}
+.face{position:absolute}
+.front{width:340px;height:510px;left:0;top:0;transform:translateZ(22px);border-radius:3px 6px 6px 3px;overflow:hidden;box-shadow:inset 0 0 0 1px #0004}
+.front img{width:100%;height:100%;display:block;object-fit:cover}
+.front::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,#0006 0,#fff3 3.2%,#0003 4.6%,#0000 9%,#fff0 60%,#fff2 100%)}
+.spine{width:44px;height:510px;left:-22px;top:0;transform:rotateY(-90deg);background:linear-gradient(90deg,#0B3D27,#145336 50%,#0B3D27);display:flex;align-items:center;justify-content:center}
+.spine span{transform:rotate(90deg);white-space:nowrap;font:900 15px Inter Display;letter-spacing:.14em;color:#C9FF48;text-transform:uppercase}
+.edge{width:44px;height:510px;right:-22px;top:6px;transform:rotateY(90deg);background:repeating-linear-gradient(90deg,#f4f1e6 0 2px,#d8d3c0 2px 3px)}
+.back{width:340px;height:510px;transform:translateZ(-22px) rotateY(180deg);background:#0B3D27}
+.top{width:340px;height:44px;left:0;top:-22px;transform:rotateX(90deg);background:#e9e5d3}
+.bot{width:340px;height:44px;left:0;bottom:-22px;transform:rotateX(-90deg);background:#cfcab6}
+</style></head><body>
+<div class="stage">
+  <div class="floor"></div><div class="shadow"></div>
+  <div class="pg p1"><div class="mk"><i>5</i>THE5TH · CHAPTER 1</div><div class="ico">🎯</div><div class="rule"></div><h4>Know exactly <b>who you serve</b></h4><div class="ln" style="width:90%"></div><div class="ln" style="width:70%"></div><div class="ln" style="width:82%"></div><div class="n">02</div></div>
+  <div class="pg p2"><div class="mk"><i>5</i>THE5TH · CHAPTER 2</div><div class="ico">📦</div><div class="rule"></div><h4>One clear <b>offer</b> people say yes to</h4><div class="ln" style="width:88%"></div><div class="ln" style="width:64%"></div><div class="ln" style="width:78%"></div><div class="n">14</div></div>
+  <div class="pg p3"><div class="mk"><i>5</i>THE5TH · CHAPTER 3</div><div class="ico">💬</div><div class="rule"></div><h4>Start <b>real conversations</b></h4><div class="ln" style="width:92%"></div><div class="ln" style="width:68%"></div><div class="ln" style="width:80%"></div><div class="n">26</div></div>
+  <div class="pg p4"><div class="mk"><i>5</i>THE5TH · CHAPTER 4</div><div class="ico">🔁</div><div class="rule"></div><h4>Follow up on every <b>maybe</b></h4><div class="ln" style="width:86%"></div><div class="ln" style="width:72%"></div><div class="ln" style="width:76%"></div><div class="n">38</div></div>
+  <div class="scene"><div class="book">
+    <div class="face back"></div><div class="face top"></div><div class="face bot"></div>
+    <div class="face edge"></div><div class="face spine"><span>Expertise to Income</span></div>
+    <div class="face front"><img src="cover.png"></div>
+  </div></div>
+</div></body></html>

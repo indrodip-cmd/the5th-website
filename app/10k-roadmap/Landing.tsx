@@ -590,11 +590,11 @@ export default function Landing() {
             ))}
           </div>
           <Reveal>
-            <div style={{ display: 'flex', gap: 'clamp(16px,3vw,32px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', marginTop: 'clamp(22px,4vw,36px)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(20px,4vw,36px)', marginTop: 'clamp(22px,4vw,36px)' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/ebook-expertise-to-income.webp" alt={LANDING.deliverables.assetsVisuals.ebookAlt} width={800} height={1200} loading="lazy" style={{ width: 'clamp(150px,22vw,210px)', height: 'auto', borderRadius: 6, boxShadow: '0 24px 50px -20px rgba(0,0,0,.75), 0 0 0 1px rgba(201,255,72,.2)' }} />
+              <img src="/images/ebook-mockup.webp" alt={LANDING.deliverables.assetsVisuals.ebookAlt} width={1800} height={1140} loading="lazy" style={{ width: 'min(100%, 880px)', height: 'auto', borderRadius: 16 }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/the5th-ai-answer.webp" alt={LANDING.deliverables.assetsVisuals.aiAlt} width={1080} height={822} loading="lazy" style={{ width: 'min(100%, 460px)', height: 'auto', borderRadius: 14, boxShadow: '0 24px 50px -20px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.12)' }} />
+              <img src="/images/the5th-ai-answer.webp" alt={LANDING.deliverables.assetsVisuals.aiAlt} width={1080} height={822} loading="lazy" style={{ width: 'min(100%, 640px)', height: 'auto', borderRadius: 14, boxShadow: '0 24px 50px -20px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.12)' }} />
             </div>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '18px auto 0' }}>{LANDING.deliverables.assetsStrip}</p>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '10px auto 0' }}>{LANDING.deliverables.sampleNote}</p>

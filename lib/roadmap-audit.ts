@@ -74,6 +74,9 @@ export type AuditPayload = {
   deep?: Record<string, unknown>
   payment?: { status: string; id?: string | null; at?: string }
   booking?: { start?: string; end?: string; tz?: string; uid?: string | number | null; meetingUrl?: string | null; at?: string }
+  // Post-booking email state (reminders) and post-call delivery. `attended` is set
+  // only by the admin send-assets action; nothing else ever sets it.
+  followup?: { reminder24_at?: string; reminder1h_at?: string; attended?: boolean; attended_at?: string; attended_by?: string; assets_sent_at?: string }
 }
 
 const SEGMENT_TAG: Record<Stage, string> = {

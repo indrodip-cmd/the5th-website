@@ -111,6 +111,8 @@ export const MANISHA = {
   bio: 'Business consultant who has helped scale multiple companies from $0 to $1M, and on to $10M in revenue.',
 } as const
 
+import { ASSETS_STRIP, ASSETS_FAQ, ASSETS_BOOKED_LINE, PREP_LIST, EBOOK_TITLE, SOFTWARE_NAME } from '@/lib/audit-assets'
+
 export const LANDING = {
   // ── HERO (locked) ─────────────────────────────────────────────────────
   // Per the 2026-11-14 brief: headline, subheadline, CTA wording, founder
@@ -210,6 +212,9 @@ export const LANDING = {
     // best way to show what $29 buys before anyone is asked to pay it, so it
     // gets its own prominent callout rather than sitting as one of six
     // equal-weight cards.
+    // Post-call assets: mentioned as a reason to show up, never linked here.
+    assetsStrip: ASSETS_STRIP,
+    assetsVisuals: { ebookAlt: `${EBOOK_TITLE}, the ebook`, aiAlt: `${SOFTWARE_NAME}: an illustrative example answer` },
     sampleHighlight: {
       eyebrow: 'See It Before You Buy It',
       heading: 'This Is Exactly What Your $29 Gets You.',
@@ -267,6 +272,7 @@ export const LANDING = {
     heading: 'Everything You Should Know.',
     items: [
       { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip and Manisha, plus your personalized audit PDF, your 100-day roadmap, the business growth calculators and an AI implementation toolkit. That’s the entire product.' },
+      { q: ASSETS_FAQ.q, a: ASSETS_FAQ.a },
       { q: 'Who conducts the session?', a: 'Indrodip Ghosh, founder, and Manisha Satpute, director of The5th Global Consulting, together on every call. Not a sales rep, not a junior coach.' },
       { q: 'Will I receive the recording?', a: 'Yes, if you consent to being recorded. We ask explicitly before the session starts. If you’d rather not be recorded, the session still runs, you just won’t get a video back.' },
       { q: 'When will I receive my PDF?', a: 'Your personalized business audit PDF and 100-day roadmap land in your inbox within 48 hours of the session.' },
@@ -556,9 +562,11 @@ export const RESERVED_WHY = {
 
 /* ── Thank-you page (after cal.com booking) ────────────────────────────────*/
 export const THANKYOU = {
-  badge: 'You’re booked',
-  headline: 'You’re all set.',
-  sub: 'Your $10K Roadmap Audit is confirmed.',
+  badge: 'Confirmed',
+  headline: 'You’re booked.',
+  sub: ASSETS_BOOKED_LINE,
+  prepHeading: 'Before your call',
+  prep: PREP_LIST,
   countdownLabel: 'Your call starts in',
   liveLabel: 'Your call is starting now',
   passedLabel: 'This call time has passed. Check your email, or rebook if you need to.',

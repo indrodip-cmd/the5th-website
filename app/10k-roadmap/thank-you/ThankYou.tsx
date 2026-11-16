@@ -218,9 +218,9 @@ export default function ThankYou() {
 
         {/* What happens next */}
         <Reveal delay={260} style={{ marginTop: 44, textAlign: 'left' }}>
-          <h2 className="rm-serif" style={{ fontSize: 22, margin: '0 0 16px', textAlign: 'center', fontWeight: 700 }}>Here’s what happens next.</h2>
+          <h2 className="rm-serif" style={{ fontSize: 22, margin: '0 0 16px', textAlign: 'center', fontWeight: 700 }}>{THANKYOU.prepHeading}</h2>
           <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 10 }}>
-            {THANKYOU.next.map((n, k) => (
+            {THANKYOU.prep.map((n, k) => (
               <li key={k} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 12, padding: '14px 16px' }}>
                 <span style={{ color: T.accentInk, fontWeight: 700, fontFamily: T.serif, fontSize: 18 }}>{k + 1}</span>
                 <span style={{ color: T.text2, fontSize: 15, lineHeight: 1.55 }}>{n}</span>

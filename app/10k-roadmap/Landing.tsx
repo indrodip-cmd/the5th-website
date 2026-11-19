@@ -129,6 +129,56 @@ function DeliverableIcon({ kind }: { kind: string }) {
   return <svg {...box} aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
 }
 
+function IncludedExtras() {
+  const sidebar = ['Home', 'The5th AI', 'My Journey', 'My Leads', 'Client Acquisition', 'My Content', 'Buyer Persona', 'Design Studio']
+  const prompts = ['What should I post today?', 'Help me write a DM outreach script', "My discovery call isn't closing, why?", 'How do I raise my prices confidently?']
+  return (
+    <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)', marginBottom: 'clamp(20px,3vw,32px)' }}>
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-book-stage" aria-label="Digital book cover preview">
+          <div className="rm-book-object">
+            <div className="rm-book-cover">
+              <div className="rm-book-series">THE 10K ROADMAP SERIES</div>
+              <div className="rm-book-nine"><span>9</span><small>CHAPTERS</small></div>
+              <div className="rm-book-title">EXPERTISE<br /><i>TO</i><br /><strong>INCOME</strong></div>
+              <div className="rm-book-tagline">STOP SELLING YOUR TIME.<br /><b>START BUILDING AN ASSET.</b></div>
+              <div className="rm-book-authors">INDRODIP GHOSH &amp; CHRISTINE MATHISON</div>
+            </div>
+            <div className="rm-book-pages" aria-hidden="true" />
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>A digital copy of <em>Expertise to Income</em></h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>The 9-chapter book shown above, yours to keep and revisit as you put your roadmap into action.</p>
+          <div className="rm-value-chip"><span>Original book price</span><strong>$9.77</strong></div>
+        </div>
+      </article>
+
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-ai-preview" aria-label="Preview of The5th AI dashboard">
+          <div className="rm-ai-sidebar">
+            <div className="rm-ai-brand"><span>5</span><b>The5th AI</b></div>
+            {sidebar.map((item, i) => <div key={item} className={'rm-ai-nav' + (i === 1 ? ' is-active' : '')}><span>{['⌂', '✧', '◉', '♧', '◎', '▱', '⊙', '▦'][i]}</span>{item}</div>)}
+          </div>
+          <div className="rm-ai-main">
+            <div className="rm-ai-top"><span className="rm-ai-mark">5</span><b>The5th AI</b><span className="rm-ai-session">Session · 0%</span></div>
+            <div className="rm-ai-welcome"><span className="rm-ai-spark">✦</span><h4>Back to business.</h4><p>What would move your business forward today?</p></div>
+            <div className="rm-ai-composer">What are you working on today? Paste a link or file to dig in.<div><span>＋ &nbsp; Attach</span><span className="rm-ai-send">↑</span></div></div>
+            <div className="rm-ai-prompts">{prompts.map((prompt) => <span key={prompt}>{prompt}</span>)}</div>
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>The5th AI, inside your workspace</h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>Plan your next post, draft an outreach message, troubleshoot a sales conversation, or think through a price increase. Open The5th AI in the same workspace where you manage your journey, leads, content, and ideal buyer.</p>
+          <div className="rm-value-chip"><span>1 month of access</span><strong>$15 value</strong></div>
+        </div>
+      </article>
+    </div>
+  )
+}
+
 function PressStrip() {
   return (
     <div style={{ padding: '22px ' + PADX + ' 0' }}>
@@ -576,6 +626,7 @@ export default function Landing() {
               </a>
             </div>
           </Reveal>
+          <Reveal><IncludedExtras /></Reveal>
           <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
             {LANDING.deliverables.items.map((d, i) => (
               <Reveal key={d.t} delay={(i % 3) * 80}>
@@ -802,6 +853,28 @@ export default function Landing() {
       </div>
 
       <style>{`
+        .rm-extra-card{background:linear-gradient(150deg,rgba(201,255,72,.095),rgba(255,255,255,.025));border:1px solid rgba(201,255,72,.24)}
+        .rm-book-stage{height:280px;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 48%,rgba(201,255,72,.11),transparent 58%),#10160e;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-book-object{position:relative;display:flex;align-items:stretch;filter:drop-shadow(18px 20px 18px rgba(0,0,0,.5));transform:perspective(900px) rotateY(-9deg) rotateX(2deg);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+        .rm-extra-card:hover .rm-book-object{transform:perspective(900px) rotateY(-4deg) rotateX(0) translateY(-3px)}
+        .rm-book-cover{width:176px;height:236px;padding:17px 15px 12px;display:flex;flex-direction:column;color:#f5f4eb;background:linear-gradient(150deg,#103d2a,#082719 70%,#061b13);border:1px solid rgba(255,255,255,.12);box-shadow:inset 5px 0 10px rgba(255,255,255,.035);position:relative;overflow:hidden}
+        .rm-book-cover:before,.rm-book-cover:after{content:'';position:absolute;width:175px;height:175px;border:1px solid rgba(201,255,72,.14);border-radius:50%;pointer-events:none}
+        .rm-book-cover:before{right:-122px;top:61px}.rm-book-cover:after{left:-145px;bottom:-138px}
+        .rm-book-series{font-size:5.5px;letter-spacing:.28em;color:#c9ff48;font-weight:800;white-space:nowrap;border-bottom:1px solid rgba(201,255,72,.32);padding-bottom:7px}
+        .rm-book-nine{display:flex;align-items:center;gap:5px;margin-top:13px;color:#c9ff48}.rm-book-nine span{font-size:22px;line-height:1;font-weight:900;border:2px solid #c9ff48;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}.rm-book-nine small{font-size:5.5px;letter-spacing:.22em;font-weight:800}
+        .rm-book-title{font-size:23px;line-height:.91;font-weight:900;letter-spacing:-.055em;margin-top:9px}.rm-book-title i{font-size:11px;display:block;text-align:center;letter-spacing:.16em;font-style:normal;color:#c9ff48;margin:4px 0}.rm-book-title strong{font-size:29px;color:#c9ff48}
+        .rm-book-tagline{font-size:6.4px;line-height:1.4;font-weight:800;margin-top:auto}.rm-book-tagline b{color:#c9ff48}.rm-book-authors{font-size:4.7px;letter-spacing:.12em;margin-top:10px;color:rgba(255,255,255,.68);white-space:nowrap}
+        .rm-book-pages{width:9px;background:repeating-linear-gradient(0deg,#e7e4d5 0 2px,#f8f5e8 2px 4px);clip-path:polygon(0 1%,100% 0,100% 99%,0 100%);margin:2px 0}
+        .rm-ai-preview{display:flex;min-height:280px;background:#f7f5ef;color:#26332b;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-ai-sidebar{width:142px;flex:0 0 142px;padding:15px 9px;background:#f0ede4;border-right:1px solid #e4e0d5}
+        .rm-ai-brand{display:flex;align-items:center;gap:7px;font:700 11px Georgia,serif;margin:0 0 14px 3px}.rm-ai-brand>span,.rm-ai-mark{width:20px;height:20px;border-radius:7px;background:#244e32;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
+        .rm-ai-nav{height:25px;display:flex;align-items:center;gap:8px;padding:0 7px;border-radius:7px;color:#536057;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}.rm-ai-nav>span{width:11px;text-align:center;font-size:11px;flex-shrink:0}.rm-ai-nav.is-active{background:#e4e0d4;color:#26332b;font-weight:700}
+        .rm-ai-main{flex:1;min-width:0;padding:12px 15px 13px;display:flex;flex-direction:column;align-items:center;position:relative}
+        .rm-ai-top{width:100%;display:flex;align-items:center;gap:7px;font-size:9px;padding-bottom:13px;border-bottom:1px solid #e9e5db}.rm-ai-session{margin-left:auto;font-size:7px;color:#879087}.rm-ai-welcome{text-align:center;margin:23px 0 16px}.rm-ai-spark{font-size:14px;color:#46694d}.rm-ai-welcome h4{font:700 25px Georgia,serif;margin:6px 0;color:#1d2d22;letter-spacing:-.04em}.rm-ai-welcome p{color:#7b847c;font-size:9px;margin:0}
+        .rm-ai-composer{width:100%;max-width:440px;border:1px solid #e5e1d7;border-radius:11px;background:white;box-shadow:0 5px 18px rgba(40,48,38,.07);padding:11px;color:#8a908a;font-size:8px;min-height:57px}.rm-ai-composer>div{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:7px}.rm-ai-send{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:#e9e4d6;color:#536057;font-size:11px}
+        .rm-ai-prompts{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:10px;max-width:450px}.rm-ai-prompts span{padding:6px 8px;border:1px solid #e5e0d5;border-radius:999px;background:#fff;color:#49564b;font-size:7px;line-height:1.2}
+        .rm-value-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(201,255,72,.3);border-radius:999px;background:rgba(201,255,72,.08);padding:8px 12px;color:#c8d2c1;font-size:11px}.rm-value-chip strong{color:#c9ff48;font-size:12px}
+        @media(max-width:768px){.rm-book-stage,.rm-ai-preview{min-height:252px;height:252px}.rm-ai-sidebar{width:104px;flex-basis:104px;padding:12px 6px}.rm-ai-nav{font-size:7px;gap:5px;padding:0 4px}.rm-ai-main{padding:10px 9px}.rm-ai-welcome{margin:19px 0 13px}.rm-ai-welcome h4{font-size:21px}.rm-ai-prompts span{font-size:6.3px}.rm-book-cover{transform:scale(.93)}}
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-guarantee,.rm-hero-rating>div{justify-content:center!important}}

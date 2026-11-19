@@ -18,4 +18,7 @@
   --font-outlier: "Newsreader", ui-serif, Georgia, serif;
   --radius-card: 4px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
   --tracking-display: -0.012em; --display-weight: 600;
+  --india-exit-overlay: oklch(10% 0.02 150 / 0.9); --india-exit-panel: oklch(18% 0.022 150); --india-exit-card: oklch(22% 0.022 150);
+  --india-exit-ink: oklch(97% 0.012 95); --india-exit-copy: oklch(79% 0.022 135); --india-exit-lime: oklch(88% 0.22 130);
+  --india-exit-sauce: oklch(48% 0.17 34); --india-exit-cheese: oklch(79% 0.16 78);
 }

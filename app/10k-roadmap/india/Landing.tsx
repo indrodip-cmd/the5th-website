@@ -3,6 +3,7 @@ import './landing.css'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import IndiaExitPopup from './ExitPopup'
 import { CASE_STUDIES } from '@/lib/case-studies'
 import { VIDEO_REVIEWS } from '@/components/VideoWall'
 import { LANDING, LEGAL, MANISHA, PRESS, RATING } from './config'
@@ -274,7 +275,7 @@ export default function Landing() {
         <section id="client-work" className="client-work band-s">
           <div className="container client-work__inner">
             <div className="client-work__heading">
-              <h2>Six client stories. The work behind the numbers.</h2>
+              <h2>Selected client stories. The work behind the numbers.</h2>
               <p>See where each business started, what we built, and the reported result. Outcomes vary by business and market.</p>
             </div>
             <div className="client-work__stories">
@@ -387,6 +388,7 @@ export default function Landing() {
       <div className={`sticky-cta${stickyVisible ? ' is-visible' : ''}`}>
         <button type="button" className="btn" onClick={() => goApply('sticky')}>{LANDING.ctaPrimary}</button>
       </div>
+      <IndiaExitPopup onBook={() => goApply('india_exit_popup')} />
     </div>
   )
 }

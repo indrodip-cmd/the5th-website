@@ -193,7 +193,7 @@ export default function Landing() {
               <p className="hero__lede">{LANDING.headlineSub}</p>
               <div className="hero__actions"><button type="button" className="btn hero__cta" onClick={() => goApply('hero')}>Book Your ₹199 Strategy Session</button><a className="hero__secondary" href="#process">See How It Works</a></div>
               <p className="hero__note">₹199 one-time booking deposit. No recurring charge. Refund terms apply.</p>
-              <div className="hero__guarantee"><strong>200% Money-Back Guarantee</strong><span>Eligible requests after your session receive ₹400 total: ₹199 back plus ₹201 extra. Request within 7 days. One claim per booking. See the <a href="/refund">full refund terms</a>.</span></div>
+              <div className="hero__guarantee"><strong>200% Guarantee for Qualified Applicants</strong><span>The ₹400 total refund (₹199 + ₹201) applies only when we confirm your coaching business is a fit, you have experience, a prior sale, and capacity to consider coaching, then fail to deliver the promised audit. If we decline you, request the standard ₹199 refund. Disliking it alone does not qualify for the extra ₹201.</span></div>
               <p className="hero__authority">AI Startup Founder, ~$6M Startup Valuation, Backed by University of California alumni</p>
               <p className="hero__rating"><strong>{RATING.score}</strong><span>{RATING.text}</span></p>
               <div className="hero__facts" aria-label="Session details">
@@ -365,7 +365,7 @@ export default function Landing() {
               <span className="booking__price">₹199</span>
               <span className="booking__price-note">Refundable booking deposit</span>
               <button type="button" className="btn btn--inverse" onClick={() => goApply('final')}>{LANDING.ctaPrimary}</button>
-              <p>Refund terms are shown before booking.</p>
+              <p><a href="/refund#india-roadmap">Read refund eligibility and terms</a></p>
             </div>
           </div>
         </section>

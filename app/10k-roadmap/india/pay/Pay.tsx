@@ -55,6 +55,7 @@ export default function Pay({ planId }: { planId: string }) {
                 <b style={{ color: T.accentInk, fontWeight: 800 }}>{PAY.guaranteeTitle}:</b> {PAY.guaranteeBody}
               </p>
             </div>
+            <p style={{ color: T.text2, fontSize: 13, lineHeight: 1.5, marginTop: 14 }}><a href="/refund#india-roadmap" style={{ color: T.accentInk, fontWeight: 700, textDecoration: 'underline' }}>Read full refund eligibility and terms</a></p>
           </Reveal>
 
           <Reveal delay={80}>

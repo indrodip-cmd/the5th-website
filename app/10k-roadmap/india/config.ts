@@ -84,18 +84,16 @@ export const LANDING = {
   headlinePost: '',
   headline: "You're Good At What You Do. So Why Is Making Money From Your Coaching Still So Difficult?",
   headlineSub: 'Build a coaching business that brings you consistent clients and predictable revenue, not one more random marketing activity.',
-  guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
-  guaranteeEmphasis: 'Yes, I’ll write the cheque.',
-  guaranteeBadge: '200% Money-Back Guarantee',
-  guaranteeShort: 'Not satisfied? Eligible requests receive ₹400 total: your ₹199 payment plus ₹201 extra.',
+  guaranteeLine: 'Qualified clients receive a defined refund if we fail to deliver the promised audit. ',
+  guaranteeEmphasis: 'See eligibility before you book.',
+  guaranteeBadge: '200% Guarantee for Qualified Applicants',
+  guaranteeShort: 'If we decline your application, request ₹199 back. The ₹400 total guarantee is limited to qualified clients.',
   // The full guarantee block, set out near the booking decision (apply section).
-  // T&Cs line kept verbatim: refund eligibility, request deadline and processing
-  // terms are the business's own disclosure and must not be reworded or dropped.
   guaranteeFull: {
-    heading: 'A ₹400 total refund if the session falls short.',
-    body: 'If you attend your strategy session and feel it did not deliver the promised review, request the guarantee within 7 calendar days. Eligible requests receive ₹400 total: ₹199 returned plus ₹201 extra.',
+    heading: '₹400 total for qualified clients only.',
+    body: 'The ₹400 total guarantee is only for relevant coaching businesses with prior experience and at least one sale, when The5th confirms we can help and then fails to deliver the promised audit. If we decline your application, you may request the standard ₹199 refund.',
     sub: 'One claim per customer and booking. No repeat or stacked payouts.',
-    terms: 'See the Refund Policy for the simple request process, exclusions for duplicate claims, and your statutory consumer rights.',
+    terms: 'See the Refund Policy for eligibility, the request process, exclusions, and your statutory consumer rights.',
   },
   ctaPrimary: 'Book Your ₹199 Strategy Session',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
@@ -247,7 +245,7 @@ export const LANDING = {
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
       { q: 'Will you help me get clients?', a: 'The session maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
       { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a one-time booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },
-      { q: 'Why does the session cost ₹199?', a: 'It is a one-time booking deposit, not a program fee. If you attend and the promised review is not delivered, the published guarantee may return ₹400 total. See the Refund Policy for eligibility and timing.' },
+      { q: 'Why does the session cost ₹199?', a: 'It is a one-time booking deposit, not a program fee. If we decline your application after reviewing your situation, you may request ₹199 back. The ₹400 total guarantee is limited to qualified clients who meet the published conditions.' },
     ],
   },
 
@@ -283,8 +281,8 @@ export const LANDING = {
     eyebrow: 'Book Your Slot',
     heading: 'Your Next Client Shouldn’t Depend On Luck.',
     sub: 'Let’s identify what’s holding your business back and map out your next steps.',
-    priceLine: '₹199 today. ₹400 total guarantee refund if eligible.',
-    micro: 'Attend the session, then request within 7 days if the promised review was not delivered. One claim per booking.',
+    priceLine: '₹199 today. Standard refund if we decline your application.',
+    micro: 'A ₹400 total guarantee is available only to qualified applicants who meet the published conditions.',
     // What the session itself leaves you with, same facts as the pay step's
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
@@ -311,8 +309,8 @@ export const LANDING = {
     ],
     fit: 'This is for full-time coaches in India who have real expertise and happy clients, and want a predictable, ₹10L/month business instead of a feast-or-famine one.',
     deposit: 'The ₹199 is a one-time booking deposit, not a program fee. Refund eligibility is explained in the Refund Policy before you book.',
-    guaranteeTitle: '₹400 total satisfaction refund',
-    guaranteeBody: 'If you attend and the promised review is not delivered, request within 7 days. Eligible refund is ₹400 total: your ₹199 back plus ₹201 extra. One claim per booking.',
+    guaranteeTitle: '₹400 total guarantee for qualified applicants',
+    guaranteeBody: 'You must have relevant coaching experience and at least one paid sale, and The5th must confirm that we can help. If we decline your application, you may request the standard ₹199 refund. The ₹201 bonus applies only if all guarantee conditions are met.',
     micro: 'Secure checkout · Refundable · No recurring charge.',
   },
 

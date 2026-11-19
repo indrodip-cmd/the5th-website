@@ -3,7 +3,7 @@
    booking we record the appointment (shared /api/10k-roadmap/record-booking —
    which creates/backfills the lead from the qualification answers and emails a
    confirmation) and advance to the deep-questions step. */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Cal, { getCalApi } from '@calcom/embed-react'
 import { auditCalUrl, SCHEDULE, T } from '../config'
@@ -25,6 +25,10 @@ export default function Schedule() {
     try { return { name: sessionStorage.getItem('audit_name') || '', email: (new URLSearchParams(window.location.search).get('email') || '').toLowerCase() || sessionStorage.getItem('audit_email') || '' } } catch { return { name: '', email: '' } }
   })
   const [calReady, setCalReady] = useState(false)
+  const [recordingConsent, setRecordingConsent] = useState(false)
+  const [aiTrainingConsent, setAiTrainingConsent] = useState(false)
+  const consentRef = useRef({ recording: false, aiTraining: false })
+  useEffect(() => { consentRef.current = { recording: recordingConsent, aiTraining: aiTrainingConsent } }, [recordingConsent, aiTrainingConsent])
 
   useEffect(() => { track('calendar_viewed') }, [])
 
@@ -54,7 +58,8 @@ export default function Schedule() {
               // qualification answers, then marks it booked + fires the email.
               fetch('/api/10k-roadmap/record-booking', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, name, start, qualification: loadQualAnswers(), audit_id: getAuditId(), utm }),
+                body: JSON.stringify({ email, name, start, qualification: loadQualAnswers(), audit_id: getAuditId(), utm,
+                  india_meeting_consent: { recording: consentRef.current.recording, ai_training: consentRef.current.recording && consentRef.current.aiTraining } }),
               }).catch(() => {})
               try { sessionStorage.setItem('audit_email', email); if (name) sessionStorage.setItem('audit_name', name) } catch { /* noop */ }
             }
@@ -72,6 +77,20 @@ export default function Schedule() {
         <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{SCHEDULE.eyebrow}</div>
         <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 10px', fontWeight: 700 }}>{SCHEDULE.headline}</h1>
         <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 520, margin: '0 auto' }}>{SCHEDULE.sub}</p>
+      </Reveal>
+      <Reveal>
+        <fieldset style={{ maxWidth: 760, margin: '0 auto 18px', padding: '16px 18px', border: `1px solid ${T.line}`, borderRadius: 14, background: '#fff' }}>
+          <legend style={{ paddingInline: 6, fontWeight: 700, color: T.text }}>Meeting recording and AI use (optional)</legend>
+          <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBlock: 8, fontSize: 14, lineHeight: 1.5, color: T.text }}>
+            <input type="checkbox" checked={recordingConsent} onChange={(e) => { setRecordingConsent(e.target.checked); if (!e.target.checked) setAiTrainingConsent(false) }} />
+            <span>I agree that The5th may record and transcribe this strategy session to prepare my notes and roadmap and for service quality. If I leave this unchecked, the session will not be recorded or transcribed by The5th.</span>
+          </label>
+          <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBlock: 8, fontSize: 14, lineHeight: 1.5, color: T.text }}>
+            <input type="checkbox" checked={aiTrainingConsent} disabled={!recordingConsent} onChange={(e) => setAiTrainingConsent(e.target.checked)} />
+            <span>Separately, I agree that The5th may use the recording and transcript to train and improve its AI models. This is optional. Declining will not affect my session or deliverables. I can withdraw future use by emailing <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a>.</span>
+          </label>
+          <p style={{ margin: '10px 0 0', fontSize: 12, lineHeight: 1.5, color: T.text2 }}>Please avoid sharing sensitive personal information that is not needed for your business review. Read the <a href="/privacy">Privacy Policy</a> for retention, service providers, and your choices.</p>
+        </fieldset>
       </Reveal>
       <Reveal>
         <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)', minHeight: 560 }}>

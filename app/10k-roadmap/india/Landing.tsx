@@ -1,541 +1,382 @@
 'use client'
-/* The Business Roadmap Audit — INDIA landing page.
-   Hallmark redesign (full depth, theme Dusk): same content, wiring, booking
-   flow and legal copy as before; the visual system and composition are new.
-   See .hallmark/log.json and the handoff in the PR description for the
-   before/after record. Keeps every link, field, handler, test hook and the
-   case-study/video proof from the parent funnel; only ./config is
-   India-specific. Copy still avoids asserting the reader's own financial
-   status (Meta's Personal Attributes policy) and absolute "0%/guaranteed"
-   claims; income claims carry "results vary" disclaimers, per Meta's
-   business-opportunity rules. */
 import './landing.css'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LANDING, LEGAL, RATING, PRESS, MANISHA } from './config'
-import { REAL_PROOF } from '../config'
+import Image from 'next/image'
+import { CASE_STUDIES } from '@/lib/case-studies'
+import { VIDEO_REVIEWS } from '@/components/VideoWall'
+import { LANDING, LEGAL, MANISHA, PRESS, RATING } from './config'
 import { useUtm } from '../ui'
 import { track } from '../track'
-import CaseStudies from './CaseStudies'
-import VideoReveal from './VideoReveal'
-import CelestialScroll from './CelestialScroll'
 
-/* Content renders visible immediately, always. A full-page capture tool
-   (and some real browsers) never fires an IntersectionObserver for content
-   outside the original viewport, which previously left whole sections of
-   this booking page invisible — worse than losing a scroll-fade-in. This
-   wrapper is kept only so call sites don't need to change if a safer
-   reveal pattern is reintroduced later. */
-function Reveal({ children }: { children: ReactNode; i?: number }) {
-  return <>{children}</>
-}
+const PARTNERS = [
+  {
+    name: 'Indrodip Ghosh',
+    role: 'Founder and Principal Consultant',
+    credential: 'Consumer Psychologist, University of California, Berkeley',
+    recruitedBy: 'Recruited by Google & Anthropic',
+    image: '/images/founder-golden-gate.webp',
+  },
+  {
+    name: MANISHA.name,
+    role: 'Director, Head of Growth',
+    image: MANISHA.avatar,
+  },
+]
 
-function CheckIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M8 12l3 3 5-6" />
-    </svg>
-  )
-}
-function CrossIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.5 9.5l5 5M14.5 9.5l-5 5" />
-    </svg>
-  )
-}
-function GuaranteeIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" />
-    </svg>
-  )
-}
-function Stars() {
-  return (
-    <span className="rating__stars" aria-hidden>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ color: 'var(--color-accent-hi)' }}>
-          <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
-        </svg>
-      ))}
-    </span>
-  )
-}
-function Rating() {
-  return (
-    <span className="rating">
-      <Stars />
-      <span className="rating__score">{RATING.score}</span>
-      <span className="rating__text">{RATING.text}</span>
-    </span>
-  )
-}
-function CheckList({ items, cross }: { items: string[]; cross?: boolean }) {
-  return (
-    <ul className="check-list">
-      {items.map((it) => (
-        <li key={it} className={`check-item${cross ? ' check-item--cross' : ''}`}>{cross ? <CrossIcon /> : <CheckIcon />}<span>{it}</span></li>
-      ))}
-    </ul>
-  )
+const INCLUSIONS = [
+  'A 60-minute review with Indrodip and Manisha',
+  'A review of your offer, positioning, and ideal buyer',
+  'A personalized audit PDF and 100-day roadmap',
+  'A digital copy of Expertise to Income',
+  'An AI prompt toolkit shaped around your plan',
+  'A call recording, only if you consent',
+]
+
+const PROCESS = [
+  { title: 'Start with your context', text: 'Bring your offer, goals, and the way clients find you today.' },
+  { title: 'Find the point to work on', text: 'Review your positioning, ideal buyer, and client journey with both partners.' },
+  { title: 'Choose a practical next move', text: 'Leave with priorities, then receive your written roadmap within 48 hours.' },
+]
+
+const FEATURED_CASES = ['abbas-jamie', 'laurie-gerber', 'amalia', 'max', 'kate-winchester', 'susan-taylor']
+  .map((slug) => CASE_STUDIES.find((study) => study.slug === slug))
+  .filter((study): study is (typeof CASE_STUDIES)[number] => Boolean(study))
+
+const INDIA_VIDEO_REVIEWS = [
+  ...VIDEO_REVIEWS.slice(0, 7),
+  ...VIDEO_REVIEWS.filter((review) => review.src.includes('1002983741962578') || review.src.includes('1000671825545007')),
+]
+
+const WISTIA_POSTERS: Record<string, string> = {
+  '5yh07cwlui': 'https://embed-ssl.wistia.com/deliveries/d9074bc29ffa866e0506e9c6bc48f7042db286eb.jpg?image_crop_resized=960x540',
+  'tnorqgs7dj': 'https://embed-ssl.wistia.com/deliveries/0ab9d9f3bcea82a1fec36cfefbd8ce6d140745c1.jpg?image_crop_resized=960x540',
+  'yz9coq1jwd': 'https://embed-ssl.wistia.com/deliveries/67c58111b5465a6aedff2ee0d83136ed34fd1f1f.jpg?image_crop_resized=960x540',
+  'ukn3ruu2nr': 'https://embed-ssl.wistia.com/deliveries/6e5c87a4f2ce1db81996a09a121ec6000ba7d847.jpg?image_crop_resized=960x540',
+  'tikovukneu': 'https://embed-ssl.wistia.com/deliveries/d4d294be7abfa4d092ee62e7afa475c0832822ed.jpg?image_crop_resized=960x540',
+  'oni4jy3cuf': 'https://embed-ssl.wistia.com/deliveries/700589756a1d69e67a952805afd03c7f97a3ae90.jpg?image_crop_resized=960x540',
+  'tcqebjpgyk': 'https://embed-ssl.wistia.com/deliveries/9512736b0e273abbe506d78059eb08d721296bdf.jpg?image_crop_resized=960x540',
+  '1002983741962578': '/clients/testimonial-posters/1002983741962578.webp',
+  '1000671825545007': '/clients/testimonial-posters/1000671825545007.webp',
 }
 
-/* A jagged income line settling into a flat one: the one fact the pain
-   section is about, shown instead of explained in three paragraphs. */
-function IncomeGraphic() {
+const FAQS = [
+  {
+    question: 'Who will I speak with?',
+    answer: 'Your session is with Indrodip Ghosh and Manisha Satpute, the two partners shown on this page.',
+  },
+  {
+    question: 'What does the ₹199 deposit mean?',
+    answer: 'It is a one-time booking deposit, not a recurring charge. The exact refund and guarantee terms are shown before you book.',
+  },
+  {
+    question: 'What will I receive after the session?',
+    answer: 'Your personalized audit PDF and 100-day roadmap arrive within 48 hours. The digital book and AI prompt toolkit are included. A call recording is shared only with your consent.',
+  },
+  {
+    question: 'I already use AI. What does the audit add?',
+    answer: 'AI can help you explore options. The audit adds a human review of your specific offer, ideal buyer, and client path, so you can decide which next step fits your business.',
+  },
+  {
+    question: 'Do I have to join a program afterward?',
+    answer: 'No. The session is a working review of your business. You can use the audit and roadmap without joining another service.',
+  },
+]
+
+function Check() {
+  return <span className="check-mark" aria-hidden="true">✓</span>
+}
+
+function BookCover() {
   return (
-    <svg className="pain__graphic" viewBox="0 0 640 160" fill="none" aria-hidden>
-      <path d="M8 60 L100 100 L180 40 L260 120 L340 55 L420 115 L480 70" stroke="var(--color-muted)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M480 70 L560 68 L632 66" stroke="var(--color-accent-deep)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 10" />
-      <circle cx="8" cy="60" r="5" fill="var(--color-muted)" />
-      <circle cx="480" cy="70" r="5" fill="var(--color-ink)" />
-      <circle cx="632" cy="66" r="6" fill="var(--color-accent)" />
-    </svg>
+    <div className="book-mockup" role="img" aria-label="Expertise to Income by Indrodip Ghosh and Christine Mathison">
+      <span className="book-page book-page--why" aria-hidden="true" />
+      <span className="book-page book-page--diagnostic" aria-hidden="true" />
+      <span className="book-page book-page--asset" aria-hidden="true" />
+      <span className="book-page book-page--audience" aria-hidden="true" />
+      <div className="book-preview" aria-hidden="true" />
+      <span className="book-mockup__pages" aria-hidden="true" />
+    </div>
   )
 }
 
-/* The 3-part method as a line, not a list: one connected flow instead of
-   three separate paragraphs. */
-function MethodGraphic() {
+const BOOK_CHAPTERS = [
+  'Understand Your Why', 'Diagnose Your Current Situation', 'The Asset Mindset',
+  'Find Your Perfect Audience', 'Design Your First Digital Product',
+  'Create a Simple Offer That Sells Itself', 'The Organic Content System',
+  'Your Simple Launch Plan', 'Mindset for Consistent $10K Months',
+]
+
+function ClientVideoTestimonials() {
+  const [activeVideo, setActiveVideo] = useState<string | null>(null)
   return (
-    <svg className="steps__graphic" viewBox="0 0 640 24" fill="none" aria-hidden>
-      <line x1="20" y1="12" x2="620" y2="12" stroke="var(--color-rule)" strokeWidth="2" />
-      <circle cx="20" cy="12" r="7" fill="var(--color-accent)" />
-      <circle cx="320" cy="12" r="7" fill="var(--color-accent)" />
-      <circle cx="620" cy="12" r="7" fill="var(--color-accent)" />
-    </svg>
+    <div className="video-testimonials">
+      {INDIA_VIDEO_REVIEWS.map((review, index) => {
+        const id = review.src.match(/iframe\/([^?]+)/)?.[1] || review.src
+        const isFacebook = review.src.includes('facebook.com')
+        const posterKey = id.match(/(?:videos%2F|reel%2F)(\d+)/)?.[1] || id
+        const poster = WISTIA_POSTERS[posterKey]
+        return (
+          <figure className="video-testimonial" key={review.src}>
+            {activeVideo === id ? (
+              <iframe
+                src={isFacebook ? review.src : `https://fast.wistia.net/embed/iframe/${id}?seo=true&videoFoam=false&autoplay=1`}
+                title={`Client video testimonial ${index + 1}`}
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <button
+                type="button"
+                className="video-testimonial__poster"
+                style={poster ? { backgroundImage: `linear-gradient(180deg, transparent 45%, var(--color-ink) 100%), url("${poster}")` } : undefined}
+                onClick={() => setActiveVideo(id)}
+                aria-label={`Play client video testimonial ${index + 1}`}
+              >
+                <span className="video-testimonial__play" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+                </span>
+                <span className="video-testimonial__caption">Client video review {String(index + 1).padStart(2, '0')}</span>
+              </button>
+            )}
+          </figure>
+        )
+      })}
+    </div>
   )
 }
 
 export default function Landing() {
   const router = useRouter()
-  const [solid, setSolid] = useState(false)
   const [stickyVisible, setStickyVisible] = useState(false)
   useUtm()
+
   useEffect(() => { track('page_view') }, [])
   useEffect(() => {
-    const onScroll = () => { setSolid(window.scrollY > 40); setStickyVisible(window.scrollY > 620) }
+    const onScroll = () => setStickyVisible(window.scrollY > 520)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  // Prefetch the ₹199 booking step so the CTA navigates instantly instead of
-  // stalling on the first-ever fetch/compile of that route's chunk.
   useEffect(() => { router.prefetch('/10k-roadmap/india/pay') }, [router])
-  const celestialRef = useRef<HTMLDivElement>(null)
+
   const goApply = (where: string) => {
     track('cta_click', { where })
     router.push('/10k-roadmap/india/pay')
   }
 
-  const CTA_LABEL = LANDING.ctaPrimary
-
   return (
     <div className="india-landing">
       <a className="skip" href="#main">Skip to content</a>
 
-      {/* ── Nav: edge-aligned, turns to slate glass once scrolled ── */}
-      <header className={`nav${solid ? ' is-solid' : ''}`}>
+      <header className="nav">
         <div className="container nav__inner">
-          <a className="nav__brand" href="/10k-roadmap/india" aria-label="The5th Global Consulting">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/the5th-consulting-header-tight-white-187x80.png" alt="The5th Global Consulting" />
+          <a className="nav__brand" href="/10k-roadmap/india" aria-label="The5th Global Consulting home">
+            <Image src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" width={192} height={75} priority />
           </a>
           <nav className="nav__links" aria-label="Page sections">
-            {LANDING.nav.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
+            <a href="#included">What you receive</a>
+            <a href="#client-work">Client work</a>
+            <a href="#voices">Video reviews</a>
+            <a href="#partners">Meet the partners</a>
           </nav>
-          <div className="nav__right">
-            <button className="btn" onClick={() => goApply('nav')}>Book Session</button>
-          </div>
+          <button type="button" className="btn nav__cta" onClick={() => goApply('nav')}>Book Your ₹199 Session</button>
         </div>
       </header>
 
       <main id="main">
-        {/* ── Hero: statement on one side, the founder's photo on the
-               other — one screen, no stacking, so the fold holds the whole
-               thing (12, 44b) and the photo keeps its own portrait crop
-               instead of being forced into a wide band. ── */}
         <section className="hero">
           <div className="container hero__grid">
             <div className="hero__text">
-              <Reveal>
-                <span className="hero__badge">{LANDING.launch.badge}</span>
-                <p className="hero__kicker">{LANDING.launch.kicker}</p>
-                <h1>
-                  {LANDING.headlinePre}<span className="hero__accent">{LANDING.headlineHighlight}</span>{LANDING.headlinePost}
-                </h1>
-                <p className="lede">{LANDING.headlineSub}</p>
-              </Reveal>
-              <Reveal i={1}>
-                <div className="hero__ctas">
-                  <button className="btn" onClick={() => goApply('hero')}>{CTA_LABEL}</button>
-                  <button
-                    className="btn btn--quiet"
-                    onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById(LANDING.ctaSecondary.href.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}
-                  >
-                    {LANDING.ctaSecondary.label}
-                  </button>
-                </div>
-                <p className="hero__fineprint">{LANDING.ctaMicro}</p>
-                <p className="hero__guarantee"><GuaranteeIcon /><span>{LANDING.guaranteeBadge}</span></p>
-                <p className="hero__creds">{LANDING.founderCreds.join(', ')}</p>
-                <div className="hero__rating"><Rating /></div>
-                <div className="hero__press">
-                  <p className="hero__press-label">{PRESS.label}</p>
-                  <div className="hero__press-row">
-                    {PRESS.items.map((p) => <span key={p}>{p}</span>)}
-                  </div>
-                </div>
-              </Reveal>
+              <p className="hero__eyebrow">Your ₹10 Lakh/Month Business Roadmap</p>
+              <h1>{LANDING.headline}</h1>
+              <p className="hero__lede">{LANDING.headlineSub}</p>
+              <div className="hero__actions"><button type="button" className="btn hero__cta" onClick={() => goApply('hero')}>Book Your ₹199 Strategy Session</button><a className="hero__secondary" href="#process">See How It Works</a></div>
+              <p className="hero__note">₹199 one-time booking deposit. No recurring charge. Refund terms apply.</p>
+              <div className="hero__guarantee"><strong>200% Money-Back Guarantee</strong><span>Eligible requests after your session receive ₹400 total: ₹199 back plus ₹201 extra. Request within 7 days. One claim per booking. See the <a href="/refund">full refund terms</a>.</span></div>
+              <p className="hero__authority">AI Startup Founder, ~$6M Startup Valuation, Backed by University of California alumni</p>
+              <p className="hero__rating"><strong>{RATING.score}</strong><span>{RATING.text}</span></p>
+              <div className="hero__facts" aria-label="Session details">
+                <span>With both partners</span><span>On Zoom</span>
+              </div>
             </div>
 
-            <Reveal i={1}>
-              <div className="hero__stage">
-                <div className="hero__photo-wrap">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="hero__photo" src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} />
-                  <div className="hero__photo-badge">
-                    <span className="hero__photo-badge-credential">{LANDING.heroCard.credential}</span>
-                    {LANDING.heroCard.recruitedBy && <span className="hero__photo-badge-recruited">{LANDING.heroCard.recruitedBy}</span>}
-                    {LANDING.heroCard.featuredIn && <span className="hero__photo-badge-featured">{LANDING.heroCard.featuredIn}</span>}
+            <div className="hero__partners" aria-label="Meet your audit partners">
+              {PARTNERS.map((person) => (
+                <article className="hero-person" key={person.name}>
+                  <div className="hero-person__photo">
+                    <Image src={person.image} alt={person.name} width={300} height={360} sizes="(max-width: 700px) 44vw, 280px" priority />
                   </div>
-                </div>
-                <div className="hero__caption">
-                  <div className="hero__caption-id">
-                    <span className="hero__caption-name">{LANDING.heroCard.name}</span>
-                    <span className="hero__caption-role">{LANDING.heroCard.role}</span>
+                  <div className="hero-person__caption">
+                    <strong>{person.name}</strong>
+                    <span>{person.role}</span>
+                    {person.credential && <span className="hero-person__credential"><b>{person.credential}</b><span>{person.recruitedBy}</span></span>}
                   </div>
-                  <div className="hero__caption-chips">
-                    {LANDING.heroCard.chips.map((c) => (
-                      <span key={c.t} className="hero__caption-chip"><b>{c.t}</b> {c.s}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Reveal>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* ── What you get: the tangible deliverables, shown before any
-               selling starts ── */}
-        <section id="get" className="get band-s">
-          <div className="container">
-            <div className="steps__head">
-              <h2>{LANDING.get.heading}</h2>
-              <p className="lede">{LANDING.get.sub}</p>
+        <section className="featured-strip" aria-label={PRESS.label}>
+          <div className="container featured-strip__inner">
+            <p>{PRESS.label}</p>
+            <div className="featured-strip__names">
+              {PRESS.items.map((publication) => <span key={publication}>{publication}</span>)}
             </div>
-            <ol className="get__grid">
-              {LANDING.get.items.map((it, i) => (
-                <li key={it.t} className="get__card">
-                  <span className="get__num">{String(i + 1).padStart(2, '0')}</span>
-                  <h3>{it.t}</h3>
-                  <p>{it.d}</p>
+          </div>
+        </section>
+
+        <section id="included" className="included band-s">
+          <div className="container included__grid">
+            <div>
+              <h2>What you get from the audit</h2>
+              <p className="section-lede">A focused review, followed by a plan built around the business you bring.</p>
+              <ul className="included__list">
+                {INCLUSIONS.map((item) => <li key={item}><Check /><span>{item}</span></li>)}
+              </ul>
+              <p className="included__delivery">Your written audit and roadmap arrive within 48 hours of your session.</p>
+              <div className="included__sample">
+                <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'india_sample_pdf' })}>View a 17-page sample audit</a>
+                <span>Illustrative example; figures are shown in USD.</span>
+              </div>
+            </div>
+
+            <aside className="book-card" aria-label="Included digital book">
+              <div className="book-card__visual"><BookCover /></div>
+              <div className="book-card__copy">
+                <p className="book-card__label"><span>Included to keep</span><span>9 chapters. Original price: ₹425.</span></p>
+                <h3>Expertise to Income</h3>
+                <p>Your complete guide to building a digital-product business that can generate $10,000 a month without a team, ads, or years of experience.</p>
+                <ol className="book-card__chapters">{BOOK_CHAPTERS.map((chapter) => <li key={chapter}>{chapter}</li>)}</ol>
+                <p className="book-card__authors">By Indrodip Ghosh &amp; Christine Mathison</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="process" className="process band-s">
+          <div className="container">
+            <div className="section-heading">
+              <h2>A focused audit, in three steps</h2>
+            </div>
+            <ol className="process__steps">
+              {PROCESS.map((step, i) => (
+                <li className="process-step" key={step.title}>
+                  <span className="process-step__number">{String(i + 1).padStart(2, '0')}</span>
+                  <div><h3>{step.title}</h3><p>{step.text}</p></div>
                 </li>
               ))}
             </ol>
-            <div className="get__cta">
-              <button className="btn" onClick={() => goApply('get')}>{CTA_LABEL}</button>
-              <a className="btn btn--quiet" href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'india_sample_pdf' })}>{LANDING.get.sampleCta}</a>
+          </div>
+        </section>
+
+        <section id="client-work" className="client-work band-s">
+          <div className="container client-work__inner">
+            <div className="client-work__heading">
+              <h2>Six client stories. The work behind the numbers.</h2>
+              <p>See where each business started, what we built, and the reported result. Outcomes vary by business and market.</p>
             </div>
-            <p className="get__note">{LANDING.get.sampleNote}</p>
-          </div>
-        </section>
-
-        {/* ── Pain → Mechanism: one scroll-linked signature (the sun
-               setting into a moon) runs the height of both sections. ── */}
-        <div className="celestial-wrap" ref={celestialRef}>
-        <div className="celestial"><CelestialScroll targetRef={celestialRef} /></div>
-        {/* ── Pain: named in the reader's own voice before any pitch ──
-            The session facts and the trust row open the section, just below
-            the fold, outside the hero's own screen (layout.md § 6: the hero
-            is the first screen only). ── */}
-        <section className="pain band-s">
-          <div className="container">
-            <Reveal>
-              <div className="figures">
-                {LANDING.stats.map((s) => (
-                  <div key={s.l}>
-                    <b>{s.v}</b>
-                    <span>{s.l}</span>
+            <div className="client-work__stories">
+              {FEATURED_CASES.map((study, index) => (
+                <article className="case-study-card" key={study.slug}>
+                  <div className="case-study-card__image">
+                    {study.image && <Image src={study.image} alt={`${study.name}, client case study`} fill sizes="(max-width: 768px) 100vw, (max-width: 1280px) 48vw, 32vw" loading="eager" />}
+                    <span className="case-study-card__index">0{index + 1}</span>
                   </div>
-                ))}
-              </div>
-            </Reveal>
-            {/* Featured testimonial, right after the hero, same placement as
-                the US page's own single-quote card — Shyama Prasad Goswami
-                (ex-Fortune 500 CEO, India) from the shared REAL_PROOF dataset. */}
-            <Reveal>
-              <div className="testimonial glass-panel">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="testimonial__photo" src={REAL_PROOF[1].photo} alt={REAL_PROOF[1].name} />
-                <div className="testimonial__body">
-                  <blockquote>&ldquo;{REAL_PROOF[1].quote}&rdquo;</blockquote>
-                  <p className="testimonial__name"><b>{REAL_PROOF[1].name}</b>, {REAL_PROOF[1].result} <span>· {REAL_PROOF[1].role}</span></p>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-          <div className="container pain__inner">
-            <Reveal><h2>{LANDING.pain.heading}</h2></Reveal>
-            <Reveal i={1}><IncomeGraphic /></Reveal>
-          </div>
-          <div className="container">
-            <Reveal i={1}>
-              <div className="contrast">
-                <div className="contrast__card">
-                  <div className="contrast__tag">What this usually looks like</div>
-                  <ul className="check-list">
-                    {LANDING.pain.lines.map((l) => <li key={l} className="check-item check-item--cross"><CrossIcon /><span>{l}</span></li>)}
-                  </ul>
-                </div>
-                <div className="contrast__card contrast__card--good">
-                  <div className="contrast__tag">What changes on the call</div>
-                  <p className="contrast__statement">{LANDING.pain.close}</p>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ── Mechanism: the named 3-step method, then the next step ── */}
-        <section id="clarity" className="clarity-band band-s">
-          <div className="container">
-            <Reveal>
-              <div className="steps__head">
-                <h2>{LANDING.mechanism.heading}</h2>
-                <p className="lede">{LANDING.mechanism.sub}</p>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="steps__flow">
-                <MethodGraphic />
-                <ol className="steps__list">
-                  {LANDING.mechanism.steps.map((s) => (
-                    <li key={s.n} className="step">
-                      <span className="step__num" />
-                      <h3>{s.t}</h3>
-                      <p>{s.d}</p>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            </Reveal>
-            <Reveal i={2}><p className="steps__close">{LANDING.mechanism.close}</p></Reveal>
-            <Reveal i={3}>
-              <div className="clarity__next">
-                <div>
-                  <h3>{LANDING.clarity.nextStep.heading}</h3>
-                  <p>{LANDING.clarity.nextStep.sub}</p>
-                </div>
-                <button className="btn" onClick={() => goApply('clarity_next_step')}>{CTA_LABEL}</button>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-        </div>
-
-        {/* ── What you can build: the real flow, not a revenue promise ── */}
-        <section id="build" className="band-s">
-          <div className="container">
-            <Reveal>
-              <div className="steps__head">
-                <h2>{LANDING.buildFlow.heading}</h2>
-                <p className="lede">{LANDING.buildFlow.sub}</p>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="build-flow">
-                {LANDING.buildFlow.steps.map((s, i) => (
-                  <span className="build-flow__step" key={s}>
-                    {s}
-                    {i < LANDING.buildFlow.steps.length - 1 && <span className="build-flow__arrow" aria-hidden>→</span>}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-            <Reveal i={2}><p className="steps__close">{LANDING.buildFlow.close}</p></Reveal>
-          </div>
-        </section>
-
-        {/* ── Who should book: good fit, not a fit ── */}
-        <section id="who" className="band-s">
-          <div className="container">
-            <Reveal>
-              <div className="qualify__head">
-                <h2>{LANDING.whoBook.heading}</h2>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="qualify__cols">
-                <div className="qualify__col">
-                  <h3>{LANDING.whoBook.goodFitHeading}</h3>
-                  <CheckList items={LANDING.whoBook.goodFit} />
-                </div>
-                <div className="qualify__col">
-                  <h3>{LANDING.whoBook.notFitHeading}</h3>
-                  <CheckList items={LANDING.whoBook.notFit} cross />
-                </div>
-              </div>
-              <div className="qualify__cta">
-                <button className="btn" onClick={() => goApply('who_banner')}>{CTA_LABEL}</button>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ── Proof: real case studies and real on-camera reviews ── */}
-        <section id="proof" className="proof band-s">
-          <div className="container">
-            <Reveal>
-              <div className="proof__head">
-                <h2>{LANDING.proof.heading}</h2>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="proof__banner"><span>{LANDING.proof.revenueLine}</span></div>
-            </Reveal>
-            <Reveal i={2}>
-              <CaseStudies />
-            </Reveal>
-            <p className="proof__disclaimer">{LANDING.proof.disclaimer}</p>
-
-            <div className="videos">
-              <Reveal>
-                <div className="videos__head">
-                  <h3>Hear it from them directly.</h3>
-                  <p>Unscripted, on-camera reactions from clients. Tap any clip to play.</p>
-                </div>
-              </Reveal>
-              <Reveal i={1}><VideoReveal columns={3} /></Reveal>
+                  <div className="case-study-card__copy">
+                    <h3>{study.name}</h3>
+                    <p className="case-story__meta">{study.location || study.category} / {study.niche}</p>
+                    <p className="case-story__tagline">{study.tagline}</p>
+                    <div className="case-story__result">
+                      <strong>{study.headline.v}</strong>
+                      <span>{study.headline.period} · USD</span>
+                    </div>
+                    <p className="case-study-card__work">{study.whatWeDid}</p>
+                    {study.metrics && <div className="case-story__metrics">{study.metrics.slice(0, 2).map((metric) => <span key={metric.l}><b>{metric.v}</b>{metric.l}</span>)}</div>}
+                  </div>
+                </article>
+              ))}
             </div>
-
-            <Reveal i={2}><div className="proof__cta"><button className="btn" onClick={() => goApply('proof')}>{CTA_LABEL}</button></div></Reveal>
+            <div className="client-work__foot">
+              <p>Published client outcomes shown in USD. Individual results vary; these are not typical or guaranteed results.</p>
+              <a href="/results">Explore the case study library</a>
+            </div>
+            <div className="proof-booking"><p>Want a clearer next move for your business?</p><button type="button" className="btn btn--inverse" onClick={() => goApply('case-study-proof')}>Book the audit for ₹199</button><span>Refundable booking deposit · no recurring charge</span></div>
           </div>
         </section>
 
-        {/* ── Meet your mentor ── */}
-        <section className="founder-band band-s">
-          <div className="container">
-            <Reveal><h2 style={{ marginBottom: 'var(--space-2xl)', maxWidth: '44rem', marginInline: 'auto', textAlign: 'center', fontSize: 'var(--text-display-s)' }}>{LANDING.founder.heading}</h2></Reveal>
-            <Reveal i={1}>
-              <div className="founder founder__row glass-panel">
-                <div className="founder__photo-wrap">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="founder__photo" src="/images/founder.png" alt={LANDING.founder.name} />
-                  <div className="founder__stats">
-                    {LANDING.founder.stats.map((s) => (
-                      <div key={s.l} className="founder__stat"><b>{s.v}</b><span>{s.l}</span></div>
-                    ))}
-                  </div>
-                </div>
+        <section id="voices" className="voices band-s">
+          <div className="container voices__inner">
+            <div className="voices__heading">
+              <h2>Hear from clients in their own words.</h2>
+              <p>Hear directly from clients after their strategy sessions. Tap any review to play.</p>
+            </div>
+            <ClientVideoTestimonials />
+            <div className="voices__cta"><span>See what a focused review could uncover in your business.</span><button type="button" className="btn" onClick={() => goApply('video-testimonials')}>Book the ₹199 audit</button></div>
+          </div>
+        </section>
+
+        <section id="partners" className="partners band-s">
+          <div className="container partners__inner">
+            <div className="section-heading">
+              <h2>Meet the people behind your audit</h2>
+            </div>
+            <div className="partner-bios">
+              <article className="partner-bio">
+                <div className="partner-bio__initial">I</div>
                 <div>
-                  <p className="founder__creds">{LANDING.founderCreds.join(', ')}</p>
-                  <blockquote>&ldquo;{LANDING.founder.quote}&rdquo;</blockquote>
-                  <p className="founder__body">{LANDING.founder.body}</p>
-                  <div className="founder__name">{LANDING.founder.name}</div>
-                  <div className="founder__role">{LANDING.founder.role}</div>
-                  <p className="founder__note">{LANDING.founderCredsNote}</p>
+                  <h3>Indrodip Ghosh</h3>
+                  <p className="partner-bio__role">Founder and Principal Consultant</p>
+                  <p>{LANDING.heroCard.credential}. Recruited by Google and Anthropic. Founder of The5th and an AI startup with an approximate $6M valuation.</p>
+                  <p className="partner-bio__proof">{LANDING.heroCard.featuredIn}. The startup is backed by University of California alumni. {LANDING.founderCredsNote}</p>
                 </div>
-              </div>
-            </Reveal>
-            <Reveal i={2}>
-              <div className="founder founder__row glass-panel founder__row--second">
-                <div className="founder__photo-wrap">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="founder__photo" src={MANISHA.event} alt={MANISHA.name} />
-                </div>
-                <div>
-                  <div className="founder__name">{MANISHA.name}</div>
-                  <div className="founder__role">{MANISHA.role}</div>
-                  <p className="founder__body">{MANISHA.bio} She joins every call.</p>
-                </div>
-              </div>
-            </Reveal>
-            <Reveal i={2}>
-              <div className="founder__moments">
-                <figure>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" />
-                  <figcaption>At a ClickFunnels event</figcaption>
-                </figure>
-                <figure>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" />
-                  <figcaption>At the Millionaire Mindset Mastermind</figcaption>
-                </figure>
-              </div>
-            </Reveal>
+              </article>
+              <article className="partner-bio">
+                <div className="partner-bio__initial">M</div>
+                <div><h3>{MANISHA.name}</h3><p>Director, Head of Growth. {MANISHA.bio}</p></div>
+              </article>
+            </div>
+              <p className="partners__reach">The5th has advised 76 coaches and consultants across 12 countries. Individual results vary.</p>
           </div>
         </section>
 
-        {/* ── FAQ ── */}
-        <section id="faq" className="faq-band band-s">
-          <div className="container">
-            <Reveal>
-              <div className="faq__head">
-                <h2>{LANDING.faq.heading}</h2>
-              </div>
-            </Reveal>
-            <Reveal i={1}>
-              <div className="faq__list">
-                {LANDING.faq.items.map((it, i) => (
-                  <details key={it.q} className="faq__item" open={i === 0}>
-                    <summary>{it.q}<span className="faq__icon" aria-hidden>+</span></summary>
-                    <p>{it.a}</p>
-                  </details>
-                ))}
-              </div>
-            </Reveal>
+        <section id="faq" className="faq band-s">
+          <div className="container faq__inner">
+            <div className="section-heading"><h2>Questions before you book</h2></div>
+            <div className="faq__list">
+              {FAQS.map((item) => (
+                <details className="faq__item" key={item.question}>
+                  <summary>{item.question}<span aria-hidden="true">+</span></summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* ── Apply: direct ₹199 booking, the refundable deposit is the filter ── */}
-        <section id="apply" className="apply">
-          <div className="container apply__inner">
-            <Reveal>
-              <span className="hero__badge apply__badge-top">{LANDING.launch.badge}</span>
-              <h2>{LANDING.apply.heading}</h2>
-              <p className="lede">{LANDING.apply.sub}</p>
-            </Reveal>
-            <Reveal i={1}>
-              <ul className="apply__points">
-                {LANDING.apply.points.map((p) => <li key={p}><CheckIcon /><span>{p}</span></li>)}
-              </ul>
-            </Reveal>
-            <Reveal i={2}>
-              <div className="apply__card glass-panel">
-                <span className="apply__badge"><GuaranteeIcon />{LANDING.guaranteeBadge}</span>
-                <div className="apply__price">₹199</div>
-                <div className="apply__price-line">{LANDING.apply.priceLine}</div>
-                <button className="btn btn--full" onClick={() => goApply('apply_section')}>{CTA_LABEL}</button>
-                <p className="apply__micro">{LANDING.apply.micro}</p>
-              </div>
-            </Reveal>
-            <Reveal i={3}>
-              <div className="apply__guarantee-full">
-                <span className="apply__guarantee-badge">{LANDING.guaranteeBadge}</span>
-                <h3>{LANDING.guaranteeFull.heading}</h3>
-                <p>{LANDING.guaranteeFull.body}</p>
-                <p className="apply__guarantee-sub">{LANDING.guaranteeFull.sub}</p>
-                <p className="apply__guarantee-terms">{LANDING.guaranteeFull.terms}</p>
-              </div>
-            </Reveal>
+        <section className="booking band-s">
+          <div className="container booking__inner">
+            <div>
+              <h2>Get a clearer next step</h2>
+              <p className="booking__lede">Review your business with Indrodip and Manisha, then decide what you want to do with the plan.</p>
+            </div>
+            <div className="booking__action">
+              <span className="booking__price">₹199</span>
+              <span className="booking__price-note">Refundable booking deposit</span>
+              <button type="button" className="btn btn--inverse" onClick={() => goApply('final')}>{LANDING.ctaPrimary}</button>
+              <p>Refund terms are shown before booking.</p>
+            </div>
           </div>
         </section>
-
       </main>
 
-      {/* ── Footer (mast), opening on the reach line ── */}
       <footer className="site-footer">
         <div className="container site-footer__inner">
-          <p className="reach"><b>{LANDING.reach.stat}</b> {LANDING.reach.body}</p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="site-footer__brand" src="/images/logo-white.png" alt="The5th Global Consulting" />
+          <Image className="site-footer__brand" src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" width={192} height={75} />
           <div className="site-footer__links">
-            {LEGAL.links.map((l) => <a key={l.label} href={l.href}>{l.label}</a>)}
+            <a href="/privacy">Privacy Policy</a><a href="/disclaimer">Disclaimer</a><a href="/refund">Refund Policy</a>
+            {LEGAL.links.filter((link) => !['Privacy Policy', 'Privacy', 'Disclaimer', 'Refund Policy'].includes(link.label)).map((link) => <a key={link.label} href={link.href}>{link.label}</a>)}
           </div>
           <p className="legal">{LEGAL.earnings}</p>
           <p className="legal">{LEGAL.meta}</p>
@@ -543,9 +384,8 @@ export default function Landing() {
         </div>
       </footer>
 
-      {/* Sticky mobile CTA */}
       <div className={`sticky-cta${stickyVisible ? ' is-visible' : ''}`}>
-        <button className="btn btn--full" onClick={() => goApply('sticky')}>{CTA_LABEL}</button>
+        <button type="button" className="btn" onClick={() => goApply('sticky')}>{LANDING.ctaPrimary}</button>
       </div>
     </div>
   )

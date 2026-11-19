@@ -1,44 +1,21 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
   --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
   --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
   --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(65% 0.17 27); --color-success: oklch(65% 0.13 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 160px; --section-gap-l: 200px;
+  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-
-  /* A true black, high-end-consulting field: near-black paper, warm
-     off-white ink, the brand's own purple (#5E2E86) as the one signal
-     (no gold: a single tinted accent against black and white, the way a
-     restrained product site runs one colour, not two), frosted glass
-     panels (blur + translucency) for the signature moments instead of
-     flat cards. */
-  --color-paper: oklch(11% 0.012 300); --color-paper-2: oklch(15% 0.014 300); --color-paper-3: oklch(19% 0.015 300);
-  --color-ink: oklch(95% 0.008 75); --color-ink-2: oklch(80% 0.012 80); --color-muted: oklch(63% 0.018 85);
-  --color-rule: oklch(27% 0.016 300); --color-light: oklch(98% 0.006 300); --color-shade: oklch(6% 0.01 300);
-  --color-accent: oklch(58% 0.17 305); --color-accent-ink: oklch(99% 0.004 300); --color-accent-hi: oklch(64% 0.16 304);
-  --color-accent-deep: oklch(74% 0.13 305); --color-accent-soft: oklch(30% 0.06 305); --color-focus: oklch(70% 0.15 305);
-  --color-accent-2: oklch(88% 0.006 280); --color-accent-2-ink: oklch(20% 0.012 280); --color-dusk: oklch(70% 0.12 330);
-  --color-accent-ink-deep: oklch(40% 0.14 305);
-  --color-sun: oklch(80% 0.15 75); --color-sun-glow: oklch(80% 0.15 75 / 0.35);
-  --color-day-ink: oklch(20% 0.012 280); --color-day-muted: oklch(63% 0.018 85); --color-fog: oklch(15% 0.014 300);
-  --color-well: oklch(97% 0.012 80); --color-well-2: oklch(94% 0.014 80); --color-well-ink: oklch(18% 0.02 300); --color-well-muted: oklch(45% 0.02 290); --color-well-rule: oklch(88% 0.012 80); --color-card: oklch(99% 0.006 80);
-
-  /* Glass: a frosted panel over the black page, the way a control surface
-     reads as a lit sheet of smoked glass, not a solid card. */
-  --glass: oklch(92% 0.012 280 / 0.1); --glass-chip: oklch(100% 0 0 / 0.07); --glass-accent: oklch(58% 0.17 305 / 0.22); --glass-blur: 28px;
-  --glass-border: oklch(100% 0 0 / 0.14);
-  --glass-hi: inset 0 1px 0 oklch(100% 0 0 / 0.22), inset 0 0 0 1px oklch(100% 0 0 / 0.05);
-  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.08) inset, 0 30px 70px -28px oklch(0% 0 0 / 0.65);
-  --font-display: "Wix Madefor Display", ui-sans-serif, system-ui, sans-serif; --font-body: "Wix Madefor Text", ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 18px; --radius-inner: 10px; --radius-pill: 999px; --rule-hair: 1px;
-  --tracking-display: -0.02em; --display-weight: 500;
-
-  /* The one true-black close (the apply band): darker than the page itself,
-     a glass card inside it for the price. */
-  --color-surface-dark: oklch(6% 0.01 300); --color-surface-dark-2: oklch(9% 0.012 300);
-  --color-on-dark: oklch(97% 0.006 75); --color-on-dark-muted: oklch(72% 0.016 85);
+  --color-paper: oklch(95.8% 0.024 90); --color-paper-2: oklch(92.6% 0.030 90); --color-paper-3: oklch(89% 0.034 90);
+  --color-ink: oklch(23% 0.050 152); --color-ink-2: oklch(33% 0.048 150); --color-muted: oklch(46% 0.034 142);
+  --color-rule: oklch(83% 0.024 112); --color-rule-2: oklch(68% 0.042 138);
+  --color-accent: oklch(46% 0.135 142); --color-accent-2: oklch(86% 0.075 128); --color-accent-ink: oklch(97% 0.015 95);
+  --color-focus: oklch(46% 0.135 142); --tint-moss: oklch(46% 0.135 142 / 0.11); --tint-clay: oklch(54% 0.140 46 / 0.10);
+  --font-display: "Vollkorn", ui-serif, Georgia, serif; --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-outlier: "Newsreader", ui-serif, Georgia, serif;
+  --radius-card: 4px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
+  --tracking-display: -0.012em; --display-weight: 600;
 }

@@ -60,8 +60,8 @@ export const LANDING = {
   // already in REAL_PROOF) opening its 1:1 session to India for the first
   // time. "Global" is the brand's own name, not an invented superlative.
   launch: {
-    badge: 'First time in India',
-    kicker: 'Your ₹10 Lakh/Month Business Roadmap',
+    badge: 'For coaches and consultants in India',
+    kicker: 'A private 60-minute business audit',
   },
   // The founder's credibility strip (hero + founder section). Every claim
   // here must stay exactly this careful: the valuation is the startup's,
@@ -79,28 +79,28 @@ export const LANDING = {
   // ChatGPT And Claude. So Why Aren't You Making Consistent Money?") —
   // names the tension (good at the work, money still isn't there) instead
   // of a "what if" tease, while staying short-sentence, no-jargon.
-  headlinePre: "You're Good At What You Do. So Why Is Making Money From Your Coaching ",
-  headlineHighlight: 'Still So Difficult?',
+  headlinePre: '',
+  headlineHighlight: '',
   headlinePost: '',
   headline: "You're Good At What You Do. So Why Is Making Money From Your Coaching Still So Difficult?",
   headlineSub: 'Build a coaching business that brings you consistent clients and predictable revenue, not one more random marketing activity.',
   guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
   guaranteeEmphasis: 'Yes, I’ll write the cheque.',
   guaranteeBadge: '200% Money-Back Guarantee',
-  guaranteeShort: 'Not happy with your strategy session? We’ll refund ₹400, double your ₹199, no questions asked.',
+  guaranteeShort: 'Not satisfied? Eligible requests receive ₹400 total: your ₹199 payment plus ₹201 extra.',
   // The full guarantee block, set out near the booking decision (apply section).
   // T&Cs line kept verbatim: refund eligibility, request deadline and processing
   // terms are the business's own disclosure and must not be reworded or dropped.
   guaranteeFull: {
-    heading: 'Not happy with your strategy session? We’ll refund ₹400.',
-    body: 'That’s right. If you genuinely feel the session wasn’t valuable, simply request a refund and we’ll return ₹400 instead of the ₹199 you paid.',
-    sub: 'Your satisfaction matters more than the booking fee.',
-    terms: 'T&Cs apply. Refund eligibility, request deadline and processing terms are explained before booking.',
+    heading: 'A ₹400 total refund if the session falls short.',
+    body: 'If you attend your strategy session and feel it did not deliver the promised review, request the guarantee within 7 calendar days. Eligible requests receive ₹400 total: ₹199 returned plus ₹201 extra.',
+    sub: 'One claim per customer and booking. No repeat or stacked payouts.',
+    terms: 'See the Refund Policy for the simple request process, exclusions for duplicate claims, and your statutory consumer rights.',
   },
   ctaPrimary: 'Book Your ₹199 Strategy Session',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199, fully refundable. Slots are limited.',
-  ctaMicroShort: '₹199, fully refundable',
+  ctaMicro: 'Refundable booking deposit. Terms shown before booking. No recurring charge.',
+  ctaMicroShort: 'Refundable booking deposit',
 
   /* ── The problem: four short, scannable statements, then the one line
      that reframes it — named before the solution, in the reader's own
@@ -146,7 +146,7 @@ export const LANDING = {
     featuredIn: 'Featured in ClickFunnels and Mastermind.com',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
-      { t: '₹199 Only', s: 'Fully Refundable' },
+      { t: '₹199 Only', s: 'One-Time Deposit' },
     ],
   },
 
@@ -157,7 +157,7 @@ export const LANDING = {
     { v: '60 Min', l: 'Focused Strategy Session' },
     { v: 'Full-Time', l: 'Built For Coaches, Not Side-Hustlers' },
     { v: '1:1', l: 'Personal, Not A Webinar' },
-    { v: '₹199', l: 'Fully Refundable Deposit' },
+    { v: '₹199', l: 'One-Time Booking Deposit' },
   ],
 
   /* ── The named system: HOW the coaching business actually gets built,
@@ -246,8 +246,8 @@ export const LANDING = {
       { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. It’s one diagnostic session to find the specific thing blocking your growth, so you can judge for yourself whether the plan makes sense, with zero obligation to continue.' },
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
       { q: 'Will you help me get clients?', a: 'The session maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
-      { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a refundable booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },
-      { q: 'Why does the session cost ₹199?', a: 'It’s a small refundable deposit that keeps the call serious on both sides, not a fee for the advice itself. If we’re not a fit, you get it back in full.' },
+      { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a one-time booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },
+      { q: 'Why does the session cost ₹199?', a: 'It is a one-time booking deposit, not a program fee. If you attend and the promised review is not delivered, the published guarantee may return ₹400 total. See the Refund Policy for eligibility and timing.' },
     ],
   },
 
@@ -283,8 +283,8 @@ export const LANDING = {
     eyebrow: 'Book Your Slot',
     heading: 'Your Next Client Shouldn’t Depend On Luck.',
     sub: 'Let’s identify what’s holding your business back and map out your next steps.',
-    priceLine: '₹199 today, fully refundable',
-    micro: 'No pressure. If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
+    priceLine: '₹199 today. ₹400 total guarantee refund if eligible.',
+    micro: 'Attend the session, then request within 7 days if the promised review was not delivered. One claim per booking.',
     // What the session itself leaves you with, same facts as the pay step's
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
@@ -310,9 +310,9 @@ export const LANDING = {
       'A realistic next step, whether or not you ever work with us again',
     ],
     fit: 'This is for full-time coaches in India who have real expertise and happy clients, and want a predictable, ₹10L/month business instead of a feast-or-famine one.',
-    deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
-    guaranteeTitle: '100% Money-Back Guarantee',
-    guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',
+    deposit: 'The ₹199 is a one-time booking deposit, not a program fee. Refund eligibility is explained in the Refund Policy before you book.',
+    guaranteeTitle: '₹400 total satisfaction refund',
+    guaranteeBody: 'If you attend and the promised review is not delivered, request within 7 days. Eligible refund is ₹400 total: your ₹199 back plus ₹201 extra. One claim per booking.',
     micro: 'Secure checkout · Refundable · No recurring charge.',
   },
 
@@ -470,8 +470,10 @@ export const LEGAL = {
   meta:
     'This site is not a part of the Facebook or Instagram website or Meta Platforms, Inc., and is not endorsed by Meta in any way. FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.',
   links: [
-    { label: 'Privacy', href: '/data-usage' },
-    { label: 'Terms', href: '/data-usage' },
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Refund Policy', href: '/refund' },
+    { label: 'Disclaimer', href: '/disclaimer' },
+    { label: 'Terms', href: '/terms' },
     { label: 'Code of Ethics', href: '/ethics' },
   ],
   copyright:

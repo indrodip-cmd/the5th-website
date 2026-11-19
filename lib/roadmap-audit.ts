@@ -74,6 +74,7 @@ export type AuditPayload = {
   deep?: Record<string, unknown>
   payment?: { status: string; id?: string | null; at?: string }
   booking?: { start?: string; end?: string; tz?: string; uid?: string | number | null; meetingUrl?: string | null; at?: string }
+  meeting_consent?: { recording: boolean; ai_training: boolean; recorded_at: string; notice_version: string }
 }
 
 const SEGMENT_TAG: Record<Stage, string> = {
@@ -252,6 +253,25 @@ export async function markBooked(email: string, booking: { start?: string; end?:
   await mirrorToCrm(e, nm, (lead?.phone as string) || null, 'audit_booked', 'Booked the $10K Roadmap Audit')
   emitEvent('appointment_booked', { email: e, source: AUDIT_SOURCE }).catch(() => {})
   if (claim) await sendAdminEmail(e, nm, 'Audit booked', '📞 $10K Roadmap Audit booked', booking).catch(() => {})
+}
+
+/* Save the attendee's meeting recording and AI-training choices separately
+   from booking. A decline is saved too, so a host can confirm no recording. */
+export async function saveMeetingConsent(emailRaw: string, consent: { recording: boolean; aiTraining: boolean }): Promise<void> {
+  const email = normEmail(emailRaw)
+  if (!email) return
+  const db = getSupabaseAdmin()
+  const { data: lead } = await db.from('vsl_leads').select('typeform_payload').eq('email', email).maybeSingle()
+  if (!lead) return
+  const audit = mergeAudit(lead.typeform_payload, {
+    meeting_consent: {
+      recording: consent.recording,
+      ai_training: consent.recording && consent.aiTraining,
+      recorded_at: new Date().toISOString(),
+      notice_version: 'india-meeting-consent-v1',
+    },
+  })
+  await db.from('vsl_leads').update({ typeform_payload: audit }).eq('email', email)
 }
 
 export async function getAuditStatus(email: string): Promise<{ found: boolean; paid: boolean; booked: boolean; deepDone: boolean; name: string; booking: AuditPayload['booking'] | null }> {

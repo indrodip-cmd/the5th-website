@@ -8,8 +8,9 @@
    sample audit both moved up, ahead of the problem/process sections, and a
    founder-credibility line now sits right after the hero instead of only
    appearing in the Section-08 editorial at the bottom. Structure:
-     Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → press
-     strip → founder-credibility strip (NEW, moved up from Section 08) →
+     Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → all
+     client testimonials, written and video → press strip →
+     founder-credibility strip (NEW, moved up from Section 08) →
      3 featured client results (NEW, moved up from the full case-studies
      section further down) → proof/stats strip (76 clients · 12 nations ·
      4.8 rating · results) → everything you receive incl. the sample audit
@@ -19,7 +20,7 @@
      process (5 numbered steps) → Section 06 interactive business
      calculators (3 tools, one slider panel) → Section 07 the rest of client
      results (expandable grid, picks up where the top-3 teaser left off) →
-     real on-camera video testimonials → Section 08 founder/credibility
+     Section 08 founder/credibility
      (two-column editorial, unchanged) → Section 09 FAQ accordion + final
      booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
@@ -541,6 +542,16 @@ export default function Landing() {
         </section>
       </div>
 
+      {/* ── Client testimonials: written and video reviews directly after
+             the real-people hero section ── */}
+      <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow="Client Testimonials" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
+          <Reveal><div style={{ marginBottom: SECY }}><TestimonialCard index={8} /></div></Reveal>
+          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
+        </div>
+      </section>
+
       <PressStrip />
 
       {/* ── Founder-credibility strip: moved up from the Section-08 editorial
@@ -738,18 +749,6 @@ export default function Landing() {
               </div>
             </>
           )}
-          <Reveal>
-            <div style={{ marginTop: SECY_LG }}><TestimonialCard index={8} /></div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Video testimonials: real on-camera client reviews, shown before
-             the founder section per the priority ordering ── */}
-      <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow="On-Camera · Paid Consultation Reviews" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
-          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
         </div>
       </section>
 

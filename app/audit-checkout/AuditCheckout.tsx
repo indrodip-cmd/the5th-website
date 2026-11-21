@@ -137,7 +137,7 @@ export default function AuditCheckout() {
                   <Field label="Email" error={touched && !emailOk ? 'Enter a valid email address.' : ''}>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" style={inputStyle} autoComplete="email" />
                   </Field>
-                  <Field label="WhatsApp number" error={touched && !phoneOk ? 'Enter a valid phone number.' : ''}>
+                  <Field label="Phone number for WhatsApp, iMessage or SMS" error={touched && !phoneOk ? 'Enter a valid phone number.' : ''}>
                     <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 234 567 8900" style={inputStyle} autoComplete="tel" />
                   </Field>
                   <Field label="Full Name" error={touched && !nameOk ? 'Enter your full name.' : ''}>

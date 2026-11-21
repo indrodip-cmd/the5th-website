@@ -238,94 +238,24 @@ function RangeSlider({
   onDragStart: () => void
   onDragEnd: () => void
 }) {
-  const sliderRef = useRef<HTMLDivElement>(null)
-  const activePointer = useRef<number | null>(null)
-  const keyboardValue = useRef(value)
-  const pendingPointerX = useRef<number | null>(null)
-  const pointerFrame = useRef<number | null>(null)
-  useEffect(() => { keyboardValue.current = value }, [value])
-  useEffect(() => () => {
-    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
-  }, [])
   const percent = ((value - min) / (max - min)) * 100
 
-  const setFromPointer = (clientX: number) => {
-    const rect = sliderRef.current?.getBoundingClientRect()
-    if (!rect || rect.width <= 0) return
-    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
-    const raw = min + ratio * (max - min)
-    const precision = Math.max(0, (String(step).split('.')[1] || '').length)
-    const pointerValue = Number(Math.min(max, Math.max(min, raw)).toFixed(precision))
-    keyboardValue.current = pointerValue
-    onChange(pointerValue)
-  }
-
-  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) return
-    event.preventDefault()
-    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
-    pointerFrame.current = null
-    pendingPointerX.current = null
-    activePointer.current = event.pointerId
-    event.currentTarget.setPointerCapture(event.pointerId)
-    onDragStart()
-    setFromPointer(event.clientX)
-  }
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (activePointer.current !== event.pointerId) return
-    pendingPointerX.current = event.clientX
-    if (pointerFrame.current !== null) return
-    pointerFrame.current = requestAnimationFrame(() => {
-      pointerFrame.current = null
-      const clientX = pendingPointerX.current
-      pendingPointerX.current = null
-      if (clientX !== null) setFromPointer(clientX)
-    })
-  }
-  const onPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (activePointer.current !== event.pointerId) return
-    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
-    pointerFrame.current = null
-    if (pendingPointerX.current !== null) setFromPointer(pendingPointerX.current)
-    pendingPointerX.current = null
-    activePointer.current = null
-    onDragEnd()
-  }
-  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    let next = keyboardValue.current
-    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next += step
-    else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next -= step
-    else if (event.key === 'PageUp') next += step * 10
-    else if (event.key === 'PageDown') next -= step * 10
-    else if (event.key === 'Home') next = min
-    else if (event.key === 'End') next = max
-    else return
-    event.preventDefault()
-    keyboardValue.current = Number(Math.min(max, Math.max(min, next)).toFixed((String(step).split('.')[1] || '').length))
-    onChange(keyboardValue.current)
-  }
-
   return (
-    <div
-      ref={sliderRef}
-      role="slider"
+    <input
+      type="range"
       aria-label={label}
-      aria-valuemin={min}
-      aria-valuemax={max}
-      aria-valuenow={value}
-      tabIndex={0}
+      min={min}
+      max={max}
+      step={step}
+      value={value}
       className="rm-range"
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerEnd}
-      onPointerCancel={onPointerEnd}
-      onLostPointerCapture={onPointerEnd}
-      onKeyDown={onKeyDown}
-    >
-      <span className="rm-range-track" aria-hidden="true" />
-      <span className="rm-range-fill" aria-hidden="true" style={{ transform: `translateY(-50%) scaleX(${percent / 100})` }} />
-      <span className="rm-range-thumb" aria-hidden="true" style={{ left: `calc(11px + ${percent}% - ${(percent / 100) * 22}px)` }} />
-    </div>
+      style={{ '--rm-range-progress': `${percent}%` } as React.CSSProperties}
+      onChange={(event) => onChange(Number(event.currentTarget.value))}
+      onPointerDown={onDragStart}
+      onPointerUp={onDragEnd}
+      onPointerCancel={onDragEnd}
+      onLostPointerCapture={onDragEnd}
+    />
   )
 }
 

@@ -273,7 +273,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
+          <img src="/images/the5th-global-consulting-logo.png" alt="The5th Global Consulting" style={{ height: 'clamp(36px,5.4vw,52px)', width: 'auto' }} />
           {showFounder && (
             <span className="rm-header-founder" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 1, height: 22, background: T.line }} />

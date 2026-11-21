@@ -61,6 +61,7 @@ export default function Reserved() {
   const router = useRouter()
   const utm = useUtm()
   const { calLink, namespace } = parseCal(auditCalUrl())
+  const [paymentStatus, setPaymentStatus] = useState<'checking' | 'succeeded' | 'failed' | 'canceled' | 'missing'>('checking')
   const [phase, setPhase] = useState<'welcome' | 'intake' | 'celebration' | 'booking'>('welcome')
   const [calReady, setCalReady] = useState(false)
   const [me] = useState<{ name: string; email: string }>(() => {
@@ -68,7 +69,16 @@ export default function Reserved() {
     try { return { name: sessionStorage.getItem('audit_name') || '', email: (new URLSearchParams(window.location.search).get('email') || '').toLowerCase() || sessionStorage.getItem('audit_email') || '' } } catch { return { name: '', email: '' } }
   })
 
-  useEffect(() => { track('page_view'); track('deep_application_started') }, [])
+  useEffect(() => {
+    const status = new URLSearchParams(window.location.search).get('status')
+    if (status === 'succeeded') {
+      setPaymentStatus('succeeded')
+      track('page_view')
+      track('deep_application_started')
+      return
+    }
+    setPaymentStatus(status === 'failed' || status === 'canceled' ? status : 'missing')
+  }, [])
 
   useEffect(() => {
     if (phase !== 'booking') return
@@ -111,7 +121,21 @@ export default function Reserved() {
       <Fonts />
       <Header />
       <main style={{ flex: 1, width: '100%', maxWidth: phase === 'booking' ? 900 : 680, margin: '0 auto', padding: 'clamp(26px,5vw,44px) clamp(16px,4vw,22px) 44px' }}>
-        {phase === 'welcome' && (
+        {paymentStatus !== 'succeeded' && paymentStatus !== 'checking' && (
+          <Reveal style={{ textAlign: 'center', padding: '48px 0' }}>
+            <h1 className="rm-serif" style={{ fontSize: 'clamp(26px,4vw,38px)', margin: '0 0 12px', fontWeight: 700 }}>
+              {paymentStatus === 'failed' ? 'Your payment did not go through.' : paymentStatus === 'canceled' ? 'Your checkout was canceled.' : 'Payment confirmation needed.'}
+            </h1>
+            <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.6, maxWidth: 520, margin: '0 auto 22px' }}>
+              {paymentStatus === 'failed' || paymentStatus === 'canceled'
+                ? 'No payment was confirmed. You can return to checkout and try again.'
+                : 'We could not verify a successful payment for this visit. Please return to checkout or contact us if you have already paid.'}
+            </p>
+            <a href="/audit-checkout" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 48, padding: '0 24px', borderRadius: 999, background: T.accent, color: T.accentText, fontWeight: 800, textDecoration: 'none' }}>Return to checkout</a>
+          </Reveal>
+        )}
+        {paymentStatus === 'checking' && <p role="status" style={{ textAlign: 'center', color: T.text2 }}>Checking payment status…</p>}
+        {paymentStatus === 'succeeded' && phase === 'welcome' && (
           <Celebration
             emoji="🎉"
             headline="Congratulations — we've received your payment!"
@@ -122,7 +146,7 @@ export default function Reserved() {
           />
         )}
 
-        {phase === 'intake' && (
+        {paymentStatus === 'succeeded' && phase === 'intake' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 22 }}>
               <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{RESERVED_WHY.eyebrow}</div>
@@ -145,7 +169,7 @@ export default function Reserved() {
           </>
         )}
 
-        {phase === 'celebration' && (
+        {paymentStatus === 'succeeded' && phase === 'celebration' && (
           <Celebration
             emoji="🎉"
             headline="Perfect — that's everything we need!"
@@ -154,7 +178,7 @@ export default function Reserved() {
           />
         )}
 
-        {phase === 'booking' && (
+        {paymentStatus === 'succeeded' && phase === 'booking' && (
           <>
             <Reveal style={{ textAlign: 'center', marginBottom: 20 }}>
               <div className="rm-eyebrow" style={{ marginBottom: 10 }}>{RESERVED_WHY.bookingEyebrow}</div>

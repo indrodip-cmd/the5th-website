@@ -2,9 +2,11 @@
 /* Direct in-site checkout — same dark/lime visual system as the rest of
    /10k-roadmap (shared Fonts/Header/Btn/Reveal kit from ../10k-roadmap/ui),
    so landing on this page never feels like leaving the site. */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
+import { Checkout, CheckoutElement, WhopElements } from '@whop/elements-react'
+import { loadWhop } from '@whop/elements'
 import { PAY, DEPOSIT, HELP, T, auditDirectPlanId } from '../10k-roadmap/config'
-import { Fonts, Header, Btn, Reveal, StepLegal } from '../10k-roadmap/ui'
+import { Fonts, Header, Reveal, StepLegal } from '../10k-roadmap/ui'
 import { track } from '../10k-roadmap/track'
 
 const PAYMENT_LOGOS = [
@@ -106,57 +108,27 @@ export default function AuditCheckout() {
   )
 }
 
-/* Mounts Whop's embedded card form directly. If the iframe is blocked or
-   unavailable, a hosted-checkout link remains available as a fallback. Whop
-   handles buyer details inside its payment form; this page does not ask for
-   contact information before checkout. The widget renders a
-   white card regardless of host theme, same as every other embed in this
-   funnel (see ../pay/Pay.tsx) — it sits as a light "insert" inside the
-   dark glass panel rather than trying to force it dark. */
+/* Whop Elements owns the checkout session and payment form. Buyer details
+   stay inside Whop's secure checkout surface. */
 function WhopEmbed({ planId }: { planId: string }) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const [mounted, setMounted] = useState(false)
-  const [slow, setSlow] = useState(false)
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://the5thglobal.consulting'
   const returnUrl = `${origin}/10k-roadmap/reserved`
-  const hosted = `https://whop.com/checkout/${planId}`
-
-  useEffect(() => {
-    const SRC = 'https://js.whop.com/static/checkout/loader.js'
-    if (!document.querySelector(`script[src="${SRC}"]`)) { const s = document.createElement('script'); s.src = SRC; s.async = true; s.defer = true; document.body.appendChild(s) }
-  }, [])
-  useEffect(() => {
-    const el = ref.current; if (!el) return
-    const check = () => { if (el.querySelector('iframe')) { setMounted(true); return true } return false }
-    if (check()) return
-    const obs = new MutationObserver(() => check()); obs.observe(el, { childList: true, subtree: true })
-    const poll = setInterval(() => { if (check()) clearInterval(poll) }, 400)
-    const t = setTimeout(() => { if (!el.querySelector('iframe')) setSlow(true) }, 7000)
-    return () => { obs.disconnect(); clearInterval(poll); clearTimeout(t) }
-  }, [planId])
 
   return (
-    <div style={{ position: 'relative', minHeight: 110, background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
-      <div ref={ref} key={planId}
-        data-whop-checkout-plan-id={planId}
-        data-whop-checkout-return-url={returnUrl}
-        data-whop-checkout-theme="light"
-        style={{ width: '100%', minHeight: 110 }} />
-      {!mounted && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#fff' }}>
-          {!slow ? (
-            <>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', border: '3px solid #e5e7eb', borderTopColor: T.accentInk, animation: 'rm-spin .8s linear infinite' }} />
-              <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>Loading secure payment form…</p>
-            </>
-          ) : (
-            <>
-              <p style={{ fontSize: 13.5, color: '#16181d', margin: 0, textAlign: 'center', fontWeight: 600 }}>Checkout is taking a moment.</p>
-              <Btn href={hosted}>Pay ${DEPOSIT.amount}.00 securely →</Btn>
-            </>
-          )}
-        </div>
-      )}
+    <div style={{ minHeight: 110, background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
+      <WhopElements elements={loadWhop()}>
+        <Checkout
+          plan={planId}
+          returnUrl={returnUrl}
+          onComplete={(completion) => {
+            if (completion.result === 'payment') {
+              track('payment_success', { value: DEPOSIT.amount, currency: DEPOSIT.currency })
+            }
+          }}
+        >
+          <CheckoutElement />
+        </Checkout>
+      </WhopElements>
     </div>
   )
 }

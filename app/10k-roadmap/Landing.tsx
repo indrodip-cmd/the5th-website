@@ -226,6 +226,88 @@ function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
   )
 }
 
+function RangeSlider({
+  label, min, max, step, value, onChange, onDragStart, onDragEnd,
+}: {
+  label: string
+  min: number
+  max: number
+  step: number
+  value: number
+  onChange: (value: number) => void
+  onDragStart: () => void
+  onDragEnd: () => void
+}) {
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const activePointer = useRef<number | null>(null)
+  const keyboardValue = useRef(value)
+  useEffect(() => { keyboardValue.current = value }, [value])
+  const percent = ((value - min) / (max - min)) * 100
+
+  const setFromPointer = (clientX: number) => {
+    const rect = sliderRef.current?.getBoundingClientRect()
+    if (!rect || rect.width <= 0) return
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    const raw = min + ratio * (max - min)
+    const stepped = min + Math.round((raw - min) / step) * step
+    const precision = (String(step).split('.')[1] || '').length
+    onChange(Number(Math.min(max, Math.max(min, stepped)).toFixed(precision)))
+  }
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return
+    event.preventDefault()
+    activePointer.current = event.pointerId
+    event.currentTarget.setPointerCapture(event.pointerId)
+    onDragStart()
+    setFromPointer(event.clientX)
+  }
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current === event.pointerId) setFromPointer(event.clientX)
+  }
+  const onPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (activePointer.current !== event.pointerId) return
+    activePointer.current = null
+    onDragEnd()
+  }
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    let next = keyboardValue.current
+    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next += step
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next -= step
+    else if (event.key === 'PageUp') next += step * 10
+    else if (event.key === 'PageDown') next -= step * 10
+    else if (event.key === 'Home') next = min
+    else if (event.key === 'End') next = max
+    else return
+    event.preventDefault()
+    keyboardValue.current = Number(Math.min(max, Math.max(min, next)).toFixed((String(step).split('.')[1] || '').length))
+    onChange(keyboardValue.current)
+  }
+
+  return (
+    <div
+      ref={sliderRef}
+      role="slider"
+      aria-label={label}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
+      tabIndex={0}
+      className="rm-range"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
+      onLostPointerCapture={onPointerEnd}
+      onKeyDown={onKeyDown}
+    >
+      <span className="rm-range-track" aria-hidden="true" />
+      <span className="rm-range-fill" aria-hidden="true" style={{ transform: `translateY(-50%) scaleX(${percent / 100})` }} />
+      <span className="rm-range-thumb" aria-hidden="true" style={{ left: `calc(11px + ${percent}% - ${(percent / 100) * 22}px)` }} />
+    </div>
+  )
+}
+
 /* ── Section 06: one unified revenue-engine calculator ────────────────────
    Every input (revenue goal, offer price, and both funnel conversion rates)
    feeds a single cascading model — goal → clients → booked calls → leads —
@@ -257,9 +339,7 @@ function Calculators() {
   useEffect(() => () => {
     if (sliderFrame.current !== null) cancelAnimationFrame(sliderFrame.current)
   }, [])
-  const dragHandlers = { onPointerDown: () => setDragging(true) }
-  const onRangeInput = (update: (value: number) => void) => (event: React.FormEvent<HTMLInputElement>) => {
-    const nextValue = Number(event.currentTarget.value)
+  const onRangeValue = (update: (value: number) => void) => (nextValue: number) => {
     pendingSliderUpdates.current.push(() => update(nextValue))
     if (sliderFrame.current === null) {
       sliderFrame.current = requestAnimationFrame(() => {
@@ -300,10 +380,6 @@ function Calculators() {
     return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved, leadsFromContent, gapLeads, surplusLeads, hoursPerLead }
   }, [goal, offerPrice, closeRate, bookRate, hoursPerWeek, postsPerWeek, leadsPerPost])
 
-  // Keep the native range input, but give it a generous hit area and an
-  // unmistakable thumb. The old 5px-high control was difficult to grab on
-  // touchscreens and looked like a decorative line on some browsers.
-  const sliderStyle: React.CSSProperties = { display: 'block', width: '100%', height: 30, margin: 0, borderRadius: 999, accentColor: ACCENT, background: 'transparent', cursor: 'grab', touchAction: 'pan-y' }
   const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 10 }}>
@@ -333,28 +409,28 @@ function Calculators() {
         <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
           <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <input type="range" min={1000} max={100000} step={500} defaultValue={goal} onInput={onRangeInput(setGoal)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <RangeSlider label="Monthly revenue goal" min={1000} max={100000} step={500} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Average offer price" display={fmt(offerPrice)}>
-            <input type="range" min={50} max={10000} step={50} defaultValue={offerPrice} onInput={onRangeInput(setOfferPrice)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <RangeSlider label="Average offer price" min={50} max={10000} step={50} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <input type="range" min={1} max={100} step={1} defaultValue={closeRate} onInput={onRangeInput(setCloseRate)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <RangeSlider label="Booked call to client rate" min={1} max={100} step={1} value={closeRate} onChange={onRangeValue(setCloseRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <input type="range" min={1} max={100} step={1} defaultValue={bookRate} onInput={onRangeInput(setBookRate)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <RangeSlider label="Lead to booked call rate" min={1} max={100} step={1} value={bookRate} onChange={onRangeValue(setBookRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
 
           <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Capacity</div>
             <Field label="Hours/week on marketing & sales" display={hoursPerWeek + ' hrs'}>
-              <input type="range" min={1} max={40} step={1} defaultValue={hoursPerWeek} onInput={onRangeInput(setHoursPerWeek)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <RangeSlider label="Hours per week on marketing and sales" min={1} max={40} step={1} value={hoursPerWeek} onChange={onRangeValue(setHoursPerWeek)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
             </Field>
             <Field label="Content posts per week" display={postsPerWeek + '/wk · ~' + postsPerDay.toFixed(1) + '/day'}>
-              <input type="range" min={0} max={21} step={1} defaultValue={postsPerWeek} onInput={onRangeInput(setPostsPerWeek)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <RangeSlider label="Content posts per week" min={0} max={21} step={1} value={postsPerWeek} onChange={onRangeValue(setPostsPerWeek)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
             </Field>
             <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
-              <input type="range" min={0} max={5} step={0.5} defaultValue={leadsPerPost} onInput={onRangeInput(setLeadsPerPost)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <RangeSlider label="Leads per post" min={0} max={5} step={0.5} value={leadsPerPost} onChange={onRangeValue(setLeadsPerPost)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
             </Field>
           </div>
 

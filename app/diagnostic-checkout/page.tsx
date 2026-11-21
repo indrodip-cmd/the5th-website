@@ -19,7 +19,7 @@ const config: CheckoutConfig = {
     'A free 1:1 strategy call with Indrodip and Manisha, included',
   ],
   plans: [
-    { key: 'diagnostic', label: 'Full Diagnostic', price: '$27', cadence: 'one-time', note: 'Instant access · yours to keep', planId: process.env.NEXT_PUBLIC_WHOP_DIAGNOSTIC_PLAN_ID || 'plan_85pIPWE1K0uBB' },
+    { key: 'diagnostic', label: 'Full Diagnostic', price: '$27', cadence: 'one-time', note: 'Instant access · yours to keep', planId: process.env.NEXT_PUBLIC_WHOP_DIAGNOSTIC_PLAN_ID || 'plan_365vk3c1m9aos' },
   ],
   returnUrl: 'https://the5thglobal.consulting/checkout/complete?type=diagnostic',
   guarantee: '7-Day Satisfaction Guarantee — go through your full report and start implementing it. If you genuinely feel it did not give you meaningful value, email us within 7 days and we will review your request per our guarantee terms.',

@@ -24,7 +24,7 @@ import { emitEvent } from '@/lib/events'
 export const AUDIT_SOURCE = '10k-roadmap-audit'
 // Defaults to the shared $27 plan so the webhook marks audit leads paid out of
 // the box; override with a dedicated plan via WHOP_AUDIT_PLAN_ID for clean CRM.
-export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_365vk3c1m9aos'
 // The India ₹199 audit deposit. No default — this plan must be created in
 // Whop (INR, ₹199) and its id set via env before the India pay step can
 // actually charge anyone. Empty string means "not configured yet".

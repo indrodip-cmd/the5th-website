@@ -47,7 +47,7 @@ export function videoUrl(): string {
   return process.env.NEXT_PUBLIC_AUDIT_VIDEO_URL || ''
 }
 export function auditPlanId(): string {
-  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_365vk3c1m9aos'
 }
 
 /* Every CTA on the global /10k-roadmap page links here: an in-site, two-step

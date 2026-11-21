@@ -241,7 +241,12 @@ function RangeSlider({
   const sliderRef = useRef<HTMLDivElement>(null)
   const activePointer = useRef<number | null>(null)
   const keyboardValue = useRef(value)
+  const pendingPointerX = useRef<number | null>(null)
+  const pointerFrame = useRef<number | null>(null)
   useEffect(() => { keyboardValue.current = value }, [value])
+  useEffect(() => () => {
+    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
+  }, [])
   const percent = ((value - min) / (max - min)) * 100
 
   const setFromPointer = (clientX: number) => {
@@ -249,24 +254,40 @@ function RangeSlider({
     if (!rect || rect.width <= 0) return
     const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
     const raw = min + ratio * (max - min)
-    const stepped = min + Math.round((raw - min) / step) * step
-    const precision = (String(step).split('.')[1] || '').length
-    onChange(Number(Math.min(max, Math.max(min, stepped)).toFixed(precision)))
+    const precision = Math.max(0, (String(step).split('.')[1] || '').length)
+    const pointerValue = Number(Math.min(max, Math.max(min, raw)).toFixed(precision))
+    keyboardValue.current = pointerValue
+    onChange(pointerValue)
   }
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return
     event.preventDefault()
+    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
+    pointerFrame.current = null
+    pendingPointerX.current = null
     activePointer.current = event.pointerId
     event.currentTarget.setPointerCapture(event.pointerId)
     onDragStart()
     setFromPointer(event.clientX)
   }
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (activePointer.current === event.pointerId) setFromPointer(event.clientX)
+    if (activePointer.current !== event.pointerId) return
+    pendingPointerX.current = event.clientX
+    if (pointerFrame.current !== null) return
+    pointerFrame.current = requestAnimationFrame(() => {
+      pointerFrame.current = null
+      const clientX = pendingPointerX.current
+      pendingPointerX.current = null
+      if (clientX !== null) setFromPointer(clientX)
+    })
   }
   const onPointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
     if (activePointer.current !== event.pointerId) return
+    if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current)
+    pointerFrame.current = null
+    if (pendingPointerX.current !== null) setFromPointer(pendingPointerX.current)
+    pendingPointerX.current = null
     activePointer.current = null
     onDragEnd()
   }
@@ -327,8 +348,6 @@ function Calculators() {
   // One shared "is a slider being dragged right now" flag. The funnel bars'
   // transition is switched off while true — see the note below on why.
   const [dragging, setDragging] = useState(false)
-  const pendingSliderUpdates = useRef<Array<() => void>>([])
-  const sliderFrame = useRef<number | null>(null)
   useEffect(() => {
     if (!dragging) return
     const stop = () => setDragging(false)
@@ -336,19 +355,7 @@ function Calculators() {
     window.addEventListener('pointercancel', stop)
     return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('pointercancel', stop) }
   }, [dragging])
-  useEffect(() => () => {
-    if (sliderFrame.current !== null) cancelAnimationFrame(sliderFrame.current)
-  }, [])
-  const onRangeValue = (update: (value: number) => void) => (nextValue: number) => {
-    pendingSliderUpdates.current.push(() => update(nextValue))
-    if (sliderFrame.current === null) {
-      sliderFrame.current = requestAnimationFrame(() => {
-        const updates = pendingSliderUpdates.current.splice(0)
-        sliderFrame.current = null
-        updates.forEach((apply) => apply())
-      })
-    }
-  }
+  const onRangeValue = (update: (value: number) => void) => (nextValue: number) => update(nextValue)
 
   const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
   const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US') + ' USD'
@@ -409,10 +416,10 @@ function Calculators() {
         <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
           <Field label="Monthly revenue goal (USD)" display={fmt(goal)}>
-            <RangeSlider label="Monthly revenue goal in USD" min={1000} max={20000} step={50} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
+            <RangeSlider label="Monthly revenue goal in USD" min={1000} max={20000} step={1} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Average offer price (USD)" display={fmt(offerPrice)}>
-            <RangeSlider label="Average offer price in USD" min={50} max={10000} step={10} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
+            <RangeSlider label="Average offer price in USD" min={50} max={10000} step={1} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
             <RangeSlider label="Booked call to client rate" min={1} max={100} step={1} value={closeRate} onChange={onRangeValue(setCloseRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />

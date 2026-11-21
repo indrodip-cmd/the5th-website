@@ -58,7 +58,7 @@ export function auditPlanId(): string {
 export const AUDIT_CHECKOUT_URL = 'https://the5thglobal.consulting/audit-checkout'
 
 export function auditDirectPlanId(): string {
-  return process.env.NEXT_PUBLIC_WHOP_AUDIT_DIRECT_PLAN_ID || 'plan_27RBggiz8MDCo'
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_DIRECT_PLAN_ID || 'plan_365vk3c1m9aos'
 }
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers

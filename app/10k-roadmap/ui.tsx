@@ -97,22 +97,17 @@ export function Fonts() {
         border:1px solid rgba(201,255,72,.38);
         box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 26px rgba(201,255,72,.03), 0 26px 54px -28px rgba(0,0,0,.6);
       }
-      /* Lighter-weight glass for the one spot on the page that redraws on
-         every pointer-move (the calculator, dragged live) — a 30px blur
-         recomposited on every slider tick is what made it feel sticky.
-         Visually still glass (gradient tint + bright edge + soft shadow),
-         just without the heaviest blur radius or the extra glare layer. */
+      /* Keep calculator surfaces free of backdrop filters so they do not
+         re-composite a blur on every range-input frame. */
       .rm-glass-calc{
-        background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+        background:linear-gradient(155deg,#1a2117,#11160f);
         border:1px solid rgba(255,255,255,.16);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 20px 44px -26px rgba(0,0,0,.55);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 14px 28px -24px rgba(0,0,0,.5);
       }
       .rm-glass-calc-accent{
-        background:linear-gradient(155deg,rgba(201,255,72,.17),rgba(201,255,72,.03));
-        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
+        background:linear-gradient(155deg,#202819,#13180f);
         border:1px solid rgba(201,255,72,.34);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 20px 44px -26px rgba(0,0,0,.55);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 14px 28px -24px rgba(0,0,0,.5);
       }
       /* Flat translucent tile — used only when a glass surface would sit
          nested inside another one (a blur inside a blur doubles the paint

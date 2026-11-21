@@ -245,15 +245,30 @@ function Calculators() {
   // One shared "is a slider being dragged right now" flag. The funnel bars'
   // transition is switched off while true — see the note below on why.
   const [dragging, setDragging] = useState(false)
+  const pendingSliderUpdates = useRef<Array<() => void>>([])
+  const sliderFrame = useRef<number | null>(null)
   useEffect(() => {
     if (!dragging) return
     const stop = () => setDragging(false)
     window.addEventListener('pointerup', stop)
-    window.addEventListener('mouseup', stop)
-    window.addEventListener('touchend', stop)
-    return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('mouseup', stop); window.removeEventListener('touchend', stop) }
+    window.addEventListener('pointercancel', stop)
+    return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('pointercancel', stop) }
   }, [dragging])
-  const dragHandlers = { onPointerDown: () => setDragging(true), onMouseDown: () => setDragging(true), onTouchStart: () => setDragging(true) }
+  useEffect(() => () => {
+    if (sliderFrame.current !== null) cancelAnimationFrame(sliderFrame.current)
+  }, [])
+  const dragHandlers = { onPointerDown: () => setDragging(true) }
+  const onRangeInput = (update: (value: number) => void) => (event: React.FormEvent<HTMLInputElement>) => {
+    const nextValue = Number(event.currentTarget.value)
+    pendingSliderUpdates.current.push(() => update(nextValue))
+    if (sliderFrame.current === null) {
+      sliderFrame.current = requestAnimationFrame(() => {
+        const updates = pendingSliderUpdates.current.splice(0)
+        sliderFrame.current = null
+        updates.forEach((apply) => apply())
+      })
+    }
+  }
 
   const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
   const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US')
@@ -318,28 +333,28 @@ function Calculators() {
         <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
           <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <input type="range" min={1000} max={100000} step={500} defaultValue={goal} onInput={onRangeInput(setGoal)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Average offer price" display={fmt(offerPrice)}>
-            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <input type="range" min={50} max={10000} step={50} defaultValue={offerPrice} onInput={onRangeInput(setOfferPrice)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <input type="range" min={1} max={100} step={1} defaultValue={closeRate} onInput={onRangeInput(setCloseRate)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
           <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+            <input type="range" min={1} max={100} step={1} defaultValue={bookRate} onInput={onRangeInput(setBookRate)} className="rm-range" style={sliderStyle} {...dragHandlers} />
           </Field>
 
           <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Capacity</div>
             <Field label="Hours/week on marketing & sales" display={hoursPerWeek + ' hrs'}>
-              <input type="range" min={1} max={40} step={1} value={hoursPerWeek} onChange={(e) => setHoursPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <input type="range" min={1} max={40} step={1} defaultValue={hoursPerWeek} onInput={onRangeInput(setHoursPerWeek)} className="rm-range" style={sliderStyle} {...dragHandlers} />
             </Field>
             <Field label="Content posts per week" display={postsPerWeek + '/wk · ~' + postsPerDay.toFixed(1) + '/day'}>
-              <input type="range" min={0} max={21} step={1} value={postsPerWeek} onChange={(e) => setPostsPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <input type="range" min={0} max={21} step={1} defaultValue={postsPerWeek} onInput={onRangeInput(setPostsPerWeek)} className="rm-range" style={sliderStyle} {...dragHandlers} />
             </Field>
             <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
-              <input type="range" min={0} max={5} step={0.5} value={leadsPerPost} onChange={(e) => setLeadsPerPost(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
+              <input type="range" min={0} max={5} step={0.5} defaultValue={leadsPerPost} onInput={onRangeInput(setLeadsPerPost)} className="rm-range" style={sliderStyle} {...dragHandlers} />
             </Field>
           </div>
 

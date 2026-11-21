@@ -2,7 +2,7 @@
 /* The $10K Roadmap — landing page.
    2026-11-14 design upgrade: premium dark-forest / acid-lime system, borrowed
    from a reference landing page's visual language (tokens, pill CTAs, stat
-   strip, rounded cards, slider calculators) — not its brand, copy or images.
+   strip and rounded cards) — not its brand, copy or images.
 
    2026-11-15 reorder (conversion-review priorities): client results and the
    sample audit both moved up, ahead of the problem/process sections, and a
@@ -17,14 +17,13 @@
      PDF, now with a prominent "see it before you buy it" banner (MOVED UP
      from after the process section) → Section 03 "more advice vs. actual
      diagnosis" (two contrasting cards) → Section 04 the 60-minute audit
-     process (5 numbered steps) → Section 06 interactive business
-     calculators (3 tools, one slider panel) → Section 07 the rest of client
-     results (expandable grid, picks up where the top-3 teaser left off) →
+     process (5 numbered steps) → the rest of client results (expandable grid,
+     picks up where the top-3 teaser left off) →
      Section 08 founder/credibility
      (two-column editorial, unchanged) → Section 09 FAQ accordion + final
      booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL, MANISHA } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
@@ -118,14 +117,13 @@ function StepIcon({ kind }: { kind: string }) {
   return <svg {...box} aria-hidden="true"><rect x={10} y={14} width={36} height={30} rx={5} {...c} /><line x1={10} y1={24} x2={46} y2={24} {...c} /><line x1={19} y1={9} x2={19} y2={18} {...c} /><line x1={37} y1={9} x2={37} y2={18} {...c} /><polyline points="19,34 25,40 38,27" {...c} /></svg>
 }
 
-/* Deliverable icons — matched to the six "what you receive" cards. */
+/* Deliverable icons — matched to the "what you receive" cards. */
 function DeliverableIcon({ kind }: { kind: string }) {
   const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const box = { width: 30, height: 30, viewBox: '0 0 24 24' }
   if (kind === 'video') return <svg {...box} aria-hidden="true"><rect x={2.5} y={5.5} width={13} height={13} rx={2.2} {...c} /><path d="M15.5 10l6-3.5v11l-6-3.5" {...c} /></svg>
   if (kind === 'file') return <svg {...box} aria-hidden="true"><path d="M6 2.5h8l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1v-17a1 1 0 011-1z" {...c} /><path d="M14 2.5v4h4" {...c} /><path d="M8 13h8M8 16.5h8M8 9.5h4" {...c} /></svg>
   if (kind === 'map') return <svg {...box} aria-hidden="true"><path d="M9 3L3 5.5v15L9 18l6 2.5 6-2.5v-15l-6 2.5L9 3z" {...c} /><path d="M9 3v15M15 5.5v15" {...c} /></svg>
-  if (kind === 'calculator') return <svg {...box} aria-hidden="true"><rect x={4} y={2.5} width={16} height={19} rx={2.2} {...c} /><line x1={7} y1={6.5} x2={17} y2={6.5} {...c} /><circle cx={7.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={7.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /></svg>
   if (kind === 'brain') return <svg {...box} aria-hidden="true"><path d="M9 3a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 003 3M9 3a3 3 0 013 3v12a3 3 0 01-3 3M15 3a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-3 3" {...c} /></svg>
   return <svg {...box} aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
 }
@@ -222,245 +220,6 @@ function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
       </div>
       <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: 0, flex: 1 }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
       <div className="rm-serif" style={{ color: ACCENT, fontWeight: 800, fontSize: 'clamp(18px,2.2vw,22px)' }}>{c.result}</div>
-    </div>
-  )
-}
-
-function RangeSlider({
-  label, min, max, step, value, onChange, onDragStart, onDragEnd,
-}: {
-  label: string
-  min: number
-  max: number
-  step: number
-  value: number
-  onChange: (value: number) => void
-  onDragStart: () => void
-  onDragEnd: () => void
-}) {
-  const percent = ((value - min) / (max - min)) * 100
-
-  return (
-    <input
-      type="range"
-      aria-label={label}
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      className="rm-range"
-      style={{ '--rm-range-progress': `${percent}%` } as React.CSSProperties}
-      onChange={(event) => onChange(Number(event.currentTarget.value))}
-      onPointerDown={onDragStart}
-      onPointerUp={onDragEnd}
-      onPointerCancel={onDragEnd}
-      onLostPointerCapture={onDragEnd}
-    />
-  )
-}
-
-/* ── Section 06: one unified revenue-engine calculator ────────────────────
-   Every input (revenue goal, offer price, and both funnel conversion rates)
-   feeds a single cascading model — goal → clients → booked calls → leads —
-   rendered as one real funnel, plus a live pricing-leverage readout. One
-   complex, meaningful tool instead of three disconnected tabs. Transparent,
-   editable math on the numbers the visitor enters; division-by-zero guarded
-   throughout, no email-gate, no guarantees implied. */
-function Calculators() {
-  const [goal, setGoal] = useState(10000)
-  const [offerPrice, setOfferPrice] = useState(1500)
-  const [closeRate, setCloseRate] = useState(25) // booked call → client
-  const [bookRate, setBookRate] = useState(40)   // lead → booked call
-  const [hoursPerWeek, setHoursPerWeek] = useState(8)   // time spent on marketing/sales
-  const [postsPerWeek, setPostsPerWeek] = useState(5)   // content volume
-  const [leadsPerPost, setLeadsPerPost] = useState(1)   // the visitor's own estimate, not our claim
-
-  // One shared "is a slider being dragged right now" flag. The funnel bars'
-  // transition is switched off while true — see the note below on why.
-  const [dragging, setDragging] = useState(false)
-  useEffect(() => {
-    if (!dragging) return
-    const stop = () => setDragging(false)
-    window.addEventListener('pointerup', stop)
-    window.addEventListener('pointercancel', stop)
-    return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('pointercancel', stop) }
-  }, [dragging])
-  const onRangeValue = (update: (value: number) => void) => (nextValue: number) => update(nextValue)
-
-  const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
-  const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US') + ' USD'
-  const fmtK = (n: number) => n >= 1000 ? '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'K USD' : fmt(n)
-
-  const model = useMemo(() => {
-    const close = closeRate / 100, book = bookRate / 100
-    const clients = safeDiv(goal, offerPrice)
-    const bookedCalls = safeDiv(clients, close)
-    const leads = safeDiv(bookedCalls, book)
-    const revenuePerLead = safeDiv(goal, leads)
-    // Pricing leverage: the same revenue goal at offer price +25%, holding
-    // conversion rates constant, shows how many fewer clients (and calls,
-    // and leads) a higher price would require.
-    const higherPrice = Math.round(offerPrice * 1.25)
-    const clientsAtHigherPrice = safeDiv(goal, higherPrice)
-    const leadsAtHigherPrice = safeDiv(safeDiv(clientsAtHigherPrice, close), book)
-    const leadsSaved = Math.max(0, leads - leadsAtHigherPrice)
-    // Capacity reality check: what your own stated content pace and your own
-    // estimated leads-per-post actually produce, set against what the funnel
-    // above says you need. We never assert a leads-per-post rate ourselves —
-    // it's the visitor's own slider — so this stays an honest "your numbers,
-    // run through the same math," not a fabricated benchmark.
-    const weeklyContentLeads = postsPerWeek * leadsPerPost
-    const leadsFromContent = weeklyContentLeads * 4.33
-    const gapLeads = Math.max(0, leads - leadsFromContent)
-    const surplusLeads = Math.max(0, leadsFromContent - leads)
-    const hoursPerLead = weeklyContentLeads > 0 ? hoursPerWeek / weeklyContentLeads : 0
-    return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved, leadsFromContent, gapLeads, surplusLeads, hoursPerLead }
-  }, [goal, offerPrice, closeRate, bookRate, hoursPerWeek, postsPerWeek, leadsPerPost])
-
-  const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 10 }}>
-        <span style={{ fontSize: 13.5, color: TEXT2 }}>{label}</span>
-        <span style={{ fontSize: 15, fontWeight: 800, color: ACCENT, fontVariantNumeric: 'tabular-nums' }}>{display}</span>
-      </div>
-      {children}
-    </div>
-  )
-
-  // The funnel itself: leads at the top (widest), narrowing down to clients
-  // and the revenue goal at the bottom. Bar widths are proportional to the
-  // top-of-funnel lead count so the shrink is visually honest, not stylized.
-  const stages = [
-    { label: 'Leads needed', value: model.leads, display: Math.ceil(model.leads).toLocaleString('en-US'), note: 'per month, at your lead→call rate' },
-    { label: 'Booked calls needed', value: model.bookedCalls, display: Math.ceil(model.bookedCalls).toLocaleString('en-US'), note: 'per month, at your call→client rate' },
-    { label: 'Clients needed', value: model.clients, display: model.clients.toFixed(1), note: `per month at ${fmt(offerPrice)}/client` },
-    { label: 'Monthly revenue', value: 0, display: fmt(goal), note: 'your stated goal' },
-  ]
-  const maxV = Math.max(model.leads, 1)
-  const postsPerDay = postsPerWeek / 7
-
-  return (
-    <div>
-      <div className="rm-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,28px)', alignItems: 'start' }}>
-        {/* Controls */}
-        <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
-          <Field label="Monthly revenue goal (USD)" display={fmt(goal)}>
-            <RangeSlider label="Monthly revenue goal in USD" min={1000} max={20000} step={1} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-          </Field>
-          <Field label="Average offer price (USD)" display={fmt(offerPrice)}>
-            <RangeSlider label="Average offer price in USD" min={50} max={10000} step={1} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-          </Field>
-          <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <RangeSlider label="Booked call to client rate" min={1} max={100} step={1} value={closeRate} onChange={onRangeValue(setCloseRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-          </Field>
-          <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <RangeSlider label="Lead to booked call rate" min={1} max={100} step={1} value={bookRate} onChange={onRangeValue(setBookRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-          </Field>
-
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Capacity</div>
-            <Field label="Hours/week on marketing & sales" display={hoursPerWeek + ' hrs'}>
-              <RangeSlider label="Hours per week on marketing and sales" min={1} max={40} step={1} value={hoursPerWeek} onChange={onRangeValue(setHoursPerWeek)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-            </Field>
-            <Field label="Content posts per week" display={postsPerWeek + '/wk · ~' + postsPerDay.toFixed(1) + '/day'}>
-              <RangeSlider label="Content posts per week" min={0} max={21} step={1} value={postsPerWeek} onChange={onRangeValue(setPostsPerWeek)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-            </Field>
-            <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
-              <RangeSlider label="Leads per post" min={0} max={5} step={0.1} value={leadsPerPost} onChange={onRangeValue(setLeadsPerPost)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
-            </Field>
-          </div>
-
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>Pricing Leverage</div>
-            <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
-              At <strong style={{ color: '#F2F6EC' }}>{fmt(model.higherPrice)}</strong> (+25%), the same {fmt(goal)}/month goal needs only{' '}
-              <strong style={{ color: ACCENT }}>{Math.ceil(model.leadsAtHigherPrice).toLocaleString('en-US')} leads</strong> instead of{' '}
-              {Math.ceil(model.leads).toLocaleString('en-US')} — {Math.ceil(model.leadsSaved).toLocaleString('en-US')} fewer leads to find every month.
-            </p>
-          </div>
-        </div>
-
-        {/* The funnel */}
-        <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Revenue Engine</div>
-          <div style={{ display: 'grid', gap: 10 }}>
-            {stages.map((s, i) => {
-              const widthPct = i === 3 ? 100 : Math.max(18, Math.min(100, (s.value / maxV) * 100))
-              return (
-                <div key={s.label}>
-                  {/* The fill narrows via a scaled, centered background layer —
-                      never the `width` property — so resizing it as the
-                      visitor drags a slider stays off the motion floor's
-                      banned list and animates on the GPU instead of layout.
-                      The transition itself is switched off mid-drag: letting
-                      a CSS transition keep chasing a target that changes
-                      every pointer-move is what made dragging feel sticky —
-                      it now snaps 1:1 with the thumb while held, then eases
-                      in on release. */}
-                  <div style={{ position: 'relative', padding: '12px 16px', borderRadius: 10 }}>
-                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: dragging ? 'none' : 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
-                    <strong style={{ position: 'relative', display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#F2F6EC', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
-                  </div>
-                  <div style={{ textAlign: 'center', marginTop: 6 }}>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: '#F2F6EC' }}>{s.label}</span>
-                    <span style={{ fontSize: 11.5, color: TEXT3 }}> · {s.note}</span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
-            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
-              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{(model.clients / 4.33).toFixed(1)}</strong>
-              <span style={{ fontSize: 11.5, color: TEXT3 }}>clients needed per week</span>
-            </div>
-            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
-              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{fmtK(model.revenuePerLead)}</strong>
-              <span style={{ fontSize: 11.5, color: TEXT3 }}>revenue value per lead</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Capacity Reality Check — the USP: not just "here's the math," but
-          "here's your gap, and here's what closes it faster." */}
-      <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, marginTop: 'clamp(18px,3vw,28px)' }}>
-        <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>Capacity Reality Check</div>
-        <div className="rm-cap-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{Math.round(model.leadsFromContent).toLocaleString('en-US')}</strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>leads/month at your current content pace</span>
-          </div>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: model.gapLeads > 0 ? '#E8806F' : ACCENT, fontVariantNumeric: 'tabular-nums' }}>
-              {model.gapLeads > 0 ? '−' : '+'}{Math.round(model.gapLeads > 0 ? model.gapLeads : model.surplusLeads).toLocaleString('en-US')}
-            </strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>{model.gapLeads > 0 ? 'leads/month short of your goal' : 'leads/month more than you need'}</span>
-          </div>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{model.hoursPerLead > 0 ? model.hoursPerLead.toFixed(1) : '—'}</strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>hours invested per lead, at your pace</span>
-          </div>
-        </div>
-        <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.16)' }}>
-          <p style={{ color: '#F2F6EC', fontSize: 15, lineHeight: 1.6, margin: '0 0 10px', fontWeight: 700, maxWidth: 640 }}>
-            {model.gapLeads > 0
-              ? <>At this pace, you're short about <span style={{ color: ACCENT }}>{Math.round(model.gapLeads)} leads a month</span> to hit {fmt(goal)}.</>
-              : <>Your content pace already covers your lead target. The real gap is usually offer, pricing or follow-up, not volume.</>}
-          </p>
-          <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>
-            This runs on the numbers you enter plus our general experience working with coaches and consultants. Your actual numbers will differ, and that's expected. In the audit, we find exactly where your version of this gap is, then build the 100-day plan around closing it. With that kind of 1:1 execution support, clients typically close a gap like this <strong style={{ color: '#F2F6EC' }}>20 to 50% faster</strong> than working it out alone (the exact range depends on where you're starting and how consistently you execute afterward).
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-            <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'calculator_gap' })} style={{ padding: '14px 30px', fontSize: 15.5 }}>
-              Close This Gap With Me — $29 <span aria-hidden>→</span>
-            </Btn>
-          </div>
-        </div>
-      </div>
-
-      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
     </div>
   )
 }
@@ -747,15 +506,6 @@ export default function Landing() {
           <Reveal>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '28px auto 0' }}>{LANDING.call.note}</p>
           </Reveal>
-        </div>
-      </section>
-
-      {/* ── Section 06: interactive business calculators ── */}
-      <section id="calculators" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow={LANDING.calculators.eyebrow} heading={LANDING.calculators.heading} sub={LANDING.calculators.sub} maxW={640} /></Reveal>
-          <p style={{ color: TEXT3, fontSize: 12.5, margin: '-8px 0 22px' }}>All monetary figures are in USD. Set a monthly revenue goal from $1,000 to $20,000.</p>
-          <Reveal><Calculators /></Reveal>
         </div>
       </section>
 

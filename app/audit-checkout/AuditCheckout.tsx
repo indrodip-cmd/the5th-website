@@ -1,14 +1,11 @@
 'use client'
-/* Two-step, in-site checkout — same dark/lime visual system as the rest of
+/* Direct in-site checkout — same dark/lime visual system as the rest of
    /10k-roadmap (shared Fonts/Header/Btn/Reveal kit from ../10k-roadmap/ui),
    so landing on this page never feels like leaving the site. */
 import { useEffect, useRef, useState } from 'react'
 import { PAY, DEPOSIT, HELP, T, auditDirectPlanId } from '../10k-roadmap/config'
 import { Fonts, Header, Btn, Reveal, StepLegal } from '../10k-roadmap/ui'
 import { track } from '../10k-roadmap/track'
-
-function isValidEmail(v: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) }
-function isValidPhone(v: string) { return v.replace(/\D/g, '').length >= 7 }
 
 const PAYMENT_LOGOS = [
   { name: 'Visa', src: '/images/payment/visa.png', h: 15 },
@@ -25,50 +22,8 @@ function LockIcon() {
   )
 }
 
-type Step = 'details' | 'pay'
-
 export default function AuditCheckout() {
-  const [step, setStep] = useState<Step>('details')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [touched, setTouched] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState('')
-
   useEffect(() => { track('page_view') }, [])
-
-  const nameOk = name.trim().length > 1
-  const emailOk = isValidEmail(email)
-  const phoneOk = isValidPhone(phone)
-  const formOk = nameOk && emailOk && phoneOk
-
-  async function handlePay() {
-    setTouched(true)
-    if (!formOk) return
-    setSubmitting(true)
-    setError('')
-    try {
-      try {
-        sessionStorage.setItem('audit_email', email.trim().toLowerCase())
-        sessionStorage.setItem('audit_name', name.trim())
-      } catch { /* noop */ }
-
-      const res = await fetch('/api/10k-roadmap/reserve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, qualification: {} }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) { setError(data?.error || 'Could not save your details. Please try again.'); setSubmitting(false); return }
-      track('checkout_started', { value: DEPOSIT.amount, currency: DEPOSIT.currency })
-      setStep('pay')
-    } catch {
-      setError('Something went wrong. Please check your connection and try again.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
@@ -129,44 +84,8 @@ export default function AuditCheckout() {
               <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 4, color: T.text }}>Payment Details</div>
               <div style={{ width: 36, height: 3, borderRadius: 2, background: T.accent, marginBottom: 18 }} />
 
-              {step === 'details' ? (
-                <>
-                  <Field label="Amount">
-                    <input value={`$${DEPOSIT.amount}.00`} readOnly style={{ ...inputStyle, color: T.text2, fontWeight: 700 }} />
-                  </Field>
-                  <Field label="Email" error={touched && !emailOk ? 'Enter a valid email address.' : ''}>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" style={inputStyle} autoComplete="email" />
-                  </Field>
-                  <Field label="Phone number for WhatsApp, iMessage or SMS" error={touched && !phoneOk ? 'Enter a valid phone number.' : ''}>
-                    <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+1 234 567 8900" style={inputStyle} autoComplete="tel" />
-                  </Field>
-                  <Field label="Full Name" error={touched && !nameOk ? 'Enter your full name.' : ''}>
-                    <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" style={inputStyle} autoComplete="name" />
-                  </Field>
-
-                  {error && <p style={{ color: T.danger, fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
-
-                  <Btn onClick={handlePay} disabled={submitting} full style={{ marginTop: 6 }}>
-                    {submitting ? 'Please wait…' : `Pay $${DEPOSIT.amount}.00`}
-                  </Btn>
-                  <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 11.5, color: T.text3, marginTop: 10 }}>
-                    <LockIcon /> Your bank may ask you to verify this payment (3D Secure).
-                  </p>
-                </>
-              ) : (
-                <>
-                  <button type="button" onClick={() => setStep('details')}
-                    style={{ background: 'none', border: 'none', color: T.text2, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit', padding: 0, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 5 }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
-                    Edit details
-                  </button>
-                  <div className="rm-glass-flat" style={{ borderRadius: 10, padding: '12px 14px', marginBottom: 16, fontSize: 13, color: T.text, display: 'grid', gap: 3 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: T.text2 }}>Amount</span><b>${DEPOSIT.amount}.00</b></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: T.text2 }}>Email</span><span>{email}</span></div>
-                  </div>
-                  <WhopEmbed planId={auditDirectPlanId()} email={email} />
-                </>
-              )}
+              <p style={{ color: T.text2, fontSize: 13.5, lineHeight: 1.5, margin: '0 0 14px' }}>One-time payment: <b style={{ color: T.text }}>${DEPOSIT.amount}.00 USD</b></p>
+              <WhopEmbed planId={auditDirectPlanId()} />
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 18, paddingTop: 16, borderTop: `1px solid ${T.line}` }}>
                 {PAYMENT_LOGOS.map((l) => (
@@ -187,41 +106,24 @@ export default function AuditCheckout() {
   )
 }
 
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: 14 }}>
-      <label style={{ display: 'block', fontSize: 12.5, fontWeight: 600, color: T.text2, marginBottom: 6 }}>{label}</label>
-      {children}
-      {error && <p style={{ color: T.danger, fontSize: 12, margin: '5px 0 0' }}>{error}</p>}
-    </div>
-  )
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%', boxSizing: 'border-box', padding: '11px 13px', fontSize: 14.5,
-  background: 'rgba(255,255,255,.04)', border: `1px solid ${T.line}`, borderRadius: 9,
-  fontFamily: 'inherit', color: T.text, outline: 'none',
-}
-
-/* Mounts Whop's embedded card form once step 2 is shown. Same defensive
-   pattern as the rest of the funnel's checkout embeds: a loading skeleton,
-   and a hosted-checkout fallback link if the iframe doesn't mount in time
-   (ad-blockers, CSP, slow network) — so a blocked embed never strands a
-   buyer who already entered their details. Whop's own widget renders a
+/* Mounts Whop's embedded card form directly. If the iframe is blocked or
+   unavailable, a hosted-checkout link remains available as a fallback. Whop
+   handles buyer details inside its payment form; this page does not ask for
+   contact information before checkout. The widget renders a
    white card regardless of host theme, same as every other embed in this
    funnel (see ../pay/Pay.tsx) — it sits as a light "insert" inside the
    dark glass panel rather than trying to force it dark. */
-function WhopEmbed({ planId, email }: { planId: string; email: string }) {
+function WhopEmbed({ planId }: { planId: string }) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [mounted, setMounted] = useState(false)
   const [slow, setSlow] = useState(false)
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://the5thglobal.consulting'
-  const redirect = `${origin}/10k-roadmap/reserved?email=${encodeURIComponent(email)}`
-  const hosted = `https://whop.com/checkout/${planId}?email=${encodeURIComponent(email)}`
+  const returnUrl = `${origin}/10k-roadmap/reserved`
+  const hosted = `https://whop.com/checkout/${planId}`
 
   useEffect(() => {
     const SRC = 'https://js.whop.com/static/checkout/loader.js'
-    if (!document.querySelector(`script[src="${SRC}"]`)) { const s = document.createElement('script'); s.src = SRC; s.async = true; document.body.appendChild(s) }
+    if (!document.querySelector(`script[src="${SRC}"]`)) { const s = document.createElement('script'); s.src = SRC; s.async = true; s.defer = true; document.body.appendChild(s) }
   }, [])
   useEffect(() => {
     const el = ref.current; if (!el) return
@@ -231,15 +133,14 @@ function WhopEmbed({ planId, email }: { planId: string; email: string }) {
     const poll = setInterval(() => { if (check()) clearInterval(poll) }, 400)
     const t = setTimeout(() => { if (!el.querySelector('iframe')) setSlow(true) }, 7000)
     return () => { obs.disconnect(); clearInterval(poll); clearTimeout(t) }
-  }, [planId, email])
+  }, [planId])
 
   return (
     <div style={{ position: 'relative', minHeight: 110, background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
-      <div ref={ref} key={`${planId}:${email}`}
+      <div ref={ref} key={planId}
         data-whop-checkout-plan-id={planId}
+        data-whop-checkout-return-url={returnUrl}
         data-whop-checkout-theme="light"
-        data-whop-checkout-redirect-url={redirect}
-        data-whop-checkout-email={email || undefined}
         style={{ width: '100%', minHeight: 110 }} />
       {!mounted && (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, background: '#fff' }}>

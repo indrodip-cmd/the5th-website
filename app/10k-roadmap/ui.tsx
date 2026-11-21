@@ -32,14 +32,6 @@ export function Fonts() {
       h1,h2,h3{text-wrap:balance}
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
-      .rm-range{--rm-range-progress:0%;appearance:none;-webkit-appearance:none;display:block;width:100%;height:34px;margin:0;padding:0;background:transparent;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;outline:none}
-      .rm-range:active{cursor:grabbing}
-      .rm-range:focus-visible{outline:2px solid ${T.accent};outline-offset:4px;border-radius:999px}
-      .rm-range::-webkit-slider-runnable-track{height:7px;border-radius:999px;background:linear-gradient(to right,${T.accent} 0 var(--rm-range-progress),rgba(255,255,255,.2) var(--rm-range-progress) 100%)}
-      .rm-range::-moz-range-track{height:7px;border-radius:999px;background:rgba(255,255,255,.2)}
-      .rm-range::-moz-range-progress{height:7px;border-radius:999px;background:${T.accent}}
-      .rm-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin-top:-7.5px;box-sizing:border-box;border:3px solid ${T.accent};border-radius:50%;background:#10150d;box-shadow:0 0 0 4px rgba(201,255,72,.16),0 2px 8px rgba(0,0,0,.4)}
-      .rm-range::-moz-range-thumb{width:16px;height:16px;box-sizing:border-box;border:3px solid ${T.accent};border-radius:50%;background:#10150d;box-shadow:0 0 0 4px rgba(201,255,72,.16),0 2px 8px rgba(0,0,0,.4)}
       /* Shared premium interaction primitives — hover lift, press feedback,
          and a button shine sweep. transform/opacity only, per the motion
          floor (never width/height/top/left). */
@@ -72,8 +64,8 @@ export function Fonts() {
          via @supports, so nothing goes invisible or illegible.
 
          2026-11-15: blur dropped from 30px to 14px (now matching
-         .rm-glass-calc below) after this page went blank below the first
-         unblurred section on real iPhone/iPad Safari — confirmed in
+         after this page went blank below the first unblurred section on
+         real iPhone/iPad Safari — confirmed in
          production, not reproducible in this sandbox's Chromium-only
          testing. This page renders 30-60+ simultaneously-visible
          backdrop-filter surfaces (every card in the problem/process/
@@ -83,7 +75,7 @@ export function Fonts() {
          visibility safety net was confirmed working on real devices
          BEFORE this glass treatment shipped. Keep future glass additions
          at this same lighter weight. */
-      .rm-glass,.rm-glass-accent,.rm-glass-calc,.rm-glass-calc-accent{position:relative;isolation:isolate}
+      .rm-glass,.rm-glass-accent{position:relative;isolation:isolate}
       .rm-glass::before,.rm-glass-accent::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.03) 22%,transparent 46%)}
       .rm-glass{
         background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
@@ -97,26 +89,14 @@ export function Fonts() {
         border:1px solid rgba(201,255,72,.38);
         box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 26px rgba(201,255,72,.03), 0 26px 54px -28px rgba(0,0,0,.6);
       }
-      /* Keep calculator surfaces free of backdrop filters so they do not
-         re-composite a blur on every range-input frame. */
-      .rm-glass-calc{
-        background:linear-gradient(155deg,#1a2117,#11160f);
-        border:1px solid rgba(255,255,255,.16);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 14px 28px -24px rgba(0,0,0,.5);
-      }
-      .rm-glass-calc-accent{
-        background:linear-gradient(155deg,#202819,#13180f);
-        border:1px solid rgba(201,255,72,.34);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 14px 28px -24px rgba(0,0,0,.5);
-      }
       /* Flat translucent tile — used only when a glass surface would sit
          nested inside another one (a blur inside a blur doubles the paint
          cost for no visible benefit). */
       .rm-glass-flat{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14)}
       .rm-glass-flat-accent{background:rgba(201,255,72,.08);border:1px solid rgba(201,255,72,.28)}
       @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-        .rm-glass,.rm-glass-calc{background:#121810}
-        .rm-glass-accent,.rm-glass-calc-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
+        .rm-glass{background:#121810}
+        .rm-glass-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
         .rm-glass::before,.rm-glass-accent::before{display:none}
       }
       @media (prefers-reduced-motion: reduce){

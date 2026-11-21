@@ -5,7 +5,7 @@
 import { useEffect } from 'react'
 import { Checkout, CheckoutElement, WhopElements } from '@whop/elements-react'
 import { loadWhop } from '@whop/elements'
-import { PAY, DEPOSIT, HELP, T, auditDirectPlanId } from '../10k-roadmap/config'
+import { PAY, DEPOSIT, T, auditDirectPlanId } from '../10k-roadmap/config'
 import { Fonts, Header, Reveal, StepLegal } from '../10k-roadmap/ui'
 import { track } from '../10k-roadmap/track'
 
@@ -73,11 +73,6 @@ export default function AuditCheckout() {
               </p>
             </div>
 
-            <div style={{ fontSize: 13, color: T.text2, lineHeight: 1.8 }}>
-              <div style={{ fontWeight: 700, color: T.text, marginBottom: 2 }}>Contact</div>
-              <div><a href={HELP.emailHref} style={{ color: T.text2, textDecoration: 'none' }}>{HELP.email}</a></div>
-              <div><a href={HELP.phoneHref} style={{ color: T.text2, textDecoration: 'none' }}>{HELP.phone}</a></div>
-            </div>
           </Reveal>
 
           {/* Right — payment */}

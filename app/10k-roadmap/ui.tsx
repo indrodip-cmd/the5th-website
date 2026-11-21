@@ -5,7 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
+import { T, STEPS, GATE, LEGAL, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
@@ -234,15 +234,6 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
 }
 
 /* ── Minimal funnel header + footer ────────────────────────────────────────*/
-function HelpContact() {
-  const link: React.CSSProperties = { color: T.accentInk, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }
-  return (
-    <div style={{ textAlign: 'right', fontSize: 12.5, lineHeight: 1.45, color: T.text2, maxWidth: 260 }}>
-      Need help? Text us at <a href={HELP.phoneHref} style={link}>{HELP.phone}</a> or email us at <a href={HELP.emailHref} style={link}>{HELP.email}</a>
-    </div>
-  )
-}
-
 export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string }) {
   // Always solid, from the very first pixel: the logo and founder credential
   // need a frame behind them on the first screen, not just after the visitor
@@ -271,7 +262,6 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
             {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
-        <span className="rm-header-help"><HelpContact /></span>
       </div>
       {/* "As featured in" sits right under the logo, pinned to the header so
           it reads on the first screen alongside the brand mark, not only
@@ -284,7 +274,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
           {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 11.5, color: T.text2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
         </span>
       </div>
-      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-header-founder,.rm-header-help,.rm-press-row{display:none!important}}`}</style>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-header-founder,.rm-press-row{display:none!important}}`}</style>
     </header>
   )
 }

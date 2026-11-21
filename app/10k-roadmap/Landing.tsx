@@ -285,7 +285,10 @@ function Calculators() {
     return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved, leadsFromContent, gapLeads, surplusLeads, hoursPerLead }
   }, [goal, offerPrice, closeRate, bookRate, hoursPerWeek, postsPerWeek, leadsPerPost])
 
-  const sliderStyle: React.CSSProperties = { width: '100%', height: 5, borderRadius: 999, accentColor: ACCENT, background: 'rgba(255,255,255,.13)' }
+  // Keep the native range input, but give it a generous hit area and an
+  // unmistakable thumb. The old 5px-high control was difficult to grab on
+  // touchscreens and looked like a decorative line on some browsers.
+  const sliderStyle: React.CSSProperties = { display: 'block', width: '100%', height: 30, margin: 0, borderRadius: 999, accentColor: ACCENT, background: 'transparent', cursor: 'grab', touchAction: 'pan-y' }
   const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
     <div style={{ marginBottom: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 10 }}>

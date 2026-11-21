@@ -33,6 +33,13 @@ export function Fonts() {
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
       .rm-range:focus-visible{outline:2px solid ${T.accent};outline-offset:5px;border-radius:999px}
+      .rm-range{-webkit-appearance:none;appearance:none;display:block;width:100%;height:30px;margin:0;padding:0;background:transparent;cursor:grab;touch-action:pan-y}
+      .rm-range:active{cursor:grabbing}
+      .rm-range::-webkit-slider-runnable-track{height:7px;border-radius:999px;background:rgba(255,255,255,.2)}
+      .rm-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;margin-top:-7.5px;border:3px solid ${T.accent};border-radius:50%;background:#10150d;box-shadow:0 0 0 4px rgba(201,255,72,.16),0 2px 8px rgba(0,0,0,.4)}
+      .rm-range::-moz-range-track{height:7px;border-radius:999px;background:rgba(255,255,255,.2)}
+      .rm-range::-moz-range-progress{height:7px;border-radius:999px;background:${T.accent}}
+      .rm-range::-moz-range-thumb{width:16px;height:16px;border:3px solid ${T.accent};border-radius:50%;background:#10150d;box-shadow:0 0 0 4px rgba(201,255,72,.16),0 2px 8px rgba(0,0,0,.4)}
       /* Shared premium interaction primitives — hover lift, press feedback,
          and a button shine sweep. transform/opacity only, per the motion
          floor (never width/height/top/left). */

@@ -351,8 +351,8 @@ function Calculators() {
   }
 
   const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
-  const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US')
-  const fmtK = (n: number) => n >= 1000 ? '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'K' : fmt(n)
+  const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US') + ' USD'
+  const fmtK = (n: number) => n >= 1000 ? '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'K USD' : fmt(n)
 
   const model = useMemo(() => {
     const close = closeRate / 100, book = bookRate / 100
@@ -408,11 +408,11 @@ function Calculators() {
         {/* Controls */}
         <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
-          <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <RangeSlider label="Monthly revenue goal" min={1000} max={100000} step={500} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
+          <Field label="Monthly revenue goal (USD)" display={fmt(goal)}>
+            <RangeSlider label="Monthly revenue goal in USD" min={1000} max={20000} step={50} value={goal} onChange={onRangeValue(setGoal)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
-          <Field label="Average offer price" display={fmt(offerPrice)}>
-            <RangeSlider label="Average offer price" min={50} max={10000} step={50} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
+          <Field label="Average offer price (USD)" display={fmt(offerPrice)}>
+            <RangeSlider label="Average offer price in USD" min={50} max={10000} step={10} value={offerPrice} onChange={onRangeValue(setOfferPrice)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
           </Field>
           <Field label="Booked call → client rate" display={closeRate + '%'}>
             <RangeSlider label="Booked call to client rate" min={1} max={100} step={1} value={closeRate} onChange={onRangeValue(setCloseRate)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
@@ -430,7 +430,7 @@ function Calculators() {
               <RangeSlider label="Content posts per week" min={0} max={21} step={1} value={postsPerWeek} onChange={onRangeValue(setPostsPerWeek)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
             </Field>
             <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
-              <RangeSlider label="Leads per post" min={0} max={5} step={0.5} value={leadsPerPost} onChange={onRangeValue(setLeadsPerPost)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
+              <RangeSlider label="Leads per post" min={0} max={5} step={0.1} value={leadsPerPost} onChange={onRangeValue(setLeadsPerPost)} onDragStart={() => setDragging(true)} onDragEnd={() => setDragging(false)} />
             </Field>
           </div>
 
@@ -817,6 +817,7 @@ export default function Landing() {
       <section id="calculators" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <Reveal><SectionHead eyebrow={LANDING.calculators.eyebrow} heading={LANDING.calculators.heading} sub={LANDING.calculators.sub} maxW={640} /></Reveal>
+          <p style={{ color: TEXT3, fontSize: 12.5, margin: '-8px 0 22px' }}>All monetary figures are in USD. Set a monthly revenue goal from $1,000 to $20,000.</p>
           <Reveal><Calculators /></Reveal>
         </div>
       </section>

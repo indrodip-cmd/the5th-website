@@ -1,146 +1,364 @@
 'use client'
-import './landing.css'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import IndiaExitPopup from './ExitPopup'
-import { CASE_STUDIES } from '@/lib/case-studies'
-import { VIDEO_REVIEWS } from '@/components/VideoWall'
-import { LANDING, LEGAL, MANISHA, PRESS, RATING } from './config'
-import { useUtm } from '../ui'
+/* The $10K Roadmap — landing page.
+   2026-11-14 design upgrade: premium dark-forest / acid-lime system, borrowed
+   from a reference landing page's visual language (tokens, pill CTAs, stat
+   strip and rounded cards) — not its brand, copy or images.
+
+   2026-11-15 reorder (conversion-review priorities): client results and the
+   sample audit both moved up, ahead of the problem/process sections, and a
+   founder-credibility line now sits right after the hero instead of only
+   appearing in the Section-08 editorial at the bottom. Structure:
+     Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → all
+     client testimonials, written and video → press strip →
+     founder-credibility strip (NEW, moved up from Section 08) →
+     3 featured client results (NEW, moved up from the full case-studies
+     section further down) → proof/stats strip (76 clients · 12 nations ·
+     4.8 rating · results) → everything you receive incl. the sample audit
+     PDF, now with a prominent "see it before you buy it" banner (MOVED UP
+     from after the process section) → Section 03 "more advice vs. actual
+     diagnosis" (two contrasting cards) → Section 04 the 60-minute audit
+     process (5 numbered steps) → the rest of client results (expandable grid,
+     picks up where the top-3 teaser left off) →
+     Section 08 founder/credibility
+     (two-column editorial, unchanged) → Section 09 FAQ accordion + final
+     booking card → footer.
+     One page, no /qualify hop. Sticky mobile CTA always visible. */
+import { useEffect, useRef, useState } from 'react'
+import { LANDING as GLOBAL_LANDING, LEGAL, RATING, PRESS, REAL_PROOF, MANISHA } from '../config'
+import { LANDING as INDIA_COPY } from './config'
+import { Fonts, Header, Footer, Btn, Reveal, useUtm } from '../ui'
 import { track } from '../track'
+import VideoWall from '@/components/VideoWall'
 
-const PARTNERS = [
-  {
+
+const MAXW = 1180
+const PADX = 'clamp(20px,5vw,22px)'
+const SECY = 'clamp(30px,6vw,60px)'
+const SECY_LG = 'clamp(30px,8vw,90px)'
+// Premium dark-forest / acid-lime system.
+const ACCENT = '#C9FF48'
+const ACCENT_TEXT = '#0B0F08' // dark text used ON lime fills
+const INK2 = '#0E130C'
+const CARD = '#121810'
+const CARD2 = '#182014'
+const LINE = 'rgba(255,255,255,0.09)'
+const LINE2 = 'rgba(255,255,255,0.18)'
+const TEXT2 = '#9AA79A'
+const TEXT3 = '#6F7D6F'
+const CARD_RADIUS = 18
+const CARD_SHADOW = '0 10px 50px -8px rgba(0,0,0,0.4)'
+const CARD_PAD = 'clamp(22px,4vw,32px)'
+const AUDIT_CHECKOUT_URL = '/10k-roadmap/india/pay'
+
+const LANDING = {
+  ...GLOBAL_LANDING,
+  eyebrow: 'FOR BUSINESS OWNERS AND CONSULTANTS IN INDIA',
+  headline: 'Build a Clear Roadmap Toward ₹10 Lakh/Month',
+  headlineSub: 'Get a 60-minute business audit, focused priorities and a practical 100-day plan.',
+  ctaPrimary: 'Book Your ₹199 Strategy Session',
+  ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
+  ctaMicro: '₹199 one-time session. No recurring charge.',
+  guarantee: '',
+  heroCard: {
+    ...GLOBAL_LANDING.heroCard,
     name: 'Indradip Ghosh',
-    role: 'Founder and Principal Consultant',
+    role: 'Business Consultant & Founder, The5th Global Consulting',
     credential: 'Consumer Psychologist, University of California, Berkeley',
-    recruitedBy: 'Recruited by Google & Anthropic',
-    image: '/images/founder-golden-gate.webp',
+    recruitedBy: 'AI startup founder · ~$6M valuation',
+    featuredIn: 'Recruited by Google & Anthropic',
+    chips: [
+      { t: 'Business Audit', s: '60-minute 1:1 session' },
+      { t: '₹199', s: 'One-time session' },
+    ],
   },
-  {
-    name: MANISHA.name,
-    role: 'Director, Head of Growth',
-    image: MANISHA.avatar,
+  ctaStandard: 'Book My 60-Minute Business Audit — ₹199',
+  founderBadge: { ...GLOBAL_LANDING.founderBadge, line: 'Every audit is personally led by Indradip and Manisha, together on your call.' },
+  proof: {
+    ...GLOBAL_LANDING.proof,
+    eyebrow: 'CLIENT RESULTS',
+    heading: 'Real Client Outcomes, Built Through Better Systems.',
+    disclaimer: 'Individual client results vary; past results do not guarantee future outcomes.',
   },
-]
-
-const INCLUSIONS = [
-  'A 60-minute review with Indradip and Manisha',
-  'A review of your offer, positioning, and ideal buyer',
-  'A personalized audit PDF and 100-day roadmap',
-  'A digital copy of Expertise to Income',
-  'An AI prompt toolkit shaped around your plan',
-  'A call recording, only if you consent',
-]
-
-const PROCESS = [
-  { title: 'Start with your context', text: 'Bring your offer, goals, and the way clients find you today.' },
-  { title: 'Find the point to work on', text: 'Review your positioning, ideal buyer, and client journey with both partners.' },
-  { title: 'Choose a practical next move', text: 'Leave with priorities, then receive your written roadmap within 48 hours.' },
-]
-
-const FEATURED_CASES = ['abbas-jamie', 'laurie-gerber', 'amalia', 'max', 'kate-winchester', 'susan-taylor']
-  .map((slug) => CASE_STUDIES.find((study) => study.slug === slug))
-  .filter((study): study is (typeof CASE_STUDIES)[number] => Boolean(study))
-
-const INDIA_VIDEO_REVIEWS = [
-  ...VIDEO_REVIEWS.slice(0, 7),
-  ...VIDEO_REVIEWS.filter((review) => review.src.includes('1002983741962578') || review.src.includes('1000671825545007')),
-]
-
-const WISTIA_POSTERS: Record<string, string> = {
-  '5yh07cwlui': 'https://embed-ssl.wistia.com/deliveries/d9074bc29ffa866e0506e9c6bc48f7042db286eb.jpg?image_crop_resized=960x540',
-  'tnorqgs7dj': 'https://embed-ssl.wistia.com/deliveries/0ab9d9f3bcea82a1fec36cfefbd8ce6d140745c1.jpg?image_crop_resized=960x540',
-  'yz9coq1jwd': 'https://embed-ssl.wistia.com/deliveries/67c58111b5465a6aedff2ee0d83136ed34fd1f1f.jpg?image_crop_resized=960x540',
-  'ukn3ruu2nr': 'https://embed-ssl.wistia.com/deliveries/6e5c87a4f2ce1db81996a09a121ec6000ba7d847.jpg?image_crop_resized=960x540',
-  'tikovukneu': 'https://embed-ssl.wistia.com/deliveries/d4d294be7abfa4d092ee62e7afa475c0832822ed.jpg?image_crop_resized=960x540',
-  'oni4jy3cuf': 'https://embed-ssl.wistia.com/deliveries/700589756a1d69e67a952805afd03c7f97a3ae90.jpg?image_crop_resized=960x540',
-  'tcqebjpgyk': 'https://embed-ssl.wistia.com/deliveries/9512736b0e273abbe506d78059eb08d721296bdf.jpg?image_crop_resized=960x540',
-  '1002983741962578': '/clients/testimonial-posters/1002983741962578.webp',
-  '1000671825545007': '/clients/testimonial-posters/1000671825545007.webp',
+  problem: {
+    ...GLOBAL_LANDING.problem,
+    eyebrow: INDIA_COPY.pain.eyebrow,
+    heading: 'More Advice Won’t Fix a Business System.',
+    sub: 'Expert input helps turn business data into priorities. Claude can assist; it cannot interpret your business or implement strategy for you.',
+    moreAdvice: { title: 'More Information', items: ['Another course', 'Another generic funnel', 'Another AI-generated plan', 'More activity without clear priorities'] },
+    diagnosis: { title: 'A Business Audit', items: ['Review your offer and positioning', 'Understand your buyer and sales process', 'Find the bottleneck limiting growth', 'Set practical implementation priorities'] },
+    close: 'Get expert input, interpret the signals and put the right systems to work.',
+  },
+  call: {
+    ...GLOBAL_LANDING.call,
+    eyebrow: 'THE 60-MINUTE BUSINESS AUDIT',
+    heading: 'One Audit. A Clearer Growth Plan.',
+    sub: 'Review your offer, positioning and client journey with Indradip and Manisha.',
+    note: 'Your personalized audit and 100-day roadmap arrive within 48 hours.',
+    steps: [
+      { n: '01', icon: 'search', t: 'Understand your business', d: 'Start with your offer, goals and how clients find you today.' },
+      { n: '02', icon: 'tag', t: 'Find the key bottleneck', d: 'Review your positioning, buyer and sales process with both partners.' },
+      { n: '03', icon: 'compass', t: 'Choose what to implement', d: 'Leave with clear priorities and a practical 100-day roadmap.' },
+    ],
+  },
+  deliverables: {
+    ...GLOBAL_LANDING.deliverables,
+    eyebrow: 'WHAT YOU RECEIVE',
+    heading: 'A Business Audit You Can Put to Work.',
+    sub: 'Get a focused review, written priorities and practical tools for implementation.',
+    items: [
+      { icon: 'file', t: 'Business Audit PDF', d: 'A written review of your offer, positioning, buyer and biggest bottleneck.' },
+      { icon: 'map', t: '100-Day Roadmap', d: 'A clear sequence of what to fix first, what to prioritize next and what to stop.' },
+      { icon: 'video', t: 'Session Recording', d: 'Revisit the discussion later. Recording is provided only with your consent.' },
+      { icon: 'brain', t: 'Claude for Business', d: 'Train your own Claude with professional context and workflows for your business.' },
+      { icon: 'download', t: 'Sample Audit', d: 'Review a 17-page example to see the format before booking.' },
+    ],
+    sampleCta: 'View the 17-Page Sample Audit',
+    sampleNote: 'Illustrative example; figures are shown in USD.',
+    note: 'The ₹199 covers the strategy session and listed deliverables. Ongoing implementation is separate.',
+    sampleHighlight: {
+      ...GLOBAL_LANDING.deliverables.sampleHighlight,
+      eyebrow: 'REVIEW THE FORMAT',
+      heading: 'See a Sample Business Audit.',
+      sub: 'A 17-page example shows the level of detail in your personalized report.',
+    },
+  },
+  founder: {
+    ...GLOBAL_LANDING.founder,
+    eyebrow: 'WHO YOU’LL SPEAK WITH',
+    heading: 'Business Consultants Who Build and Improve Systems.',
+    quote: INDIA_COPY.founder.quote,
+    body: INDIA_COPY.founder.body + ' Every audit is run with director Manisha Satpute, not a sales representative.',
+    name: 'Indradip Ghosh',
+    role: 'Business Consultant, The5th Global Consulting',
+    stat: { value: '₹199', label: '60-Minute Business Audit' },
+    creds: ['Consumer Psychologist, University of California, Berkeley', 'AI Startup Founder', '~$6M Startup Valuation'],
+    credsNote: INDIA_COPY.founderCredsNote,
+  },
+  faq: {
+    ...GLOBAL_LANDING.faq,
+    eyebrow: 'BEFORE YOU BOOK',
+    heading: 'Questions Before Your Audit.',
+    items: [
+      { q: 'What happens in the ₹199 strategy session?', a: 'Indradip and Manisha review your offer, positioning and client journey, then identify practical next steps.' },
+      { q: 'What will I receive?', a: 'A written business audit and 100-day roadmap within 48 hours. A call recording is provided only if you consent.' },
+      { q: 'Is this a sales call?', a: 'No. It is a working session focused on your business. There is no obligation to continue afterward.' },
+      { q: 'Can Claude do this for me?', a: 'Claude can assist with tasks. Expert input is still needed to interpret your business, choose priorities and implement the strategy.' },
+      { q: 'What does ₹199 cover?', a: 'It covers the 60-minute strategy session. Review booking and refund terms before checkout.' },
+    ],
+  },
+  apply: {
+    ...GLOBAL_LANDING.apply,
+    eyebrow: 'YOUR NEXT STEP',
+    heading: 'Get a Clearer Business Roadmap for ₹199.',
+    includes: [
+      'A private 60-minute session with Indradip and Manisha',
+      'Your personalized business audit PDF',
+      'A practical 100-day action roadmap',
+      'A Claude implementation toolkit',
+    ],
+    priceNote: '₹199 one-time payment. No subscription.',
+    micro: 'Read the booking and refund terms before checkout.',
+  },
 }
 
-const FAQS = [
-  {
-    question: 'Who will I speak with?',
-    answer: 'Your session is with Indradip Ghosh and Manisha Satpute, the two partners shown on this page.',
-  },
-  {
-    question: 'What does the ₹199 deposit mean?',
-    answer: 'It is a one-time booking deposit, not a recurring charge. The exact refund and guarantee terms are shown before you book.',
-  },
-  {
-    question: 'What will I receive after the session?',
-    answer: 'Your personalized audit PDF and 100-day roadmap arrive within 48 hours. The digital book and AI prompt toolkit are included. A call recording is shared only with your consent.',
-  },
-  {
-    question: 'I already use AI. What does the audit add?',
-    answer: 'AI can help you explore options. The audit adds a human review of your specific offer, ideal buyer, and client path, so you can decide which next step fits your business.',
-  },
-  {
-    question: 'Do I have to join a program afterward?',
-    answer: 'No. The session is a working review of your business. You can use the audit and roadmap without joining another service.',
-  },
-]
-
-function Check() {
-  return <span className="check-mark" aria-hidden="true">✓</span>
+function Stars() {
+  return <span style={{ display: 'inline-flex', gap: 2 }} aria-hidden>{Array.from({ length: 5 }).map((_, i) => <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={ACCENT}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.8 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" /></svg>)}</span>
 }
-
-function BookCover() {
+/* Counts up from 0 once scrolled into view — preserves any prefix/suffix
+   (e.g. "₹199", "4.8") and decimal precision. Shows the final value instantly
+   when the visitor prefers reduced motion. */
+function AnimatedStat({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [display, setDisplay] = useState(value)
+  useEffect(() => {
+    const el = ref.current
+    const m = /^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/.exec(value)
+    if (!el || !m) return
+    const [, prefix, numStr, suffix] = m
+    const target = parseFloat(numStr)
+    const decimals = numStr.includes('.') ? numStr.split('.')[1].length : 0
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) return
+    let frame = 0
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => {
+        if (!e.isIntersecting) return
+        io.disconnect()
+        const start = performance.now()
+        const dur = 1100
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / dur)
+          const eased = 1 - Math.pow(1 - t, 3)
+          setDisplay(prefix + (target * eased).toFixed(decimals) + suffix)
+          if (t < 1) frame = requestAnimationFrame(tick)
+        }
+        frame = requestAnimationFrame(tick)
+      })
+    }, { threshold: 0.4 })
+    io.observe(el)
+    return () => { io.disconnect(); cancelAnimationFrame(frame) }
+  }, [value])
+  return <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>{display}</span>
+}
+function RatingRow() {
   return (
-    <div className="book-mockup" role="img" aria-label="Expertise to Income by Indradip Ghosh and Christine Mathison">
-      <span className="book-page book-page--why" aria-hidden="true" />
-      <span className="book-page book-page--diagnostic" aria-hidden="true" />
-      <span className="book-page book-page--asset" aria-hidden="true" />
-      <span className="book-page book-page--audience" aria-hidden="true" />
-      <div className="book-preview" aria-hidden="true" />
-      <span className="book-mockup__pages" aria-hidden="true" />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+      <Stars /><span style={{ fontWeight: 800, fontSize: 14.5 }}>{RATING.score}</span>
+      <span style={{ color: TEXT2, fontSize: 13 }}>{RATING.text}</span>
+    </div>
+  )
+}
+function SectionHead({ eyebrow, heading, sub, maxW, dark, align }: { eyebrow?: string; heading: string; sub?: string; maxW?: number; dark?: boolean; align?: 'left' | 'center' }) {
+  const left = align === 'left'
+  return (
+    <div style={{ textAlign: left ? 'left' : 'center', marginBottom: 28, maxWidth: left ? undefined : (maxW || 680), marginLeft: left ? 0 : 'auto', marginRight: left ? 0 : 'auto' }}>
+      {eyebrow && <div className="rm-eyebrow" style={{ marginBottom: 12, color: ACCENT }}>{eyebrow}</div>}
+      <h2 className="rm-serif" style={{ fontSize: 'clamp(22px,4.6vw,42px)', margin: 0, fontWeight: 800, lineHeight: 1.1, color: dark ? '#fff' : undefined }}>{heading}</h2>
+      {sub && <p style={{ color: dark ? 'rgba(255,255,255,.65)' : TEXT2, fontSize: 15.5, lineHeight: 1.6, marginTop: 12, maxWidth: left ? 560 : undefined }}>{sub}</p>}
     </div>
   )
 }
 
-const BOOK_CHAPTERS = [
-  'Understand Your Why', 'Diagnose Your Current Situation', 'The Asset Mindset',
-  'Find Your Perfect Audience', 'Design Your First Digital Product',
-  'Create a Simple Offer That Sells Itself', 'The Organic Content System',
-  'Your Simple Launch Plan', 'Mindset for Consistent $10K Months',
-]
+/* Thin-stroke line-art icons, lime on dark. */
+function StepIcon({ kind }: { kind: string }) {
+  const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  const box = { width: 48, height: 48, viewBox: '0 0 56 56' }
+  if (kind === 'search') return <svg {...box} aria-hidden="true"><circle cx={24} cy={24} r={13} {...c} /><line x1={33.5} y1={33.5} x2={46} y2={46} {...c} /></svg>
+  if (kind === 'tag') return <svg {...box} aria-hidden="true"><rect x={14} y={14} width={28} height={28} rx={6} transform="rotate(45 28 28)" {...c} /><circle cx={28} cy={18} r={2} fill={ACCENT} stroke="none" /></svg>
+  if (kind === 'target') return <svg {...box} aria-hidden="true"><circle cx={28} cy={28} r={18} {...c} /><circle cx={28} cy={28} r={10} {...c} /><circle cx={28} cy={28} r={3} fill={ACCENT} stroke="none" /></svg>
+  if (kind === 'compass') return <svg {...box} aria-hidden="true"><circle cx={28} cy={28} r={18} {...c} /><polygon points="28,16 32,28 28,40 24,28" fill={ACCENT} stroke="none" /></svg>
+  return <svg {...box} aria-hidden="true"><rect x={10} y={14} width={36} height={30} rx={5} {...c} /><line x1={10} y1={24} x2={46} y2={24} {...c} /><line x1={19} y1={9} x2={19} y2={18} {...c} /><line x1={37} y1={9} x2={37} y2={18} {...c} /><polyline points="19,34 25,40 38,27" {...c} /></svg>
+}
 
-function ClientVideoTestimonials() {
-  const [activeVideo, setActiveVideo] = useState<string | null>(null)
+/* Deliverable icons — matched to the "what you receive" cards. */
+function DeliverableIcon({ kind }: { kind: string }) {
+  const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  const box = { width: 30, height: 30, viewBox: '0 0 24 24' }
+  if (kind === 'video') return <svg {...box} aria-hidden="true"><rect x={2.5} y={5.5} width={13} height={13} rx={2.2} {...c} /><path d="M15.5 10l6-3.5v11l-6-3.5" {...c} /></svg>
+  if (kind === 'file') return <svg {...box} aria-hidden="true"><path d="M6 2.5h8l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1v-17a1 1 0 011-1z" {...c} /><path d="M14 2.5v4h4" {...c} /><path d="M8 13h8M8 16.5h8M8 9.5h4" {...c} /></svg>
+  if (kind === 'map') return <svg {...box} aria-hidden="true"><path d="M9 3L3 5.5v15L9 18l6 2.5 6-2.5v-15l-6 2.5L9 3z" {...c} /><path d="M9 3v15M15 5.5v15" {...c} /></svg>
+  if (kind === 'brain') return <svg {...box} aria-hidden="true"><path d="M9 3a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 003 3M9 3a3 3 0 013 3v12a3 3 0 01-3 3M15 3a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-3 3" {...c} /></svg>
+  return <svg {...box} aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
+}
+
+function IncludedExtras() {
+  const sidebar = ['Home', 'The5th AI', 'My Journey', 'My Leads', 'Client Acquisition', 'My Content', 'Buyer Persona', 'Design Studio']
+  const prompts = ['What should I post today?', 'Help me write a DM outreach script', "My discovery call isn't closing, why?", 'How do I raise my prices confidently?']
   return (
-    <div className="video-testimonials">
-      {INDIA_VIDEO_REVIEWS.map((review, index) => {
-        const id = review.src.match(/iframe\/([^?]+)/)?.[1] || review.src
-        const isFacebook = review.src.includes('facebook.com')
-        const posterKey = id.match(/(?:videos%2F|reel%2F)(\d+)/)?.[1] || id
-        const poster = WISTIA_POSTERS[posterKey]
+    <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)', marginBottom: 'clamp(20px,3vw,32px)' }}>
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-book-stage" aria-label="Digital book cover preview">
+          <div className="rm-book-object">
+            <div className="rm-book-cover">
+              <div className="rm-book-series">THE 10K ROADMAP SERIES</div>
+              <div className="rm-book-nine"><span>9</span><small>CHAPTERS</small></div>
+              <div className="rm-book-title">EXPERTISE<br /><i>TO</i><br /><strong>INCOME</strong></div>
+              <div className="rm-book-tagline">STOP SELLING YOUR TIME.<br /><b>START BUILDING AN ASSET.</b></div>
+              <div className="rm-book-authors">INDRODIP GHOSH &amp; CHRISTINE MATHISON</div>
+            </div>
+            <div className="rm-book-pages" aria-hidden="true" />
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>A digital copy of <em>Expertise to Income</em></h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>The 9-chapter book shown above, yours to keep and revisit as you put your roadmap into action.</p>
+          <div className="rm-value-chip"><span>Original book price</span><strong>₹425</strong></div>
+        </div>
+      </article>
+
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-ai-preview" aria-label="Preview of The5th AI dashboard">
+          <div className="rm-ai-sidebar">
+            <div className="rm-ai-brand"><span>5</span><b>The5th AI</b></div>
+            {sidebar.map((item, i) => <div key={item} className={'rm-ai-nav' + (i === 1 ? ' is-active' : '')}><span>{['⌂', '✧', '◉', '♧', '◎', '▱', '⊙', '▦'][i]}</span>{item}</div>)}
+          </div>
+          <div className="rm-ai-main">
+            <div className="rm-ai-top"><span className="rm-ai-mark">5</span><b>The5th AI</b><span className="rm-ai-session">Session · 0%</span></div>
+            <div className="rm-ai-welcome"><span className="rm-ai-spark">✦</span><h4>Back to business.</h4><p>What would move your business forward today?</p></div>
+            <div className="rm-ai-composer">What are you working on today? Paste a link or file to dig in.<div><span>＋ &nbsp; Attach</span><span className="rm-ai-send">↑</span></div></div>
+            <div className="rm-ai-prompts">{prompts.map((prompt) => <span key={prompt}>{prompt}</span>)}</div>
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>The5th AI, inside your workspace</h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>Plan your next post, draft an outreach message, troubleshoot a sales conversation, or think through a price increase. Open The5th AI in the same workspace where you manage your journey, leads, content, and ideal buyer.</p>
+          <div className="rm-value-chip"><span>Included with your session</span><strong>Included</strong></div>
+        </div>
+      </article>
+    </div>
+  )
+}
+
+function PressStrip() {
+  return (
+    <div style={{ padding: '22px ' + PADX + ' 0' }}>
+      <div style={{ maxWidth: MAXW, margin: '0 auto', display: 'flex', gap: 'clamp(16px,4vw,40px)', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+        {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 'clamp(13px,2vw,16px)', color: TEXT2, opacity: 0.6, whiteSpace: 'nowrap' }}>{p}</span>)}
+      </div>
+    </div>
+  )
+}
+
+function TestimonialCard({ index = 7 }: { index?: number }) {
+  const t = REAL_PROOF[index] // defaults to Laurie — has a photo, carries the hero testimonial slot
+  return (
+    <div style={{ maxWidth: 680, margin: '0 auto', display: 'flex', gap: 'clamp(18px,3vw,30px)', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={t.photo} alt={t.name} style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+      <div style={{ flex: '1 1 380px', minWidth: 260 }}>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: '#F2F6EC', fontStyle: 'italic', margin: '0 0 10px' }}>&ldquo;{t.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
+        <div style={{ fontSize: 14, lineHeight: 1.5 }}><strong style={{ fontWeight: 800 }}>{t.name}</strong>, {t.result} <span style={{ color: TEXT3 }}>· {t.role}</span></div>
+      </div>
+    </div>
+  )
+}
+
+/* A single documented-result proof card: photo, name, business type, result, quote. */
+function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
+  return (
+    <div className="rm-lift rm-glass-flat" style={{ borderRadius: CARD_RADIUS, padding: 20, display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {c.photo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={c.photo} alt={c.name} style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+        ) : (
+          <span style={{ width: 44, height: 44, borderRadius: '50%', background: CARD2, border: `1px solid ${LINE2}`, color: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, flexShrink: 0 }}>{c.name[0]}</span>
+        )}
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 14.5 }}>{c.name}</div>
+          <div style={{ color: TEXT3, fontSize: 11.5, textTransform: 'uppercase', letterSpacing: '.04em' }}>{c.role}</div>
+        </div>
+      </div>
+      <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: 0, flex: 1 }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
+      <div className="rm-serif" style={{ color: ACCENT, fontWeight: 800, fontSize: 'clamp(18px,2.2vw,22px)' }}>{c.result}</div>
+    </div>
+  )
+}
+
+/* ── FAQ accordion ──────────────────────────────────────────────────────── */
+function FaqAccordion({ items }: { items: typeof LANDING.faq.items }) {
+  const [open, setOpen] = useState(0)
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      {items.map((it, i) => {
+        const isOpen = open === i
         return (
-          <figure className="video-testimonial" key={review.src}>
-            {activeVideo === id ? (
-              <iframe
-                src={isFacebook ? review.src : `https://fast.wistia.net/embed/iframe/${id}?seo=true&videoFoam=false&autoplay=1`}
-                title={`Client video testimonial ${index + 1}`}
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <button
-                type="button"
-                className="video-testimonial__poster"
-                style={poster ? { backgroundImage: `linear-gradient(180deg, transparent 45%, var(--color-ink) 100%), url("${poster}")` } : undefined}
-                onClick={() => setActiveVideo(id)}
-                aria-label={`Play client video testimonial ${index + 1}`}
-              >
-                <span className="video-testimonial__play" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
-                </span>
-                <span className="video-testimonial__caption">Client video review {String(index + 1).padStart(2, '0')}</span>
-              </button>
-            )}
-          </figure>
+          <div key={it.q} className="rm-lift rm-glass-flat" style={{ borderRadius: 14, overflow: 'hidden' }}>
+            <button onClick={() => setOpen(isOpen ? -1 : i)} className="rm-focus" aria-expanded={isOpen}
+              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer', padding: '18px 20px', fontFamily: 'inherit' }}>
+              <span style={{ fontSize: 15.5, fontWeight: 700, color: '#F2F6EC' }}>{it.q}</span>
+              <span aria-hidden style={{ flexShrink: 0, width: 22, height: 22, borderRadius: '50%', border: `1px solid ${LINE2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: ACCENT, fontSize: 15, transform: isOpen ? 'rotate(45deg)' : 'none', transition: 'transform .3s cubic-bezier(.16,1,.3,1)' }}>+</span>
+            </button>
+            {/* Smooth expand/collapse via an animated grid-track (not `height`),
+                so the Floor's never-animate-height rule still holds. */}
+            <div style={{ display: 'grid', gridTemplateRows: isOpen ? '1fr' : '0fr', transition: 'grid-template-rows .4s cubic-bezier(.16,1,.3,1)' }}>
+              <div style={{ overflow: 'hidden', minHeight: 0 }}>
+                <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.65, margin: 0, padding: '0 20px 18px', maxWidth: 640 }}>{it.a}</p>
+              </div>
+            </div>
+          </div>
         )
       })}
     </div>
@@ -148,246 +366,412 @@ function ClientVideoTestimonials() {
 }
 
 export default function Landing() {
-  const router = useRouter()
-  const [stickyVisible, setStickyVisible] = useState(false)
+  const [showSticky, setShowSticky] = useState(false)
+  const [showAllProof, setShowAllProof] = useState(false)
   useUtm()
-
   useEffect(() => { track('page_view') }, [])
-  useEffect(() => {
-    const onScroll = () => setStickyVisible(window.scrollY > 520)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-  useEffect(() => { router.prefetch('/10k-roadmap/india/pay') }, [router])
-
-  const goApply = (where: string) => {
-    track('cta_click', { where })
-    router.push('/10k-roadmap/india/pay')
-  }
+  useEffect(() => { const on = () => setShowSticky(window.scrollY > 620); on(); window.addEventListener('scroll', on, { passive: true }); return () => window.removeEventListener('scroll', on) }, [])
+  // Every CTA on this page links straight to the Whop product page for the
+  // ₹199 audit — no internal qualification/schedule hop in between.
+  const CTA = (where: string, label?: string) => <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where })} style={{ padding: '16px 34px', fontSize: 16.5 }}>{label || LANDING.ctaStandard} <span aria-hidden>→</span></Btn>
+  // For this page's US/Canada-first audience, lead the proof list with named
+  // North American clients, without reordering the shared REAL_PROOF array
+  // other pages also read.
+  const NA_FIRST = ['Amalia', 'Max', 'Susan Taylor', 'Laurie', 'Angela', 'Jeanne', 'Seth']
+  const orderedProof = [...REAL_PROOF].sort((a, b) => {
+    const ai = NA_FIRST.includes(a.name) ? 0 : 1
+    const bi = NA_FIRST.includes(b.name) ? 0 : 1
+    return ai - bi
+  })
+  // The top 3 go in the teaser right after the hero; the full-grid section
+  // further down picks up where that teaser left off, so no result repeats.
+  const topProof = orderedProof.slice(0, 3)
+  const featuredProof = orderedProof.slice(3, 9)
+  const restProof = orderedProof.slice(9)
 
   return (
-    <div className="india-landing">
-      <a className="skip" href="#main">Skip to content</a>
+    <div style={{ background: '#070A06', color: '#F2F6EC', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
+      <Fonts />
+      <Header nav={LANDING.nav} showFounder />
 
-      <header className="nav">
-        <div className="container nav__inner">
-          <a className="nav__brand" href="/india" aria-label="The5th Global Consulting India audit home">
-            <Image src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" width={192} height={75} priority />
-          </a>
-          <nav className="nav__links" aria-label="Page sections">
-            <a href="#included">What you receive</a>
-            <a href="#client-work">Client work</a>
-            <a href="#voices">Video reviews</a>
-            <a href="#partners">Meet the partners</a>
-          </nav>
-          <button type="button" className="btn nav__cta" onClick={() => goApply('nav')}>Book Your ₹199 Session</button>
-        </div>
-      </header>
-
-      <main id="main">
-        <section className="hero">
-          <div className="container hero__grid">
-            <div className="hero__text">
-              <p className="hero__eyebrow">Your ₹10 Lakh/Month Business Roadmap</p>
-              <h1>{LANDING.headline}</h1>
-              <p className="hero__lede">{LANDING.headlineSub}</p>
-              <div className="hero__actions"><button type="button" className="btn hero__cta" onClick={() => goApply('hero')}>Book Your ₹199 Strategy Session</button><a className="hero__secondary" href="#process">See How It Works</a></div>
-              <p className="hero__note">₹199 one-time booking deposit. No recurring charge. Refund terms apply.</p>
-              <p className="hero__authority">AI Startup Founder, ~$6M Startup Valuation, Backed by University of California alumni</p>
-              <p className="hero__rating"><strong>{RATING.score}</strong><span>{RATING.text}</span></p>
-              <div className="hero__facts" aria-label="Session details">
-                <span>With both partners</span><span>On Zoom</span>
+      {/* ── Hero: LOCKED — copy, layout, photo and CTA wording unchanged ── */}
+      <div style={{ background: 'radial-gradient(110% 60% at 15% -6%, rgba(201,255,72,0.12) 0%, #070A06 62%)' }}>
+        <section style={{ maxWidth: MAXW, margin: '0 auto', padding: 'clamp(30px,6vw,56px) ' + PADX + ' 20px', display: 'flex', gap: 'clamp(24px,5vw,56px)', alignItems: 'center', flexWrap: 'wrap' }} className="rm-hero">
+          <div style={{ flex: '1 1 440px', minWidth: 300 }}>
+            <Reveal>
+              <div className="rm-eyebrow" style={{ marginBottom: 14 }}>{LANDING.eyebrow}</div>
+              <h1 className="rm-serif" style={{ fontSize: 'clamp(32px,5.6vw,54px)', margin: 0, fontWeight: 800, lineHeight: 1.04 }}>{LANDING.headline}</h1>
+              <p style={{ color: TEXT2, fontSize: 'clamp(15.5px,1.8vw,18px)', lineHeight: 1.55, maxWidth: 520, margin: '16px 0 0', fontWeight: 500 }}>{LANDING.headlineSub}</p>
+            </Reveal>
+            <Reveal delay={100} style={{ marginTop: 24 }}>
+              <div className="rm-hero-ctas" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'hero' })} style={{ padding: '16px 34px', fontSize: 17 }}>{LANDING.ctaPrimary} <span aria-hidden>→</span></Btn>
+                <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById('proof')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
+              </div>
+              <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
+              <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
+            </Reveal>
+          </div>
+          <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 400, margin: '0 auto' }}>
+            <div style={{ position: 'relative' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/founder-golden-gate.webp" alt={`${LANDING.heroCard.name}, ${LANDING.heroCard.role}`} style={{ width: '100%', aspectRatio: '4/5', objectFit: 'cover', objectPosition: '50% 22%', borderRadius: 24, boxShadow: '0 30px 60px -24px rgba(0,0,0,.6)' }} />
+              <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(7,10,6,.55)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)', textAlign: 'center' }}>
+                <span style={{ fontWeight: 800, fontSize: 15.5, color: '#fff' }}>{LANDING.heroCard.credential}</span>
+                {LANDING.heroCard.recruitedBy && (
+                  <span style={{ display: 'block', marginTop: 6, fontWeight: 700, fontSize: 12.5, color: ACCENT }}>{LANDING.heroCard.recruitedBy}</span>
+                )}
+                {LANDING.heroCard.featuredIn && (
+                  <span style={{ display: 'block', marginTop: 4, fontWeight: 600, fontSize: 11.5, color: 'rgba(255,255,255,.75)' }}>{LANDING.heroCard.featuredIn}</span>
+                )}
               </div>
             </div>
-
-            <div className="hero__partners" aria-label="Meet your audit partners">
-              {PARTNERS.map((person) => (
-                <article className="hero-person" key={person.name}>
-                  <div className="hero-person__photo">
-                    <Image src={person.image} alt={person.name} width={300} height={360} sizes="(max-width: 700px) 44vw, 280px" priority />
-                  </div>
-                  <div className="hero-person__caption">
-                    <strong>{person.name}</strong>
-                    <span>{person.role}</span>
-                    {person.credential && <span className="hero-person__credential"><b>{person.credential}</b><span>{person.recruitedBy}</span></span>}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="featured-strip" aria-label={PRESS.label}>
-          <div className="container featured-strip__inner">
-            <p>{PRESS.label}</p>
-            <div className="featured-strip__names">
-              {PRESS.items.map((publication) => <span key={publication}>{publication}</span>)}
-            </div>
-          </div>
-        </section>
-
-        <section id="included" className="included band-s">
-          <div className="container included__grid">
-            <div>
-              <h2>What you get from the audit</h2>
-              <p className="section-lede">A focused review, followed by a plan built around the business you bring.</p>
-              <ul className="included__list">
-                {INCLUSIONS.map((item) => <li key={item}><Check /><span>{item}</span></li>)}
-              </ul>
-              <p className="included__delivery">Your written audit and roadmap arrive within 48 hours of your session.</p>
-              <div className="included__sample">
-                <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'india_sample_pdf' })}>View a 17-page sample audit</a>
-                <span>Illustrative example; figures are shown in USD.</span>
+            <div style={{ marginTop: 18, textAlign: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 800, fontSize: 15 }}>{LANDING.heroCard.name}</span>
+                <span style={{ color: TEXT3, fontSize: 13 }}>{LANDING.heroCard.role}</span>
+              </div>
+              <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 18 }}>
+                {LANDING.heroCard.chips.map((c) => (
+                  <span key={c.t} style={{ fontSize: 13, color: TEXT3 }}><strong style={{ color: '#fff', fontWeight: 800 }}>{c.t}</strong> {c.s}</span>
+                ))}
               </div>
             </div>
-
-            <aside className="book-card" aria-label="Included digital book">
-              <div className="book-card__visual"><BookCover /></div>
-              <div className="book-card__copy">
-                <p className="book-card__label"><span>Included to keep</span><span>9 chapters. Original price: ₹425.</span></p>
-                <h3>Expertise to Income</h3>
-                <p>Your complete guide to building a digital-product business that can generate $10,000 a month without a team, ads, or years of experience.</p>
-                <ol className="book-card__chapters">{BOOK_CHAPTERS.map((chapter) => <li key={chapter}>{chapter}</li>)}</ol>
-                <p className="book-card__authors">By Indradip Ghosh &amp; Christine Mathison</p>
-              </div>
-            </aside>
-          </div>
+          </Reveal>
         </section>
-
-        <section id="process" className="process band-s">
-          <div className="container">
-            <div className="section-heading">
-              <h2>A focused audit, in three steps</h2>
-            </div>
-            <ol className="process__steps">
-              {PROCESS.map((step, i) => (
-                <li className="process-step" key={step.title}>
-                  <span className="process-step__number">{String(i + 1).padStart(2, '0')}</span>
-                  <div><h3>{step.title}</h3><p>{step.text}</p></div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section id="client-work" className="client-work band-s">
-          <div className="container client-work__inner">
-            <div className="client-work__heading">
-              <h2>Selected client stories. The work behind the numbers.</h2>
-              <p>See where each business started, what we built, and the reported result. Outcomes vary by business and market.</p>
-            </div>
-            <div className="client-work__stories">
-              {FEATURED_CASES.map((study, index) => (
-                <article className="case-study-card" key={study.slug}>
-                  <div className="case-study-card__image">
-                    {study.image && <Image src={study.image} alt={`${study.name}, client case study`} fill sizes="(max-width: 768px) 100vw, (max-width: 1280px) 48vw, 32vw" loading="eager" />}
-                    <span className="case-study-card__index">0{index + 1}</span>
-                  </div>
-                  <div className="case-study-card__copy">
-                    <h3>{study.name}</h3>
-                    <p className="case-story__meta">{study.location || study.category} / {study.niche}</p>
-                    <p className="case-story__tagline">{study.tagline}</p>
-                    <div className="case-story__result">
-                      <strong>{study.headline.v}</strong>
-                      <span>{study.headline.period} · USD</span>
-                    </div>
-                    <p className="case-study-card__work">{study.whatWeDid}</p>
-                    {study.metrics && <div className="case-story__metrics">{study.metrics.slice(0, 2).map((metric) => <span key={metric.l}><b>{metric.v}</b>{metric.l}</span>)}</div>}
-                  </div>
-                </article>
-              ))}
-            </div>
-            <div className="client-work__foot">
-              <p>Published client outcomes shown in USD. Individual results vary; these are not typical or guaranteed results.</p>
-              <a href="/results">Explore the case study library</a>
-            </div>
-            <div className="proof-booking"><p>Want a clearer next move for your business?</p><button type="button" className="btn btn--inverse" onClick={() => goApply('case-study-proof')}>Book the audit for ₹199</button><span>Refundable booking deposit · no recurring charge</span></div>
-          </div>
-        </section>
-
-        <section id="voices" className="voices band-s">
-          <div className="container voices__inner">
-            <div className="voices__heading">
-              <h2>Hear from clients in their own words.</h2>
-              <p>Hear directly from clients after their strategy sessions. Tap any review to play.</p>
-            </div>
-            <ClientVideoTestimonials />
-            <div className="voices__cta"><span>See what a focused review could uncover in your business.</span><button type="button" className="btn" onClick={() => goApply('video-testimonials')}>Book the ₹199 audit</button></div>
-          </div>
-        </section>
-
-        <section id="partners" className="partners band-s">
-          <div className="container partners__inner">
-            <div className="section-heading">
-              <h2>Meet the people behind your audit</h2>
-            </div>
-            <div className="partner-bios">
-              <article className="partner-bio">
-                <div className="partner-bio__initial">I</div>
-                <div>
-                  <h3>Indradip Ghosh</h3>
-                  <p className="partner-bio__role">Founder and Principal Consultant</p>
-                  <p>{LANDING.heroCard.credential}. Recruited by Google and Anthropic. Founder of The5th and an AI startup with an approximate $6M valuation.</p>
-                  <p className="partner-bio__proof">{LANDING.heroCard.featuredIn}. The startup is backed by University of California alumni. {LANDING.founderCredsNote}</p>
-                </div>
-              </article>
-              <article className="partner-bio">
-                <div className="partner-bio__initial">M</div>
-                <div><h3>{MANISHA.name}</h3><p>Director, Head of Growth. {MANISHA.bio}</p></div>
-              </article>
-            </div>
-              <p className="partners__reach">The5th has advised 76 coaches and consultants across 12 countries. Individual results vary.</p>
-          </div>
-        </section>
-
-        <section id="faq" className="faq band-s">
-          <div className="container faq__inner">
-            <div className="section-heading"><h2>Questions before you book</h2></div>
-            <div className="faq__list">
-              {FAQS.map((item) => (
-                <details className="faq__item" key={item.question}>
-                  <summary>{item.question}<span aria-hidden="true">+</span></summary>
-                  <p>{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="booking band-s">
-          <div className="container booking__inner">
-            <div>
-              <h2>Get a clearer next step</h2>
-              <p className="booking__lede">Review your business with Indradip and Manisha, then decide what you want to do with the plan.</p>
-            </div>
-            <div className="booking__action">
-              <span className="booking__price">₹199</span>
-              <span className="booking__price-note">Refundable booking deposit</span>
-              <button type="button" className="btn btn--inverse" onClick={() => goApply('final')}>{LANDING.ctaPrimary}</button>
-              <p><a href="/refund#india-roadmap">Read refund eligibility and terms</a></p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="site-footer">
-        <div className="container site-footer__inner">
-          <Image className="site-footer__brand" src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" width={192} height={75} />
-          <div className="site-footer__links">
-            <a href="/privacy">Privacy Policy</a><a href="/disclaimer">Disclaimer</a><a href="/refund">Refund Policy</a>
-            {LEGAL.links.filter((link) => !['Privacy Policy', 'Privacy', 'Disclaimer', 'Refund Policy'].includes(link.label)).map((link) => <a key={link.label} href={link.href}>{link.label}</a>)}
-          </div>
-          <p className="legal">{LEGAL.earnings}</p>
-          <p className="legal">{LEGAL.meta}</p>
-          <p className="copyright">{LEGAL.copyright}</p>
-        </div>
-      </footer>
-
-      <div className={`sticky-cta${stickyVisible ? ' is-visible' : ''}`}>
-        <button type="button" className="btn" onClick={() => goApply('sticky')}>{LANDING.ctaPrimary}</button>
       </div>
-      <IndiaExitPopup onBook={() => goApply('india_exit_popup')} />
+
+      {/* ── Client testimonials: written and video reviews directly after
+             the real-people hero section ── */}
+      <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow="Client Testimonials" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
+          <Reveal><div style={{ marginBottom: SECY }}><TestimonialCard index={8} /></div></Reveal>
+          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
+        </div>
+      </section>
+
+      <PressStrip />
+
+      {/* ── Founder-credibility strip: moved up from the Section-08 editorial
+             so "this is run by the founder personally" lands immediately,
+             not only after scrolling most of the page ── */}
+      <section style={{ padding: '28px ' + PADX + ' 0' }}>
+        <Reveal>
+          <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap', background: 'rgba(201,255,72,.08)', border: `1px solid rgba(201,255,72,.3)`, borderRadius: 28, padding: '14px 24px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <span style={{ display: 'inline-flex', flexShrink: 0 }}>
+              <img src="/images/founder.png" alt="Indrodip Ghosh" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}` }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={MANISHA.avatar} alt={MANISHA.name} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${ACCENT}`, marginLeft: -10 }} />
+            </span>
+            <span style={{ flex: '1 1 300px', fontSize: 14.5, fontWeight: 700, color: '#F2F6EC', textAlign: 'left', lineHeight: 1.4 }}>{LANDING.founderBadge.line}</span>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ── Client results teaser: 3 featured cases, moved up from the full
+             case-studies section (now further down the page) so results show
+             right after the hero instead of waiting until mid-scroll ── */}
+      <section style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.teaserHeading} maxW={640} /></Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {topProof.map((c, i) => <Reveal key={c.name} delay={i * 80}><ProofCard c={c} /></Reveal>)}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 02: social proof — compact stats strip + result pills ── */}
+      <section id="proof" style={{ background: INK2, color: '#fff', padding: 'clamp(30px,5vw,48px) ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 24 }}>
+              <div className="rm-eyebrow" style={{ marginBottom: 10, color: ACCENT }}>{LANDING.proof.eyebrow}</div>
+              <h2 className="rm-serif" style={{ fontSize: 'clamp(20px,3.2vw,28px)', margin: 0, fontWeight: 800, color: '#fff' }}>{LANDING.proof.heading}</h2>
+            </div>
+          </Reveal>
+          <div className="rm-stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: CARD_RADIUS, overflow: 'hidden' }}>
+            {[
+              { b: '76', s: 'Coaches & consultants served' },
+              { b: '12', s: 'Nations, coached remotely' },
+              { b: RATING.score, s: 'Average client rating' },
+              { b: '₹199', s: 'One-time business audit' },
+            ].map((s, i) => (
+              <Reveal key={s.s} delay={i * 90}>
+                <div className="rm-lift rm-glass-flat" style={{ padding: '22px 18px', height: '100%' }}>
+                  <strong className="rm-serif" style={{ display: 'block', fontSize: 'clamp(26px,3.6vw,36px)', fontWeight: 800, color: ACCENT, lineHeight: 1 }}><AnimatedStat value={s.b} /></strong>
+                  <span style={{ display: 'block', marginTop: 9, fontSize: 12.5, color: 'rgba(255,255,255,.6)', lineHeight: 1.4 }}>{s.s}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginTop: 20 }}>
+              {LANDING.proof.stats.map((st) => (
+                <div key={st} style={{ background: 'rgba(255,255,255,.05)', border: `1px solid ${LINE2}`, borderRadius: 999, padding: '10px 18px' }}>
+                  <span style={{ fontSize: 13.5, fontWeight: 700, color: '#F2F6EC' }}>{st}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 11.5, textAlign: 'center', marginTop: 14 }}>{LANDING.proof.disclaimer}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Section 05: everything you receive ── */}
+      <section id="deliverables" style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.deliverables.eyebrow} heading={LANDING.deliverables.heading} sub={LANDING.deliverables.sub} maxW={680} /></Reveal>
+          <Reveal>
+            <div className="rm-lift rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, display: 'flex', gap: 24, alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: 'clamp(20px,3vw,32px)' }}>
+              <div style={{ flex: '1 1 320px', minWidth: 260 }}>
+                <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>{LANDING.deliverables.sampleHighlight.eyebrow}</div>
+                <h3 className="rm-serif" style={{ fontSize: 'clamp(20px,2.6vw,26px)', fontWeight: 800, margin: '0 0 8px' }}>{LANDING.deliverables.sampleHighlight.heading}</h3>
+                <p style={{ color: TEXT2, fontSize: 14.5, lineHeight: 1.6, margin: 0, maxWidth: 440 }}>{LANDING.deliverables.sampleHighlight.sub}</p>
+              </div>
+              <a href="/documents/sample-audit-report.pdf" target="_blank" rel="noopener noreferrer" onClick={() => track('cta_click', { where: 'sample_pdf_banner' })}
+                className="rm-focus rm-pop" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 8, fontSize: 15, fontWeight: 800, color: ACCENT_TEXT, background: ACCENT, borderRadius: 999, padding: '15px 26px', boxShadow: '0 14px 30px -14px rgba(201,255,72,.5)', textDecoration: 'none', maxWidth: '100%', boxSizing: 'border-box' }}>
+                {LANDING.deliverables.sampleCta} <span aria-hidden>→</span>
+              </a>
+            </div>
+          </Reveal>
+          <Reveal><IncludedExtras /></Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {LANDING.deliverables.items.map((d, i) => (
+              <Reveal key={d.t} delay={(i % 3) * 80}>
+                <div className={"rm-lift " + (i < 2 ? 'rm-glass-flat-accent' : 'rm-glass-flat')} style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                  <div style={{ width: 54, height: 54, borderRadius: 14, background: CARD2, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                    <DeliverableIcon kind={d.icon} />
+                  </div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, margin: '0 0 8px' }}>{d.t}</h3>
+                  <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.55, margin: 0 }}>{d.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: TEXT3, fontSize: 12.5, lineHeight: 1.6, maxWidth: 560, margin: '18px auto 0' }}>{LANDING.deliverables.sampleNote}</p>
+            <p style={{ textAlign: 'center', color: TEXT2, fontSize: 13.5, lineHeight: 1.6, maxWidth: 620, margin: '10px auto 0', fontWeight: 600 }}>{LANDING.deliverables.note}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Section 03: the problem — more advice vs. an actual diagnosis ── */}
+      <section style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.problem.eyebrow} heading={LANDING.problem.heading} sub={LANDING.problem.sub} maxW={720} /></Reveal>
+          <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)' }}>
+            <Reveal>
+              <div className="rm-lift rm-glass" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>{LANDING.problem.moreAdvice.title}</div>
+                <div style={{ display: 'grid', gap: 12 }}>
+                  {LANDING.problem.moreAdvice.items.map((it) => (
+                    <div key={it} style={{ display: 'flex', gap: 10, fontSize: 14.5, color: TEXT2, lineHeight: 1.5 }}>
+                      <span aria-hidden style={{ color: '#E8806F', fontWeight: 800, flexShrink: 0 }}>×</span>{it}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={90}>
+              <div className="rm-lift rm-glass-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, height: '100%' }}>
+                <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.1em', textTransform: 'uppercase', color: ACCENT, marginBottom: 16 }}>{LANDING.problem.diagnosis.title}</div>
+                <div style={{ display: 'grid', gap: 12 }}>
+                  {LANDING.problem.diagnosis.items.map((it) => (
+                    <div key={it} style={{ display: 'flex', gap: 10, fontSize: 14.5, color: '#DBE3D6', lineHeight: 1.5 }}>
+                      <span aria-hidden style={{ color: ACCENT, fontWeight: 800, flexShrink: 0 }}>✓</span>{it}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          </div>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginTop: 32 }}>
+              <p style={{ fontWeight: 700, fontSize: 16.5, marginBottom: 18 }}>{LANDING.problem.close}</p>
+              {CTA('problem_cta')}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Section 04: the 60-minute audit process ── */}
+      <section id="call" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.call.eyebrow} heading={LANDING.call.heading} sub={LANDING.call.sub} maxW={640} /></Reveal>
+          <div className="rm-steps5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 14, marginTop: 12 }}>
+            {LANDING.call.steps.map((s, i) => (
+              <Reveal key={s.n} delay={i * 70}>
+                <div className="rm-lift rm-glass-flat" style={{ borderRadius: 16, padding: 18, height: '100%' }}>
+                  <div style={{ marginBottom: 12 }}><StepIcon kind={s.icon} /></div>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: ACCENT, letterSpacing: '.08em', marginBottom: 8 }}>STEP {s.n}</div>
+                  <h3 style={{ fontSize: 15, fontWeight: 800, margin: '0 0 6px' }}>{s.t}</h3>
+                  <p style={{ color: TEXT2, fontSize: 13, lineHeight: 1.5, margin: 0 }}>{s.d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '28px auto 0' }}>{LANDING.call.note}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Section 07: client results — featured proof cards + expandable grid ── */}
+      <section style={{ padding: SECY_LG + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.caseStudies.eyebrow} heading={LANDING.caseStudies.heading} maxW={640} /></Reveal>
+          <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
+            {featuredProof.map((c, i) => <Reveal key={c.name} delay={(i % 3) * 80}><ProofCard c={c} /></Reveal>)}
+          </div>
+          {restProof.length > 0 && (
+            <>
+              {showAllProof && (
+                <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)', marginTop: 'clamp(14px,2.5vw,20px)' }}>
+                  {restProof.map((c, i) => <Reveal key={c.name} delay={(i % 3) * 80}><ProofCard c={c} /></Reveal>)}
+                </div>
+              )}
+              <div style={{ textAlign: 'center', marginTop: 28 }}>
+                <button onClick={() => setShowAllProof((v) => !v)} className="rm-focus rm-pop"
+                  style={{ background: 'transparent', border: `1px solid ${LINE2}`, color: '#F2F6EC', borderRadius: 999, padding: '12px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                  {showAllProof ? 'Show fewer results' : `Show all ${orderedProof.length} client results`}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* ── Section 08: founder / credibility — editorial two-column layout ── */}
+      <section id="why-us" style={{ background: INK2, color: '#fff', padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: 820, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.founder.eyebrow} heading={LANDING.founder.heading} dark maxW={640} /></Reveal>
+          <div style={{ display: 'grid', gap: 20, marginTop: 4 }}>
+            {[
+              { photo: '/images/founder.png', ...LANDING.founder },
+              { ...LANDING.founder2 },
+            ].map((p) => (
+              <Reveal key={p.name}>
+                <div className="rm-founder-row rm-lift rm-glass" style={{ borderRadius: 20, padding: 'clamp(22px,4vw,34px)', display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                  <div style={{ flexShrink: 0, textAlign: 'center', width: 140, margin: '0 auto' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.photo} alt={p.name} style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,.2)' }} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 260 }}>
+                    {'creds' in p && p.creds && (
+                      <p style={{ fontSize: 13, color: 'rgba(255,255,255,.65)', margin: '0 0 14px' }}>{p.creds.join(', ')}</p>
+                    )}
+                    <blockquote style={{ margin: '0 0 14px', paddingLeft: 16, borderLeft: '3px solid ' + ACCENT, color: '#fff', fontSize: 16.5, lineHeight: 1.55, fontStyle: 'italic' }}>&ldquo;{p.quote}&rdquo;</blockquote>
+                    <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 14.5, lineHeight: 1.65, margin: '0 0 14px' }}>{p.body}</p>
+                    <div style={{ fontWeight: 800, fontSize: 14.5 }}>{p.name}</div>
+                    <div style={{ color: 'rgba(255,255,255,.5)', fontSize: 12.5 }}>{p.role}</div>
+                    {'credsNote' in p && p.credsNote && (
+                      <p style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', marginTop: 10, maxWidth: 480 }}>{p.credsNote}</p>
+                    )}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          {/* Two real photos backing the "recruited by" claim above: a
+              ClickFunnels event and the Millionaire Mindset Mastermind. */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20, marginTop: 20 }}>
+            <Reveal>
+              <figure style={{ margin: 0 }}>
+                <div className="rm-photo-frame" style={{ borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-clickfunnels-event.webp" alt="Indrodip Ghosh at a ClickFunnels event" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
+                </div>
+                <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At a ClickFunnels event.</figcaption>
+              </figure>
+            </Reveal>
+            <Reveal delay={90}>
+              <figure style={{ margin: 0 }}>
+                <div className="rm-photo-frame" style={{ borderRadius: 16, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/founder-mastermind-event.webp" alt="Indrodip Ghosh at the Millionaire Mindset Mastermind" style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
+                </div>
+                <figcaption style={{ textAlign: 'center', marginTop: 10, fontSize: 13, color: 'rgba(255,255,255,.55)' }}>At the Millionaire Mindset Mastermind.</figcaption>
+              </figure>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 09: FAQ accordion + final booking card ── */}
+      <section id="faq" style={{ padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: 740, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow={LANDING.faq.eyebrow} heading={LANDING.faq.heading} maxW={620} /></Reveal>
+          <Reveal><FaqAccordion items={LANDING.faq.items} /></Reveal>
+        </div>
+      </section>
+
+      <section id="apply" style={{ background: INK2, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: 820, margin: '0 auto' }}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div className="rm-eyebrow" style={{ marginBottom: 12, color: ACCENT }}>{LANDING.apply.eyebrow}</div>
+              <h2 className="rm-serif" style={{ fontSize: 'clamp(24px,4vw,38px)', margin: 0, fontWeight: 800, color: '#fff', lineHeight: 1.12, maxWidth: 680, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.apply.heading}</h2>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div className="rm-glass-accent" style={{ borderRadius: 26, padding: 'clamp(26px,5vw,48px)', textAlign: 'center' }}>
+              <div className="rm-cols2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 30px', textAlign: 'left', maxWidth: 560, margin: '0 auto 24px' }}>
+                {LANDING.apply.includes.map((it) => (
+                  <div key={it} style={{ display: 'flex', gap: 10, fontSize: 14, color: '#DBE3D6', lineHeight: 1.4 }}>
+                    <span aria-hidden style={{ color: ACCENT, fontWeight: 800, flexShrink: 0 }}>✓</span>{it}
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 14, color: TEXT2, fontWeight: 700, marginBottom: 20 }}>{LANDING.apply.priceNote}</div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>{CTA('apply_card')}</div>
+              <p style={{ color: ACCENT, fontSize: 13, fontWeight: 800, marginTop: 16, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.guarantee}</p>
+            </div>
+          </Reveal>
+          <Reveal>
+            <p style={{ color: 'rgba(255,255,255,.55)', fontSize: 12.5, marginTop: 28, maxWidth: 680, margin: '28px auto 0', textAlign: 'center' }}>{LANDING.apply.micro}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <Footer legal={LEGAL} />
+
+      {/* Sticky mobile CTA */}
+      <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(7,10,6,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(0,0,0,.6)' }}>
+        <a href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'sticky' })} className="rm-focus" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, whiteSpace: 'nowrap', background: ACCENT, color: ACCENT_TEXT, border: 'none', borderRadius: 999, padding: '15px 18px', fontSize: 'clamp(13.5px,4vw,15.5px)', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'none' }}>Book My Audit — ₹199 <span aria-hidden>→</span></a>
+      </div>
+
+      <style>{`
+        .rm-extra-card{background:linear-gradient(150deg,rgba(201,255,72,.095),rgba(255,255,255,.025));border:1px solid rgba(201,255,72,.24)}
+        .rm-book-stage{height:280px;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 48%,rgba(201,255,72,.11),transparent 58%),#10160e;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-book-object{position:relative;display:flex;align-items:stretch;filter:drop-shadow(18px 20px 18px rgba(0,0,0,.5));transform:perspective(900px) rotateY(-9deg) rotateX(2deg);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+        .rm-extra-card:hover .rm-book-object{transform:perspective(900px) rotateY(-4deg) rotateX(0) translateY(-3px)}
+        .rm-book-cover{width:176px;height:236px;padding:17px 15px 12px;display:flex;flex-direction:column;color:#f5f4eb;background:linear-gradient(150deg,#103d2a,#082719 70%,#061b13);border:1px solid rgba(255,255,255,.12);box-shadow:inset 5px 0 10px rgba(255,255,255,.035);position:relative;overflow:hidden}
+        .rm-book-cover:before,.rm-book-cover:after{content:'';position:absolute;width:175px;height:175px;border:1px solid rgba(201,255,72,.14);border-radius:50%;pointer-events:none}
+        .rm-book-cover:before{right:-122px;top:61px}.rm-book-cover:after{left:-145px;bottom:-138px}
+        .rm-book-series{font-size:5.5px;letter-spacing:.28em;color:#c9ff48;font-weight:800;white-space:nowrap;border-bottom:1px solid rgba(201,255,72,.32);padding-bottom:7px}
+        .rm-book-nine{display:flex;align-items:center;gap:5px;margin-top:13px;color:#c9ff48}.rm-book-nine span{font-size:22px;line-height:1;font-weight:900;border:2px solid #c9ff48;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}.rm-book-nine small{font-size:5.5px;letter-spacing:.22em;font-weight:800}
+        .rm-book-title{font-size:23px;line-height:.91;font-weight:900;letter-spacing:-.055em;margin-top:9px}.rm-book-title i{font-size:11px;display:block;text-align:center;letter-spacing:.16em;font-style:normal;color:#c9ff48;margin:4px 0}.rm-book-title strong{font-size:29px;color:#c9ff48}
+        .rm-book-tagline{font-size:6.4px;line-height:1.4;font-weight:800;margin-top:auto}.rm-book-tagline b{color:#c9ff48}.rm-book-authors{font-size:4.7px;letter-spacing:.12em;margin-top:10px;color:rgba(255,255,255,.68);white-space:nowrap}
+        .rm-book-pages{width:9px;background:repeating-linear-gradient(0deg,#e7e4d5 0 2px,#f8f5e8 2px 4px);clip-path:polygon(0 1%,100% 0,100% 99%,0 100%);margin:2px 0}
+        .rm-ai-preview{display:flex;min-height:280px;background:#f7f5ef;color:#26332b;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-ai-sidebar{width:142px;flex:0 0 142px;padding:15px 9px;background:#f0ede4;border-right:1px solid #e4e0d5}
+        .rm-ai-brand{display:flex;align-items:center;gap:7px;font:700 11px Georgia,serif;margin:0 0 14px 3px}.rm-ai-brand>span,.rm-ai-mark{width:20px;height:20px;border-radius:7px;background:#244e32;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
+        .rm-ai-nav{height:25px;display:flex;align-items:center;gap:8px;padding:0 7px;border-radius:7px;color:#536057;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}.rm-ai-nav>span{width:11px;text-align:center;font-size:11px;flex-shrink:0}.rm-ai-nav.is-active{background:#e4e0d4;color:#26332b;font-weight:700}
+        .rm-ai-main{flex:1;min-width:0;padding:12px 15px 13px;display:flex;flex-direction:column;align-items:center;position:relative}
+        .rm-ai-top{width:100%;display:flex;align-items:center;gap:7px;font-size:9px;padding-bottom:13px;border-bottom:1px solid #e9e5db}.rm-ai-session{margin-left:auto;font-size:7px;color:#879087}.rm-ai-welcome{text-align:center;margin:23px 0 16px}.rm-ai-spark{font-size:14px;color:#46694d}.rm-ai-welcome h4{font:700 25px Georgia,serif;margin:6px 0;color:#1d2d22;letter-spacing:-.04em}.rm-ai-welcome p{color:#7b847c;font-size:9px;margin:0}
+        .rm-ai-composer{width:100%;max-width:440px;border:1px solid #e5e1d7;border-radius:11px;background:white;box-shadow:0 5px 18px rgba(40,48,38,.07);padding:11px;color:#8a908a;font-size:8px;min-height:57px}.rm-ai-composer>div{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:7px}.rm-ai-send{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:#e9e4d6;color:#536057;font-size:11px}
+        .rm-ai-prompts{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:10px;max-width:450px}.rm-ai-prompts span{padding:6px 8px;border:1px solid #e5e0d5;border-radius:999px;background:#fff;color:#49564b;font-size:7px;line-height:1.2}
+        .rm-value-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(201,255,72,.3);border-radius:999px;background:rgba(201,255,72,.08);padding:8px 12px;color:#c8d2c1;font-size:11px}.rm-value-chip strong{color:#c9ff48;font-size:12px}
+        @media(max-width:768px){.rm-book-stage,.rm-ai-preview{min-height:252px;height:252px}.rm-ai-sidebar{width:104px;flex-basis:104px;padding:12px 6px}.rm-ai-nav{font-size:7px;gap:5px;padding:0 4px}.rm-ai-main{padding:10px 9px}.rm-ai-welcome{margin:19px 0 13px}.rm-ai-welcome h4{font-size:21px}.rm-ai-prompts span{font-size:6.3px}.rm-book-cover{transform:scale(.93)}}
+        .rm-sticky-cta{display:none}
+        @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
+        @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-rating>div{justify-content:center!important}}
+        @media(min-width:769px) and (max-width:1024px){.rm-grid3{grid-template-columns:1fr 1fr!important}.rm-steps5{grid-template-columns:1fr 1fr 1fr!important}}
+        @media(max-width:768px){.rm-grid2,.rm-grid3,.rm-steps5,.rm-stats,.rm-calc-grid,.rm-cols2,.rm-cap-grid{grid-template-columns:1fr!important}.rm-founder-row{flex-direction:column;align-items:center!important;text-align:center}}
+        @media(min-width:769px) and (max-width:1024px){.rm-cap-grid{grid-template-columns:1fr 1fr!important}}
+      `}</style>
     </div>
   )
 }

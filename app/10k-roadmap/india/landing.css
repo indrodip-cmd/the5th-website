@@ -335,3 +335,45 @@
 @media (max-height: 760px) and (min-width: 1024px) { .india-exit__panel { padding: var(--space-md); } .india-exit__visual { min-height: 235px; } .india-exit__visual img { height: 235px; } .india-exit__comparison { margin-block-start: var(--space-md); } .india-exit__choice { min-height: 84px; padding: var(--space-sm); } }
 @media (max-width: 1023px) { .india-exit { display: none; } }
 @media (prefers-reduced-motion: reduce) { .india-exit, .india-exit__panel { animation: none; } .india-exit__cta { transition: none; } }
+
+
+/* India edition uses the same dark forest / acid lime visual system as
+   /10k-roadmap: matching section rhythm, radial hero treatment, pill CTAs,
+   and rounded image / proof cards. */
+.india-landing section { padding-block: clamp(30px, 6vw, 60px); }
+.india-landing section.hero {
+  padding-block: clamp(30px, 6vw, 56px) 20px;
+  background: radial-gradient(110% 60% at 15% -6%, rgba(201,255,72,.12) 0%, #070A06 62%);
+}
+.india-landing .btn { min-height: 52px; border-radius: 999px; font-weight: 700; }
+.india-landing .btn:hover { background: #D8FF78; border-color: #D8FF78; color: #0B0F08; }
+.india-landing .hero-person__photo,
+.india-landing .case-study-card,
+.india-landing .book-card__visual,
+.india-landing .book-card__copy,
+.india-landing .proof-booking,
+.india-landing .video-testimonial__poster {
+  border-radius: 18px;
+}
+.india-landing .hero-person__photo {
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 30px 60px -24px rgba(0,0,0,.6);
+}
+.india-landing .case-study-card,
+.india-landing .book-card__copy,
+.india-landing .proof-booking {
+  background: #121810;
+  border: 1px solid rgba(255,255,255,.09);
+}
+@media (max-width: 48rem) {
+  .india-landing section.hero { padding-block: 30px 20px; }
+  .india-landing .hero__text { text-align: center; margin-inline: auto; }
+  .india-landing .hero h1,
+  .india-landing .hero__lede,
+  .india-landing .hero__note,
+  .india-landing .hero__authority { margin-inline: auto; }
+  .india-landing .hero__actions { justify-content: center; }
+  .india-landing .hero__facts,
+  .india-landing .hero__rating { justify-content: center; }
+  .india-landing .hero__guarantee { text-align: left; }
+}

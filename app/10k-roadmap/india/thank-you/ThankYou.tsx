@@ -45,7 +45,7 @@ function Countdown({ start }: { start: string }) {
       <div className="rm-eyebrow" style={{ marginBottom: 12 }}>{THANKYOU.countdownLabel}</div>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
         {parts.map(([v, l]) => (
-          <div key={l} style={{ minWidth: 68, background: '#fff', border: `1px solid ${T.line}`, borderRadius: 14, padding: '12px 10px', boxShadow: '0 12px 34px -26px rgba(46,26,53,.6)' }}>
+          <div key={l} style={{ minWidth: 68, background: T.surface, border: `1px solid ${T.line}`, borderRadius: 14, padding: '12px 10px', boxShadow: '0 12px 34px -26px rgba(0,0,0,.45)' }}>
             <div className="rm-serif" style={{ fontSize: 32, fontWeight: 700, lineHeight: 1, color: T.text }}>{String(v).padStart(2, '0')}</div>
             <div style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: T.text3, marginTop: 6 }}>{l}</div>
           </div>
@@ -156,7 +156,7 @@ export default function ThankYou() {
               <Reveal delay={200} style={{ marginTop: 26 }}>
                 <a href={b.meetingUrl} target="_blank" rel="noopener noreferrer" onClick={() => track('meeting_link_clicked')}
                   className="rm-focus"
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', maxWidth: 420, padding: '18px 28px', borderRadius: 16, background: 'linear-gradient(180deg,#6b39a0 0%,#5a2c86 55%,#4c2472 100%)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 17, boxShadow: '0 16px 32px -14px rgba(94,46,134,.7)' }}>
+                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', maxWidth: 420, padding: '18px 28px', borderRadius: 16, background: 'linear-gradient(180deg,#C9FF48 0%,#B9F13C 55%,#A6DA2E 100%)', color: '#0B0F08', textDecoration: 'none', fontWeight: 700, fontSize: 17, boxShadow: '0 16px 32px -14px rgba(201,255,72,.45)' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
                   Join the call
                 </a>
@@ -173,7 +173,7 @@ export default function ThankYou() {
                 <div className="rm-eyebrow" style={{ marginBottom: 14 }}>{THANKYOU.addHeading}</div>
                 <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                   <Btn href={googleUrl(full)} variant="ghost" onClick={() => track('calendar_google_clicked')}>Google Calendar</Btn>
-                  <a href={icsBlobUrl(full)} download="business-roadmap-audit.ics" onClick={() => track('calendar_apple_clicked')} className="rm-focus" style={{ display: 'inline-flex', alignItems: 'center', padding: '17px 30px', borderRadius: 999, border: `1px solid ${T.lineStrong}`, background: '#fff', color: T.text, textDecoration: 'none', fontWeight: 700, fontSize: 16 }}>Apple Calendar</a>
+                  <a href={icsBlobUrl(full)} download="business-roadmap-audit.ics" onClick={() => track('calendar_apple_clicked')} className="rm-focus" style={{ display: 'inline-flex', alignItems: 'center', padding: '17px 30px', borderRadius: 999, border: `1px solid ${T.lineStrong}`, background: T.surface, color: T.text, textDecoration: 'none', fontWeight: 700, fontSize: 16 }}>Apple Calendar</a>
                   <Btn href={outlookUrl(full)} variant="ghost" onClick={() => track('calendar_outlook_clicked')}>Outlook / Microsoft</Btn>
                 </div>
               </Reveal>
@@ -190,7 +190,7 @@ export default function ThankYou() {
               <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.6, margin: '0 0 16px' }}>{THANKYOU.detailsPending}</p>
               <form onSubmit={lookupByEmail} style={{ display: 'grid', gap: 10, maxWidth: 360, margin: '0 auto' }}>
                 <p style={{ color: T.text3, fontSize: 13, margin: 0 }}>{THANKYOU.emailPrompt}</p>
-                <input className="rm-focus" type="email" placeholder="Email you booked with" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} style={{ width: '100%', background: '#fff', border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '13px 15px', fontFamily: T.sans }} />
+                <input className="rm-focus" type="email" placeholder="Email you booked with" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} style={{ width: '100%', background: T.surface, border: `1px solid ${T.line}`, borderRadius: 12, color: T.text, fontSize: 15.5, padding: '13px 15px', fontFamily: T.sans }} />
                 <Btn type="submit" full>Show my countdown →</Btn>
               </form>
             </div>

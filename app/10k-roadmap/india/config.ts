@@ -124,7 +124,7 @@ export const LANDING = {
     heading: 'Everything you get for ₹199.',
     sub: 'Not just a call. You leave with real things you can use.',
     items: [
-      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indrodip and Manisha. Not a team member.' },
+      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indradip and Manisha. Not a team member.' },
       { t: 'Your Business Audit PDF', d: 'A written report on your offer, your buyer and your biggest problem.' },
       { t: 'Your 100-Day Roadmap', d: 'What to fix first, second and third. Step by step.' },
       { t: 'Call Recording', d: 'Watch it again any time. Sent only if you agree to recording.' },
@@ -137,7 +137,7 @@ export const LANDING = {
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
     recruitedBy: 'Recruited by Google & Anthropic',
@@ -204,7 +204,7 @@ export const LANDING = {
   proof: {
     eyebrow: 'Real Results, Real People',
     heading: 'Real results.',
-    // Figure confirmed directly by the business owner (Indrodip), 2026-11-13:
+    // Figure confirmed directly by the business owner (Indradip), 2026-11-13:
     // total documented client revenue across the full client base, not only
     // the cases shown below (those sum to a conservative $646,000+).
     revenueLine: 'Clients have generated over $15,000,000 in documented business growth.',
@@ -239,7 +239,7 @@ export const LANDING = {
     heading: 'Frequently Asked Questions',
     items: [
       { q: 'What exactly happens during the ₹199 strategy session?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
-      { q: 'How long does the session last?', a: 'Sixty minutes, with Indrodip and Manisha personally.' },
+      { q: 'How long does the session last?', a: 'Sixty minutes, with Indradip and Manisha personally.' },
       { q: 'Is this suitable for beginners?', a: 'Yes, if you already have some expertise or clients. It isn’t built for people with no business or income yet.' },
       { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. It’s one diagnostic session to find the specific thing blocking your growth, so you can judge for yourself whether the plan makes sense, with zero obligation to continue.' },
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
@@ -269,7 +269,7 @@ export const LANDING = {
     heading: 'Learn From Someone Building Businesses, Not Just Teaching Them.',
     quote: 'Talented professionals rarely got paid for the value they created. That gap is what built The5th.',
     body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M. Building that company, not just studying business, is what shapes how I help coaches and consultants position their offer, build a marketing system, and convert leads into clients.',
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
       { v: '5+ Yrs', l: 'Marketing & Funnel Strategy' },
@@ -287,7 +287,7 @@ export const LANDING = {
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
     points: [
-      'A 60-minute 1:1 call with Indrodip and Manisha personally',
+      'A 60-minute 1:1 call with Indradip and Manisha personally',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],
@@ -299,11 +299,11 @@ export const LANDING = {
   pay: {
     eyebrow: 'Last Step',
     headline: 'Reserve your 1:1 Business Audit.',
-    sub: 'A 60-minute private call with Indrodip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
+    sub: 'A 60-minute private call with Indradip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
     notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
     coverLead: 'Your ₹199 reserves:',
     points: [
-      'A 60-minute 1:1 call with Indrodip and Manisha personally',
+      'A 60-minute 1:1 call with Indradip and Manisha personally',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],

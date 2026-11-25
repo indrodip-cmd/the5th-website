@@ -79,7 +79,7 @@ export default function Schedule() {
         <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.55, maxWidth: 520, margin: '0 auto' }}>{SCHEDULE.sub}</p>
       </Reveal>
       <Reveal>
-        <fieldset style={{ maxWidth: 760, margin: '0 auto 18px', padding: '16px 18px', border: `1px solid ${T.line}`, borderRadius: 14, background: '#fff' }}>
+        <fieldset style={{ maxWidth: 760, margin: '0 auto 18px', padding: '16px 18px', border: `1px solid ${T.line}`, borderRadius: 14, background: T.surface }}>
           <legend style={{ paddingInline: 6, fontWeight: 700, color: T.text }}>Meeting recording and AI use (optional)</legend>
           <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBlock: 8, fontSize: 14, lineHeight: 1.5, color: T.text }}>
             <input type="checkbox" checked={recordingConsent} onChange={(e) => { setRecordingConsent(e.target.checked); if (!e.target.checked) setAiTrainingConsent(false) }} />
@@ -93,9 +93,9 @@ export default function Schedule() {
         </fieldset>
       </Reveal>
       <Reveal>
-        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)', minHeight: 560 }}>
+        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: T.surface, boxShadow: '0 24px 70px -50px rgba(0,0,0,.45)', minHeight: 560 }}>
           {!calReady && (
-            <div aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: '#fff', zIndex: 2 }}>
+            <div aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, background: T.surface, zIndex: 2 }}>
               <span className="rm-cal-spin" style={{ width: 34, height: 34, borderRadius: '50%', border: `3px solid ${T.line}`, borderTopColor: T.accentInk, display: 'block' }} />
               <span style={{ color: T.text2, fontSize: 14, fontWeight: 600 }}>{SCHEDULE.loading || 'Loading available times…'}</span>
             </div>

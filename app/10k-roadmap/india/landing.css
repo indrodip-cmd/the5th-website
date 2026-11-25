@@ -5,7 +5,7 @@
 /* Hallmark · dismissed F4 · the paper button keeps the dark closing price band legible */
 /* Hallmark · dismissed F15 · case stories, biographies, FAQ and legal copy each use their own reading measure */
 /* Hallmark · waive 38iii · lime pizza phrase matches the screenshot · keep the ₹360 comparison prominent */
-@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400&family=Vollkorn:wght@600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -47,9 +47,6 @@
 .hero__secondary { color: var(--color-accent); font-size: var(--text-sm); font-weight: 700; text-underline-offset: 4px; }
 .hero__secondary:hover { color: var(--color-ink); }
 .hero__note { max-width: 42ch; margin-block-start: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); line-height: 1.5; }
-.hero__guarantee { display: grid; gap: var(--space-3xs); margin-block-start: var(--space-md); padding: var(--space-sm); border: var(--rule-hair) solid var(--color-rule-2); background: var(--color-paper-2); }
-.hero__guarantee strong { color: var(--color-ink); font-family: var(--font-display); font-size: var(--text-md); }
-.hero__guarantee span { max-width: 45ch; color: var(--color-muted); font-size: var(--text-xs); line-height: 1.45; }
 .hero__authority { max-width: 54ch; margin-block-start: var(--space-md); color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.45; }
 .hero__credential { display: grid; gap: var(--space-3xs); margin-block-start: var(--space-sm); color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.4; }
 .hero__credential strong { color: var(--color-ink); font-weight: 700; }
@@ -335,3 +332,44 @@
 @media (max-height: 760px) and (min-width: 1024px) { .india-exit__panel { padding: var(--space-md); } .india-exit__visual { min-height: 235px; } .india-exit__visual img { height: 235px; } .india-exit__comparison { margin-block-start: var(--space-md); } .india-exit__choice { min-height: 84px; padding: var(--space-sm); } }
 @media (max-width: 1023px) { .india-exit { display: none; } }
 @media (prefers-reduced-motion: reduce) { .india-exit, .india-exit__panel { animation: none; } .india-exit__cta { transition: none; } }
+
+
+/* India edition uses the same dark forest / acid lime visual system as
+   /10k-roadmap: matching section rhythm, radial hero treatment, pill CTAs,
+   and rounded image / proof cards. */
+.india-landing section { padding-block: clamp(30px, 6vw, 60px); }
+.india-landing section.hero {
+  padding-block: clamp(30px, 6vw, 56px) 20px;
+  background: radial-gradient(110% 60% at 15% -6%, rgba(201,255,72,.12) 0%, #070A06 62%);
+}
+.india-landing .btn { min-height: 52px; border-radius: 999px; font-weight: 700; }
+.india-landing .btn:hover { background: #D8FF78; border-color: #D8FF78; color: #0B0F08; }
+.india-landing .hero-person__photo,
+.india-landing .case-study-card,
+.india-landing .book-card__visual,
+.india-landing .book-card__copy,
+.india-landing .proof-booking,
+.india-landing .video-testimonial__poster {
+  border-radius: 18px;
+}
+.india-landing .hero-person__photo {
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 30px 60px -24px rgba(0,0,0,.6);
+}
+.india-landing .case-study-card,
+.india-landing .book-card__copy,
+.india-landing .proof-booking {
+  background: #121810;
+  border: 1px solid rgba(255,255,255,.09);
+}
+@media (max-width: 48rem) {
+  .india-landing section.hero { padding-block: 30px 20px; }
+  .india-landing .hero__text { text-align: center; margin-inline: auto; }
+  .india-landing .hero h1,
+  .india-landing .hero__lede,
+  .india-landing .hero__note,
+  .india-landing .hero__authority { margin-inline: auto; }
+  .india-landing .hero__actions { justify-content: center; }
+  .india-landing .hero__facts,
+  .india-landing .hero__rating { justify-content: center; }
+}

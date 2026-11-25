@@ -53,7 +53,7 @@ export default function Questions() {
         <p style={{ color: T.text3, fontSize: 13, marginTop: 12 }}>{RESERVED_WHY.footnote}</p>
       </Reveal>
       <Reveal>
-        <div id="tf-container" style={{ width: '100%', height: 'clamp(560px,72vh,820px)', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: '#fff', boxShadow: '0 24px 70px -50px rgba(46,26,53,.5)' }} />
+        <div id="tf-container" style={{ width: '100%', height: 'clamp(560px,72vh,820px)', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.line}`, background: T.surface, boxShadow: '0 24px 70px -50px rgba(0,0,0,.45)' }} />
       </Reveal>
       {failed && (
         <Reveal style={{ textAlign: 'center', marginTop: 20 }}>

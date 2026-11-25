@@ -55,9 +55,9 @@ const LANDING = {
   eyebrow: 'FOR BUSINESS OWNERS AND CONSULTANTS IN INDIA',
   headline: 'Build a Clear Roadmap Toward ₹10 Lakh/Month',
   headlineSub: 'Get a 60-minute business audit, focused priorities and a practical 100-day plan.',
-  ctaPrimary: 'Book Your ₹199 Strategy Session',
+  ctaPrimary: 'Book Your ₹199 Business Audit',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
-  ctaMicro: '₹199 one-time session. No recurring charge.',
+  ctaMicro: '₹199 one-time business audit. No recurring charge.',
   guarantee: '',
   heroCard: {
     ...GLOBAL_LANDING.heroCard,
@@ -67,8 +67,8 @@ const LANDING = {
     recruitedBy: 'AI startup founder · ~$6M valuation',
     featuredIn: 'Recruited by Google & Anthropic',
     chips: [
-      { t: 'Business Audit', s: '60-minute 1:1 session' },
-      { t: '₹199', s: 'One-time session' },
+      { t: 'Business Audit', s: '60-minute 1:1 review' },
+      { t: '₹199', s: 'One-time audit' },
     ],
   },
   ctaStandard: 'Book My 60-Minute Business Audit — ₹199',
@@ -114,7 +114,7 @@ const LANDING = {
     ],
     sampleCta: 'View the 17-Page Sample Audit',
     sampleNote: 'Illustrative example; figures are shown in USD.',
-    note: 'The ₹199 covers the strategy session and listed deliverables. Ongoing implementation is separate.',
+    note: '₹199 covers your business audit and listed deliverables. Ongoing implementation is separate.',
     sampleHighlight: {
       ...GLOBAL_LANDING.deliverables.sampleHighlight,
       eyebrow: 'REVIEW THE FORMAT',
@@ -139,11 +139,11 @@ const LANDING = {
     eyebrow: 'BEFORE YOU BOOK',
     heading: 'Questions Before Your Audit.',
     items: [
-      { q: 'What happens in the ₹199 strategy session?', a: 'Indradip and Manisha review your offer, positioning and client journey, then identify practical next steps.' },
+      { q: 'What happens in the ₹199 business audit?', a: 'Indradip and Manisha review your offer, positioning and client journey, then identify practical next steps.' },
       { q: 'What will I receive?', a: 'A written business audit and 100-day roadmap within 48 hours. A call recording is provided only if you consent.' },
-      { q: 'Is this a sales call?', a: 'No. It is a working session focused on your business. There is no obligation to continue afterward.' },
+      { q: 'Is this a sales call?', a: 'No. It is a focused business audit. There is no obligation to continue afterward.' },
       { q: 'Can Claude do this for me?', a: 'Claude can assist with tasks. Expert input is still needed to interpret your business, choose priorities and implement the strategy.' },
-      { q: 'What does ₹199 cover?', a: 'It covers the 60-minute strategy session. Review booking and refund terms before checkout.' },
+      { q: 'What does ₹199 cover?', a: 'It covers the 60-minute business audit and listed deliverables. Review the terms before checkout.' },
     ],
   },
   apply: {
@@ -151,7 +151,7 @@ const LANDING = {
     eyebrow: 'YOUR NEXT STEP',
     heading: 'Get a Clearer Business Roadmap for ₹199.',
     includes: [
-      'A private 60-minute session with Indradip and Manisha',
+      'A private 60-minute business audit with Indradip and Manisha',
       'Your personalized business audit PDF',
       'A practical 100-day action roadmap',
       'A Claude implementation toolkit',
@@ -260,7 +260,7 @@ function IncludedExtras() {
           </div>
         </div>
         <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
-          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included with your business audit</div>
           <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>A digital copy of <em>Expertise to Income</em></h3>
           <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>The 9-chapter book shown above, yours to keep and revisit as you put your roadmap into action.</p>
           <div className="rm-value-chip"><span>Original book price</span><strong>₹425</strong></div>
@@ -281,10 +281,10 @@ function IncludedExtras() {
           </div>
         </div>
         <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
-          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included with your business audit</div>
           <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>The5th AI, inside your workspace</h3>
           <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>Plan your next post, draft an outreach message, troubleshoot a sales conversation, or think through a price increase. Open The5th AI in the same workspace where you manage your journey, leads, content, and ideal buyer.</p>
-          <div className="rm-value-chip"><span>Included with your session</span><strong>Included</strong></div>
+          <div className="rm-value-chip"><span>Included with your audit</span><strong>Included</strong></div>
         </div>
       </article>
     </div>
@@ -410,6 +410,11 @@ export default function Landing() {
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
               <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
+              <div className="rm-audit-points" aria-label="Business audit includes" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: 20, paddingTop: 16, borderTop: `1px solid ${LINE}`, color: '#D7E0D3', fontSize: 13, lineHeight: 1.45 }}>
+                <span><b style={{ color: ACCENT }}>60 min</b> with both consultants</span>
+                <span><b style={{ color: ACCENT }}>Written</b> business audit</span>
+                <span><b style={{ color: ACCENT }}>100-day</b> action roadmap</span>
+              </div>
             </Reveal>
           </div>
           <Reveal delay={150} style={{ flex: '1 1 300px', minWidth: 260, maxWidth: 400, margin: '0 auto' }}>
@@ -445,7 +450,7 @@ export default function Landing() {
              the real-people hero section ── */}
       <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow="Client Testimonials" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
+          <Reveal><SectionHead eyebrow="Client Testimonials" heading="Hear it from them directly." sub="Unscripted reactions from clients about their Roadmap experience. Tap any clip to play." maxW={620} /></Reveal>
           <Reveal><div style={{ marginBottom: SECY }}><TestimonialCard index={8} /></div></Reveal>
           <Reveal><VideoWall columns={3} limit={9} /></Reveal>
         </div>

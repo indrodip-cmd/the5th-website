@@ -49,12 +49,6 @@ export default function Pay({ planId }: { planId: string }) {
             <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.fit}</p>
             <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, marginBottom: 18 }}>{PAY.deposit}</p>
 
-            <div style={{ background: T.surface, border: `1px solid ${T.accent}`, borderRadius: 14, padding: '16px 18px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.accentInk} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: T.text }}>
-                <b style={{ color: T.accentInk, fontWeight: 800 }}>{PAY.guaranteeTitle}:</b> {PAY.guaranteeBody}
-              </p>
-            </div>
             <p style={{ color: T.text2, fontSize: 13, lineHeight: 1.5, marginTop: 14 }}><a href="/refund#india-roadmap" style={{ color: T.accentInk, fontWeight: 700, textDecoration: 'underline' }}>Read full refund eligibility and terms</a></p>
           </Reveal>
 
@@ -62,7 +56,7 @@ export default function Pay({ planId }: { planId: string }) {
             <div style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: 20, padding: 'clamp(20px,3vw,28px) clamp(16px,2.5vw,22px)', position: 'sticky', top: 90, boxShadow: '0 30px 70px -50px rgba(0,0,0,.45)' }}>
               <div style={{ textAlign: 'center', marginBottom: 16 }}>
                 <span className="rm-serif" style={{ fontSize: 44, color: T.accentInk, fontWeight: 800 }}>{DEPOSIT_INDIA.label}</span>
-                <span style={{ color: T.text2, fontSize: 14, marginLeft: 6 }}>refundable deposit</span>
+                <span style={{ color: T.text2, fontSize: 14, marginLeft: 6 }}>business audit</span>
               </div>
               {planId ? <WhopCheckout planId={planId} email={email} /> : <PendingSetup />}
               <p style={{ textAlign: 'center', fontSize: 11.5, color: T.text3, marginTop: 12, lineHeight: 1.5 }}>{PAY.micro}</p>
@@ -82,7 +76,7 @@ function PendingSetup() {
   return (
     <div style={{ textAlign: 'center', padding: '18px 4px' }}>
       <p style={{ fontSize: 14, color: T.text2, lineHeight: 1.6, marginBottom: 16 }}>
-        Online payment for this page is being set up. For now, book directly and we’ll confirm the ₹199 deposit with you personally.
+        Online payment for this page is being set up. Book your business audit directly and we’ll confirm the ₹199 payment with you personally.
       </p>
       <Btn href="/10k-roadmap/india/schedule" full>Book My Audit Call →</Btn>
     </div>

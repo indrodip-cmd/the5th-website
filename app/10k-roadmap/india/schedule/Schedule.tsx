@@ -83,11 +83,11 @@ export default function Schedule() {
           <legend style={{ paddingInline: 6, fontWeight: 700, color: T.text }}>Meeting recording and AI use (optional)</legend>
           <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBlock: 8, fontSize: 14, lineHeight: 1.5, color: T.text }}>
             <input type="checkbox" checked={recordingConsent} onChange={(e) => { setRecordingConsent(e.target.checked); if (!e.target.checked) setAiTrainingConsent(false) }} />
-            <span>I agree that The5th may record and transcribe this strategy session to prepare my notes and roadmap and for service quality. If I leave this unchecked, the session will not be recorded or transcribed by The5th.</span>
+            <span>I agree that The5th may record and transcribe this business audit call to prepare my notes and roadmap and for service quality. If I leave this unchecked, the call will not be recorded or transcribed by The5th.</span>
           </label>
           <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBlock: 8, fontSize: 14, lineHeight: 1.5, color: T.text }}>
             <input type="checkbox" checked={aiTrainingConsent} disabled={!recordingConsent} onChange={(e) => setAiTrainingConsent(e.target.checked)} />
-            <span>Separately, I agree that The5th may use the recording and transcript to train and improve its AI models. This is optional. Declining will not affect my session or deliverables. I can withdraw future use by emailing <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a>.</span>
+            <span>Separately, I agree that The5th may use the recording and transcript to train and improve its AI models. This is optional. Declining will not affect my audit or deliverables. I can withdraw future use by emailing <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a>.</span>
           </label>
           <p style={{ margin: '10px 0 0', fontSize: 12, lineHeight: 1.5, color: T.text2 }}>Please avoid sharing sensitive personal information that is not needed for your business review. Read the <a href="/privacy">Privacy Policy</a> for retention, service providers, and your choices.</p>
         </fieldset>

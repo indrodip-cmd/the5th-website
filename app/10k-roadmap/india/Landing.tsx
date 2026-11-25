@@ -172,7 +172,7 @@ export default function Landing() {
 
       <header className="nav">
         <div className="container nav__inner">
-          <a className="nav__brand" href="/10k-roadmap/india" aria-label="The5th Global Consulting home">
+          <a className="nav__brand" href="/india" aria-label="The5th Global Consulting India audit home">
             <Image src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" width={192} height={75} priority />
           </a>
           <nav className="nav__links" aria-label="Page sections">

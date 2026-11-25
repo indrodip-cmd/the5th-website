@@ -7,7 +7,7 @@ import type { Metadata } from 'next'
 const TITLE = 'Business Roadmap Audit for Coaches in India | The5th'
 const OG_TITLE = 'More ideas. Still unsure what brings clients?'
 const DESC =
-  'A 60-minute audit of your offer and client flow with Indrodip Ghosh and Manisha Satpute. Receive a personalized audit PDF and 100-day roadmap. ₹199 refundable booking deposit.'
+  'A 60-minute audit of your offer and client flow with Indradip Ghosh and Manisha Satpute. Receive a personalized audit PDF and 100-day roadmap. ₹199 refundable booking deposit.'
 const URL = 'https://the5thglobal.consulting/10k-roadmap/india'
 
 export const metadata: Metadata = {

@@ -194,7 +194,6 @@ export default function Landing() {
               <p className="hero__lede">{LANDING.headlineSub}</p>
               <div className="hero__actions"><button type="button" className="btn hero__cta" onClick={() => goApply('hero')}>Book Your ₹199 Strategy Session</button><a className="hero__secondary" href="#process">See How It Works</a></div>
               <p className="hero__note">₹199 one-time booking deposit. No recurring charge. Refund terms apply.</p>
-              <div className="hero__guarantee"><strong>200% Guarantee for Qualified Applicants</strong><span>The ₹400 total refund (₹199 + ₹201) applies only when we confirm your coaching business is a fit, you have experience, a prior sale, and capacity to consider coaching, then fail to deliver the promised audit. If we decline you, request the standard ₹199 refund. Disliking it alone does not qualify for the extra ₹201.</span></div>
               <p className="hero__authority">AI Startup Founder, ~$6M Startup Valuation, Backed by University of California alumni</p>
               <p className="hero__rating"><strong>{RATING.score}</strong><span>{RATING.text}</span></p>
               <div className="hero__facts" aria-label="Session details">

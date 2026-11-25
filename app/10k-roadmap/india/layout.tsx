@@ -4,10 +4,10 @@ import type { Metadata } from 'next'
    The 1200x630 og:image is a current screenshot of this landing page's hero
    (public/og/10k-roadmap-india-hero.png).
    Indexable so search + AI assistants can fetch and cite it. */
-const TITLE = 'Business Roadmap Audit for Coaches in India | The5th'
-const OG_TITLE = 'More ideas. Still unsure what brings clients?'
+const TITLE = 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money? | The5th'
+const OG_TITLE = 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?'
 const DESC =
-  'A 60-minute audit of your offer and client flow with Indradip Ghosh and Manisha Satpute. Receive a personalized audit PDF and 100-day roadmap. ₹199 refundable booking deposit.'
+  'Before you spend another rupee on coaching, courses, or marketing tools, get a ₹199 business audit. Fully refundable within 7 days if it isn’t worth it.'
 const URL = 'https://the5thglobal.consulting/india'
 
 export const metadata: Metadata = {

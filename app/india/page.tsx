@@ -2,15 +2,15 @@ import type { Metadata } from 'next'
 import Landing from '../10k-roadmap/india/Landing'
 
 export const metadata: Metadata = {
-  title: 'Business Roadmap Audit for Coaches in India | The5th',
-  description: 'Get a 60-minute business audit with Indradip Ghosh and Manisha Satpute, plus a personalized audit PDF and 100-day roadmap for ₹199.',
+  title: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money? | The5th',
+  description: 'Before you spend another rupee on coaching, courses, or marketing tools, get a ₹199 business audit. Fully refundable within 7 days if it isn’t worth it.',
   alternates: { canonical: '/india' },
   openGraph: {
     type: 'website',
     url: 'https://the5thglobal.consulting/india',
     siteName: 'The5th Global Consulting',
-    title: 'More ideas. Still unsure what brings clients?',
-    description: 'Get a 60-minute business audit with Indradip Ghosh and Manisha Satpute, plus a personalized audit PDF and 100-day roadmap for ₹199.',
+    title: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?',
+    description: 'Before you spend another rupee on coaching, courses, or marketing tools, get a ₹199 business audit. Fully refundable within 7 days if it isn’t worth it.',
     images: [{ url: '/og/10k-roadmap-india-hero.png', width: 1200, height: 630, alt: 'The5th India Business Roadmap Audit' }],
   },
 }

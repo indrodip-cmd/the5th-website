@@ -133,12 +133,12 @@ export default function IndiaExitPopup({ onBook }: { onBook: () => void }) {
             <b>₹360</b>
           </div>
           <div className="india-exit__choice india-exit__choice--session">
-            <div><strong>Your strategy session</strong><p>A focused review, plus your written roadmap within 48 hours.</p></div>
+            <div><strong>Your business audit</strong><p>A focused review, plus your written roadmap within 48 hours.</p></div>
             <b>₹199</b>
           </div>
         </div>
         <p className="india-exit__ask">That’s ₹161 less, with a practical plan to take away.</p>
-        <button className="btn india-exit__cta" type="button" onClick={onBook}>Book my ₹199 session</button>
+        <button className="btn india-exit__cta" type="button" onClick={onBook}>Book my ₹199 audit</button>
         <a className="india-exit__terms" href="/refund#india-roadmap">One-time deposit. Refund terms apply.</a>
       </section>
     </div>

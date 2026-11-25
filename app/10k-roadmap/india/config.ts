@@ -82,23 +82,12 @@ export const LANDING = {
   headlinePre: '',
   headlineHighlight: '',
   headlinePost: '',
-  headline: "You're Good At What You Do. So Why Is Making Money From Your Coaching Still So Difficult?",
-  headlineSub: 'Build a coaching business that brings you consistent clients and predictable revenue, not one more random marketing activity.',
-  guaranteeLine: 'Qualified clients receive a defined refund if we fail to deliver the promised audit. ',
-  guaranteeEmphasis: 'See eligibility before you book.',
-  guaranteeBadge: '200% Guarantee for Qualified Applicants',
-  guaranteeShort: 'If we decline your application, request ₹199 back. The ₹400 total guarantee is limited to qualified clients.',
-  // The full guarantee block, set out near the booking decision (apply section).
-  guaranteeFull: {
-    heading: '₹400 total for qualified clients only.',
-    body: 'The ₹400 total guarantee is only for relevant coaching businesses with prior experience and at least one sale, when The5th confirms we can help and then fails to deliver the promised audit. If we decline your application, you may request the standard ₹199 refund.',
-    sub: 'One claim per customer and booking. No repeat or stacked payouts.',
-    terms: 'See the Refund Policy for eligibility, the request process, exclusions, and your statutory consumer rights.',
-  },
-  ctaPrimary: 'Book Your ₹199 Business Audit',
+  headline: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?',
+  headlineSub: 'Before you spend another rupee on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
+  ctaPrimary: 'Apply for a Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199 one-time business audit. No recurring charge.',
-  ctaMicroShort: '₹199 one-time business audit',
+  ctaMicro: '₹199, fully refundable if it isn’t worth it to you. Credited toward any program booked within 14 days.',
+  ctaMicroShort: '₹199 fully refundable',
 
   /* ── The problem: four short, scannable statements, then the one line
      that reframes it — named before the solution, in the reader's own
@@ -281,8 +270,8 @@ export const LANDING = {
     eyebrow: 'Book Your Slot',
     heading: 'Your Next Client Shouldn’t Depend On Luck.',
     sub: 'Let’s identify what’s holding your business back and map out your next steps.',
-    priceLine: '₹199 today. Standard refund if we decline your application.',
-    micro: 'A ₹400 total guarantee is available only to qualified applicants who meet the published conditions.',
+    priceLine: '₹199 for your business audit. Fully refundable within 7 days if it isn’t worth it to you.',
+    micro: 'Tell us within 7 days after your audit for a full refund. You keep the written plan either way.',
     // What the session itself leaves you with, same facts as the pay step's
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
@@ -308,7 +297,7 @@ export const LANDING = {
       'A realistic next step, whether or not you ever work with us again',
     ],
     fit: 'This is for full-time coaches in India who have real expertise and happy clients, and want a predictable, ₹10L/month business instead of a feast-or-famine one.',
-    deposit: '₹199 is a one-time payment for the business audit and listed deliverables. Review the refund terms before checkout.',
+    deposit: 'Your ₹199 is fully refundable if the audit isn’t worth it to you. Tell us within 7 days for a refund; you keep the written plan either way. Book any program within 14 days and the ₹199 is credited toward it.',
     micro: 'Secure checkout · One-time payment · No recurring charge.',
   },
 

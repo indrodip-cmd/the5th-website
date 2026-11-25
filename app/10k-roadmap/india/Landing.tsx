@@ -53,11 +53,11 @@ const AUDIT_CHECKOUT_URL = '/10k-roadmap/india/pay'
 const LANDING = {
   ...GLOBAL_LANDING,
   eyebrow: 'FOR BUSINESS OWNERS AND CONSULTANTS IN INDIA',
-  headline: 'Build a Clear Roadmap Toward ₹10 Lakh/Month',
-  headlineSub: 'Get a 60-minute business audit, focused priorities and a practical 100-day plan.',
-  ctaPrimary: 'Book Your ₹199 Business Audit',
+  headline: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?',
+  headlineSub: 'Before you spend another rupee on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
+  ctaPrimary: 'Apply for a Business Audit — ₹199',
   ctaSecondary: { label: 'See Real Client Results', href: '#proof' },
-  ctaMicro: '₹199 one-time business audit. No recurring charge.',
+  ctaMicro: '₹199, fully refundable if it isn’t worth it to you. Credited toward any program booked within 14 days.',
   guarantee: '',
   heroCard: {
     ...GLOBAL_LANDING.heroCard,
@@ -293,9 +293,12 @@ function IncludedExtras() {
 
 function PressStrip() {
   return (
-    <div style={{ padding: '22px ' + PADX + ' 0' }}>
-      <div style={{ maxWidth: MAXW, margin: '0 auto', display: 'flex', gap: 'clamp(16px,4vw,40px)', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-        {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 'clamp(13px,2vw,16px)', color: TEXT2, opacity: 0.6, whiteSpace: 'nowrap' }}>{p}</span>)}
+    <div aria-label="Press logos" style={{ padding: '20px ' + PADX + ' 26px', borderTop: `1px solid ${LINE}`, background: 'rgba(255,255,255,.025)' }}>
+      <div style={{ maxWidth: MAXW, margin: '0 auto', display: 'grid', gap: 13, justifyItems: 'center' }}>
+        <span style={{ color: TEXT3, fontSize: 10.5, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase' }}>{PRESS.label}</span>
+        <div style={{ width: '100%', display: 'flex', gap: 'clamp(16px,4vw,40px)', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+          {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 'clamp(13px,2vw,16px)', color: '#E3E8E0', opacity: 0.68, whiteSpace: 'nowrap' }}>{p}</span>)}
+        </div>
       </div>
     </div>
   )
@@ -409,6 +412,7 @@ export default function Landing() {
                 <Btn onClick={() => { track('cta_click', { where: 'hero_secondary' }); document.getElementById('proof')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }} variant="outline" style={{ padding: '16px 28px', fontSize: 16 }}>{LANDING.ctaSecondary.label}</Btn>
               </div>
               <p style={{ color: TEXT3, fontSize: 12.5, marginTop: 14 }}>{LANDING.ctaMicro}</p>
+              <p style={{ color: '#D7E0D3', fontSize: 13, lineHeight: 1.5, maxWidth: 520, margin: '8px 0 0' }}>Tell me within 7 days if it wasn’t worth ₹199, and I’ll refund you. You keep the written plan either way.</p>
               <div className="rm-hero-rating" style={{ marginTop: 16 }}><RatingRow /></div>
               <div className="rm-audit-points" aria-label="Business audit includes" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: 20, paddingTop: 16, borderTop: `1px solid ${LINE}`, color: '#D7E0D3', fontSize: 13, lineHeight: 1.45 }}>
                 <span><b style={{ color: ACCENT }}>60 min</b> with both consultants</span>
@@ -444,6 +448,7 @@ export default function Landing() {
             </div>
           </Reveal>
         </section>
+        <PressStrip />
       </div>
 
       {/* ── Client testimonials: written and video reviews directly after
@@ -455,8 +460,6 @@ export default function Landing() {
           <Reveal><VideoWall columns={3} limit={9} /></Reveal>
         </div>
       </section>
-
-      <PressStrip />
 
       {/* ── Founder-credibility strip: moved up from the Section-08 editorial
              so "this is run by the founder personally" lands immediately,
@@ -619,6 +622,7 @@ export default function Landing() {
           </div>
           <Reveal>
             <p style={{ textAlign: 'center', color: TEXT3, fontSize: 13.5, lineHeight: 1.6, maxWidth: 560, margin: '28px auto 0' }}>{LANDING.call.note}</p>
+            <p style={{ textAlign: 'center', color: '#D7E0D3', fontSize: 14, lineHeight: 1.6, maxWidth: 760, margin: '16px auto 0' }}><strong style={{ color: ACCENT }}>Camera optional:</strong> audio-only is completely fine. Prefer not to get on a call? Ask for a written-only business audit at the same ₹199 price.</p>
           </Reveal>
         </div>
       </section>

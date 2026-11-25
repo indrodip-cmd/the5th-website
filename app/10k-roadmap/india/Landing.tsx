@@ -12,7 +12,7 @@ import { track } from '../track'
 
 const PARTNERS = [
   {
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder and Principal Consultant',
     credential: 'Consumer Psychologist, University of California, Berkeley',
     recruitedBy: 'Recruited by Google & Anthropic',
@@ -64,7 +64,7 @@ const WISTIA_POSTERS: Record<string, string> = {
 const FAQS = [
   {
     question: 'Who will I speak with?',
-    answer: 'Your session is with Indrodip Ghosh and Manisha Satpute, the two partners shown on this page.',
+    answer: 'Your session is with Indradip Ghosh and Manisha Satpute, the two partners shown on this page.',
   },
   {
     question: 'What does the ₹199 deposit mean?',
@@ -90,7 +90,7 @@ function Check() {
 
 function BookCover() {
   return (
-    <div className="book-mockup" role="img" aria-label="Expertise to Income by Indrodip Ghosh and Christine Mathison">
+    <div className="book-mockup" role="img" aria-label="Expertise to Income by Indradip Ghosh and Christine Mathison">
       <span className="book-page book-page--why" aria-hidden="true" />
       <span className="book-page book-page--diagnostic" aria-hidden="true" />
       <span className="book-page book-page--asset" aria-hidden="true" />
@@ -250,7 +250,7 @@ export default function Landing() {
                 <h3>Expertise to Income</h3>
                 <p>Your complete guide to building a digital-product business that can generate $10,000 a month without a team, ads, or years of experience.</p>
                 <ol className="book-card__chapters">{BOOK_CHAPTERS.map((chapter) => <li key={chapter}>{chapter}</li>)}</ol>
-                <p className="book-card__authors">By Indrodip Ghosh &amp; Christine Mathison</p>
+                <p className="book-card__authors">By Indradip Ghosh &amp; Christine Mathison</p>
               </div>
             </aside>
           </div>
@@ -327,7 +327,7 @@ export default function Landing() {
               <article className="partner-bio">
                 <div className="partner-bio__initial">I</div>
                 <div>
-                  <h3>Indrodip Ghosh</h3>
+                  <h3>Indradip Ghosh</h3>
                   <p className="partner-bio__role">Founder and Principal Consultant</p>
                   <p>{LANDING.heroCard.credential}. Recruited by Google and Anthropic. Founder of The5th and an AI startup with an approximate $6M valuation.</p>
                   <p className="partner-bio__proof">{LANDING.heroCard.featuredIn}. The startup is backed by University of California alumni. {LANDING.founderCredsNote}</p>

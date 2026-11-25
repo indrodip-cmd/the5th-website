@@ -47,9 +47,6 @@
 .hero__secondary { color: var(--color-accent); font-size: var(--text-sm); font-weight: 700; text-underline-offset: 4px; }
 .hero__secondary:hover { color: var(--color-ink); }
 .hero__note { max-width: 42ch; margin-block-start: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); line-height: 1.5; }
-.hero__guarantee { display: grid; gap: var(--space-3xs); margin-block-start: var(--space-md); padding: var(--space-sm); border: var(--rule-hair) solid var(--color-rule-2); background: var(--color-paper-2); }
-.hero__guarantee strong { color: var(--color-ink); font-family: var(--font-display); font-size: var(--text-md); }
-.hero__guarantee span { max-width: 45ch; color: var(--color-muted); font-size: var(--text-xs); line-height: 1.45; }
 .hero__authority { max-width: 54ch; margin-block-start: var(--space-md); color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.45; }
 .hero__credential { display: grid; gap: var(--space-3xs); margin-block-start: var(--space-sm); color: var(--color-ink-2); font-size: var(--text-sm); line-height: 1.4; }
 .hero__credential strong { color: var(--color-ink); font-weight: 700; }
@@ -375,5 +372,4 @@
   .india-landing .hero__actions { justify-content: center; }
   .india-landing .hero__facts,
   .india-landing .hero__rating { justify-content: center; }
-  .india-landing .hero__guarantee { text-align: left; }
 }

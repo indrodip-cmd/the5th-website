@@ -137,7 +137,7 @@ export const LANDING = {
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
     recruitedBy: 'Recruited by Google & Anthropic',
@@ -269,7 +269,7 @@ export const LANDING = {
     heading: 'Learn From Someone Building Businesses, Not Just Teaching Them.',
     quote: 'Talented professionals rarely got paid for the value they created. That gap is what built The5th.',
     body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M. Building that company, not just studying business, is what shapes how I help coaches and consultants position their offer, build a marketing system, and convert leads into clients.',
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
       { v: '5+ Yrs', l: 'Marketing & Funnel Strategy' },
@@ -299,7 +299,7 @@ export const LANDING = {
   pay: {
     eyebrow: 'Last Step',
     headline: 'Reserve your 1:1 Business Audit.',
-    sub: 'A 60-minute private call with Indrodip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
+    sub: 'A 60-minute private call with Indradip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
     notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
     coverLead: 'Your ₹199 reserves:',
     points: [

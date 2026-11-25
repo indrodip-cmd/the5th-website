@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
   --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
   --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
@@ -7,18 +7,18 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
   --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --container: 1180px; --gutter: clamp(20px,5vw,22px); --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-  --color-paper: oklch(95.8% 0.024 90); --color-paper-2: oklch(92.6% 0.030 90); --color-paper-3: oklch(89% 0.034 90);
-  --color-ink: oklch(23% 0.050 152); --color-ink-2: oklch(33% 0.048 150); --color-muted: oklch(46% 0.034 142);
-  --color-rule: oklch(83% 0.024 112); --color-rule-2: oklch(68% 0.042 138);
-  --color-accent: oklch(46% 0.135 142); --color-accent-2: oklch(86% 0.075 128); --color-accent-ink: oklch(97% 0.015 95);
-  --color-focus: oklch(46% 0.135 142); --tint-moss: oklch(46% 0.135 142 / 0.11); --tint-clay: oklch(54% 0.140 46 / 0.10);
-  --font-display: "Vollkorn", ui-serif, Georgia, serif; --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-outlier: "Newsreader", ui-serif, Georgia, serif;
-  --radius-card: 4px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
+  --color-paper: #070A06; --color-paper-2: #121810; --color-paper-3: #182014;
+  --color-ink: #F2F6EC; --color-ink-2: #9AA79A; --color-muted: #6F7D6F;
+  --color-rule: rgba(255,255,255,0.09); --color-rule-2: rgba(255,255,255,0.18);
+  --color-accent: #C9FF48; --color-accent-2: #C9FF48; --color-accent-ink: #0B0F08;
+  --color-focus: #C9FF48; --tint-moss: rgba(201,255,72,0.14); --tint-clay: rgba(24,32,20,0.42);
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif; --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-outlier: "Inter", system-ui, sans-serif;
+  --radius-card: 18px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: 0 10px 50px -8px rgba(0,0,0,0.4);
   --tracking-display: -0.012em; --display-weight: 600;
-  --india-exit-overlay: oklch(10% 0.02 150 / 0.9); --india-exit-panel: oklch(18% 0.022 150); --india-exit-card: oklch(22% 0.022 150);
-  --india-exit-ink: oklch(97% 0.012 95); --india-exit-copy: oklch(79% 0.022 135); --india-exit-lime: oklch(88% 0.22 130);
-  --india-exit-sauce: oklch(48% 0.17 34); --india-exit-cheese: oklch(79% 0.16 78);
+  --india-exit-overlay: rgba(7,10,6,0.9); --india-exit-panel: #121810; --india-exit-card: #182014;
+  --india-exit-ink: #F2F6EC; --india-exit-copy: #9AA79A; --india-exit-lime: #C9FF48;
+  --india-exit-sauce: #C9FF48; --india-exit-cheese: #C9FF48;
 }

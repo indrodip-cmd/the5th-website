@@ -26,7 +26,7 @@ const PARTNERS = [
 ]
 
 const INCLUSIONS = [
-  'A 60-minute review with Indrodip and Manisha',
+  'A 60-minute review with Indradip and Manisha',
   'A review of your offer, positioning, and ideal buyer',
   'A personalized audit PDF and 100-day roadmap',
   'A digital copy of Expertise to Income',
@@ -360,7 +360,7 @@ export default function Landing() {
           <div className="container booking__inner">
             <div>
               <h2>Get a clearer next step</h2>
-              <p className="booking__lede">Review your business with Indrodip and Manisha, then decide what you want to do with the plan.</p>
+              <p className="booking__lede">Review your business with Indradip and Manisha, then decide what you want to do with the plan.</p>
             </div>
             <div className="booking__action">
               <span className="booking__price">₹199</span>

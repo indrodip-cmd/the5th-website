@@ -59,7 +59,7 @@ export default function Pay({ planId }: { planId: string }) {
           </Reveal>
 
           <Reveal delay={80}>
-            <div style={{ background: '#fff', border: `1px solid ${T.line}`, borderRadius: 20, padding: 'clamp(20px,3vw,28px) clamp(16px,2.5vw,22px)', position: 'sticky', top: 90, boxShadow: '0 30px 70px -50px rgba(46,26,53,.5)' }}>
+            <div style={{ background: T.surface, border: `1px solid ${T.line}`, borderRadius: 20, padding: 'clamp(20px,3vw,28px) clamp(16px,2.5vw,22px)', position: 'sticky', top: 90, boxShadow: '0 30px 70px -50px rgba(0,0,0,.45)' }}>
               <div style={{ textAlign: 'center', marginBottom: 16 }}>
                 <span className="rm-serif" style={{ fontSize: 44, color: T.accentInk, fontWeight: 800 }}>{DEPOSIT_INDIA.label}</span>
                 <span style={{ color: T.text2, fontSize: 14, marginLeft: 6 }}>refundable deposit</span>

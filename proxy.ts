@@ -56,8 +56,18 @@ export async function proxy(request: NextRequest) {
     return new NextResponse('Not Found', { status: 404, headers: NO_STORE });
   }
 
+  // Vercel preview deployments are SSO-protected at the platform layer.
+  // Keep those hosts on their preview deployment so reviewers can inspect a
+  // branch without being redirected to the production canonical host.
+  const onVercelPreview =
+    host.startsWith('the5th-website-') &&
+    host.endsWith('-indrodip-cmds-projects.vercel.app') &&
+    !host.startsWith('the5th-website-git-main-');
   const onCanonical =
-    host === CANONICAL_HOST || host.startsWith('localhost') || host.startsWith('127.0.0.1');
+    host === CANONICAL_HOST ||
+    host.startsWith('localhost') ||
+    host.startsWith('127.0.0.1') ||
+    onVercelPreview;
 
   // 2) API rate-limit backstop (defence-in-depth over per-route limiters).
   if (

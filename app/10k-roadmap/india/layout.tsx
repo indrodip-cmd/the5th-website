@@ -8,13 +8,13 @@ const TITLE = 'Business Roadmap Audit for Coaches in India | The5th'
 const OG_TITLE = 'More ideas. Still unsure what brings clients?'
 const DESC =
   'A 60-minute audit of your offer and client flow with Indradip Ghosh and Manisha Satpute. Receive a personalized audit PDF and 100-day roadmap. ₹199 refundable booking deposit.'
-const URL = 'https://the5thglobal.consulting/10k-roadmap/india'
+const URL = 'https://the5thglobal.consulting/india'
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
   keywords: ['coaching business India', 'consultant growth India', 'predictable income', 'strategy audit', 'business roadmap', 'side business India', 'The5th Global Consulting'],
-  alternates: { canonical: '/10k-roadmap/india' },
+  alternates: { canonical: '/india' },
   robots: {
     index: true, follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },

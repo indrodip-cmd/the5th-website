@@ -24,8 +24,8 @@
      booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
 import { useEffect, useRef, useState } from 'react'
-import { LANDING as GLOBAL_LANDING, LEGAL, RATING, PRESS, REAL_PROOF, MANISHA } from '../config'
-import { LANDING as INDIA_COPY } from './config'
+import { LANDING as GLOBAL_LANDING, RATING, PRESS, REAL_PROOF, MANISHA } from '../config'
+import { LANDING as INDIA_COPY, LEGAL as INDIA_LEGAL } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from '../ui'
 import { track } from '../track'
 import VideoWall from '@/components/VideoWall'
@@ -392,7 +392,7 @@ export default function Landing() {
   return (
     <div style={{ background: '#070A06', color: '#F2F6EC', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif", overflowX: 'hidden' }}>
       <Fonts />
-      <Header nav={LANDING.nav} showFounder />
+      <Header nav={LANDING.nav} showFounder homeHref="/india" />
 
       {/* ── Hero: LOCKED — copy, layout, photo and CTA wording unchanged ── */}
       <div style={{ background: 'radial-gradient(110% 60% at 15% -6%, rgba(201,255,72,0.12) 0%, #070A06 62%)' }}>
@@ -735,7 +735,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <Footer legal={LEGAL} />
+      <Footer legal={INDIA_LEGAL} />
 
       {/* Sticky mobile CTA */}
       <div className="rm-sticky-cta" style={{ position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 60, padding: '10px 14px calc(10px + env(safe-area-inset-bottom))', background: 'rgba(7,10,6,.92)', backdropFilter: 'saturate(140%) blur(12px)', borderTop: `1px solid ${LINE}`, transform: showSticky ? 'translateY(0)' : 'translateY(120%)', transition: 'transform .3s cubic-bezier(.2,.7,.2,1)', boxShadow: '0 -8px 30px -20px rgba(0,0,0,.6)' }}>

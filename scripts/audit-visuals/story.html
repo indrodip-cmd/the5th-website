@@ -1,41 +1,71 @@
 <!doctype html><html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:1080px;height:1920px;overflow:hidden;background:#07200F;font-family:Inter,sans-serif;color:#fff}
-.s{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(90% 55% at 50% 38%,#1D6A46 0%,#0F3F2B 45%,#06180D 100%)}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.04) 2px,transparent 2px);background-size:90px 90px;-webkit-mask-image:radial-gradient(70% 55% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 55% at 50% 40%,#000,transparent)}
-.pill{display:inline-block;padding:16px 34px;border-radius:999px;background:#C9FF48;color:#0B0F08;font:900 34px/1 'Inter Display';letter-spacing:.06em}
-.c{position:absolute;left:70px;right:70px;text-align:center}
-h1{font:900 118px/1 'Inter Display';letter-spacing:-.03em}h1 span{color:#C9FF48}
-.sub{font:600 40px/1.35 Inter;color:#CFE9D6}
-.book{position:absolute;left:50%;transform:translateX(-50%)}
-.chip{display:inline-block;padding:18px 34px;margin:6px;border-radius:999px;border:3px solid rgba(201,255,72,.55);font:800 34px/1 Inter;color:#fff;background:rgba(7,24,13,.6)}
-.chip b{color:#C9FF48}
-ul.l li{font-size:44px;margin-bottom:22px}ul{list-style:none;text-align:left;display:inline-block}li{font:800 50px/1.25 'Inter Display';margin:0 0 30px;padding-left:80px;position:relative}
-li::before{content:'';position:absolute;left:0;top:6px;width:48px;height:48px;border-radius:24px;background:#C9FF48}
-li::after{content:'';position:absolute;left:15px;top:14px;width:11px;height:22px;border:solid #0A2A1B;border-width:0 6px 6px 0;transform:rotate(40deg)}
-.card{position:absolute;left:60px;right:60px;border-radius:36px;overflow:hidden;box-shadow:0 50px 100px -30px rgba(0,0,0,.8);border:3px solid rgba(255,255,255,.12)}
+html,body{width:1080px;background:#06180D;font-family:Inter,sans-serif;color:#fff}
+.s{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(80% 50% at 50% 30%,#22794F 0%,#0F3F2B 50%,#06180D 100%)}
+.s::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.035) 2px,transparent 2px);background-size:90px 90px;-webkit-mask-image:radial-gradient(75% 60% at 50% 40%,#000,transparent);mask-image:radial-gradient(75% 60% at 50% 40%,#000,transparent)}
+.glow{position:absolute;left:50%;width:900px;height:900px;margin-left:-450px;border-radius:50%;background:radial-gradient(circle,rgba(201,255,72,.38),transparent 62%);filter:blur(10px)}
+.a{position:absolute;left:70px;right:70px;text-align:center}
+.pill{display:inline-block;padding:16px 34px;border-radius:999px;background:#C9FF48;color:#0B0F08;font:900 32px/1 'Inter Display';letter-spacing:.1em}
+h1{font:900 124px/.98 'Inter Display';letter-spacing:-.035em}
+h1 em{font-style:normal;color:#C9FF48}
+.sub{font:600 44px/1.3 Inter;color:#D6EEDD}
+.sub b{color:#fff;font-weight:800}
+.book{position:absolute;left:50%;filter:drop-shadow(0 60px 60px rgba(0,0,0,.65))}
+.tap{display:inline-flex;align-items:center;gap:16px;padding:20px 40px;border-radius:999px;border:3px solid rgba(255,255,255,.35);font:800 34px/1 Inter;color:#fff;background:rgba(6,24,13,.55)}
+.tap i{font-style:normal;color:#C9FF48;font-size:44px;line-height:.8}
+.pain{display:flex;align-items:center;gap:30px;text-align:left;margin:0 0 30px;padding:38px 44px;border-radius:36px;background:rgba(255,255,255,.07);border:3px solid rgba(255,255,255,.14);font:800 50px/1.2 'Inter Display'}
+.pain .x{flex:none;width:84px;height:84px;border-radius:50%;background:#FF6B5E;color:#fff;font:900 56px/84px 'Inter Display';text-align:center}
+.pain q{quotes:none;color:#C9FF48}
+.card{position:absolute;left:110px;right:110px;border-radius:34px;overflow:hidden;border:3px solid rgba(255,255,255,.2);box-shadow:0 60px 110px -30px rgba(0,0,0,.85),0 0 0 14px rgba(201,255,72,.08)}
 .card img{width:100%;display:block}
-.arrow{font:900 120px/1 'Inter Display';color:#C9FF48}
+.step{display:flex;align-items:center;gap:28px;text-align:left;margin:0 0 16px;padding:22px 40px;border-radius:999px;background:#C9FF48;color:#0A2A1B;font:900 46px/1 'Inter Display'}
+.step span{flex:none;width:68px;height:68px;border-radius:50%;background:#0A2A1B;color:#C9FF48;font:900 40px/68px 'Inter Display';text-align:center}
+.price{font:900 250px/.9 'Inter Display';letter-spacing:-.05em;color:#C9FF48;text-shadow:0 0 90px rgba(201,255,72,.55)}
+.chip{display:inline-block;padding:20px 36px;margin:7px;border-radius:999px;border:3px solid rgba(201,255,72,.6);font:800 36px/1 Inter;background:rgba(6,24,13,.6)}
+.chip b{color:#C9FF48}
+.arrow{font:900 150px/1 'Inter Display';color:#C9FF48;text-shadow:0 0 60px rgba(201,255,72,.6)}
 </style></head><body>
-<!-- FRAME 1: hook. Content lives between y=300 and y=1500 (clear of Instagram's top and bottom UI). -->
-<div class="s" id="f1"><div class="grid"></div>
-  <div class="c" style="top:300px"><span class="pill">OUT NOW</span></div>
-  <div class="c" style="top:400px"><h1>Our book<br>is <span>live.</span></h1></div>
-  <img class="book" src="../../public/images/book/book-3d.webp" style="top:770px;width:560px">
-  <div class="c" style="top:1400px"><div class="sub"><b style="color:#fff;font-weight:800">Expertise to Income</b><br>Turn what you know into income.</div></div>
+
+<!-- 1 HOOK -->
+<div class="s" id="f1">
+  <div class="glow" style="top:640px"></div>
+  <div class="a" style="top:310px"><h1>You know<br>more than<br><em>you think.</em></h1></div>
+  <img class="book" src="../../public/images/book/book-3d.webp" style="top:790px;width:460px;margin-left:-230px;transform:rotate(-5deg)">
+  <div class="a" style="top:1400px"><div class="sub"><b>Someone will pay for it.</b></div></div>
+  <div class="a" style="top:1490px"><span class="tap">Our book is live <i>&rsaquo;</i></span></div>
 </div>
-<!-- FRAME 2: inside the book -->
-<div class="s" id="f2"><div class="grid"></div>
-  <div class="c" style="top:300px"><div class="sub" style="color:#C9FF48;letter-spacing:.2em;font-weight:800;font-size:34px">INSIDE THE BOOK</div></div>
-  <div class="c" style="top:370px"><h1 style="font-size:92px">104 pages.<br><span>9 chapters.</span></h1></div>
-  <div class="card" style="top:700px;left:130px;right:130px"><img src="../../public/images/book/flip-29.webp"></div>
-  <div class="c" style="top:1280px"><ul class="l"><li>Find your expertise</li><li>Design and price a product</li><li>Launch in 7 days</li></ul></div>
+
+<!-- 2 PAIN -->
+<div class="s" id="f2">
+  <div class="a" style="top:310px"><span class="pill">SOUND FAMILIAR?</span></div>
+  <div class="a" style="top:420px;text-align:left">
+    <div class="pain"><div class="x">&times;</div><div>Income stops the moment <q>you stop working</q></div></div>
+    <div class="pain"><div class="x">&times;</div><div>"My knowledge is <q>too basic</q>"</div></div>
+    <div class="pain"><div class="x">&times;</div><div>Courses <q>quit halfway</q></div></div>
+    <div class="pain"><div class="x">&times;</div><div>No idea <q>what to sell or charge</q></div></div>
+  </div>
+  <div class="a" style="top:1290px"><div class="sub" style="font-size:64px;font-family:Inter Display;font-weight:900"><b style="color:#C9FF48">This book fixes that.</b></div></div>
 </div>
-<!-- FRAME 3: the offer + CTA. The link sticker goes in the empty zone at y 1290-1560. -->
-<div class="s" id="f3"><div class="grid"></div>
-  <img class="book" src="../../public/images/book/book-3d.webp" style="top:290px;width:420px">
-  <div class="c" style="top:800px"><h1 style="font-size:104px"><span>$4.99.</span><br>Instant PDF.</h1></div>
-  <div class="c" style="top:1130px"><span class="chip"><b>365-day</b> money-back guarantee</span><span class="chip">Free Chapter 1 on the page</span></div>
-  <div class="c" style="top:1300px"><div class="arrow">&#8595;</div><div class="sub" style="font-weight:800;color:#fff;font-size:46px">Tap the link</div></div>
+
+<!-- 3 INSIDE -->
+<div class="s" id="f3">
+  <div class="glow" style="top:500px"></div>
+  <div class="a" style="top:310px"><h1 style="font-size:96px">9 chapters.<br><em>One first product.</em></h1></div>
+  <div class="card" style="top:620px;left:190px;right:190px;transform:rotate(-2deg)"><img src="../../public/images/book/flip-29.webp"></div>
+  <div class="a" style="top:1150px;text-align:left;left:110px;right:110px">
+    <div class="step"><span>1</span>Find what you know</div>
+    <div class="step"><span>2</span>Design and price it</div>
+    <div class="step"><span>3</span>Launch in 7 days</div>
+  </div>
+</div>
+
+<!-- 4 OFFER -->
+<div class="s" id="f4">
+  <div class="glow" style="top:300px"></div>
+  <img class="book" src="../../public/images/book/book-3d.webp" style="top:290px;width:380px;margin-left:-190px;transform:rotate(4deg)">
+  <div class="a" style="top:760px"><div class="price">$4.99</div></div>
+  <div class="a" style="top:1010px"><div class="sub" style="font-size:52px"><b>Instant PDF. 104 pages.</b></div></div>
+  <div class="a" style="top:1120px"><span class="chip"><b>365-day</b> money-back guarantee</span><br><span class="chip">Read Chapter 1 free first</span></div>
+  <div class="a" style="top:1320px"><div class="arrow">&darr;</div><div class="sub" style="font-size:54px"><b>Tap the link</b></div></div>
 </div>
 </body></html>

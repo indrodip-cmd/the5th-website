@@ -22,7 +22,7 @@ def title_page():
   <div style="position:absolute;left:0;right:0;bottom:0;height:290px;overflow:hidden;display:flex;align-items:flex-end">{art.landscape(1, sun=False)}</div></section>'''
 
 def copyright_page():
-    return f'''<section class="plain" style="break-before:page"><div style="padding-top:5.2in;font:500 8.8pt/1.6 'Inter';color:#3E4C44">
+    return f'''<section class="plain flow" style="break-before:page;min-height:8.65in"><div style="padding-top:4.6in;font:500 8.8pt/1.6 'Inter';color:#3E4C44">
  <p><strong>Expertise to Income: The 10K Roadmap Workbook</strong></p>
  <p>Copyright © 2026 The5th Consulting. All rights reserved. No part of this workbook may be reproduced by any mechanical, photographic, or electronic process, or stored in a retrieval system, transmitted, or otherwise copied for public or private use without prior written permission of the publisher.</p>
  <p>This publication is designed to provide accurate and authoritative information regarding the subject matter covered. The authors make no guarantees about the results you will achieve by reading this book. All business requires risk and hard work. Your results may vary. Examples and client stories are shared to illustrate ideas and are not a promise or guarantee of income.</p>
@@ -73,7 +73,7 @@ I commit to reading one chapter per week.<br>I commit to completing every worksh
 
 def intro():
     pre = section_page('INTRODUCTION', 'The Story Behind This Book', 'Indrodip Ghosh', art.landscape(1, sun=True), tokk='intro')
-    body = f'''<div style="break-before:page">
+    body = f'''<div class="flow" style="break-before:page">
 {QUOTE('The secret of getting ahead is getting started.', 'Mark Twain')}
 {LEAD("I did not grow up knowing how to build a business.")}
 {P("I grew up in India, a country where the unspoken rule is: study hard, get a job, be safe. No one in my world was talking about digital products or online income. Entrepreneurship was not a career. It was a risk people like us were supposed to avoid.", "But something inside me refused to settle.")}

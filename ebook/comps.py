@@ -71,7 +71,7 @@ def chapter_open(n, word, title, author, quote, qby, promise):
 </section>'''
 
 def chapter_start(n):
-    return f'<div style="page:ch{n};break-before:page">'
+    return f'<div class="flow" style="page:ch{n};break-before:page">'
 def chapter_end(): return '</div>'
 
 def section_page(kicker, title, sub, art_html='', dark=True, tokk=''):

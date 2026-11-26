@@ -30,18 +30,20 @@ def page_rules():
     return '\n'.join(r)
 
 CSS = '''
-@page { size: 7in 10in; margin: 0.8in 0.8in 0.95in 0.8in;
+@page { size: 7in 10in; margin: 0.4in 0.4in 0.95in 0.4in; background: #DCE9D0;
   @bottom-left { content: counter(page); font: 700 8.5pt 'Inter'; color: #5C6B62; vertical-align: middle; }
   @bottom-right { content: "EXPERTISE TO INCOME"; font: 800 6.5pt 'Inter'; letter-spacing: .22em; color: #9FB3A7; vertical-align: middle; }
 }
-@page full { margin: 0; @bottom-left{content:none} @bottom-right{content:none} @bottom-center{content:none} }
+@page full { margin: 0; background: #07200F; @bottom-left{content:none} @bottom-right{content:none} @bottom-center{content:none} }
 @page plain { @bottom-left{content:none} @bottom-right{content:none} @bottom-center{content:none} }
 ''' + page_rules() + '''
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-html { background: #FBF9F2; }
+html { background: #DCE9D0; }
+.full { z-index: 5; }
 body { font-family: 'Bitstream Charter', 'Charter', Georgia, serif; font-size: 11.2pt; line-height: 1.58; color: #14201A; }
 .full { page: full; width: 7in; height: 10in; position: relative; overflow: hidden; break-after: page; break-before: page; }
 .plain { page: plain; }
+.flow, .pg-break { box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0.5in 0.45in 0.45in; background: #FFFDF7; border-radius: 20px; box-shadow: 0 0 0 1px rgba(12,58,40,.06); }
 .pg-break { break-before: page; }
 h1,h2,h3,h4,.sans { font-family: 'Inter', sans-serif; }
 p { margin: 0 0 .78em; orphans: 3; widows: 3; }

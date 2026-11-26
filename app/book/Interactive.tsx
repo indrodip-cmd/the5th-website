@@ -375,7 +375,7 @@ export function LeadMagnet() {
       {state === 'done' ? (
         <div className="bk-in">
           <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 12 }}>It is on its way. You can also open it now.</div>
-          <a href={msg || '/documents/expertise-to-income-chapter-1.pdf'} target="_blank" rel="noopener" className="rm-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '15px 28px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accentText)', fontWeight: 800, textDecoration: 'none' }}>Open Chapter 1 (PDF) →</a>
+          <a href={msg || '/api/book/download?k=chapter1'} target="_blank" rel="noopener" className="rm-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '15px 28px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accentText)', fontWeight: 800, textDecoration: 'none' }}>Open Chapter 1 (PDF) →</a>
           <p style={{ margin: '16px 0 0', fontSize: 14, color: 'var(--text2)' }}>Like it? <a href={BOOK_CHECKOUT_PATH} onClick={() => ftrack('book_cta_click', { where: 'lead_done' })} style={{ color: 'var(--accentInk)', fontWeight: 800 }}>Get the full book for {BOOK_PRICE.label}</a>.</p>
         </div>
       ) : (

@@ -36,6 +36,7 @@ const NAV: Array<{ section?: string; items: NavItem[] }> = [
     { href: '/admin/tickets', label: 'Tickets', icon: '🎫', match: (p) => p.startsWith('/admin/tickets') },
     { href: '/admin/revenue', label: 'Revenue', icon: '＄', match: (p) => p.startsWith('/admin/revenue') },
     { href: '/admin/funnel', label: 'Book funnel', icon: '▽', match: (p) => p.startsWith('/admin/funnel') },
+    { href: '/admin/book', label: 'Book customers', icon: '✉', match: (p) => p.startsWith('/admin/book') },
     { href: '/admin/events', label: 'Event Campaign', icon: '🎟', match: (p) => p.startsWith('/admin/events') },
     { href: '/admin/workbook', label: 'Workbook Buyers', icon: '📕', match: (p) => p.startsWith('/admin/workbook') },
     { href: '/admin/journeys', label: 'Journeys', icon: '🧭', match: (p) => p.startsWith('/admin/journeys'), flag: 'journey_engine' },

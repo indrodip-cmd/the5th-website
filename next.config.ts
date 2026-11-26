@@ -10,6 +10,8 @@ const MARKETING_PAGES = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // The download route reads these PDFs at runtime, so they must ship with the function.
+  outputFileTracingIncludes: { '/api/book/download': ['./ebook/expertise-to-income.pdf', './public/documents/expertise-to-income-chapter-1.pdf'] },
   async headers() {
     return [
       {

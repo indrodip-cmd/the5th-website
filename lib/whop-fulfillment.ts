@@ -19,6 +19,7 @@ import { recordPurchase } from '@/lib/purchases'
 import { markAuditPaid, AUDIT_PLAN_ID, AUDIT_PLAN_ID_INDIA } from '@/lib/roadmap-audit'
 import { Resend } from 'resend'
 import { FRONT_BOOK, bump } from '@/lib/funnel/products'
+import { sendPurchaseEmail } from '@/lib/book-mail'
 
 // Whop plan/product ids we react to. Env-overridable where the product may change.
 export const BREAKTHROUGH_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
@@ -84,6 +85,9 @@ export async function dispatchWhopEvent(body: Record<string, unknown>, raw: stri
         const c = await resolveOrCreateContact({ email, name, tags: ['book-buyer', ...(bundle ? ['book-bump-buyer'] : [])] }, { source: 'whop', actor: 'whop-webhook' })
         if (c?.id) await addTag(c.id as string, 'book-buyer').catch(() => {})
         emitEvent('purchase_completed', { email, product: FRONT_BOOK.slug, bundle, contact_id: c?.id })
+        // Branded delivery email with the signed download link (idempotent per buyer).
+        const sent = await sendPurchaseEmail(email, name)
+        if (!sent.ok) emitEvent('book_email_failed', { email, error: sent.error })
       } catch (e) { emitEvent('book_grant_failed', { provider: 'whop', error: String(e) }) }
     }
     if (email && DIAGNOSTIC_PLAN_ID && raw.includes(DIAGNOSTIC_PLAN_ID)) {

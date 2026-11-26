@@ -1,3 +1,4 @@
+import os
 from comps import *
 import diagrams as D, base64, os
 
@@ -55,7 +56,7 @@ def gratitude_page():
 
 ENTRIES = [('how', '', 'How to Use This Workbook', ''), ('intro', '', 'Introduction: The Story Behind This Book', 'Indrodip Ghosh')] + \
   [(f'ch{i+1}', str(i+1), CHAPTERS[i], 'Indrodip Ghosh' if (i+1) in (1,2,3,8) else 'Christinee Mathison') for i in range(9)] + \
-  [('concl', '', 'Conclusion and Your Next 24 Hours', 'Indrodip Ghosh'), ('letter', '', 'A Letter from Indrodip', 'Indrodip Ghosh'), ('about', '', 'About the Authors', 'Both Authors'), ('gift', '', 'Free Gift', 'Both Authors')]
+  [('concl', '', 'Conclusion and Your Next 24 Hours', 'Indrodip Ghosh'), ('letter', '', 'A Letter from Indrodip', 'Indrodip Ghosh'), ('about', '', 'About the Authors', 'Both Authors')] + ([] if os.environ.get('AMAZON') else [('gift', '', 'Free Gift', 'Both Authors')])
 
 def contents_page():
     rows = ''

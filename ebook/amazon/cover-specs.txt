@@ -1,0 +1,7 @@
+Paperback cover wrap
+Trim 7 x 10 in, white paper, 98 pages
+Spine width 0.2207 in (98 x 0.002252)
+Full cover 14.4707 x 10.25 in = 4341 x 3075 px at 300 dpi (includes 0.125 in bleed)
+Back panel 2137px | spine 66px | front 2138px
+Keep the barcode area (lower right of back, 2 x 1.2 in) clear; KDP places the ISBN barcode there.
+If the page count changes, spine width must be recalculated (pages x 0.002252 in for white paper).

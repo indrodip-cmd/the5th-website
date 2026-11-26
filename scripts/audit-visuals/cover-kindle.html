@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Expertise to Income, cover</title>
+<style>
+/* 600 x 900 CSS px, rendered at 2x. Poster-style cover in the funnel's palette:
+   forest green + acid lime (#C9FF48), heavy condensed caps, illustrated fronds. */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:630px;height:1008px;background:#06150E;overflow:hidden}
+.cover{position:relative;width:630px;height:1008px;overflow:hidden;font-family:'Inter Display','Inter',sans-serif;color:#fff;
+  background:radial-gradient(120% 70% at 50% 0%,#14543A 0%,#0C3A28 38%,#07200F 100%)}
+.grain{position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;
+  background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.10) 0 1px,transparent 1.5px) 0 0/9px 9px,radial-gradient(circle at 70% 60%,rgba(0,0,0,.25) 0 1px,transparent 1.5px) 0 0/7px 7px}
+.glow{position:absolute;left:-10%;right:-10%;bottom:-8%;height:46%;background:radial-gradient(60% 70% at 50% 100%,rgba(201,255,72,.40),rgba(201,255,72,0) 70%)}
+.brand{position:absolute;top:34px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:10px}
+.tile{width:30px;height:30px;border-radius:8px;background:#C9FF48;color:#0A2A1B;display:flex;align-items:center;justify-content:center;font:900 20px/1 'Inter Display'}
+.brand span{font-size:11px;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:#E9FFB0}
+.laurel{position:absolute;top:104px;left:50%;width:250px;height:190px;margin-left:-125px}
+.nine{position:absolute;top:126px;left:0;right:0;text-align:center;font:900 132px/1 'Inter Display';letter-spacing:-.04em;transform:scaleX(.82)}
+.nine small{display:block;margin-top:16px;font-size:15px;font-weight:800;letter-spacing:.42em;color:#C9FF48;transform:scaleX(1.22);padding-left:.42em}
+.title{position:absolute;top:338px;left:0;right:0;text-align:center;text-transform:uppercase;line-height:.86}
+.w{display:block;width:max-content;margin:0 auto;white-space:nowrap;font:900 120px/.9 'Inter Display';letter-spacing:-.035em;transform-origin:center}
+.e{color:#fff;text-shadow:0 6px 0 rgba(0,0,0,.28)}
+.to{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px 0 6px;font:900 25px/1 'Inter Display';letter-spacing:.35em;color:#C9FF48;padding-left:.35em}
+.to i{display:block;width:92px;height:3px;background:#C9FF48}
+.i{color:#C9FF48;font-size:150px;text-shadow:0 7px 0 rgba(0,0,0,.30),0 0 60px rgba(201,255,72,.30)}
+.sub{position:absolute;top:772px;left:0;right:0;text-align:center;text-transform:uppercase;font:900 24px/1.08 'Inter Display';letter-spacing:.01em}
+.sub span{color:#C9FF48}
+.auth{position:absolute;top:846px;left:0;right:0;text-align:center;font:900 21px/1.1 'Inter Display';letter-spacing:.06em;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.plants{position:absolute;left:0;right:0;bottom:-14px;height:150px}
+</style></head><body>
+<div class="cover">
+  <div class="grain"></div><div class="glow"></div>
+  <div class="brand"><div class="tile">5</div><span>The5th Global Consulting</span></div>
+  <svg class="laurel" id="laurel" viewBox="-125 -95 250 190"></svg>
+  <div class="nine">9<small>CHAPTERS</small></div>
+  <div class="title">
+    <span class="w e">Expertise</span>
+    <div class="to"><i></i>TO<i></i></div>
+    <span class="w i">Income</span>
+  </div>
+  <div class="sub">Stop selling your time.<br><span>Start building an asset.</span></div>
+  <div class="auth">Indrodip Ghosh &amp; Christinee Mathison</div>
+  <svg class="plants" id="plants" viewBox="0 0 630 150" preserveAspectRatio="xMidYMax slice"></svg>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const mk=(p,t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+// laurel: leaves along two arcs around the "9"
+const L=document.getElementById('laurel');
+for(const side of [-1,1]){
+  for(let i=0;i<10;i++){
+    const t=i/9, ph=(-48+t*128)*Math.PI/180, r=80;
+    const x=side*r*Math.cos(ph)*1.12, y=-r*Math.sin(ph)+4;
+    const ang=Math.atan2(-Math.cos(ph), side*-Math.sin(ph))*180/Math.PI;
+    const g=mk(L,'g',{transform:`translate(${x} ${y}) rotate(${ang}) scale(${1-t*.2})`});
+    mk(g,'path',{d:'M-4 0 C 2 -10 20 -11 32 0 C 20 11 2 10 -4 0 Z',fill:i%2?'#C9FF48':'#9BE02A'});
+  }
+}
+// fit title words to 470px wide
+document.querySelectorAll('.w').forEach(w=>{const k=480/w.getBoundingClientRect().width;w.style.transform=`scaleX(${k})`});
+// ferns / fronds along the bottom
+const P=document.getElementById('plants');
+function frond(x,y,len,ang,col,leaf){
+  const g=mk(P,'g',{transform:`translate(${x} ${y}) rotate(${ang})`});
+  mk(g,'path',{d:`M0 0 C ${len*.1} ${-len*.35} ${len*.05} ${-len*.7} ${len*.18} ${-len}`,stroke:col,'stroke-width':3,fill:'none','stroke-linecap':'round'});
+  const n=14;
+  for(let i=1;i<=n;i++){
+    const t=i/(n+1), cx=len*.18*t*t*1.5+len*.02*t, cy=-len*t, sz=leaf*(1-t*.78);
+    for(const s of [-1,1]){
+      mk(g,'path',{d:`M${cx} ${cy} C ${cx+s*sz*.5} ${cy-sz*.55} ${cx+s*sz*1.0} ${cy-sz*.5} ${cx+s*sz*1.45} ${cy-sz*.9} C ${cx+s*sz*1.05} ${cy-sz*.05} ${cx+s*sz*.5} ${cy+sz*.1} ${cx} ${cy} Z`,fill:col,opacity:.96});
+    }
+  }
+}
+frond(70,160,190,-18,'#1B7A52',34); frond(150,170,150,8,'#2FA866',28);
+frond(315,175,210,-4,'#C9FF48',38);
+frond(470,172,160,-12,'#8AD81F',30); frond(560,166,200,20,'#1B7A52',34); frond(628,160,150,38,'#2FA866',28);
+// two big leaves
+const big=(x,y,sc,rot,fill)=>{const g=mk(P,'g',{transform:`translate(${x} ${y}) rotate(${rot}) scale(${sc})`});
+  mk(g,'path',{d:'M0 0 C 40 -40 110 -50 150 -10 C 100 20 40 20 0 0 Z',fill});
+  mk(g,'path',{d:'M4 -2 C 50 -14 100 -22 140 -12',stroke:'rgba(0,0,0,.28)','stroke-width':2.2,fill:'none'});};
+big(221,166,1.1,-52,'#9BE02A'); big(411,166,1.05,-122,'#C9FF48'); big(10,166,1,-70,'#2FA866');
+</script></body></html>

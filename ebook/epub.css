@@ -1,0 +1,31 @@
+/* Kindle edition: reflowable. No fonts, colours or sizes that fight the reader's settings. */
+body { margin: 0; line-height: 1.5; }
+h1 { font-size: 1.6em; line-height: 1.2; margin: 1.6em 0 .6em; page-break-before: always; text-align: left; }
+h1.chap { text-align: center; margin-top: 3em; }
+.chnum { font-size: .6em; letter-spacing: .15em; text-transform: uppercase; font-weight: normal; }
+h2 { font-size: 1.3em; margin: 1.6em 0 .5em; page-break-after: avoid; }
+h3 { font-size: 1.1em; margin: 1.2em 0 .4em; page-break-after: avoid; }
+p { margin: 0 0 .9em; text-align: left; }
+p.lead { font-size: 1.1em; }
+p.kicker { text-transform: uppercase; letter-spacing: .1em; font-size: .8em; margin-bottom: .3em; }
+p.by, p.small, .cap, .hint { font-size: .85em; }
+p.by { font-style: italic; margin-bottom: 1.2em; }
+.cap { text-align: center; margin-top: .3em; }
+blockquote { margin: 1.2em 1em; padding-left: .8em; border-left: 3px solid #666; font-style: italic; }
+.pull { font-weight: bold; font-size: 1.15em; border-left: 4px solid #333; padding-left: .8em; margin: 1.3em 0; }
+.call, .note, .story, .card, .step { border: 1px solid #999; border-radius: .4em; padding: .6em .9em; margin: 1.1em 0; }
+.story { background: #f2f2f2; } .call { background: #ececec; }
+.label { text-transform: uppercase; letter-spacing: .08em; font-size: .75em; font-weight: bold; margin-bottom: .3em; }
+.steph, .cardh { font-weight: bold; margin-bottom: .3em; }
+.ws { border: 1px solid #333; padding: .5em .8em .2em; margin: 1.1em 0; }
+.wsh { font-weight: bold; text-transform: uppercase; letter-spacing: .06em; font-size: .85em; border-bottom: 1px solid #333; padding-bottom: .3em; margin-bottom: .5em; }
+.q { margin: .6em 0 .9em; }
+.fig { text-align: center; margin: 1.2em 0; page-break-inside: avoid; }
+.fig img { max-width: 100%; height: auto; }
+table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: .92em; }
+th, td { border: 1px solid #888; padding: .35em .5em; text-align: left; vertical-align: top; }
+th { background: #e6e6e6; }
+ul, ol { margin: .4em 0 1em 1.2em; padding: 0; } li { margin: 0 0 .4em; }
+.titlepage { text-align: center; margin-top: 5em; page-break-before: avoid; } .titlepage h1 { font-size: 2em; page-break-before: avoid; text-align: center; }
+.titlepage .sub { font-size: 1.1em; } .titlepage .tag { font-style: italic; margin: 2em 0; } .titlepage .auth { margin-top: 3em; font-size: 1.1em; }
+.copyright p { font-size: .8em; }

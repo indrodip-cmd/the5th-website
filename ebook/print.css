@@ -1,0 +1,51 @@
+/* Paperback interior (KDP, 7in x 10in trim, black & white, no bleed).
+   Applied on top of the normal book CSS: removes the colour page frame, keeps
+   every page well inside the trim, makes dark areas print-safe, and gives the
+   binding side extra room. */
+@page { size: 7in 10in; margin: .75in .6in .9in .85in; background: #fff;
+  @top-left-corner{content:none;background:none} @top-right-corner{content:none;background:none} @top-center{content:none;background:none}
+  @left-middle{content:none;background:none} @right-middle{content:none;background:none}
+  @bottom-left-corner{content:none;background:none} @bottom-right-corner{content:none;background:none}
+  @bottom-left { content: counter(page); font: 700 8.5pt 'Inter'; color:#333; vertical-align: top; padding-top:.28in; background:none }
+  @bottom-right { content: "EXPERTISE TO INCOME"; font: 800 6.5pt 'Inter'; letter-spacing:.22em; color:#555; vertical-align: top; padding-top:.29in; text-align:right; background:none }
+  @bottom-center { background: none; vertical-align: top; padding-top:.26in } }
+@page :left  { margin-left: .6in;  margin-right: .85in; }
+@page :right { margin-left: .85in; margin-right: .6in; }
+@page full { margin: 0; background:#fff; @bottom-left{content:none;background:none} @bottom-right{content:none;background:none} @bottom-center{content:none;background:none} }
+@page plain { @bottom-left{content:"";background:none} @bottom-right{content:"";background:none} @bottom-center{content:"";background:none} }
+@page ch1,@page ch2,@page ch3,@page ch4,@page ch5,@page ch6,@page ch7,@page ch8,@page ch9 { @bottom-center { background:none; vertical-align: top; padding-top:.26in } }
+html, body { background:#fff !important; }
+.flow, .pg-break { background:none !important; padding:0 !important; border-radius:0 !important; box-shadow:none !important; }
+.plain { padding:0 !important; }
+/* the digital cover is not part of a print interior (the cover is a separate file) */
+body > section.full:first-child { display:none !important; }
+/* full-page art pages: white, inset from the trim edge so nothing needs bleed */
+.full { background:#fff !important; color:#111 !important; }
+.full * { color:#111 !important; -webkit-text-stroke-color:#111 !important; text-shadow:none !important; }
+.full > div[style*="bottom:0"] { left:.45in !important; right:.45in !important; bottom:.55in !important; border-radius:16px; overflow:hidden; border:1.5px solid #111; }
+.full > div[style*="padding:64px 56px 0"], .full > div[style*="padding:54px 56px 0"] { padding-left:.7in !important; padding-right:.7in !important; }
+.full > div[style*="left:56px"] { left:.7in !important; right:.7in !important; }
+.full > div[style*="left:60px"] { left:.7in !important; right:.7in !important; }
+.full div[style*="background:#C9FF48"] { background:#e4e4e4 !important; border:1.5px solid #111 !important; }
+.full div[style*="rgba(201,255,72,.08)"] { background:#f1f1f1 !important; border-left-color:#111 !important; }
+.full div[style*="background:#FFFDF7"] { background:#fff !important; border:1.5px solid #111 !important; }
+.full div[style*="border-bottom:1.5px solid #9BC7A9"] { border-bottom-color:#555 !important; }
+.full svg text { fill:#111 !important; }
+/* components: no heavy colour blocks in a B&W interior */
+.call { background:#efefef !important; color:#111 !important; border:1.5px solid #111; }
+.call .t, .call p { color:#111 !important; }
+.card.dark { background:#efefef !important; color:#111 !important; border-color:#111 !important; }
+.card.dark h4 { color:#111 !important; } .card.dark .ico { background:#d9d9d9 !important; }
+.card .ico svg, .story .ic svg { stroke:#111 !important; }
+.story { background:#f1f1f1 !important; border:1px solid #999; } .story .ic { background:#fff !important; border:1.5px solid #111; } .story .tag { color:#111 !important; }
+.pull { border-left-color:#111 !important; color:#111 !important; } .pull small { color:#333 !important; }
+.ws { border-color:#111 !important; } .ws > .hd { background:#222 !important; color:#fff !important; } .ws > .hd svg { stroke:#fff !important; }
+.tbl th { background:#222 !important; color:#fff !important; } .tbl tr:nth-child(even) td { background:#f3f3f3 !important; } .tbl td:first-child { color:#111 !important; }
+h2 { color:#111 !important; } h2 .n { background:#222 !important; color:#fff !important; } h3 { color:#111 !important; }
+.kicker, .by { color:#333 !important; } .by i { background:#111 !important; }
+.step .num { background:#222 !important; color:#fff !important; } .step h4 { color:#111 !important; }
+.dropcap::first-letter { color:#111 !important; } .lead { color:#111 !important; }
+.chk li::before { border-color:#111 !important; } .chk.done li::before { background:#222 !important; } .chk.done li::after { border-color:#fff !important; }
+.note .t { color:#111 !important; } .quote b { color:#333 !important; }
+.ln { border-bottom-color:#777 !important; } .q b { color:#111 !important; }
+.fig svg { filter:none; }

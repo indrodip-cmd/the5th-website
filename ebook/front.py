@@ -32,11 +32,10 @@ def note_page():
     return f'''<div class="pg-break">{BY('A NOTE ON THIS BOOK').replace(' &nbsp;·&nbsp; Co-Author, The5th Consulting','')}
 {H2('How this book was written')}
 {LEAD("This workbook was written by two equal partners who share one mission: to help coaches, consultants, healers, and experts stop trading their time for money, and start building something that works without them.")}
-<div class="grid2" style="margin-top:22px">
- <div class="card dark" style="padding:18px"><div style="width:62px;height:62px;border-radius:50%;background:#C9FF48;overflow:hidden;margin-bottom:10px"><svg viewBox="0 0 100 100" width="62" height="62">{art.person(50,38,.66,'#1B7A52','#C98F66','#1A1210')}</svg></div><h4 style="font-size:12pt">Indrodip Ghosh</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#9BE02A;margin-bottom:8px">STRATEGY AND SYSTEMS</div>Business mechanics, the mindset of scaling, and the market reality of digital products.<div style="margin-top:8px;color:#B9D8C4;font-size:8.6pt">Introduction, Chapters 1, 2, 3, 8, the Conclusion, and the closing Letter.</div></div>
- <div class="card" style="padding:18px;background:#EAF8C8;border-color:#EAF8C8"><div style="width:62px;height:62px;border-radius:50%;background:#0C3A28;overflow:hidden;margin-bottom:10px"><svg viewBox="0 0 100 100" width="62" height="62">{art.person(50,38,.66,'#C9FF48','#E1A97E','#5A3A28')}</svg></div><h4 style="font-size:12pt">Christinee Mathison</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#1B7A52;margin-bottom:8px">TRANSFORMATION AND CLARITY</div>Knowing your audience, building your offer, creating content that connects, and the inner game of showing up consistently.<div style="margin-top:8px;color:#5C6B62;font-size:8.6pt">Chapters 4, 5, 6, 7, and 9.</div></div></div>
+<div class="grid2" style="margin-top:14px">
+ <div class="card dark" style="padding:18px"><div style="margin-bottom:10px">{avatar('Indrodip Ghosh', 62)}</div><h4 style="font-size:12pt">Indrodip Ghosh</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#9BE02A;margin-bottom:8px">STRATEGY AND SYSTEMS</div>Business mechanics, the mindset of scaling, and the market reality of digital products.<div style="margin-top:8px;color:#B9D8C4;font-size:8.6pt">Introduction, Chapters 1, 2, 3, 8, the Conclusion, and the closing Letter.</div></div>
+ <div class="card" style="padding:18px;background:#EAF8C8;border-color:#EAF8C8"><div style="margin-bottom:10px">{avatar('Christinee Mathison', 62, '#0C3A28')}</div><h4 style="font-size:12pt">Christinee Mathison</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#1B7A52;margin-bottom:8px">TRANSFORMATION AND CLARITY</div>Knowing your audience, building your offer, creating content that connects, and the inner game of showing up consistently.<div style="margin-top:8px;color:#5C6B62;font-size:8.6pt">Chapters 4, 5, 6, 7, and 9.</div></div></div>
 {P("Indrodip's chapters draw on his lived experience as a digital product strategist, his years of building and rebuilding businesses from scratch, and the real stories of the 20+ clients he has guided to their first $10K months.", "Christinee's chapters are built from her deep expertise in mindset coaching, audience clarity, and offer building, and the specific transformation required for coaches, consultants, and healers who know they have something valuable to offer but have not yet found the system to package and sell it with confidence.", "Read each chapter as it comes. Trust that both authors wrote their part with you in mind.")}
-{PULL('Two voices. One mission. One complete roadmap.')}
 </div>'''
 
 def gratitude_page():
@@ -48,13 +47,13 @@ def gratitude_page():
 
 ENTRIES = [('how', '', 'How to Use This Workbook', ''), ('intro', '', 'Introduction: The Story Behind This Book', 'Indrodip Ghosh')] + \
   [(f'ch{i+1}', str(i+1), CHAPTERS[i], 'Indrodip Ghosh' if (i+1) in (1,2,3,8) else 'Christinee Mathison') for i in range(9)] + \
-  [('concl', '', 'Conclusion and Your Next 24 Hours', 'Indrodip Ghosh'), ('letter', '', 'A Letter from Indrodip', 'Indrodip Ghosh'), ('gift', '', 'Free Gift', 'Both Authors')]
+  [('concl', '', 'Conclusion and Your Next 24 Hours', 'Indrodip Ghosh'), ('letter', '', 'A Letter from Indrodip', 'Indrodip Ghosh'), ('about', '', 'About the Authors', 'Both Authors'), ('gift', '', 'Free Gift', 'Both Authors')]
 
 def contents_page():
     rows = ''
     for k, n, t, a in ENTRIES:
         badge = f'<div style="flex:0 0 32px;height:32px;border-radius:50%;background:#C9FF48;color:#0A2A1B;font:900 13pt/32px \'Inter Display\';text-align:center">{n}</div>' if n else '<div style="flex:0 0 32px;height:32px;border-radius:50%;background:#0C3A28;display:flex;align-items:center;justify-content:center">' + icon('flag', 15, '#C9FF48') + '</div>'
-        rows += f'<div style="display:flex;align-items:center;gap:14px;padding:7px 0;border-bottom:1px solid #DCE8E0">{badge}<div style="flex:1"><div style="font:800 11pt \'Inter\';color:#0C3A28">{sq(t)}</div>{"<div style=\"font:500 8.3pt Inter;color:#5C6B62\">"+a+"</div>" if a else ""}</div><div style="font:900 12pt \'Inter Display\';color:#1B7A52">@@pg:{k}@@</div></div>'
+        rows += f'<div style="display:flex;align-items:center;gap:14px;padding:4px 0;border-bottom:1px solid #DCE8E0">{badge}<div style="flex:1"><div style="font:800 11pt \'Inter\';color:#0C3A28">{sq(t)}</div>{"<div style=\"font:500 8.3pt Inter;color:#5C6B62\">"+a+"</div>" if a else ""}</div><div style="font:900 12pt \'Inter Display\';color:#1B7A52">@@pg:{k}@@</div></div>'
     return f'<div class="pg-break"><div class="kicker">Your route</div>{H2("Contents")}{rows}</div>'
 
 def how_to_page():

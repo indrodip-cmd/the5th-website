@@ -3,6 +3,13 @@ from lib import *
 import art
 from art import icon, landscape
 
+import base64, os
+def _b64(f): return 'data:image/jpeg;base64,' + base64.b64encode(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets', f), 'rb').read()).decode()
+PHOTO = {'Indrodip Ghosh': _b64('indrodip.jpg'), 'Christinee Mathison': _b64('christinee.jpg'),
+         'Indrodip Ghosh tall': _b64('indrodip-tall.jpg'), 'Christinee Mathison tall': _b64('christinee-tall.jpg')}
+def avatar(name, size=30, ring='#C9FF48'):
+    return f'<img src="{PHOTO[name]}" style="width:{size}px;height:{size}px;border-radius:50%;object-fit:cover;border:2px solid {ring};display:block;flex:0 0 auto"/>'
+
 def sq(s):
     """Smart quotes outside of tags."""
     def fix(t):
@@ -24,7 +31,9 @@ def STORY(tag, *paras, ic='heart'):
 def CALL(title, *paras): return f'<div class="call"><div class="t">{sq(title)}</div>{P(*paras)}</div>'
 def NOTE(title, *paras): return f'<div class="note"><div class="t">{sq(title)}</div>{P(*paras)}</div>'
 def FIG(s, cap=''): return f'<div class="fig">{s}{"<div class=cap>"+sq(cap)+"</div>" if cap else ""}</div>'
-def BY(name): return f'<div class="by"><i></i>{name} &nbsp;·&nbsp; Co-Author, The5th Consulting</div>'
+def BY(name):
+    if name not in PHOTO: return f'<div class="by"><i></i>{name} &nbsp;·&nbsp; Co-Author, The5th Consulting</div>'
+    return f'<div class="by" style="gap:10px">{avatar(name, 34, "#9BE02A")}<span>{name} &nbsp;·&nbsp; Co-Author, The5th Consulting</span></div>'
 def CHK(items, done=False): return f'<ul class="chk{" done" if done else ""}">' + ''.join(f'<li>{sq(i)}</li>' for i in items) + '</ul>'
 def BUL(items): return '<ul class="bul">' + ''.join(f'<li>{sq(i)}</li>' for i in items) + '</ul>'
 def LN(n=3): return '<div class="ln"></div>' * n
@@ -63,7 +72,7 @@ def chapter_open(n, word, title, author, quote, qby, promise):
     <div style="font:900 150px/.9 'Inter Display';letter-spacing:-.05em;color:transparent;-webkit-text-stroke:3px #C9FF48;margin:14px 0 4px">{num}</div>
     <div style="font:800 9pt 'Inter';letter-spacing:.3em;color:#9BE02A;text-transform:uppercase">{word}</div>
     <div style="font:900 {size}px/1.02 'Inter Display';letter-spacing:-.03em;color:#fff;margin-top:8px;max-width:520px">{t}</div>
-    <div style="font:600 9.5pt 'Inter';color:#CFE9D6;margin-top:14px">{author}</div>
+    <div style="display:flex;align-items:center;gap:12px;font:600 9.5pt 'Inter';color:#CFE9D6;margin-top:16px">{avatar(author.split(' ·')[0], 44)}<span>{author}</span></div>
     <div style="margin-top:22px;padding:14px 18px;border-left:4px solid #C9FF48;background:rgba(201,255,72,.08);border-radius:0 12px 12px 0;max-width:470px;color:#F2FFD0;font:italic 11pt/1.45 'Bitstream Charter',serif">{sq(quote)}<div style="font:700 8.5pt 'Inter';font-style:normal;color:#C9FF48;margin-top:6px">{sq(qby)}</div></div>
   </div>
   <div style="position:absolute;left:0;right:0;bottom:0">{landscape(n)}

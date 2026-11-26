@@ -640,6 +640,41 @@ body{padding-bottom:70px}
 }
 .flow{stroke-dasharray:8 10;animation:hFlow 1.6s linear infinite}
 @keyframes hFlow{to{stroke-dashoffset:-36}}
+
+/* interactions */
+.hScrub{margin-top:18px;padding:16px 18px;border:1px solid var(--gold-line);border-radius:16px;background:rgba(255,255,255,.04)}
+.hScrub label{display:flex;align-items:center;gap:10px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+.hScrub label i{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:hPulse 2s ease-in-out infinite}
+.hScrub input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:40px;background:transparent;cursor:pointer;touch-action:pan-y;margin-top:4px}
+.hScrub input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--gold) var(--p,100%),rgba(255,255,255,.14) var(--p,100%))}
+.hScrub input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:rgba(255,255,255,.14)}
+.hScrub input[type=range]::-moz-range-progress{height:8px;border-radius:99px;background:var(--gold)}
+.hScrub input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:linear-gradient(180deg,#f3dc9b,#C9A84C);border:3px solid #2E1A35;box-shadow:0 0 0 2px var(--gold),0 6px 16px rgba(0,0,0,.4);margin-top:-12px}
+.hScrub input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#C9A84C;border:3px solid #2E1A35;box-shadow:0 0 0 2px var(--gold)}
+.hScrub p{margin-top:6px;font-size:.95rem;line-height:1.55;color:rgba(255,255,255,.85);min-height:3em}
+.hScrub p b{display:inline-block;margin-right:8px;font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--gold-soft);font-weight:600}
+.idot{cursor:pointer;animation:hDot 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center;transition:fill .2s}
+.idot.on{fill:#fff;animation:none;transform:scale(1.35)}
+@keyframes hDot{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.hIceTap{margin-top:16px;text-align:center}
+.hIceTap>p{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+.hIceBtns{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:10px}
+.hIceBtns button{font:inherit;font-size:.86rem;font-weight:600;color:#fff;padding:11px 16px;border-radius:99px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);cursor:pointer;min-height:44px;transition:all .2s}
+.hIceBtns button.on{background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);border-color:#ecd391}
+.hIceOut{margin-top:12px;min-height:4.5em;padding:14px 16px;border-radius:14px;background:rgba(201,168,76,.1);border:1px solid var(--gold-line);font-size:.98rem;line-height:1.6;color:rgba(255,255,255,.9);text-align:left;display:none}
+.hIceOut.show{display:block;animation:hFade2 .4s}
+.hIceOut b{color:var(--gold-soft)}
+@keyframes hFade2{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rn{opacity:.35;transition:opacity .5s}.rn.lit{opacity:1}
+.hStep{transition:border-color .4s,box-shadow .4s,transform .4s}
+.hStep.on{border-color:var(--gold);box-shadow:0 30px 60px -30px rgba(176,144,47,.55);transform:translateY(-4px)}
+.hTopic{margin:26px auto 0;max-width:640px}
+.hTopic__q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold-soft)}
+.hTopic__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.hTopic__chips button{font:inherit;font-size:.9rem;font-weight:600;color:#fff;padding:12px 18px;border-radius:99px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);cursor:pointer;min-height:46px;transition:all .2s}
+.hTopic__chips button:hover{border-color:var(--gold)}
+.hTopic__chips button.on{background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);border-color:#ecd391}
+.hTopic__r{margin:14px auto 0;min-height:2.6em;font-size:1rem;color:rgba(255,255,255,.85)}
 </style>
 </head>
 <body>
@@ -725,9 +760,11 @@ body{padding-bottom:70px}
         <g class="fade fade2"><circle cx="520" cy="60" r="7" fill="#E4C879"/><circle cx="520" cy="60" r="7" fill="#E4C879" class="pulse"/><circle cx="520" cy="326" r="6" fill="#fff"/>
           <text x="506" y="46" text-anchor="end" font-family="Cormorant Garamond,serif" font-size="27" fill="#E4C879" font-style="italic" stroke="#2E1A35" stroke-width="5" paint-order="stroke">What you know</text>
           <text x="506" y="312" text-anchor="end" font-family="Cormorant Garamond,serif" font-size="27" fill="#fff" font-style="italic" stroke="#2E1A35" stroke-width="5" paint-order="stroke">What you are paid</text>
-          <path d="M470 108V300" stroke="#E4C879" stroke-width="1.6" stroke-dasharray="4 5"/><path d="M464 116l6-9 6 9M464 292l6 9 6-9" fill="none" stroke="#E4C879" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <rect x="352" y="184" width="108" height="40" rx="20" fill="#2E1A35" stroke="#C9A84C"/><text x="406" y="209" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" letter-spacing="2" fill="#E4C879" font-weight="800">THE GAP</text></g>
+          <g id="gapStatic"><path d="M470 108V300" stroke="#E4C879" stroke-width="1.6" stroke-dasharray="4 5"/><path d="M464 116l6-9 6 9M464 292l6 9 6-9" fill="none" stroke="#E4C879" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="352" y="184" width="108" height="40" rx="20" fill="#2E1A35" stroke="#C9A84C"/><text x="406" y="209" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="14" letter-spacing="2" fill="#E4C879" font-weight="800">THE GAP</text></g></g>
+          <g id="sv" opacity="0" style="pointer-events:none"><line id="svL" stroke="#E4C879" stroke-width="2" stroke-dasharray="4 5"/><line id="svV" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/><circle id="svE" r="8" fill="#E4C879" stroke="#2E1A35" stroke-width="3"/><circle id="svI" r="7" fill="#fff" stroke="#2E1A35" stroke-width="3"/><rect id="svR" width="84" height="26" rx="13" fill="#2E1A35" stroke="#C9A84C"/><text id="svT" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="13" letter-spacing="1.6" fill="#E4C879" font-weight="800"></text></g></g>
       </svg>
+      <div class="hScrub"><label for="scrub"><i></i>Drag through your career</label><input type="range" id="scrub" min="1" max="30" value="30" aria-describedby="scrubTxt"><p id="scrubTxt" aria-live="polite"><b>Year 30+</b> The gap is widest. This is where The5th starts.</p></div>
       <p class="hChart__cap">Illustration of the pattern we see in experienced professionals. Not client data.</p>
     </div>
   </div>
@@ -759,8 +796,10 @@ body{padding-bottom:70px}
         <path d="M225 170L305 170L345 185L430 245L455 325L395 392L300 422L195 412L112 358L92 282L142 208L190 182Z" fill="url(#ice)" stroke="#E4C879" stroke-opacity=".6"/>
         <g font-family="Cormorant Garamond,serif" fill="#fff" text-anchor="middle"><text x="270" y="252" font-size="28" font-style="italic">20, 30, 40 years</text><text x="270" y="284" font-size="28" font-style="italic">of experience</text></g>
         <g font-family="DM Sans,sans-serif" fill="rgba(255,255,255,.85)" text-anchor="middle" font-size="14.5" letter-spacing="1"><text x="270" y="326">HARD-WON JUDGMENT</text><text x="270" y="349">PROVEN RESULTS</text><text x="270" y="372">STORIES NOBODY PAID FOR</text></g>
+        <g id="iceDots" fill="#E4C879" stroke="#2E1A35" stroke-width="3"><circle class="idot" data-k="j" cx="200" cy="214" r="9"/><circle class="idot" data-k="r" cx="372" cy="226" r="9"/><circle class="idot" data-k="f" cx="156" cy="290" r="9"/><circle class="idot" data-k="s" cx="418" cy="304" r="9"/></g>
         <g font-family="DM Sans,sans-serif" font-size="13.5" letter-spacing="1.4" font-weight="800" fill="#E4C879"><text x="206" y="106" text-anchor="end">WHAT YOU CHARGE FOR</text><path d="M214 104H236" stroke="#E4C879"/><text x="14" y="198" font-size="12.5" letter-spacing="1">WHAT YOU KNOW</text><path d="M470 186h10v236h-10" fill="none" stroke="#E4C879" stroke-width="1.5"/></g>
       </svg>
+      <div class="hIceTap"><p id="iceHint">Tap what is hiding underwater</p><div class="hIceBtns" role="group" aria-label="What is hiding underwater"><button type="button" data-k="j">Judgment</button><button type="button" data-k="r">Results</button><button type="button" data-k="f">Frameworks</button><button type="button" data-k="s">Stories</button></div><div class="hIceOut" id="iceOut" aria-live="polite"></div></div>
     </div>
     <div data-reveal class="d1">
       <span class="chap"><b>01</b>The gap</span>
@@ -788,9 +827,10 @@ body{padding-bottom:70px}
         <svg viewBox="0 0 1200 130">
           <defs><linearGradient id="nd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecd391"/><stop offset="1" stop-color="#B0902F"/></linearGradient></defs>
           <path d="M60 65H1140" stroke="rgba(176,144,47,.25)" stroke-width="3"/>
+          <path id="roadFill" d="M60 65H1140" stroke="#C9A84C" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
           <path d="M200 65H400M500 65H700M800 65H1000" stroke="#B0902F" stroke-width="3" stroke-linecap="round" class="flow"/>
           <g fill="none" stroke="#B0902F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M392 55l12 10-12 10M692 55l12 10-12 10M992 55l12 10-12 10"/></g>
-          <g><circle cx="150" cy="65" r="44" fill="url(#nd)"/><circle cx="450" cy="65" r="44" fill="url(#nd)"/><circle cx="750" cy="65" r="44" fill="url(#nd)"/><circle cx="1050" cy="65" r="44" fill="url(#nd)"/></g>
+          <g><circle class="rn" cx="150" cy="65" r="44" fill="url(#nd)"/><circle class="rn" cx="450" cy="65" r="44" fill="url(#nd)"/><circle class="rn" cx="750" cy="65" r="44" fill="url(#nd)"/><circle class="rn" cx="1050" cy="65" r="44" fill="url(#nd)"/></g>
           <g fill="none" stroke="#2E1A35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <g transform="translate(126 41)"><path d="M8 16l16-8 16 8v18L24 42 8 34z"/><path d="M8 16l16 8 16-8M24 24v18"/></g>
             <g transform="translate(426 41)"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="8"/><circle cx="24" cy="24" r="2"/><path d="M24 2v8M24 38v8M2 24h8M38 24h8"/></g>
@@ -960,6 +1000,7 @@ body{padding-bottom:70px}
     <span class="kicker" data-reveal>Your turn</span>
     <h2 data-reveal style="margin-top:16px">Your best work deserves <em>to be paid for.</em></h2>
     <p data-reveal>You have the expertise. We have the method, the coaching and the AI. Take the free 2-minute quiz to see your fastest path to your next paying clients, with no pressure and no hard pitch.</p>
+    <div class="hTopic" data-reveal><div class="hTopic__q">One quick thing: what do you help people with?</div><div class="hTopic__chips"><button type="button" data-t="coaching">Coaching</button><button type="button" data-t="consulting">Consulting</button><button type="button" data-t="healing">Healing &amp; wellness</button><button type="button" data-t="leadership">Leadership &amp; career</button><button type="button" data-t="other">Something else</button></div><p class="hTopic__r" id="topicR" aria-live="polite"></p></div>
     <div class="hFinal__ctas" data-reveal><a href="/quiz" class="btnGold" data-cta="final-quiz">Take the free 2-minute quiz →</a><a href="/call" class="btnGhost" data-cta="final-call">Book a free strategy call</a></div>
     <small data-reveal>No credit card · No obligation · We'll never spam you</small>
   </div>
@@ -1041,6 +1082,50 @@ body{padding-bottom:70px}
   if(venn){document.querySelectorAll('.hPill__c').forEach(function(c){var k=c.getAttribute('data-c');c.addEventListener('mouseenter',function(){venn.querySelectorAll('.c').forEach(function(x){x.style.opacity=x.getAttribute('data-c')===k?'1':'.35'})});c.addEventListener('mouseleave',function(){venn.querySelectorAll('.c').forEach(function(x){x.style.opacity='1'})})})}
   /* faq */
   document.querySelectorAll('.hFaq__q').forEach(function(b){b.addEventListener('click',function(){var it=b.parentNode,a=it.querySelector('.hFaq__a'),o=it.classList.contains('open');document.querySelectorAll('.hFaq__i.open').forEach(function(x){x.classList.remove('open');x.querySelector('.hFaq__a').style.maxHeight='0'});if(!o){it.classList.add('open');a.style.maxHeight=a.scrollHeight+'px'}})});
+
+  /* hero scrubber */
+  var sc=document.getElementById('scrub');
+  if(sc){
+    var E=[[60,360],[200,350],[330,200],[520,60]],I=[[60,365],[200,362],[360,345],[520,326]];
+    function pt(P,t){var u=1-t;return[u*u*u*P[0][0]+3*u*u*t*P[1][0]+3*u*t*t*P[2][0]+t*t*t*P[3][0],u*u*u*P[0][1]+3*u*u*t*P[1][1]+3*u*t*t*P[2][1]+t*t*t*P[3][1]]}
+    function at(P,x){var lo=0,hi=1;for(var k=0;k<30;k++){var m=(lo+hi)/2;if(pt(P,m)[0]<x)lo=m;else hi=m}return pt(P,(lo+hi)/2)}
+    var $=function(i){return document.getElementById(i)},stages=[[7,'Learning fast. Every client teaches you something.'],[15,'People start asking you for advice. Often for free.'],[24,'You are the one they call. Your income has barely moved.'],[30,'The gap is widest. This is where The5th starts.']],first=false;
+    function draw(){
+      var y=+sc.value,x=60+(y-1)/29*460,e=at(E,x),n=at(I,x);
+      $('gapStatic').style.display='none';$('sv').setAttribute('opacity','1');
+      $('svV').setAttribute('x1',x);$('svV').setAttribute('x2',x);$('svV').setAttribute('y1',60);$('svV').setAttribute('y2',380);
+      $('svL').setAttribute('x1',x);$('svL').setAttribute('x2',x);$('svL').setAttribute('y1',e[1]+9);$('svL').setAttribute('y2',n[1]-8);
+      $('svE').setAttribute('cx',x);$('svE').setAttribute('cy',e[1]);$('svI').setAttribute('cx',x);$('svI').setAttribute('cy',n[1]);
+      var rx=Math.min(Math.max(x,102),478);$('svR').setAttribute('x',rx-42);$('svR').setAttribute('y',414);$('svT').setAttribute('x',rx);$('svT').setAttribute('y',432);$('svT').textContent='YEAR '+(y===30?'30+':y);
+      var s=stages.find(function(a){return y<=a[0]});$('scrubTxt').innerHTML='<b>Year '+(y===30?'30+':y)+'</b>'+s[1];
+      sc.style.setProperty('--p',((y-1)/29*100)+'%');
+      if(!first){first=true;ev('home_scrub_use')}
+    }
+    sc.style.setProperty('--p','100%');sc.addEventListener('input',draw);
+  }
+  /* iceberg */
+  var IC={j:['Hard-won judgment','becomes the diagnosis people pay a premium to hear.'],r:['Proven results','become the proof that makes your offer easy to say yes to.'],f:['Frameworks you use without thinking','become the signature method your offer is built around.'],s:['Stories nobody paid for','become the content that makes the right clients reach out.']};
+  var io2=document.getElementById('iceOut');
+  if(io2){
+    function ice(k){document.querySelectorAll('.hIceBtns button,.idot').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-k')===k)});io2.innerHTML='<b>'+IC[k][0]+'</b> '+IC[k][1];io2.classList.add('show');ev('home_ice_tap',{k:k})}
+    document.querySelectorAll('.hIceBtns button').forEach(function(x){x.addEventListener('click',function(){ice(x.getAttribute('data-k'))})});
+    document.querySelectorAll('.idot').forEach(function(x){x.addEventListener('click',function(){ice(x.getAttribute('data-k'))})});
+  }
+  /* method road */
+  var rf=document.getElementById('roadFill'),mt=document.querySelector('.hMeth'),rns=document.querySelectorAll('.rn'),sts=document.querySelectorAll('.hStep');
+  function road(){
+    if(!mt)return;var r=mt.getBoundingClientRect(),p=Math.max(0,Math.min(1,(innerHeight*.8-r.top)/(r.height*.9)));
+    if(rf)rf.style.strokeDashoffset=1-p;
+    rns.forEach(function(n,i){n.classList.toggle('lit',p>i/4+.06)});sts.forEach(function(s,i){s.classList.toggle('on',p>i/4+.12&&p<(i+1)/4+.12)});
+  }
+  addEventListener('scroll',road,{passive:true});road();
+  /* topic chips */
+  var tr=document.getElementById('topicR');
+  document.querySelectorAll('.hTopic__chips button').forEach(function(b){b.addEventListener('click',function(){
+    var t=b.getAttribute('data-t');document.querySelectorAll('.hTopic__chips button').forEach(function(x){x.classList.toggle('on',x===b)});
+    tr.textContent='Good. Your next step is a 2-minute quiz that maps your fastest path to clients.';
+    document.querySelectorAll('a[href^="/quiz"]').forEach(function(a){a.setAttribute('href','/quiz?topic='+t)});ev('home_topic',{topic:t});
+  })});
   /* sticky */
   var st=document.getElementById('hSticky'),hero=document.getElementById('top');
   if(st&&hero&&'IntersectionObserver' in window){new IntersectionObserver(function(en){st.classList.toggle('show',!en[0].isIntersecting)},{threshold:0}).observe(hero)}

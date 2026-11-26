@@ -18,6 +18,7 @@ import { resolveOrCreateContact, logActivity, addTag } from '@/lib/crm'
 import { recordPurchase } from '@/lib/purchases'
 import { markAuditPaid, AUDIT_PLAN_ID, AUDIT_PLAN_ID_INDIA } from '@/lib/roadmap-audit'
 import { Resend } from 'resend'
+import { FRONT_BOOK, bump } from '@/lib/funnel/products'
 
 // Whop plan/product ids we react to. Env-overridable where the product may change.
 export const BREAKTHROUGH_PLAN_ID = 'plan_ZXh5ZISKwiWDy'
@@ -72,6 +73,18 @@ export async function dispatchWhopEvent(body: Record<string, unknown>, raw: stri
     }
     if (email && (raw.includes(WORKBOOK_PLAN_ID) || raw.includes(WORKBOOK_PRODUCT_ID))) {
       try { await enrollWorkbookBuyer(email, name, 'whop') } catch (e) { emitEvent('workbook_enroll_failed', { provider: 'whop', error: String(e) }) }
+    }
+    // Expertise to Income ebook ($4.99) and its order-bump bundle. Whop delivers
+    // the file; here we tag the buyer in the CRM (email list + LTV) and emit the
+    // purchase event. Revenue itself is already recorded above with the plan id.
+    const bookPlans = [FRONT_BOOK.planId, bump()?.bundlePlanId || ''].filter(Boolean)
+    if (email && bookPlans.some((id) => raw.includes(id))) {
+      try {
+        const bundle = !!bump() && raw.includes(bump()!.bundlePlanId)
+        const c = await resolveOrCreateContact({ email, name, tags: ['book-buyer', ...(bundle ? ['book-bump-buyer'] : [])] }, { source: 'whop', actor: 'whop-webhook' })
+        if (c?.id) await addTag(c.id as string, 'book-buyer').catch(() => {})
+        emitEvent('purchase_completed', { email, product: FRONT_BOOK.slug, bundle, contact_id: c?.id })
+      } catch (e) { emitEvent('book_grant_failed', { provider: 'whop', error: String(e) }) }
     }
     if (email && DIAGNOSTIC_PLAN_ID && raw.includes(DIAGNOSTIC_PLAN_ID)) {
       try { await grantDiagnostic(email, name, receiptId) } catch (e) { emitEvent('diagnostic_grant_failed', { provider: 'whop', error: String(e) }) }

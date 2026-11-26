@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { limit, clientIp } from '@/lib/rateLimit';
+import { EXP_COOKIE, EXP_HEADER, assign, isComplete, parse, serialize } from '@/lib/funnel/experiments';
 
 /* ══════════════════════════════════════════════════════════════════════════
    Edge security gateway (Next.js 16 renamed `middleware` -> `proxy`).
@@ -102,6 +103,24 @@ export async function proxy(request: NextRequest) {
     url.protocol = 'https:';
     url.port = '';
     return NextResponse.redirect(url, 308);
+  }
+
+  // 4) Funnel A/B bucketing. Only the book funnel pages are bucketed. The visitor
+  //    is assigned once (cookie, 90 days) and the assignment is also forwarded as
+  //    a request header so the very first server render already shows their
+  //    variant. ?exp=headline:value,theme:dark forces variants for QA.
+  if (pathname === '/book' || pathname.startsWith('/book/')) {
+    const forced = request.nextUrl.searchParams.get('exp');
+    const existing = request.cookies.get(EXP_COOKIE)?.value;
+    let value = existing && isComplete(existing) ? serialize(parse(existing)) : serialize(assign());
+    if (forced) value = serialize({ ...parse(value), ...parse(forced) });
+    const headers = new Headers(request.headers);
+    headers.set(EXP_HEADER, value);
+    const res = NextResponse.next({ request: { headers } });
+    if (value !== existing) {
+      res.cookies.set(EXP_COOKIE, value, { maxAge: 60 * 60 * 24 * 90, path: '/', sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
+    }
+    return res;
   }
 
   return NextResponse.next();

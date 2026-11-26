@@ -1,4 +1,6 @@
+import { headers } from 'next/headers'
 import BookLanding from './BookLanding'
+import { EXP_HEADER, parse } from '@/lib/funnel/experiments'
 import { BOOK_PRICE, BOOK_TITLE, BOOK_SUBTITLE, BOOK_PAGES, BOOK_GUARANTEE_DAYS, FAQ, COMPANY_SALES } from './config'
 
 const SITE = 'https://the5thglobal.consulting'
@@ -108,11 +110,14 @@ const GRAPH = {
   ],
 }
 
-export default function BookPage() {
+export default async function BookPage() {
+  // The bucket was assigned in proxy.ts; rendering it on the server means the
+  // visitor's very first paint is already their variant (no flicker, no CLS).
+  const exp = parse((await headers()).get(EXP_HEADER))
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(GRAPH) }} />
-      <BookLanding />
+      <BookLanding exp={exp} />
     </>
   )
 }

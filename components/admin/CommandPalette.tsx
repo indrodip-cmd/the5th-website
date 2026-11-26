@@ -36,6 +36,7 @@ const NAV_ACTIONS: Array<{ icon: string; label: string; href: string; keywords: 
   { icon: '🎫', label: 'Support Tickets', href: '/admin/tickets', keywords: 'bug report help ticket issue support', group: 'Communications' },
   // ── Growth ──
   { icon: '＄', label: 'Revenue', href: '/admin/revenue', keywords: 'money sales whop balance', group: 'Growth' },
+  { icon: '▽', label: 'Book funnel', href: '/admin/funnel', keywords: 'conversion ab test book cvr', group: 'Growth' },
   { icon: '🎟', label: 'Event Campaign', href: '/admin/events', keywords: 'breakthrough event presale', group: 'Growth' },
   { icon: '🧭', label: 'Journeys', href: '/admin/journeys', keywords: 'intent segments visitors journey intelligence', group: 'Growth' },
   { icon: '📈', label: 'Analytics', href: '/admin/analytics', keywords: 'stats reports traffic', group: 'Growth' },

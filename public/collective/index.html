@@ -767,6 +767,85 @@ body{padding-bottom:70px}
 }
 @media(max-width:420px){.cCard__dots{gap:5px}.cPlan__price{font-size:4.6rem}.cTable__r{font-size:.76rem}.cTable__h{font-size:.5rem}.cTable__h div,.cTable__r div{padding:12px 4px}}
 @media(prefers-reduced-motion:reduce){.cCard__dots i{animation:none;background:#C9A84C;opacity:1}.cPlan__arc{stroke-dashoffset:0;transition:none}}
+/* ═════ persuasion layer ═════ */
+.cHead__s{display:block;margin-top:10px;font-size:.42em;letter-spacing:0;color:var(--muted);font-style:italic}
+.hDark .cHead__s{color:rgba(255,255,255,.6)}
+/* familiar */
+.cFam{display:grid;gap:10px;max-width:900px}
+.cFam__c{position:relative;text-align:left;padding:16px 56px 16px 18px;border-radius:16px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;transition:all .25s;display:block;width:100%}
+.cFam__t{display:block;font:600 1rem/1.4 'DM Sans',sans-serif}
+.cFam__r{display:block;max-height:0;overflow:hidden;opacity:0;font-size:.94rem;line-height:1.65;color:rgba(255,255,255,.82);font-weight:300;transition:max-height .4s ease,opacity .4s,margin .3s}
+.cFam__c i{position:absolute;right:16px;top:16px;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--gold);transition:all .25s}
+.cFam__c.on{border-color:var(--gold-soft);background:linear-gradient(160deg,rgba(201,168,76,.2),rgba(201,168,76,.06))}
+.cFam__c.on i{background:linear-gradient(180deg,#ecd391,#C9A84C);border-color:transparent}
+.cFam__c.on i::after{content:'';position:absolute;left:7px;top:8px;width:10px;height:5px;border-left:2.5px solid #2E1A35;border-bottom:2.5px solid #2E1A35;transform:rotate(-45deg)}
+.cFam__c.on .cFam__r{max-height:200px;opacity:1;margin-top:10px}
+.cFam__out{max-width:900px;margin-top:18px;padding:20px;border-radius:16px;border:1px dashed var(--gold-line);font-size:1.05rem;line-height:1.6;color:rgba(255,255,255,.85);min-height:70px;transition:background .4s,border-color .4s}
+.cFam__out b{color:var(--gold-soft)}
+.cFam__out.hot{background:rgba(201,168,76,.1);border:1px solid var(--gold)}
+.cFam__out a{display:inline-block;margin-top:12px}
+/* calculator extra */
+.cCalc__l2{display:block;margin-top:22px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.cCalc__val--s{font-size:1.9rem;margin-bottom:10px}
+.cCalc__wait{grid-column:1/-1;padding:18px 22px;background:linear-gradient(170deg,#2E1A35,#231029);color:#fff;font-size:1rem;line-height:1.6}
+.cCalc__wait b{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--gold-soft);font-weight:600}
+/* year */
+.cYear{max-width:900px}
+.cYear__rail input{width:100%;-webkit-appearance:none;appearance:none;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--gold) var(--p,0%),#e8e1d4 var(--p,0%));outline:none}
+.cYear__rail input::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C);border:3px solid #fff;box-shadow:0 4px 14px rgba(46,26,53,.4);cursor:pointer}
+.cYear__rail input::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#C9A84C;border:3px solid #fff;cursor:pointer}
+.cYear__q{display:flex;justify-content:space-between;margin-top:10px;font:800 .72rem 'DM Sans',sans-serif;letter-spacing:.14em;color:var(--gold-deep)}
+.cYear__cols{display:grid;gap:12px;margin-top:20px}
+.cYear__c{padding:22px 20px;border-radius:18px;min-height:150px}
+.cYear__c h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;margin-bottom:8px}
+.cYear__c p{font-size:.98rem;line-height:1.65}
+.cYear__c.alone{background:#ece6da;border:1px solid var(--border)}.cYear__c.alone h3{color:#6b6258}.cYear__c.alone p{color:#6b6258}
+.cYear__c.room{background:linear-gradient(160deg,#4E3158,#2E1A35);color:#fff;border:1px solid var(--gold);box-shadow:0 30px 60px -34px rgba(46,26,53,.8)}.cYear__c.room h3{color:var(--gold-soft)}.cYear__c.room p{color:rgba(255,255,255,.88)}
+.cYear__c.sw p{animation:cSw .4s}
+/* readiness */
+.cReady{display:grid;gap:16px;max-width:900px}
+.cReady__list{display:grid;gap:10px}
+.cReady__list button{position:relative;text-align:left;padding:16px 16px 16px 58px;border-radius:14px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);color:#fff;font:600 .98rem/1.4 'DM Sans',sans-serif;cursor:pointer;transition:all .25s;min-height:58px}
+.cReady__list i{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:8px;border:1.5px solid var(--gold);transition:all .2s}
+.cReady__list button.on{background:linear-gradient(160deg,rgba(201,168,76,.28),rgba(201,168,76,.1));border-color:var(--gold-soft)}
+.cReady__list button.on i{background:linear-gradient(180deg,#ecd391,#C9A84C);border-color:transparent}
+.cReady__list button.on i::after{content:'';position:absolute;left:7px;top:8px;width:11px;height:6px;border-left:3px solid #2E1A35;border-bottom:3px solid #2E1A35;transform:rotate(-45deg)}
+.cReady__out{display:flex;gap:18px;align-items:center;padding:20px;border-radius:18px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05)}
+.cReady__ring{position:relative;flex:none;width:96px;height:96px}
+.cReady__ring svg{width:100%;height:100%}
+#cRdArc{transition:stroke-dashoffset .6s cubic-bezier(.19,.7,.2,1)}
+.cReady__ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--gold-soft)}
+.cReady__msg{font-size:1.02rem;line-height:1.55;color:rgba(255,255,255,.88)}
+.cReady__msg b{color:var(--gold-soft)}.cReady__msg a{display:inline-block;margin-top:10px}
+.cReady__no{max-width:900px;margin-top:14px;font-size:.84rem;color:rgba(255,255,255,.55)}
+/* objections */
+.cObj{max-width:900px}
+.cObj__tabs{display:grid;gap:8px}
+.cObj__tabs button{text-align:left;padding:15px 16px;border-radius:14px;border:1px solid var(--border);background:#fff;font:600 .96rem/1.35 'DM Sans',sans-serif;color:var(--ink);cursor:pointer;transition:all .2s;min-height:54px}
+.cObj__tabs button.on{background:var(--plum-dark);color:#fff;border-color:var(--plum-dark);box-shadow:0 20px 40px -24px rgba(46,26,53,.8)}
+.cObj__out{margin-top:14px;padding:24px 22px;border-radius:18px;background:linear-gradient(170deg,#fff,#faf6ef);border:1px solid var(--gold);min-height:170px}
+.cObj__out h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--plum-dark);line-height:1.1}
+.cObj__out p{margin-top:10px;font-size:1rem;line-height:1.7;color:var(--ink-mid)}
+.cObj__out.sw{animation:cSw .4s}
+/* plan personalised line */
+.cPlan__for{display:none;margin:12px auto 0;padding:8px 14px;border-radius:99px;font-size:.8rem;font-weight:700;color:var(--green);background:rgba(28,74,50,.09);border:1px solid rgba(28,74,50,.25);width:fit-content;max-width:100%}
+.cPlan__for.show{display:block}
+.cPlan__btn{animation:cPulse 2.6s infinite}
+@keyframes cPulse{0%,100%{box-shadow:0 12px 34px rgba(201,168,76,.34),0 0 0 0 rgba(201,168,76,.5)}50%{box-shadow:0 12px 34px rgba(201,168,76,.34),0 0 0 12px rgba(201,168,76,0)}}
+/* toast */
+.cToast{position:fixed;left:12px;bottom:84px;z-index:140;max-width:300px;display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:14px;background:rgba(35,16,41,.96);border:1px solid var(--gold-line);color:#fff;box-shadow:0 20px 40px -16px rgba(0,0,0,.6);transform:translateY(30px);opacity:0;pointer-events:none;transition:all .5s}
+.cToast.show{transform:none;opacity:1}
+.cToast img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid var(--gold)}
+.cToast b{display:block;font-size:.84rem}.cToast span{display:block;font-size:.74rem;color:var(--gold-soft)}
+@media(min-width:760px){
+  .cFam{grid-template-columns:1fr 1fr}
+  .cYear__cols{grid-template-columns:1fr 1fr}
+  .cReady{grid-template-columns:1.2fr 1fr;align-items:start}
+  .cReady__out{position:sticky;top:110px}
+  .cObj__tabs{grid-template-columns:repeat(4,1fr)}
+  .cToast{bottom:24px;left:24px}
+}
+@media(prefers-reduced-motion:reduce){.cPlan__btn{animation:none}.cFam__r{transition:none}}
 </style>
 </head>
 <body>
@@ -818,7 +897,7 @@ body{padding-bottom:70px}
 </div>
 <div class="mobileMenu__backdrop" id="menuBackdrop"></div>
 <div class="hProg" id="hProg"></div>
-<nav class="hDots" id="hDots" aria-label="Page chapters"><a href="#top" class="on" aria-label="Start"><span>Start</span></a><a href="#value"><span>The value</span></a><a href="#inside"><span>What is inside</span></a><a href="#method"><span>The method</span></a><a href="#proof"><span>Proof</span></a><a href="#founder"><span>Founder</span></a><a href="#join"><span>Join</span></a></nav>
+<nav class="hDots" id="hDots" aria-label="Page chapters"><a href="#top" class="on" aria-label="Start"><span>Start</span></a><a href="#familiar"><span>Sound familiar</span></a><a href="#value"><span>The value</span></a><a href="#inside"><span>What is inside</span></a><a href="#method"><span>The method</span></a><a href="#proof"><span>Proof</span></a><a href="#founder"><span>Founder</span></a><a href="#join"><span>Join</span></a></nav>
 
 <!-- HERO -->
 <section class="hHero cHero" id="top">
@@ -849,11 +928,29 @@ body{padding-bottom:70px}
   </div></div>
 </section>
 
+<!-- SOUND FAMILIAR -->
+<section class="hSec hDark" id="familiar">
+  <div class="layout">
+    <div class="cHead" data-reveal><span class="chap"><b>01</b>Sound familiar</span>
+    <h2 class="h2">Tap every line that <em>sounds like you.</em></h2>
+    <p class="lead">Years of real expertise, and still this. It is not a flaw in you. Tap to see what is really going on.</p></div>
+    <div class="cFam" id="cFam">
+      <button class="cFam__c" data-react="You are not behind. You are missing a system, and nobody gave you one. Experts are rarely taught how to sell what they know."><span class="cFam__t">I post and post, and nobody buys</span><span class="cFam__r"></span><i></i></button>
+      <button class="cFam__c" data-react="Undercharging is a positioning problem, not a worth problem. It is fixed by a structured offer and a price built on the transformation, not the hours."><span class="cFam__t">I undercharge, or I do not know what to charge</span><span class="cFam__r"></span><i></i></button>
+      <button class="cFam__c" data-react="Courses give you information. Results come from implementation, with someone who answers your actual situation. That is the gap a live room closes."><span class="cFam__t">I have bought courses and still have no steady clients</span><span class="cFam__r"></span><i></i></button>
+      <button class="cFam__c" data-react="Many of our members started with no audience at all. The method works through your existing network, not through followers."><span class="cFam__t">I do not have a big audience</span><span class="cFam__r"></span><i></i></button>
+      <button class="cFam__c" data-react="This is the most common one, and the most expensive. Imposter feelings usually fade fastest when you see other professionals your age get paid and you get specific feedback."><span class="cFam__t">Part of me wonders if I am really good enough to charge</span><span class="cFam__r"></span><i></i></button>
+      <button class="cFam__c" data-react="Alone, every decision takes weeks. In a room with a coach every week, it takes a single session. The speed is the point."><span class="cFam__t">I keep figuring it out alone, slowly</span><span class="cFam__r"></span><i></i></button>
+    </div>
+    <div class="cFam__out" id="cFamOut" aria-live="polite"></div>
+  </div>
+</section>
+
 <!-- VALUE -->
 <section class="hSec hLight" id="value">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>01</b>The value</span>
-    <h2 class="h2">$997 is less than <em>one client.</em></h2>
+    <div class="cHead" data-reveal><span class="chap"><b>02</b>The value</span>
+    <h2 class="h2">$997 is less than <em>one client.</em><span class="cHead__s">And waiting costs more than both.</span></h2>
     <p class="lead">Private coaching with a founder-led consultancy costs $15,000 and up. The Collective gives you that founder every week for the price of one small engagement with your own client. Set what one client is worth to you.</p></div>
     <div class="cCalc" data-reveal>
       <div class="cCalc__in">
@@ -861,6 +958,9 @@ body{padding-bottom:70px}
         <div class="cCalc__val" id="cVal">$3,000</div>
         <input type="range" id="cRange" min="500" max="10000" step="500" value="3000" aria-label="Value of one new client in dollars">
         <div class="cCalc__scale"><span>$500</span><span>$10,000</span></div>
+        <label for="cN" class="cCalc__l2">How many new clients a month would change your life?</label>
+        <div class="cCalc__val cCalc__val--s" id="cNv">1 client a month</div>
+        <input type="range" id="cN" min="1" max="4" step="1" value="1" aria-label="New clients per month">
       </div>
       <div class="cCalc__out">
         <div class="cCalc__bar"><i id="cBar"></i></div>
@@ -871,7 +971,8 @@ body{padding-bottom:70px}
           <div><b>$83</b><span>per month</span></div>
         </div>
       </div>
-      <p class="cCalc__note">Arithmetic from the price, not a promise of results. See the <a href="/disclaimer">earnings disclaimer</a>.</p>
+      <div class="cCalc__wait" id="cWait"></div>
+      <p class="cCalc__note">Illustration using your own numbers, not a forecast or a promise of results. See the <a href="/disclaimer">earnings disclaimer</a>.</p>
     </div>
   </div>
 </section>
@@ -879,7 +980,7 @@ body{padding-bottom:70px}
 <!-- WHERE ARE YOU -->
 <section class="hSec hDark" id="start-here">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>02</b>Your starting point</span>
+    <div class="cHead" data-reveal><span class="chap"><b>03</b>Your starting point</span>
     <h2 class="h2">Where are you <em>right now?</em></h2>
     <p class="lead">You do not have an expertise problem. You have a system problem, and you have been solving it alone. Tap where you are and see where you start inside.</p></div>
     <div class="cStage" data-reveal>
@@ -896,7 +997,7 @@ body{padding-bottom:70px}
 <!-- INSIDE -->
 <section class="hSec hLight" id="inside">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>03</b>What is inside</span>
+    <div class="cHead" data-reveal><span class="chap"><b>04</b>What is inside</span>
     <h2 class="h2">Four things. <em>One year.</em></h2>
     <p class="lead">Not a content library. A working system, a live coach, an AI that knows your business, and a room that holds you to it.</p></div>
     <div class="cGrid">
@@ -935,7 +1036,7 @@ body{padding-bottom:70px}
 <!-- METHOD -->
 <section class="hSec hDark" id="method">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>04</b>The method</span>
+    <div class="cHead" data-reveal><span class="chap"><b>05</b>The method</span>
     <h2 class="h2">Five pillars. One path from <em>expertise to income.</em></h2>
     <p class="lead">No more piecing it together from free content and crossed fingers. This is the sequence members follow to enroll their first, and their fiftieth, paying client. Tap each step.</p></div>
     <div class="cMeth" data-reveal>
@@ -954,10 +1055,26 @@ body{padding-bottom:70px}
   </div>
 </section>
 
+<!-- YEAR -->
+<section class="hSec hLight" id="year">
+  <div class="layout">
+    <div class="cHead" data-reveal><span class="chap"><b>06</b>Your year inside</span>
+    <h2 class="h2">What the year is <em>built to do.</em></h2>
+    <p class="lead">Two versions of the next twelve months. Slide through the year and see the difference between doing it alone and doing it in the room.</p></div>
+    <div class="cYear" data-reveal>
+      <div class="cYear__rail"><input type="range" id="cYr" min="1" max="4" step="1" value="1" aria-label="Quarter of the year"><div class="cYear__q"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>
+      <div class="cYear__cols">
+        <div class="cYear__c alone"><h3>On your own</h3><p id="cYa"></p></div>
+        <div class="cYear__c room"><h3>Inside The Collective</h3><p id="cYb"></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- COMPARE -->
 <section class="hSec hLight" id="compare">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>05</b>Why The Collective</span>
+    <div class="cHead" data-reveal><span class="chap"><b>07</b>Why The Collective</span>
     <h2 class="h2">What you get, <em>compared.</em></h2></div>
     <div class="cTable" data-reveal>
       <div class="cTable__h"><div></div><div class="us">The Collective</div><div>Online courses</div><div>Private coaching</div></div>
@@ -974,7 +1091,7 @@ body{padding-bottom:70px}
 <!-- PROOF -->
 <section class="hSec hDark" id="proof">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>06</b>Member results</span>
+    <div class="cHead" data-reveal><span class="chap"><b>08</b>Member results</span>
     <h2 class="h2">They were exactly <em>where you are.</em></h2></div>
     <div class="hQuotes">
       <figure class="hQ" data-reveal><blockquote>“Twelve thousand dollars in nine weeks. I had never earned that from my own business in my life. The framework works if you actually work it.”</blockquote><figcaption><img src="/public/clients/sm/angela.webp" alt="Angela" width="44" height="44" loading="lazy"><div><b>Angela</b><span>$12,000 in 63 days</span></div></figcaption></figure>
@@ -989,23 +1106,35 @@ body{padding-bottom:70px}
 </section>
 
 <!-- FIT -->
-<section class="hSec hLight" id="fit">
+<section class="hSec hDark" id="fit">
   <div class="layout">
-    <div class="cHead" data-reveal><span class="chap"><b>07</b>Is it for you</span>
-    <h2 class="h2">Built for you <em>if...</em></h2></div>
-    <div class="cFit" data-reveal>
-      <div class="cFit__c yes"><h3>This is for you</h3><ul>
-        <li>You have real expertise and no idea how to package it into something people will pay for</li>
-        <li>You have tried courses and still do not have consistent clients</li>
-        <li>You want serious coaching and a proven system without a $10,000 price tag</li>
-        <li>You are ready to stop consuming content and start building</li>
-        <li>You want a room of professionals who are doing the work</li></ul></div>
-      <div class="cFit__c no"><h3>This is not for you</h3><ul>
-        <li>You want a passive content library you can consume without acting</li>
-        <li>You want someone to do the work for you</li>
-        <li>You expect results without showing up consistently</li>
-        <li>You want motivation without implementation</li>
-        <li>You are looking for a quick fix that takes no effort</li></ul></div>
+    <div class="cHead" data-reveal><span class="chap"><b>09</b>Is it for you</span>
+    <h2 class="h2">Your 30-second <em>readiness check.</em></h2>
+    <p class="lead">The Collective is not for everyone, and we would rather you know now. Tap everything that is true for you.</p></div>
+    <div class="cReady" data-reveal>
+      <div class="cReady__list" id="cReady">
+        <button><i></i>I have real expertise from years of work or life</button>
+        <button><i></i>I can set aside a few focused hours a week</button>
+        <button><i></i>I am willing to talk to real potential clients</button>
+        <button><i></i>I want a system and a coach, not another pile of content</button>
+        <button><i></i>I would rather act and adjust than wait until I feel ready</button>
+      </div>
+      <div class="cReady__out"><div class="cReady__ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(201,168,76,.2)" stroke-width="9"/><circle id="cRdArc" cx="60" cy="60" r="52" fill="none" stroke="#C9A84C" stroke-width="9" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="327" transform="rotate(-90 60 60)"/></svg><b id="cRdN">0/5</b></div>
+        <div class="cReady__msg" id="cRdMsg" aria-live="polite">Tap the statements that are true for you.</div></div>
+    </div>
+    <p class="cReady__no">Not a fit if you want a passive library, expect results without showing up, or want someone to do the work for you.</p>
+  </div>
+</section>
+
+<!-- HONEST ANSWERS -->
+<section class="hSec hLight" id="honest">
+  <div class="layout">
+    <div class="cHead" data-reveal><span class="chap"><b>10</b>Honest answers</span>
+    <h2 class="h2">The four thoughts that <em>stop people.</em></h2>
+    <p class="lead">Almost everyone who joins had at least one of these. Tap the one you are having.</p></div>
+    <div class="cObj" data-reveal>
+      <div class="cObj__tabs"><button class="on" data-o="0">"I am too old for this"</button><button data-o="1">"I have tried before"</button><button data-o="2">"I do not have time"</button><button data-o="3">"What if it fails?"</button></div>
+      <div class="cObj__out" id="cObjOut" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -1016,7 +1145,7 @@ body{padding-bottom:70px}
     <div class="hFound">
       <div class="hFound__img" data-reveal><img src="/public/images/founder-ff.webp" alt="Indrodip Ghosh, founder of The5th Global Consulting" width="760" height="1025" loading="lazy"></div>
       <div data-reveal class="d1">
-        <span class="chap"><b>08</b>The founder</span>
+        <span class="chap"><b>11</b>The founder</span>
         <blockquote style="margin-top:18px">“I built this because talented professionals kept going unpaid.”</blockquote>
         <p>I grew up surrounded by professionals who spent decades helping others, and rarely got paid what they were worth. Later, as a marketer and funnel strategist, I saw the same pattern again and again: people with 20, 30, even 40 years of expertise who believed they had nothing worth selling.</p>
         <p>The5th is not a course and not another group with a chat channel. It is a real system, real coaching and a private collective, so the next professional who feels she is starting from zero realises she is starting from everything.</p>
@@ -1030,7 +1159,7 @@ body{padding-bottom:70px}
 <!-- JOIN / PRICING -->
 <section class="hSec cJoin" id="join">
   <div class="layout">
-    <div class="cHead cHead--c" data-reveal><span class="chap"><b>09</b>Your membership</span>
+    <div class="cHead cHead--c" data-reveal><span class="chap"><b>12</b>Your membership</span>
     <h2 class="h2">One year. One price. <em>Everything.</em></h2></div>
     <div class="cPlan" data-reveal>
       <div class="cPlan__ring">
@@ -1039,6 +1168,7 @@ body{padding-bottom:70px}
       </div>
       <div class="cPlan__price"><span>$</span>997<small>/ year</small></div>
       <p class="cPlan__sub">One payment. No upsells inside. About $19 per live session.</p>
+      <p class="cPlan__for" id="cFor"></p>
       <ul class="cPlan__list">
         <li>52 live coaching sessions with Indrodip</li>
         <li>The5th AI, your personal CMO, 24/7</li>
@@ -1067,7 +1197,7 @@ body{padding-bottom:70px}
 <!-- FAQ -->
 <section class="hSec hLight" id="faq">
   <div class="layout">
-    <div class="cHead cHead--c" data-reveal><span class="chap"><b>10</b>Questions</span>
+    <div class="cHead cHead--c" data-reveal><span class="chap"><b>13</b>Questions</span>
     <h2 class="h2">Before you <em>join.</em></h2></div>
     <div class="hFaq">
       <div class="hFaq__i"><button class="hFaq__q">Is this a content library or do I get real coaching?<i>+</i></button><div class="hFaq__a"><p>Real coaching. Every week Indrodip runs a live session where you bring your actual situation and get a specific answer and action plan. The platform also holds the on-demand curriculum and The5th AI, but the weekly call is live and with Indrodip personally, not a team member and not a recording.</p></div></div>
@@ -1093,6 +1223,7 @@ body{padding-bottom:70px}
   </div>
 </section>
 <div class="hDisc"><div class="layout"><p>Individual results vary and depend on each member's implementation and circumstances. The5th provides business coaching and education, not therapy, medical, legal, tax or financial advice. See our <a href="/disclaimer">earnings disclaimer</a>.</p></div></div>
+<div class="cToast" id="cToast" aria-live="polite"></div>
 <div class="hSticky" id="hSticky"><a href="/collective-checkout" class="btnGold" data-cta="sticky">Join The Collective · $997/year →</a></div>
 
 <footer class="footer">
@@ -1147,18 +1278,21 @@ body{padding-bottom:70px}
   var cc=$('cCard');
   if(cc&&matchMedia('(hover:hover)').matches){cc.parentNode.addEventListener('mousemove',function(e){var r=cc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;cc.style.transform='rotateY('+(x*10)+'deg) rotateX('+(-y*10)+'deg)';cc.style.setProperty('--mx',(x+.5)*100+'%');cc.style.setProperty('--my',(y+.5)*100+'%')});cc.parentNode.addEventListener('mouseleave',function(){cc.style.transform=''})}
   /* calculator */
-  var rg=$('cRange'),used=false;
+  var rg=$('cRange'),rn=$('cN'),used=false;
   function money(n){return '$'+n.toLocaleString('en-US')}
   function calc(){
-    var v=+rg.value,price=997,x=v/price;
+    var v=+rg.value,n=+rn.value,price=997,x=v/price;
     $('cVal').textContent=money(v);
     rg.style.setProperty('--p',((v-500)/9500*100)+'%');
+    rn.style.setProperty('--p',((n-1)/3*100)+'%');
+    $('cNv').textContent=n+(n===1?' client':' clients')+' a month';
     $('cBar').style.width=Math.min(100,price/v*100)+'%';
-    var t=x>=1?'<b>One client at '+money(v)+' covers your membership '+x.toFixed(1)+' times.</b> The membership equals '+Math.round(price/v*100)+'% of a single client.':'<b>One client at '+money(v)+' covers '+Math.round(v/price*100)+'% of your membership.</b> Two clients would cover it in full.';
-    $('cOut').innerHTML=t;
-    if(!used&&document.activeElement===rg){used=true;ev('collective_calc_use')}
+    $('cOut').innerHTML=x>=1?'<b>One client at '+money(v)+' covers your membership '+x.toFixed(1)+' times.</b> The membership equals '+Math.round(price/v*100)+'% of a single client.':'<b>One client at '+money(v)+' covers '+Math.round(v/price*100)+'% of your membership.</b> Two clients would cover it in full.';
+    var mo=v*n;
+    $('cWait').innerHTML='In your own numbers, '+n+' new '+(n===1?'client':'clients')+' a month at '+money(v)+' is <b>'+money(mo)+' a month</b>, or <b>'+money(mo*12)+' over a year</b>. Every month that income is not built is a month you do not get back. The membership is '+money(price)+' once.';
+    if(!used&&(document.activeElement===rg||document.activeElement===rn)){used=true;ev('collective_calc_use')}
   }
-  if(rg){rg.addEventListener('input',calc);calc()}
+  if(rg&&rn){rg.addEventListener('input',calc);rn.addEventListener('input',calc);calc()}
   /* stage */
   var ST=[
     ['Start with Clarity and Offer','You have years of value and nothing packaged yet. That is the most common starting point in the room, and the fastest to fix.',['Day one: tell The5th AI what you know and who you help, and shape your first offer','Bring the draft to the next live session and sharpen it with Indrodip','Work Pillar 1 and 2 of the method: positioning and offer architecture','Set a price that reflects the transformation, not the hours']],
@@ -1166,8 +1300,36 @@ body{padding-bottom:70px}
     ['Start with Sales and Scale','You can get clients. The problem is consistency, pricing confidence and a business that depends on your calendar.',['Tighten the sales conversation so more calls turn into yes','Raise your price with a framework instead of a guess','Pillar 5: systemise what works and let The5th AI carry the load','Weekly live sessions keep the rhythm going all year']]
   ];
   var so=$('cStageOut');
-  function stage(i){var s=ST[i];so.classList.remove('sw');void so.offsetWidth;so.classList.add('sw');so.innerHTML='<h3>'+s[0]+'</h3><p>'+s[1]+'</p><ul>'+s[2].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'}
+  var NAMES=['Clarity and Offer','Audience and Sales','Sales and Scale'];
+  function stage(i){var s=ST[i];try{sessionStorage.setItem('c_stage',NAMES[i])}catch(_){};var f=$('cFor');if(f){f.textContent='Your starting point: '+NAMES[i];f.classList.add('show')};so.classList.remove('sw');void so.offsetWidth;so.classList.add('sw');so.innerHTML='<h3>'+s[0]+'</h3><p>'+s[1]+'</p><ul>'+s[2].map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul><a href="#join" class="btnGold" style="margin-top:18px" data-cta="stage-join">Start at '+NAMES[i]+' · $997/year →</a>'}
   if(so){stage(0);document.querySelectorAll('.cStage__btns button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.cStage__btns button').forEach(function(x){x.classList.toggle('on',x===b)});stage(+b.getAttribute('data-s'));ev('collective_stage',{s:b.getAttribute('data-s')})})})}
+  /* sound familiar */
+  var fam=document.querySelectorAll('.cFam__c'),fo=$('cFamOut');
+  fam.forEach(function(c){c.querySelector('.cFam__r').textContent=c.getAttribute('data-react');c.addEventListener('click',function(){c.classList.toggle('on');var k=document.querySelectorAll('.cFam__c.on').length;
+    if(!k){fo.className='cFam__out';fo.textContent='';return}
+    fo.className='cFam__out hot';
+    fo.innerHTML=k>=3?'<b>'+k+' of 6 sound like you.</b> Then you are exactly who The Collective was built for. None of this is a flaw in you. It is the absence of a system and a room.<br><a href="#join" class="btnGold" data-cta="familiar-join">Fix this with a system →</a>':'<b>'+k+' of 6.</b> Keep tapping. Most members recognise themselves in at least three.';
+    ev('collective_familiar',{n:k})})});
+  /* year */
+  var YA=['You are reading, watching and deciding what to do first. Progress is real but slow, and each decision waits on you to be sure.','Still refining. The offer is half-built, and you are not sure whether to charge more. Posting continues, sales conversations have not started.','You are tired of figuring it out. Momentum fades because nothing holds you to it, and the year is already three quarters gone.','A year later the expertise is the same and the income is similar. The work you could have been paid for went unsold.'];
+  var YB=['Access opens the same day. The5th AI helps shape your first offer, and you are in your first live session within days with a specific plan to act on.','Your offer is live. You are having real sales conversations with the Diagnose, Prescribe, Close framework, and bringing them back to the live room each week.','You are adjusting price, tightening the process and learning from what other members are closing. The method becomes a habit.','You have a repeatable way to find and enroll clients, a price you believe in, and a year of weekly sessions behind you. Individual results vary with implementation.'];
+  var yr=$('cYr');
+  function year(){var q=+yr.value-1;yr.style.setProperty('--p',(q/3*100)+'%');document.querySelectorAll('.cYear__c').forEach(function(c){c.classList.remove('sw');void c.offsetWidth;c.classList.add('sw')});$('cYa').textContent=YA[q];$('cYb').textContent=YB[q]}
+  if(yr){yr.addEventListener('input',function(){year();ev('collective_year',{q:yr.value})});year()}
+  /* readiness */
+  var rd=document.querySelectorAll('#cReady button');
+  function ready(){var k=document.querySelectorAll('#cReady button.on').length;$('cRdN').textContent=k+'/5';$('cRdArc').style.strokeDashoffset=327-327*k/5;var m=$('cRdMsg');
+    m.innerHTML=k===0?'Tap the statements that are true for you.':k<3?'<b>Honest answer:</b> it works best when you can say yes to most of these. Keep going.':k<5?'<b>You are a strong fit.</b> You have the expertise and the willingness. The system and the room do the rest.<br><a href="#join" class="btnGold" data-cta="ready-join">Claim my place · $997/year →</a>':'<b>You are exactly who this is for.</b> Five out of five. The only thing left is a decision.<br><a href="#join" class="btnGold" data-cta="ready-join">Claim my place · $997/year →</a>'}
+  rd.forEach(function(b){b.addEventListener('click',function(){b.classList.toggle('on');ready();ev('collective_ready',{n:document.querySelectorAll('#cReady button.on').length})})});ready();
+  /* objections */
+  var OB=[['Experience is the asset, not the liability.','The people who get paid most for advice are the ones with decades behind them. The method was built for experienced professionals, and many members join in their 40s, 50s and beyond. You do not need to learn to be a young influencer. You need to package what you already know.'],['Then you tried it without a system or a room.','Most people who have tried before bought information and implemented alone. This is different: a live coach every week, an AI that knows the system, and others doing the work beside you. The difference is implementation, not intelligence.'],['A few focused hours a week is the design.','The live session, plus implementation. The5th AI drafts your offers, emails and scripts so you are not starting from a blank page, and replays are posted if you miss a call. It is built to fit around a full life.'],['Then the risk is ours, not yours.','The Collective carries a 365-day money-back guarantee. Show up to the live coaching and work the method for a full year. If you do the work and still get no results, email us and we refund every penny. The only real risk is staying exactly where you are.']];
+  var oo=$('cObjOut');
+  function obj(i){document.querySelectorAll('.cObj__tabs button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-o')===i)});oo.classList.remove('sw');void oo.offsetWidth;oo.classList.add('sw');oo.innerHTML='<h3>'+OB[i][0]+'</h3><p>'+OB[i][1]+'</p>'}
+  if(oo){obj(0);document.querySelectorAll('.cObj__tabs button').forEach(function(b){b.addEventListener('click',function(){obj(+b.getAttribute('data-o'));ev('collective_objection',{o:b.getAttribute('data-o')})})})}
+  /* real wins toast (published results only) */
+  var W=[['angela','Angela','$12,000 in 63 days'],['jeanne','Jeanne','$8,000 in 56 days'],['hayley','Hayley','$2,200 in 3 weeks'],['laurie','Laurie','$8,900 in 5 weeks'],['seth','Seth','2 clients in 6 weeks']],ti=$('cToast'),wi=0;
+  function toast(){if(!ti||scrollY<innerHeight*.8)return;var w=W[wi++%W.length];ti.innerHTML='<img src="/public/clients/sm/'+w[0]+'.webp" alt="" width="40" height="40"><div><b>'+w[1]+', member result</b><span>'+w[2]+'</span></div>';ti.classList.add('show');setTimeout(function(){ti.classList.remove('show')},4200)}
+  setTimeout(function(){toast();setInterval(toast,16000)},9000);
   /* method */
   var M=[
     ['Pillar 1','Clarity: positioning and signature authority','Define exactly what you sell, who it is for, and why you are the obvious choice, so the right professionals lean in before you ever pitch.'],
@@ -1179,6 +1341,7 @@ body{padding-bottom:70px}
   var mo=$('cMethOut');
   function meth(i){document.querySelectorAll('.cStep').forEach(function(g){g.classList.toggle('on',+g.getAttribute('data-m')===i)});document.querySelectorAll('.cMeth__tabs button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-m')===i)});var m=M[i];mo.classList.remove('sw');void mo.offsetWidth;mo.classList.add('sw');mo.innerHTML='<div class="k">'+m[0]+'</div><h3>'+m[1]+'</h3><p>'+m[2]+'</p>'}
   if(mo){meth(0);document.querySelectorAll('.cStep,.cMeth__tabs button').forEach(function(e){e.addEventListener('click',function(){meth(+e.getAttribute('data-m'));ev('collective_method',{p:e.getAttribute('data-m')})})})}
+  try{var sv=sessionStorage.getItem('c_stage'),f=$('cFor');if(sv&&f){f.textContent='Your starting point: '+sv;f.classList.add('show')}}catch(_){}
   /* nav, progress, reveal, count, dots, faq, sticky */
   var nav=document.querySelector('.globalNav');
   addEventListener('scroll',function(){nav&&nav.classList.toggle('scrolled',scrollY>20)},{passive:true});

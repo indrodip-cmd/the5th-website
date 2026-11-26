@@ -64,9 +64,10 @@ export function ResearchHeader() {
       borderBottom: `1px solid ${C.border}`,
     }}>
       <div style={{ maxWidth: 1180, margin: '0 auto', padding: '15px clamp(20px,5vw,56px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-        <a href="/" aria-label="The5th Global Consulting" style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <a href="/" aria-label="The5th Global Consulting" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: 3, textDecoration: 'none' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
+          <span style={{ fontSize: 11, letterSpacing: '.08em', color: C.goldDeep, fontWeight: 700, lineHeight: 1 }}>Indradip Ghosh™</span>
         </a>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px,4vw,34px)' }}>
           <a href="/research" style={{ color: C.plumDark, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Research</a>
@@ -94,7 +95,8 @@ export function ResearchFooter() {
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 24, alignItems: 'flex-start' }}>
           <div style={{ maxWidth: 320 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo-white.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 14 }} />
+            <img src="/images/logo-white.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', opacity: 0.9, marginBottom: 6 }} />
+            <div style={{ fontSize: 12, letterSpacing: '.08em', color: '#C9A84C', fontWeight: 700, marginBottom: 14 }}>Indradip Ghosh™</div>
             <p style={{ fontSize: 14.5, lineHeight: 1.7, color: 'rgba(255,255,255,.6)', margin: 0 }}>
               Research at the edge of artificial intelligence, neuroscience, and human behaviour.
             </p>

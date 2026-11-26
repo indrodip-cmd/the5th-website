@@ -284,7 +284,8 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; cop
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 20 }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 6 }} />
+        <div style={{ fontSize: 12, letterSpacing: '.08em', color: T.text2, fontWeight: 700, marginBottom: 18 }}>Indradip Ghosh™</div>
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>

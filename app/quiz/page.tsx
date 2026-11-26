@@ -2242,7 +2242,7 @@ function LandingPage({ onStart }: { onStart: () => void }) {
       {/* ══ FOOTER ══ */}
       <footer className="qp-footer">
         <div className="qp-footer-top">
-          <div className="qp-footer-logo"><Image src="/logo-white2.png" alt="The5th Global Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /></div>
+          <div className="qp-footer-logo"><Image src="/logo-white2.png" alt="The5th Global Consulting" width={240} height={54} style={{ objectFit: 'contain' }} /><div style={{ fontSize: 12, letterSpacing: '.08em', color: '#C9A84C', fontWeight: 700, marginTop: 4 }}>Indradip Ghosh™</div></div>
           <div className="qp-footer-avs">
             {[
               '/illustrations/advocate.png',

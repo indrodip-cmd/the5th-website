@@ -9,6 +9,7 @@ import { Fonts, Header, Btn, Reveal, Footer } from '../10k-roadmap/ui'
 import { T, LEGAL, REAL_PROOF, RATING } from '../10k-roadmap/config'
 import { track } from '../10k-roadmap/track'
 import { DIAGRAMS } from './diagrams'
+import { ScrollBar, SpotlightLayer, TiltBook, Magnetic, PainCheck, ChapterExplorer, Flipbook, SlideToBuy } from './Interactive'
 import { CountUp, HourMath, TryChapter, TwoPaths, Timeline30, Objections, FloatingBuy, Icon } from './Graphics'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE, PAINS, OUTCOMES, COMPARE, CLIENTS_SERVED } from './config'
 
@@ -68,6 +69,8 @@ export default function BookLanding() {
   return (
     <div style={{ background: T.bg, color: T.text, fontFamily: T.sans, paddingBottom: 76, overflowX: 'clip' }}>
       <Fonts />
+      <ScrollBar />
+      <SpotlightLayer />
       <style>{`
         .bk-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);align-items:center}
         .bk-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,48px);align-items:center}
@@ -97,6 +100,22 @@ export default function BookLanding() {
         @media(max-width:1000px){.bk-4{grid-template-columns:repeat(2,minmax(0,1fr))}.bk-arrow{display:none}}
         @media(max-width:860px){.bk-math{grid-template-columns:1fr!important}}
         @media(max-width:560px){.bk-4{grid-template-columns:1fr}}
+        .bk-spot{position:relative}
+        .bk-spot::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(201,255,72,.13),transparent 60%);opacity:0;transition:opacity .25s;pointer-events:none}
+        .bk-spot:hover::before{opacity:1}
+        .rm-btn:active,.bk-pulse a:active{transform:scale(.97)!important}
+        .bk-explorer{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:22px;align-items:stretch}
+        .bk-tabs{display:flex;flex-direction:column;gap:6px}
+        .bk-panel{animation:bk-in .45s cubic-bezier(.16,1,.3,1)}
+        @keyframes bk-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+        .bk-in{animation:bk-in .5s cubic-bezier(.16,1,.3,1)}
+        @keyframes bk-flipr{from{opacity:0;transform:rotateY(-28deg) translateX(40px);transform-origin:left center}to{opacity:1;transform:none}}
+        @keyframes bk-flipl{from{opacity:0;transform:rotateY(28deg) translateX(-40px);transform-origin:right center}to{opacity:1;transform:none}}
+        .bk-flip-r{animation:bk-flipr .55s cubic-bezier(.16,1,.3,1)}.bk-flip-l{animation:bk-flipl .55s cubic-bezier(.16,1,.3,1)}
+        .bk-fl-btn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(7,10,6,.78);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(6px);transition:transform .2s,background .2s}
+        .bk-fl-btn:hover{background:${T.accent};color:${T.accentText};transform:translateY(-50%) scale(1.08)}
+        @media(max-width:860px){.bk-explorer{grid-template-columns:1fr}.bk-tabs{flex-direction:row;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;gap:8px}.bk-tab-t{display:none}.bk-tabs button{padding:8px!important}}
+        @media(prefers-reduced-motion:reduce){.bk-panel,.bk-in,.bk-flip-r,.bk-flip-l{animation:none}}
         .bk-swipe{display:none}.bk-lbl{display:none}
         @media(max-width:640px){
           .bk-wide-wrap{position:relative}
@@ -145,7 +164,7 @@ export default function BookLanding() {
               ))}
             </ul>
             <div className="bk-cta-row" style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', margin: '30px 0 0' }}>
-              <span className="bk-pulse" style={{ borderRadius: 999, display: 'inline-flex' }}><Cta where="hero" big /></span>
+              <span className="bk-pulse" style={{ borderRadius: 999, display: 'inline-flex' }}><Magnetic><Cta where="hero" big /></Magnetic></span>
               <div style={{ lineHeight: 1.1 }}>
                 <div className="rm-serif" style={{ fontSize: 40 }}>{BOOK_PRICE.label}</div>
                 <div style={{ fontSize: 12.5, color: T.text3, marginTop: 4 }}>less than one coffee</div>
@@ -170,7 +189,7 @@ export default function BookLanding() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/book/spread-53.webp" alt="" aria-hidden="true" width={1400} height={1000} style={{ position: 'absolute', right: '-14%', bottom: '10%', width: '62%', height: 'auto', borderRadius: 10, transform: 'rotate(8deg)', boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)', opacity: 0.92 }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="bk-book" src="/images/book/book-3d.webp" alt={`${BOOK_TITLE}: ${BOOK_SUBTITLE}, book cover`} width={794} height={986} fetchPriority="high" style={{ position: 'relative', width: 'min(78%, 400px)', height: 'auto' }} />
+              <TiltBook><img className="bk-book" src="/images/book/book-3d.webp" alt={`${BOOK_TITLE}: ${BOOK_SUBTITLE}, book cover`} width={794} height={986} fetchPriority="high" draggable={false} style={{ position: 'relative', width: '100%', height: 'auto', display: 'block' }} /></TiltBook>
               <div style={{ position: 'absolute', left: '4%', top: '8%', ...CARD, padding: '10px 14px', fontSize: 13, fontWeight: 700, background: 'rgba(18,24,16,.94)' }}><span style={{ color: T.accentInk }}>{BOOK_CHAPTERS}</span> chapters</div>
               <div style={{ position: 'absolute', right: '2%', top: '30%', ...CARD, padding: '10px 14px', fontSize: 13, fontWeight: 700, background: 'rgba(18,24,16,.94)' }}><span style={{ color: T.accentInk }}>{BOOK_PAGES}</span> pages</div>
               <div style={{ position: 'absolute', left: '8%', bottom: '2%', ...CARD, padding: '10px 14px', fontSize: 13, fontWeight: 700, background: 'rgba(18,24,16,.94)' }}>Instant <span style={{ color: T.accentInk }}>PDF</span> download</div>
@@ -192,15 +211,9 @@ export default function BookLanding() {
       <section style={{ ...SEC, paddingTop: 'clamp(30px,5vw,56px)' }}>
         <div style={{ ...WRAP, maxWidth: 820 }}>
           <Reveal>
-            <div className="rm-eyebrow" style={{ marginBottom: 14, textAlign: 'center' }}>Does this sound like you?</div>
+            <div className="rm-eyebrow" style={{ marginBottom: 14, textAlign: 'center' }}>Does this sound like you? Tap what does.</div>
             <h2 className="rm-serif" style={{ fontSize: 'clamp(30px,4.6vw,48px)', margin: '0 0 20px', textAlign: 'center' }}>You are not short of expertise. <span className="rm-mark">You are short of a system.</span></h2>
-            <ul style={{ listStyle: 'none', margin: '30px 0 0', padding: 0, display: 'grid', gap: 14 }}>
-              {PAINS.map((t) => (
-                <li key={t} style={{ ...CARD, padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'flex-start', fontSize: 17, lineHeight: 1.55 }}>
-                  <span style={{ color: T.danger, fontWeight: 800, fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>×</span>{t}
-                </li>
-              ))}
-            </ul>
+            <div style={{ marginTop: 30 }}><PainCheck /></div>
             <p style={{ fontSize: 'clamp(18px,2.2vw,21px)', lineHeight: 1.7, color: '#D5DDCF', margin: '34px 0 0' }}>
               If that is you, nothing is wrong with you. This is not a talent problem. <strong style={{ color: T.text }}>It is a packaging problem</strong>, and the gap between what you know and what you earn gets wider every month it stays that way. Nobody showed you how to turn what you know into something you can name, price, sell and launch. <strong style={{ color: T.text }}>That is exactly what this book teaches.</strong>
             </p>
@@ -237,20 +250,9 @@ export default function BookLanding() {
       {/* ── What you will learn ── */}
       <section id="inside" style={SEC}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="What you will learn" title={<>Nine skills that take you from <span className="rm-mark">expertise to income</span></>} sub="Each chapter teaches one skill, shows it with a real example, and then has you apply it to your own business on the page." /></Reveal>
-          <div className="bk-2" style={{ marginTop: 44, alignItems: 'stretch', gap: 16 }}>
-            {OUTCOMES.map((o, i) => (
-              <Reveal key={o.ch} delay={(i % 2) * 0.05}>
-                <div style={{ ...CARD, padding: 24, height: '100%', display: 'flex', gap: 16 }}>
-                  <span className="rm-serif" style={{ flex: '0 0 42px', height: 42, borderRadius: '50%', background: T.accent, color: T.accentText, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{o.ch}</span>
-                  <div>
-                    <h3 style={{ fontFamily: T.serif, fontSize: 20, lineHeight: 1.25, margin: '0 0 8px', letterSpacing: '-.01em' }}>{o.t}</h3>
-                    <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.65, margin: 0 }}>{o.d}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal><Head eyebrow="What you will learn" title={<>Nine skills that take you from <span className="rm-mark">expertise to income</span></>} sub="Tap through the road. Each stop teaches one skill, shows it with a real example, and ends with something you have written down." /></Reveal>
+          <Reveal delay={0.04} style={{ marginTop: 36 }}><Wide><Diagram k="roadmap_glance" max={720} /></Wide></Reveal>
+          <Reveal delay={0.06} style={{ marginTop: 36 }}><ChapterExplorer /></Reveal>
           <Reveal style={{ textAlign: 'center', marginTop: 40 }}><Cta where="learn" /><Reassure /></Reveal>
         </div>
       </section>
@@ -263,41 +265,11 @@ export default function BookLanding() {
         </div>
       </section>
 
-      {/* ── What you will have written ── */}
-      <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
-        <div style={WRAP}>
-          <Reveal><Head eyebrow="You do not just read it. You build it." title={<>By the last page, you will have <span className="rm-mark">all of this written down</span></>} sub="Every chapter ends with a write-it-down page. Here is what you will hold in your hands after each stop on the road." /></Reveal>
-          <Reveal delay={0.04} style={{ marginTop: 40 }}><Diagram k="roadmap_glance" max={760} /></Reveal>
-          <div className="bk-ch" style={{ marginTop: 40 }}>
-            {CHAPTERS.map((c, i) => (
-              <Reveal key={c.n} delay={(i % 3) * 0.05}>
-                <div style={{ ...CARD, padding: 20, height: '100%', background: T.bg, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <span className="rm-serif" style={{ width: 38, height: 38, borderRadius: '50%', background: T.accent, color: T.accentText, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{c.n}</span>
-                    <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: T.text3 }}>by {c.by}</span>
-                  </div>
-                  <h3 style={{ fontFamily: T.serif, fontSize: 18, lineHeight: 1.25, margin: '0 0 8px', letterSpacing: '-.01em' }}>{c.title}</h3>
-                  <p style={{ color: T.text2, fontSize: 14.5, lineHeight: 1.6, margin: '0 0 14px' }}>{c.line}</p>
-                  <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: `1px solid ${T.line}`, fontSize: 14, lineHeight: 1.55, color: T.text }}><span style={{ color: T.accentInk, fontWeight: 800 }}>You walk away with: </span>{c.get}</div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Look inside ── */}
       <section style={SEC}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="A look inside" title={<>Not a wall of text. A book you will <span className="rm-mark">actually finish.</span></>} sub="Real pages from the book: story-led lessons, clear diagrams, worked examples and worksheets with space to write." /></Reveal>
-          <div className="bk-2" style={{ marginTop: 44, alignItems: 'start' }}>
-            {[16, 20, 53, 93].map((n, i) => (
-              <Reveal key={n} delay={(i % 2) * 0.06}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/images/book/spread-${n}.webp`} alt="Two pages from inside the book" loading="lazy" width={1400} height={1000} style={{ width: '100%', height: 'auto', borderRadius: 14, boxShadow: IMG_LIME, border: `1px solid ${T.line}` }} />
-              </Reveal>
-            ))}
-          </div>
+          <Reveal><Head eyebrow="A look inside" title={<>Not a wall of text. A book you will <span className="rm-mark">actually finish.</span></>} sub="Real pages from the book. Swipe or tap through them: story-led lessons, clear diagrams, worked examples and worksheets with space to write." /></Reveal>
+          <Reveal delay={0.05} style={{ marginTop: 44, maxWidth: 980, marginLeft: 'auto', marginRight: 'auto' }}><Flipbook /></Reveal>
         </div>
       </section>
 
@@ -523,6 +495,7 @@ export default function BookLanding() {
             <p style={{ color: T.text2, fontSize: 18, lineHeight: 1.65, margin: '0 0 28px' }}>In one sitting tonight you can write down your why. In a few weeks you can have a product, an offer and a launch date on paper. For {BOOK_PRICE.label} and a full year of protection.</p>
             <span className="bk-pulse" style={{ borderRadius: 999, display: 'inline-flex' }}><Cta where="final" big label={`Yes, I am ready: ${BOOK_PRICE.label}`} /></span>
             <Reassure />
+            <div style={{ margin: '30px 0 6px' }}><div style={{ fontSize: 13, color: T.text3, marginBottom: 12, letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 700 }}>Or feel it for yourself</div><SlideToBuy /></div>
             <p style={{ color: T.text3, fontSize: 14, margin: '18px 0 0' }}>Want 1-on-1 help instead? <a href="/10k-roadmap" style={{ color: T.accentInk, fontWeight: 700 }}>Book a private business audit with Indrodip and Manisha.</a></p>
             <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.75, margin: '38px 0 0', textAlign: 'left', borderTop: `1px solid ${T.line}`, paddingTop: 24 }}>
               <strong style={{ color: T.text }}>P.S.</strong> The hard part is not the book. It is the next twelve months, which you will live whether you start tonight or not. Most people who download a workbook feel inspired for a few days and then go back to what they were doing, because they never wrote anything down. Do Chapter 1 tonight. If it is not worth {BOOK_PRICE.label}, you can have every cent back any time in the next year. The only thing you can lose by starting is nothing.

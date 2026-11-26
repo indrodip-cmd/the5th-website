@@ -163,7 +163,7 @@ export function TwoPaths() {
   const A = ['Same hours, same income ceiling', 'Still “someday” for the product', 'Knowledge nobody can buy yet', 'One more year of trading time']
   const B = ['A product page that is live', 'An offer with a guarantee', 'A content habit that attracts buyers', 'Income that does not need your hours']
   const col = (title: string, tone: 'bad' | 'good', items: string[], line: string) => (
-    <div style={{ ...CARD, padding: 'clamp(20px,3vw,30px)', height: '100%', position: 'relative', overflow: 'hidden', borderColor: tone === 'good' ? 'rgba(201,255,72,.4)' : T.line, background: tone === 'good' ? 'linear-gradient(160deg, rgba(201,255,72,.10), rgba(201,255,72,.02))' : T.surface }}>
+    <div className="bk-spot" style={{ ...CARD, padding: 'clamp(20px,3vw,30px)', height: '100%', position: 'relative', overflow: 'hidden', borderColor: tone === 'good' ? 'rgba(201,255,72,.4)' : T.line, background: tone === 'good' ? 'linear-gradient(160deg, rgba(201,255,72,.10), rgba(201,255,72,.02))' : T.surface }}>
       <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: tone === 'good' ? T.accentInk : T.text3, marginBottom: 6 }}>{tone === 'good' ? 'Path B' : 'Path A'}</div>
       <h3 style={{ fontFamily: T.serif, fontSize: 'clamp(22px,3vw,28px)', margin: '0 0 18px', lineHeight: 1.2 }}>{title}</h3>
       <svg viewBox="0 0 320 90" width="100%" height="90" aria-hidden="true" style={{ display: 'block', marginBottom: 18 }}>
@@ -199,7 +199,7 @@ export function Timeline30() {
   return (
     <div className="bk-4" style={{ position: 'relative' }}>
       {steps.map((s, i) => (
-        <div key={s.w} style={{ ...CARD, padding: 22, position: 'relative', height: '100%' }}>
+        <div key={s.w} className="bk-spot" style={{ ...CARD, padding: 22, position: 'relative', height: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
             <span style={{ width: 46, height: 46, borderRadius: 14, background: T.accentSoft, border: '1px solid rgba(201,255,72,.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={s.icon} size={24} /></span>
             <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: T.accentInk }}>{s.w}</span>
@@ -226,7 +226,7 @@ export function Objections() {
   return (
     <div className="bk-3">
       {OBJ.map((o) => (
-        <div key={o.q} style={{ ...CARD, padding: 22, height: '100%' }}>
+        <div key={o.q} className="bk-spot" style={{ ...CARD, padding: 22, height: '100%' }}>
           <span style={{ width: 44, height: 44, borderRadius: 14, background: T.accentSoft, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}><Icon name={o.icon} size={22} /></span>
           <div style={{ fontFamily: T.serif, fontWeight: 800, fontSize: 18, lineHeight: 1.3, marginBottom: 8 }}>{o.q}</div>
           <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.65, margin: 0 }}>{o.a}</p>
@@ -240,15 +240,17 @@ export function Objections() {
 export function FloatingBuy() {
   const [show, setShow] = useState(false)
   useEffect(() => {
-    const hero = document.getElementById('bk-hero'); const end = document.getElementById('bk-final')
+    const hero = document.getElementById('bk-hero')
     if (!hero || typeof IntersectionObserver === 'undefined') return
-    let heroGone = false, endSeen = false
-    const upd = () => setShow(heroGone && !endSeen)
+    let heroGone = false, nearCta = 0
+    const upd = () => setShow(heroGone && nearCta === 0)
     const a = new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting && e.boundingClientRect.top < 0; upd() }, { threshold: 0 })
     a.observe(hero)
-    const b = end ? new IntersectionObserver(([e]) => { endSeen = e.isIntersecting; upd() }, { threshold: 0.15 }) : null
-    if (end && b) b.observe(end)
-    return () => { a.disconnect(); b?.disconnect() }
+    // hide the pill whenever another buy button is already on screen
+    const seen = new Set<Element>()
+    const b = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target) }); nearCta = seen.size; upd() }, { threshold: 0.2 })
+    document.querySelectorAll('a[href="' + BOOK_CHECKOUT_PATH + '"]:not(.bk-float), #bk-final').forEach((el) => b.observe(el))
+    return () => { a.disconnect(); b.disconnect() }
   }, [])
   return (
     <a href={BOOK_CHECKOUT_PATH} onClick={() => track('book_cta_click', { where: 'floating' })} className="bk-float" style={{ position: 'fixed', left: '50%', bottom: 22, zIndex: 55, transform: `translate(-50%, ${show ? 0 : 140}%)`, opacity: show ? 1 : 0, pointerEvents: show ? 'auto' : 'none', transition: 'transform .4s cubic-bezier(.16,1,.3,1), opacity .3s', display: 'none', alignItems: 'center', gap: 14, padding: '10px 12px 10px 22px', borderRadius: 999, background: 'rgba(12,16,10,.94)', border: `1px solid ${T.lineStrong}`, boxShadow: '0 20px 50px -14px rgba(0,0,0,.8), 0 0 0 1px rgba(201,255,72,.15)', backdropFilter: 'blur(14px)', color: T.text, textDecoration: 'none', fontWeight: 700, fontSize: 15 }}>

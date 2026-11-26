@@ -401,3 +401,18 @@
 
 .qz-prog__nm{font-style:normal;font-family:inherit;color:rgba(255,255,255,.75)}
 @media(max-width:520px){.qz-prog__nm{display:none}.qz-prog{max-width:none}}
+
+/* intro: more air on phones */
+.qz-sub--short{display:none}
+@media(max-width:759px){
+  .qz-intro{gap:44px}
+  .qz-intro h1{font-size:clamp(2.3rem,9.4vw,3rem);line-height:1.05;margin-top:22px}
+  .qz-sub--long,.qz-os{display:none}
+  .qz-sub--short{display:block;font-size:1rem;line-height:1.65;margin-top:20px}
+  .qz-gets{margin-top:30px;gap:12px}
+  .qz-gets>div{padding:14px 12px;align-items:center}
+  .qz-gets small{display:none}
+  .qz-gets b{font-size:.9rem}
+  .qz-cta{margin-top:34px}
+  .qz-micro{margin-top:16px;line-height:1.6}
+}

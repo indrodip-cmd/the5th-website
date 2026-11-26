@@ -183,7 +183,8 @@ export default function QuizApp() {
               <div className="qz-intro__txt">
                 <span className="qz-chip"><Ic name="spark" size={16} sw={3} /> The5th Income OS · free assessment</span>
                 <h1>Find out what is <em>really</em> stopping you from making money.</h1>
-                <p className="qz-sub">This is not a quiz. It is the same kind of diagnostic we start every client with: <b>18 screens, 6 income blockers, 4 money-mindset scales</b> and one personal profile out of 30. You get a full report, a 7-day plan and a profile ID you can track.</p>
+                <p className="qz-sub qz-sub--long">This is not a quiz. It is the same kind of diagnostic we start every client with: <b>18 screens, 6 income blockers, 4 money-mindset scales</b> and one personal profile out of 30. You get a full report, a 7-day plan and a profile ID you can track.</p>
+                <p className="qz-sub qz-sub--short">A 4-minute diagnostic: <b>6 income blockers, 4 mindset scales</b>, one personal profile. You get a full report and a 7-day plan.</p>
                 <div className="qz-os">
                   {[['compass', 'Assess', '18 quick screens'], ['target', 'Diagnose', 'Blockers + mindset'], ['map', 'Plan', 'Your 7-day plan'], ['chart', 'Track', 'Retake and compare']].map(([ic, t, s], i) => (
                     <div key={t}><span><Ic name={ic} size={22} /></span><p><b>{t}</b><small>{s}</small></p>{i < 3 && <i>→</i>}</div>

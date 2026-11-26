@@ -9,6 +9,7 @@ import { subscribeToBeehiiv } from '@/lib/beehiiv'
 import { FROM, REPLY_TO } from '@/lib/event-campaign'
 import { decode, score, toLeadAnswers } from '@/lib/quiz/engine'
 import { reportEmail } from '@/lib/quiz/email'
+import { REPORT_KEY } from '@/lib/quiz/audit-emails'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,7 +49,9 @@ export async function POST(req: NextRequest) {
         const send = await limit(`quizrep:email:${email}`, 3, 3600)
         if (!send.ok || !process.env.RESEND_API_KEY) return
         const mail = reportEmail(first, result, unsubscribeUrl(email))
-        await new Resend(process.env.RESEND_API_KEY).emails.send({ from: FROM, to: email, replyTo: REPLY_TO, subject: mail.subject, html: mail.html, text: mail.text })
+        const sent = await new Resend(process.env.RESEND_API_KEY).emails.send({ from: FROM, to: email, replyTo: REPLY_TO, subject: mail.subject, html: mail.html, text: mail.text })
+        // The report email anchors the 14-email audit sequence (lib/quiz/audit-mail).
+        if (!sent.error) await getSupabaseAdmin().from('event_email_log').upsert({ email, email_key: REPORT_KEY, provider_id: sent.data?.id || null }, { onConflict: 'email,email_key' })
       } catch (e) { console.error('quiz submit: report email failed', e) }
     })
 

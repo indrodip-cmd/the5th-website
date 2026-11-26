@@ -6,6 +6,7 @@
     { "path": "/api/cron/breakthrough-campaign", "schedule": "0 15 * * *" },
     { "path": "/api/cron/workbook-campaign", "schedule": "0 16 * * *" },
     { "path": "/api/cron/book-campaign", "schedule": "30 16 * * *" },
+    { "path": "/api/cron/quiz-audit", "schedule": "45 14 * * *" },
     { "path": "/api/cron/coaching-retention", "schedule": "0 3 * * 0" },
     { "path": "/api/cron/daily-tasks", "schedule": "0 14 * * *" }
   ]

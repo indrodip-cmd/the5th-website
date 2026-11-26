@@ -66,7 +66,7 @@ const PAGE_DIRECTORY = `PAGE DIRECTORY — pages you can open with navigate_user
 - The5th AI (ai) — the AI product page: The5th AI coaching + Vega. $47/mo, or $470/yr with a 3-day free trial.
 - Free Assessment (quiz) — the free AI business quiz: Business Health Score, biggest opportunity, and a personalised 90-day roadmap.
 - Fast Forward (fast_forward) — group coaching program to reach $10K months ($1,850/mo × 3).
-- The Collective (collective) — full membership: weekly live calls, The5th AI, Vega, community ($197/mo or $1,970/yr).
+- The Collective (collective) — full membership: weekly live calls, The5th AI, Vega, community ($997/year, one payment).
 - Book Your Audit (call) — the $10K Roadmap Audit funnel. Send ANYONE who wants to book a call, book an appointment, schedule, get on a call, or speak with Indrodip here. It's a private 60-minute 1:1 business audit with Indrodip and Manisha Satpute (a director of The5th) personally, together on every call, $29 one-time, fully refundable within 7 days — they pay on the page, then pick their time.
 - Client Results (results) — real client outcomes and stories.
 - About (about) — Indrodip's story and what The5th is about.

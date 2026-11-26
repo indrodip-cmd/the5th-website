@@ -1,9 +1,12 @@
 import CheckoutView, { CheckoutConfig } from '../checkout/CheckoutView'
 
-// The5th Collective ($197/mo or $1,970/yr) → platform tier member_monthly /
-// member_yearly: full platform — weekly calls, The5th AI, Vega, courses,
+// The5th Collective: single $997/year membership → platform tier member_yearly: full platform — weekly calls, The5th AI, Vega, courses,
 // community, tracker, and custom 30/60/90-day action plans.
 export const metadata = { title: 'Join The5th Collective — Checkout | The5th' }
+
+// Create a $997 / 1-year plan in Whop and set NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID.
+// There is deliberately no fallback: the old fallback plan charged $1,970.
+const PLAN_ID = process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID || ''
 
 const config: CheckoutConfig = {
   eyebrow: 'The5th Collective',
@@ -19,15 +22,24 @@ const config: CheckoutConfig = {
     'Instant platform access · cancel anytime',
   ],
   plans: [
-    { key: 'yearly', label: 'Yearly · best value', price: '$1,970', cadence: '/year', note: '$164/month · 2 months free', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_YEARLY_PLAN_ID || 'plan_1q6y2XxrF9C0w' },
-    { key: 'monthly', label: 'Monthly', price: '$197', cadence: '/month', note: 'Instant access · cancel anytime', planId: process.env.NEXT_PUBLIC_WHOP_COLLECTIVE_MONTHLY_PLAN_ID || 'plan_8iKDrh6vc0Anu' },
+    { key: 'yearly', label: 'One-year membership', price: '$997', cadence: '/year', note: 'One payment · 365 days of access', planId: PLAN_ID },
   ],
   returnUrl: 'https://the5thglobal.consulting/checkout/complete?type=collective',
-  guarantee: 'Cancel anytime, self-serve, right from your membership dashboard.',
+  guarantee: '365-day money-back guarantee: do the work for a full year and if you do not get results, we refund every penny.',
   backHref: '/collective',
   backLabel: 'Back to The Collective',
 }
 
 export default function CollectiveCheckout() {
+  if (!PLAN_ID) {
+    return (
+      <main style={{ minHeight: '70vh', display: 'grid', placeItems: 'center', padding: 24, textAlign: 'center', fontFamily: 'DM Sans, sans-serif' }}>
+        <div style={{ maxWidth: 460 }}>
+          <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '2.2rem', fontWeight: 500 }}>Checkout is opening shortly</h1>
+          <p style={{ marginTop: 12, color: '#5a5550', lineHeight: 1.6 }}>Email <a href="mailto:support@10kroadmap.org" style={{ textDecoration: 'underline' }}>support@10kroadmap.org</a> and we will get you in today.</p>
+        </div>
+      </main>
+    )
+  }
   return <CheckoutView config={config} />
 }

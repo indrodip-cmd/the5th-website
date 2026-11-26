@@ -46,27 +46,26 @@ const reportLink = (r: Result, first: string) => `${SITE}/quiz/report?r=${r.code
 /* ── layout ── */
 function layout(c: Ctx, o: { pre: string; kicker: string; head: string; body: string[]; cta?: string; ps?: string; n: number }): string {
   const { r } = c
-  const p = o.body.map((b) => b.startsWith('<') ? b : `<p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#2a2a3a">${b}</p>`).join('')
-  const btn = `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 6px"><tr><td style="background:#C9A84C;border-radius:8px"><a href="${link(r, o.n)}" style="display:inline-block;padding:16px 28px;font-weight:700;font-size:16px;color:#2E1A35;text-decoration:none">${esc(o.cta || 'Book my $29 audit')} &rarr;</a></td></tr></table>`
-  return `<!doctype html><html><body style="margin:0;background:#F4EEE4;font-family:Helvetica,Arial,sans-serif">
+  /* Deliberately plain: no banner, cards or buttons. Looks like a personal email, which keeps
+     it out of Gmail's Promotions tab. One link to the offer, one to unsubscribe. */
+  const pst = 'margin:0 0 14px;font-size:16px;line-height:1.6;color:#222'
+  const p = o.body.map((b) => b.startsWith('<') ? b : `<p style="${pst}">${b}</p>`).join('')
+  return `<!doctype html><html><body style="margin:0;padding:16px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:#222">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">${esc(o.pre)}</div>
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#F4EEE4"><tr><td align="center" style="padding:22px 12px">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden">
-<tr><td style="background:#2E1A35;padding:22px 28px"><div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#C9A84C;font-weight:700">${esc(o.kicker)}</div>
-<div style="font-family:Georgia,serif;font-size:27px;line-height:1.18;color:#ffffff;margin-top:8px">${o.head}</div></td></tr>
-<tr><td style="padding:26px 28px 8px">${p}${btn}
-<p style="margin:12px 0 0;font-size:12.5px;color:#8A8075">$29 · 60 minutes · 7-day money-back guarantee</p>
-${o.ps ? `<p style="margin:22px 0 0;font-size:15px;line-height:1.6;color:#2a2a3a"><b>P.S.</b> ${o.ps}</p>` : ''}
-<p style="margin:22px 0 0;font-size:15px;color:#2a2a3a">Indrodip</p>
-<p style="margin:2px 0 18px;font-size:13px;color:#8A8075">Your profile: <a href="${reportLink(r, c.first)}" style="color:#8A6D1F">${esc(r.archetype)} (${esc(r.profileId)})</a></p>
-</td></tr>
-<tr><td style="padding:0 28px 24px;font-size:11.5px;line-height:1.6;color:#8A8075;border-top:1px solid #EFE8DA"><br>You are receiving this because you took the Income Blocker Assessment. Reply to this email any time, I read every one.<br>${esc(ADDRESS)}<br><a href="${c.unsub}" style="color:#8A8075">Unsubscribe</a></td></tr>
-</table></td></tr></table></body></html>`
+<div style="max-width:560px">
+<p style="${pst}">${c.first ? `Hi ${esc(c.first)},` : 'Hi,'}</p>
+<p style="${pst}"><b>${o.head}</b></p>
+${p}
+<p style="${pst}"><a href="${link(r, o.n)}" style="color:#1a55c4">${esc(o.cta || 'Book my $29 audit')}</a><br><span style="font-size:13px;color:#777">$29 · 60 minutes · 7-day money-back guarantee</span></p>
+${o.ps ? `<p style="${pst}">P.S. ${o.ps}</p>` : ''}
+<p style="${pst}">Indrodip<br><span style="font-size:13px;color:#777">The5th Global Consulting</span></p>
+<p style="margin:26px 0 0;font-size:12px;line-height:1.6;color:#888">You are getting this because you took the Income Blocker Assessment. Just reply if you have a question, I read every reply.<br>${esc(ADDRESS)} · <a href="${c.unsub}" style="color:#888">Unsubscribe</a></p>
+</div></body></html>`
 }
 
 const strip = (h: string) => h.replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, '$2 ($1)').replace(/<\/(p|div|tr|h\d|li)>/gi, '\n').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&rarr;/g, '->').replace(/&amp;/g, '&').replace(/\n{3,}/g, '\n\n').trim()
-const li = (items: string[]) => `<ul style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.7;color:#2a2a3a">${items.map((i) => `<li style="margin:0 0 6px">${i}</li>`).join('')}</ul>`
-const box = (t: string) => `<div style="margin:0 0 18px;padding:14px 16px;border-left:3px solid #C9A84C;background:#FBF6E8;border-radius:0 10px 10px 0;font-size:15.5px;line-height:1.65;color:#2E1A35">${t}</div>`
+const li = (items: string[]) => `<ul style="margin:0 0 14px;padding-left:20px;font-size:16px;line-height:1.6;color:#222">${items.map((i) => `<li style="margin:0 0 6px">${i}</li>`).join('')}</ul>`
+const box = (t: string) => `<p style="margin:0 0 14px;padding-left:12px;border-left:3px solid #ccc;font-size:16px;line-height:1.6;color:#222">${t}</p>`
 
 export function renderStep(n: number, c: Ctx): Rendered {
   const { r, first } = c

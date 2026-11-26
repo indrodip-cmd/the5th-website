@@ -163,13 +163,13 @@ export default function ResearchIndex() {
         .r-row:hover .r-row-title{color:${C.goldDeep}}
         .r-row:hover .r-row-cta{opacity:1}
         @media(max-width:820px){
-          .r-hero{grid-template-columns:1fr!important}
+          .r-hero{grid-template-columns:minmax(0,1fr)!important}.r-hero>*{min-width:0}
           .r-hero-author{width:100%!important;display:flex;align-items:center;gap:16px;text-align:left!important;margin-top:6px}
           .r-hero-author img{width:72px!important;height:72px!important;margin:0!important}
           .r-hero-author > div:nth-child(4){display:none}
-          .r-feat{grid-template-columns:1fr!important}
+          .r-feat{grid-template-columns:minmax(0,1fr)!important}
           .r-feat-art{min-height:220px!important}
-          .r-row{grid-template-columns:1fr!important;gap:14px!important}
+          .r-row{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
           .r-row-meta{text-align:left!important;padding-top:0!important;display:flex;gap:14px;align-items:center}
           .r-row-meta time{display:inline!important}
           .r-row-meta span{display:inline!important}

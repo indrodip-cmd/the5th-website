@@ -51,3 +51,13 @@ html, body { background: #FAF6F0; min-height: 100vh; }
     gap: 12px !important;
   }
 }
+/* Large displays (QHD ultrawide, 4K / 42-inch): scale the whole page up so the
+   layout keeps the same proportions instead of floating as a small column. */
+@media (min-width:2200px){html{background:#231029}body{zoom:1.35;max-width:none!important}}
+@media (min-width:2800px){body{zoom:1.75}}
+@media (min-width:3400px){body{zoom:2.1}}
+/* Touch targets on phones */
+@media(max-width:760px){
+  .footer-col a,.footer-brand .f-contact a{display:inline-block;padding:9px 0}
+  input[type=text],input[type=email],input[type=tel]{min-height:44px}
+}

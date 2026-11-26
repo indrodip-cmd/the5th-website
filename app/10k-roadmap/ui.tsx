@@ -5,7 +5,7 @@
    continuous, expensive experience. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { T, STEPS, GATE, LEGAL, HELP, PRESS, type Q } from './config'
+import { T, STEPS, GATE, LEGAL, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
 export function Fonts() {
@@ -32,7 +32,6 @@ export function Fonts() {
       h1,h2,h3{text-wrap:balance}
       p{text-wrap:pretty}
       .rm-focus:focus-visible{outline:2px solid ${T.accent};outline-offset:3px;border-radius:10px}
-      .rm-range:focus-visible{outline:2px solid ${T.accent};outline-offset:5px;border-radius:999px}
       /* Shared premium interaction primitives — hover lift, press feedback,
          and a button shine sweep. transform/opacity only, per the motion
          floor (never width/height/top/left). */
@@ -65,8 +64,8 @@ export function Fonts() {
          via @supports, so nothing goes invisible or illegible.
 
          2026-11-15: blur dropped from 30px to 14px (now matching
-         .rm-glass-calc below) after this page went blank below the first
-         unblurred section on real iPhone/iPad Safari — confirmed in
+         after this page went blank below the first unblurred section on
+         real iPhone/iPad Safari — confirmed in
          production, not reproducible in this sandbox's Chromium-only
          testing. This page renders 30-60+ simultaneously-visible
          backdrop-filter surfaces (every card in the problem/process/
@@ -76,7 +75,7 @@ export function Fonts() {
          visibility safety net was confirmed working on real devices
          BEFORE this glass treatment shipped. Keep future glass additions
          at this same lighter weight. */
-      .rm-glass,.rm-glass-accent,.rm-glass-calc,.rm-glass-calc-accent{position:relative;isolation:isolate}
+      .rm-glass,.rm-glass-accent{position:relative;isolation:isolate}
       .rm-glass::before,.rm-glass-accent::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.03) 22%,transparent 46%)}
       .rm-glass{
         background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.025));
@@ -90,31 +89,14 @@ export function Fonts() {
         border:1px solid rgba(201,255,72,.38);
         box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 26px rgba(201,255,72,.03), 0 26px 54px -28px rgba(0,0,0,.6);
       }
-      /* Lighter-weight glass for the one spot on the page that redraws on
-         every pointer-move (the calculator, dragged live) — a 30px blur
-         recomposited on every slider tick is what made it feel sticky.
-         Visually still glass (gradient tint + bright edge + soft shadow),
-         just without the heaviest blur radius or the extra glare layer. */
-      .rm-glass-calc{
-        background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
-        border:1px solid rgba(255,255,255,.16);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 20px 44px -26px rgba(0,0,0,.55);
-      }
-      .rm-glass-calc-accent{
-        background:linear-gradient(155deg,rgba(201,255,72,.17),rgba(201,255,72,.03));
-        -webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%);
-        border:1px solid rgba(201,255,72,.34);
-        box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 20px 44px -26px rgba(0,0,0,.55);
-      }
       /* Flat translucent tile — used only when a glass surface would sit
          nested inside another one (a blur inside a blur doubles the paint
          cost for no visible benefit). */
       .rm-glass-flat{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14)}
       .rm-glass-flat-accent{background:rgba(201,255,72,.08);border:1px solid rgba(201,255,72,.28)}
       @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-        .rm-glass,.rm-glass-calc{background:#121810}
-        .rm-glass-accent,.rm-glass-calc-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
+        .rm-glass{background:#121810}
+        .rm-glass-accent{background:linear-gradient(180deg,rgba(201,255,72,.08),#121810)}
         .rm-glass::before,.rm-glass-accent::before{display:none}
       }
       @media (prefers-reduced-motion: reduce){
@@ -252,16 +234,7 @@ export function Btn({ children, onClick, href, variant = 'primary', full, type =
 }
 
 /* ── Minimal funnel header + footer ────────────────────────────────────────*/
-function HelpContact() {
-  const link: React.CSSProperties = { color: T.accentInk, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }
-  return (
-    <div style={{ textAlign: 'right', fontSize: 12.5, lineHeight: 1.45, color: T.text2, maxWidth: 260 }}>
-      Need help? Text us at <a href={HELP.phoneHref} style={link}>{HELP.phone}</a> or email us at <a href={HELP.emailHref} style={link}>{HELP.email}</a>
-    </div>
-  )
-}
-
-export function Header({ nav, showFounder, homeHref = '/10k-roadmap', hideHelp }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string; hideHelp?: boolean }) {
+export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string }) {
   // Always solid, from the very first pixel: the logo and founder credential
   // need a frame behind them on the first screen, not just after the visitor
   // scrolls past a transparent hero. (Scroll state kept only to deepen the
@@ -273,7 +246,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap', hideHelp }
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-logo-colorful.png" alt="The5th Global Consulting" style={{ height: 'clamp(34px,5vw,46px)', width: 'auto' }} />
+          <img src="/images/the5th-global-consulting-logo.png" alt="The5th Global Consulting" style={{ height: 'clamp(36px,5.4vw,52px)', width: 'auto' }} />
           {showFounder && (
             <span className="rm-header-founder" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 1, height: 22, background: T.line }} />
@@ -289,7 +262,6 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap', hideHelp }
             {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
-        {!hideHelp && <span className="rm-header-help"><HelpContact /></span>}
       </div>
       {/* "As featured in" sits right under the logo, pinned to the header so
           it reads on the first screen alongside the brand mark, not only
@@ -302,7 +274,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap', hideHelp }
           {PRESS.items.map((p) => <span key={p} style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontWeight: 700, fontSize: 11.5, color: T.text2, opacity: 0.75, whiteSpace: 'nowrap' }}>{p}</span>)}
         </span>
       </div>
-      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-header-founder,.rm-header-help,.rm-press-row{display:none!important}}`}</style>
+      <style>{`@media(max-width:900px){.rm-nav{display:none!important}}@media(max-width:640px){.rm-header-founder,.rm-press-row{display:none!important}}`}</style>
     </header>
   )
 }
@@ -312,7 +284,8 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; cop
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 20 }} />
+        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 6 }} />
+        <div style={{ fontSize: 12, letterSpacing: '.08em', color: T.text2, fontWeight: 700, marginBottom: 18 }}>Indradip Ghosh™</div>
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}
         </div>

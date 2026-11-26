@@ -23,7 +23,7 @@ const URL = 'https://the5thglobal.consulting/10k-roadmap'
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
-  keywords: ['business audit for coaches', 'consultant growth audit', '$29 business audit', 'coaching business strategy', 'predictable revenue coaching', 'business growth calculator', 'The5th Global Consulting'],
+  keywords: ['business audit for coaches', 'consultant growth audit', '$29 business audit', 'coaching business strategy', 'predictable revenue coaching', 'The5th Global Consulting'],
   alternates: { canonical: '/10k-roadmap' },
   robots: {
     index: true, follow: true,

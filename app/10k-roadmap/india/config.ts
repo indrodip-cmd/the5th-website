@@ -60,8 +60,8 @@ export const LANDING = {
   // already in REAL_PROOF) opening its 1:1 session to India for the first
   // time. "Global" is the brand's own name, not an invented superlative.
   launch: {
-    badge: 'First time in India',
-    kicker: 'Your ₹10 Lakh/Month Business Roadmap',
+    badge: 'For coaches and consultants in India',
+    kicker: 'A private 60-minute business audit',
   },
   // The founder's credibility strip (hero + founder section). Every claim
   // here must stay exactly this careful: the valuation is the startup's,
@@ -73,34 +73,21 @@ export const LANDING = {
   // copy (Meta's Personal Attributes policy disallows asserting or implying
   // a viewer's financial status). This names the AUDIENCE by role/intent
   // instead of asserting a fact about the specific person reading it.
-  eyebrowAttention: 'A PRIVATE 1:1 STRATEGY SESSION FOR FULL-TIME COACHES IN INDIA',
+  eyebrowAttention: 'A PRIVATE 1:1 BUSINESS AUDIT FOR COACHES IN INDIA',
   eyebrow: 'From the desk of a Consumer Behaviour & AI Researcher:',
   // Mirrors the US page's own headline pattern ("You've Tried Coaches,
   // ChatGPT And Claude. So Why Aren't You Making Consistent Money?") —
   // names the tension (good at the work, money still isn't there) instead
   // of a "what if" tease, while staying short-sentence, no-jargon.
-  headlinePre: "You're Good At What You Do. So Why Is Making Money From Your Coaching ",
-  headlineHighlight: 'Still So Difficult?',
+  headlinePre: '',
+  headlineHighlight: '',
   headlinePost: '',
-  headline: "You're Good At What You Do. So Why Is Making Money From Your Coaching Still So Difficult?",
-  headlineSub: 'Build a coaching business that brings you consistent clients and predictable revenue, not one more random marketing activity.',
-  guaranteeLine: 'Build a predictable income from your own business, or get every rupee you invested back. ',
-  guaranteeEmphasis: 'Yes, I’ll write the cheque.',
-  guaranteeBadge: '200% Money-Back Guarantee',
-  guaranteeShort: 'Not happy with your strategy session? We’ll refund ₹400, double your ₹199, no questions asked.',
-  // The full guarantee block, set out near the booking decision (apply section).
-  // T&Cs line kept verbatim: refund eligibility, request deadline and processing
-  // terms are the business's own disclosure and must not be reworded or dropped.
-  guaranteeFull: {
-    heading: 'Not happy with your strategy session? We’ll refund ₹400.',
-    body: 'That’s right. If you genuinely feel the session wasn’t valuable, simply request a refund and we’ll return ₹400 instead of the ₹199 you paid.',
-    sub: 'Your satisfaction matters more than the booking fee.',
-    terms: 'T&Cs apply. Refund eligibility, request deadline and processing terms are explained before booking.',
-  },
-  ctaPrimary: 'Book Your ₹199 Strategy Session',
+  headline: 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?',
+  headlineSub: 'Before you spend another rupee on coaching, courses, or marketing tools, let’s find out what’s actually holding your business back.',
+  ctaPrimary: 'Apply for a Business Audit — ₹199',
   ctaSecondary: { label: 'See How It Works', href: '#clarity' },
-  ctaMicro: '₹199, fully refundable. Slots are limited.',
-  ctaMicroShort: '₹199, fully refundable',
+  ctaMicro: '₹199, fully refundable if it isn’t worth it to you. Credited toward any program booked within 14 days.',
+  ctaMicroShort: '₹199 fully refundable',
 
   /* ── The problem: four short, scannable statements, then the one line
      that reframes it — named before the solution, in the reader's own
@@ -126,7 +113,7 @@ export const LANDING = {
     heading: 'Everything you get for ₹199.',
     sub: 'Not just a call. You leave with real things you can use.',
     items: [
-      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indrodip and Manisha. Not a team member.' },
+      { t: '60-Minute 1:1 Call', d: 'A private Zoom call with Indradip and Manisha. Not a team member.' },
       { t: 'Your Business Audit PDF', d: 'A written report on your offer, your buyer and your biggest problem.' },
       { t: 'Your 100-Day Roadmap', d: 'What to fix first, second and third. Step by step.' },
       { t: 'Call Recording', d: 'Watch it again any time. Sent only if you agree to recording.' },
@@ -139,14 +126,14 @@ export const LANDING = {
 
   // Hero card: the live 1:1 session details, shown next to the founder photo.
   heroCard: {
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, Business Growth Strategist & AI Researcher',
     credential: 'Consumer Psychologist, University of California, Berkeley',
     recruitedBy: 'Recruited by Google & Anthropic',
     featuredIn: 'Featured in ClickFunnels and Mastermind.com',
     chips: [
       { t: '1-on-1 Zoom Session', s: '60 Minutes' },
-      { t: '₹199 Only', s: 'Fully Refundable' },
+      { t: '₹199 Only', s: 'One-Time Deposit' },
     ],
   },
 
@@ -154,10 +141,10 @@ export const LANDING = {
   // absolute "0%/100%" guarantee-style claims — only verifiable facts about
   // the format itself.
   stats: [
-    { v: '60 Min', l: 'Focused Strategy Session' },
+    { v: '60 Min', l: 'Focused Business Audit' },
     { v: 'Full-Time', l: 'Built For Coaches, Not Side-Hustlers' },
     { v: '1:1', l: 'Personal, Not A Webinar' },
-    { v: '₹199', l: 'Fully Refundable Deposit' },
+    { v: '₹199', l: 'One-Time Business Audit' },
   ],
 
   /* ── The named system: HOW the coaching business actually gets built,
@@ -166,13 +153,13 @@ export const LANDING = {
   mechanism: {
     eyebrow: 'The Method',
     heading: 'The 3-part business growth system.',
-    sub: 'The exact order we work in, on every session.',
+    sub: 'The exact order we follow in your business audit.',
     steps: [
       { n: '01', t: 'Position', d: 'A simple, clear offer that the right customers actually want.' },
       { n: '02', t: 'Attract', d: 'A way to bring in new enquiries every week, not just when you post.' },
       { n: '03', t: 'Convert', d: 'A simple sales conversation that turns enquiries into paying clients.' },
     ],
-    close: 'On the session: where you stand, what’s blocking you, your next step.',
+    close: 'Your business audit shows where you stand, what’s blocking growth, and what to do next.',
   },
 
   clarity: {
@@ -206,7 +193,7 @@ export const LANDING = {
   proof: {
     eyebrow: 'Real Results, Real People',
     heading: 'Real results.',
-    // Figure confirmed directly by the business owner (Indrodip), 2026-11-13:
+    // Figure confirmed directly by the business owner (Indradip), 2026-11-13:
     // total documented client revenue across the full client base, not only
     // the cases shown below (those sum to a conservative $646,000+).
     revenueLine: 'Clients have generated over $15,000,000 in documented business growth.',
@@ -240,14 +227,14 @@ export const LANDING = {
     eyebrow: 'Clearing Your Doubts',
     heading: 'Frequently Asked Questions',
     items: [
-      { q: 'What exactly happens during the ₹199 strategy session?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
-      { q: 'How long does the session last?', a: 'Sixty minutes, with Indrodip and Manisha personally.' },
+      { q: 'What exactly happens during the ₹199 business audit?', a: 'We look at your positioning, offer and client acquisition, find the one bottleneck costing you the most, and map a realistic plan to fix it.' },
+      { q: 'How long is the business audit?', a: 'Sixty minutes, with Indradip and Manisha personally.' },
       { q: 'Is this suitable for beginners?', a: 'Yes, if you already have some expertise or clients. It isn’t built for people with no business or income yet.' },
-      { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. It’s one diagnostic session to find the specific thing blocking your growth, so you can judge for yourself whether the plan makes sense, with zero obligation to continue.' },
+      { q: 'I’ve already paid for coaching before and it didn’t work. Why would this be different?', a: 'This isn’t a programme pitch. The business audit identifies the specific thing blocking your growth and maps a practical plan. There is no obligation to continue.' },
       { q: 'Do I need an existing business?', a: 'You need real expertise, a skill or a service, and some income already coming in. You don’t need a formal company.' },
-      { q: 'Will you help me get clients?', a: 'The session maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
-      { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a refundable booking deposit, not the start of a bigger programme. You decide after the call, with no pressure.' },
-      { q: 'Why does the session cost ₹199?', a: 'It’s a small refundable deposit that keeps the call serious on both sides, not a fee for the advice itself. If we’re not a fit, you get it back in full.' },
+      { q: 'Will you help me get clients?', a: 'The audit maps your system. If it’s a genuine fit, you can choose to keep working with us afterward, with zero obligation either way.' },
+      { q: 'Is there any obligation to purchase a programme?', a: 'No. The ₹199 is a one-time payment for the business audit, not the start of a bigger programme. You decide afterward, with no pressure.' },
+      { q: 'Why does the business audit cost ₹199?', a: 'It is a one-time payment for your business audit and listed deliverables. Review the terms before booking.' },
     ],
   },
 
@@ -271,7 +258,7 @@ export const LANDING = {
     heading: 'Learn From Someone Building Businesses, Not Just Teaching Them.',
     quote: 'Talented professionals rarely got paid for the value they created. That gap is what built The5th.',
     body: 'I’m also the founder of an AI startup, backed by University of California alumni, at an approximate valuation of $6M. Building that company, not just studying business, is what shapes how I help coaches and consultants position their offer, build a marketing system, and convert leads into clients.',
-    name: 'Indrodip Ghosh',
+    name: 'Indradip Ghosh',
     role: 'Founder, The5th Global Consulting',
     stats: [
       { v: '5+ Yrs', l: 'Marketing & Funnel Strategy' },
@@ -283,13 +270,13 @@ export const LANDING = {
     eyebrow: 'Book Your Slot',
     heading: 'Your Next Client Shouldn’t Depend On Luck.',
     sub: 'Let’s identify what’s holding your business back and map out your next steps.',
-    priceLine: '₹199 today, fully refundable',
-    micro: 'No pressure. If we’re not the right fit, we’ll say so on the call and refund your ₹199.',
+    priceLine: '₹199 for your business audit. Fully refundable within 7 days if it isn’t worth it to you.',
+    micro: 'Tell us within 7 days after your audit for a full refund. You keep the written plan either way.',
     // What the session itself leaves you with, same facts as the pay step's
     // `points` below, kept here so the apply section can show them before
     // the click, not only after it.
     points: [
-      'A 60-minute 1:1 call with Indrodip and Manisha personally',
+      'A 60-minute 1:1 call with Indradip and Manisha personally',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],
@@ -301,19 +288,17 @@ export const LANDING = {
   pay: {
     eyebrow: 'Last Step',
     headline: 'Reserve your 1:1 Business Audit.',
-    sub: 'A 60-minute private call with Indrodip Ghosh and Manisha Satpute, not a sales rep. You’ll leave knowing exactly what’s holding your income back and what to do about it.',
-    notPitch: 'This isn’t a disguised sales call for a bigger program. It’s a real audit of your business.',
-    coverLead: 'Your ₹199 reserves:',
+    sub: 'A 60-minute business audit with Indradip Ghosh and Manisha Satpute. Leave with a clear view of what is holding your business back and what to do next.',
+    notPitch: 'This is a working business audit, not a sales call for a bigger program.',
+    coverLead: 'Your ₹199 business audit includes:',
     points: [
-      'A 60-minute 1:1 call with Indrodip and Manisha personally',
+      'A 60-minute 1:1 business audit with Indradip and Manisha',
       'A clear picture of your current bottleneck',
       'A realistic next step, whether or not you ever work with us again',
     ],
     fit: 'This is for full-time coaches in India who have real expertise and happy clients, and want a predictable, ₹10L/month business instead of a feast-or-famine one.',
-    deposit: 'The ₹199 is a refundable booking deposit, not a program fee. It keeps the call serious on both sides, nothing more.',
-    guaranteeTitle: '100% Money-Back Guarantee',
-    guaranteeBody: 'If you show up and we agree this genuinely isn’t a fit for you, we refund every rupee.',
-    micro: 'Secure checkout · Refundable · No recurring charge.',
+    deposit: 'Your ₹199 is fully refundable if the audit isn’t worth it to you. Tell us within 7 days for a refund; you keep the written plan either way. Book any program within 14 days and the ₹199 is credited toward it.',
+    micro: 'Secure checkout · One-time payment · No recurring charge.',
   },
 
   nav: [
@@ -396,14 +381,14 @@ export const QUALIFICATION: Q[] = [
 export const SCHEDULE = {
   eyebrow: 'Step 1 of 3 · Pick a time',
   headline: 'Choose your audit time.',
-  sub: 'Grab the slot that works for you. Next we’ll ask a few quick questions so your 60 minutes are laser-specific to your business.',
+  sub: 'Choose a time for your business audit. Then answer a few quick questions so the review is focused on your business.',
   loading: 'Loading available times…',
 }
 
 /* ── Step: A Few Questions (Typeform) ───────────────────────────────────────*/
 export const RESERVED_WHY = {
   eyebrow: 'Time reserved',
-  headline: 'Your time is held. One essential step before your call.',
+  headline: 'Your audit time is held. One essential step remains.',
   body: 'This isn’t a formality. Your answers here are exactly how we prepare a personalised audit for YOUR business, so on the call we pinpoint the specific fix you need, not vague, generic advice.',
   points: [
     'It’s how we understand your exact situation before we meet.',
@@ -470,8 +455,10 @@ export const LEGAL = {
   meta:
     'This site is not a part of the Facebook or Instagram website or Meta Platforms, Inc., and is not endorsed by Meta in any way. FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.',
   links: [
-    { label: 'Privacy', href: '/data-usage' },
-    { label: 'Terms', href: '/data-usage' },
+    { label: 'Privacy', href: '/privacy' },
+    { label: 'Refund Policy', href: '/refund' },
+    { label: 'Disclaimer', href: '/disclaimer' },
+    { label: 'Terms', href: '/terms' },
     { label: 'Code of Ethics', href: '/ethics' },
   ],
   copyright:

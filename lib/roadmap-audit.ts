@@ -24,7 +24,7 @@ import { emitEvent } from '@/lib/events'
 export const AUDIT_SOURCE = '10k-roadmap-audit'
 // Defaults to the shared $27 plan so the webhook marks audit leads paid out of
 // the box; override with a dedicated plan via WHOP_AUDIT_PLAN_ID for clean CRM.
-export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+export const AUDIT_PLAN_ID = process.env.WHOP_AUDIT_PLAN_ID || process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_365vk3c1m9aos'
 // The India ₹199 audit deposit. No default — this plan must be created in
 // Whop (INR, ₹199) and its id set via env before the India pay step can
 // actually charge anyone. Empty string means "not configured yet".
@@ -77,6 +77,7 @@ export type AuditPayload = {
   // Post-booking email state (reminders) and post-call delivery. `attended` is set
   // only by the admin send-assets action; nothing else ever sets it.
   followup?: { reminder24_at?: string; reminder1h_at?: string; attended?: boolean; attended_at?: string; attended_by?: string; assets_sent_at?: string }
+  meeting_consent?: { recording: boolean; ai_training: boolean; recorded_at: string; notice_version: string }
 }
 
 const SEGMENT_TAG: Record<Stage, string> = {
@@ -255,6 +256,25 @@ export async function markBooked(email: string, booking: { start?: string; end?:
   await mirrorToCrm(e, nm, (lead?.phone as string) || null, 'audit_booked', 'Booked the $10K Roadmap Audit')
   emitEvent('appointment_booked', { email: e, source: AUDIT_SOURCE }).catch(() => {})
   if (claim) await sendAdminEmail(e, nm, 'Audit booked', '📞 $10K Roadmap Audit booked', booking).catch(() => {})
+}
+
+/* Save the attendee's meeting recording and AI-training choices separately
+   from booking. A decline is saved too, so a host can confirm no recording. */
+export async function saveMeetingConsent(emailRaw: string, consent: { recording: boolean; aiTraining: boolean }): Promise<void> {
+  const email = normEmail(emailRaw)
+  if (!email) return
+  const db = getSupabaseAdmin()
+  const { data: lead } = await db.from('vsl_leads').select('typeform_payload').eq('email', email).maybeSingle()
+  if (!lead) return
+  const audit = mergeAudit(lead.typeform_payload, {
+    meeting_consent: {
+      recording: consent.recording,
+      ai_training: consent.recording && consent.aiTraining,
+      recorded_at: new Date().toISOString(),
+      notice_version: 'india-meeting-consent-v1',
+    },
+  })
+  await db.from('vsl_leads').update({ typeform_payload: audit }).eq('email', email)
 }
 
 export async function getAuditStatus(email: string): Promise<{ found: boolean; paid: boolean; booked: boolean; deepDone: boolean; name: string; booking: AuditPayload['booking'] | null }> {

@@ -1,5 +1,5 @@
-import Landing from './Landing'
+import { redirect } from 'next/navigation'
 
-export default function RoadmapAuditIndiaPage() {
-  return <Landing />
+export default function RoadmapAuditIndiaLegacyPage() {
+  redirect('/india')
 }

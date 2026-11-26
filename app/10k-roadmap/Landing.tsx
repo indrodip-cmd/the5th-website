@@ -2,28 +2,28 @@
 /* The $10K Roadmap — landing page.
    2026-11-14 design upgrade: premium dark-forest / acid-lime system, borrowed
    from a reference landing page's visual language (tokens, pill CTAs, stat
-   strip, rounded cards, slider calculators) — not its brand, copy or images.
+   strip and rounded cards) — not its brand, copy or images.
 
    2026-11-15 reorder (conversion-review priorities): client results and the
    sample audit both moved up, ahead of the problem/process sections, and a
    founder-credibility line now sits right after the hero instead of only
    appearing in the Section-08 editorial at the bottom. Structure:
-     Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → press
-     strip → founder-credibility strip (NEW, moved up from Section 08) →
+     Header → Hero (locked: copy/layout/photo/CTA wording unchanged) → all
+     client testimonials, written and video → press strip →
+     founder-credibility strip (NEW, moved up from Section 08) →
      3 featured client results (NEW, moved up from the full case-studies
      section further down) → proof/stats strip (76 clients · 12 nations ·
      4.8 rating · results) → everything you receive incl. the sample audit
      PDF, now with a prominent "see it before you buy it" banner (MOVED UP
      from after the process section) → Section 03 "more advice vs. actual
      diagnosis" (two contrasting cards) → Section 04 the 60-minute audit
-     process (5 numbered steps) → Section 06 interactive business
-     calculators (3 tools, one slider panel) → Section 07 the rest of client
-     results (expandable grid, picks up where the top-3 teaser left off) →
-     real on-camera video testimonials → Section 08 founder/credibility
+     process (5 numbered steps) → the rest of client results (expandable grid,
+     picks up where the top-3 teaser left off) →
+     Section 08 founder/credibility
      (two-column editorial, unchanged) → Section 09 FAQ accordion + final
      booking card → footer.
      One page, no /qualify hop. Sticky mobile CTA always visible. */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LANDING, LEGAL, RATING, PRESS, REAL_PROOF, AUDIT_CHECKOUT_URL, MANISHA } from './config'
 import { Fonts, Header, Footer, Btn, Reveal, useUtm } from './ui'
 import { track } from './track'
@@ -117,16 +117,65 @@ function StepIcon({ kind }: { kind: string }) {
   return <svg {...box} aria-hidden="true"><rect x={10} y={14} width={36} height={30} rx={5} {...c} /><line x1={10} y1={24} x2={46} y2={24} {...c} /><line x1={19} y1={9} x2={19} y2={18} {...c} /><line x1={37} y1={9} x2={37} y2={18} {...c} /><polyline points="19,34 25,40 38,27" {...c} /></svg>
 }
 
-/* Deliverable icons — matched to the six "what you receive" cards. */
+/* Deliverable icons — matched to the "what you receive" cards. */
 function DeliverableIcon({ kind }: { kind: string }) {
   const c = { fill: 'none', stroke: ACCENT, strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   const box = { width: 30, height: 30, viewBox: '0 0 24 24' }
   if (kind === 'video') return <svg {...box} aria-hidden="true"><rect x={2.5} y={5.5} width={13} height={13} rx={2.2} {...c} /><path d="M15.5 10l6-3.5v11l-6-3.5" {...c} /></svg>
   if (kind === 'file') return <svg {...box} aria-hidden="true"><path d="M6 2.5h8l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1v-17a1 1 0 011-1z" {...c} /><path d="M14 2.5v4h4" {...c} /><path d="M8 13h8M8 16.5h8M8 9.5h4" {...c} /></svg>
   if (kind === 'map') return <svg {...box} aria-hidden="true"><path d="M9 3L3 5.5v15L9 18l6 2.5 6-2.5v-15l-6 2.5L9 3z" {...c} /><path d="M9 3v15M15 5.5v15" {...c} /></svg>
-  if (kind === 'calculator') return <svg {...box} aria-hidden="true"><rect x={4} y={2.5} width={16} height={19} rx={2.2} {...c} /><line x1={7} y1={6.5} x2={17} y2={6.5} {...c} /><circle cx={7.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={11.5} r={1} fill={ACCENT} stroke="none" /><circle cx={7.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={12} cy={15.5} r={1} fill={ACCENT} stroke="none" /><circle cx={16.5} cy={15.5} r={1} fill={ACCENT} stroke="none" /></svg>
   if (kind === 'brain') return <svg {...box} aria-hidden="true"><path d="M9 3a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 003 3M9 3a3 3 0 013 3v12a3 3 0 01-3 3M15 3a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-3 3" {...c} /></svg>
   return <svg {...box} aria-hidden="true"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5" {...c} /><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3" {...c} /></svg>
+}
+
+function IncludedExtras() {
+  const sidebar = ['Home', 'The5th AI', 'My Journey', 'My Leads', 'Client Acquisition', 'My Content', 'Buyer Persona', 'Design Studio']
+  const prompts = ['What should I post today?', 'Help me write a DM outreach script', "My discovery call isn't closing, why?", 'How do I raise my prices confidently?']
+  return (
+    <div className="rm-grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(16px,2.5vw,26px)', marginBottom: 'clamp(20px,3vw,32px)' }}>
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-book-stage" aria-label="Digital book cover preview">
+          <div className="rm-book-object">
+            <div className="rm-book-cover">
+              <div className="rm-book-series">THE 10K ROADMAP SERIES</div>
+              <div className="rm-book-nine"><span>9</span><small>CHAPTERS</small></div>
+              <div className="rm-book-title">EXPERTISE<br /><i>TO</i><br /><strong>INCOME</strong></div>
+              <div className="rm-book-tagline">STOP SELLING YOUR TIME.<br /><b>START BUILDING AN ASSET.</b></div>
+              <div className="rm-book-authors">INDRODIP GHOSH &amp; CHRISTINE MATHISON</div>
+            </div>
+            <div className="rm-book-pages" aria-hidden="true" />
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>A digital copy of <em>Expertise to Income</em></h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>The 9-chapter book shown above, yours to keep and revisit as you put your roadmap into action.</p>
+          <div className="rm-value-chip"><span>Original book price</span><strong>$9.77</strong></div>
+        </div>
+      </article>
+
+      <article className="rm-lift rm-glass-flat-accent rm-extra-card" style={{ borderRadius: CARD_RADIUS, overflow: 'hidden', minWidth: 0 }}>
+        <div className="rm-ai-preview" aria-label="Preview of The5th AI dashboard">
+          <div className="rm-ai-sidebar">
+            <div className="rm-ai-brand"><span>5</span><b>The5th AI</b></div>
+            {sidebar.map((item, i) => <div key={item} className={'rm-ai-nav' + (i === 1 ? ' is-active' : '')}><span>{['⌂', '✧', '◉', '♧', '◎', '▱', '⊙', '▦'][i]}</span>{item}</div>)}
+          </div>
+          <div className="rm-ai-main">
+            <div className="rm-ai-top"><span className="rm-ai-mark">5</span><b>The5th AI</b><span className="rm-ai-session">Session · 0%</span></div>
+            <div className="rm-ai-welcome"><span className="rm-ai-spark">✦</span><h4>Back to business.</h4><p>What would move your business forward today?</p></div>
+            <div className="rm-ai-composer">What are you working on today? Paste a link or file to dig in.<div><span>＋ &nbsp; Attach</span><span className="rm-ai-send">↑</span></div></div>
+            <div className="rm-ai-prompts">{prompts.map((prompt) => <span key={prompt}>{prompt}</span>)}</div>
+          </div>
+        </div>
+        <div style={{ padding: '24px clamp(20px,3vw,30px) 28px' }}>
+          <div className="rm-eyebrow" style={{ color: ACCENT, marginBottom: 8 }}>Included after your session</div>
+          <h3 className="rm-serif" style={{ fontSize: 21, margin: '0 0 8px' }}>The5th AI, inside your workspace</h3>
+          <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: '0 0 16px' }}>Plan your next post, draft an outreach message, troubleshoot a sales conversation, or think through a price increase. Open The5th AI in the same workspace where you manage your journey, leads, content, and ideal buyer.</p>
+          <div className="rm-value-chip"><span>1 month of access</span><strong>$15 value</strong></div>
+        </div>
+      </article>
+    </div>
+  )
 }
 
 function PressStrip() {
@@ -171,214 +220,6 @@ function ProofCard({ c }: { c: typeof REAL_PROOF[number] }) {
       </div>
       <p style={{ color: TEXT2, fontSize: 14, lineHeight: 1.6, margin: 0, flex: 1 }}>&ldquo;{c.quote.replace(/^[“"]|[”"]$/g, '')}&rdquo;</p>
       <div className="rm-serif" style={{ color: ACCENT, fontWeight: 800, fontSize: 'clamp(18px,2.2vw,22px)' }}>{c.result}</div>
-    </div>
-  )
-}
-
-/* ── Section 06: one unified revenue-engine calculator ────────────────────
-   Every input (revenue goal, offer price, and both funnel conversion rates)
-   feeds a single cascading model — goal → clients → booked calls → leads —
-   rendered as one real funnel, plus a live pricing-leverage readout. One
-   complex, meaningful tool instead of three disconnected tabs. Transparent,
-   editable math on the numbers the visitor enters; division-by-zero guarded
-   throughout, no email-gate, no guarantees implied. */
-function Calculators() {
-  const [goal, setGoal] = useState(10000)
-  const [offerPrice, setOfferPrice] = useState(1500)
-  const [closeRate, setCloseRate] = useState(25) // booked call → client
-  const [bookRate, setBookRate] = useState(40)   // lead → booked call
-  const [hoursPerWeek, setHoursPerWeek] = useState(8)   // time spent on marketing/sales
-  const [postsPerWeek, setPostsPerWeek] = useState(5)   // content volume
-  const [leadsPerPost, setLeadsPerPost] = useState(1)   // the visitor's own estimate, not our claim
-
-  // One shared "is a slider being dragged right now" flag. The funnel bars'
-  // transition is switched off while true — see the note below on why.
-  const [dragging, setDragging] = useState(false)
-  useEffect(() => {
-    if (!dragging) return
-    const stop = () => setDragging(false)
-    window.addEventListener('pointerup', stop)
-    window.addEventListener('mouseup', stop)
-    window.addEventListener('touchend', stop)
-    return () => { window.removeEventListener('pointerup', stop); window.removeEventListener('mouseup', stop); window.removeEventListener('touchend', stop) }
-  }, [dragging])
-  const dragHandlers = { onPointerDown: () => setDragging(true), onMouseDown: () => setDragging(true), onTouchStart: () => setDragging(true) }
-
-  const safeDiv = (a: number, b: number) => (b > 0 ? a / b : 0)
-  const fmt = (n: number) => '$' + Math.round(n).toLocaleString('en-US')
-  const fmtK = (n: number) => n >= 1000 ? '$' + (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + 'K' : fmt(n)
-
-  const model = useMemo(() => {
-    const close = closeRate / 100, book = bookRate / 100
-    const clients = safeDiv(goal, offerPrice)
-    const bookedCalls = safeDiv(clients, close)
-    const leads = safeDiv(bookedCalls, book)
-    const revenuePerLead = safeDiv(goal, leads)
-    // Pricing leverage: the same revenue goal at offer price +25%, holding
-    // conversion rates constant, shows how many fewer clients (and calls,
-    // and leads) a higher price would require.
-    const higherPrice = Math.round(offerPrice * 1.25)
-    const clientsAtHigherPrice = safeDiv(goal, higherPrice)
-    const leadsAtHigherPrice = safeDiv(safeDiv(clientsAtHigherPrice, close), book)
-    const leadsSaved = Math.max(0, leads - leadsAtHigherPrice)
-    // Capacity reality check: what your own stated content pace and your own
-    // estimated leads-per-post actually produce, set against what the funnel
-    // above says you need. We never assert a leads-per-post rate ourselves —
-    // it's the visitor's own slider — so this stays an honest "your numbers,
-    // run through the same math," not a fabricated benchmark.
-    const weeklyContentLeads = postsPerWeek * leadsPerPost
-    const leadsFromContent = weeklyContentLeads * 4.33
-    const gapLeads = Math.max(0, leads - leadsFromContent)
-    const surplusLeads = Math.max(0, leadsFromContent - leads)
-    const hoursPerLead = weeklyContentLeads > 0 ? hoursPerWeek / weeklyContentLeads : 0
-    return { clients, bookedCalls, leads, revenuePerLead, higherPrice, clientsAtHigherPrice, leadsAtHigherPrice, leadsSaved, leadsFromContent, gapLeads, surplusLeads, hoursPerLead }
-  }, [goal, offerPrice, closeRate, bookRate, hoursPerWeek, postsPerWeek, leadsPerPost])
-
-  const sliderStyle: React.CSSProperties = { width: '100%', height: 5, borderRadius: 999, accentColor: ACCENT, background: 'rgba(255,255,255,.13)' }
-  const Field = ({ label, display, children }: { label: string; display: string; children: React.ReactNode }) => (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, marginBottom: 10 }}>
-        <span style={{ fontSize: 13.5, color: TEXT2 }}>{label}</span>
-        <span style={{ fontSize: 15, fontWeight: 800, color: ACCENT, fontVariantNumeric: 'tabular-nums' }}>{display}</span>
-      </div>
-      {children}
-    </div>
-  )
-
-  // The funnel itself: leads at the top (widest), narrowing down to clients
-  // and the revenue goal at the bottom. Bar widths are proportional to the
-  // top-of-funnel lead count so the shrink is visually honest, not stylized.
-  const stages = [
-    { label: 'Leads needed', value: model.leads, display: Math.ceil(model.leads).toLocaleString('en-US'), note: 'per month, at your lead→call rate' },
-    { label: 'Booked calls needed', value: model.bookedCalls, display: Math.ceil(model.bookedCalls).toLocaleString('en-US'), note: 'per month, at your call→client rate' },
-    { label: 'Clients needed', value: model.clients, display: model.clients.toFixed(1), note: `per month at ${fmt(offerPrice)}/client` },
-    { label: 'Monthly revenue', value: 0, display: fmt(goal), note: 'your stated goal' },
-  ]
-  const maxV = Math.max(model.leads, 1)
-  const postsPerDay = postsPerWeek / 7
-
-  return (
-    <div>
-      <div className="rm-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(18px,3vw,28px)', alignItems: 'start' }}>
-        {/* Controls */}
-        <div className="rm-glass-calc" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Revenue Targets</div>
-          <Field label="Monthly revenue goal" display={fmt(goal)}>
-            <input type="range" min={1000} max={100000} step={500} value={goal} onChange={(e) => setGoal(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-          </Field>
-          <Field label="Average offer price" display={fmt(offerPrice)}>
-            <input type="range" min={50} max={10000} step={50} value={offerPrice} onChange={(e) => setOfferPrice(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-          </Field>
-          <Field label="Booked call → client rate" display={closeRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={closeRate} onChange={(e) => setCloseRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-          </Field>
-          <Field label="Lead → booked call rate" display={bookRate + '%'}>
-            <input type="range" min={1} max={100} step={1} value={bookRate} onChange={(e) => setBookRate(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-          </Field>
-
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Capacity</div>
-            <Field label="Hours/week on marketing & sales" display={hoursPerWeek + ' hrs'}>
-              <input type="range" min={1} max={40} step={1} value={hoursPerWeek} onChange={(e) => setHoursPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-            </Field>
-            <Field label="Content posts per week" display={postsPerWeek + '/wk · ~' + postsPerDay.toFixed(1) + '/day'}>
-              <input type="range" min={0} max={21} step={1} value={postsPerWeek} onChange={(e) => setPostsPerWeek(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-            </Field>
-            <Field label="Leads per post (your own estimate)" display={leadsPerPost.toFixed(1)}>
-              <input type="range" min={0} max={5} step={0.5} value={leadsPerPost} onChange={(e) => setLeadsPerPost(+e.target.value)} className="rm-range" style={sliderStyle} {...dragHandlers} />
-            </Field>
-          </div>
-
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.14)' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: ACCENT, marginBottom: 10 }}>Pricing Leverage</div>
-            <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
-              At <strong style={{ color: '#F2F6EC' }}>{fmt(model.higherPrice)}</strong> (+25%), the same {fmt(goal)}/month goal needs only{' '}
-              <strong style={{ color: ACCENT }}>{Math.ceil(model.leadsAtHigherPrice).toLocaleString('en-US')} leads</strong> instead of{' '}
-              {Math.ceil(model.leads).toLocaleString('en-US')} — {Math.ceil(model.leadsSaved).toLocaleString('en-US')} fewer leads to find every month.
-            </p>
-          </div>
-        </div>
-
-        {/* The funnel */}
-        <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD }}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 18 }}>Your Revenue Engine</div>
-          <div style={{ display: 'grid', gap: 10 }}>
-            {stages.map((s, i) => {
-              const widthPct = i === 3 ? 100 : Math.max(18, Math.min(100, (s.value / maxV) * 100))
-              return (
-                <div key={s.label}>
-                  {/* The fill narrows via a scaled, centered background layer —
-                      never the `width` property — so resizing it as the
-                      visitor drags a slider stays off the motion floor's
-                      banned list and animates on the GPU instead of layout.
-                      The transition itself is switched off mid-drag: letting
-                      a CSS transition keep chasing a target that changes
-                      every pointer-move is what made dragging feel sticky —
-                      it now snaps 1:1 with the thumb while held, then eases
-                      in on release. */}
-                  <div style={{ position: 'relative', padding: '12px 16px', borderRadius: 10 }}>
-                    <div aria-hidden style={{ position: 'absolute', inset: 0, borderRadius: 10, background: i === 3 ? ACCENT : `rgba(201,255,72,${0.42 - i * 0.08})`, transformOrigin: '50% 50%', transform: `scaleX(${Math.max(widthPct, 46) / 100})`, transition: dragging ? 'none' : 'transform .45s cubic-bezier(.16,1,.3,1)' }} />
-                    <strong style={{ position: 'relative', display: 'block', fontSize: i === 3 ? 22 : 19, fontWeight: 800, color: i === 3 ? ACCENT_TEXT : '#F2F6EC', letterSpacing: '-.01em', fontVariantNumeric: 'tabular-nums', textAlign: 'center' }}>{s.display}</strong>
-                  </div>
-                  <div style={{ textAlign: 'center', marginTop: 6 }}>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: '#F2F6EC' }}>{s.label}</span>
-                    <span style={{ fontSize: 11.5, color: TEXT3 }}> · {s.note}</span>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
-            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
-              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{(model.clients / 4.33).toFixed(1)}</strong>
-              <span style={{ fontSize: 11.5, color: TEXT3 }}>clients needed per week</span>
-            </div>
-            <div className="rm-glass-flat" style={{ borderRadius: 14, padding: '14px 16px' }}>
-              <strong style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{fmtK(model.revenuePerLead)}</strong>
-              <span style={{ fontSize: 11.5, color: TEXT3 }}>revenue value per lead</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Capacity Reality Check — the USP: not just "here's the math," but
-          "here's your gap, and here's what closes it faster." */}
-      <div className="rm-glass-calc-accent" style={{ borderRadius: CARD_RADIUS, padding: CARD_PAD, marginTop: 'clamp(18px,3vw,28px)' }}>
-        <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.08em', textTransform: 'uppercase', color: TEXT3, marginBottom: 16 }}>Capacity Reality Check</div>
-        <div className="rm-cap-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{Math.round(model.leadsFromContent).toLocaleString('en-US')}</strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>leads/month at your current content pace</span>
-          </div>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: model.gapLeads > 0 ? '#E8806F' : ACCENT, fontVariantNumeric: 'tabular-nums' }}>
-              {model.gapLeads > 0 ? '−' : '+'}{Math.round(model.gapLeads > 0 ? model.gapLeads : model.surplusLeads).toLocaleString('en-US')}
-            </strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>{model.gapLeads > 0 ? 'leads/month short of your goal' : 'leads/month more than you need'}</span>
-          </div>
-          <div>
-            <strong style={{ display: 'block', fontSize: 'clamp(22px,3vw,26px)', fontWeight: 800, color: '#F2F6EC', fontVariantNumeric: 'tabular-nums' }}>{model.hoursPerLead > 0 ? model.hoursPerLead.toFixed(1) : '—'}</strong>
-            <span style={{ fontSize: 12.5, color: TEXT3 }}>hours invested per lead, at your pace</span>
-          </div>
-        </div>
-        <div style={{ marginTop: 20, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,.16)' }}>
-          <p style={{ color: '#F2F6EC', fontSize: 15, lineHeight: 1.6, margin: '0 0 10px', fontWeight: 700, maxWidth: 640 }}>
-            {model.gapLeads > 0
-              ? <>At this pace, you're short about <span style={{ color: ACCENT }}>{Math.round(model.gapLeads)} leads a month</span> to hit {fmt(goal)}.</>
-              : <>Your content pace already covers your lead target. The real gap is usually offer, pricing or follow-up, not volume.</>}
-          </p>
-          <p style={{ color: TEXT2, fontSize: 13.5, lineHeight: 1.65, margin: 0, maxWidth: 640 }}>
-            This runs on the numbers you enter plus our general experience working with coaches and consultants. Your actual numbers will differ, and that's expected. In the audit, we find exactly where your version of this gap is, then build the 100-day plan around closing it. With that kind of 1:1 execution support, clients typically close a gap like this <strong style={{ color: '#F2F6EC' }}>20 to 50% faster</strong> than working it out alone (the exact range depends on where you're starting and how consistently you execute afterward).
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-            <Btn href={AUDIT_CHECKOUT_URL} onClick={() => track('cta_click', { where: 'calculator_gap' })} style={{ padding: '14px 30px', fontSize: 15.5 }}>
-              Close This Gap With Me — $29 <span aria-hidden>→</span>
-            </Btn>
-          </div>
-        </div>
-      </div>
-
-      <p style={{ color: TEXT3, fontSize: 11.5, textAlign: 'center', marginTop: 20, maxWidth: 620, marginLeft: 'auto', marginRight: 'auto' }}>{LANDING.calculators.disclaimer}</p>
     </div>
   )
 }
@@ -491,6 +332,16 @@ export default function Landing() {
         </section>
       </div>
 
+      {/* ── Client testimonials: written and video reviews directly after
+             the real-people hero section ── */}
+      <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
+        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
+          <Reveal><SectionHead eyebrow="Client Testimonials" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
+          <Reveal><div style={{ marginBottom: SECY }}><TestimonialCard index={8} /></div></Reveal>
+          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
+        </div>
+      </section>
+
       <PressStrip />
 
       {/* ── Founder-credibility strip: moved up from the Section-08 editorial
@@ -576,6 +427,7 @@ export default function Landing() {
               </a>
             </div>
           </Reveal>
+          <Reveal><IncludedExtras /></Reveal>
           <div className="rm-grid3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(14px,2.5vw,20px)' }}>
             {LANDING.deliverables.items.map((d, i) => (
               <Reveal key={d.t} delay={(i % 3) * 80}>
@@ -664,14 +516,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Section 06: interactive business calculators ── */}
-      <section id="calculators" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow={LANDING.calculators.eyebrow} heading={LANDING.calculators.heading} sub={LANDING.calculators.sub} maxW={640} /></Reveal>
-          <Reveal><Calculators /></Reveal>
-        </div>
-      </section>
-
       {/* ── Section 07: client results — featured proof cards + expandable grid ── */}
       <section style={{ padding: SECY_LG + ' ' + PADX }}>
         <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
@@ -694,18 +538,6 @@ export default function Landing() {
               </div>
             </>
           )}
-          <Reveal>
-            <div style={{ marginTop: SECY_LG }}><TestimonialCard index={8} /></div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Video testimonials: real on-camera client reviews, shown before
-             the founder section per the priority ordering ── */}
-      <section id="proof2" style={{ background: CARD2, borderTop: `1px solid ${LINE}`, borderBottom: `1px solid ${LINE}`, padding: SECY + ' ' + PADX }}>
-        <div style={{ maxWidth: MAXW, margin: '0 auto' }}>
-          <Reveal><SectionHead eyebrow="On-Camera · Paid Consultation Reviews" heading="Hear it from them directly." sub="Unscripted reactions from clients after their Roadmap Session. Tap any clip to play." maxW={620} /></Reveal>
-          <Reveal><VideoWall columns={3} limit={9} /></Reveal>
         </div>
       </section>
 
@@ -809,6 +641,28 @@ export default function Landing() {
       </div>
 
       <style>{`
+        .rm-extra-card{background:linear-gradient(150deg,rgba(201,255,72,.095),rgba(255,255,255,.025));border:1px solid rgba(201,255,72,.24)}
+        .rm-book-stage{height:280px;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 48%,rgba(201,255,72,.11),transparent 58%),#10160e;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-book-object{position:relative;display:flex;align-items:stretch;filter:drop-shadow(18px 20px 18px rgba(0,0,0,.5));transform:perspective(900px) rotateY(-9deg) rotateX(2deg);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+        .rm-extra-card:hover .rm-book-object{transform:perspective(900px) rotateY(-4deg) rotateX(0) translateY(-3px)}
+        .rm-book-cover{width:176px;height:236px;padding:17px 15px 12px;display:flex;flex-direction:column;color:#f5f4eb;background:linear-gradient(150deg,#103d2a,#082719 70%,#061b13);border:1px solid rgba(255,255,255,.12);box-shadow:inset 5px 0 10px rgba(255,255,255,.035);position:relative;overflow:hidden}
+        .rm-book-cover:before,.rm-book-cover:after{content:'';position:absolute;width:175px;height:175px;border:1px solid rgba(201,255,72,.14);border-radius:50%;pointer-events:none}
+        .rm-book-cover:before{right:-122px;top:61px}.rm-book-cover:after{left:-145px;bottom:-138px}
+        .rm-book-series{font-size:5.5px;letter-spacing:.28em;color:#c9ff48;font-weight:800;white-space:nowrap;border-bottom:1px solid rgba(201,255,72,.32);padding-bottom:7px}
+        .rm-book-nine{display:flex;align-items:center;gap:5px;margin-top:13px;color:#c9ff48}.rm-book-nine span{font-size:22px;line-height:1;font-weight:900;border:2px solid #c9ff48;border-radius:50%;width:28px;height:28px;display:grid;place-items:center}.rm-book-nine small{font-size:5.5px;letter-spacing:.22em;font-weight:800}
+        .rm-book-title{font-size:23px;line-height:.91;font-weight:900;letter-spacing:-.055em;margin-top:9px}.rm-book-title i{font-size:11px;display:block;text-align:center;letter-spacing:.16em;font-style:normal;color:#c9ff48;margin:4px 0}.rm-book-title strong{font-size:29px;color:#c9ff48}
+        .rm-book-tagline{font-size:6.4px;line-height:1.4;font-weight:800;margin-top:auto}.rm-book-tagline b{color:#c9ff48}.rm-book-authors{font-size:4.7px;letter-spacing:.12em;margin-top:10px;color:rgba(255,255,255,.68);white-space:nowrap}
+        .rm-book-pages{width:9px;background:repeating-linear-gradient(0deg,#e7e4d5 0 2px,#f8f5e8 2px 4px);clip-path:polygon(0 1%,100% 0,100% 99%,0 100%);margin:2px 0}
+        .rm-ai-preview{display:flex;min-height:280px;background:#f7f5ef;color:#26332b;border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+        .rm-ai-sidebar{width:142px;flex:0 0 142px;padding:15px 9px;background:#f0ede4;border-right:1px solid #e4e0d5}
+        .rm-ai-brand{display:flex;align-items:center;gap:7px;font:700 11px Georgia,serif;margin:0 0 14px 3px}.rm-ai-brand>span,.rm-ai-mark{width:20px;height:20px;border-radius:7px;background:#244e32;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800}
+        .rm-ai-nav{height:25px;display:flex;align-items:center;gap:8px;padding:0 7px;border-radius:7px;color:#536057;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}.rm-ai-nav>span{width:11px;text-align:center;font-size:11px;flex-shrink:0}.rm-ai-nav.is-active{background:#e4e0d4;color:#26332b;font-weight:700}
+        .rm-ai-main{flex:1;min-width:0;padding:12px 15px 13px;display:flex;flex-direction:column;align-items:center;position:relative}
+        .rm-ai-top{width:100%;display:flex;align-items:center;gap:7px;font-size:9px;padding-bottom:13px;border-bottom:1px solid #e9e5db}.rm-ai-session{margin-left:auto;font-size:7px;color:#879087}.rm-ai-welcome{text-align:center;margin:23px 0 16px}.rm-ai-spark{font-size:14px;color:#46694d}.rm-ai-welcome h4{font:700 25px Georgia,serif;margin:6px 0;color:#1d2d22;letter-spacing:-.04em}.rm-ai-welcome p{color:#7b847c;font-size:9px;margin:0}
+        .rm-ai-composer{width:100%;max-width:440px;border:1px solid #e5e1d7;border-radius:11px;background:white;box-shadow:0 5px 18px rgba(40,48,38,.07);padding:11px;color:#8a908a;font-size:8px;min-height:57px}.rm-ai-composer>div{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:7px}.rm-ai-send{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:#e9e4d6;color:#536057;font-size:11px}
+        .rm-ai-prompts{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:10px;max-width:450px}.rm-ai-prompts span{padding:6px 8px;border:1px solid #e5e0d5;border-radius:999px;background:#fff;color:#49564b;font-size:7px;line-height:1.2}
+        .rm-value-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(201,255,72,.3);border-radius:999px;background:rgba(201,255,72,.08);padding:8px 12px;color:#c8d2c1;font-size:11px}.rm-value-chip strong{color:#c9ff48;font-size:12px}
+        @media(max-width:768px){.rm-book-stage,.rm-ai-preview{min-height:252px;height:252px}.rm-ai-sidebar{width:104px;flex-basis:104px;padding:12px 6px}.rm-ai-nav{font-size:7px;gap:5px;padding:0 4px}.rm-ai-main{padding:10px 9px}.rm-ai-welcome{margin:19px 0 13px}.rm-ai-welcome h4{font-size:21px}.rm-ai-prompts span{font-size:6.3px}.rm-book-cover{transform:scale(.93)}}
         .rm-sticky-cta{display:none}
         @media(max-width:768px){.rm-sticky-cta{display:block}footer{padding-bottom:100px!important}}
         @media(max-width:900px){.rm-hero{flex-direction:column;text-align:center}.rm-hero > div:first-child{text-align:center}.rm-hero p{margin-left:auto;margin-right:auto}.rm-hero-ctas,.rm-hero-guarantee,.rm-hero-rating>div{justify-content:center!important}}

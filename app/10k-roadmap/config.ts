@@ -47,7 +47,7 @@ export function videoUrl(): string {
   return process.env.NEXT_PUBLIC_AUDIT_VIDEO_URL || ''
 }
 export function auditPlanId(): string {
-  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_85pIPWE1K0uBB'
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_PLAN_ID || 'plan_365vk3c1m9aos'
 }
 
 /* Every CTA on the global /10k-roadmap page links here: an in-site, two-step
@@ -58,7 +58,7 @@ export function auditPlanId(): string {
 export const AUDIT_CHECKOUT_URL = 'https://the5thglobal.consulting/audit-checkout'
 
 export function auditDirectPlanId(): string {
-  return process.env.NEXT_PUBLIC_WHOP_AUDIT_DIRECT_PLAN_ID || 'plan_27RBggiz8MDCo'
+  return process.env.NEXT_PUBLIC_WHOP_AUDIT_DIRECT_PLAN_ID || 'plan_365vk3c1m9aos'
 }
 
 /* Post-payment page: the deep-questions Typeform, then the cal.com page buyers
@@ -181,7 +181,7 @@ export const LANDING = {
   call: {
     eyebrow: 'The 60-Minute Audit',
     heading: 'One Hour. Your Business. One Clear Direction.',
-    sub: 'A short application, then the audit itself, in this order. Your personalized audit lands in your inbox within 48 hours.',
+    sub: 'Pay securely first, then complete a short intake so we can prepare for your audit. Your personalized audit lands in your inbox within 48 hours.',
     note: 'Camera optional, audio-only is completely fine. Prefer not to get on a call at all? Tell us and we’ll run it as a written-only audit instead, for the same price.',
     steps: [
       { n: '01', icon: 'search', t: 'Understand your business', d: 'We start with what’s actually happening in your business right now, no assumptions carried over from a past program.' },
@@ -201,14 +201,13 @@ export const LANDING = {
       { icon: 'video', t: 'Private Call Recording', d: 'Your complete 60-minute session recording so you can revisit the discussion, recommendations and important insights. Provided only when you’ve consented to recording.' },
       { icon: 'file', t: 'Personalized Business Audit PDF', d: 'A professional written assessment covering your current business position, offer and positioning, ideal customer analysis, biggest bottleneck, recommended changes and a priority action plan.' },
       { icon: 'map', t: 'Personalized 100-Day Roadmap', d: 'A structured action plan: what to fix first, what to prioritize next, what to stop doing, which marketing activities to focus on, and your next implementation milestones.' },
-      { icon: 'calculator', t: 'Business Growth Calculators', d: 'Access to interactive tools, a revenue goal calculator, offer pricing calculator and client acquisition calculator, to help you understand your own numbers.' },
       { icon: 'brain', t: 'AI Implementation Toolkit', d: 'Relevant ChatGPT and Claude prompts to help you execute your audit recommendations.' },
       { icon: 'download', t: 'Downloadable Sample Report', d: 'A full 17-page sample audit, every section filled out end to end, so you see exactly what your personalized audit will look like before you book.' },
     ],
     sampleCta: 'Download The Full Sample Audit (17 Pages)',
     sampleNote: 'Illustrative sample only, built section-by-section to match the exact format and depth of your real audit. Not an actual client’s report.',
     note: 'The $29 covers the 60-minute session and the deliverables above, not 100 days of coaching or implementation. What you do with the roadmap afterward is up to you.',
-    // Featured banner shown above the 6-card grid — the sample is the single
+    // Featured banner shown above the deliverable cards — the sample is the single
     // best way to show what $29 buys before anyone is asked to pay it, so it
     // gets its own prominent callout rather than sitting as one of six
     // equal-weight cards.
@@ -220,14 +219,6 @@ export const LANDING = {
       heading: 'This Is Exactly What Your $29 Gets You.',
       sub: 'A full 17-page sample audit, every section filled out end to end, built to the same format and depth as your real one.',
     },
-  },
-
-  // ── Section 06: interactive business calculators ───────────────────────
-  calculators: {
-    eyebrow: 'Know Your Numbers',
-    heading: 'Your Entire Revenue Engine, On One Screen.',
-    sub: 'Your revenue goal, your price, both conversion rates, and your real capacity (hours per week, content pace) run through one connected model, leads down to booked calls, down to clients, down to revenue. Adjust any input and watch the whole chain move.',
-    disclaimer: 'For planning only. These are illustrative calculations based on the numbers you enter, not a prediction or a guarantee of revenue, clients or conversion rates.',
   },
 
   caseStudies: {
@@ -271,7 +262,7 @@ export const LANDING = {
     eyebrow: 'Before You Book',
     heading: 'Everything You Should Know.',
     items: [
-      { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip and Manisha, plus your personalized audit PDF, your 100-day roadmap, the business growth calculators and an AI implementation toolkit. That’s the entire product.' },
+      { q: 'What exactly am I paying $29 for?', a: 'A private 60-minute business audit, personally conducted by Indrodip and Manisha, plus your personalized audit PDF, your 100-day roadmap and an AI implementation toolkit. That’s the entire product.' },
       { q: ASSETS_FAQ.q, a: ASSETS_FAQ.a },
       { q: 'Who conducts the session?', a: 'Indrodip Ghosh, founder, and Manisha Satpute, director of The5th Global Consulting, together on every call. Not a sales rep, not a junior coach.' },
       { q: 'Will I receive the recording?', a: 'Yes, if you consent to being recorded. We ask explicitly before the session starts. If you’d rather not be recorded, the session still runs, you just won’t get a video back.' },
@@ -295,7 +286,6 @@ export const LANDING = {
       'Your personalized audit PDF',
       'Your call recording, subject to consent',
       'Your personalized 100-day action roadmap',
-      'Interactive business growth calculators',
       'An AI implementation toolkit',
       'A 7-day full refund promise',
     ],

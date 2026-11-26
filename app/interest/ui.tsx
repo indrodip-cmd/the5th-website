@@ -186,7 +186,10 @@ export function Logo({ variant = 'dark', height = 30 }: { variant?: 'dark' | 'wh
   const src = variant === 'white' ? '/images/logo-white.png' : '/images/the5th-logo-purple.png'
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt="The5th Global Consulting" style={{ height, width: 'auto', display: 'block' }} />
+    <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
+      <img src={src} alt="The5th Global Consulting" style={{ height, width: 'auto', display: 'block' }} />
+      <span style={{ fontSize: 10.5, letterSpacing: '.08em', fontWeight: 700, lineHeight: 1, color: variant === 'white' ? '#E8CF7A' : '#B0902F' }}>Indradip Ghosh™</span>
+    </span>
   )
 }
 

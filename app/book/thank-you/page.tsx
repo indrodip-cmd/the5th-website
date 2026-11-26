@@ -1,5 +1,5 @@
 import { Fonts, Header, Btn, StepLegal } from '../../10k-roadmap/ui'
-import { T, HELP } from '../../10k-roadmap/config'
+import { T } from '../../10k-roadmap/config'
 import { BOOK_TITLE } from '../config'
 
 export const metadata = {
@@ -11,7 +11,7 @@ export default function BookThankYou() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
-      <Header hideHelp homeHref="/book" />
+      <Header homeHref="/book" />
       <main style={{ maxWidth: 680, margin: '0 auto', padding: 'clamp(40px,7vw,80px) 20px 70px', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/book/book-3d.webp" alt={`${BOOK_TITLE} book`} width={794} height={986} style={{ width: 'min(100%, 240px)', height: 'auto', margin: '0 auto 8px' }} />
@@ -32,7 +32,6 @@ export default function BookThankYou() {
           Want help turning the book into a plan for your business? Book a private 60-minute audit with Indrodip and Manisha.
         </p>
         <Btn href="/10k-roadmap">See the private business audit</Btn>
-        <p style={{ color: T.text3, fontSize: 13, margin: '28px 0 0' }}>Need help? Email <a href={HELP.emailHref} style={{ color: T.accentInk }}>{HELP.email}</a></p>
       </main>
       <StepLegal />
     </div>

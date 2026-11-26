@@ -1285,6 +1285,10 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
 
 /* ── LOGO GLASS ── */
 .gn__logo--img{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:0.3rem;
   text-decoration:none;
   flex-shrink:0;
 }
@@ -1306,6 +1310,18 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   display:block;
   object-fit:contain;
   filter:none;
+}
+.gn__founder-name{
+  color:var(--plum);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.8rem;
+  font-weight:700;
+  letter-spacing:0.06em;
+  line-height:1;
+  white-space:nowrap;
+}
+@media(min-width:1100px){
+  .globalNav .gn__founder-name{color:#F0D98A;font-size:0.82rem;}
 }
 /* ── TESTIMONIAL TICKER ── */
 .testimonial-strip{
@@ -1784,6 +1800,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
              alt="The5th Global Consulting"
              class="gn__logo-img gn__logo-img--white">
       </div>
+      <span class="gn__founder-name">Indradip Ghosh&trade;</span>
     </a>
     <ul class="gn__nav" role="list">
       <li><a href="/fast-forward">Fast Forward</a></li>
@@ -2630,6 +2647,7 @@ html[data-known="yes"] .hero__hi{display:block;animation:heroHiIn .6s ease both}
   <div class="footer-inner">
     <div class="footer-brand">
       <a href="/" class="footer-logo"><img src="/public/images/logo-white.png" alt="The5th Global Consulting" style="height:38px;width:auto;opacity:.85"></a>
+      <div class="tm-mark" style="margin:-.55rem 0 1rem;font-size:.8125rem;letter-spacing:.08em;color:#C9A84C;font-weight:600">Indradip Ghosh&trade;</div>
       <p>Helping professionals 40+ turn decades of wisdom and experience into a profitable digital business. Finally, on their own terms.</p>
       <p class="f-contact">Questions? <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a></p>
     </div>

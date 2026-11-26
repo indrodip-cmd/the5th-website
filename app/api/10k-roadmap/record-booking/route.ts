@@ -3,7 +3,7 @@ import { limit, clientIp } from '@/lib/rateLimit'
 import { isValidEmail, sanitizeName, sanitizeAnswers } from '@/lib/validation'
 import { Resend } from 'resend'
 import { bookingConfirmationEmail } from '@/lib/audit-emails'
-import { markBooked, getAuditStatus, saveApplication } from '@/lib/roadmap-audit'
+import { markBooked, getAuditStatus, saveApplication, saveMeetingConsent } from '@/lib/roadmap-audit'
 import { QUALIFICATION } from '@/app/10k-roadmap/config'
 
 export const runtime = 'nodejs'
@@ -56,6 +56,12 @@ export async function POST(req: NextRequest) {
           qualification, verdict, reject_reason: reason,
         }).catch(() => {})
       }
+    }
+    if (body?.india_meeting_consent && typeof body.india_meeting_consent === 'object') {
+      await saveMeetingConsent(email, {
+        recording: body.india_meeting_consent.recording === true,
+        aiTraining: body.india_meeting_consent.ai_training === true,
+      }).catch(() => {})
     }
 
     const end = new Date(new Date(start).getTime() + AUDIT_MINUTES * 60000).toISOString()

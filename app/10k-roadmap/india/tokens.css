@@ -6,39 +6,19 @@
   --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(65% 0.17 27); --color-success: oklch(65% 0.13 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 160px; --section-gap-l: 200px;
+  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
+  --container: 1180px; --gutter: clamp(20px,5vw,22px); --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-
-  /* A true black, high-end-consulting field: near-black paper, warm
-     off-white ink, the brand's own purple (#5E2E86) as the one signal
-     (no gold: a single tinted accent against black and white, the way a
-     restrained product site runs one colour, not two), frosted glass
-     panels (blur + translucency) for the signature moments instead of
-     flat cards. */
-  --color-paper: oklch(11% 0.012 300); --color-paper-2: oklch(15% 0.014 300); --color-paper-3: oklch(19% 0.015 300);
-  --color-ink: oklch(95% 0.008 75); --color-ink-2: oklch(80% 0.012 80); --color-muted: oklch(63% 0.018 85);
-  --color-rule: oklch(27% 0.016 300); --color-light: oklch(98% 0.006 300); --color-shade: oklch(6% 0.01 300);
-  --color-accent: oklch(58% 0.17 305); --color-accent-ink: oklch(99% 0.004 300); --color-accent-hi: oklch(64% 0.16 304);
-  --color-accent-deep: oklch(74% 0.13 305); --color-accent-soft: oklch(30% 0.06 305); --color-focus: oklch(70% 0.15 305);
-  --color-accent-2: oklch(88% 0.006 280); --color-accent-2-ink: oklch(20% 0.012 280); --color-dusk: oklch(70% 0.12 330);
-  --color-accent-ink-deep: oklch(40% 0.14 305);
-  --color-sun: oklch(80% 0.15 75); --color-sun-glow: oklch(80% 0.15 75 / 0.35);
-  --color-day-ink: oklch(20% 0.012 280); --color-day-muted: oklch(63% 0.018 85); --color-fog: oklch(15% 0.014 300);
-  --color-well: oklch(97% 0.012 80); --color-well-2: oklch(94% 0.014 80); --color-well-ink: oklch(18% 0.02 300); --color-well-muted: oklch(45% 0.02 290); --color-well-rule: oklch(88% 0.012 80); --color-card: oklch(99% 0.006 80);
-
-  /* Glass: a frosted panel over the black page, the way a control surface
-     reads as a lit sheet of smoked glass, not a solid card. */
-  --glass: oklch(92% 0.012 280 / 0.1); --glass-chip: oklch(100% 0 0 / 0.07); --glass-accent: oklch(58% 0.17 305 / 0.22); --glass-blur: 28px;
-  --glass-border: oklch(100% 0 0 / 0.14);
-  --glass-hi: inset 0 1px 0 oklch(100% 0 0 / 0.22), inset 0 0 0 1px oklch(100% 0 0 / 0.05);
-  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.08) inset, 0 30px 70px -28px oklch(0% 0 0 / 0.65);
-  --font-display: "Wix Madefor Display", ui-sans-serif, system-ui, sans-serif; --font-body: "Wix Madefor Text", ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 18px; --radius-inner: 10px; --radius-pill: 999px; --rule-hair: 1px;
-  --tracking-display: -0.02em; --display-weight: 500;
-
-  /* The one true-black close (the apply band): darker than the page itself,
-     a glass card inside it for the price. */
-  --color-surface-dark: oklch(6% 0.01 300); --color-surface-dark-2: oklch(9% 0.012 300);
-  --color-on-dark: oklch(97% 0.006 75); --color-on-dark-muted: oklch(72% 0.016 85);
+  --color-paper: #070A06; --color-paper-2: #121810; --color-paper-3: #182014;
+  --color-ink: #F2F6EC; --color-ink-2: #9AA79A; --color-muted: #6F7D6F;
+  --color-rule: rgba(255,255,255,0.09); --color-rule-2: rgba(255,255,255,0.18);
+  --color-accent: #C9FF48; --color-accent-2: #C9FF48; --color-accent-ink: #0B0F08;
+  --color-focus: #C9FF48; --tint-moss: rgba(201,255,72,0.14); --tint-clay: rgba(24,32,20,0.42);
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif; --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-outlier: "Inter", system-ui, sans-serif;
+  --radius-card: 18px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: 0 10px 50px -8px rgba(0,0,0,0.4);
+  --tracking-display: -0.012em; --display-weight: 600;
+  --india-exit-overlay: rgba(7,10,6,0.9); --india-exit-panel: #121810; --india-exit-card: #182014;
+  --india-exit-ink: #F2F6EC; --india-exit-copy: #9AA79A; --india-exit-lime: #C9FF48;
+  --india-exit-sauce: #C9FF48; --india-exit-cheese: #C9FF48;
 }

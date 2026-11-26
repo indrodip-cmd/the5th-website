@@ -1,20 +1,20 @@
 import type { Metadata } from 'next'
 
-/* India cold-traffic funnel: full share/SEO metadata (title, desc, OG, Twitter).
-   The 1200x630 og:image is a real screenshot of this landing page's hero
-   (public/og/10k-roadmap-india-hero.png), matching the parent funnel's pattern.
+/* India audit page: full share/SEO metadata (title, desc, OG, Twitter).
+   The 1200x630 og:image is a current screenshot of this landing page's hero
+   (public/og/10k-roadmap-india-hero.png).
    Indexable so search + AI assistants can fetch and cite it. */
-const TITLE = 'Build a Predictable, Profitable Business From Your Expertise | The5th (India)'
-const OG_TITLE = 'Build a Predictable Business From Your Expertise, Guaranteed'
+const TITLE = 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money? | The5th'
+const OG_TITLE = 'You’ve Tried Coaches, ChatGPT And Claude. So Why Aren’t You Making Consistent Money?'
 const DESC =
-  'For Indian professionals & founders already earning ₹1 lakh+/month. You probably don’t need more content or funnels, just one fix. Find the exact bottleneck between you and a predictable business income, or get 100% of your money back.'
-const URL = 'https://the5thglobal.consulting/10k-roadmap/india'
+  'Before you spend another rupee on coaching, courses, or marketing tools, get a ₹199 business audit. Fully refundable within 7 days if it isn’t worth it.'
+const URL = 'https://the5thglobal.consulting/india'
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESC,
   keywords: ['coaching business India', 'consultant growth India', 'predictable income', 'strategy audit', 'business roadmap', 'side business India', 'The5th Global Consulting'],
-  alternates: { canonical: '/10k-roadmap/india' },
+  alternates: { canonical: '/india' },
   robots: {
     index: true, follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 /* Hide third-party feedback/survey/toolbar widgets on the funnel only, and pin
    a light theme-color so mobile browser chrome matches. */
 const FUNNEL_CSS = `
-  html { color-scheme: light; background:#ffffff; }
+  html { color-scheme: dark; background:var(--color-paper); }
   #vercel-toolbar, vercel-live-feedback, [data-vercel-toolbar-root],
   [aria-label="Feedback" i], [aria-label*="feedback" i], [title="Feedback" i],
   iframe[title*="feedback" i], iframe[title*="survey" i],
@@ -50,7 +50,7 @@ const FUNNEL_CSS = `
 export default function RoadmapAuditIndiaLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <meta name="theme-color" content="#ffffff" />
+      <meta name="theme-color" content="#070A06" />
       <style dangerouslySetInnerHTML={{ __html: FUNNEL_CSS }} />
       {children}
     </>

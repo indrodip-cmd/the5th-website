@@ -69,10 +69,12 @@ export function ResearchHeader() {
           <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, width: 'auto', display: 'block' }} />
           <span style={{ fontSize: 11, letterSpacing: '.08em', color: C.goldDeep, fontWeight: 700, lineHeight: 1 }}>Indradip Ghosh™</span>
         </a>
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px,4vw,34px)' }}>
+        <style>{`@media(max-width:560px){.rs-hide-sm{display:none!important}}`}</style>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(16px,4vw,34px)' }}>
           <a href="/research" style={{ color: C.plumDark, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Research</a>
-          <a href="/research/study" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Study</a>
-          <a href="/" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>The5th ↗</a>
+          <a className="rs-hide-sm" href="/research/study" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Study</a>
+          <a href="/resources" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>Resources</a>
+          <a className="rs-hide-sm" href="/" style={{ color: C.muted, fontSize: 13.5, fontWeight: 600, letterSpacing: '.02em', textDecoration: 'none' }}>The5th ↗</a>
         </nav>
       </div>
     </header>

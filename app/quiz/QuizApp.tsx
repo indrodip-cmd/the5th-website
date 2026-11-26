@@ -168,7 +168,7 @@ export default function QuizApp() {
         <a href="/" className="qz-logo" aria-label="The5th Global Consulting"><img src="/images/logo-header-white.png" alt="The5th Global Consulting" width={150} height={46} /></a>
         {phase === 'q' ? (
           <div className="qz-prog">
-            <span><b>Part {part!.n} of 4</b> · {part!.name}</span>
+            <span><b>Part {part!.n} of 4</b><span className="qz-prog__nm"> · {part!.name}</span></span>
             <div><i style={{ width: `${((idx + 1) / TOTAL) * 100}%` }} /></div>
           </div>
         ) : phase === 'report' ? <span className="qz-free">Your Income OS profile</span> : <span className="qz-free">The5th Income OS</span>}

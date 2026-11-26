@@ -103,9 +103,6 @@
 .qz-gate h2{font-size:clamp(1.9rem,7.4vw,3rem);margin-top:14px}
 .qz-gate form{margin-top:22px;display:grid;gap:12px}
 .qz-gate label{display:grid;gap:6px;font-size:.78rem;letter-spacing:.06em;font-weight:700;color:rgba(255,255,255,.8)}
-.qz-gate input[type=text],.qz-gate input[type=email]{width:100%;padding:16px;border-radius:12px;border:1px solid var(--gl);background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:1rem;outline:0;min-height:54px}
-.qz-gate input:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(201,168,76,.2)}
-.qz-gate input::placeholder{color:rgba(255,255,255,.4)}
 .qz-trap{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important}
 .qz-err{color:#ffb4a8;font-size:.86rem;line-height:1.5}
 /* build */
@@ -401,3 +398,6 @@
   .qz-rep-ring{position:absolute;right:-4px;bottom:-6px}
 }
 @media(max-width:759px){.qz-rep-ring{position:static;margin:12px auto 0;width:fit-content}}
+
+.qz-prog__nm{font-style:normal;font-family:inherit;color:rgba(255,255,255,.75)}
+@media(max-width:520px){.qz-prog__nm{display:none}.qz-prog{max-width:none}}

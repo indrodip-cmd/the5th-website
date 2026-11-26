@@ -259,7 +259,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
         </a>
         {nav && (
           <nav className="rm-nav" style={{ display: 'flex', gap: 28 }}>
-            {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
+            {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none', padding: '12px 4px', display: 'inline-block' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
       </div>

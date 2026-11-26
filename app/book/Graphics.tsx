@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { T } from '../10k-roadmap/config'
 import { track } from '../10k-roadmap/track'
 import { BOOK_PRICE, BOOK_CHECKOUT_PATH, BOOK_GUARANTEE_DAYS } from './config'
+import { mark } from './events'
 
 /* ── icons (24-unit strokes, same family as the book) ── */
 const PATHS: Record<string, string> = {
@@ -69,7 +70,7 @@ export function HourMath() {
       <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 14, color: T.text2, marginBottom: 10 }}>
         <span>{label}</span><strong style={{ color: T.text, fontSize: 20, fontFamily: T.serif }}>{fmt(val)}</strong>
       </span>
-      <input className="bk-range" type="range" min={min} max={max_} step={step} value={val} onChange={(e) => set(Number(e.target.value))} aria-label={label} style={{ width: '100%' }} />
+      <input className="bk-range" type="range" min={min} max={max_} step={step} value={val} onChange={(e) => { set(Number(e.target.value)); mark('math') }} aria-label={label} style={{ width: '100%' }} />
     </label>
   )
   return (
@@ -140,7 +141,7 @@ export function TryChapter() {
             style={{ width: '100%', boxSizing: 'border-box', padding: '14px 16px', fontSize: 16, lineHeight: 1.5, background: 'rgba(255,255,255,.05)', border: `1px solid ${T.lineStrong}`, borderRadius: 12, fontFamily: 'inherit', color: T.text, outline: 'none', resize: 'vertical' }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16, gap: 12, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 12.5, color: T.text3, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="lock" size={14} stroke={T.text3} sw={3.4} /> Stays on your device. Nothing is saved or sent.</span>
-            <button onClick={() => { if (a[step].trim().length > 1) { setStep(step + 1); if (step === 0) track('book_cta_click', { where: 'try_chapter_start' }) } }} disabled={a[step].trim().length < 2}
+            <button onClick={() => { if (a[step].trim().length > 1) { setStep(step + 1); if (step === 2) mark('why'); if (step === 0) track('book_cta_click', { where: 'try_chapter_start' }) } }} disabled={a[step].trim().length < 2}
               style={{ padding: '13px 26px', borderRadius: 999, border: 0, fontWeight: 800, fontSize: 15, cursor: a[step].trim().length < 2 ? 'not-allowed' : 'pointer', background: T.accent, color: T.accentText, opacity: a[step].trim().length < 2 ? 0.45 : 1 }}>{step < 2 ? 'Go deeper →' : 'Show me my why →'}</button>
           </div>
         </>

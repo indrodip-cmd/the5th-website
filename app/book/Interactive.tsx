@@ -6,6 +6,7 @@ import { T } from '../10k-roadmap/config'
 import { track } from '../10k-roadmap/track'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHECKOUT_PATH, BOOK_GUARANTEE_DAYS, CHAPTERS, OUTCOMES, PAINS } from './config'
 import { Icon } from './Graphics'
+import { mark } from './events'
 
 const CARD: React.CSSProperties = { background: T.surface, border: `1px solid ${T.line}`, borderRadius: T.radius }
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -89,7 +90,7 @@ export function PainCheck() {
       <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 12 }}>
         {PAINS.map((t, i) => (
           <li key={t}>
-            <button className="bk-spot" aria-pressed={on[i]} onClick={() => { setOn((p) => p.map((v, j) => (j === i ? !v : v))); if (!on[i] && navigator.vibrate) navigator.vibrate(8) }}
+            <button className="bk-spot" aria-pressed={on[i]} onClick={() => { setOn((p) => p.map((v, j) => (j === i ? !v : v))); if (!on[i]) { mark('pain'); if (navigator.vibrate) navigator.vibrate(8) } }}
               style={{ ...CARD, width: '100%', textAlign: 'left', padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'flex-start', fontSize: 17, lineHeight: 1.55, color: T.text, cursor: 'pointer', fontFamily: 'inherit', transition: 'transform .2s, background .25s, border-color .25s', background: on[i] ? 'rgba(201,255,72,.10)' : T.surface, borderColor: on[i] ? 'rgba(201,255,72,.55)' : T.line, transform: on[i] ? 'scale(1.01)' : 'none' }}>
               <span style={{ flex: '0 0 26px', height: 26, borderRadius: 8, border: `2px solid ${on[i] ? T.accent : T.lineStrong}`, background: on[i] ? T.accent : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .2s', marginTop: 1 }}>
                 {on[i] && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.accentText} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>}
@@ -161,7 +162,7 @@ export function Flipbook() {
   const [flips, setFlips] = useState(0)
   const [dir, setDir] = useState(1)
   const drag = useRef<number | null>(null)
-  const go = (n: number) => { setDir(n > i ? 1 : -1); setI((n + FLIP.length) % FLIP.length); setFlips((f) => f + 1) }
+  const go = (n: number) => { setDir(n > i ? 1 : -1); setI((n + FLIP.length) % FLIP.length); setFlips((f) => { if (f + 1 >= 3) mark('flip'); return f + 1 }) }
   useEffect(() => { FLIP.forEach((f) => { const im = new Image(); im.src = `/images/book/flip-${f.n}.webp` }) }, [])
   return (
     <div role="group" aria-label="Flip through the book" tabIndex={0} onKeyDown={(e) => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1) }} style={{ outline: 'none' }}>
@@ -176,7 +177,7 @@ export function Flipbook() {
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, marginTop: 18, flexWrap: 'wrap' }}>
         <div style={{ fontSize: 15, color: T.text2 }}><strong style={{ color: T.text }}>{FLIP[i].c}</strong><span style={{ color: T.text3 }}> · {i + 1} of {FLIP.length}</span></div>
-        <div style={{ display: 'flex', gap: 8 }} role="tablist">{FLIP.map((f, k) => <button key={f.n} role="tab" aria-selected={k === i} aria-label={`Spread ${k + 1}`} onClick={() => go(k)} style={{ width: k === i ? 28 : 10, height: 10, borderRadius: 5, border: 0, cursor: 'pointer', background: k === i ? T.accent : 'rgba(255,255,255,.2)', transition: 'all .25s', padding: 0 }} />)}</div>
+        <div style={{ display: 'flex', gap: 0 }} role="tablist">{FLIP.map((f, k) => <button key={f.n} role="tab" aria-selected={k === i} aria-label={`Spread ${k + 1}`} onClick={() => go(k)} style={{ width: k === i ? 40 : 24, height: 36, border: 0, cursor: 'pointer', background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'width .25s' }}><span style={{ display: 'block', width: '100%', height: 10, borderRadius: 5, background: k === i ? T.accent : 'rgba(255,255,255,.22)', transition: 'background .25s' }} /></button>)}</div>
       </div>
       {flips >= 3 && (
         <div className="bk-in" style={{ ...CARD, marginTop: 22, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', borderColor: 'rgba(201,255,72,.4)', background: T.accentSoft }}>
@@ -224,4 +225,115 @@ export function SlideToBuy() {
       <p style={{ margin: '12px 0 0', fontSize: 13, color: T.text3, textAlign: 'center' }}>or <a href={BOOK_CHECKOUT_PATH} style={{ color: T.accentInk, fontWeight: 700 }}>tap here</a> · {BOOK_GUARANTEE_DAYS}-day money-back guarantee</p>
     </div>
   )
+}
+
+
+/* ── progress: every interaction fills "your roadmap", then offers the book ── */
+export const STEPS = [
+  { k: 'pain', t: 'Tick what sounds like you' },
+  { k: 'math', t: 'Do the math on your hours' },
+  { k: 'why', t: 'Write your why' },
+  { k: 'flip', t: 'Flip through the pages' },
+  { k: 'plan', t: 'Build your 30-day plan' },
+]
+export function ProgressChip() {
+  const [done, setDone] = useState<string[]>([])
+  const [open, setOpen] = useState(false)
+  const celebrated = useRef(false)
+  useEffect(() => {
+    const on = (e: Event) => { const k = (e as CustomEvent).detail as string; setDone((d) => (d.includes(k) ? d : [...d, k])) }
+    window.addEventListener('bk-step', on)
+    return () => window.removeEventListener('bk-step', on)
+  }, [])
+  const n = done.length, all = n === STEPS.length
+  useEffect(() => {
+    if (all && !celebrated.current) { celebrated.current = true; setOpen(true); burst(window.innerWidth / 2, window.innerHeight * 0.6, 90); track('book_cta_click', { where: 'progress_complete' }) }
+  }, [all])
+  if (n === 0) return null
+  return (
+    <div className="bk-chip" style={{ position: 'fixed', left: 14, zIndex: 58 }}>
+      <button onClick={() => setOpen((o) => !o)} aria-expanded={open} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px 9px 10px', borderRadius: 999, border: `1px solid ${all ? T.accent : T.lineStrong}`, background: 'rgba(12,16,10,.94)', color: T.text, cursor: 'pointer', fontFamily: 'inherit', fontWeight: 700, fontSize: 13.5, backdropFilter: 'blur(12px)', boxShadow: all ? `0 0 0 4px rgba(201,255,72,.18)` : 'none' }}>
+        <svg width="30" height="30" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,.14)" strokeWidth="4" /><circle cx="18" cy="18" r="15" fill="none" stroke={T.accent} strokeWidth="4" strokeLinecap="round" strokeDasharray={`${(n / STEPS.length) * 94.2} 94.2`} transform="rotate(-90 18 18)" style={{ transition: 'stroke-dasharray .5s cubic-bezier(.16,1,.3,1)' }} /><text x="18" y="22" textAnchor="middle" fontSize="12" fontWeight="800" fill={T.text}>{n}</text></svg>
+        {all ? 'Your roadmap is built' : `Your roadmap: ${n} of ${STEPS.length}`}
+      </button>
+      {open && (
+        <div className="bk-in" style={{ ...CARD, marginTop: 8, padding: 16, width: 'min(300px, calc(100vw - 28px))', background: 'rgba(12,16,10,.97)', backdropFilter: 'blur(12px)' }}>
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 10 }}>
+            {STEPS.map((s) => { const d = done.includes(s.k); return (
+              <li key={s.k} style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 14, color: d ? T.text : T.text3 }}>
+                <span style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, background: d ? T.accent : 'transparent', border: `2px solid ${d ? T.accent : T.lineStrong}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{d && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.accentText} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>}</span>{s.t}
+              </li>) })}
+          </ul>
+          {all ? (
+            <a href={BOOK_CHECKOUT_PATH} onClick={() => track('book_cta_click', { where: 'chip_complete' })} className="rm-btn" style={{ display: 'flex', justifyContent: 'center', marginTop: 14, padding: '13px 18px', borderRadius: 999, background: T.accent, color: T.accentText, fontWeight: 800, textDecoration: 'none', fontSize: 15 }}>You have done the work. Get the book: {BOOK_PRICE.label} →</a>
+          ) : <p style={{ margin: '12px 0 0', fontSize: 12.5, color: T.text3, lineHeight: 1.5 }}>Finish all five and the whole roadmap is yours to keep. The book is what turns it into a plan on paper.</p>}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ── build a personal 30-day plan in four taps ── */
+const DOES = [
+  { id: 'coach', l: 'I coach people' }, { id: 'consult', l: 'I consult for businesses' }, { id: 'heal', l: 'I am a healer or therapist' }, { id: 'expert', l: 'I am a professional or specialist' },
+]
+const BLOCK = [
+  { id: 'what', l: 'I do not know what to sell', ch: [2, 3, 5], first: 'Take the expertise inventory (Chapter 2) and pick one problem you have already solved.' },
+  { id: 'who', l: 'I do not know who to sell to', ch: [4, 7], first: 'Describe your One Person in 10 specific details (Chapter 4).' },
+  { id: 'tech', l: 'The tech scares me', ch: [8, 5], first: 'Follow the click-by-click selling-platform setup (Chapter 8) with a friend beside you.' },
+  { id: 'fear', l: 'I am afraid to be seen or rejected', ch: [1, 9, 7], first: 'Write your Layer 3 why (Chapter 1) and your doubt response plan (Chapter 9).' },
+]
+const TIME = [{ id: '2', l: 'About 2 hours a week' }, { id: '5', l: 'About 5 hours a week' }, { id: '10', l: '10 or more hours a week' }]
+export function RoadmapBuilder() {
+  const [step, setStep] = useState(0)
+  const [does, setDoes] = useState('')
+  const [block, setBlock] = useState('')
+  const [time, setTime] = useState('')
+  const [name, setName] = useState('')
+  const b = BLOCK.find((x) => x.id === block)
+  const doesL = DOES.find((x) => x.id === does)?.l.toLowerCase() || ''
+  const pick = (setter: (v: string) => void, v: string) => { setter(v); if (navigator.vibrate) navigator.vibrate(8); setTimeout(() => setStep((s) => s + 1), 220) }
+  const opt = (sel: boolean): React.CSSProperties => ({ padding: '16px 18px', borderRadius: 14, textAlign: 'left', fontFamily: 'inherit', fontSize: 16.5, fontWeight: 700, lineHeight: 1.35, cursor: 'pointer', color: T.text, border: `1px solid ${sel ? T.accent : T.line}`, background: sel ? T.accentSoft : T.surface, transition: 'all .2s', minHeight: 56 })
+  const q = [
+    { t: 'What best describes you?', body: <div className="bk-opt">{DOES.map((o) => <button key={o.id} className="bk-spot" style={opt(does === o.id)} onClick={() => pick(setDoes, o.id)}>{o.l}</button>)}</div> },
+    { t: 'What is the biggest thing in your way?', body: <div className="bk-opt">{BLOCK.map((o) => <button key={o.id} className="bk-spot" style={opt(block === o.id)} onClick={() => pick(setBlock, o.id)}>{o.l}</button>)}</div> },
+    { t: 'How much time can you give this each week?', body: <div className="bk-opt">{TIME.map((o) => <button key={o.id} className="bk-spot" style={opt(time === o.id)} onClick={() => { setTime(o.id); if (navigator.vibrate) navigator.vibrate(8); setTimeout(() => { setStep(3); mark('plan') }, 220) }}>{o.l}</button>)}</div> },
+  ]
+  return (
+    <div style={{ ...CARD, padding: 'clamp(22px,3.6vw,40px)', maxWidth: 860, margin: '0 auto', background: 'linear-gradient(160deg,#141b11,#0d120b)', borderColor: 'rgba(201,255,72,.25)' }}>
+      {step < 3 ? (
+        <div key={step} className="bk-in">
+          <div style={{ display: 'flex', gap: 8, marginBottom: 22 }}>{[0, 1, 2].map((k) => <div key={k} style={{ flex: 1, height: 5, borderRadius: 3, background: k < step ? T.accent : k === step ? 'rgba(201,255,72,.45)' : 'rgba(255,255,255,.1)' }} />)}</div>
+          <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Question {step + 1} of 3</div>
+          <h3 className="rm-serif" style={{ fontSize: 'clamp(24px,3.4vw,34px)', margin: '0 0 22px', lineHeight: 1.2 }}>{q[step].t}</h3>
+          {q[step].body}
+          {step > 0 && <button onClick={() => setStep(step - 1)} style={{ marginTop: 18, background: 'none', border: 0, color: T.text3, fontSize: 13.5, cursor: 'pointer', padding: '8px 0' }}>← Back</button>}
+        </div>
+      ) : (
+        <div className="bk-in">
+          <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Your personal starting plan</div>
+          <h3 className="rm-serif" style={{ fontSize: 'clamp(24px,3.6vw,36px)', margin: '0 0 6px', lineHeight: 1.2 }}>{name.trim() ? `${name.trim()}, here is` : 'Here is'} your first 30 days</h3>
+          <p style={{ margin: '0 0 22px', color: T.text2, fontSize: 15.5, lineHeight: 1.6 }}>For someone who {doesL} and says “{b?.l.toLowerCase()}”, with about {time} hours a week. Built from the book&rsquo;s own chapters.</p>
+          <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 12 }}>
+            {[{ w: 'Day 1', d: b?.first || '' }, { w: 'Week 1', d: `Work through Chapter ${b?.ch[0]} at your own pace (${time === '2' ? 'two short sittings' : time === '5' ? 'three sittings' : 'a single focused weekend session'}) and fill in every worksheet.` }, { w: 'Week 2', d: `Move to Chapter ${b?.ch[1]} and turn it into something written down: ${CHAPTER_HINT[b?.ch[1] || 1]}` }, { w: 'Weeks 3 to 4', d: `Finish the road: Chapter ${b?.ch[2] || 5} and the 7-day launch plan, then pick your launch date.` }].map((s, k) => (
+              <li key={s.w} className="bk-spot" style={{ ...CARD, padding: '16px 18px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                <span className="rm-serif" style={{ flex: '0 0 auto', minWidth: 74, color: T.accentInk, fontSize: 15, fontWeight: 800, paddingTop: 2 }}>{s.w}</span>
+                <span style={{ fontSize: 15.5, lineHeight: 1.6, color: T.text }}>{s.d}</span>
+                <span style={{ marginLeft: 'auto', color: T.text3, fontSize: 12, paddingTop: 3 }}>{k + 1}/4</span>
+              </li>
+            ))}
+          </ol>
+          <div style={{ marginTop: 22, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input value={name} onChange={(e) => setName(e.target.value.slice(0, 24))} placeholder="Add your first name (optional)" aria-label="Your first name" style={{ flex: '1 1 200px', minWidth: 0, padding: '13px 16px', fontSize: 16, background: 'rgba(255,255,255,.05)', border: `1px solid ${T.lineStrong}`, borderRadius: 12, color: T.text, fontFamily: 'inherit', outline: 'none' }} />
+            <a href={BOOK_CHECKOUT_PATH} onClick={() => track('book_cta_click', { where: 'roadmap_builder', blocker: block, time })} className="rm-btn" style={{ flex: '1 1 240px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', gap: 10, padding: '16px 24px', borderRadius: 999, background: T.accent, color: T.accentText, fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>Get the book that fills this in: {BOOK_PRICE.label} →</a>
+          </div>
+          <p style={{ margin: '14px 0 0', fontSize: 12.5, color: T.text3 }}>Nothing you chose here is saved or sent. <button onClick={() => { setStep(0); setDoes(''); setBlock(''); setTime('') }} style={{ background: 'none', border: 0, color: T.text2, textDecoration: 'underline', cursor: 'pointer', fontSize: 12.5, padding: 0 }}>Start over</button></p>
+        </div>
+      )}
+    </div>
+  )
+}
+const CHAPTER_HINT: Record<number, string> = {
+  1: 'your Layer 3 why and your 12-month vision.', 2: 'your expertise inventory and your biggest leaks.', 3: 'your first product idea and your place on the product ladder.', 4: 'a 10-detail profile of your One Person.',
+  5: 'your product blueprint and one-sentence sales promise.', 6: 'your offer stack and one-page offer.', 7: 'your 30-day content map and five selling posts.', 8: 'your product page, launch posts and ten people to message.', 9: 'your doubt response plan and morning ritual.',
 }

@@ -9,7 +9,7 @@ import { Fonts, Header, Btn, Reveal, Footer } from '../10k-roadmap/ui'
 import { T, LEGAL, REAL_PROOF, RATING } from '../10k-roadmap/config'
 import { track } from '../10k-roadmap/track'
 import { DIAGRAMS } from './diagrams'
-import { ScrollBar, SpotlightLayer, TiltBook, Magnetic, PainCheck, ChapterExplorer, Flipbook, SlideToBuy } from './Interactive'
+import { ScrollBar, SpotlightLayer, TiltBook, Magnetic, PainCheck, ChapterExplorer, Flipbook, SlideToBuy, ProgressChip, RoadmapBuilder } from './Interactive'
 import { CountUp, HourMath, TryChapter, TwoPaths, Timeline30, Objections, FloatingBuy, Icon } from './Graphics'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE, PAINS, OUTCOMES, COMPARE, CLIENTS_SERVED } from './config'
 
@@ -70,6 +70,7 @@ export default function BookLanding() {
     <div style={{ background: T.bg, color: T.text, fontFamily: T.sans, paddingBottom: 76, overflowX: 'clip' }}>
       <Fonts />
       <ScrollBar />
+      <ProgressChip />
       <SpotlightLayer />
       <style>{`
         .bk-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);align-items:center}
@@ -79,7 +80,10 @@ export default function BookLanding() {
         .bk-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(7,10,6,.94);border-top:1px solid ${T.line};backdrop-filter:blur(10px)}
         .bk-faq summary{list-style:none;cursor:pointer}.bk-faq summary::-webkit-details-marker{display:none}
         .bk-faq[open] .bk-plus{transform:rotate(45deg)}
-        @media(max-width:900px){.bk-hero,.bk-2{grid-template-columns:1fr}.bk-3,.bk-ch{grid-template-columns:1fr 1fr}.bk-sticky{display:block}.bk-hero-art{order:-1}}
+        @media(max-width:900px){.bk-hero,.bk-2{grid-template-columns:1fr}.bk-3,.bk-ch{grid-template-columns:1fr 1fr}.bk-sticky{display:block}}
+        @media(min-width:601px) and (max-width:900px){.bk-hero>*:nth-child(2){order:-1}.bk-hero-art{min-height:380px!important;max-width:560px;margin:0 auto}}
+        @media(min-width:901px) and (max-width:1120px){.bk-hero h1{font-size:clamp(32px,4.3vw,46px)!important}}
+        @media(max-height:480px) and (orientation:landscape){.bk-hero-art{min-height:300px!important}}
         .bk-2>*,.bk-3>*,.bk-ch>*,.bk-hero>*{min-width:0}
         .bk-wide-wrap{min-width:0;max-width:100%}
         .bk-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -87,8 +91,10 @@ export default function BookLanding() {
         .bk-4>*:last-child .bk-arrow{display:none}
         .bk-float{display:none}
         .bk-grid-bg{background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 70% at 50% 30%,#000,transparent);mask-image:radial-gradient(70% 70% at 50% 30%,#000,transparent)}
-        .bk-range{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:rgba(255,255,255,.14);outline:none}
-        .bk-range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:${T.accent};border:3px solid #0a0e08;box-shadow:0 0 0 2px ${T.accent};cursor:pointer}
+        .bk-range{-webkit-appearance:none;appearance:none;height:34px;background:transparent;outline:none;margin:0;touch-action:pan-y}
+        .bk-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:rgba(255,255,255,.16)}
+        .bk-range::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.16)}
+        .bk-range::-webkit-slider-thumb{-webkit-appearance:none;margin-top:-10px;width:26px;height:26px;border-radius:50%;background:${T.accent};border:3px solid #0a0e08;box-shadow:0 0 0 2px ${T.accent};cursor:pointer}
         .bk-range::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:${T.accent};border:3px solid #0a0e08;box-shadow:0 0 0 2px ${T.accent};cursor:pointer}
         .bk-range:focus-visible{outline:2px solid ${T.accent};outline-offset:6px}
         @keyframes bk-floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -100,6 +106,10 @@ export default function BookLanding() {
         @media(max-width:1000px){.bk-4{grid-template-columns:repeat(2,minmax(0,1fr))}.bk-arrow{display:none}}
         @media(max-width:860px){.bk-math{grid-template-columns:1fr!important}}
         @media(max-width:560px){.bk-4{grid-template-columns:1fr}}
+        .bk-opt{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .bk-chip{bottom:86px}
+        @media(min-width:901px){.bk-chip{bottom:22px}}
+        @media(max-width:560px){.bk-opt{grid-template-columns:1fr}}
         .bk-spot{position:relative}
         .bk-spot::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(201,255,72,.13),transparent 60%);opacity:0;transition:opacity .25s;pointer-events:none}
         .bk-spot:hover::before{opacity:1}
@@ -262,6 +272,14 @@ export default function BookLanding() {
         <div style={WRAP}>
           <Reveal><Head eyebrow="Try it before you buy it" title={<>Do the first exercise of Chapter 1 <span className="rm-mark">right now</span></>} sub="Two minutes, three questions. This is the same method the book uses to find the reason that keeps you going when it gets quiet." /></Reveal>
           <Reveal delay={0.05} style={{ marginTop: 40 }}><TryChapter /></Reveal>
+        </div>
+      </section>
+
+      {/* ── Build your plan ── */}
+      <section style={SEC}>
+        <div style={WRAP}>
+          <Reveal><Head eyebrow="Build it with us" title={<>Get your personal 30-day starting plan <span className="rm-mark">in four taps</span></>} sub="Answer three quick questions and see which chapters to start with and what you would do in your first month. It takes 20 seconds, and nothing is saved or sent." /></Reveal>
+          <Reveal delay={0.05} style={{ marginTop: 40 }}><RoadmapBuilder /></Reveal>
         </div>
       </section>
 

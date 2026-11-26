@@ -712,6 +712,11 @@ h2.H.lime-em em{color:var(--lime);}
 .footer-wordmark span em{-webkit-text-fill-color:#F6E29B!important;color:#F6E29B!important;}
 @keyframes fwGlow{0%,100%{filter:drop-shadow(0 0 18px rgba(201,168,76,.34)) drop-shadow(0 0 46px rgba(138,91,176,.24));}50%{filter:drop-shadow(0 0 38px rgba(201,168,76,.66)) drop-shadow(0 0 92px rgba(138,91,176,.42));}}
 @media(prefers-reduced-motion:reduce){.footer-wordmark span{animation:none;}}
+
+/* founder trademark under header logo */
+.gn__logo--img{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem}
+.gn__founder-name{color:#3D2645;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;line-height:1;white-space:nowrap}
+@media(min-width:1100px){.globalNav .gn__founder-name{color:#F0D98A;font-size:.82rem}}
 </style>
 <script>!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_nKXxpj4hLE61K7");whop.track("page");</script>
 </head>
@@ -726,6 +731,7 @@ h2.H.lime-em em{color:var(--lime);}
         <img src="/public/images/logo.png" alt="The5th Global Consulting" class="gn__logo-img gn__logo-img--dark">
         <img src="/public/images/logo-header-white.png" alt="The5th Global Consulting" class="gn__logo-img gn__logo-img--white">
       </div>
+      <span class="gn__founder-name">Indradip Ghosh&trade;</span>
     </a>
     <ul class="gn__nav" role="list">
       <li><a href="/fast-forward">Fast Forward</a></li>

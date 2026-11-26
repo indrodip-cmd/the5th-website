@@ -21,6 +21,7 @@ def ch2():
 {STORY('Field note: the healing practitioner', "A healing practitioner I worked with spent six months convincing herself that her knowledge of trauma recovery was 'too basic.' She had helped herself recover from burnout after a 20-year corporate career.", "That was not basic. That was a $997 course waiting to exist.", ic='sprout')}
 {FIG(D.iceberg())}
 {WS('Your expertise inventory', [("What is a result you have achieved that others in your life have not?", 3), ("What do people come to you for advice about, even informally?", 3), ("What skill or knowledge took you years to develop that you could teach in a weekend?", 3), ("What problem have you solved in your own life that you wish someone had guided you through?", 3), ("My biggest transferable expertise or result:", 2), ("Three problems I have personally solved that others still struggle with:", 3)])}
+{NOTES(2)}
 {RECAP('CHAPTER TWO', 'You know where you are.', ['My income breakdown: Active ___%  Leveraged ___%  Passive ___%', 'My biggest transferable expertise:', 'The problem others would pay me to teach:'])}
 '''
     return o + chapter_end()

@@ -32,6 +32,7 @@ def ch6():
 <div class="step"><div class="num">4</div><div><h4>The guarantee: remove the risk</h4><p><em>"If you go through this and feel it was not worth every cent, email me within 7 days for a full refund. No questions asked."</em></p></div></div>
 <div class="step"><div class="num">5</div><div><h4>The CTA: tell him or her exactly what to do next</h4><p><em>"Click the button below and get instant access."</em></p></div></div>
 {WS('Write your one-page offer description', [("Line 1: the hook", 2), ("Line 2: the promise", 2), ("Line 3: what is included", 2), ("Line 4: the guarantee", 2), ("Line 5: the CTA", 1)])}
+{NOTES(6)}
 {RECAP('CHAPTER SIX', 'You have a reason for them to buy.', ['My complete offer stack is written: Yes / Not yet', 'My one-page offer description is drafted: Yes / Not yet', 'One thing I will strengthen before launching:'])}
 '''
     return o + chapter_end()

@@ -22,7 +22,15 @@ def title_page():
   <div style="position:absolute;left:0;right:0;bottom:0;height:290px;overflow:hidden;display:flex;align-items:flex-end">{art.landscape(1, sun=False)}</div></section>'''
 
 def copyright_page():
-    return f'''<section class="plain flow" style="break-before:page;min-height:8.65in"><div style="padding-top:4.6in;font:500 8.8pt/1.6 'Inter';color:#3E4C44">
+    return f'''<section class="plain" style="break-before:page">
+ <div style="position:relative;border-radius:20px;overflow:hidden;background:#07200F;height:4.55in">
+  <div style="position:absolute;left:0;right:0;bottom:-70px">{art.landscape(1, sun=True)}</div>
+  <div style="position:absolute;left:0;right:0;top:34px;text-align:center">
+   <div style="display:inline-flex;align-items:center;gap:9px"><div style="width:26px;height:26px;border-radius:7px;background:#C9FF48;color:#0A2A1B;font:900 17px/26px 'Inter Display'">5</div><span style="font:800 7.5pt 'Inter';letter-spacing:.28em;color:#E9FFB0">THE5TH GLOBAL CONSULTING</span></div>
+   <div style="font:900 40px/1 'Inter Display';letter-spacing:-.03em;color:#fff;margin-top:22px">EXPERTISE <span style="color:#C9FF48">TO INCOME</span></div>
+   <div style="font:italic 12pt/1.4 'Bitstream Charter',serif;color:#E6F5D0;margin-top:12px">Stop selling your time. Start building an asset.</div>
+  </div></div>
+ <div style="margin-top:.35in;font:500 8.8pt/1.6 'Inter';color:#3E4C44">
  <p><strong>Expertise to Income: The 10K Roadmap Workbook</strong></p>
  <p>Copyright © 2026 The5th Consulting. All rights reserved. No part of this workbook may be reproduced by any mechanical, photographic, or electronic process, or stored in a retrieval system, transmitted, or otherwise copied for public or private use without prior written permission of the publisher.</p>
  <p>This publication is designed to provide accurate and authoritative information regarding the subject matter covered. The authors make no guarantees about the results you will achieve by reading this book. All business requires risk and hard work. Your results may vary. Examples and client stories are shared to illustrate ideas and are not a promise or guarantee of income.</p>
@@ -87,8 +95,11 @@ def intro():
 {P("Instead, I showed up as exactly who I was: an Indian entrepreneur who had failed, learned, invested over $16,000 of his own money into education, and slowly figured it out. My clients, most of them men and women over 45 starting their first online business from scratch, did not care where I was from. They cared that I understood their fear of being seen. Their fear of technology. Their fear of failing at something they had dreamed about for years.", "By the end of 2024, I had served 20+ clients. I hit my first $10K month. Not with ads. Not with a big team. Just with clarity, story, and a simple system.")}
 {H3('Why this workbook exists')}
 {P("This workbook is everything I wish I had in 2016, or 2020, or 2022. It is the blueprint I have built and refined through years of failure, through real client breakthroughs, through late nights and honest conversations.", "It is for the coach who is tired of trading time for money. The consultant sitting on expertise they have not yet packaged. The healer who knows they can help more people but has no system to reach them. The person over 40 who thinks they started too late. The entrepreneur who has been told no one will trust them.", "This workbook will prove them all wrong. Chapter by chapter, exercise by exercise, decision by decision.")}
-{CALL('The route ahead', 'Nine stops. Each one builds on the last. You will find your why, diagnose where you are, learn how assets work, choose your person, build your product and offer, create content, launch, and then learn the mindset that keeps it going.')}
+</div>
+<div style="break-before:page">{H2('The route ahead')}
+{LEAD("Nine stops. Each one builds on the last. You will find your why, diagnose where you are, learn how assets work, choose your person, build your product and offer, create content, launch, and then learn the mindset that keeps it going.")}
 {FIG(D.roadmap_glance(), 'Your roadmap: nine stops from "why" to a business that lasts')}
+{PULL('If you can send an email, you can do this.')}
 <p style="font-style:italic;margin-top:14px">Let us begin.<br>— Indrodip Ghosh</p>
 </div>'''
     return pre + body

@@ -29,6 +29,7 @@ def ch1():
 {FIG(D.sunrise())}
 {WS('My 12-month vision in one sentence', [("In 12 months from today, my life and business look like this...", 4)])}
 {CALL('Do this every morning', "Read that sentence every morning for the next 30 days. Before you open social media. Before you check your email. Let it orient your day.")}
+{NOTES(1)}
 {RECAP('CHAPTER ONE', 'You have your WHY.', ['My Layer 3 why, what I am truly fighting for:', 'My minimum income non-negotiable: $', 'My 12-month vision:'])}
 '''
     return o + chapter_end()

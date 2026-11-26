@@ -39,6 +39,7 @@ def ch4():
 {P("Tick any that sound like you:")}
 {CHK(["My ideal client is 'anyone who wants to make more money'", "I do not want to exclude certain age groups or genders", "My product could work for coaches AND consultants AND healers AND freelancers", "I am scared to niche down because it feels limiting", "My content topics change every week depending on what I think people want"])}
 {CALL('The truth about niching down', "Choosing ONE person does not mean you will only ever work with one type of person. It means your MARKETING speaks to one person clearly. In reality, when your message is clear and specific, it often attracts a wider audience than a vague, generic message ever would.", "The specialist always earns more than the generalist. Choose your person. Speak to him or her. Watch what happens.")}
+{NOTES(4)}
 {RECAP('CHAPTER FOUR', 'You know exactly who you are building for.', ["My One Person's name is:", 'His/Her biggest problem is:', 'He/She hangs out most on:', 'My bridge statement:'])}
 '''
     return o + chapter_end()

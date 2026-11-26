@@ -109,6 +109,7 @@ def ch8():
 {STEP(2,'Ask for a testimonial', "Message your first three buyers and ask: 'Could you share one sentence about what the workbook gave you? I would love to use it on my product page.'")}
 {STEP(3,'Plan your next product', "What is the natural next step for someone who bought your first product? That is your next offer. It can be a follow-up call, a higher-priced course, or a done-for-you service.")}
 {PULL('That is how $10K months are built. Not in one brilliant launch. In ten imperfect ones that get better every time.')}
+{NOTES(8)}
 {RECAP('CHAPTER EIGHT', 'You launched. Now keep going.', ['All 7 days of content posted: Yes / Not yet', 'Personal messages sent to 10 warm contacts: Yes / Not yet', 'First sale logged and buyer followed up: Yes / Not yet', 'Week 1 numbers reviewed and one adjustment made: Yes / Not yet', 'Next product idea identified:'])}
 '''
     return o + chapter_end()

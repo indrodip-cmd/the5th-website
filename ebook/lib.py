@@ -26,24 +26,31 @@ def trail_svg(n, w=190, h=16):
 def page_rules():
     r = []
     for n in range(1, 10):
-        r.append(f'@page ch{n} {{ @bottom-center {{ content: url("{trail_svg(n)}"); vertical-align: middle; }} }}')
+        r.append(f'@page ch{n} {{ @bottom-center {{ content: url("{trail_svg(n)}"); vertical-align: top; padding-top: .3in; background: linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in); }} }}')
     return '\n'.join(r)
 
 CSS = '''
-@page { size: 7in 10in; margin: 0.4in 0.4in 0.95in 0.4in; background: #DCE9D0;
-  @bottom-left { content: counter(page); font: 700 8.5pt 'Inter'; color: #5C6B62; vertical-align: middle; }
-  @bottom-right { content: "EXPERTISE TO INCOME"; font: 800 6.5pt 'Inter'; letter-spacing: .22em; color: #9FB3A7; vertical-align: middle; }
+@page { size: 7in 10in; margin: 0.95in 0.95in 1.1in 0.95in; background: #FFFDF7;
+  @top-left-corner { content: ""; background: radial-gradient(circle at 100% 100%, #FFFDF7 .2in, #DCE9D0 calc(.2in + .5px)) 0 0 / .55in .55in no-repeat, linear-gradient(to bottom, #DCE9D0 .35in, #FFFDF7 .35in) .55in 0 / calc(100% - .55in) 100% no-repeat, linear-gradient(to right, #DCE9D0 .35in, #FFFDF7 .35in) 0 .55in / .55in calc(100% - .55in) no-repeat, #FFFDF7; }
+  @top-right-corner { content: ""; background: radial-gradient(circle at 0% 100%, #FFFDF7 .2in, #DCE9D0 calc(.2in + .5px)) 100% 0 / .55in .55in no-repeat, linear-gradient(to bottom, #DCE9D0 .35in, #FFFDF7 .35in) 0 0 / calc(100% - .55in) 100% no-repeat, linear-gradient(to left, #DCE9D0 .35in, #FFFDF7 .35in) 100% .55in / .55in calc(100% - .55in) no-repeat, #FFFDF7; }
+  @top-center { content: ""; background: linear-gradient(to bottom, #DCE9D0 .35in, #FFFDF7 .35in); }
+  @left-middle { content: ""; background: linear-gradient(to right, #DCE9D0 .35in, #FFFDF7 .35in); }
+  @right-middle { content: ""; background: linear-gradient(to left, #DCE9D0 .35in, #FFFDF7 .35in); }
+  @bottom-left-corner { content: ""; background: radial-gradient(circle at 100% 0%, #FFFDF7 .2in, #DCE9D0 calc(.2in + .5px)) 0 100% / .55in .55in no-repeat, linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in) .55in 0 / calc(100% - .55in) 100% no-repeat, linear-gradient(to right, #DCE9D0 .35in, #FFFDF7 .35in) 0 0 / .55in calc(100% - .55in) no-repeat, #FFFDF7; }
+  @bottom-right-corner { content: ""; background: radial-gradient(circle at 0% 0%, #FFFDF7 .2in, #DCE9D0 calc(.2in + .5px)) 100% 100% / .55in .55in no-repeat, linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in) 0 0 / calc(100% - .55in) 100% no-repeat, linear-gradient(to left, #DCE9D0 .35in, #FFFDF7 .35in) 100% 0 / .55in calc(100% - .55in) no-repeat, #FFFDF7; }
+  @bottom-left { content: counter(page); font: 700 8.5pt 'Inter'; color: #5C6B62; vertical-align: top; padding-top: .3in; background: linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in); }
+  @bottom-right { content: "EXPERTISE TO INCOME"; font: 800 6.5pt 'Inter'; letter-spacing: .22em; color: #9FB3A7; vertical-align: top; padding-top: .31in; text-align: right; background: linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in); }
+  @bottom-center { content: ""; background: linear-gradient(to top, #DCE9D0 .35in, #FFFDF7 .35in); }
 }
 @page full { margin: 0; background: #07200F; @bottom-left{content:none} @bottom-right{content:none} @bottom-center{content:none} }
-@page plain { @bottom-left{content:none} @bottom-right{content:none} @bottom-center{content:none} }
+@page plain { @bottom-left{content:""} @bottom-right{content:""} @bottom-center{content:""} }
 ''' + page_rules() + '''
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-html { background: #DCE9D0; }
+html { background: #FFFDF7; }
 .full { z-index: 5; }
 body { font-family: 'Bitstream Charter', 'Charter', Georgia, serif; font-size: 11.2pt; line-height: 1.58; color: #14201A; }
 .full { page: full; width: 7in; height: 10in; position: relative; overflow: hidden; break-after: page; break-before: page; }
 .plain { page: plain; }
-.flow, .pg-break { box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0.5in 0.45in 0.45in; background: #FFFDF7; border-radius: 20px; box-shadow: 0 0 0 1px rgba(12,58,40,.06); }
 .pg-break { break-before: page; }
 h1,h2,h3,h4,.sans { font-family: 'Inter', sans-serif; }
 p { margin: 0 0 .78em; orphans: 3; widows: 3; }
@@ -88,9 +95,7 @@ h3 { font: 800 11.5pt/1.25 'Inter'; color: #0C3A28; margin: 1.2em 0 .4em; break-
 .q:first-of-type { border-top: 0; }
 .q b { font: 700 9.5pt/1.35 'Inter'; color:#14201A; display:block; }
 .q .hint { font: 500 8.3pt/1.35 'Inter'; color:#5C6B62; display:block; margin-top:1px; }
-.ln { height: 22px; border-bottom: 1.2px solid #BFD3C5; }
-.ln.sp { height: 24px; }
-.ws .tight .ln { height: 20px; }
+.ln { height: var(--lh, 22px); border-bottom: 1.2px solid #BFD3C5; }
 .inline-blank { display:inline-block; border-bottom: 1.2px solid #1B7A52; min-width: 120px; height: 1em; vertical-align: -1px; }
 .chk { list-style:none; margin: .6em 0 1em; }
 .chk li { position:relative; padding: 5px 0 5px 30px; font-size: 10.2pt; line-height:1.4; break-inside: avoid; }
@@ -108,7 +113,8 @@ h3 { font: 800 11.5pt/1.25 'Inter'; color: #0C3A28; margin: 1.2em 0 .4em; break-
 .recap .b .row i { flex:1; border-bottom: 1.2px solid #5F9A7C; height: 1em; display:block; min-width: 40px; }
 
 /* ---------- table-ish ---------- */
-.tbl { width:100%; border-collapse: separate; border-spacing: 0; margin: 1em 0; font: 500 9.3pt/1.4 'Inter'; break-inside: avoid; }
+.tbl { width:100%; border-collapse: separate; border-spacing: 0; margin: 1em 0; font: 500 9.3pt/1.4 'Inter'; }
+.tbl tr { break-inside: avoid; }
 .tbl th { background:#0C3A28; color:#C9FF48; text-align:left; padding: 8px 10px; font-weight:800; font-size:8pt; letter-spacing:.14em; text-transform:uppercase; }
 .tbl th:first-child { border-radius: 10px 0 0 0; } .tbl th:last-child { border-radius: 0 10px 0 0; }
 .tbl td { padding: 8px 10px; border-bottom: 1px solid #DCE8E0; background:#fff; vertical-align: top; }

@@ -20,6 +20,7 @@ def ch3():
 {FIG(D.ladder_stairs(), 'The product ladder')}
 {TABLE(['Step','What it does'], [['$7 Ebook','The entry point. Builds trust, delivers a quick win, introduces your method.'],['$27 Mini-course','Goes deeper. Shows them how to implement what the ebook introduced.'],['$47 Toolkit','Done-for-you resources. Templates, swipe files, plug-and-play assets.'],['$10 Call','A low-barrier conversation that converts to high-ticket.'],['$1,000 to $5,000 Coaching','The premium transformation for those who want full support.']])}
 {WS('Where are you on the ladder?', [("Where on this ladder does your expertise naturally fit? Start there.", 3), ("What is one digital product you could create in the next 7 days?", 3), ("What would the next product on your ladder look like after that?", 3)])}
+{NOTES(3)}
 {RECAP('CHAPTER THREE', 'You understand the asset game.', ['My first digital product idea:', 'My entry price point: $', 'The transformation it delivers:'])}
 '''
     return o + chapter_end()

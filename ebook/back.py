@@ -20,14 +20,14 @@ def back():
  <div style="font:500 11pt/1.62 'Bitstream Charter',serif">{P("I did not grow up knowing how to build a business. I just kept trying to solve problems, and failed my way forward.", "I have been the person who heard: 'Indian people are scammers, no one will trust you online.' I believed it, for a time. Then I proved it wrong, client by client, month by month.", "Today, almost all of my clients are men and women over 45, starting their first online business from scratch, in countries I have never visited. No ads. No email lists. Just clarity, honesty, and a system that works.", "And I want that for you, too. Not someday. Now.")}</div>
  <div style="font:800 15pt/1.3 'Inter Display';color:#C9FF48;margin-top:14px">If you are struggling, I see you. You are not broken. You are early.</div></div>
  <div style="position:absolute;left:0;right:0;bottom:0">{art.landscape(9, sun=False)}</div></section>'''
-    letter2 = f'''<div class="flow" style="break-before:page">
+    letter2 = f'''<div class="flow" style="break-before:page;font-size:10.2pt;line-height:1.5">
 {P("You did not just read a workbook. You made a decision. You said yes to yourself, maybe for the first time in a long time. That matters more than you know.")}
 {H2('A free 1-on-1 roadmap call with Indrodip')}
 {P("Because you finished this book, I am personally offering you something I do not advertise publicly.")}
 {CALL('No pitch. No pressure. No sales team.', "Just you and me on a real call, where I will look at your situation, your expertise, and your goals, and personally build your $10K roadmap with you. Step by step. Specific to your life.", "This is the same call my paying clients begin with. You get it free, because you did the work of getting here.")}
 {NOTE('How to claim it', "<strong>1. Send an email to:</strong> indrodip@10kroadmap.org", "<strong>2. Use this exact subject line:</strong> “I READ THE BOOK: I’M READY FOR MY ROADMAP”", "<strong>3. In the email, tell me:</strong> where you are right now in your business journey, what you most want to build or launch, and the one thing holding you back.")}
 {P("Spots are limited. I read every email myself. This is not a funnel. This is a real conversation with a real person who has been where you are.")}
-{PULL('You have already done the hardest part. You started. Now let me help you finish.')}
+<p style="font:800 12pt/1.35 'Inter Display';color:#0C3A28">You have already done the hardest part. You started. Now let me help you finish.</p>
 <p style="font-style:italic">With you, always,<br><strong style="font-style:normal">Indrodip Ghosh</strong><br><span style="font:500 9pt Inter;color:#5C6B62;font-style:normal">indrodip@10kroadmap.org | www.10kroadmap.org<br>Written together with Christinee Mathison: equal partner, equal voice, equal belief in you.</span></p></div>'''
     about = f'''<div class="flow" style="break-before:page"><span style="font-size:1px;color:transparent;position:absolute">@@about@@</span><div class="kicker">The people behind the pages</div>{H2('About the authors')}
 <div style="display:flex;flex-direction:column;gap:18px">

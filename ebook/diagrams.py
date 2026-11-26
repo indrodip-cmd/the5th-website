@@ -91,7 +91,7 @@ def leaky_bucket():
     o = ['<path d="M205 40 H435 L410 250 Q320 272 230 250 Z" fill="#DCEBF2" stroke="#0C3A28" stroke-width="5" stroke-linejoin="round"/>',
          '<path d="M215 120 H425 L410 250 Q320 272 230 250 Z" fill="#7FD1AE" opacity=".9"/>',
          '<ellipse cx="320" cy="40" rx="115" ry="14" fill="#F2FFFD" stroke="#0C3A28" stroke-width="5"/>']
-    for x, y, t in [(222, 150, 'Unused tools'), (422, 190, 'Time on non-revenue tasks'), (236, 214, 'Under-priced services')]:
+    for x, y, t in [(222, 150, 'Unused tools'), (422, 190, 'Time on non-revenue tasks'), (236, 214, 'Underpriced services')]:
         left = x < 320
         o.append(f'<circle cx="{x}" cy="{y}" r="6" fill="#0C3A28"/>')
         for k in range(3):
@@ -176,15 +176,15 @@ def bridge():
 
 # ---------- Ch5 ----------
 def price_steps():
-    items = [('$7', 'removes every|financial objection', 70), ('$27', 'mini-courses|and toolkits', 108), ('$47', 'comprehensive|guides', 146), ('$97', 'full courses,|done-for-you', 184)]
+    items = [('$7', 'removes every|financial objection', 96), ('$27', 'mini-courses|and toolkits', 128), ('$47', 'comprehensive|guides', 160), ('$97', 'full courses,|done-for-you', 192)]
     o = []
     for i, (p, d, h) in enumerate(items):
-        x = 20 + i * 150; y = 232 - h
+        x = 20 + i * 150; y = 236 - h
         o.append(rr(x, y, 128, h, 14, [LIME, '#B7E36A', '#8ACD2E', '#5DB521'][i]))
-        o.append(txt(x + 64, y + 38, p, 30, '#0A2A1B', 900, fam='Inter Display'))
-        for j, l in enumerate(d.split('|')): o.append(txt(x + 64, y + 58 + j * 12, l, 9.3, '#17391F', 700))
-    o.append(txt(320, 262, 'The first product is not about getting rich. It is about getting buyers.', 11, '#5C6B62', 700))
-    return wrap(278, ''.join(o))
+        o.append(txt(x + 64, y + 40, p, 30, '#0A2A1B', 900, fam='Inter Display'))
+        for j, l in enumerate(d.split('|')): o.append(txt(x + 64, y + 62 + j * 13, l, 9.3, '#17391F', 700))
+    o.append(txt(320, 266, 'The first product is not about getting rich. It is about getting buyers.', 11, '#5C6B62', 700))
+    return wrap(282, ''.join(o))
 
 def offer_stack():
     o = []

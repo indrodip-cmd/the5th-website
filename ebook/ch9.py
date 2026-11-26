@@ -37,6 +37,7 @@ def ch9():
 {H2('When to Scale, When to Simplify, and When to Reassess', 5)}
 {FIG(D.traffic())}
 {WS('Where are you right now?', [("Based on the table above, which phase are you in? (Scale / Simplify / Reassess)", 1), ("What does that mean for your next 30 days?", 2), ("The one thing I am going to STOP doing that is not serving my business:", 2), ("The one thing I am going to focus on completely for the next 30 days:", 2)])}
+{NOTES(9)}
 {RECAP('CHAPTER NINE', 'You have the resilience to last.', ['My one focus for the next 30 days:', 'My morning ritual time is set:', 'My doubt response plan is written: Yes / Not yet'])}
 '''
     return o + chapter_end()

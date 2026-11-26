@@ -33,6 +33,7 @@ def ch5():
 {CHK(["Making it too long. Your buyer needs the 20 pages that get the result, not 200.", "Trying to cover everything. Pick ONE problem and solve it completely.", "Waiting until it is perfect. 'Good enough and launched' beats 'perfect and never shipped'.", "Pricing too low out of fear. $0 signals no value; $7 signals 'this is real and worth your time'.", "Choosing a format you hate creating.", "No clear outcome. If you cannot say in one sentence what your buyer will DO after it, it is not focused enough.", "Skipping the title. A clear, curiosity-provoking title sells products."])}
 {H2("The MVP Checklist: What 'Done Enough' Looks Like", 6)}
 {CHK(done=True, items=["It delivers the ONE specific outcome promised in the title", "It is designed for your One Person, not for everyone", "Every section earns its place (no filler, no padding)", "It has been read or watched through once from start to finish", "The design is clean and readable", "There is a clear next step at the end", "You would be proud to show it to your ideal client today"])}
+{NOTES(5)}
 {RECAP('CHAPTER FIVE', 'You have something to sell.', ['My product format:', 'My product title:', 'My one-sentence sales promise:', 'My price: $          My launch deadline:'])}
 '''
     return o + chapter_end()

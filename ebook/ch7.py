@@ -42,6 +42,7 @@ def ch7():
 {CARD('book','Use long-form posts or videos when...','You want to build DEEP TRUST with people who already follow you. You are teaching a framework, sharing a story, or making an offer.',True)}
 </div>
 {CALL('The winning formula', "Post one reel per day to attract new eyes.", "Write 2 to 3 long captions or videos per week to convert those eyes into buyers.")}
+{NOTES(7)}
 {RECAP('CHAPTER SEVEN', 'You have a voice in the market.', ['I understand the Story, Lesson, CTA formula: Yes / Not yet', 'I have planned my first 7 days of content: Yes / Not yet', 'I have drafted my 5 selling-without-selling posts: Yes / Not yet', 'My biggest insight from this chapter:'])}
 '''
     return o + chapter_end()

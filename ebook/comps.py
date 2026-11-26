@@ -47,11 +47,29 @@ def WS(title, qs, cls=''):
         out.append(f'<div class="q"><b>{sq(question)}</b>{"<span class=hint>"+sq(hint)+"</span>" if hint else ""}{LN(lines)}</div>')
     out.append('</div>'); return ''.join(out)
 
+def NOTES(n):
+    import json, os
+    h = json.load(open('/tmp/notes.json')).get(str(n), 0) if os.path.exists('/tmp/notes.json') else 0
+    if h < 90: return ''
+    return (f'<div class="ws" style="margin-top:1.2em"><div class="hd">{icon("pen", 16, "#C9FF48", 3)}Notes and reflections</div>'
+            f'<div style="height:{int(h)-34}px;background:repeating-linear-gradient(to bottom,#fff 0,#fff 27px,#BFD3C5 27px,#BFD3C5 28px);padding:0"></div></div>')
+
 def WRITE(label, lines=2): return f'<div class="write"><b>{sq(label)}</b>{LN(lines)}</div>'
 
+_NUM = {'ONE':1,'TWO':2,'THREE':3,'FOUR':4,'FIVE':5,'SIX':6,'SEVEN':7,'EIGHT':8,'NINE':9}
 def RECAP(chapter_word, line, rows):
-    rs = ''.join(f'<div class="row"><span>{sq(l)}</span><i></i></div>' for l in rows)
-    return f'<div class="recap"><div class="h">{icon("flag", 30, "#C9FF48")}<div><div class="big">{chapter_word} COMPLETE.</div><div class="sub">{sq(line)}</div></div></div><div class="b">{rs}</div></div>'
+    n = _NUM[chapter_word.split()[-1]]
+    rs = ''.join(f'<div style="margin-top:20px"><div style="font:700 9.5pt/1.3 Inter;color:#0C3A28">{sq(l)}</div><div style="border-bottom:1.5px solid #9BC7A9;height:26px"></div></div>' for l in rows)
+    nxt = (f'NEXT STOP: {CHAPTERS[n].upper()}' if n < 9 else 'YOU HAVE REACHED THE END OF THE ROAD. NOW BUILD.')
+    return f'''<section class="full" style="background:linear-gradient(180deg,#07200F 0%,#0C3A28 55%,#07200F 100%)">
+  <div style="position:absolute;left:0;right:0;top:0;padding:64px 56px 0">
+    <div style="display:flex;align-items:center;gap:12px;font:800 9pt 'Inter';letter-spacing:.3em;color:#C9FF48">STOP {n} OF 9 <span style="flex:1;height:2px;background:linear-gradient(90deg,#C9FF48,transparent)"></span></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:18px"><div style="flex:0 0 54px;height:54px;border-radius:50%;background:#C9FF48;display:flex;align-items:center;justify-content:center">{icon('flag', 28, '#0A2A1B')}</div><div><div style="font:900 34px/1 'Inter Display';letter-spacing:-.025em;color:#fff">{chapter_word} COMPLETE.</div><div style="font:600 12pt 'Inter';color:#C9FF48;margin-top:6px">{sq(line)}</div></div></div>
+    <div style="margin-top:24px;background:#FFFDF7;border-radius:20px;padding:20px 26px 28px;color:#14201A"><div style="font:800 8pt Inter;letter-spacing:.22em;color:#1B7A52">WRITE IT DOWN BEFORE YOU TURN THE PAGE</div>{rs}</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0">{landscape(min(n+1, 9))}
+    <div style="position:absolute;left:40px;right:40px;bottom:30px;text-align:center;font:800 10pt/1.3 'Inter Display';letter-spacing:.06em;color:#0A2A1B;background:#C9FF48;border-radius:14px;padding:11px 16px">{nxt}</div></div>
+</section>'''
 
 def STEP(n, title, *paras, why=''):
     return f'<div class="step"><div class="num">{n}</div><div><h4>{sq(title)}</h4>{P(*paras)}{"<p class=why>"+sq(why)+"</p>" if why else ""}</div></div>'
@@ -80,7 +98,9 @@ def chapter_open(n, word, title, author, quote, qby, promise):
 </section>'''
 
 def chapter_start(n):
-    return f'<div class="flow" style="page:ch{n};break-before:page">'
+    import json, os
+    lh = json.load(open('/tmp/lh.json')).get(str(n), 22) if os.path.exists('/tmp/lh.json') else 22
+    return f'<div class="flow" style="page:ch{n};break-before:page;--lh:{lh}px">'
 def chapter_end(): return '</div>'
 
 def section_page(kicker, title, sub, art_html='', dark=True, tokk=''):

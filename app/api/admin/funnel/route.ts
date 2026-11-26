@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
   const plans = [FRONT_BOOK.planId, bump()?.bundlePlanId || ''].filter(Boolean)
   const revenue = { orders: 0, gross: 0, bumpOrders: 0 }
   const revByDay: Record<string, number> = {}
+  const revByVariant: Record<string, { orders: number; revenue: number }> = {}
   if (plans.length) {
     const { data: rev } = await db.from('revenue_events').select('amount,type,meta,occurred_at').eq('type', 'sale').gte('occurred_at', since).limit(20000)
     for (const r of rev || []) {
@@ -35,6 +36,8 @@ export async function GET(req: NextRequest) {
       revenue.orders++; revenue.gross += Number(r.amount) || 0
       if (pid === bump()?.bundlePlanId) revenue.bumpOrders++
       const d = String(r.occurred_at).slice(0, 10); revByDay[d] = (revByDay[d] || 0) + (Number(r.amount) || 0)
+      const exp = String(((r.meta as Record<string, unknown>)?.checkout_meta as Record<string, unknown> | undefined)?.exp || '')
+      for (const part of exp.split(',')) if (part) { const v = (revByVariant[part] ||= { orders: 0, revenue: 0 }); v.orders++; v.revenue += Number(r.amount) || 0 }
     }
   }
 
@@ -88,7 +91,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     days, generatedAt: new Date().toISOString(),
     summary: { ...fin(total), orders: revenue.orders, revenue: Math.round(revenue.gross * 100) / 100, aov: revenue.orders ? Math.round((revenue.gross / revenue.orders) * 100) / 100 : 0, revenuePerVisitor: visitors ? Math.round((revenue.gross / visitors) * 100) / 100 : 0, bumpTakeRate: revenue.orders ? revenue.bumpOrders / revenue.orders : 0 },
-    variants: table(by.variant), devices: table(by.device), sources: table(by.source),
+    variants: table(by.variant).map((v) => ({ ...v, orders: revByVariant[v.key]?.orders || 0, revenue: Math.round((revByVariant[v.key]?.revenue || 0) * 100) / 100, revenuePerVisitor: v.visitors ? Math.round(((revByVariant[v.key]?.revenue || 0) / v.visitors) * 100) / 100 : 0 })), devices: table(by.device), sources: table(by.source),
     ctaWhere: Object.entries(clicks).sort((a, b) => b[1] - a[1]).map(([where, n]) => ({ where, clicks: n })),
     sections: Object.entries(sections).map(([section, s]) => ({ section, visitors: s.size, reach: visitors ? s.size / visitors : 0 })).sort((a, b) => b.visitors - a.visitors),
     revenueByDay: Object.entries(revByDay).sort(([a], [b]) => a.localeCompare(b)).map(([date, amount]) => ({ date, amount })),

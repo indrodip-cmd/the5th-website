@@ -250,7 +250,7 @@ export function FloatingBuy() {
     // hide the pill whenever another buy button is already on screen
     const seen = new Set<Element>()
     const b = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target) }); nearCta = seen.size; upd() }, { threshold: 0.2 })
-    document.querySelectorAll('a[href="' + BOOK_CHECKOUT_PATH + '"]:not(.bk-float), #bk-final').forEach((el) => b.observe(el))
+    document.querySelectorAll('a[href="' + BOOK_CHECKOUT_PATH + '"]:not(.bk-float), #bk-final, #checkout').forEach((el) => b.observe(el))
     return () => { a.disconnect(); b.disconnect() }
   }, [])
   return (

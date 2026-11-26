@@ -33,6 +33,9 @@ export interface Product {
    process.env[name] lookup would be empty in the browser bundle). */
 const t = (v: string | undefined) => (v || '').trim()
 
+/* Whop plan for the $4.99 ebook. Overridable from Vercel, defaults to the live plan. */
+export const BOOK_PLAN_ID = t(process.env.NEXT_PUBLIC_WHOP_BOOK_PLAN_ID) || 'plan_5NarkWSueUFxr'
+
 export const FRONT_BOOK: Product = {
   slug: 'expertise-to-income',
   kind: 'front',
@@ -41,7 +44,7 @@ export const FRONT_BOOK: Product = {
   price: 4.99,
   path: '/book',
   checkoutPath: '/book/checkout',
-  planId: t(process.env.NEXT_PUBLIC_WHOP_BOOK_PLAN_ID),
+  planId: BOOK_PLAN_ID,
   active: true,
   image: '/images/book/book-3d.webp',
 }

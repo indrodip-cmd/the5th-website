@@ -5,7 +5,7 @@ type Row = { key: string; visitors: number; cta: number; checkout: number; purch
 type Data = {
   days: number; generatedAt: string
   summary: Row & { orders: number; revenue: number; aov: number; revenuePerVisitor: number; bumpTakeRate: number }
-  variants: Row[]; devices: Row[]; sources: Row[]
+  variants: (Row & { orders?: number; revenue?: number; revenuePerVisitor?: number })[]; devices: Row[]; sources: Row[]
   ctaWhere: { where: string; clicks: number }[]; sections: { section: string; visitors: number; reach: number }[]
   revenueByDay: { date: string; amount: number }[]
   notes: { planIdsConfigured: boolean; revenueSource: string }
@@ -61,6 +61,10 @@ export default function FunnelAdmin() {
         </div>
         <div style={{ display: 'grid', gap: 14 }}>
           {table('A/B variants', 'Each row is one variant of one experiment (headline / cta / theme). Compare rows with the same prefix. Wait for roughly 100+ visitors per variant and a clear gap before calling a winner.', d.variants)}
+          <div style={box}>
+            <div style={{ fontWeight: 800, fontSize: 16 }}>Revenue by variant</div><div style={{ color: '#6b7280', fontSize: 12.5, margin: '2px 0 10px' }}>Server-confirmed orders, attributed through the checkout metadata. Pick winners on revenue per visitor.</div>
+            {d.variants.map((v) => <div key={v.key} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '8px 0', borderBottom: '1px solid #f1f2f4', fontSize: 14 }}><strong>{v.key}</strong><span>{v.orders || 0} orders · {usd(v.revenue || 0)} · <strong>{usd(v.revenuePerVisitor || 0)}</strong> / visitor</span></div>)}
+          </div>
           {table('Device', 'Mobile vs tablet vs desktop', d.devices)}
           {table('Traffic source', 'First-touch UTM source, or referring site, or direct', d.sources)}
           <div style={box}>

@@ -1,3 +1,5 @@
+import { BOOK_PLAN_ID } from '@/lib/funnel/products'
+
 /* Sales-page config for the "Expertise to Income" ebook ($4.99).
    Everything here is a claim the page makes, so it lives in one place.
    - Price and guarantee length are business decisions: confirm before launch.
@@ -7,10 +9,13 @@ export const BOOK_PRICE = { amount: 4.99, label: '$4.99', currency: 'USD' } as c
 export const BOOK_PAGES = 104
 export const BOOK_CHAPTERS = 9
 export const BOOK_GUARANTEE_DAYS = 365
-export const BOOK_CHECKOUT_PATH = '/book/checkout'
+/* Primary buy buttons scroll to the checkout embedded on the page itself
+   (no page load between "yes" and the payment form). /book/checkout still
+   exists as a standalone fallback. */
+export const BOOK_CHECKOUT_PATH = '#checkout'
 
 export function bookPlanId(): string {
-  return process.env.NEXT_PUBLIC_WHOP_BOOK_PLAN_ID || ''
+  return BOOK_PLAN_ID
 }
 
 export const BOOK_TITLE = 'Expertise to Income'

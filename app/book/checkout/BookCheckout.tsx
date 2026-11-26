@@ -4,34 +4,12 @@
    form). The Whop plan must be a digital-download plan that delivers the PDF;
    set NEXT_PUBLIC_WHOP_BOOK_PLAN_ID. If it is not set, the page says so
    instead of showing a dead form. */
-import { useEffect, useState } from 'react'
-import { Checkout, CheckoutElement, WhopElements } from '@whop/elements-react'
-import { loadWhop } from '@whop/elements'
+import CheckoutPanel from '../CheckoutPanel'
 import { T } from '../../10k-roadmap/config'
 import { Fonts, Header, Reveal, StepLegal } from '../../10k-roadmap/ui'
-import { ftrack, ftrackOnce } from '../funnel'
-import { bump } from '@/lib/funnel/products'
-import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_TITLE, BOOK_SUBTITLE, BOOK_GUARANTEE_DAYS, bookPlanId } from '../config'
-
-const PAYMENT_LOGOS = [
-  { name: 'Visa', src: '/images/payment/visa.png', h: 15 },
-  { name: 'Mastercard', src: '/images/payment/mastercard.png', h: 22 },
-  { name: 'American Express', src: '/images/payment/amex.png', h: 26 },
-  { name: 'Cash App', src: '/images/payment/cashapp.png', h: 18 },
-]
-
-function Lock() {
-  return <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><rect x="4" y="11" width="16" height="9" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-}
+import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_TITLE, BOOK_SUBTITLE, BOOK_GUARANTEE_DAYS } from '../config'
 
 export default function BookCheckout() {
-  const planId = bookPlanId()
-  const b = bump()
-  const [withBump, setWithBump] = useState(false)
-  const activePlan = withBump && b ? b.bundlePlanId : planId
-  const total = withBump && b ? b.total : BOOK_PRICE.amount
-  useEffect(() => { ftrackOnce('checkout', 'book_checkout_view', { value: BOOK_PRICE.amount, currency: BOOK_PRICE.currency }) }, [])
-
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
@@ -58,63 +36,12 @@ export default function BookCheckout() {
           </Reveal>
 
           <Reveal delay={0.06}>
-            <div style={{ background: T.surface, border: `1px solid ${T.lineStrong}`, borderRadius: 20, padding: 'clamp(20px,3vw,28px)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18 }}>
-                <span style={{ fontWeight: 700, fontSize: 15 }}>Total today</span>
-                <span className="rm-serif" style={{ fontSize: 30 }}>${total.toFixed(2)}</span>
-              </div>
-              {!planId ? (
-                <p style={{ margin: 0, padding: 16, borderRadius: 12, background: 'rgba(229,88,74,.1)', border: '1px solid rgba(229,88,74,.35)', color: T.text, fontSize: 14.5, lineHeight: 1.6 }}>
-                  Checkout for this book is being switched on. Please check back shortly, or email us and we will send you the book directly.
-                </p>
-              ) : (
-                <>
-                  {b && (
-                    <label style={{ display: 'flex', gap: 14, alignItems: 'flex-start', padding: 16, marginBottom: 16, borderRadius: 14, cursor: 'pointer', border: `2px dashed ${withBump ? T.accent : T.lineStrong}`, background: withBump ? T.accentSoft : 'rgba(255,255,255,.03)', transition: 'all .2s' }}>
-                      <input type="checkbox" checked={withBump} onChange={(e) => { setWithBump(e.target.checked); ftrack('book_bump_toggle', { on: e.target.checked, value: b.price }) }} style={{ width: 22, height: 22, marginTop: 2, accentColor: '#C9FF48', flexShrink: 0 }} />
-                      <span style={{ fontSize: 15, lineHeight: 1.5 }}>
-                        <strong style={{ color: T.text }}>Yes, add {b.name} for just ${b.price.toFixed(2)} more.</strong>
-                        {b.tagline && <span style={{ display: 'block', color: T.text2, marginTop: 4, fontSize: 14 }}>{b.tagline}</span>}
-                      </span>
-                    </label>
-                  )}
-                  <WhopEmbed key={activePlan} planId={activePlan} total={total} />
-                </>
-              )}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 18, paddingTop: 16, borderTop: `1px solid ${T.line}` }}>
-                {PAYMENT_LOGOS.map((l) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={l.name} src={l.src} alt={l.name} style={{ height: l.h, width: 'auto' }} />
-                ))}
-              </div>
-              <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, textAlign: 'center', fontSize: 11.5, color: T.text3, marginTop: 10, lineHeight: 1.5 }}>
-                <Lock /> 256-bit SSL encrypted · 3D Secure authentication · Powered by Whop
-              </p>
-            </div>
+            <CheckoutPanel viewEvent="mount" />
           </Reveal>
         </div>
       </main>
       <StepLegal />
       <style>{`@media(max-width:960px){.bc-grid{grid-template-columns:1fr!important;max-width:600px;margin:0 auto}}`}</style>
-    </div>
-  )
-}
-
-function WhopEmbed({ planId, total }: { planId: string; total: number }) {
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://the5thglobal.consulting'
-  return (
-    <div style={{ minHeight: 110, background: '#fff', borderRadius: 12, overflow: 'hidden' }}>
-      <WhopElements elements={loadWhop()}>
-        <Checkout
-          plan={planId}
-          returnUrl={`${origin}/book/thank-you`}
-          onComplete={(completion) => {
-            if (completion.result === 'payment') ftrackOnce('paid', 'book_payment_success', { value: total, currency: BOOK_PRICE.currency })
-          }}
-        >
-          <CheckoutElement />
-        </Checkout>
-      </WhopElements>
     </div>
   )
 }

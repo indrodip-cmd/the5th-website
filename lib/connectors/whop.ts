@@ -318,6 +318,6 @@ export function normalizeWhopEvent(body: Record<string, unknown>): RevenueEvent 
     amount,
     currency: usd ? 'USD' : String(d.currency || 'usd').toUpperCase(),
     occurred_at: whopDate(d.paid_at || d.created_at),
-    meta: { action, name: user.name, plan_id: String((d.plan as Record<string, unknown>)?.id || d.plan_id || '') || undefined },
+    meta: { action, name: user.name, plan_id: String((d.plan as Record<string, unknown>)?.id || d.plan_id || '') || undefined, checkout_meta: (d.metadata && typeof d.metadata === 'object') ? d.metadata : undefined },
   }
 }

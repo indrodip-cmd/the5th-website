@@ -11,6 +11,7 @@ import { ftrack, ftrackOnce } from './funnel'
 import type { Assignment } from '@/lib/funnel/experiments'
 import { DEFAULTS } from '@/lib/funnel/experiments'
 import { DIAGRAMS } from './diagrams'
+import CheckoutPanel from './CheckoutPanel'
 import { SectionTracker, LeadMagnet, ScrollBar, SpotlightLayer, TiltBook, Magnetic, PainCheck, ChapterExplorer, Flipbook, SlideToBuy, ProgressChip, RoadmapBuilder } from './Interactive'
 import { CountUp, HourMath, TryChapter, TwoPaths, Timeline30, Objections, FloatingBuy, Icon } from './Graphics'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE, PAINS, OUTCOMES, COMPARE, CLIENTS_SERVED } from './config'
@@ -435,6 +436,35 @@ export default function BookLanding({ exp }: { exp?: Assignment }) {
               </div>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ── Checkout, embedded: the form is on the page, not a click away ── */}
+      <section id="checkout" data-sec="checkout" className="th-dark" style={{ ...SEC, background: 'radial-gradient(60% 70% at 50% 0%, rgba(var(--limeRGB),.12), transparent 70%), var(--bg)', scrollMarginTop: 80 }}>
+        <div style={WRAP}>
+          <Reveal><Head eyebrow="Get it now" title={<>Get <span className="rm-mark">Expertise to Income</span> in the next two minutes</>} sub={`Instant PDF download, then read Chapter 1 tonight. Covered by a ${BOOK_GUARANTEE_DAYS}-day money-back guarantee, which means a full year.`} /></Reveal>
+          <div className="bk-2" style={{ marginTop: 40, alignItems: 'start' }}>
+            <Reveal>
+              <div className="bk-spot" style={{ ...CARD, padding: 'clamp(20px,3vw,30px)' }}>
+                <div style={{ display: 'flex', gap: 18, alignItems: 'center', marginBottom: 20 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/book/cover.webp" alt={`${BOOK_TITLE} cover`} loading="lazy" width={96} height={137} style={{ width: 96, height: 'auto', borderRadius: 6, boxShadow: '0 16px 30px -14px rgba(0,0,0,.7)', flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontFamily: T.serif, fontWeight: 800, fontSize: 21, lineHeight: 1.2 }}>{BOOK_TITLE}</div>
+                    <div style={{ color: T.text3, fontSize: 13.5, margin: '4px 0 8px' }}>{BOOK_SUBTITLE} · {BOOK_PAGES} pages · PDF</div>
+                    <div className="rm-serif" style={{ fontSize: 34 }}>{BOOK_PRICE.label}</div>
+                  </div>
+                </div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 12, fontSize: 15.5, lineHeight: 1.5 }}>
+                  {[`All ${BOOK_CHAPTERS} chapters and every worksheet`, 'The 7-day launch plan with message scripts', 'A 30-day content map and 5 posts that sell', `${BOOK_GUARANTEE_DAYS}-day money-back guarantee (a full year)`, 'Read on any device, or print it and write in it'].map((t) => (
+                    <li key={t} style={{ display: 'flex', gap: 12 }}><Check />{t}</li>
+                  ))}
+                </ul>
+                <p style={{ margin: '20px 0 0', paddingTop: 16, borderTop: `1px solid ${T.line}`, fontSize: 13.5, color: T.text3, lineHeight: 1.6 }}>Your download link arrives on the confirmation page and by email the moment payment goes through. One-time payment, no subscription.</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.06}><CheckoutPanel /></Reveal>
+          </div>
         </div>
       </section>
 

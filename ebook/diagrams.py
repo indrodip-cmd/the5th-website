@@ -320,5 +320,9 @@ def roadmap_glance():
     labels = ['Your why', 'Your starting point', 'The asset game', 'Your one person', 'Something to sell', 'A reason to buy', 'A voice in the market', 'A launch date', 'Resilience to last']
     for i, ((x, y), l) in enumerate(zip(pts, labels), 1):
         o.append(f'<circle cx="{x}" cy="{y}" r="15" fill="{LIME}" stroke="#0A2A1B" stroke-width="3"/>' + txt(x, y + 5, str(i), 14, '#0A2A1B', 900, fam='Inter Display'))
-        o.append(txt(x, y - 24, l, 11.5, '#F2FFD0', 800))
+    for i, ((x, y), l) in enumerate(zip(pts, labels), 1):
+        w = len(l) * 6.9 + 20
+        right = x < 300
+        lx = x + 26 if right else x - 26 - w
+        o.append(f'<rect x="{lx:.0f}" y="{y-12}" width="{w:.0f}" height="24" rx="12" fill="#07200F"/>' + txt(lx + w / 2, y + 4.5, l, 11.5, '#F2FFD0', 800))
     return wrap(420, ''.join(o))

@@ -261,7 +261,7 @@ function HelpContact() {
   )
 }
 
-export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string }) {
+export function Header({ nav, showFounder, homeHref = '/10k-roadmap', hideHelp }: { nav?: { label: string; href: string }[]; showFounder?: boolean; homeHref?: string; hideHelp?: boolean }) {
   // Always solid, from the very first pixel: the logo and founder credential
   // need a frame behind them on the first screen, not just after the visitor
   // scrolls past a transparent hero. (Scroll state kept only to deepen the
@@ -289,7 +289,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
             {nav.map((l) => <a key={l.label} href={l.href} style={{ fontSize: 14, fontWeight: 600, color: T.text2, textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = T.text)} onMouseLeave={(e) => (e.currentTarget.style.color = T.text2)}>{l.label}</a>)}
           </nav>
         )}
-        <span className="rm-header-help"><HelpContact /></span>
+        {!hideHelp && <span className="rm-header-help"><HelpContact /></span>}
       </div>
       {/* "As featured in" sits right under the logo, pinned to the header so
           it reads on the first screen alongside the brand mark, not only

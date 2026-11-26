@@ -73,7 +73,7 @@ export default function BookLanding() {
       <div style={{ background: T.accent, color: T.accentText, textAlign: 'center', fontSize: 13, fontWeight: 700, padding: '9px 14px', letterSpacing: '.01em' }}>
         Instant PDF download · {BOOK_PAGES} pages · {BOOK_CHAPTERS} chapters · only {BOOK_PRICE.label}
       </div>
-      <Header homeHref="/book" nav={[{ label: 'Inside the book', href: '#inside' }, { label: 'The authors', href: '#authors' }, { label: 'FAQ', href: '#faq' }]} />
+      <Header hideHelp homeHref="/book" nav={[{ label: 'Inside the book', href: '#inside' }, { label: 'The authors', href: '#authors' }, { label: 'FAQ', href: '#faq' }]} />
 
       {/* ── Hero ── */}
       <section style={{ padding: 'clamp(34px,6vw,72px) 0 clamp(40px,6vw,76px)', background: 'radial-gradient(70% 60% at 78% 20%, rgba(201,255,72,.10), transparent 60%)' }}>

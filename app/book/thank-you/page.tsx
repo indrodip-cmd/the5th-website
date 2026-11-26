@@ -11,7 +11,7 @@ export default function BookThankYou() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
       <Fonts />
-      <Header homeHref="/book" />
+      <Header hideHelp homeHref="/book" />
       <main style={{ maxWidth: 680, margin: '0 auto', padding: 'clamp(40px,7vw,80px) 20px 70px', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/book/book-3d.webp" alt={`${BOOK_TITLE} book`} width={794} height={986} style={{ width: 'min(100%, 240px)', height: 'auto', margin: '0 auto 8px' }} />

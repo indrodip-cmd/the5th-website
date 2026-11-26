@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#07200F;font-family:Inter,sans-serif;color:#fff}
+.s{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(90% 55% at 50% 38%,#1D6A46 0%,#0F3F2B 45%,#06180D 100%)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.04) 2px,transparent 2px);background-size:90px 90px;-webkit-mask-image:radial-gradient(70% 55% at 50% 40%,#000,transparent);mask-image:radial-gradient(70% 55% at 50% 40%,#000,transparent)}
+.pill{display:inline-block;padding:16px 34px;border-radius:999px;background:#C9FF48;color:#0B0F08;font:900 34px/1 'Inter Display';letter-spacing:.06em}
+.c{position:absolute;left:70px;right:70px;text-align:center}
+h1{font:900 118px/1 'Inter Display';letter-spacing:-.03em}h1 span{color:#C9FF48}
+.sub{font:600 40px/1.35 Inter;color:#CFE9D6}
+.book{position:absolute;left:50%;transform:translateX(-50%)}
+.chip{display:inline-block;padding:18px 34px;margin:6px;border-radius:999px;border:3px solid rgba(201,255,72,.55);font:800 34px/1 Inter;color:#fff;background:rgba(7,24,13,.6)}
+.chip b{color:#C9FF48}
+ul.l li{font-size:44px;margin-bottom:22px}ul{list-style:none;text-align:left;display:inline-block}li{font:800 50px/1.25 'Inter Display';margin:0 0 30px;padding-left:80px;position:relative}
+li::before{content:'';position:absolute;left:0;top:6px;width:48px;height:48px;border-radius:24px;background:#C9FF48}
+li::after{content:'';position:absolute;left:15px;top:14px;width:11px;height:22px;border:solid #0A2A1B;border-width:0 6px 6px 0;transform:rotate(40deg)}
+.card{position:absolute;left:60px;right:60px;border-radius:36px;overflow:hidden;box-shadow:0 50px 100px -30px rgba(0,0,0,.8);border:3px solid rgba(255,255,255,.12)}
+.card img{width:100%;display:block}
+.arrow{font:900 120px/1 'Inter Display';color:#C9FF48}
+</style></head><body>
+<!-- FRAME 1: hook. Content lives between y=300 and y=1500 (clear of Instagram's top and bottom UI). -->
+<div class="s" id="f1"><div class="grid"></div>
+  <div class="c" style="top:300px"><span class="pill">OUT NOW</span></div>
+  <div class="c" style="top:400px"><h1>Our book<br>is <span>live.</span></h1></div>
+  <img class="book" src="../../public/images/book/book-3d.webp" style="top:770px;width:560px">
+  <div class="c" style="top:1400px"><div class="sub"><b style="color:#fff;font-weight:800">Expertise to Income</b><br>Turn what you know into income.</div></div>
+</div>
+<!-- FRAME 2: inside the book -->
+<div class="s" id="f2"><div class="grid"></div>
+  <div class="c" style="top:300px"><div class="sub" style="color:#C9FF48;letter-spacing:.2em;font-weight:800;font-size:34px">INSIDE THE BOOK</div></div>
+  <div class="c" style="top:370px"><h1 style="font-size:92px">104 pages.<br><span>9 chapters.</span></h1></div>
+  <div class="card" style="top:700px;left:130px;right:130px"><img src="../../public/images/book/flip-29.webp"></div>
+  <div class="c" style="top:1280px"><ul class="l"><li>Find your expertise</li><li>Design and price a product</li><li>Launch in 7 days</li></ul></div>
+</div>
+<!-- FRAME 3: the offer + CTA. The link sticker goes in the empty zone at y 1290-1560. -->
+<div class="s" id="f3"><div class="grid"></div>
+  <img class="book" src="../../public/images/book/book-3d.webp" style="top:290px;width:420px">
+  <div class="c" style="top:800px"><h1 style="font-size:104px"><span>$4.99.</span><br>Instant PDF.</h1></div>
+  <div class="c" style="top:1130px"><span class="chip"><b>365-day</b> money-back guarantee</span><span class="chip">Free Chapter 1 on the page</span></div>
+  <div class="c" style="top:1300px"><div class="arrow">&#8595;</div><div class="sub" style="font-weight:800;color:#fff;font-size:46px">Tap the link</div></div>
+</div>
+</body></html>

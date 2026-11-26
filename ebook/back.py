@@ -1,0 +1,40 @@
+from comps import *
+import diagrams as D, front
+
+def back():
+    pre = section_page('CONCLUSION', 'Your Roadmap at a Glance and Your Next 24 Hours', 'Indrodip Ghosh', art.landscape(9, sun=True), tokk='concl')
+    done = [('Your why', 'You found your why. You know what you are fighting for.'), ('Your starting point', 'You diagnosed your starting point. You know where you are.'), ('The asset game', 'You adopted the asset mindset. You know how the game works.'),
+            ('Your one person', 'You identified your ideal client. You know exactly who you serve.'), ('Something to sell', 'You designed your first product. You have something to sell.'), ('A reason to buy', 'You built an irresistible offer. You have a reason for them to buy.'),
+            ('A voice in the market', 'You created a content plan. You have a voice in the market.'), ('A launch date', 'You scheduled your launch. You have a date that cannot move.'), ('Resilience to last', 'You strengthened your mindset. You have the resilience to last.')]
+    rows = ''.join(f'<div style="display:flex;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid #DCE8E0"><div style="flex:0 0 28px;height:28px;border-radius:50%;background:#C9FF48;font:900 11pt/28px \'Inter Display\';text-align:center;color:#0A2A1B">{i+1}</div><div style="font:500 10pt/1.35 Inter"><strong style="color:#0C3A28">Chapter {i+1}.</strong> {sq(t)}</div></div>' for i, (_, t) in enumerate(done))
+    body = f'''<div style="break-before:page">{LEAD("You have done the work. Nine chapters. Nine frameworks. Dozens of exercises. But none of it matters unless you use it.")}
+{P("Most people who read a workbook like this will feel inspired for a few days, and then return to exactly what they were doing before. The clarity will fade. The intention will blur. The comfort zone will win.", "You are not most people. You picked up this workbook. You completed it. That already puts you ahead of 95% of people who download, start, and abandon.", "Now take the next step.")}
+<div class="kicker" style="margin-top:20px">Your completed roadmap at a glance</div>{rows}</div>
+<div style="break-before:page">{H2('What to do in the next 24 hours')}
+{CHK(["Post one piece of content today. Your story, your method, or your offer. Just post.", "Set your product launch date. Tell someone about it so you are accountable.", "Send one DM to someone who could benefit from your product.", "Start building your first digital product, even if it is just an outline.", "If you want to go deeper, visit 10kroadmap.org and explore how to take this further."])}
+{WS('Your final commitment page', [("My One Person's name is:", 1), ("My product is:", 1), ("My launch date is:", 1), ("My daily content commitment is:", 2), ("The one mindset rule I am taking into the next 90 days is:", 2)])}
+<div style="margin-top:22px;text-align:center;font:900 17pt/1.25 'Inter Display';letter-spacing:-.01em;color:#0C3A28">Your story is still being written.<br><span style="color:#1B7A52">Make it worth reading.</span></div></div>'''
+    letter = f'''<section class="full" style="background:#0C3A28"><span style="font-size:1px;color:transparent;position:absolute">@@letter@@</span>
+ <div style="position:absolute;left:60px;right:60px;top:80px;color:#F2FFD0"><div class="kicker" style="color:#C9FF48">A letter from Indrodip</div>
+ <div style="font:900 34px/1.05 'Inter Display';letter-spacing:-.025em;color:#fff;margin:6px 0 22px">You earned this.<br>Claim it.</div>
+ <div style="font:500 11pt/1.62 'Bitstream Charter',serif">{P("I did not grow up knowing how to build a business. I just kept trying to solve problems, and failed my way forward.", "I have been the person who heard: 'Indian people are scammers, no one will trust you online.' I believed it, for a time. Then I proved it wrong, client by client, month by month.", "Today, almost all of my clients are men and women over 45, starting their first online business from scratch, in countries I have never visited. No ads. No email lists. Just clarity, honesty, and a system that works.", "And I want that for you, too. Not someday. Now.")}</div>
+ <div style="font:800 15pt/1.3 'Inter Display';color:#C9FF48;margin-top:14px">If you are struggling, I see you. You are not broken. You are early.</div></div>
+ <div style="position:absolute;left:0;right:0;bottom:0">{art.landscape(9, sun=False)}</div></section>'''
+    letter2 = f'''<div style="break-before:page">
+{P("You did not just read a workbook. You made a decision. You said yes to yourself, maybe for the first time in a long time. That matters more than you know.")}
+{H2('A free 1-on-1 roadmap call with Indrodip')}
+{P("Because you finished this book, I am personally offering you something I do not advertise publicly.")}
+{CALL('No pitch. No pressure. No sales team.', "Just you and me on a real call, where I will look at your situation, your expertise, and your goals, and personally build your $10K roadmap with you. Step by step. Specific to your life.", "This is the same call my paying clients begin with. You get it free, because you did the work of getting here.")}
+{NOTE('How to claim it', "<strong>1. Send an email to:</strong> indrodip@10kroadmap.org", "<strong>2. Use this exact subject line:</strong> “I READ THE BOOK: I’M READY FOR MY ROADMAP”", "<strong>3. In the email, tell me:</strong> where you are right now in your business journey, what you most want to build or launch, and the one thing holding you back.")}
+{P("Spots are limited. I read every email myself. This is not a funnel. This is a real conversation with a real person who has been where you are.")}
+{PULL('You have already done the hardest part. You started. Now let me help you finish.')}
+<p style="font-style:italic">With you, always,<br><strong style="font-style:normal">Indrodip Ghosh</strong><br><span style="font:500 9pt Inter;color:#5C6B62;font-style:normal">indrodip@10kroadmap.org | www.10kroadmap.org<br>Written together with Christinee Mathison: equal partner, equal voice, equal belief in you.</span></p></div>'''
+    gift = f'''<div style="break-before:page">{tok_gift()}<div class="kicker">Free gift</div>{H2('A gift from both of us')}
+{P("Because you finished this workbook, both Indrodip and Christinee want to give you something extra, completely free.")}
+<div style="display:flex;flex-direction:column;gap:12px;margin:16px 0">
+{''.join(f'<div class="step" style="align-items:center"><div class="num" style="background:#0C3A28;color:#C9FF48">{icon(ic,18,"#C9FF48")}</div><div><h4>{sq(t)}</h4><p>{sq(d)}</p></div></div>' for ic,t,d in [('calendar','Bonus 1: The 90-Day Content Calendar (full PDF)','90 daily content topics, pre-planned, phase by phase, so you never stare at a blank screen again.'),('grid','Bonus 2: The Product Blueprint Template (Canva)','The exact one-page product planning template Christinee uses with her clients, editable and ready to fill in.'),('pen','Bonus 3: The Offer Stack Builder (Google Doc)','A fill-in-the-blank document that builds your complete offer description in under 30 minutes.')])}</div>
+{CALL('How to claim your free bonuses', "Visit: <strong>www.10kroadmap.org/gift</strong>", "Or email <strong>indrodip@10kroadmap.org</strong> with the subject line: <strong>“BOOK BONUS”</strong>")}
+<div style="margin-top:28px;text-align:center"><div style="font:900 15pt/1.3 'Inter Display';color:#0C3A28">Thank you for trusting us with your journey.<br><span style="color:#1B7A52">Now go build something that matters.</span></div><div style="font:600 10pt Inter;color:#5C6B62;margin-top:12px">— Indrodip Ghosh &amp; Christinee Mathison</div></div></div>'''
+    return pre + body + letter + letter2 + gift
+
+def tok_gift(): return '<span style="font-size:1px;color:transparent;position:absolute">@@gift@@</span>'

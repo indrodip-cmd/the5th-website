@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Book hero</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1400px;height:1400px;overflow:hidden;background:transparent}
+.stage{position:relative;width:1400px;height:1400px;font-family:Inter,sans-serif}
+.dark{background:radial-gradient(60% 60% at 50% 48%,#1D5A3E 0%,#0F3A27 50%,#07180F 100%)}
+.light{background:radial-gradient(60% 55% at 50% 50%,#FFFFFF 0%,#F1F5EE 100%)}
+.shadow{position:absolute;left:300px;top:1130px;width:800px;height:70px;border-radius:50%;background:radial-gradient(#000b,#0000 70%);filter:blur(10px)}
+.light .shadow{background:radial-gradient(#0007,#0000 70%)}
+.scene{position:absolute;left:396px;top:250px;width:357px;height:510px;perspective:2200px;transform:scale(1.68);transform-origin:top left}
+.book{position:relative;width:357px;height:510px;transform-style:preserve-3d;transform:rotateY(-24deg) rotateX(2deg)}
+.face{position:absolute}
+.front{width:357px;height:510px;left:0;top:0;transform:translateZ(22px);border-radius:3px 6px 6px 3px;overflow:hidden}
+.front img{width:100%;height:100%;display:block;object-fit:cover}
+.front::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,#0006 0,#fff3 3.2%,#0003 4.6%,#0000 9%,#fff0 60%,#fff2 100%)}
+.spine{width:44px;height:510px;left:-22px;top:0;transform:rotateY(-90deg);background:linear-gradient(90deg,#0B3D27,#145336 50%,#0B3D27);display:flex;align-items:center;justify-content:center}
+.spine span{transform:rotate(90deg);white-space:nowrap;font:900 15px 'Inter Display';letter-spacing:.14em;color:#C9FF48;text-transform:uppercase}
+.edge{width:44px;height:510px;right:-22px;top:6px;transform:rotateY(90deg);background:repeating-linear-gradient(90deg,#f4f1e6 0 2px,#d8d3c0 2px 3px)}
+.back{width:357px;height:510px;transform:translateZ(-22px) rotateY(180deg);background:#0B3D27}
+.top{width:357px;height:44px;left:0;top:-22px;transform:rotateX(90deg);background:#e9e5d3}
+.bot{width:357px;height:44px;left:0;bottom:-22px;transform:rotateX(-90deg);background:#cfcab6}
+</style></head><body>
+<div class="stage" id="s"><div class="shadow"></div>
+<div class="scene"><div class="book"><div class="face back"></div><div class="face top"></div><div class="face bot"></div><div class="face edge"></div><div class="face spine"><span>Expertise to Income</span></div><div class="face front"><img src="cover.png"></div></div></div></div>
+<script>const bg=new URLSearchParams(location.search).get('bg');document.getElementById('s').className='stage '+(bg||'');</script>
+</body></html>

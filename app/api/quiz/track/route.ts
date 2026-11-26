@@ -11,6 +11,7 @@ export const dynamic = 'force-dynamic'
 const ALLOWED = new Set([
   'free_report_viewed', 'paywall_viewed', 'checkout_started',
   'full_report_viewed', 'strategy_call_booked',
+  'audit_cta_clicked',
 ])
 
 /* Events worth pinning to the contact's CRM timeline (not just the event bus). */
@@ -19,6 +20,7 @@ const TIMELINE: Record<string, { type: string; title: string }> = {
   checkout_started: { type: 'program_view', title: 'Started diagnostic checkout' },
   full_report_viewed: { type: 'program_view', title: 'Opened their full diagnostic report' },
   strategy_call_booked: { type: 'call_booked', title: 'Booked a strategy call from the report' },
+  audit_cta_clicked: { type: 'program_view', title: 'Clicked Book my $29 audit from their Income Blocker Report' },
 }
 
 export async function POST(req: NextRequest) {

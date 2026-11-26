@@ -3,6 +3,9 @@
    /10k-roadmap (shared Fonts/Header/Btn/Reveal kit from ../10k-roadmap/ui),
    so landing on this page never feels like leaving the site. */
 import { useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { BLOCKERS } from '@/lib/quiz/content'
+import { BLOCKER_IDS, type BlockerId } from '@/lib/quiz/questions'
 import { Checkout, CheckoutElement, WhopElements } from '@whop/elements-react'
 import { loadWhop } from '@whop/elements'
 import { PAY, DEPOSIT, T, auditDirectPlanId } from '../10k-roadmap/config'
@@ -26,6 +29,12 @@ function LockIcon() {
 
 export default function AuditCheckout() {
   useEffect(() => { track('page_view') }, [])
+  const sp = useSearchParams()
+  const fromQuiz = sp.get('src') === 'quiz'
+  const pId = sp.get('p') as BlockerId | null
+  const sId = sp.get('s') as BlockerId | null
+  const P = fromQuiz && pId && BLOCKER_IDS.includes(pId) ? BLOCKERS[pId] : null
+  const S = fromQuiz && sId && BLOCKER_IDS.includes(sId) ? BLOCKERS[sId] : null
 
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
@@ -35,6 +44,12 @@ export default function AuditCheckout() {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(460px,540px)', gap: 40, alignItems: 'start' }} className="ac-grid">
           {/* Left — what they're paying for */}
           <Reveal>
+            {P && (
+              <div style={{ background: T.surface, border: `1px solid ${T.accent}`, borderRadius: 14, padding: '14px 16px', marginBottom: 22 }}>
+                <div className="rm-eyebrow" style={{ marginBottom: 6 }}>Your Income Blocker Report is attached</div>
+                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.55, color: T.text }}>We will start your audit from your report: <b>{P.name}</b>{S ? <> and <b>{S.name}</b></> : null}. Book below and we arrive prepared.</p>
+              </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 22 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <span style={{ display: 'inline-flex', flexShrink: 0 }}>

@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { T, Card, PageHeader, Input, Button, Drawer, EmptyState, ErrorState, useAdminFetch, fmtDate } from '@/components/admin/ui'
 import type { Qualification, QualTier } from '@/lib/qualification'
+import SalesBrief from '@/components/admin/SalesBrief'
 
 type Roadmap = {
   days?: Array<{ day: number; title?: string; theme?: string; tasks?: string[]; win_condition?: string; motivation?: string }>
@@ -342,6 +343,7 @@ function LeadDetail({ lead }: { lead: Lead }) {
         <Button variant="ghost" onClick={downloadPdf} disabled={pdfBusy}>{pdfBusy ? 'Generating PDF…' : '⬇ Download Full PDF'}</Button>
       </div>
       {pdfErr && <div style={{ fontSize: 12.5, color: '#c0392b', marginBottom: 8 }}>{pdfErr}</div>}
+      {typeof lead.answers?.report_code === 'string' && <SalesBrief code={lead.answers.report_code} />}
 
       <div style={{ height: 1, background: T.border, margin: '18px 0' }} />
 

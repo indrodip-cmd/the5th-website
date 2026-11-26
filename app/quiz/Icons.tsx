@@ -1,0 +1,50 @@
+/* Line icons for the quiz (48-unit grid, rounded strokes, same family as the site). */
+const P: Record<string, string> = {
+  compass: '<circle cx="24" cy="24" r="17"/><path d="M30 18l-4 10-10 4 4-10z"/>',
+  seed: '<path d="M24 40V22"/><path d="M24 26c-8 0-12-5-12-12 8 0 12 5 12 12z"/><path d="M24 22c0-7 4-11 12-11 0 8-5 12-12 11z"/>',
+  spark: '<path d="M24 5l5 14 14 5-14 5-5 14-5-14-14-5 14-5z"/>',
+  rocket: '<path d="M24 6c8 4 12 12 10 22l-6 6h-8l-6-6C12 18 16 10 24 6z"/><circle cx="24" cy="19" r="3.5"/><path d="M14 30l-6 4 2 6 8-4M34 30l6 4-2 6-8-4"/>',
+  chart: '<path d="M6 40h36"/><path d="M10 32l10-10 8 6 12-16"/><path d="M32 12h8v8"/>',
+  people: '<circle cx="17" cy="16" r="6"/><path d="M5 40c0-8 5-13 12-13s12 5 12 13"/><circle cx="34" cy="18" r="5"/><path d="M33 28c6 0 10 4 10 11"/>',
+  leaf: '<path d="M40 8C20 8 8 18 8 32c0 4 3 8 8 8 14 0 24-12 24-32z"/><path d="M8 40c6-12 14-20 24-26"/>',
+  bulb: '<path d="M17 33c0-3-5-6-5-12a12 12 0 0 1 24 0c0 6-5 9-5 12z"/><path d="M18 38h12M20 43h8"/>',
+  briefcase: '<rect x="6" y="15" width="36" height="25" rx="3"/><path d="M17 15v-4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4M6 27h36"/>',
+  heart: '<path d="M24 41C8 29 6 20 11 14c4-4 10-3 13 2 3-5 9-6 13-2 5 6 3 15-13 27z"/>',
+  coin: '<ellipse cx="24" cy="14" rx="14" ry="6"/><path d="M10 14v10c0 3.3 6.3 6 14 6s14-2.7 14-6V14M10 24v10c0 3.3 6.3 6 14 6s14-2.7 14-6V24"/>',
+  moon: '<path d="M38 28A16 16 0 0 1 20 10a16 16 0 1 0 18 18z"/>',
+  pen: '<path d="M8 40l3-10L33 8l7 7-22 22z"/><path d="M28 13l7 7"/>',
+  zero: '<circle cx="24" cy="24" r="14"/><path d="M14 34L34 14"/>',
+  crown: '<path d="M7 34l-2-18 11 8 8-13 8 13 11-8-2 18z"/><path d="M8 40h32"/>',
+  target: '<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="10"/><circle cx="24" cy="24" r="3"/>',
+  wall: '<rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 19h36M6 29h36M18 10v9M30 19v10M18 29v9"/>',
+  fog: '<path d="M10 18h22a6 6 0 1 0-5-9M6 26h30a6 6 0 1 1-5 9M12 34h14"/>',
+  eye: '<path d="M4 24s8-13 20-13 20 13 20 13-8 13-20 13S4 24 4 24z"/><circle cx="24" cy="24" r="6"/>',
+  door: '<path d="M12 42V8a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v34M8 42h32"/><circle cx="28" cy="25" r="1.6"/>',
+  scale: '<path d="M24 8v32M12 40h24M10 14h28"/><path d="M10 14l-5 12a6 6 0 0 0 10 0zM38 14l-5 12a6 6 0 0 0 10 0z"/>',
+  voice: '<path d="M8 10h32a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H26l-9 8v-8H8a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/><path d="M15 18h18M15 25h11"/>',
+  wave: '<path d="M4 28c5-10 8-10 12 0s7 10 12 0 8-10 12 0"/><path d="M4 38h40"/>',
+  gift: '<rect x="7" y="18" width="34" height="22" rx="2"/><path d="M4 18h40v-6H4zM24 12v28M24 12c-6-8-14-3-10 0M24 12c6-8 14-3 10 0"/>',
+  hand: '<path d="M16 28V12a3 3 0 0 1 6 0v12V8a3 3 0 0 1 6 0v16V12a3 3 0 0 1 6 0v22c0 6-4 10-11 10h-2c-5 0-8-3-11-8l-6-9a3 3 0 0 1 5-3z"/>',
+  book: '<path d="M8 10c6-2 12-2 16 2 4-4 10-4 16-2v28c-6-2-12-2-16 2-4-4-10-4-16-2z"/><path d="M24 12v28"/>',
+  ladder: '<path d="M14 6v36M34 6v36M14 14h20M14 24h20M14 34h20"/>',
+  clock: '<circle cx="24" cy="24" r="17"/><path d="M24 12v13l9 5"/>',
+  gear: '<circle cx="24" cy="24" r="6"/><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/>',
+  net: '<circle cx="24" cy="10" r="5"/><circle cx="10" cy="34" r="5"/><circle cx="38" cy="34" r="5"/><path d="M21 15l-8 15M27 15l8 15M15 36h18"/>',
+  phone: '<rect x="13" y="5" width="22" height="38" rx="4"/><path d="M21 37h6"/>',
+  chat: '<path d="M8 10h32a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H26l-9 8v-8H8a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/>',
+  mic: '<rect x="18" y="5" width="12" height="22" rx="6"/><path d="M10 22a14 14 0 0 0 28 0M24 36v7M16 43h16"/>',
+  bolt: '<path d="M26 4L10 26h12l-2 18 18-24H26z"/>',
+  mail: '<rect x="5" y="10" width="38" height="28" rx="3"/><path d="M5 14l19 14 19-14"/>',
+  check: '<circle cx="24" cy="24" r="17"/><path d="M15 25l7 7 12-14"/>',
+  lock: '<rect x="9" y="21" width="30" height="21" rx="5"/><path d="M15 21v-6a9 9 0 0 1 18 0v6"/>',
+  doc: '<path d="M12 6h18l8 8v28H12z"/><path d="M30 6v8h8M18 24h14M18 31h14"/>',
+  map: '<path d="M6 12l12-5 12 5 12-5v29l-12 5-12-5-12 5z"/><path d="M18 7v29M30 12v29"/>',
+  user: '<circle cx="24" cy="16" r="8"/><path d="M8 42c0-9 7-14 16-14s16 5 16 14"/>',
+  shield: '<path d="M24 5l15 5v12c0 10-6 17-15 21C15 39 9 32 9 22V10z"/><path d="M17 24l5 5 9-10"/>',
+}
+
+export default function Ic({ name, size = 28, stroke = 'currentColor', sw = 2.6 }: { name: string; size?: number; stroke?: string; sw?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" dangerouslySetInnerHTML={{ __html: P[name] || P.spark }} />
+  )
+}

@@ -6,7 +6,7 @@
 export const BOOK_PRICE = { amount: 4.99, label: '$4.99', currency: 'USD' } as const
 export const BOOK_PAGES = 104
 export const BOOK_CHAPTERS = 9
-export const BOOK_GUARANTEE_DAYS = 7
+export const BOOK_GUARANTEE_DAYS = 365
 export const BOOK_CHECKOUT_PATH = '/book/checkout'
 
 export function bookPlanId(): string {
@@ -38,5 +38,17 @@ export const FAQ = [
   { q: 'Will this work for me?', a: 'The book gives you a clear system and the exercises to apply it. Results depend on your effort, your offer and your market, so we cannot promise any outcome. What it will give you is clarity: your why, your one person, a product, an offer and a launch date.' },
   { q: 'How is this different from a course?', a: 'It is a workbook, not a video series. You read one chapter at a time and fill in the pages as you go, so you finish with real decisions written down, not just ideas.' },
   { q: 'How do I get the book?', a: 'Immediately after checkout. Your download link is delivered on the confirmation page and by email. If it does not arrive, check spam or contact us and we will sort it out the same day.' },
-  { q: 'What if I do not like it?', a: `You are covered by a ${BOOK_GUARANTEE_DAYS}-day money-back guarantee. Email us within ${BOOK_GUARANTEE_DAYS} days of purchase and we will refund you.` },
+  { q: 'What if I do not like it?', a: `You are covered by a ${BOOK_GUARANTEE_DAYS}-day (full year) money-back guarantee. Email us within ${BOOK_GUARANTEE_DAYS} days of purchase and we will refund you.` },
 ]
+
+/* Claims about the authors and the company. Sources: the live /go page
+   (credentials, startup valuation note) and the founder's own statement
+   (company sales figure). Keep wording identical to /go where it overlaps. */
+export const COMPANY_SALES = 'over $15M in sales'
+export const INDRODIP_CREDENTIALS = [
+  'Consumer Psychologist, University of California, Berkeley',
+  'AI startup founder (~$6M approximate valuation), backed by University of California alumni',
+  'Recruited by Google, Anthropic, Mastermind.com and ClickFunnels',
+  'Founder, The5th Global Consulting',
+]
+export const VALUATION_NOTE = 'Startup valuation (approximately $6M) is an estimate of the startup, not personal net worth, and does not guarantee outcomes for readers.'

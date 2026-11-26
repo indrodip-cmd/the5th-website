@@ -39,7 +39,7 @@ def copyright_page():
 def note_page():
     return f'''<div class="pg-break">{BY('A NOTE ON THIS BOOK').replace(' &nbsp;·&nbsp; Co-Author, The5th Consulting','')}
 {H2('How this book was written')}
-{LEAD("This workbook was written by two equal partners who share one mission: to help coaches, consultants, healers, and experts stop trading their time for money, and start building something that works without them.")}
+{LEAD("This workbook was written by two co-authors who share one mission: to help coaches, consultants, healers, and experts stop trading their time for money, and start building something that works without them.")}
 <div class="grid2" style="margin-top:14px">
  <div class="card dark" style="padding:18px"><div style="margin-bottom:10px">{avatar('Indrodip Ghosh', 62)}</div><h4 style="font-size:12pt">Indrodip Ghosh</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#9BE02A;margin-bottom:8px">STRATEGY AND SYSTEMS</div>Business mechanics, the mindset of scaling, and the market reality of digital products.<div style="margin-top:8px;color:#B9D8C4;font-size:8.6pt">Introduction, Chapters 1, 2, 3, 8, the Conclusion, and the closing Letter.</div></div>
  <div class="card" style="padding:18px;background:#EAF8C8;border-color:#EAF8C8"><div style="margin-bottom:10px">{avatar('Christinee Mathison', 62, '#0C3A28')}</div><h4 style="font-size:12pt">Christinee Mathison</h4><div style="font:800 7.5pt 'Inter';letter-spacing:.18em;color:#1B7A52;margin-bottom:8px">TRANSFORMATION AND CLARITY</div>Knowing your audience, building your offer, creating content that connects, and the inner game of showing up consistently.<div style="margin-top:8px;color:#5C6B62;font-size:8.6pt">Chapters 4, 5, 6, 7, and 9.</div></div></div>
@@ -50,7 +50,7 @@ def gratitude_page():
     return f'''<div class="pg-break"><div class="kicker">A word of gratitude</div>{H2('To my clients')}
 {LEAD('You are the reason this book exists.')}
 {P("Every lesson in these pages was forged in real conversations, real struggles, and real breakthroughs, yours. You trusted me when you were afraid. You showed up when it would have been easier to quit. You proved, again and again, that it is never too late to build something that matters.", "This is for you.")}
-<div class="story" style="margin-top:22px"><div class="ic">{icon('heart', 26)}</div><div class="tag">And to Christinee</div>{P("My co-author and equal partner in this work. This book would not exist without you. Your clarity, structure, and steady commitment turned ideas into something real and tangible. When things felt overwhelming, you brought focus. When momentum slowed, you kept it moving. This was not just collaboration. It was true partnership, built on equal contribution, equal vision, and equal belief in the people we wrote this for.")}</div>
+<div class="story" style="margin-top:22px"><div class="ic">{icon('heart', 26)}</div><div class="tag">And to Christinee</div>{P("My co-author. This book would not exist without you. Your clarity, structure, and steady commitment turned ideas into something real and tangible. When things felt overwhelming, you brought focus. When momentum slowed, you kept it moving. This was not just collaboration. It was true co-authorship, built on equal contribution, equal vision, and equal belief in the people we wrote this for.")}</div>
 <p style="font-style:italic;margin-top:18px">— Indrodip</p></div>'''
 
 ENTRIES = [('how', '', 'How to Use This Workbook', ''), ('intro', '', 'Introduction: The Story Behind This Book', 'Indrodip Ghosh')] + \

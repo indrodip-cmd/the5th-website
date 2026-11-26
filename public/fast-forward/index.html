@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#231029">
 
-<title>Fast Forward 1:1 Coaching Program | Turn Expertise Into Income | The5th Global Consulting</title>
+<title>Fast Forward 1:1 Coaching Program for Healers & Coaches | The5th Global Consulting</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
@@ -412,259 +412,484 @@ ul{list-style:none}
 }
 
 
-/* ═════════ FAST FORWARD v2 ═════════ */
-.ff-hero{position:relative;background:radial-gradient(70% 90% at 78% 30%,rgba(201,168,76,.16),transparent 60%),radial-gradient(60% 80% at 5% 100%,rgba(78,49,88,.7),transparent 65%),linear-gradient(165deg,var(--plum-deep),var(--plum-dark) 55%,#1c0d22);color:#fff;overflow:hidden;padding:clamp(54px,8vw,104px) 0 clamp(60px,8vw,96px)}
-.ff-hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");opacity:.05;mix-blend-mode:overlay;pointer-events:none}
-.ff-hero .layout{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(30px,5vw,72px);align-items:center}
-.ff-hero__eb{margin-bottom:26px}
-.ff-hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:clamp(2.7rem,6.2vw,5.6rem);line-height:.98;letter-spacing:-.03em;color:#fff}
-.ff-hero h1 em{font-style:italic;color:var(--gold-soft)}
-.ff-hero__sub{margin-top:26px;font-size:clamp(1.05rem,1.6vw,1.28rem);font-weight:300;line-height:1.75;color:rgba(255,255,255,.82);max-width:600px}
+/* ═════════ FAST FORWARD v3 — mobile first ═════════ */
+.layout{padding:0 20px}
+.sec{padding:64px 0}
+.secHead{margin-bottom:34px}
+.h2{font-size:clamp(2rem,8.4vw,3.2rem);line-height:1.06}
+.lead{font-size:1.02rem;line-height:1.75}
+html{scroll-padding-top:70px}
+.globalNav{height:4.25rem;background:linear-gradient(180deg,#2E1A35,#231029)!important;border-bottom:1px solid var(--gold-line)!important}
+.globalNav .layout{padding:0 16px}
+.globalNav .gn__logo{display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:0 1 auto}
+.globalNav .gn__logo-glass{background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+.globalNav .gn__logo-img--dark{display:none!important}
+.globalNav .gn__logo-img--white{display:block!important;height:30px;width:auto;mix-blend-mode:normal!important}
+.gn__founder-name{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(228,200,121,.85);font-weight:600;line-height:1}
+.globalNav .gn__ctas{flex:0 0 auto;gap:.4rem}
+.globalNav .gn__start{background:linear-gradient(180deg,#E4C879,#C9A84C 55%,#B0902F)!important;color:#2E1A35!important;padding:.62rem 1rem;font-size:.68rem;letter-spacing:.1em;border-radius:5px;text-transform:uppercase}
+.gn__toggle span{background:#fff!important}
+.mobileMenu{top:4.25rem!important;background:rgba(35,16,41,.99)!important;border-bottom:1px solid var(--gold-line)!important}
+.mobileMenu__nav a{color:#fff!important;border-bottom-color:rgba(201,168,76,.22)!important}
+.mobileMenu__nav a.active{color:var(--gold-soft)!important}
+.mobileMenu__login{color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)!important}
+.mobileMenu__backdrop{top:4.25rem!important}
+@media(min-width:1100px){.globalNav{height:6rem}.globalNav .gn__logo-img--white{height:46px}.gn__founder-name{font-size:.56rem}.globalNav .gn__start{padding:.85rem 1.7rem;font-size:.74rem}.mobileMenu,.mobileMenu__backdrop{display:none}}
+.ffProg{position:fixed;top:0;left:0;height:3px;width:100%;z-index:300;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transform-origin:0 50%;transform:scaleX(0)}
+[data-reveal]{transform:translateY(22px);transition-duration:.7s}
+.ff-hero{position:relative;background:radial-gradient(80% 60% at 85% 0%,rgba(201,168,76,.18),transparent 62%),radial-gradient(70% 50% at 0% 100%,rgba(78,49,88,.75),transparent 65%),linear-gradient(170deg,#231029,#2E1A35 60%,#1c0d22);color:#fff;overflow:hidden;padding:34px 0 46px}
+.ff-hero__in{display:grid;gap:34px}
+.ff-hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:clamp(2.7rem,12.6vw,5.6rem);line-height:.98;letter-spacing:-.03em;margin-top:18px}
+.ff-hero h1 em{display:block;font-style:italic;color:var(--gold-soft)}
+.ff-hero__sub{margin-top:20px;font-size:1.04rem;font-weight:300;line-height:1.7;color:rgba(255,255,255,.84)}
 .ff-hero__sub b{color:#fff;font-weight:600}
-.ff-hero__ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;align-items:center}
-.ff-hero__chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
-.ff-chip{display:inline-flex;align-items:center;gap:9px;font-size:.78rem;font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.88);padding:9px 15px;border-radius:999px;border:1px solid var(--gold-line);background:rgba(255,255,255,.04)}
-.ff-chip i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
-.ff-hero__fine{margin-top:16px;font-size:.74rem;color:rgba(255,255,255,.55);line-height:1.5;max-width:560px}
-/* agreement document visual */
-.ffDoc{position:relative;background:linear-gradient(180deg,#fffdf8,#f6efe1);color:var(--ink);border-radius:14px;padding:clamp(26px,3.4vw,40px);box-shadow:0 50px 90px -30px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,76,.55),0 0 0 9px rgba(201,168,76,.07);transform:rotate(1.6deg);transition:transform .5s cubic-bezier(.19,.7,.2,1)}
-.ffDoc:hover{transform:rotate(0) translateY(-4px)}
-.ffDoc::before{content:'';position:absolute;inset:10px;border:1px solid rgba(176,144,47,.4);border-radius:8px;pointer-events:none}
-.ffDoc__k{font-size:.62rem;letter-spacing:.3em;font-weight:700;color:var(--gold-deep);text-transform:uppercase}
-.ffDoc__h{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,2.6vw,2.3rem);line-height:1.05;margin:10px 0 4px;color:var(--plum-dark);font-weight:500}
+.ff-hero__ctas{display:grid;gap:12px;margin-top:26px}
+.ff-hero__ctas .btnGold,.ff-hero__ctas .btnGhost{justify-content:center;width:100%;padding:17px 20px}
+.ff-hero__chips{display:flex;gap:8px;margin:22px -20px 0;padding:0 20px 4px;overflow-x:auto;scrollbar-width:none}
+.ff-hero__chips::-webkit-scrollbar{display:none}
+.ff-chip{flex:none;display:inline-flex;align-items:center;gap:8px;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.9);padding:9px 13px;border-radius:999px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);white-space:nowrap}
+.ff-chip i{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.ff-hero__fine{margin-top:14px;font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.55}
+.ffDoc{position:relative;background:linear-gradient(180deg,#fffdf8,#f6efe1);color:var(--ink);border-radius:14px;padding:24px 20px;box-shadow:0 40px 70px -28px rgba(0,0,0,.75),0 0 0 1px rgba(201,168,76,.55),0 0 0 7px rgba(201,168,76,.07);transition:transform .25s ease-out;will-change:transform}
+.ffDoc::before{content:'';position:absolute;inset:8px;border:1px solid rgba(176,144,47,.4);border-radius:8px;pointer-events:none}
+.ffDoc__k{font-size:.58rem;letter-spacing:.28em;font-weight:700;color:var(--gold-deep);text-transform:uppercase}
+.ffDoc__h{font-family:'Cormorant Garamond',serif;font-size:1.7rem;line-height:1.05;margin:8px 0 2px;color:var(--plum-dark);font-weight:500;padding-right:56px}
 .ffDoc__h em{color:var(--gold-deep)}
-.ffDoc__row{display:grid;grid-template-columns:112px 1fr;gap:14px;padding:11px 0;border-top:1px solid rgba(26,26,46,.1);font-size:.86rem;line-height:1.5}
-.ffDoc__row:first-of-type{margin-top:18px}
-.ffDoc__row b{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:3px}
-.ffDoc__sig{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid rgba(26,26,46,.1)}
-.ffDoc__sig span{font-family:'Great Vibes',cursive;font-size:1.9rem;line-height:1;color:var(--plum)}
-.ffDoc__sig small{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.ffSeal{position:absolute;right:-18px;top:-26px;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc9b,#C9A84C 55%,#9a7a22);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--plum-dark);text-align:center;box-shadow:0 14px 30px rgba(0,0,0,.45),inset 0 0 0 4px rgba(255,255,255,.28);transform:rotate(10deg)}
-.ffSeal b{font-family:'Cormorant Garamond',serif;font-size:1.9rem;line-height:1;font-weight:600}
-.ffSeal span{font-size:.5rem;letter-spacing:.14em;font-weight:800;text-transform:uppercase;line-height:1.25;margin-top:3px}
-.ffDocCap{margin-top:18px;text-align:center;font-size:.7rem;color:rgba(255,255,255,.5)}
-/* proof strip */
+.ffDoc__row{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:10px 0;border-top:1px solid rgba(26,26,46,.1);font-size:.82rem;line-height:1.45}
+.ffDoc__row:first-of-type{margin-top:14px}
+.ffDoc__row b{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.ffDoc__sig{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;padding-top:12px;border-top:1px solid rgba(26,26,46,.1)}
+.ffDoc__sig span{font-family:'Great Vibes',cursive;font-size:1.7rem;line-height:1;color:var(--plum)}
+.ffDoc__sig small{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ffSeal{position:absolute;right:-6px;top:-18px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f3dc9b,#C9A84C 55%,#9a7a22);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--plum-dark);text-align:center;box-shadow:0 12px 26px rgba(0,0,0,.45),inset 0 0 0 3px rgba(255,255,255,.28);transform:rotate(10deg)}
+.ffSeal b{font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1;font-weight:600}
+.ffSeal span{font-size:.42rem;letter-spacing:.12em;font-weight:800;text-transform:uppercase;line-height:1.25;margin-top:2px}
+.ffDocCap{margin-top:14px;text-align:center;font-size:.66rem;color:rgba(255,255,255,.5);line-height:1.5}
 .ffProof{background:linear-gradient(180deg,#1c0d22,var(--plum-deep));border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line)}
-.ffProof .layout{display:grid;grid-template-columns:repeat(4,1fr)}
-.ffProof__c{padding:30px 18px;text-align:center;border-right:1px solid rgba(201,168,76,.18)}
-.ffProof__c:last-child{border:0}
-.ffProof__c b{display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(2rem,3.6vw,3rem);line-height:1;color:var(--gold-soft)}
-.ffProof__c span{display:block;margin-top:8px;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.62);font-weight:600}
-/* shift */
-.ffShift{background:var(--plum-deep);color:#fff;text-align:center;padding:clamp(70px,10vw,130px) 0;position:relative;overflow:hidden}
-.ffShift h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1;letter-spacing:-.03em}
+.ffProof .layout{display:grid;grid-template-columns:1fr 1fr;padding:0}
+.ffProof__c{padding:22px 12px;text-align:center;border-right:1px solid rgba(201,168,76,.18);border-bottom:1px solid rgba(201,168,76,.18)}
+.ffProof__c:nth-child(2n){border-right:0}
+.ffProof__c:nth-child(n+3){border-bottom:0}
+.ffProof__c b{display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:2.1rem;line-height:1;color:var(--gold-soft)}
+.ffProof__c span{display:block;margin-top:7px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62);font-weight:600}
+.ffBlock{background:linear-gradient(180deg,var(--plum-deep),#1a0b20);color:#fff;padding:64px 0}
+.ffBlock .h2{color:#fff}.ffBlock .lead{color:rgba(255,255,255,.72)}
+.ffBlock .h2 em{color:var(--gold-soft)}
+.ffFind{max-width:980px;margin:0 auto}
+.ffFind__q{font-family:'Cormorant Garamond',serif;font-size:1.5rem;text-align:center;margin-bottom:16px;color:var(--gold-soft)}
+.ffFind__chips{display:grid;gap:10px}
+.ffFind__b{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-size:1.02rem;line-height:1.4;color:#fff;padding:16px;border-radius:14px;border:1px solid var(--gold-line);background:rgba(255,255,255,.04);cursor:pointer;transition:background .2s,border-color .2s,transform .15s;min-height:56px}
+.ffFind__b::before{content:'“';font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:.6;color:var(--gold);flex:none;margin-top:6px}
+.ffFind__b:active{transform:scale(.985)}
+.ffFind__b.on{background:linear-gradient(160deg,rgba(201,168,76,.28),rgba(201,168,76,.1));border-color:var(--gold)}
+.ffFind__p{margin-top:18px;border-radius:18px;border:1px solid var(--gold-line);background:rgba(255,255,255,.04);overflow:hidden;display:none}
+.ffFind__p.show{display:block;animation:ffIn .5s cubic-bezier(.19,.7,.2,1)}
+.ffFind__sec{padding:20px;border-bottom:1px solid rgba(201,168,76,.18)}
+.ffFind__k{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+.ffFind__sec p{margin-top:8px;font-size:1rem;line-height:1.7;color:rgba(255,255,255,.88);font-weight:300}
+.ffFind__sec p b{color:#fff;font-weight:600}
+.ffFind__cta{padding:18px 20px;background:rgba(0,0,0,.22)}
+.ffFind__cta .btnGold{width:100%;justify-content:center}
+@keyframes ffIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ffTwo{display:grid;gap:16px;max-width:1000px;margin:0 auto}
+.ffTwo__c{border-radius:20px;padding:26px 22px}
+.ffTwo__c--in{background:linear-gradient(160deg,var(--plum),var(--plum-deep));color:#fff;box-shadow:0 30px 60px -30px rgba(46,26,53,.7)}
+.ffTwo__c--out{background:#fff;border:1px solid var(--border)}
+.ffTwo__k{font-size:.62rem;letter-spacing:.22em;font-weight:700;text-transform:uppercase;color:var(--gold-deep)}
+.ffTwo__c--in .ffTwo__k{color:var(--gold)}
+.ffTwo__h{font-family:'Cormorant Garamond',serif;font-size:1.9rem;line-height:1.08;margin:8px 0;font-weight:500}
+.ffTwo__c--out .ffTwo__h{color:var(--plum-dark)}
+.ffTwo__p{font-size:.98rem;line-height:1.65;opacity:.85;margin-bottom:12px}
+.ffTwo li{position:relative;padding:10px 0 10px 30px;border-top:1px solid rgba(201,168,76,.22);font-size:.98rem;line-height:1.45}
+.ffTwo li::before{content:'';position:absolute;left:2px;top:15px;width:15px;height:15px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C)}
+.ffTwo__c--out li{color:var(--ink-mid)}
+.ffTwo__both{max-width:760px;margin:26px auto 0;text-align:center;font-size:1rem;line-height:1.75;color:var(--ink-soft)}
+.ffTwo__both b{color:var(--plum-dark)}
+.ffCalc{background:linear-gradient(170deg,#fffdf8,#f5eddd);border:1px solid var(--border);border-radius:22px;padding:24px 20px;max-width:900px;margin:0 auto;box-shadow:0 36px 70px -40px rgba(46,26,53,.45)}
+.ffCalc__row{margin-bottom:22px}
+.ffCalc__lab{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;font-weight:600;color:var(--ink);margin-bottom:10px;gap:10px}
+.ffCalc__lab b{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--plum-dark);font-weight:600;line-height:1}
+.ffCalc input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:36px;background:transparent;cursor:pointer;touch-action:pan-y}
+.ffCalc input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:99px;background:linear-gradient(90deg,var(--gold) var(--p,50%),var(--parchment-deep) var(--p,50%))}
+.ffCalc input[type=range]::-moz-range-track{height:8px;border-radius:99px;background:var(--parchment-deep)}
+.ffCalc input[type=range]::-moz-range-progress{height:8px;border-radius:99px;background:var(--gold)}
+.ffCalc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#f3dc9b,#C9A84C);border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.3);margin-top:-11px}
+.ffCalc input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#C9A84C;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.ffCalc__out{display:grid;gap:12px;margin-top:8px}
+.ffCalc__box{border-radius:16px;padding:18px;background:#fff;border:1px solid var(--border)}
+.ffCalc__box--up{background:linear-gradient(160deg,var(--plum),var(--plum-deep));color:#fff;border-color:transparent}
+.ffCalc__box small{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.ffCalc__box--up small{color:var(--gold)}
+.ffCalc__box b{display:block;font-family:'Cormorant Garamond',serif;font-size:2.5rem;line-height:1.05;margin-top:4px;color:var(--plum-dark);font-weight:500}
+.ffCalc__box--up b{color:var(--gold-soft)}
+.ffCalc__ins{margin-top:16px;padding:16px 18px;border-left:3px solid var(--gold);background:rgba(201,168,76,.12);border-radius:0 12px 12px 0;font-size:.98rem;line-height:1.65;color:var(--ink-mid)}
+.ffCalc__ins b{color:var(--plum-dark)}
+.ffCalc__fine{margin-top:12px;font-size:.72rem;color:var(--muted);line-height:1.55}
+.ffShift{background:var(--plum-deep);color:#fff;text-align:center;padding:72px 0;position:relative;overflow:hidden}
+.ffShift h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.3rem,10.5vw,5rem);line-height:1;letter-spacing:-.03em}
 .ffShift h2 span{display:block;color:rgba(255,255,255,.38)}
 .ffShift h2 em{font-style:italic;color:var(--gold-soft)}
-.ffShift p{max-width:700px;margin:30px auto 0;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:300;line-height:1.8;color:rgba(255,255,255,.78)}
+.ffShift p{max-width:680px;margin:24px auto 0;font-size:1.04rem;font-weight:300;line-height:1.75;color:rgba(255,255,255,.78)}
 .ffShift p b{color:#fff}
-/* free vs worth paying */
-.ffVs{display:grid;grid-template-columns:1fr 1.15fr;gap:22px;max-width:1000px;margin:0 auto}
-.ffVs__c{border-radius:18px;padding:clamp(26px,3vw,38px)}
-.ffVs__c--free{background:var(--ivory);border:1px solid var(--border)}
-.ffVs__c--pay{background:linear-gradient(160deg,var(--plum),var(--plum-deep));color:#fff;box-shadow:0 30px 60px -28px rgba(46,26,53,.6);position:relative}
-.ffVs__tag{font-size:.66rem;letter-spacing:.22em;font-weight:700;text-transform:uppercase;color:var(--gold-deep)}
+.ffVs{display:grid;gap:14px;max-width:1000px;margin:34px auto 0}
+.ffVs__c{border-radius:18px;padding:24px 22px;text-align:left}
+.ffVs__c--free{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)}
+.ffVs__c--pay{background:linear-gradient(160deg,#4E3158,var(--plum));border:1px solid var(--gold-line)}
+.ffVs__tag{font-size:.62rem;letter-spacing:.22em;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.55)}
 .ffVs__c--pay .ffVs__tag{color:var(--gold)}
-.ffVs__h{font-family:'Cormorant Garamond',serif;font-size:2rem;margin:6px 0 16px;font-weight:500}
-.ffVs li{position:relative;padding:8px 0 8px 26px;font-size:.98rem;color:var(--ink-soft)}
-.ffVs__c--pay li{color:rgba(255,255,255,.88)}
-.ffVs__c--free li::before{content:'×';position:absolute;left:2px;color:var(--muted);font-weight:700}
-.ffVs__c--pay li::before{content:'';position:absolute;left:3px;top:15px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.7)}
-/* phase explorer */
-.ffPh{background:linear-gradient(180deg,var(--plum-deep),#1a0b20);color:#fff;padding:clamp(70px,9vw,120px) 0}
-.ffPh .h2{color:#fff}
-.ffPh .lead{color:rgba(255,255,255,.7)}
-.ffPh__rail{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:0 auto 34px;max-width:1040px}
-.ffPh__rail::before{content:'';position:absolute;left:8.3%;right:8.3%;top:23px;height:2px;background:rgba(201,168,76,.22)}
-.ffPh__bar{position:absolute;left:8.3%;top:23px;height:2px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));width:0;transition:width .6s cubic-bezier(.19,.7,.2,1)}
-.ffPh__b{position:relative;background:none;border:0;color:inherit;font:inherit;cursor:pointer;text-align:center;padding:0 4px}
-.ffPh__n{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;margin:0 auto 10px;background:var(--plum-dark);border:2px solid rgba(201,168,76,.35);font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:rgba(255,255,255,.7);transition:all .35s}
-.ffPh__b span{display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:rgba(255,255,255,.5);transition:color .3s}
-.ffPh__b.on .ffPh__n,.ffPh__b.done .ffPh__n{background:linear-gradient(180deg,#ecd391,#C9A84C);border-color:#ecd391;color:var(--plum-dark);font-weight:700}
-.ffPh__b.on .ffPh__n{transform:scale(1.14);box-shadow:0 0 0 7px rgba(201,168,76,.16)}
-.ffPh__b.on span{color:var(--gold-soft)}
-.ffPh__b:focus-visible .ffPh__n{outline:2px solid var(--gold-soft);outline-offset:4px}
-.ffPh__panel{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:0;border-radius:20px;overflow:hidden;border:1px solid var(--gold-line);background:rgba(255,255,255,.03);min-height:330px}
-.ffPh__l{padding:clamp(26px,3.4vw,46px)}
-.ffPh__r{padding:clamp(26px,3.4vw,46px);background:linear-gradient(160deg,rgba(201,168,76,.12),rgba(201,168,76,.03));border-left:1px solid var(--gold-line)}
-.ffPh__k{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:700}
-.ffPh__t{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.4rem);line-height:1;margin:10px 0 14px;font-weight:500}
-.ffPh__d{font-size:1.04rem;line-height:1.75;color:rgba(255,255,255,.78);font-weight:300}
-.ffPh__lw{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--gold-soft);margin-bottom:14px}
-.ffPh__r li{position:relative;padding:11px 0 11px 34px;border-bottom:1px solid rgba(201,168,76,.18);font-size:1.02rem;color:#fff}
+.ffVs__h{font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin:4px 0 10px;font-weight:500}
+.ffVs li{position:relative;padding:7px 0 7px 26px;font-size:.98rem;color:rgba(255,255,255,.72)}
+.ffVs__c--pay li{color:#fff}
+.ffVs__c--free li::before{content:'×';position:absolute;left:2px;color:rgba(255,255,255,.4);font-weight:700}
+.ffVs__c--pay li::before{content:'';position:absolute;left:3px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.7)}
+.ffPh{background:linear-gradient(180deg,#1a0b20,var(--plum-deep));color:#fff;padding:64px 0}
+.ffPh .h2{color:#fff}.ffPh .lead{color:rgba(255,255,255,.7)}
+.ffPh__rail{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;margin:0 -20px 14px;padding:4px 20px 8px;scrollbar-width:none}
+.ffPh__rail::-webkit-scrollbar{display:none}
+.ffPh__b{flex:none;scroll-snap-align:center;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.05);border:1px solid var(--gold-line);color:rgba(255,255,255,.7);font:inherit;font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 15px 10px 10px;border-radius:999px;cursor:pointer;transition:all .25s;min-height:48px}
+.ffPh__n{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--plum-dark);border:1px solid var(--gold-line);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700}
+.ffPh__b.done{color:var(--gold-soft)}
+.ffPh__b.on{background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);border-color:#ecd391}
+.ffPh__b.on .ffPh__n{background:var(--plum-dark);color:var(--gold-soft)}
+.ffPh__bar{height:3px;border-radius:99px;background:rgba(201,168,76,.2);margin:0 0 18px;overflow:hidden}
+.ffPh__bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transition:width .5s cubic-bezier(.19,.7,.2,1)}
+.ffPh__panel{border-radius:20px;overflow:hidden;border:1px solid var(--gold-line);background:rgba(255,255,255,.03)}
+.ffPh__l{padding:24px 20px}
+.ffPh__r{padding:22px 20px;background:linear-gradient(160deg,rgba(201,168,76,.14),rgba(201,168,76,.04));border-top:1px solid var(--gold-line)}
+.ffPh__k{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.ffPh__t{font-family:'Cormorant Garamond',serif;font-size:2.5rem;line-height:1;margin:8px 0 12px;font-weight:500}
+.ffPh__d{font-size:1rem;line-height:1.7;color:rgba(255,255,255,.8);font-weight:300}
+.ffPh__in{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(201,168,76,.12);font-size:.9rem;line-height:1.55;color:var(--gold-soft)}
+.ffPh__lw{font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--gold-soft);margin-bottom:10px}
+.ffPh__r li{position:relative;padding:12px 0 12px 34px;border-bottom:1px solid rgba(201,168,76,.18);font-size:1rem;color:#fff;line-height:1.4}
 .ffPh__r li:last-child{border:0}
 .ffPh__r li::before{content:'';position:absolute;left:0;top:14px;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C)}
 .ffPh__r li::after{content:'';position:absolute;left:7px;top:19px;width:5px;height:9px;border:solid var(--plum-dark);border-width:0 2px 2px 0;transform:rotate(40deg)}
-.ffPh__nav{display:flex;justify-content:space-between;max-width:1040px;margin:18px auto 0}
-.ffPh__nav button{background:none;border:1px solid var(--gold-line);color:#fff;font:inherit;font-size:.85rem;font-weight:600;padding:11px 20px;border-radius:5px;cursor:pointer;transition:all .2s}
-.ffPh__nav button:hover{border-color:var(--gold);background:rgba(201,168,76,.08)}
-.ffPh__panel.swap .ffPh__l,.ffPh__panel.swap .ffPh__r{animation:ffIn .5s cubic-bezier(.19,.7,.2,1)}
-@keyframes ffIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-/* support layers */
-.ffLay{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1120px;margin:0 auto}
-.ffLay__c{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:transform .3s,box-shadow .3s,border-color .3s}
-.ffLay__c:hover{transform:translateY(-6px);box-shadow:0 26px 50px -26px rgba(46,26,53,.35);border-color:var(--gold)}
-.ffLay__k{font-size:.66rem;letter-spacing:.22em;font-weight:700;color:var(--gold-deep);text-transform:uppercase}
+.ffPh__nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.ffPh__nav button{background:none;border:1px solid var(--gold-line);color:#fff;font:inherit;font-size:.88rem;font-weight:600;padding:14px;border-radius:10px;cursor:pointer}
+.ffPh__nav button:active{background:rgba(201,168,76,.12)}
+.ffPh__panel.swap .ffPh__l,.ffPh__panel.swap .ffPh__r{animation:ffIn .45s cubic-bezier(.19,.7,.2,1)}
+.ffSwipe{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:4px 20px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ffSwipe::-webkit-scrollbar{display:none}
+.ffSwipe>*{flex:0 0 84%;scroll-snap-align:center}
+.ffHint{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.ffHint--d{color:rgba(255,255,255,.5)}
+.ffLay__c{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px 22px}
+.ffLay__k{font-size:.62rem;letter-spacing:.22em;font-weight:700;color:var(--gold-deep);text-transform:uppercase}
 .ffLay__h{font-family:'Cormorant Garamond',serif;font-size:1.6rem;line-height:1.1;margin:8px 0 10px;color:var(--plum-dark);font-weight:600}
-.ffLay__p{font-size:.95rem;color:var(--ink-soft);line-height:1.65}
-.ffPrin{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1120px;margin:54px auto 0;border-top:1px solid var(--gold-line)}
-.ffPrin__c{padding:26px 22px 0;border-right:1px solid rgba(201,168,76,.22)}
-.ffPrin__c:last-child{border:0}
-.ffPrin__n{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--gold);line-height:1}
-.ffPrin__h{font-weight:700;font-size:1rem;margin:8px 0 6px;color:var(--plum-dark)}
-.ffPrin__p{font-size:.9rem;color:var(--ink-soft);line-height:1.6}
-/* comparison */
-.ffCmp{max-width:980px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:#fff;box-shadow:0 30px 60px -36px rgba(46,26,53,.4)}
-.ffCmp table{width:100%;border-collapse:collapse}
-.ffCmp th,.ffCmp td{padding:17px 20px;text-align:left;font-size:.98rem;border-bottom:1px solid var(--border)}
-.ffCmp thead th{background:var(--parchment-mid);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
-.ffCmp thead th.us{background:linear-gradient(180deg,var(--plum),var(--plum-dark));color:var(--gold-soft)}
-.ffCmp td.us{background:rgba(201,168,76,.1);font-weight:700;color:var(--plum-dark)}
-.ffCmp td.us::before{content:'✓ ';color:var(--gold-deep)}
-.ffCmp td{color:var(--ink-soft)}
-.ffCmp tr:last-child td{border-bottom:0}
-.ffCmp td:first-child{color:var(--ink);font-weight:600}
-/* results */
-.ffRes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1120px;margin:0 auto}
-.ffRes__c{position:relative;background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--gold-line);border-radius:18px;padding:30px 26px;transition:transform .3s,border-color .3s}
-.ffRes__c:hover{transform:translateY(-6px);border-color:var(--gold)}
-.ffRes__num{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,4.4vw,3.8rem);line-height:1;color:var(--gold-soft);font-weight:500}
-.ffRes__when{margin-top:6px;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
-.ffRes__by{display:flex;align-items:center;gap:12px;margin-top:20px;padding-top:18px;border-top:1px solid rgba(201,168,76,.2)}
+.ffLay__p{font-size:.96rem;color:var(--ink-soft);line-height:1.65}
+.ffPrin{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:36px auto 0;border-top:1px solid var(--gold-line)}
+.ffPrin__c{padding:20px 14px 6px 0}
+.ffPrin__n{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);line-height:1}
+.ffPrin__h{font-weight:700;font-size:.92rem;margin:6px 0 4px;color:var(--plum-dark);line-height:1.3}
+.ffPrin__p{font-size:.84rem;color:var(--ink-soft);line-height:1.55}
+.ffRes__c{position:relative;background:linear-gradient(165deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--gold-line);border-radius:18px;padding:26px 22px}
+.ffRes__num{font-family:'Cormorant Garamond',serif;font-size:3rem;line-height:1;color:var(--gold-soft);font-weight:500}
+.ffRes__when{margin-top:6px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.ffRes__by{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,168,76,.2)}
 .ffRes__av{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(160deg,var(--plum-mid),var(--plum));border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold-soft);overflow:hidden}
 .ffRes__av img{width:100%;height:100%;object-fit:cover}
 .ffRes__nm{font-weight:700;color:#fff;font-size:1rem;line-height:1.2}
-.ffRes__ds{font-size:.88rem;color:rgba(255,255,255,.66);line-height:1.5;margin-top:2px}
-.ffResNote{max-width:760px;margin:34px auto 0;text-align:center;font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.6}
+.ffRes__ds{font-size:.86rem;color:rgba(255,255,255,.68);line-height:1.5;margin-top:2px}
+.ffResNote{max-width:760px;margin:22px auto 0;text-align:center;font-size:.74rem;color:rgba(255,255,255,.55);line-height:1.6}
 .ffResNote a{color:var(--gold-soft);text-decoration:underline}
-/* guarantee */
-.ffG{position:relative;background:linear-gradient(170deg,#231029,#2E1A35 50%,#1c0d22);color:#fff;padding:clamp(76px,10vw,130px) 0;overflow:hidden}
-.ffG::before{content:'';position:absolute;left:50%;top:-10%;width:900px;height:900px;margin-left:-450px;background:radial-gradient(circle,rgba(201,168,76,.18),transparent 62%);pointer-events:none}
+.ffG{position:relative;background:linear-gradient(170deg,#231029,#2E1A35 50%,#1c0d22);color:#fff;padding:64px 0;overflow:hidden}
+.ffG::before{content:'';position:absolute;left:50%;top:-6%;width:620px;height:620px;margin-left:-310px;background:radial-gradient(circle,rgba(201,168,76,.2),transparent 62%);pointer-events:none}
 .ffG .layout{position:relative}
-.ffG__top{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,64px);align-items:center;max-width:1040px;margin:0 auto 56px}
-.ffG__seal{width:clamp(150px,18vw,220px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 28%,#f6e3a5,#C9A84C 52%,#8e6f1e);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--plum-dark);text-align:center;box-shadow:0 30px 70px -10px rgba(201,168,76,.45),inset 0 0 0 7px rgba(255,255,255,.22),inset 0 0 0 9px rgba(46,26,53,.25)}
-.ffG__seal b{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,4.6rem);line-height:.9;font-weight:600}
-.ffG__seal span{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;margin-top:6px;line-height:1.35}
-.ffG__top h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.3rem,4.8vw,4.2rem);line-height:1.02;letter-spacing:-.025em}
+.ffG__top{display:grid;gap:22px;justify-items:center;text-align:center;max-width:1040px;margin:0 auto 36px}
+.ffG__seal{width:150px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 28%,#f6e3a5,#C9A84C 52%,#8e6f1e);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--plum-dark);box-shadow:0 26px 60px -10px rgba(201,168,76,.5),inset 0 0 0 6px rgba(255,255,255,.22),inset 0 0 0 8px rgba(46,26,53,.25);animation:ffPulse 3.6s ease-in-out infinite}
+@keyframes ffPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+.ffG__seal b{font-family:'Cormorant Garamond',serif;font-size:3rem;line-height:.9;font-weight:600}
+.ffG__seal span{font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800;margin-top:5px;line-height:1.35;text-align:center}
+.ffG__top h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2rem,9vw,4rem);line-height:1.04;letter-spacing:-.025em}
 .ffG__top h2 em{color:var(--gold-soft)}
-.ffG__top p{margin-top:20px;font-size:1.15rem;font-weight:300;line-height:1.8;color:rgba(255,255,255,.8);max-width:620px}
+.ffG__top p{margin-top:16px;font-size:1.04rem;font-weight:300;line-height:1.75;color:rgba(255,255,255,.82)}
 .ffG__top p b{color:#fff;font-weight:600}
-.ffGs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1120px;margin:0 auto}
-.ffGs__c{position:relative;border:1px solid var(--gold-line);border-radius:16px;padding:26px 22px;background:rgba(255,255,255,.04);transition:transform .3s,border-color .3s,background .3s}
-.ffGs__c:hover{transform:translateY(-5px);border-color:var(--gold);background:rgba(201,168,76,.08)}
-.ffGs__n{font-family:'Cormorant Garamond',serif;font-size:2.6rem;line-height:1;color:var(--gold)}
-.ffGs__h{font-weight:700;margin:10px 0 6px;font-size:1.02rem}
-.ffGs__p{font-size:.9rem;line-height:1.65;color:rgba(255,255,255,.7)}
-.ffG2{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1120px;margin:44px auto 0}
-.ffG2__c{border-radius:16px;padding:30px 28px;border:1px solid var(--gold-line);background:rgba(255,255,255,.03)}
-.ffG2__c h3{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;margin-bottom:14px;color:var(--gold-soft)}
-.ffG2__c li{position:relative;padding:8px 0 8px 22px;font-size:.96rem;line-height:1.55;color:rgba(255,255,255,.82)}
-.ffG2__c li::before{content:'';position:absolute;left:2px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
-.ffGglance{max-width:1120px;margin:44px auto 0;border:1px solid var(--gold-line);border-radius:16px;overflow:hidden}
-.ffGglance div{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:15px 24px;border-bottom:1px solid rgba(201,168,76,.18);font-size:.95rem}
+.ffGt{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:1000px;margin:0 auto 12px}
+.ffGt button{font:inherit;background:rgba(255,255,255,.05);border:1px solid var(--gold-line);border-radius:12px;padding:12px 4px;color:rgba(255,255,255,.7);cursor:pointer;text-align:center;min-height:62px;transition:all .25s}
+.ffGt button b{display:block;font-family:'Cormorant Garamond',serif;font-size:1.6rem;line-height:1;color:var(--gold)}
+.ffGt button span{display:block;margin-top:4px;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.ffGt button.on{background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);border-color:#ecd391}
+.ffGt button.on b{color:var(--plum-dark)}
+.ffGp{max-width:1000px;margin:0 auto;border:1px solid var(--gold-line);border-radius:18px;padding:24px 20px;background:rgba(255,255,255,.04);min-height:190px}
+.ffGp.swap{animation:ffIn .45s cubic-bezier(.19,.7,.2,1)}
+.ffGp__n{font-family:'Cormorant Garamond',serif;font-size:2.6rem;line-height:1;color:var(--gold)}
+.ffGp h3{font-size:1.2rem;margin:8px 0;font-weight:700}
+.ffGp p{font-size:1rem;line-height:1.7;color:rgba(255,255,255,.8);font-weight:300}
+.ffGtab{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:1000px;margin:34px auto 12px}
+.ffGtab button{font:inherit;font-size:.86rem;font-weight:700;padding:14px 8px;border-radius:12px;border:1px solid var(--gold-line);background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);cursor:pointer;min-height:50px}
+.ffGtab button.on{background:rgba(201,168,76,.2);border-color:var(--gold);color:#fff}
+.ffG2{max-width:1000px;margin:0 auto}
+.ffG2__c{border-radius:16px;padding:22px 20px;border:1px solid var(--gold-line);background:rgba(255,255,255,.03);display:none}
+.ffG2__c.show{display:block;animation:ffIn .4s}
+.ffG2__c li{position:relative;padding:9px 0 9px 22px;font-size:.98rem;line-height:1.5;color:rgba(255,255,255,.85)}
+.ffG2__c li::before{content:'';position:absolute;left:2px;top:18px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.ffGglance{max-width:1000px;margin:30px auto 0;border:1px solid var(--gold-line);border-radius:16px;overflow:hidden}
+.ffGglance div{padding:14px 18px;border-bottom:1px solid rgba(201,168,76,.18);font-size:.94rem;line-height:1.5}
 .ffGglance div:last-child{border:0}
-.ffGglance b{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);padding-top:4px}
-.ffGglance span{color:rgba(255,255,255,.86)}
-.ffG__fine{max-width:820px;margin:30px auto 0;text-align:center;font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.7}
-/* fit + check */
-.ffFit{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1040px;margin:0 auto}
-.ffFit__c{border-radius:18px;padding:32px 30px}
-.ffFit__c--y{background:#fff;border:1px solid var(--border);box-shadow:0 26px 50px -34px rgba(46,26,53,.35)}
+.ffGglance b{display:block;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.ffGglance span{color:rgba(255,255,255,.88)}
+.ffG__fine{max-width:820px;margin:24px auto 0;text-align:center;font-size:.76rem;color:rgba(255,255,255,.55);line-height:1.7}
+.ffCmp{max-width:980px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid var(--border);background:#fff}
+.ffCmp table,.ffCmp tbody,.ffCmp tr,.ffCmp td{display:block;width:100%}
+.ffCmp thead{display:none}
+.ffCmp tr{padding:16px 18px;border-bottom:1px solid var(--border)}
+.ffCmp tr:last-child{border:0}
+.ffCmp td:first-child{font-weight:700;color:var(--ink);margin-bottom:8px;font-size:1rem}
+.ffCmp td{display:flex;justify-content:space-between;font-size:.9rem;color:var(--ink-soft);padding:3px 0}
+.ffCmp td::before{content:attr(data-l);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;padding-top:3px}
+.ffCmp td:first-child::before{display:none}
+.ffCmp td.us{margin-top:6px;padding:9px 12px;border-radius:10px;background:linear-gradient(160deg,var(--plum),var(--plum-dark));color:var(--gold-soft);font-weight:700}
+.ffCmp td.us::before{color:var(--gold)}
+.ffFit{display:grid;gap:14px;max-width:1040px;margin:0 auto}
+.ffFit__c{border-radius:18px;padding:26px 22px}
+.ffFit__c--y{background:#fff;border:1px solid var(--border)}
 .ffFit__c--n{background:var(--parchment-mid);border:1px solid var(--border)}
-.ffFit__h{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;margin:6px 0 14px;color:var(--plum-dark)}
-.ffFit__c li{position:relative;padding:9px 0 9px 28px;font-size:.98rem;color:var(--ink-mid);line-height:1.55}
+.ffFit__h{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;margin:4px 0 10px;color:var(--plum-dark);line-height:1.1}
+.ffFit__c li{position:relative;padding:8px 0 8px 28px;font-size:.98rem;color:var(--ink-mid);line-height:1.5}
 .ffFit__c--y li::before{content:'✓';position:absolute;left:0;color:var(--gold-deep);font-weight:800}
 .ffFit__c--n li::before{content:'×';position:absolute;left:3px;color:var(--muted);font-weight:700}
-.ffChk{max-width:760px;margin:46px auto 0;background:linear-gradient(160deg,var(--plum),var(--plum-deep));border-radius:20px;padding:clamp(28px,4vw,44px);color:#fff;box-shadow:0 36px 70px -34px rgba(46,26,53,.7)}
-.ffChk h3{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(1.7rem,3vw,2.3rem);line-height:1.1}
+.ffChk{max-width:760px;margin:30px auto 0;background:linear-gradient(160deg,var(--plum),var(--plum-deep));border-radius:20px;padding:26px 18px;color:#fff}
+.ffChk h3{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.9rem;line-height:1.1}
 .ffChk h3 em{color:var(--gold-soft)}
-.ffChk p.s{margin-top:8px;font-size:.92rem;color:rgba(255,255,255,.66)}
-.ffChk label{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;margin-top:10px;border:1px solid var(--gold-line);border-radius:12px;cursor:pointer;font-size:.98rem;line-height:1.5;transition:all .2s;background:rgba(255,255,255,.03)}
-.ffChk label:hover{border-color:var(--gold)}
-.ffChk label.on{background:rgba(201,168,76,.14);border-color:var(--gold)}
-.ffChk input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--gold);margin-top:1px;cursor:pointer;position:relative;background:transparent}
+.ffChk p.s{margin-top:6px;font-size:.88rem;color:rgba(255,255,255,.66)}
+.ffChk label{display:flex;gap:14px;align-items:flex-start;padding:15px 14px;margin-top:9px;border:1px solid var(--gold-line);border-radius:12px;cursor:pointer;font-size:.98rem;line-height:1.45;background:rgba(255,255,255,.03);min-height:56px}
+.ffChk label.on{background:rgba(201,168,76,.16);border-color:var(--gold)}
+.ffChk input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--gold);position:relative;background:transparent}
 .ffChk input:checked{background:var(--gold)}
-.ffChk input:checked::after{content:'';position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid var(--plum-dark);border-width:0 2.5px 2.5px 0;transform:rotate(40deg)}
-.ffChk__res{margin-top:22px;padding:20px 22px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--gold-line);display:none}
+.ffChk input:checked::after{content:'';position:absolute;left:7px;top:2px;width:6px;height:11px;border:solid var(--plum-dark);border-width:0 2.5px 2.5px 0;transform:rotate(40deg)}
+.ffChk__meter{height:6px;border-radius:99px;background:rgba(255,255,255,.12);margin-top:20px;overflow:hidden}
+.ffChk__meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transition:width .5s cubic-bezier(.19,.7,.2,1)}
+.ffChk__res{margin-top:18px;padding:18px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--gold-line);display:none}
 .ffChk__res.show{display:block;animation:ffIn .5s}
 .ffChk__res b{display:block;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold-soft);font-weight:500;margin-bottom:6px}
-.ffChk__res span{font-size:.95rem;line-height:1.7;color:rgba(255,255,255,.8)}
-.ffChk__meter{height:6px;border-radius:99px;background:rgba(255,255,255,.12);margin-top:22px;overflow:hidden}
-.ffChk__meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transition:width .5s cubic-bezier(.19,.7,.2,1)}
-/* investment */
-.ffInv{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;max-width:1040px;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 40px 80px -40px rgba(46,26,53,.55)}
-.ffInv__l{background:linear-gradient(165deg,var(--plum),var(--plum-deep));color:#fff;padding:clamp(30px,4vw,52px);display:flex;flex-direction:column;justify-content:center}
-.ffInv__k{font-size:.68rem;letter-spacing:.24em;font-weight:700;text-transform:uppercase;color:var(--gold)}
-.ffInv__big{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,3.8vw,3.2rem);line-height:1.05;color:var(--gold-soft);margin:12px 0 10px;font-weight:500}
-.ffInv__l p{color:rgba(255,255,255,.76);font-size:1rem;line-height:1.7}
-.ffInv__r{background:#fff;padding:clamp(30px,4vw,52px)}
-.ffInv__r h3{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin-bottom:10px}
-.ffInv__r li{position:relative;padding:10px 0 10px 30px;border-bottom:1px solid var(--border);font-size:1rem;color:var(--ink-mid)}
+.ffChk__res span{font-size:.94rem;line-height:1.65;color:rgba(255,255,255,.82)}
+.ffChk__res .btnGold{width:100%;justify-content:center;margin-top:14px}
+.ffInv{display:grid;max-width:1040px;margin:0 auto;border-radius:22px;overflow:hidden;border:1px solid var(--gold-line);box-shadow:0 36px 70px -40px rgba(46,26,53,.55)}
+.ffInv__l{background:linear-gradient(165deg,var(--plum),var(--plum-deep));color:#fff;padding:30px 22px}
+.ffInv__k{font-size:.64rem;letter-spacing:.22em;font-weight:700;text-transform:uppercase;color:var(--gold)}
+.ffInv__big{font-family:'Cormorant Garamond',serif;font-size:2.4rem;line-height:1.05;color:var(--gold-soft);margin:10px 0;font-weight:500}
+.ffInv__l p{color:rgba(255,255,255,.78);font-size:.98rem;line-height:1.7}
+.ffInv__l .btnGold{width:100%;justify-content:center;margin-top:22px}
+.ffInv__r{background:#fff;padding:26px 22px}
+.ffInv__r h3{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin-bottom:8px}
+.ffInv__r li{position:relative;padding:12px 0 12px 30px;border-bottom:1px solid var(--border);font-size:.98rem;color:var(--ink-mid);line-height:1.45}
 .ffInv__r li:last-child{border:0}
 .ffInv__r li::before{content:'✓';position:absolute;left:0;color:var(--gold-deep);font-weight:800}
-/* founder */
-.ffFound{display:grid;grid-template-columns:.78fr 1.22fr;gap:clamp(30px,5vw,70px);align-items:center;max-width:1080px;margin:0 auto}
-.ffFound__img{position:relative}
-.ffFound__img img{width:100%;border-radius:20px;aspect-ratio:4/5;object-fit:cover;object-position:top center;box-shadow:0 40px 70px -34px rgba(46,26,53,.6)}
-.ffFound__img::after{content:'';position:absolute;inset:-12px 12px 12px -12px;border:1px solid var(--gold);border-radius:22px;z-index:-1;opacity:.7}
-.ffFound h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.1rem,4vw,3.4rem);line-height:1.04;letter-spacing:-.02em;color:var(--ink)}
+.ffFound{display:grid;gap:28px;max-width:1080px;margin:0 auto}
+.ffFound__img img{width:100%;border-radius:20px;aspect-ratio:4/4.4;object-fit:cover;object-position:top center;box-shadow:0 36px 60px -34px rgba(46,26,53,.6)}
+.ffFound h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2rem,9vw,3.4rem);line-height:1.05;letter-spacing:-.02em;color:var(--ink)}
 .ffFound h2 em{font-style:italic;color:var(--gold-deep)}
-.ffFound p{margin-top:18px;font-size:1.08rem;line-height:1.85;color:var(--ink-soft);font-weight:300}
+.ffFound p{margin-top:16px;font-size:1.04rem;line-height:1.8;color:var(--ink-soft);font-weight:300}
 .ffFound p b{color:var(--ink);font-weight:600}
-.ffFound__stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
-.ffFound__stats div{padding:16px 14px;border:1px solid var(--border);border-radius:12px;background:#fff;text-align:center}
-.ffFound__stats b{display:block;font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:1;color:var(--plum-dark)}
-.ffFound__stats span{display:block;margin-top:5px;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
-/* sticky cta */
-.ffSticky{position:fixed;left:0;right:0;bottom:0;z-index:150;display:none;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(35,16,41,.96);backdrop-filter:blur(10px);border-top:1px solid var(--gold-line);transform:translateY(110%);transition:transform .35s}
+.ffFound__stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.ffFound__stats div{padding:14px 8px;border:1px solid var(--border);border-radius:12px;background:#fff;text-align:center}
+.ffFound__stats b{display:block;font-family:'Cormorant Garamond',serif;font-size:1.7rem;line-height:1;color:var(--plum-dark)}
+.ffFound__stats span{display:block;margin-top:5px;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.faqBtn{padding:20px 0;font-size:1.2rem;min-height:60px}
+.faqA p{font-size:.98rem}
+.ffNext__row{gap:16px;padding:22px 0}
+.ffDisc{background:var(--plum-deep);padding:26px 0;text-align:center}
+.ffDisc p{max-width:860px;margin:0 auto;font-size:.72rem;line-height:1.7;color:rgba(255,255,255,.5)}
+.ffDisc a{text-decoration:underline;color:rgba(255,255,255,.7)}
+.final__h{font-size:clamp(2.3rem,10vw,5rem)}
+.final .btnGold{width:100%;max-width:420px;justify-content:center}
+.ffSticky{position:fixed;left:0;right:0;bottom:0;z-index:150;padding:10px 74px calc(10px + env(safe-area-inset-bottom)) 60px;background:rgba(35,16,41,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--gold-line);transform:translateY(110%);transition:transform .35s}
 .ffSticky.show{transform:none}
-.ffSticky{padding-left:62px;padding-right:76px}
 .ffSticky a{display:flex;justify-content:center;width:100%;padding:14px 10px;font-size:.84rem}
-@media(max-width:1000px){
-  .ff-hero .layout{grid-template-columns:1fr}
-  .ffDoc{transform:none;max-width:520px;margin:10px auto 0}
-  .ffSeal{right:-8px}
-  .ffProof .layout{grid-template-columns:repeat(2,1fr)}
-  .ffProof__c:nth-child(2){border-right:0}
-  .ffProof__c:nth-child(-n+2){border-bottom:1px solid rgba(201,168,76,.18)}
-  .ffVs,.ffPh__panel,.ffG2,.ffFit,.ffInv,.ffFound{grid-template-columns:1fr}
-  .ffPh__r{border-left:0;border-top:1px solid var(--gold-line)}
-  .ffLay,.ffGs{grid-template-columns:repeat(2,1fr)}
-  .ffPrin{grid-template-columns:repeat(2,1fr)}
-  .ffPrin__c:nth-child(2){border-right:0}
-  .ffRes{grid-template-columns:repeat(2,1fr)}
-  .ffG__top{grid-template-columns:1fr;text-align:center;justify-items:center}
-  .ffG__top p{margin-left:auto;margin-right:auto}
-  .ffFound__img{max-width:420px;margin:0 auto}
+body{padding-bottom:70px}
+@media(min-width:760px){
+  .layout{padding:0 36px}
+  .sec,.ffBlock,.ffPh,.ffG{padding:96px 0}
+  .ffShift{padding:110px 0}
+  .secHead{margin-bottom:54px}
+  .ff-hero{padding:64px 0 80px}
+  .ff-hero__ctas{display:flex;flex-wrap:wrap}
+  .ff-hero__ctas .btnGold,.ff-hero__ctas .btnGhost{width:auto}
+  .ff-hero__chips{margin:26px 0 0;padding:0;flex-wrap:wrap;overflow:visible}
+  .ffProof .layout{grid-template-columns:repeat(4,1fr)}
+  .ffProof__c{border-bottom:0!important;border-right:1px solid rgba(201,168,76,.18)!important;padding:30px 14px}
+  .ffProof__c:last-child{border-right:0!important}
+  .ffProof__c b{font-size:2.8rem}
+  .ffFind__chips{grid-template-columns:1fr 1fr 1fr}
+  .ffFind__b{flex-direction:column;align-items:flex-start;min-height:120px;font-size:1.05rem}
+  .ffFind__p.show{display:grid;grid-template-columns:1fr 1fr 1fr}
+  .ffFind__sec{border-bottom:0;border-right:1px solid rgba(201,168,76,.18)}
+  .ffFind__cta{grid-column:1/-1}
+  .ffFind__cta .btnGold{width:auto}
+  .ffTwo{grid-template-columns:1fr 1fr;gap:22px}
+  .ffTwo__c{padding:36px 32px}
+  .ffCalc{padding:40px}
+  .ffCalc__out{grid-template-columns:1fr 1fr}
+  .ffVs{grid-template-columns:1fr 1.15fr}
+  .ffPh__rail{margin:0 auto 18px;justify-content:center;overflow:visible}
+  .ffPh__panel{display:grid;grid-template-columns:1.05fr .95fr;min-height:330px}
+  .ffPh__r{border-top:0;border-left:1px solid var(--gold-line)}
+  .ffPh__l,.ffPh__r{padding:40px}
+  .ffPh__nav{max-width:420px;margin:18px auto 0}
+  .ffSwipe{display:grid;overflow:visible;margin:0;padding:0;gap:18px;grid-template-columns:repeat(2,1fr)}
+  .ffSwipe>*{flex:none}
+  .ffHint{display:none}
+  .ffPrin{grid-template-columns:repeat(4,1fr)}
+  .ffPrin__c{padding:26px 22px 0;border-right:1px solid rgba(201,168,76,.22)}
+  .ffPrin__c:last-child{border:0}
+  .ffRes__num{font-size:3.4rem}
+  .ffG__top{grid-template-columns:auto 1fr;text-align:left;justify-items:start;gap:56px;align-items:center}
+  .ffG__seal{width:200px}
+  .ffG__seal b{font-size:4rem}
+  .ffGp{padding:36px}
+  .ffGtab{display:none}
+  .ffG2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .ffG2__c{display:block;padding:30px 28px}
+  .ffGglance div{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:15px 24px}
+  .ffGglance b{margin:0;padding-top:4px}
+  .ffCmp table{display:table}
+  .ffCmp tbody{display:table-row-group}
+  .ffCmp tr{display:table-row;padding:0}
+  .ffCmp thead{display:table-header-group}
+  .ffCmp td,.ffCmp th{display:table-cell;width:auto;padding:17px 20px;text-align:left;font-size:.98rem;border-bottom:1px solid var(--border)}
+  .ffCmp td::before{display:none}
+  .ffCmp td:first-child{margin:0;font-size:.98rem}
+  .ffCmp thead th{background:var(--parchment-mid);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+  .ffCmp thead th.us{background:linear-gradient(180deg,var(--plum),var(--plum-dark));color:var(--gold-soft)}
+  .ffCmp td.us{margin:0;border-radius:0;background:rgba(201,168,76,.1);color:var(--plum-dark)}
+  .ffCmp td.us::before{display:inline;content:'✓ ';color:var(--gold-deep)}
+  .ffCmp tr:last-child td{border-bottom:0}
+  .ffFit{grid-template-columns:1fr 1fr;gap:22px}
+  .ffChk{padding:40px}
+  .ffInv{grid-template-columns:.9fr 1.1fr}
+  .ffInv__l,.ffInv__r{padding:46px}
+  .ffInv__l .btnGold{width:auto}
+  .ffFound{grid-template-columns:.78fr 1.22fr;gap:64px;align-items:center}
+  .ffFound__stats b{font-size:2rem}
+  .ffSticky{display:none}
+  body{padding-bottom:0}
 }
-@media(max-width:700px){
-  .layout{padding:0 20px}
-  .ff-hero__ctas .btnGold,.ff-hero__ctas .btnGhost{width:100%;justify-content:center}
-  .ffPh__rail{grid-template-columns:repeat(6,minmax(76px,1fr));overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
-  .ffPh__rail::-webkit-scrollbar{display:none}
-  .ffPh__rail::before,.ffPh__bar{display:none}
-  .ffLay,.ffGs,.ffRes,.ffPrin{grid-template-columns:1fr}
-  .ffPrin__c{border-right:0;border-bottom:1px solid rgba(201,168,76,.22);padding:22px 0}
-  .ffGglance div{grid-template-columns:1fr;gap:2px}
-  .ffCmp th,.ffCmp td{padding:13px 12px;font-size:.88rem}
-  .ffDoc__row{grid-template-columns:1fr;gap:2px}
-  .ffSticky{display:block}
-  body{padding-bottom:70px}
-  .ffFound__stats{grid-template-columns:1fr 1fr 1fr}
+@media(min-width:1000px){
+  .ff-hero__in{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:64px;align-items:center}
+  .ffDoc{padding:38px;transform:rotate(1.6deg)}
+  .ffDoc__h{font-size:2.2rem}
+  .ffDoc__row{grid-template-columns:112px 1fr;font-size:.86rem}
+  .ffSeal{width:104px;height:104px;right:-18px;top:-26px}
+  .ffSeal b{font-size:1.9rem}.ffSeal span{font-size:.5rem}
+  .ffSwipe{grid-template-columns:repeat(4,1fr)}
+  .ffSwipe--res{grid-template-columns:repeat(3,1fr)}
 }
+@media(max-width:759px){.ffSwipe--res>*{flex-basis:86%}}
+@media(prefers-reduced-motion:reduce){.ffG__seal{animation:none}}
+
+/* ═════ v4: everything visible, no slides ═════ */
+.ffSwipe{display:grid;grid-template-columns:1fr;gap:14px;overflow:visible;margin:0;padding:0;scroll-snap-type:none}
+.ffSwipe>*{flex:none}
+.ffHint{display:none}
+.ff-hero__chips{flex-wrap:wrap;overflow:visible;margin:22px 0 0;padding:0}
+.ffG2__c{display:block;margin-bottom:14px}
+.ffGs{display:grid;grid-template-columns:1fr;gap:12px;max-width:1120px;margin:0 auto}
+.ffGs__c{border:1px solid var(--gold-line);border-radius:16px;padding:24px 22px;background:rgba(255,255,255,.04)}
+.ffGs__n{font-family:'Cormorant Garamond',serif;font-size:2.6rem;line-height:1;color:var(--gold)}
+.ffGs__c h3{font-size:1.15rem;margin:8px 0 6px;font-weight:700}
+.ffGs__c p{font-size:.98rem;line-height:1.7;color:rgba(255,255,255,.78);font-weight:300}
+/* benefits */
+.ffBen{display:grid;grid-template-columns:1fr;gap:16px;max-width:1120px;margin:0 auto}
+.ffBen__c{position:relative;border:1px solid var(--border);border-radius:20px;padding:28px 22px;background:linear-gradient(170deg,#fff,#faf6ef)}
+.ffBen__c--in{background:linear-gradient(160deg,var(--plum),var(--plum-deep));color:#fff;border-color:transparent;box-shadow:0 30px 60px -32px rgba(46,26,53,.7)}
+.ffBen__n{font-family:'Cormorant Garamond',serif;font-size:2.4rem;line-height:1;color:var(--gold)}
+.ffBen__c h3{font-family:'Cormorant Garamond',serif;font-size:1.65rem;line-height:1.12;font-weight:600;margin:6px 0 8px;color:var(--plum-dark)}
+.ffBen__c--in h3{color:#fff}
+.ffBen__c>p{font-size:1rem;line-height:1.65;color:var(--ink-soft);margin-bottom:12px}
+.ffBen__c--in>p{color:rgba(255,255,255,.8)}
+.ffBen__c li{position:relative;padding:9px 0 9px 28px;border-top:1px solid var(--border);font-size:.97rem;line-height:1.5;color:var(--ink-mid)}
+.ffBen__c--in li{border-top-color:rgba(201,168,76,.25);color:rgba(255,255,255,.9)}
+.ffBen__c li::before{content:'';position:absolute;left:2px;top:15px;width:14px;height:14px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C)}
+.ffBen__fine{max-width:760px;margin:22px auto 0;text-align:center;font-size:.76rem;color:var(--muted);line-height:1.65}
+.ffBA{background:linear-gradient(180deg,#1a0b20,var(--plum-deep));color:#fff;padding:64px 0}
+.ffBA .h2{color:#fff}.ffBA .h2 em{color:var(--gold-soft)}
+.ffBA__grid{display:grid;grid-template-columns:1fr 1fr;max-width:1000px;margin:0 auto;border:1px solid var(--gold-line);border-radius:18px;overflow:hidden}
+.ffBA__h{padding:14px 14px;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
+.ffBA__h--a{background:rgba(255,255,255,.06);color:rgba(255,255,255,.6)}
+.ffBA__h--b{background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark)}
+.ffBA__a,.ffBA__b{padding:16px 14px;font-size:.92rem;line-height:1.5;border-top:1px solid rgba(201,168,76,.2)}
+.ffBA__a{color:rgba(255,255,255,.62);font-style:italic;background:rgba(255,255,255,.02)}
+.ffBA__b{color:#fff;font-weight:600;background:rgba(201,168,76,.1)}
+/* blocks */
+.ffBk{display:grid;grid-template-columns:1fr;gap:14px;max-width:1120px;margin:0 auto}
+.ffBk__c{border:1px solid var(--gold-line);border-radius:18px;padding:24px 20px;background:rgba(255,255,255,.04)}
+.ffBk__c h3{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1.15;color:var(--gold-soft);font-weight:500;margin-bottom:12px}
+.ffBk__k{margin-top:14px;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.5)}
+.ffBk__k--g{color:var(--gold)}
+.ffBk__c p{margin-top:5px;font-size:.97rem;line-height:1.65;color:rgba(255,255,255,.84);font-weight:300}
+/* timeline */
+.ffTl{list-style:none;position:relative;margin:0;padding:0}
+.ffTl::before{content:'';position:absolute;left:21px;top:10px;bottom:10px;width:2px;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,.15))}
+.ffTl__i{position:relative;display:flex;gap:16px;padding-bottom:22px}
+.ffTl__n{flex:none;position:relative;z-index:1;width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px var(--plum-deep)}
+.ffTl__b{flex:1;border:1px solid var(--gold-line);border-radius:18px;padding:22px 18px;background:rgba(255,255,255,.04)}
+.ffTl__k{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:var(--gold)}
+.ffTl__b h3{font-family:'Cormorant Garamond',serif;font-size:2rem;line-height:1.05;font-weight:500;margin:4px 0 10px}
+.ffTl__b p{font-size:.98rem;line-height:1.7;color:rgba(255,255,255,.82);font-weight:300}
+.ffTl__in{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(201,168,76,.13);font-size:.9rem;line-height:1.55;color:var(--gold-soft)}
+.ffTl__in b{color:#fff;margin-right:4px}
+.ffTl__lw{margin-top:14px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;font-weight:800;color:var(--gold-soft)}
+.ffTl__b li{position:relative;padding:9px 0 9px 28px;border-top:1px solid rgba(201,168,76,.18);font-size:.97rem;color:#fff;line-height:1.4}
+.ffTl__b li::before{content:'';position:absolute;left:0;top:11px;width:18px;height:18px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C)}
+.ffTl__b li::after{content:'';position:absolute;left:6px;top:15px;width:5px;height:8px;border:solid var(--plum-dark);border-width:0 2px 2px 0;transform:rotate(40deg)}
+/* included */
+.ffInc{display:grid;grid-template-columns:1fr;gap:12px;max-width:1120px;margin:0 auto}
+.ffInc__c{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 20px 20px 22px;border-left:3px solid var(--gold)}
+.ffInc__c h3{font-family:'Cormorant Garamond',serif;font-size:1.35rem;line-height:1.15;color:var(--plum-dark);font-weight:600;margin-bottom:6px}
+.ffInc__c p{font-size:.95rem;color:var(--ink-soft);line-height:1.6}
+@media(min-width:760px){
+  .ffSwipe{grid-template-columns:repeat(2,1fr);gap:18px}
+  .ffBen{grid-template-columns:1fr 1fr;gap:20px}
+  .ffBen__c{padding:34px 30px}
+  .ffBen__c--wide{grid-column:1/-1}
+  .ffBA{padding:96px 0}
+  .ffBA__h{padding:18px 28px;font-size:.7rem}
+  .ffBA__a,.ffBA__b{padding:20px 28px;font-size:1.02rem}
+  .ffBk{grid-template-columns:1fr 1fr;gap:18px}
+  .ffBk__c{padding:30px 28px}
+  .ffTl::before{left:27px}
+  .ffTl__n{width:56px;height:56px;font-size:1.6rem}
+  .ffTl__i{gap:26px;padding-bottom:30px}
+  .ffTl__b{padding:32px 34px}
+  .ffTl__b h3{font-size:2.5rem}
+  .ffInc{grid-template-columns:1fr 1fr;gap:16px}
+  .ffGs{grid-template-columns:1fr 1fr;gap:14px}
+}
+@media(min-width:1000px){
+  .ffSwipe{grid-template-columns:repeat(4,1fr)}
+  .ffSwipe--res{grid-template-columns:repeat(3,1fr)}
+  .ffBen{grid-template-columns:repeat(3,1fr)}
+  .ffBen__c--wide{grid-column:span 3}
+  .ffBk{grid-template-columns:repeat(3,1fr)}
+  .ffInc{grid-template-columns:repeat(3,1fr)}
+  .ffGs{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:759px){.ffSwipe--res>*{flex-basis:auto}}
+.ffWhy{display:grid;grid-template-columns:1fr;gap:14px;max-width:1120px;margin:0 auto}
+.ffWhy__c{border:1px solid var(--gold-line);border-radius:18px;padding:26px 22px;background:linear-gradient(165deg,rgba(255,255,255,.07),rgba(255,255,255,.02))}
+.ffWhy__n{width:38px;height:38px;border-radius:50%;background:linear-gradient(180deg,#ecd391,#C9A84C);color:var(--plum-dark);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center}
+.ffWhy__c h3{font-family:'Cormorant Garamond',serif;font-size:1.55rem;line-height:1.12;font-weight:500;color:var(--gold-soft);margin:14px 0 10px}
+.ffWhy__c p{font-size:.98rem;line-height:1.7;color:rgba(255,255,255,.82);font-weight:300}
+.ffWhy__gap{display:block;margin-top:10px;color:var(--gold-soft);font-weight:600}
+@media(min-width:760px){.ffWhy{grid-template-columns:1fr 1fr;gap:18px}.ffWhy__c{padding:32px 30px}}
+@media(min-width:1000px){.ffWhy{grid-template-columns:repeat(3,1fr)}}
+.ffWhy__c--wide{grid-column:1/-1}
+@media(min-width:1000px){.ffWhy__c--wide{grid-column:span 3}.ffWhy__c--wide p{max-width:900px}}
 </style>
 
-<meta name="description" content="A 6-month 1:1 program where we build your offer, assets and client engine with you, backed by a signed agreement and a 100% money-back guarantee. By application.">
+<meta name="description" content="A 6-month 1:1 program that works through the mental and money blocks that keep healers and coaches undercharging, then builds your offer and client engine. Signed agreement, 100% money-back guarantee.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://the5thglobal.consulting/fast-forward">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The5th Global Consulting">
-<meta property="og:title" content="Fast Forward 1:1 Coaching Program | Turn Expertise Into Income | The5th Global Consulting">
-<meta property="og:description" content="A 6-month 1:1 program where we build your offer, assets and client engine with you, backed by a signed agreement and a 100% money-back guarantee. By application.">
+<meta property="og:title" content="Fast Forward 1:1 Coaching Program for Healers & Coaches | The5th Global Consulting">
+<meta property="og:description" content="A 6-month 1:1 program that works through the mental and money blocks that keep healers and coaches undercharging, then builds your offer and client engine. Signed agreement, 100% money-back guarantee.">
 <meta property="og:url" content="https://the5thglobal.consulting/fast-forward">
 <meta property="og:image" content="https://the5thglobal.consulting/public/images/founder.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fast Forward 1:1 Coaching Program | Turn Expertise Into Income | The5th Global Consulting">
-<meta name="twitter:description" content="A 6-month 1:1 program where we build your offer, assets and client engine with you, backed by a signed agreement and a 100% money-back guarantee. By application.">
+<meta name="twitter:title" content="Fast Forward 1:1 Coaching Program for Healers & Coaches | The5th Global Consulting">
+<meta name="twitter:description" content="A 6-month 1:1 program that works through the mental and money blocks that keep healers and coaches undercharging, then builds your offer and client engine. Signed agreement, 100% money-back guarantee.">
 <meta name="twitter:image" content="https://the5thglobal.consulting/public/images/founder.png">
 <script src="https://t.contentsquare.net/uxa/9af567d0424d8.js" defer></script>
 <style>
@@ -676,7 +901,7 @@ ul{list-style:none}
 @media(prefers-reduced-motion:reduce){.footer-wordmark span{animation:none;}}
 </style>
 <script>!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_nKXxpj4hLE61K7");whop.track("page");</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Service", "@id": "https://the5thglobal.consulting/fast-forward#service", "name": "Fast Forward 1:1 Coaching Program", "serviceType": "1:1 business coaching and implementation program", "description": "A 6-month 1:1 program where we build your offer, assets and client engine with you, backed by a signed agreement and a 100% money-back guarantee. By application.", "url": "https://the5thglobal.consulting/fast-forward", "provider": {"@type": "Organization", "name": "The5th Global Consulting", "url": "https://the5thglobal.consulting/"}, "areaServed": "Worldwide", "audience": {"@type": "Audience", "audienceType": "Coaches, consultants and experts building an independent business"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://the5thglobal.consulting/"}, {"@type": "ListItem", "position": 2, "name": "Fast Forward", "item": "https://the5thglobal.consulting/fast-forward"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does the money-back guarantee work?", "acceptedAnswer": {"@type": "Answer", "text": "Before you start, we record your documented employment income, agree an income target and a measurement date between 6 and 12 months from your start, and agree measurable participation standards. If you meet those standards and the target is not reached by the measurement date, you submit a written claim with income evidence and receive 100% of your Program Fee. Everything is in the agreement you sign."}}, {"@type": "Question", "name": "Is the guarantee unconditional?", "acceptedAnswer": {"@type": "Answer", "text": "No, and we will not pretend it is. It depends on you meeting the participation requirements written into the agreement, and on the information you gave us being accurate. Those standards are measurable, set at a level compatible with your job, and agreed by both of us before you sign. A shortfall caused by us, such as a cancelled session or delayed feedback, is never held against you."}}, {"@type": "Question", "name": "Can I do this while working full time?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The program is designed around full-time employment. Sessions are arranged around your availability, with no fixed class timings, and you agree a weekly implementation schedule that reflects the time you can realistically commit."}}, {"@type": "Question", "name": "What do I get, exactly?", "acceptedAnswer": {"@type": "Answer", "text": "A personalised roadmap, a transformation-first offer, done-for-you sales copy, landing page and automation setup, a content engine and outreach system, a sales process from application to enrolled client, and a documented delivery system, all through live 1:1 sessions, support between sessions and a milestone review at the end of every phase."}}, {"@type": "Question", "name": "What if I don't know what to sell yet?", "acceptedAnswer": {"@type": "Answer", "text": "That is what the first two phases solve. We audit your experience, audience and numbers, then design an offer and positioning around your proven results. You do not need to arrive with it figured out."}}, {"@type": "Question", "name": "Do I need to buy any tools or software?", "acceptedAnswer": {"@type": "Answer", "text": "No. The Program Fee is the complete cost and no additional software, technology or tool purchase is required. We use free tools wherever possible. Anything optional you choose to spend is your own decision and is never a condition of the guarantee."}}, {"@type": "Question", "name": "What is not included?", "acceptedAnswer": {"@type": "Answer", "text": "Unlimited or on-demand support, and legal, tax, financial or accounting advice. The agreement lists what is and is not included, and we do not add deliverables that are not written down."}}, {"@type": "Question", "name": "What does it cost, and can I pay in instalments?", "acceptedAnswer": {"@type": "Answer", "text": "We confirm the investment on your strategy call and write it into the agreement. You can pay in instalments, with the exact schedule agreed in writing before you start. There is no payment to apply."}}, {"@type": "Question", "name": "How is this different from a course or a community?", "acceptedAnswer": {"@type": "Answer", "text": "A course gives you generic information and a community gives you shared attention. Fast Forward gives you a custom roadmap, assets built for you, a personal strategist working your real numbers, accountability to a revenue milestone and a guarantee on the outcome."}}, {"@type": "Question", "name": "Is my information safe when I apply?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We never sell or share your details and we will never spam you. Your application is used only to prepare for your call. Income documents, if you join, are used only to set your baseline and verify the guarantee, and are kept confidential. Read our privacy policy."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Service", "@id": "https://the5thglobal.consulting/fast-forward#service", "name": "Fast Forward 1:1 Coaching Program", "serviceType": "1:1 business coaching and implementation program", "description": "A 6-month 1:1 program that works through the mental and money blocks that keep healers and coaches undercharging, then builds your offer and client engine. Signed agreement, 100% money-back guarantee.", "url": "https://the5thglobal.consulting/fast-forward", "provider": {"@type": "Organization", "name": "The5th Global Consulting", "url": "https://the5thglobal.consulting/"}, "areaServed": "Worldwide"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://the5thglobal.consulting/"}, {"@type": "ListItem", "position": 2, "name": "Fast Forward", "item": "https://the5thglobal.consulting/fast-forward"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this therapy, or will it heal me?", "acceptedAnswer": {"@type": "Answer", "text": "No. Fast Forward is business coaching. It includes work on the mindset and money beliefs that affect how you price and sell, but it is not therapy, counselling or medical treatment and it does not replace them. If you are dealing with a mental-health condition, please work with a qualified professional alongside this program."}}, {"@type": "Question", "name": "What are \"money blocks\" and how do you work on them?", "acceptedAnswer": {"@type": "Answer", "text": "They are the beliefs and habits that decide what you allow yourself to earn: feeling it is wrong to charge for healing, doubting your worth, giving too much away, fearing being seen. In the inner layer of the program we audit your income ceiling, rewrite the money story behind it and build the identity of a paid expert, then test the change in real conversations with real clients. We do not promise the beliefs disappear on a schedule. We work on them while you build and sell."}}, {"@type": "Question", "name": "How does the money-back guarantee work?", "acceptedAnswer": {"@type": "Answer", "text": "Before you start, we record your documented employment income, agree an income target and a measurement date between 6 and 12 months from your start, and agree measurable participation standards. If you meet those standards and the target is not reached by the measurement date, you submit a written claim with income evidence and receive 100% of your Program Fee. Everything is in the agreement you sign."}}, {"@type": "Question", "name": "Will I need to hire marketers or more coaches afterwards?", "acceptedAnswer": {"@type": "Answer", "text": "That is the aim of the program: that you do not need to. By the end you have an offer, a landing page, copy, automation, a content and outreach routine, a documented sales process and a delivery system built for your business, and you have worked through the sessions that taught you to run them. You can still choose to hire help, but you will not depend on it to keep the business moving."}}, {"@type": "Question", "name": "Is the guarantee unconditional?", "acceptedAnswer": {"@type": "Answer", "text": "No, and we will not pretend it is. It depends on you meeting the participation requirements written into the agreement, and on the information you gave us being accurate. Those standards are measurable, set at a level compatible with your job, and agreed by both of us before you sign. A shortfall caused by us, such as a cancelled session or delayed feedback, is never held against you."}}, {"@type": "Question", "name": "Can I do this while working full time?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The program is designed around full-time employment. Sessions are arranged around your availability, with no fixed class timings, and you agree a weekly implementation schedule that reflects the time you can realistically commit."}}, {"@type": "Question", "name": "What do I get, exactly?", "acceptedAnswer": {"@type": "Answer", "text": "A personalised roadmap, work on the blocks that cap your income, a transformation-first offer, done-for-you sales copy, landing page and automation setup, a content engine and outreach system, a sales process from application to enrolled client, and a documented delivery system, through live 1:1 sessions, support between sessions and a milestone review at the end of every phase."}}, {"@type": "Question", "name": "What if I don't know what to sell yet?", "acceptedAnswer": {"@type": "Answer", "text": "That is what the first two phases solve. We audit your experience, audience and numbers, then design an offer and positioning around your proven results. You do not need to arrive with it figured out."}}, {"@type": "Question", "name": "Do I need to buy any tools or software?", "acceptedAnswer": {"@type": "Answer", "text": "No. The Program Fee is the complete cost and no additional software, technology or tool purchase is required. We use free tools wherever possible. Anything optional you choose to spend is your own decision and is never a condition of the guarantee."}}, {"@type": "Question", "name": "What does it cost, and can I pay in instalments?", "acceptedAnswer": {"@type": "Answer", "text": "We confirm the investment on your strategy call and write it into the agreement. You can pay in instalments, with the exact schedule agreed in writing before you start. There is no payment to apply."}}, {"@type": "Question", "name": "What is not included?", "acceptedAnswer": {"@type": "Answer", "text": "Unlimited or on-demand support, and therapy, medical, legal, tax, financial or accounting advice. The agreement lists what is and is not included, and we do not add deliverables that are not written down."}}, {"@type": "Question", "name": "Is my information safe when I apply?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. We never sell or share your details and we will never spam you. Your application is used only to prepare for your call. Income documents, if you join, are used only to set your baseline and verify the guarantee, and are kept confidential. Read our privacy policy."}}]}]}</script>
 </head>
 <body>
 <header class="globalNav" id="nav">
@@ -717,29 +942,30 @@ ul{list-style:none}
 <div class="mobileMenu__backdrop" id="menuBackdrop"></div>
 
 <!-- HERO -->
+<div class="ffProg" id="ffProg"></div>
 <!-- HERO -->
 <section class="ff-hero" id="top">
-  <div class="layout">
+  <div class="layout ff-hero__in">
     <div>
-      <span class="eyebrow ff-hero__eb">Fast Forward &nbsp;·&nbsp; 1:1 Program &nbsp;·&nbsp; By application</span>
-      <h1>Build the business that <em>replaces your income.</em></h1>
-      <p class="ff-hero__sub">A 6-month, one-to-one program where we <b>build your offer, your assets and your client engine with you</b>, then put the outcome in a signed agreement backed by a <b>100% money-back guarantee.</b></p>
+      <span class="eyebrow">Fast Forward &nbsp;·&nbsp; 1:1 Program &nbsp;·&nbsp; By application</span>
+      <h1>You heal people.<em>Now get paid like it.</em></h1>
+      <p class="ff-hero__sub">A 6-month 1:1 program for coaches, healers and guides. We work through the <b>mental and money blocks</b> that keep you undercharging, then build your offer, your assets and your client engine with you. <b>100% money-back guarantee, in writing.</b></p>
       <div class="ff-hero__ctas">
         <a href="/call" class="btnGold" data-cta="hero">Apply for Fast Forward →</a>
-        <a href="#guarantee" class="btnGhost">Read the guarantee</a>
+        <a href="#blocks" class="btnGhost">What's holding you back?</a>
       </div>
       <div class="ff-hero__chips">
-        <span class="ff-chip"><i></i>Agreement signed before day one</span>
+        <span class="ff-chip"><i></i>Signed agreement before day one</span>
         <span class="ff-chip"><i></i>Built around your full-time job</span>
         <span class="ff-chip"><i></i>Done-for-you builds</span>
       </div>
       <p class="ff-hero__fine">The guarantee applies when the agreed participation requirements are met and the agreed income target is not reached by the agreed date. Full terms are in the agreement you sign. Individual results vary.</p>
     </div>
     <div data-reveal class="d2">
-      <div class="ffDoc" aria-label="Illustration of the Fast Forward client agreement">
+      <div class="ffDoc" id="ffDoc" aria-label="Illustration of the Fast Forward client agreement">
         <div class="ffSeal"><b>100%</b><span>Money-back<br>guarantee</span></div>
         <div class="ffDoc__k">The5th Global Consulting</div>
-        <div class="ffDoc__h">Fast Forward <em>1:1</em><br>Coaching Agreement</div>
+        <div class="ffDoc__h">Fast Forward <em>1:1</em> Coaching Agreement</div>
         <div class="ffDoc__row"><b>Program</b><span>Personalised 1:1 coaching. Not a pre-recorded course.</span></div>
         <div class="ffDoc__row"><b>Duration</b><span>Six months from your start date</span></div>
         <div class="ffDoc__row"><b>Objective</b><span>Replace your documented employment income through your own business</span></div>
@@ -752,13 +978,128 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- PROOF STRIP -->
+<!-- PROOF -->
 <section class="ffProof" aria-label="Track record">
   <div class="layout">
-    <div class="ffProof__c"><b data-count="15" data-prefix="$" data-suffix="M+">$15M+</b><span>Client revenue generated</span></div>
-    <div class="ffProof__c"><b data-count="79" data-suffix="">79</b><span>Clients served</span></div>
+    <div class="ffProof__c"><b data-count="15" data-prefix="$" data-suffix="M+">$15M+</b><span>Client revenue</span></div>
+    <div class="ffProof__c"><b data-count="79">79</b><span>Clients served</span></div>
     <div class="ffProof__c"><b data-count="12">12</b><span>Nations</span></div>
     <div class="ffProof__c"><b>~90 days</b><span>Avg. to first client</span></div>
+  </div>
+</section>
+
+
+<!-- WHAT CHANGES FOR YOU -->
+<section class="sec sec--white" id="benefits">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">What Changes For You</span>
+      <h2 class="h2">Not more information. <em>Here is what you walk away with.</em></h2>
+      <p class="lead">Fast Forward is built around one question: what will be different in your income, your confidence and your week? These are the outcomes we work toward with you, in writing, over six months.</p>
+    </div>
+    <div class="ffBen">
+      <article class="ffBen__c" data-reveal><div class="ffBen__n">01</div><h3>Get paid properly for the work you already do</h3>
+        <p>You already change lives. The aim is for your income to reflect it.</p>
+        <ul><li>Price your work for the result it creates, not for the hour</li><li>Move from trading hours for money toward an offer with a clear price and a clear finish line</li><li>Build a business that can replace your employment income, with the target agreed in writing before you start</li><li>Work toward your first paying clients inside roughly 90 days, the average our clients reach their first client</li></ul></article>
+      <article class="ffBen__c ffBen__c--in" data-reveal><div class="ffBen__n">02</div><h3>Quiet the voice that says you are not allowed</h3>
+        <p>The mental and money blocks that cap what you earn get worked on directly, not skipped.</p>
+        <ul><li>Find the income ceiling you have been stopping at without noticing</li><li>Rewrite the money story behind the guilt of charging for healing</li><li>Build the identity of a paid expert, so premium pricing feels natural</li><li>Learn to hold your price on a call without apologising or discounting</li><li>Nervous-system and manifestation practices through all six months</li></ul></article>
+      <article class="ffBen__c" data-reveal><div class="ffBen__n">03</div><h3>Know exactly what you sell, and to whom</h3>
+        <p>Clarity is the thing most gifted people are missing.</p>
+        <ul><li>One transformation-first offer built on your proven results</li><li>Positioning that a free AI answer or a cheaper competitor cannot copy</li><li>A clear ideal-client profile, so your message lands</li><li>Pricing, structure and guarantee decided and written down</li></ul></article>
+      <article class="ffBen__c" data-reveal><div class="ffBen__n">04</div><h3>Be found without it feeling like performing</h3>
+        <p>A way to reach people that fits who you are.</p>
+        <ul><li>A content engine in your own voice</li><li>A warm-outreach system for real conversations</li><li>A first campaign in market, with paid ads where they genuinely fit</li><li>A sales process from application to enrolled client, with call script and objection handling</li></ul></article>
+      <article class="ffBen__c" data-reveal><div class="ffBen__n">05</div><h3>Assets built for you, not assigned as homework</h3>
+        <p>The tech that makes you freeze is handled with you.</p>
+        <ul><li>Sales copy written with you</li><li>Landing page and booking funnel built</li><li>Automation set up and running</li><li>No software or tool purchases required</li></ul></article>
+      <article class="ffBen__c" data-reveal><div class="ffBen__n">06</div><h3>A business that fits your life</h3>
+        <p>Built around your job, your energy and your family, not around a class timetable.</p>
+        <ul><li>Sessions arranged around your full-time job, with no fixed class timings</li><li>Support between sessions, so no decision stalls</li><li>A documented delivery system and AI-assisted workflows, so revenue can hold without more hours</li><li>A milestone review at the end of every phase</li><li>No need to keep hiring marketers, freelancers or more coaches once the system is built and you know how to run it</li></ul></article>
+      <article class="ffBen__c ffBen__c--wide" data-reveal><div class="ffBen__n">07</div><h3>The risk sits with us, not with you</h3>
+        <p>Most programs ask you to take it on trust. This one is written down.</p>
+        <ul><li>A signed agreement before your first session</li><li>A 100% money-back guarantee if you do the agreed work and the agreed target is not reached</li><li>A free call first, where we tell you honestly if this is not the right fit</li><li>No hidden costs: the Program Fee is the complete cost</li></ul></article>
+    </div>
+    <p class="ffBen__fine" data-reveal>These are the outcomes the program is designed to work toward. Results depend on your implementation and circumstances and are not promised. The guarantee terms are in the agreement.</p>
+  </div>
+</section>
+
+<!-- TODAY vs AFTER -->
+<section class="ffBA">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c" style="color:var(--gold)">Where You Are, Where We Work Toward</span>
+      <h2 class="h2">From <em>“I should not charge that”</em> to a price you can say out loud.</h2>
+    </div>
+    <div class="ffBA__grid" data-reveal>
+      <div class="ffBA__h ffBA__h--a">Today</div><div class="ffBA__h ffBA__h--b">What we work toward</div>
+      <div class="ffBA__a">I quote a price and my voice shrinks.</div><div class="ffBA__b">I state a price for the result and hold it calmly.</div>
+      <div class="ffBA__a">I give free calls and free advice.</div><div class="ffBA__b">I run structured sales conversations that qualify people.</div>
+      <div class="ffBA__a">My income stops the moment I stop working.</div><div class="ffBA__b">I have an offer and a system that do not depend on every hour.</div>
+      <div class="ffBA__a">I do not know what to sell.</div><div class="ffBA__b">I have one clear, priced, positioned offer.</div>
+      <div class="ffBA__a">Tech and funnels make me freeze.</div><div class="ffBA__b">My copy, page and automation are built with me.</div>
+      <div class="ffBA__a">I start strong, then stall.</div><div class="ffBA__b">I have a weekly plan, a strategist on my numbers and a milestone review every phase.</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE REAL PROBLEM + BLOCKAGE FINDER -->
+<section class="ffBlock" id="blocks">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c" style="color:var(--gold)">The Real Problem</span>
+      <h2 class="h2">You tell people they are worthy. Then you quote <em>your own price</em> and your voice shrinks.</h2>
+      <p class="lead">It is rarely a strategy problem. It is a blockage problem sitting on top of a system problem, and fixing only one is why most programs fail healers and coaches.</p>
+    </div>
+    <div class="ffBk"><article class="ffBk__c" data-reveal><h3>“Who am I to charge that much?”</h3><div class="ffBk__k">What is going on</div><p>This is the worth block. You can hold space for a stranger's pain and still flinch when you say your own price out loud.</p><div class="ffBk__k">What it costs you</div><p>You undercharge, discount on the call and attract people who value your work less than you do.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>We start with an income-ceiling audit to find where your number really stops, then build the identity of a paid expert and price for the result you create.</p></article><article class="ffBk__c" data-reveal><h3>“It feels wrong to charge for healing.”</h3><div class="ffBk__k">What is going on</div><p>This is the money story. Somewhere you learned that helping and earning cannot sit together, so you give the work away or apologise for the invoice.</p><div class="ffBk__k">What it costs you</div><p>You burn out serving for little, and the people who most need you cannot rely on you being around.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>We rewrite the money story behind it and reframe the exchange, then put a fair, confident price on a clearly defined transformation.</p></article><article class="ffBk__c" data-reveal><h3>“I give too much away for free.”</h3><div class="ffBk__k">What is going on</div><p>This is the boundary block. Free calls, free advice and open-ended sessions feel kind, but they train people to expect your time at no cost.</p><div class="ffBk__k">What it costs you</div><p>Your calendar fills with people who never buy, and the paying work gets what is left of you.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>We design one structured offer with a clear start and finish, set the boundaries into it and run sales conversations that qualify instead of give away.</p></article><article class="ffBk__c" data-reveal><h3>“I am afraid of being seen.”</h3><div class="ffBk__k">What is going on</div><p>This is the visibility block. You can show up for clients in private, but posting, reaching out and telling people what you do feels exposed.</p><div class="ffBk__k">What it costs you</div><p>Your best work stays invisible, so the right people never find you.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>We build a content engine and a warm-outreach system in small steps, in your voice, so being seen becomes a routine and not a performance.</p></article><article class="ffBk__c" data-reveal><h3>“I have tried before and it did not stick.”</h3><div class="ffBk__k">What is going on</div><p>This is the consistency block. You start strong, then the doubt, the job or the overwhelm pulls you back to the old pattern.</p><div class="ffBk__k">What it costs you</div><p>Each restart costs confidence, and a pile of unfinished funnels and courses proves the doubt right.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>We take the build work off your plate, agree a weekly plan that fits your life and review progress against a milestone every phase, so momentum does not depend on willpower.</p></article><article class="ffBk__c" data-reveal><h3>“I do not know what to sell.”</h3><div class="ffBk__k">What is going on</div><p>This is the clarity block. You are good at many things and cannot see which one people would pay for.</p><div class="ffBk__k">What it costs you</div><p>You stay in planning, or build something nobody asked for.</p><div class="ffBk__k ffBk__k--g">What we do about it</div><p>Phases one and two audit your experience, audience and numbers, then shape one transformation-first offer around your proven results.</p></article></div><div style="text-align:center;margin-top:30px" data-reveal><a href="/call" class="btnGold" data-cta="blocks" style="width:100%;max-width:440px;justify-content:center">Talk it through on a free call →</a></div>
+  </div>
+</section>
+
+<!-- TWO LAYERS -->
+<section class="sec sec--parch">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">The Difference</span>
+      <h2 class="h2">Most programs teach strategy. <em>We work on both layers.</em></h2>
+    </div>
+    <div class="ffTwo">
+      <div class="ffTwo__c ffTwo__c--in" data-reveal>
+        <div class="ffTwo__k">The Inner Layer</div>
+        <div class="ffTwo__h">The blocks that decide what you allow yourself to earn</div>
+        <p class="ffTwo__p">Money blocks, limiting beliefs and the invisible income ceiling you have been living under. Most coaches skip this because it is hard to teach.</p>
+        <ul><li>Income-ceiling audit: find your real cap</li><li>Money-story rewrite: clear inherited beliefs</li><li>Identity work: becoming the paid expert</li><li>Nervous-system and manifestation practices, across all six months</li></ul>
+      </div>
+      <div class="ffTwo__c ffTwo__c--out d1" data-reveal>
+        <div class="ffTwo__k">The Outer Layer</div>
+        <div class="ffTwo__h">The system that turns conversations into paying clients</div>
+        <p class="ffTwo__p">Offer, assets, client acquisition and sales, built with you and, for the build work, done for you. Most mindset programs skip this because it is hard to deliver.</p>
+        <ul><li>A transformation-first offer, priced for the result, not the hour</li><li>Copy, landing page, funnel and automation, built for you</li><li>Content, outreach and ads where they fit</li><li>A sales process from application to enrolled client</li></ul>
+      </div>
+    </div>
+    <p class="ffTwo__both" data-reveal>Clients who had the strategy but not the self-worth kept undercharging. Clients who had the mindset but not the system stayed busy without income. <b>Doing both is what moves the number.</b></p>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="sec sec--white" id="calc">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Try It</span>
+      <h2 class="h2">What is undercharging <em>really costing you?</em></h2>
+      <p class="lead">Slide to your own numbers. Nothing is saved or sent.</p>
+    </div>
+    <div class="ffCalc" data-reveal>
+      <div class="ffCalc__row"><div class="ffCalc__lab"><span>Client sessions you give per week</span><b id="cSv">10</b></div><input type="range" id="cS" min="1" max="30" value="10"></div>
+      <div class="ffCalc__row"><div class="ffCalc__lab"><span>What you charge per session</span><b id="cRv">$80</b></div><input type="range" id="cR" min="10" max="400" step="5" value="80"></div>
+      <div class="ffCalc__row"><div class="ffCalc__lab"><span>What you believe a session is worth</span><b id="cTv">$180</b></div><input type="range" id="cT" min="10" max="800" step="5" value="180"></div>
+      <div class="ffCalc__out">
+        <div class="ffCalc__box"><small>Per month today</small><b id="cNow">$0</b></div>
+        <div class="ffCalc__box ffCalc__box--up"><small>At your worth</small><b id="cWorth">$0</b></div>
+      </div>
+      <div class="ffCalc__ins" id="cIns" aria-live="polite"></div>
+      <p class="ffCalc__fine">Simple arithmetic on the numbers you enter, using 4.3 weeks a month. It is not a forecast, an estimate of your results or a promise of income.</p>
+      <div style="margin-top:20px"><a href="/call" class="btnGold" data-cta="calc" style="width:100%;justify-content:center">Close the gap with Fast Forward →</a></div>
+    </div>
   </div>
 </section>
 
@@ -766,48 +1107,40 @@ ul{list-style:none}
 <section class="ffShift">
   <div class="layout layout--narrow">
     <span class="eyebrow eyebrow--c" data-reveal>The Shift</span>
-    <h2 data-reveal style="margin-top:22px">Knowledge is free.<span>Advice is a commodity.</span><em>Results are not.</em></h2>
-    <p data-reveal>AI answers any coaching question in seconds. Courses, frameworks and templates now cost nothing to copy. <b>Clients no longer pay to be told what to do. They pay to have it done, and to be held to the result.</b></p>
-  </div>
-</section>
-
-<!-- WHAT CLIENTS BUY -->
-<section class="sec sec--parch">
-  <div class="layout">
-    <div class="secHead" data-reveal>
-      <span class="eyebrow eyebrow--c">What Clients Buy Now</span>
-      <h2 class="h2">Pay for what <em>AI cannot give.</em></h2>
-    </div>
+    <h2 data-reveal style="margin-top:20px">Knowledge is free.<span>Advice is a commodity.</span><em>Results are not.</em></h2>
+    <p data-reveal>AI answers any coaching question in seconds. Courses, frameworks and templates cost nothing to copy. <b>Clients no longer pay to be told what to do. They pay to have it done, and to be held to the result.</b></p>
     <div class="ffVs">
-      <div class="ffVs__c ffVs__c--free" data-reveal>
-        <div class="ffVs__tag">Now free</div><div class="ffVs__h">Information</div>
-        <ul><li>Frameworks and methods</li><li>Content and templates</li><li>Answers to any question</li><li>Generic advice</li></ul>
-      </div>
-      <div class="ffVs__c ffVs__c--pay d2" data-reveal>
-        <div class="ffVs__tag">Worth paying for</div><div class="ffVs__h">Implementation</div>
-        <ul><li>A roadmap built for your business</li><li>Assets built and installed for you</li><li>A strategist working your real numbers</li><li>Accountability to ship on schedule</li><li>A guarantee on the outcome</li></ul>
-      </div>
+      <div class="ffVs__c ffVs__c--free" data-reveal><div class="ffVs__tag">Now free</div><div class="ffVs__h">Information</div><ul><li>Frameworks and methods</li><li>Content and templates</li><li>Answers to any question</li><li>Generic advice</li></ul></div>
+      <div class="ffVs__c ffVs__c--pay d2" data-reveal><div class="ffVs__tag">Worth paying for</div><div class="ffVs__h">Implementation</div><ul><li>A roadmap built for your business</li><li>Assets built and installed for you</li><li>A strategist working your real numbers</li><li>Accountability to ship on schedule</li><li>A guarantee on the outcome</li></ul></div>
     </div>
   </div>
 </section>
 
-<!-- SIX PHASES — interactive -->
+<!-- SIX PHASES -->
 <section class="ffPh" id="program">
-  <div class="layout">
+  <div class="layout layout--narrow">
     <div class="secHead" data-reveal>
       <span class="eyebrow eyebrow--c">The Roadmap</span>
       <h2 class="h2">Six phases. <em>End to end.</em></h2>
-      <p class="lead">Every phase closes against a measurable revenue milestone. Tap a phase to see what you leave with.</p>
+      <p class="lead">Every phase closes against a measurable milestone, and the inner work runs alongside the build, so the new price and the new confidence arrive together.</p>
     </div>
-    <div class="ffPh__rail" role="tablist" aria-label="Program phases" data-reveal>
-      <div class="ffPh__bar" id="phBar"></div>
-    </div>
-    <div class="ffPh__panel" id="phPanel" aria-live="polite" data-reveal></div>
-    <div class="ffPh__nav"><button type="button" id="phPrev">← Previous phase</button><button type="button" id="phNext">Next phase →</button></div>
+    <ol class="ffTl"><li class="ffTl__i" data-reveal><div class="ffTl__n">1</div><div class="ffTl__b"><div class="ffTl__k">Phase 01</div><h3>Clarity</h3><p>A full audit of your offer, audience, assets and numbers. The revenue milestone and the 90-day target are set, and your custom roadmap is written.</p><div class="ffTl__in"><b>Inner work</b> The income-ceiling audit finds the number you have been unconsciously stopping at.</div><div class="ffTl__lw">You leave with</div><ul><li>A customised roadmap</li><li>Baseline metrics</li><li>A ranked priority list</li></ul></div></li><li class="ffTl__i" data-reveal><div class="ffTl__n">2</div><div class="ffTl__b"><div class="ffTl__k">Phase 02</div><h3>Offer</h3><p>A transformation-first offer built on your proven results, with pricing, structure and guarantee, and positioning that AI cannot commoditise.</p><div class="ffTl__in"><b>Inner work</b> The money-story rewrite, so the price you set is one you can say out loud.</div><div class="ffTl__lw">You leave with</div><ul><li>A finished offer document</li><li>A positioning statement</li><li>An ideal-client profile</li></ul></div></li><li class="ffTl__i" data-reveal><div class="ffTl__n">3</div><div class="ffTl__b"><div class="ffTl__k">Phase 03</div><h3>Build</h3><p>The strategy becomes live assets. This work is done for you, not assigned to you: copy, landing page, funnel and automation.</p><div class="ffTl__in"><b>Inner work</b> Identity practice as the work goes public, so showing up feels natural.</div><div class="ffTl__lw">You leave with</div><ul><li>Sales copy</li><li>Landing page and booking funnel</li><li>Automation set up and running</li></ul></div></li><li class="ffTl__i" data-reveal><div class="ffTl__n">4</div><div class="ffTl__b"><div class="ffTl__k">Phase 04</div><h3>Launch</h3><p>Client acquisition switches on through organic content, LinkedIn outreach and paid ads where they fit.</p><div class="ffTl__in"><b>Inner work</b> Staying steady through visibility and the first rejections.</div><div class="ffTl__lw">You leave with</div><ul><li>A content engine</li><li>An outreach system</li><li>A first campaign in market</li></ul></div></li><li class="ffTl__i" data-reveal><div class="ffTl__n">5</div><div class="ffTl__b"><div class="ffTl__k">Phase 05</div><h3>Convert</h3><p>Applicants are qualified, sales calls are run and clients are enrolled through a repeatable process.</p><div class="ffTl__in"><b>Inner work</b> Holding your price on the call without apologising or discounting.</div><div class="ffTl__lw">You leave with</div><ul><li>Call script and objection handling</li><li>An application-to-call flow</li><li>First enrolments</li></ul></div></li><li class="ffTl__i" data-reveal><div class="ffTl__n">6</div><div class="ffTl__b"><div class="ffTl__k">Phase 06</div><h3>Scale</h3><p>Delivery is systemised and AI is added as leverage, so revenue holds without more hours.</p><div class="ffTl__in"><b>Inner work</b> Raising your ceiling so the new income level feels like yours to keep.</div><div class="ffTl__lw">You leave with</div><ul><li>A documented delivery system</li><li>AI-assisted workflows</li><li>A milestone review and next target</li></ul></div></li></ol>
   </div>
 </section>
 
-<!-- LAYERS + PRINCIPLES -->
+<!-- EVERYTHING INCLUDED -->
+<section class="sec sec--parch" id="included">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">Everything Included</span>
+      <h2 class="h2">What you get, <em>in plain words.</em></h2>
+      <p class="lead">No mystery bonuses and no hidden extras. These are the areas the program covers, and each one is written into your agreement.</p>
+    </div>
+    <div class="ffInc"><div class="ffInc__c" data-reveal><h3>Personalised business strategy</h3><p>A written strategy and roadmap built around your goals, constraints and full-time employment.</p></div><div class="ffInc__c" data-reveal><h3>Business model identification</h3><p>Analysis of your skills, experience, interests and goals to choose a suitable business model.</p></div><div class="ffInc__c" data-reveal><h3>Market research and positioning</h3><p>Guidance on researching your target market and positioning the business within it.</p></div><div class="ffInc__c" data-reveal><h3>Offer creation and development</h3><p>Support to design, structure and refine your offer.</p></div><div class="ffInc__c" data-reveal><h3>Pricing and monetisation</h3><p>Guidance on pricing and on how the business will generate revenue.</p></div><div class="ffInc__c" data-reveal><h3>Marketing and content strategy</h3><p>A marketing and content approach suited to your offer and audience.</p></div><div class="ffInc__c" data-reveal><h3>Client acquisition systems</h3><p>Repeatable ways to attract and enquire with prospective clients.</p></div><div class="ffInc__c" data-reveal><h3>Sales strategy and conversion</h3><p>Guidance on sales conversations and converting enquiries into paying clients.</p></div><div class="ffInc__c" data-reveal><h3>Funnel and infrastructure</h3><p>The funnel and basic business infrastructure you need to operate.</p></div><div class="ffInc__c" data-reveal><h3>Implementation support and accountability</h3><p>Regular review of progress against the agreed plan, with feedback and accountability.</p></div><div class="ffInc__c" data-reveal><h3>Ongoing strategic guidance</h3><p>Strategic guidance throughout the program, within the channels and response times agreed in writing.</p></div><div class="ffInc__c" data-reveal><h3>Inner work on money and mindset</h3><p>The income-ceiling audit, money-story rewrite and identity work, alongside the build.</p></div></div>
+  </div>
+</section>
+
+<!-- SUPPORT LAYERS -->
 <section class="sec sec--warm">
   <div class="layout">
     <div class="secHead" data-reveal>
@@ -815,39 +1148,18 @@ ul{list-style:none}
       <h2 class="h2">Four layers of <em>support.</em></h2>
       <p class="lead">Not homework. Not a library of videos. A strategist and a build team working on your business.</p>
     </div>
-    <div class="ffLay">
-      <div class="ffLay__c" data-reveal><div class="ffLay__k">Strategy</div><div class="ffLay__h">Live 1:1 sessions</div><p class="ffLay__p">Sessions on your real numbers, offers and pipeline, arranged around your working week.</p></div>
-      <div class="ffLay__c d1" data-reveal><div class="ffLay__k">Execution</div><div class="ffLay__h">Done-for-you builds</div><p class="ffLay__p">Copywriting, landing page and automation setup handled for you, not assigned as homework.</p></div>
-      <div class="ffLay__c d2" data-reveal><div class="ffLay__k">Access</div><div class="ffLay__h">Support between sessions</div><p class="ffLay__p">Questions are answered asynchronously, so no decision stalls.</p></div>
-      <div class="ffLay__c d3" data-reveal><div class="ffLay__k">Accountability</div><div class="ffLay__h">Milestone scorecard</div><p class="ffLay__p">Every phase closes against a measurable revenue milestone.</p></div>
+    <div class="ffSwipe">
+      <div class="ffLay__c"><div class="ffLay__k">Strategy</div><div class="ffLay__h">Live 1:1 sessions</div><p class="ffLay__p">Sessions on your real numbers, offers and pipeline, arranged around your working week.</p></div>
+      <div class="ffLay__c"><div class="ffLay__k">Execution</div><div class="ffLay__h">Done-for-you builds</div><p class="ffLay__p">Copywriting, landing page and automation setup handled for you, not assigned as homework.</p></div>
+      <div class="ffLay__c"><div class="ffLay__k">Access</div><div class="ffLay__h">Support between sessions</div><p class="ffLay__p">Questions are answered asynchronously, so no decision stalls.</p></div>
+      <div class="ffLay__c"><div class="ffLay__k">Accountability</div><div class="ffLay__h">Milestone scorecard</div><p class="ffLay__p">Every phase closes against a measurable milestone.</p></div>
     </div>
+    
     <div class="ffPrin">
-      <div class="ffPrin__c" data-reveal><div class="ffPrin__n">01</div><div class="ffPrin__h">Outcome, not curriculum</div><p class="ffPrin__p">Every step moves a revenue milestone. Nothing is taught for its own sake.</p></div>
-      <div class="ffPrin__c d1" data-reveal><div class="ffPrin__n">02</div><div class="ffPrin__h">Built with you</div><p class="ffPrin__p">Strategy, copy, pages and automation are produced inside the program.</p></div>
-      <div class="ffPrin__c d2" data-reveal><div class="ffPrin__n">03</div><div class="ffPrin__h">One connected system</div><p class="ffPrin__p">Positioning, offer, acquisition, sales and delivery run as a single machine.</p></div>
-      <div class="ffPrin__c d3" data-reveal><div class="ffPrin__n">04</div><div class="ffPrin__h">Risk reversed</div><p class="ffPrin__p">Done-for-you support and a money-back guarantee put the outcome on us.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- COMPARISON -->
-<section class="sec sec--white">
-  <div class="layout">
-    <div class="secHead" data-reveal>
-      <span class="eyebrow eyebrow--c">The Comparison</span>
-      <h2 class="h2">Why a program <em>beats a product.</em></h2>
-    </div>
-    <div class="ffCmp" data-reveal>
-      <table>
-        <thead><tr><th></th><th>Typical course</th><th>Typical community</th><th class="us">Fast Forward 1:1</th></tr></thead>
-        <tbody>
-          <tr><td>Roadmap for your business</td><td>Generic</td><td>Generic</td><td class="us">Custom</td></tr>
-          <tr><td>Assets built for you</td><td>No</td><td>No</td><td class="us">Yes</td></tr>
-          <tr><td>Personal strategist on your numbers</td><td>No</td><td>Shared</td><td class="us">Yes</td></tr>
-          <tr><td>Accountability to a revenue milestone</td><td>No</td><td>Peer level</td><td class="us">Yes</td></tr>
-          <tr><td>Money-back guarantee</td><td>Rare</td><td>Rare</td><td class="us">Yes</td></tr>
-        </tbody>
-      </table>
+      <div class="ffPrin__c" data-reveal><div class="ffPrin__n">01</div><div class="ffPrin__h">Outcome, not curriculum</div><p class="ffPrin__p">Every step moves a milestone. Nothing is taught for its own sake.</p></div>
+      <div class="ffPrin__c" data-reveal><div class="ffPrin__n">02</div><div class="ffPrin__h">Built with you</div><p class="ffPrin__p">Strategy, copy, pages and automation are produced inside the program.</p></div>
+      <div class="ffPrin__c" data-reveal><div class="ffPrin__n">03</div><div class="ffPrin__h">One connected system</div><p class="ffPrin__p">Positioning, offer, acquisition, sales and delivery run as one machine.</p></div>
+      <div class="ffPrin__c" data-reveal><div class="ffPrin__n">04</div><div class="ffPrin__h">Risk reversed</div><p class="ffPrin__p">Done-for-you support and a money-back guarantee put the outcome on us.</p></div>
     </div>
   </div>
 </section>
@@ -858,17 +1170,18 @@ ul{list-style:none}
     <div class="secHead" data-reveal>
       <span class="eyebrow eyebrow--c" style="color:var(--gold)">Client Results</span>
       <h2 class="h2">Results from the <em>10K Roadmap Method.</em></h2>
-      <p class="lead">Experts who had the knowledge and lacked the system. Here is what implementation produced.</p>
+      <p class="lead">Experts who had the gift and lacked the system. Here is what implementation produced.</p>
     </div>
-    <div class="ffRes">
-      <div class="ffRes__c" data-reveal><div class="ffRes__num" data-count="210000" data-prefix="$">$210,000</div><div class="ffRes__when">3 months</div><div class="ffRes__by"><div class="ffRes__av">T</div><div><div class="ffRes__nm">Torill</div><div class="ffRes__ds">Leadership coach sold out a $7,000 program after 15 years away.</div></div></div></div>
-      <div class="ffRes__c d1" data-reveal><div class="ffRes__num" data-count="180000" data-prefix="$">$180,000</div><div class="ffRes__when">5 months</div><div class="ffRes__by"><div class="ffRes__av">S</div><div><div class="ffRes__nm">Shyama Prasad Goswami</div><div class="ffRes__ds">Retired Fortune 500 CEO built a high-ticket consulting practice.</div></div></div></div>
-      <div class="ffRes__c d2" data-reveal><div class="ffRes__num" data-count="21000" data-prefix="$" data-suffix="+">$21,000+</div><div class="ffRes__when">2 months</div><div class="ffRes__by"><div class="ffRes__av"><img src="/public/clients/sm/abbas.webp" alt="Abbas Jamie" width="44" height="44" loading="lazy"></div><div><div class="ffRes__nm">Abbas Jamie</div><div class="ffRes__ds">Executive and conscious-living coach, former corporate CEO.</div></div></div></div>
-      <div class="ffRes__c" data-reveal><div class="ffRes__num" data-count="18000" data-prefix="$" data-suffix="+">$18,000+</div><div class="ffRes__when">One challenge</div><div class="ffRes__by"><div class="ffRes__av">B</div><div><div class="ffRes__nm">Bharti Chauhan</div><div class="ffRes__ds">Revived a decade-old couples retreat program with a low-ticket funnel.</div></div></div></div>
-      <div class="ffRes__c d1" data-reveal><div class="ffRes__num" data-count="18000" data-prefix="$">$18,000</div><div class="ffRes__when">3 months</div><div class="ffRes__by"><div class="ffRes__av">G</div><div><div class="ffRes__nm">Gurpreet</div><div class="ffRes__ds">Law of Attraction coach went from zero revenue to $18,000.</div></div></div></div>
-      <div class="ffRes__c d2" data-reveal><div class="ffRes__num" data-count="14193" data-prefix="$">$14,193</div><div class="ffRes__when">60 days</div><div class="ffRes__by"><div class="ffRes__av"><img src="/public/clients/sm/laurie.webp" alt="Laurie Gerber" width="44" height="44" loading="lazy"></div><div><div class="ffRes__nm">Laurie Gerber</div><div class="ffRes__ds">Dating coach for professionals 50+ relaunched a stalled course.</div></div></div></div>
+    <div class="ffSwipe ffSwipe--res">
+      <div class="ffRes__c"><div class="ffRes__num" data-count="210000" data-prefix="$">$210,000</div><div class="ffRes__when">3 months</div><div class="ffRes__by"><div class="ffRes__av">T</div><div><div class="ffRes__nm">Torill</div><div class="ffRes__ds">Leadership coach sold out a $7,000 program after 15 years away.</div></div></div></div>
+      <div class="ffRes__c"><div class="ffRes__num" data-count="180000" data-prefix="$">$180,000</div><div class="ffRes__when">5 months</div><div class="ffRes__by"><div class="ffRes__av">S</div><div><div class="ffRes__nm">Shyama Prasad Goswami</div><div class="ffRes__ds">Retired Fortune 500 CEO built a high-ticket consulting practice.</div></div></div></div>
+      <div class="ffRes__c"><div class="ffRes__num" data-count="21000" data-prefix="$" data-suffix="+">$21,000+</div><div class="ffRes__when">2 months</div><div class="ffRes__by"><div class="ffRes__av"><img src="/public/clients/sm/abbas.webp" alt="Abbas Jamie" width="44" height="44" loading="lazy"></div><div><div class="ffRes__nm">Abbas Jamie</div><div class="ffRes__ds">Executive and conscious-living coach, former corporate CEO.</div></div></div></div>
+      <div class="ffRes__c"><div class="ffRes__num" data-count="18000" data-prefix="$" data-suffix="+">$18,000+</div><div class="ffRes__when">One challenge</div><div class="ffRes__by"><div class="ffRes__av">B</div><div><div class="ffRes__nm">Bharti Chauhan</div><div class="ffRes__ds">Revived a decade-old couples retreat program with a low-ticket funnel.</div></div></div></div>
+      <div class="ffRes__c"><div class="ffRes__num" data-count="18000" data-prefix="$">$18,000</div><div class="ffRes__when">3 months</div><div class="ffRes__by"><div class="ffRes__av">G</div><div><div class="ffRes__nm">Gurpreet</div><div class="ffRes__ds">Law of Attraction coach went from zero revenue to $18,000.</div></div></div></div>
+      <div class="ffRes__c"><div class="ffRes__num" data-count="14193" data-prefix="$">$14,193</div><div class="ffRes__when">60 days</div><div class="ffRes__by"><div class="ffRes__av"><img src="/public/clients/sm/laurie.webp" alt="Laurie Gerber" width="44" height="44" loading="lazy"></div><div><div class="ffRes__nm">Laurie Gerber</div><div class="ffRes__ds">Dating coach for professionals 50+ relaunched a stalled course.</div></div></div></div>
     </div>
-    <p class="ffResNote" data-reveal>Individual results vary and depend on the client's implementation and factors outside our control. These are results clients reported from working with the 10K Roadmap Method. Source and details: <a href="/results">the5thglobal.consulting/results</a>. See our <a href="/disclaimer">earnings disclaimer</a>.</p>
+    
+    <p class="ffResNote">Individual results vary and depend on the client's implementation and factors outside our control. These are results clients reported from working with the 10K Roadmap Method. Source and details: <a href="/results">the5thglobal.consulting/results</a>. See our <a href="/disclaimer">earnings disclaimer</a>.</p>
   </div>
 </section>
 
@@ -884,33 +1197,24 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- THE GUARANTEE -->
+<!-- GUARANTEE -->
 <section class="ffG" id="guarantee">
   <div class="layout">
     <div class="ffG__top">
       <div class="ffG__seal" data-reveal><b>100%</b><span>Money-back<br>guarantee</span></div>
       <div data-reveal class="d1">
         <span class="eyebrow" style="color:var(--gold)">The Guarantee, In Writing</span>
-        <h2 style="margin-top:18px">We are not asking you to buy <em>another coaching program.</em></h2>
+        <h2 style="margin-top:16px">We are not asking you to buy <em>another coaching program.</em></h2>
         <p>We commit to work alongside you to build a business capable of replacing your employment income. If you do the agreed work and the agreed income target is not reached by the agreed date, <b>you get 100% of your Program Fee back.</b></p>
       </div>
     </div>
-
-    <div class="secHead" data-reveal style="margin-bottom:36px"><span class="eyebrow eyebrow--c" style="color:var(--gold)">How The Guarantee Works</span></div>
-    <div class="ffGs">
-      <div class="ffGs__c" data-reveal><div class="ffGs__n">01</div><div class="ffGs__h">We set your baseline</div><p class="ffGs__p">You provide documents showing your current employment income. Your income target is set from that record, not from an estimate.</p></div>
-      <div class="ffGs__c d1" data-reveal><div class="ffGs__n">02</div><div class="ffGs__h">We agree the target and the date</div><p class="ffGs__p">One income measure, one monthly target and a measurement date between 6 and 12 months from your start. Both parties initial it before you begin.</p></div>
-      <div class="ffGs__c d2" data-reveal><div class="ffGs__n">03</div><div class="ffGs__h">You do the agreed work</div><p class="ffGs__p">Measurable standards for sessions, assignments and implementation, set realistically around your job. A shared log records progress, and you can review it.</p></div>
-      <div class="ffGs__c d3" data-reveal><div class="ffGs__n">04</div><div class="ffGs__h">If the target is missed, you are refunded</div><p class="ffGs__p">Submit a written claim with income evidence. If you met the agreed requirements and the target was not achieved, the Program Fee is refunded in full.</p></div>
-    </div>
-
-    <div class="ffG2">
-      <div class="ffG2__c" data-reveal><h3>What we commit to</h3>
+    <div class="secHead" data-reveal style="margin-bottom:24px"><span class="eyebrow eyebrow--c" style="color:var(--gold)">How The Guarantee Works</span></div><div class="ffGs"><div class="ffGs__c" data-reveal><div class="ffGs__n">01</div><h3>We set your baseline</h3><p>You provide documents showing your current employment income. Your income target is set from that record, not from an estimate.</p></div><div class="ffGs__c" data-reveal><div class="ffGs__n">02</div><h3>We agree the target and the date</h3><p>One income measure, one monthly target and a measurement date between 6 and 12 months from your start. Both parties initial it before you begin.</p></div><div class="ffGs__c" data-reveal><div class="ffGs__n">03</div><h3>You do the agreed work</h3><p>Measurable standards for sessions, assignments and implementation, set realistically around your job. A shared log records progress and you can review it.</p></div><div class="ffGs__c" data-reveal><div class="ffGs__n">04</div><h3>If the target is missed, you are refunded</h3><p>Submit a written claim with income evidence. If you met the agreed requirements and the target was not achieved, the Program Fee is refunded in full.</p></div></div><div style="height:22px"></div>
+    <div class="ffG2" id="gTwo">
+      <div class="ffG2__c" data-reveal><h3 class="kicker" style="margin-bottom:8px">What we commit to</h3>
         <ul><li>Personalised strategic guidance based on your goals, skills and circumstances</li><li>Coaching sessions at times arranged around your availability</li><li>A clear implementation direction after every session</li><li>Honest feedback and accurate progress records</li><li>Replies within the response times agreed in writing</li><li>Honouring the guarantee, including refunding on time when it applies</li></ul></div>
-      <div class="ffG2__c d1" data-reveal><h3>What we ask of you</h3>
+      <div class="ffG2__c" data-reveal><h3 class="kicker" style="margin-bottom:8px">What we ask of you</h3>
         <ul><li>Attend scheduled sessions, or reschedule with notice</li><li>Complete the agreed assignments by the agreed dates</li><li>Implement the agreed strategy and weekly plan</li><li>Communicate challenges and progress honestly</li><li>Provide accurate income documents, then evidence at the end</li><li>Keep up the agreed payments</li></ul></div>
     </div>
-
     <div class="ffGglance" data-reveal>
       <div><b>Program</b><span>Personalised 1:1 coaching, not a pre-recorded or group course</span></div>
       <div><b>Duration</b><span>Six months from your start date</span></div>
@@ -919,12 +1223,34 @@ ul{list-style:none}
       <div><b>Costs</b><span>The Program Fee is the complete cost. No software, technology or tool purchase is required.</span></div>
       <div><b>Payment</b><span>Instalments available, with the schedule agreed in writing before you start</span></div>
     </div>
-    <p class="ffG__fine" data-reveal>The income target is a shared objective. Actual results depend on your implementation and on factors outside either party's control. The guarantee is not unconditional: it depends on the agreed participation requirements being met, and every standard is written down and agreed before you sign. Fast Forward does not include legal, tax, financial or accounting advice or unlimited on-demand support.</p>
-    <div style="text-align:center;margin-top:40px" data-reveal><a href="/call" class="btnGold" data-cta="guarantee">Apply and read the full agreement →</a></div>
+    <p class="ffG__fine" data-reveal>The income target is a shared objective. Actual results depend on your implementation and on factors outside either party's control. The guarantee is not unconditional: it depends on the agreed participation requirements being met, and every standard is written down and agreed before you sign. Fast Forward is business coaching. It does not include therapy, medical, legal, tax, financial or accounting advice, or unlimited on-demand support.</p>
+    <div style="text-align:center;margin-top:30px" data-reveal><a href="/call" class="btnGold" data-cta="guarantee">Apply and read the full agreement →</a></div>
   </div>
 </section>
 
-<!-- WHO FOR + SELF CHECK -->
+<!-- COMPARISON -->
+<section class="sec sec--white">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c">The Comparison</span>
+      <h2 class="h2">Why a program <em>beats a product.</em></h2>
+    </div>
+    <div class="ffCmp" data-reveal>
+      <table>
+        <thead><tr><th></th><th>Typical course</th><th>Typical community</th><th class="us">Fast Forward 1:1</th></tr></thead>
+        <tbody>
+          <tr><td>Roadmap for your business</td><td data-l="Course">Generic</td><td data-l="Community">Generic</td><td class="us" data-l="Fast Forward">Custom</td></tr>
+          <tr><td>Assets built for you</td><td data-l="Course">No</td><td data-l="Community">No</td><td class="us" data-l="Fast Forward">Yes</td></tr>
+          <tr><td>Personal strategist on your numbers</td><td data-l="Course">No</td><td data-l="Community">Shared</td><td class="us" data-l="Fast Forward">Yes</td></tr>
+          <tr><td>Accountability to a milestone</td><td data-l="Course">No</td><td data-l="Community">Peer level</td><td class="us" data-l="Fast Forward">Yes</td></tr>
+          <tr><td>Money-back guarantee</td><td data-l="Course">Rare</td><td data-l="Community">Rare</td><td class="us" data-l="Fast Forward">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FIT + SELF CHECK -->
 <section class="sec sec--warm" id="fit">
   <div class="layout">
     <div class="secHead" data-reveal>
@@ -932,22 +1258,43 @@ ul{list-style:none}
       <h2 class="h2">Who Fast Forward <em>is for.</em></h2>
     </div>
     <div class="ffFit">
-      <div class="ffFit__c ffFit__c--y" data-reveal><span class="kicker">Built for</span><div class="ffFit__h">Experts ready to implement</div>
-        <ul><li>Coaches, consultants and experts with proven results</li><li>An audience, network or past clients to build from</li><li>Monthly revenue that is inconsistent</li><li>Willingness to act, not only learn</li></ul></div>
+      <div class="ffFit__c ffFit__c--y" data-reveal><span class="kicker">Built for</span><div class="ffFit__h">Healers, coaches and experts ready to implement</div>
+        <ul><li>Coaches, healers, consultants and experts with proven results</li><li>An audience, network or past clients to build from</li><li>Income that is inconsistent, or far below the value you give</li><li>Willingness to do the inner work and take action, not only learn</li></ul></div>
       <div class="ffFit__c ffFit__c--n d1" data-reveal><span class="kicker" style="color:var(--muted)">Not built for</span><div class="ffFit__h">Information collectors</div>
         <ul><li>People who want more frameworks, not results</li><li>Waiting for a perfect offer before launching</li><li>Delegating every decision without engaging</li></ul></div>
     </div>
     <div class="ffChk" data-reveal id="selfcheck">
       <h3>Is Fast Forward <em>right for you?</em></h3>
       <p class="s">Tick what is true today. Nothing is saved or sent.</p>
-      <label><input type="checkbox"> I have real expertise or results that clients have paid for, or would</label>
+      <label><input type="checkbox"> I help people for a living, or I am ready to</label>
       <label><input type="checkbox"> I have an audience, a network or past clients to build from</label>
-      <label><input type="checkbox"> My income from my own business is inconsistent, or zero</label>
+      <label><input type="checkbox"> I undercharge, or I feel uneasy asking for money for what I do</label>
       <label><input type="checkbox"> I want the work built with me, not just advice</label>
       <label><input type="checkbox"> I will act on the plan every week, even around my job</label>
       <div class="ffChk__meter"><i id="chkBar"></i></div>
-      <div class="ffChk__res" id="chkRes" aria-live="polite"><b id="chkH"></b><span id="chkP"></span><div style="margin-top:16px"><a href="/call" class="btnGold" data-cta="selfcheck">Apply now →</a></div></div>
+      <div class="ffChk__res" id="chkRes" aria-live="polite"><b id="chkH"></b><span id="chkP"></span><a href="/call" class="btnGold" data-cta="selfcheck">Apply now →</a></div>
     </div>
+  </div>
+</section>
+
+<!-- WHY THE INVESTMENT IS JUSTIFIED -->
+<section class="sec sec--dark grain" id="why-invest">
+  <div class="layout">
+    <div class="secHead" data-reveal>
+      <span class="eyebrow eyebrow--c" style="color:var(--gold)">Why It Is Worth It</span>
+      <h2 class="h2">Priced like a business, <em>because it builds one.</em></h2>
+      <p class="lead">Fast Forward is not priced like a course or a membership, and it is not meant to be. Here is the honest reasoning, so you can judge it for yourself.</p>
+    </div>
+    <div class="ffWhy">
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">1</div><h3>You are buying implementation, not information</h3><p>Information is free. A framework, a template or an answer costs you nothing today. What costs money is having the offer designed, the copy written, the page built, the automation running and someone holding you to the result. That is the work you are paying for.</p></article>
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">2</div><h3>One program replaces roles you would hire separately</h3><p>Doing this yourself means finding and coordinating a strategist, an offer designer, a copywriter, a landing-page and funnel builder, an automation specialist, a sales coach and a money-and-mindset coach, plus someone to keep you accountable. Here they work as one connected system, and one team is answerable for the whole. When it ends, you do not need to keep paying any of them.</p></article>
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">3</div><h3>The benchmark is your income, not another course</h3><p>The objective in your agreement is to replace your documented employment income through your own business. The right comparison is not the price of a course. It is what your income is worth to you, and what another year of undercharging costs. <span id="whyGap" class="ffWhy__gap"></span></p></article>
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">4</div><h3>The risk sits with us first</h3><p>If you do the agreed work and the agreed income target is not reached by the agreed date, you receive 100% of your Program Fee back. A provider who doubted its own delivery could not afford to offer that, and the terms are written down before you pay anything.</p></article>
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">5</div><h3>There is nothing else to buy</h3><p>The Program Fee is the complete cost. No software, technology or tool purchases are required, we use free tools wherever possible, and you can pay in instalments on a schedule agreed in writing. You will not meet a surprise invoice halfway through.</p></article>
+      <article class="ffWhy__c" data-reveal><div class="ffWhy__n">6</div><h3>It should pay for itself in clients, not in hope</h3><p>Your payback is simple arithmetic: what one client pays you for your offer, times how many clients you need to cover the investment. On your strategy call we put your numbers next to the investment before you decide, and if the maths does not work for you, we will say so.</p></article>
+    <article class="ffWhy__c ffWhy__c--wide" data-reveal><div class="ffWhy__n">7</div><h3>When it is done, you do not need to hire marketers or more coaches</h3><p>The point of the program is that you finish self-sufficient. Your offer is designed, your copy and landing page are built, your automation is running, your content and outreach routine is in place, your sales process is documented and your delivery system is written down, and you have worked through the sessions that taught you to run it. So you are not left needing an agency to market for you, a freelancer to maintain it or another coach to tell you what to do next. You keep strategy and execution in your own hands, and you can choose to bring in help later, not because you have to.</p></article>
+    </div>
+    <div style="text-align:center;margin-top:34px" data-reveal><a href="/call" class="btnGold" data-cta="why" style="width:100%;max-width:440px;justify-content:center">See the maths on a free call →</a></div>
   </div>
 </section>
 
@@ -962,13 +1309,14 @@ ul{list-style:none}
       <div class="ffInv__l">
         <div class="ffInv__k">Fast Forward 1:1</div>
         <div class="ffInv__big">6-month program</div>
-        <p>End to end, from clarity to scale. Your investment is confirmed on your strategy call, and you can pay in instalments. It is written into the agreement before you commit.</p>
-        <div style="margin-top:26px"><a href="/call" class="btnGold" data-cta="investment">Apply for Fast Forward →</a></div>
+        <p>End to end, from clarity to scale. Your investment is confirmed on your strategy call and you can pay in instalments. It is written into the agreement before you commit.</p>
+        <a href="/call" class="btnGold" data-cta="investment">Apply for Fast Forward →</a>
       </div>
       <div class="ffInv__r">
         <h3>Included</h3>
         <ul>
           <li>A customised roadmap for your business</li>
+          <li>Work on the mental and money blocks that cap your income</li>
           <li>Done-for-you copywriting, landing page and automation setup</li>
           <li>1:1 strategy sessions and support throughout</li>
           <li>A milestone review at the end of every phase</li>
@@ -987,16 +1335,16 @@ ul{list-style:none}
       <div class="ffFound__img" data-reveal><img src="/public/images/founder-ff.webp" alt="Indrodip Ghosh, founder of The5th Global Consulting" width="760" height="1025" loading="lazy"></div>
       <div data-reveal class="d1">
         <span class="eyebrow">Who's Behind Fast Forward</span>
-        <h2 style="margin-top:20px">You work with me, <em>not a junior closer.</em></h2>
+        <h2 style="margin-top:18px">You work with me, <em>not a junior closer.</em></h2>
         <p>I'm <b>Indrodip Ghosh</b>. For over a decade I've advised Fortune 500 executives, billion-dollar companies, celebrity coaches and governments on the three things most experts are never taught: <b>positioning, marketing and sales.</b></p>
-        <p>I built Fast Forward to put that exact system in your hands, so a lifetime of expertise finally pays what it is worth, and I put the outcome in writing so the risk sits with me.</p>
+        <p>I built Fast Forward to put that exact system in your hands, so a lifetime of care and expertise finally pays what it is worth, and I put the outcome in writing so the risk sits with me.</p>
         <div class="ffFound__stats"><div><b>$15M+</b><span>Client revenue</span></div><div><b>79</b><span>Clients served</span></div><div><b>12</b><span>Nations</span></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHAT HAPPENS NEXT -->
+<!-- NEXT -->
 <section class="sec sec--white">
   <div class="layout layout--narrow">
     <div class="secHead" data-reveal>
@@ -1007,10 +1355,10 @@ ul{list-style:none}
     <div class="ffNext">
       <div class="ffNext__row" data-reveal><div class="ffNext__n">1</div><div><div class="ffNext__h">You apply in 3 minutes</div><p class="ffNext__p">A short application tells us about your experience and goals. No payment and no commitment at this stage.</p><span class="ffNext__tag">Step 1 · Today</span></div></div>
       <div class="ffNext__row" data-reveal><div class="ffNext__n">2</div><div><div class="ffNext__h">We have a real 45-minute call</div><p class="ffNext__p">Not a sales pitch. We map your offer, answer every question and decide together whether this is a fit. If it isn't, we'll tell you honestly.</p><span class="ffNext__tag">Step 2 · Within days</span></div></div>
-      <div class="ffNext__row" data-reveal><div class="ffNext__n">3</div><div><div class="ffNext__h">You review and sign the agreement</div><p class="ffNext__p">Your income target, your payment schedule and your participation standards are written down, initialled by both parties and signed before your first session. Take independent advice if you wish.</p><span class="ffNext__tag">Step 3 · Onboarding</span></div></div>
-      <div class="ffNext__row" data-reveal><div class="ffNext__n">4</div><div><div class="ffNext__h">We start building</div><p class="ffNext__p">Phase one begins with your audit, your revenue milestone and your custom roadmap. Your sessions fit around your job.</p><span class="ffNext__tag">Step 4 · Week 1 onward</span></div></div>
+      <div class="ffNext__row" data-reveal><div class="ffNext__n">3</div><div><div class="ffNext__h">You review and sign the agreement</div><p class="ffNext__p">Your income target, payment schedule and participation standards are written down, initialled by both parties and signed before your first session. Take independent advice if you wish.</p><span class="ffNext__tag">Step 3 · Onboarding</span></div></div>
+      <div class="ffNext__row" data-reveal><div class="ffNext__n">4</div><div><div class="ffNext__h">We start building</div><p class="ffNext__p">Phase one begins with your audit, your milestone and your custom roadmap. Sessions fit around your job.</p><span class="ffNext__tag">Step 4 · Week 1 onward</span></div></div>
     </div>
-    <div class="ffCtaRow" data-reveal><a href="/call" class="btnGold" data-cta="next">Start Your Application →</a><p class="ffTrust">Takes 3 minutes · <b>No payment to apply</b> · We'll never spam you</p></div>
+    <div class="ffCtaRow" data-reveal><a href="/call" class="btnGold" data-cta="next" style="width:100%;max-width:420px;justify-content:center">Start Your Application →</a><p class="ffTrust">Takes 3 minutes · <b>No payment to apply</b> · We'll never spam you</p></div>
   </div>
 </section>
 
@@ -1022,26 +1370,28 @@ ul{list-style:none}
       <h2 class="h2">Let's clear <em>them up.</em></h2>
     </div>
     <div class="faq">
+      <div class="faqItem" data-reveal><button class="faqBtn">Is this therapy, or will it heal me?<span class="faqIco">+</span></button><div class="faqA"><p>No. Fast Forward is business coaching. It includes work on the mindset and money beliefs that affect how you price and sell, but it is not therapy, counselling or medical treatment and it does not replace them. If you are dealing with a mental-health condition, please work with a qualified professional alongside this program.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What are "money blocks" and how do you work on them?<span class="faqIco">+</span></button><div class="faqA"><p>They are the beliefs and habits that decide what you allow yourself to earn: feeling it is wrong to charge for healing, doubting your worth, giving too much away, fearing being seen. In the inner layer of the program we audit your income ceiling, rewrite the money story behind it and build the identity of a paid expert, then test the change in real conversations with real clients. We do not promise the beliefs disappear on a schedule. We work on them while you build and sell.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">How does the money-back guarantee work?<span class="faqIco">+</span></button><div class="faqA"><p>Before you start, we record your documented employment income, agree an income target and a measurement date between 6 and 12 months from your start, and agree measurable participation standards. If you meet those standards and the target is not reached by the measurement date, you submit a written claim with income evidence and receive 100% of your Program Fee. Everything is in the agreement you sign.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">Will I need to hire marketers or more coaches afterwards?<span class="faqIco">+</span></button><div class="faqA"><p>That is the aim of the program: that you do not need to. By the end you have an offer, a landing page, copy, automation, a content and outreach routine, a documented sales process and a delivery system built for your business, and you have worked through the sessions that taught you to run them. You can still choose to hire help, but you will not depend on it to keep the business moving.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">Is the guarantee unconditional?<span class="faqIco">+</span></button><div class="faqA"><p>No, and we will not pretend it is. It depends on you meeting the participation requirements written into the agreement, and on the information you gave us being accurate. Those standards are measurable, set at a level compatible with your job, and agreed by both of us before you sign. A shortfall caused by us, such as a cancelled session or delayed feedback, is never held against you.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">Can I do this while working full time?<span class="faqIco">+</span></button><div class="faqA"><p>Yes. The program is designed around full-time employment. Sessions are arranged around your availability, with no fixed class timings, and you agree a weekly implementation schedule that reflects the time you can realistically commit.</p></div></div>
-      <div class="faqItem" data-reveal><button class="faqBtn">What do I get, exactly?<span class="faqIco">+</span></button><div class="faqA"><p>A personalised roadmap, a transformation-first offer, done-for-you sales copy, landing page and automation setup, a content engine and outreach system, a sales process from application to enrolled client, and a documented delivery system, all through live 1:1 sessions, support between sessions and a milestone review at the end of every phase.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What do I get, exactly?<span class="faqIco">+</span></button><div class="faqA"><p>A personalised roadmap, work on the blocks that cap your income, a transformation-first offer, done-for-you sales copy, landing page and automation setup, a content engine and outreach system, a sales process from application to enrolled client, and a documented delivery system, through live 1:1 sessions, support between sessions and a milestone review at the end of every phase.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">What if I don't know what to sell yet?<span class="faqIco">+</span></button><div class="faqA"><p>That is what the first two phases solve. We audit your experience, audience and numbers, then design an offer and positioning around your proven results. You do not need to arrive with it figured out.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">Do I need to buy any tools or software?<span class="faqIco">+</span></button><div class="faqA"><p>No. The Program Fee is the complete cost and no additional software, technology or tool purchase is required. We use free tools wherever possible. Anything optional you choose to spend is your own decision and is never a condition of the guarantee.</p></div></div>
-      <div class="faqItem" data-reveal><button class="faqBtn">What is not included?<span class="faqIco">+</span></button><div class="faqA"><p>Unlimited or on-demand support, and legal, tax, financial or accounting advice. The agreement lists what is and is not included, and we do not add deliverables that are not written down.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">What does it cost, and can I pay in instalments?<span class="faqIco">+</span></button><div class="faqA"><p>We confirm the investment on your strategy call and write it into the agreement. You can pay in instalments, with the exact schedule agreed in writing before you start. There is no payment to apply.</p></div></div>
-      <div class="faqItem" data-reveal><button class="faqBtn">How is this different from a course or a community?<span class="faqIco">+</span></button><div class="faqA"><p>A course gives you generic information and a community gives you shared attention. Fast Forward gives you a custom roadmap, assets built for you, a personal strategist working your real numbers, accountability to a revenue milestone and a guarantee on the outcome.</p></div></div>
+      <div class="faqItem" data-reveal><button class="faqBtn">What is not included?<span class="faqIco">+</span></button><div class="faqA"><p>Unlimited or on-demand support, and therapy, medical, legal, tax, financial or accounting advice. The agreement lists what is and is not included, and we do not add deliverables that are not written down.</p></div></div>
       <div class="faqItem" data-reveal><button class="faqBtn">Is my information safe when I apply?<span class="faqIco">+</span></button><div class="faqA"><p>Yes. We never sell or share your details and we will never spam you. Your application is used only to prepare for your call. Income documents, if you join, are used only to set your baseline and verify the guarantee, and are kept confidential. <a href="/privacy" style="text-decoration:underline">Read our privacy policy</a>.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- FINAL -->
 <section class="sec sec--dark grain final">
   <div class="layout">
     <span class="eyebrow eyebrow--c" data-reveal style="color:var(--gold);margin-bottom:22px">Information Is Free</span>
     <h2 class="final__h" data-reveal>Implementation is <em>the product.</em></h2>
-    <p class="final__sub" data-reveal>You have the experience. The missing piece is the structure, the support and someone willing to put <b>the outcome in writing.</b> That is exactly what this is.</p>
+    <p class="final__sub" data-reveal>You have the gift. The missing piece is the structure, the support and someone willing to put <b>the outcome in writing.</b> That is exactly what this is.</p>
     <div data-reveal style="display:inline-flex;align-items:center;gap:13px;margin-bottom:26px">
       <img src="/public/images/founder-ff.webp" alt="Indrodip Ghosh" width="54" height="54" loading="lazy" style="width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);box-shadow:0 6px 18px rgba(0,0,0,.4)">
       <span style="text-align:left;font-family:'DM Sans',sans-serif;font-size:.92rem;color:rgba(255,255,255,.82);line-height:1.4">You'll speak with <b style="color:#fff">Indrodip</b> personally,<br>not a sales rep.</span>
@@ -1055,13 +1405,13 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- SIGNOFF -->
 <section class="signoff">
   <div class="layout">
     <p class="signoff__q" data-reveal>"You have already done the hard part. You have lived it. Now let's turn it into <b>income.</b>"</p>
     <p class="signoff__name" data-reveal>Indrodip Ghosh &nbsp;·&nbsp; Founder, The5th Global Consulting</p>
   </div>
 </section>
+<div class="ffDisc"><div class="layout"><p>Fast Forward is a business coaching program. It is not therapy, counselling, medical, legal, tax or financial advice. Results depend on each client's implementation and circumstances, and individual results vary. See the <a href="/disclaimer">earnings disclaimer</a>.</p></div></div>
 
 <div class="ffSticky" id="ffSticky"><a href="/call" class="btnGold" data-cta="sticky">Apply for Fast Forward →</a></div>
 
@@ -1150,38 +1500,32 @@ ul{list-style:none}
 </script>
 <script>
 (function(){
-  /* phase explorer */
-  var P=[
-    {k:'Phase 01',t:'Clarity',d:'A full audit of your offer, audience, assets and numbers. The revenue milestone and the 90-day target are set, and your custom roadmap is written.',o:['A customised roadmap','Baseline metrics','A ranked priority list']},
-    {k:'Phase 02',t:'Offer',d:'A transformation-first offer built on your proven results, with pricing, structure and guarantee, and positioning that AI cannot commoditise.',o:['A finished offer document','A positioning statement','An ideal-client profile']},
-    {k:'Phase 03',t:'Build',d:'The strategy becomes live assets. This work is done for you, not assigned to you: copy, landing page, funnel and automation.',o:['Sales copy','Landing page and booking funnel','Automation set up and running']},
-    {k:'Phase 04',t:'Launch',d:'Client acquisition switches on through organic content, LinkedIn outreach and paid ads where they fit.',o:['A content engine','An outreach system','A first campaign in market']},
-    {k:'Phase 05',t:'Convert',d:'Applicants are qualified, sales calls are run and clients are enrolled through a repeatable process.',o:['Call script and objection handling','An application-to-call flow','First enrolments']},
-    {k:'Phase 06',t:'Scale',d:'Delivery is systemised and AI is added as leverage, so revenue holds without more hours.',o:['A documented delivery system','AI-assisted workflows','A milestone review and next target']}
-  ];
-  var rail=document.querySelector('.ffPh__rail'),panel=document.getElementById('phPanel'),bar=document.getElementById('phBar');
-  if(rail&&panel){
-    var cur=0,btns=[];
-    P.forEach(function(p,i){
-      var b=document.createElement('button');b.type='button';b.className='ffPh__b';b.setAttribute('role','tab');b.setAttribute('aria-selected','false');
-      b.innerHTML='<div class="ffPh__n">'+(i+1)+'</div><span>'+p.t+'</span>';
-      b.addEventListener('click',function(){go(i)});rail.appendChild(b);btns.push(b);
-    });
-    function go(i,noAnim){
-      cur=Math.max(0,Math.min(P.length-1,i));var p=P[cur];
-      btns.forEach(function(b,j){b.classList.toggle('on',j===cur);b.classList.toggle('done',j<cur);b.setAttribute('aria-selected',j===cur?'true':'false')});
-      panel.innerHTML='<div class="ffPh__l"><div class="ffPh__k">'+p.k+' of 06</div><div class="ffPh__t">'+p.t+'</div><p class="ffPh__d">'+p.d+'</p></div><div class="ffPh__r"><div class="ffPh__lw">You leave with</div><ul>'+p.o.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>';
-      if(!noAnim){panel.classList.remove('swap');void panel.offsetWidth;panel.classList.add('swap')}
-      bar.style.width=(cur/(P.length-1))*83.4+'%';
-      document.getElementById('phPrev').disabled=cur===0;document.getElementById('phNext').disabled=cur===P.length-1;
-      document.getElementById('phPrev').style.opacity=cur===0?.35:1;document.getElementById('phNext').style.opacity=cur===P.length-1?.35:1;
-    }
-    document.getElementById('phPrev').addEventListener('click',function(){go(cur-1)});
-    document.getElementById('phNext').addEventListener('click',function(){go(cur+1)});
-    rail.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(cur+1);btns[cur].focus()}if(e.key==='ArrowLeft'){go(cur-1);btns[cur].focus()}});
-    go(0,true);
+  function ev(n,p){try{if(window.gtag)gtag('event',n,p||{})}catch(_){}}
+  var pg=document.getElementById('ffProg');
+  function prog(){var h=document.documentElement.scrollHeight-innerHeight;pg.style.transform='scaleX('+(h>0?Math.min(1,scrollY/h):0)+')'}
+  addEventListener('scroll',prog,{passive:true});prog();
+  var doc=document.getElementById('ffDoc');
+  if(doc&&matchMedia('(hover:hover) and (min-width:1000px)').matches){
+    doc.addEventListener('pointermove',function(e){var r=doc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;doc.style.transform='perspective(900px) rotateY('+(x*8)+'deg) rotateX('+(-y*8)+'deg)'});
+    doc.addEventListener('pointerleave',function(){doc.style.transform=''});
   }
-  /* self check */
+  /* calculator */
+  var cS=document.getElementById('cS'),cR=document.getElementById('cR'),cT=document.getElementById('cT');
+  if(cS){
+    var fmt=function(n){return '$'+Math.round(n).toLocaleString('en-US')},used=false,wg=document.getElementById('whyGap');
+    function fill(el){el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%')}
+    function calc(){
+      var s=+cS.value,r=+cR.value,t=+cT.value;[cS,cR,cT].forEach(fill);
+      document.getElementById('cSv').textContent=s;document.getElementById('cRv').textContent='$'+r;document.getElementById('cTv').textContent='$'+t;
+      var now=s*r*4.3,worth=s*t*4.3;
+      document.getElementById('cNow').textContent=fmt(now);document.getElementById('cWorth').textContent=fmt(worth);
+      var ins=document.getElementById('cIns');
+      if(t>r){var need=Math.ceil(s*t/r);ins.innerHTML='At <b>'+fmt(r)+'</b> a session you would need about <b>'+need+' sessions a week</b> to earn what <b>'+s+'</b> sessions would earn at <b>'+fmt(t)+'</b>. The gap is <b>'+fmt((worth-now)*12)+' a year</b>.';
+        if(wg&&used)wg.textContent='From your numbers above: about '+fmt((worth-now)*12)+' a year between what you charge and what you believe your work is worth.'}
+      else{ins.innerHTML='You already charge at or above what you believe a session is worth. The next lever is how many of the right clients find you.';if(wg)wg.textContent=''}
+    }
+    [cS,cR,cT].forEach(function(e){e.addEventListener('input',function(){if(!used){used=true;ev('ff_calc_use')}calc()})});calc();
+  }
   var chk=document.getElementById('selfcheck');
   if(chk){
     var boxes=chk.querySelectorAll('input[type=checkbox]'),res=document.getElementById('chkRes'),h=document.getElementById('chkH'),pp=document.getElementById('chkP'),mb=document.getElementById('chkBar');
@@ -1190,22 +1534,15 @@ ul{list-style:none}
       mb.style.width=(n/boxes.length*100)+'%';
       if(!n){res.classList.remove('show');return}
       res.classList.add('show');
-      if(n>=4){h.textContent='This looks like a strong fit.';pp.textContent='You have the expertise, the base to build from and the willingness to implement. The next step is a short application and a 45-minute call.'}
+      if(n>=4){h.textContent='This looks like a strong fit.';pp.textContent='You have the gift, the base to build from and the willingness to act. The next step is a short application and a 45-minute call.'}
       else if(n>=2){h.textContent='A possible fit. Let\'s check on a call.';pp.textContent='A few of these are true today. The call is where we look at your numbers and tell you honestly whether Fast Forward is right for you now.'}
-      else{h.textContent='You may be early for this.';pp.textContent='Fast Forward works best when you already have expertise to package and the time to implement. You can still apply, and we will tell you honestly if it is not the right time.'}
+      else{h.textContent='You may be early for this.';pp.textContent='Fast Forward works best when you already have work to package and time to implement. You can still apply, and we will tell you honestly if it is not the right time.'}
     }
     boxes.forEach(function(b){b.addEventListener('change',upd)});
   }
-  /* sticky CTA after the hero */
   var st=document.getElementById('ffSticky'),hero=document.getElementById('top');
-  if(st&&hero&&'IntersectionObserver' in window){
-    new IntersectionObserver(function(en){st.classList.toggle('show',!en[0].isIntersecting)},{threshold:0}).observe(hero);
-  }
-  /* CTA click tracking */
-  document.addEventListener('click',function(e){
-    var a=e.target.closest&&e.target.closest('[data-cta]');if(!a)return;
-    try{if(window.gtag)gtag('event','ff_apply_click',{cta_location:a.getAttribute('data-cta')})}catch(_){}
-  });
+  if(st&&hero&&'IntersectionObserver' in window){new IntersectionObserver(function(en){st.classList.toggle('show',!en[0].isIntersecting)},{threshold:0}).observe(hero)}
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-cta]');if(a)ev('ff_apply_click',{cta_location:a.getAttribute('data-cta')})});
 })();
 </script>
 <!-- Intercom -->

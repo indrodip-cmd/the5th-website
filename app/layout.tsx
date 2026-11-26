@@ -88,7 +88,7 @@ export default function RootLayout({
       <head>
         <Script
           src="https://t.contentsquare.net/uxa/9af567d0424d8.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-T45WJY6Q2W"
@@ -103,11 +103,11 @@ export default function RootLayout({
           `}
         </Script>
         {/* Whop Pixel — biz_nKXxpj4hLE61K7 · site-wide conversion tracking (quiz + booking funnel) */}
-        <Script id="whop-pixel" strategy="afterInteractive">
+        <Script id="whop-pixel" strategy="lazyOnload">
           {`!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");whop.setScope("biz_nKXxpj4hLE61K7");whop.track("page");`}
         </Script>
         {/* Microsoft Clarity — session recordings + heatmaps */}
-        <Script id="ms-clarity" strategy="afterInteractive">
+        <Script id="ms-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -121,11 +121,11 @@ export default function RootLayout({
         {/* Cookie / privacy consent banner — shown site-wide */}
         <Script src="/cookie-consent.js" strategy="afterInteractive" />
         {/* Carolina — concierge chat widget (sales + booking) */}
-        <Script src="/carolina.js" strategy="afterInteractive" />
+        <Script src="/carolina.js" strategy="lazyOnload" />
         {/* Personalization layer — greets known visitors by name site-wide */}
-        <Script src="/personalize.js" strategy="afterInteractive" />
+        <Script src="/personalize.js" strategy="lazyOnload" />
         {/* Whop embedded checkout loader — powers the $1 trial checkout on the offer page */}
-        <Script src="https://js.whop.com/static/checkout/loader.js" strategy="afterInteractive" />
+        <Script src="https://js.whop.com/static/checkout/loader.js" strategy="lazyOnload" />
         {/* Google reCAPTCHA v3 — invisible bot protection on lead forms (loads only when configured) */}
         {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
           <Script src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`} strategy="afterInteractive" />

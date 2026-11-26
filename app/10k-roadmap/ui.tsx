@@ -8,10 +8,13 @@ import { useRouter } from 'next/navigation'
 import { T, STEPS, GATE, LEGAL, PRESS, type Q } from './config'
 
 /* ── Global styles / fonts (scoped to the funnel routes) ───────────────────*/
-export function Fonts() {
+export function Fonts({ external = true }: { external?: boolean } = {}) {
   return (
+    <>
+    {external && <link rel="preconnect" href="https://fonts.googleapis.com" />}
+    {external && <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />}
+    {external && <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" precedence="fonts" />}
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
       *{box-sizing:border-box}
       html{scroll-behavior:smooth}
       section[id]{scroll-margin-top:86px}
@@ -111,6 +114,7 @@ export function Fonts() {
         details summary{line-height:1.4!important}
       }
     `}</style>
+    </>
   )
 }
 
@@ -169,9 +173,9 @@ export function loadQualAnswers(): Record<string, unknown> { try { return JSON.p
    vanilla IntersectionObserver (same safety-net shape as v2) driving a
    plain CSS transition on a plain div — no animation library, no
    WebKit-specific library behavior left to misfire. */
-export function Reveal({ children, delay = 0, style, id }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties; id?: string }) {
+export function Reveal({ children, delay = 0, style, id, eager = false }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties; id?: string; eager?: boolean }) {
   const ref = useRef<HTMLDivElement | null>(null)
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(eager)
   const [reduceMotion, setReduceMotion] = useState(false)
 
   useEffect(() => {
@@ -246,7 +250,7 @@ export function Header({ nav, showFounder, homeHref = '/10k-roadmap' }: { nav?: 
       <div style={{ maxWidth: 1160, margin: '0 auto', padding: '12px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
         <a href={homeHref} aria-label="The5th" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/the5th-global-consulting-logo.png" alt="The5th Global Consulting" style={{ height: 'clamp(36px,5.4vw,52px)', width: 'auto' }} />
+          <img src="/images/the5th-global-consulting-logo.webp" alt="The5th Global Consulting" style={{ height: 'clamp(36px,5.4vw,52px)', width: 'auto' }} />
           {showFounder && (
             <span className="rm-header-founder" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ width: 1, height: 22, background: T.line }} />
@@ -284,7 +288,7 @@ export function Footer({ legal }: { legal: { earnings: string; meta: string; cop
     <footer style={{ borderTop: `1px solid ${T.line}`, background: T.surface, padding: '46px 22px 60px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/the5th-logo-purple.png" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 6 }} />
+        <img src="/images/the5th-logo-purple.webp" alt="The5th Global Consulting" style={{ height: 34, opacity: 0.9, marginBottom: 6 }} />
         <div style={{ fontSize: 12, letterSpacing: '.08em', color: T.text2, fontWeight: 700, marginBottom: 18 }}>Indradip Ghosh™</div>
         <div style={{ display: 'flex', gap: 22, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 22 }}>
           {legal.links.map((l) => <a key={l.label} href={l.href} style={{ color: T.text2, fontSize: 13, textDecoration: 'none' }}>{l.label}</a>)}

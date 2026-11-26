@@ -39,8 +39,8 @@ export const T = {
   danger: '#e5584a',
   radius: 18,
   // Clean, bold, modern. Headlines use Plus Jakarta Sans (700/800); body Inter.
-  serif: "'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif",
-  sans: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  serif: "var(--f-jakarta, 'Plus Jakarta Sans'), var(--f-inter, 'Inter'), system-ui, -apple-system, sans-serif",
+  sans: "var(--f-inter, 'Inter'), system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 } as const
 
 export function videoUrl(): string {

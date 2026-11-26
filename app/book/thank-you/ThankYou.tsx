@@ -26,7 +26,7 @@ export default function ThankYou() {
   if (status === 'failed' || status === 'canceled') {
     return (
       <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
-        <Fonts /><Header homeHref="/book" />
+        <Fonts external={false} /><Header homeHref="/book" />
         <main style={{ maxWidth: 560, margin: '0 auto', padding: '70px 20px', textAlign: 'center' }}>
           <h1 className="rm-serif" style={{ fontSize: 'clamp(28px,4.6vw,40px)', margin: '0 0 14px' }}>Your payment did not go through.</h1>
           <p style={{ color: T.text2, fontSize: 17, lineHeight: 1.7, margin: '0 0 26px' }}>You have not been charged. This can happen with a bank check or a cancelled step. You can try again, with the same card or a different one.</p>
@@ -39,7 +39,7 @@ export default function ThankYou() {
   const next = activeProducts(['upsell', 'core'])
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
-      <Fonts />
+      <Fonts external={false} />
       <Header homeHref="/book" />
       <main style={{ maxWidth: 720, margin: '0 auto', padding: 'clamp(36px,6vw,72px) 20px 70px', textAlign: 'center' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -10,10 +10,9 @@ import { T, LEGAL, REAL_PROOF, RATING } from '../10k-roadmap/config'
 import { ftrack, ftrackOnce } from './funnel'
 import type { Assignment } from '@/lib/funnel/experiments'
 import { DEFAULTS } from '@/lib/funnel/experiments'
-import { DIAGRAMS } from './diagrams'
-import CheckoutPanel from './CheckoutPanel'
-import { SectionTracker, LeadMagnet, ScrollBar, SpotlightLayer, TiltBook, Magnetic, PainCheck, ChapterExplorer, Flipbook, SlideToBuy, ProgressChip, RoadmapBuilder } from './Interactive'
-import { CountUp, HourMath, TryChapter, TwoPaths, Timeline30, Objections, FloatingBuy, Icon } from './Graphics'
+import { PainCheck, ChapterExplorer, Flipbook, SlideToBuy, RoadmapBuilder, LeadMagnet, HourMath, TryChapter, TwoPaths, Timeline30, Objections, Diagram, CheckoutPanel } from './Lazy'
+import { SectionTracker, ScrollBar, SpotlightLayer, TiltBook, Magnetic, ProgressChip } from './Interactive'
+import { CountUp, FloatingBuy, Icon } from './Graphics'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE, PAINS, OUTCOMES, COMPARE, CLIENTS_SERVED } from './config'
 
 const WRAP: React.CSSProperties = { maxWidth: 1080, margin: '0 auto', padding: '0 clamp(16px,4vw,24px)' }
@@ -22,9 +21,6 @@ const CARD: React.CSSProperties = { background: 'var(--surface)', border: `1px s
 const IMG_LIME = '0 30px 80px -30px rgba(var(--limeRGB),.35)'
 
 const VarCtx = createContext<Assignment>(DEFAULTS)
-function Diagram({ k, max }: { k: string; max?: number }) {
-  return <div style={{ maxWidth: max, margin: '0 auto' }} dangerouslySetInnerHTML={{ __html: DIAGRAMS[k] }} />
-}
 /* Wide diagrams keep a readable minimum width on phones and scroll sideways
    instead of shrinking their labels to a few pixels. */
 function Wide({ children }: { children: React.ReactNode }) {
@@ -79,7 +75,7 @@ export default function BookLanding({ exp }: { exp?: Assignment }) {
   return (
     <VarCtx.Provider value={V}>
     <div className="th-dark" style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: T.sans, paddingBottom: 76, overflowX: 'clip' }}>
-      <Fonts />
+      <Fonts external={false} />
       <ScrollBar />
       <SectionTracker />
       <ProgressChip />
@@ -172,7 +168,7 @@ export default function BookLanding({ exp }: { exp?: Assignment }) {
       <section data-sec="hero" className="th-dark" id="bk-hero" style={{ position: 'relative', padding: 'clamp(34px,6vw,76px) 0 clamp(44px,6vw,84px)', background: 'radial-gradient(70% 60% at 78% 20%, rgba(var(--limeRGB),.12), transparent 60%), radial-gradient(50% 50% at 8% 90%, rgba(47,168,102,.14), transparent 70%)', overflow: 'hidden' }}>
         <div className="bk-grid-bg" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
         <div style={{ ...WRAP, position: 'relative' }} className="bk-hero">
-          <Reveal>
+          <Reveal eager>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 16px', borderRadius: 999, border: `1px solid rgba(var(--limeRGB),.35)`, background: 'var(--accentSoft)', fontSize: 12.5, fontWeight: 700, letterSpacing: '.04em', color: 'var(--accentInk)', marginBottom: 22, lineHeight: 1.35 }}>
               <Icon name="target" size={16} />For coaches, consultants and healers who are done trading hours for money
             </div>
@@ -203,20 +199,20 @@ export default function BookLanding({ exp }: { exp?: Assignment }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 22, fontSize: 13.5, color: 'var(--text2)', lineHeight: 1.45 }}>
               <span style={{ display: 'flex', flexShrink: 0 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/book/indrodip.jpg" alt="Indrodip Ghosh" width={40} height={40} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+                <img src="/images/book/indrodip-sm.webp" alt="Indrodip Ghosh" width={40} height={40} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/book/christinee.jpg" alt="Christinee Mathison" width={40} height={40} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)`, marginLeft: -10 }} />
+                <img src="/images/book/christinee-sm.webp" alt="Christinee Mathison" width={40} height={40} style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)`, marginLeft: -10 }} />
               </span>
               <span>By <strong style={{ color: 'var(--text)' }}>Indrodip Ghosh</strong> and <strong style={{ color: 'var(--text)' }}>Christinee Mathison</strong>. The5th has worked with {CLIENTS_SERVED} clients and generated {COMPANY_SALES}.</span>
             </div>
           </Reveal>
-          <Reveal delay={0.08} style={{}}>
+          <Reveal eager delay={0.08} style={{}}>
             <div className="bk-hero-art" style={{ position: 'relative', textAlign: 'center', minHeight: 'clamp(320px,46vw,560px)' }}>
               <div style={{ position: 'absolute', inset: '6% 2%', background: 'radial-gradient(closest-side, rgba(var(--limeRGB),.30), transparent)', filter: 'blur(34px)' }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/book/spread-20.webp" alt="" aria-hidden="true" width={1400} height={1000} style={{ position: 'absolute', left: '-14%', bottom: '4%', width: '62%', height: 'auto', borderRadius: 10, transform: 'rotate(-9deg)', boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)', opacity: 0.92 }} />
+              <img src="/images/book/spread-20.webp" alt="" aria-hidden="true" fetchPriority="low" decoding="async" width={1400} height={1000} style={{ position: 'absolute', left: '-14%', bottom: '4%', width: '62%', height: 'auto', borderRadius: 10, transform: 'rotate(-9deg)', boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)', opacity: 0.92 }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/book/spread-53.webp" alt="" aria-hidden="true" width={1400} height={1000} style={{ position: 'absolute', right: '-14%', bottom: '10%', width: '62%', height: 'auto', borderRadius: 10, transform: 'rotate(8deg)', boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)', opacity: 0.92 }} />
+              <img src="/images/book/spread-53.webp" alt="" aria-hidden="true" fetchPriority="low" decoding="async" width={1400} height={1000} style={{ position: 'absolute', right: '-14%', bottom: '10%', width: '62%', height: 'auto', borderRadius: 10, transform: 'rotate(8deg)', boxShadow: '0 30px 60px -20px rgba(0,0,0,.8)', opacity: 0.92 }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <TiltBook><img className="bk-book" src="/images/book/book-3d.webp" alt={`${BOOK_TITLE}: ${BOOK_SUBTITLE}, book cover`} width={794} height={986} fetchPriority="high" draggable={false} style={{ position: 'relative', width: '100%', height: 'auto', display: 'block' }} /></TiltBook>
               <div style={{ position: 'absolute', left: '4%', top: '8%', ...CARD, padding: '10px 14px', fontSize: 13, fontWeight: 700, background: 'rgba(18,24,16,.94)' }}><span style={{ color: 'var(--accentInk)' }}>{BOOK_CHAPTERS}</span> chapters</div>
@@ -286,7 +282,7 @@ export default function BookLanding({ exp }: { exp?: Assignment }) {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 30 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/book/indrodip.jpg" alt="Indrodip Ghosh" width={64} height={64} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
+              <img src="/images/book/indrodip-sm.webp" alt="Indrodip Ghosh" width={64} height={64} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `2px solid var(--accent)` }} />
               <div><div style={{ fontWeight: 800, fontSize: 17 }}>Indrodip Ghosh</div><div style={{ color: 'var(--text3)', fontSize: 13, lineHeight: 1.5 }}>Co-author · Founder, The5th Global Consulting<br />Consumer Psychologist, UC Berkeley · AI startup founder</div></div>
             </div>
           </Reveal>

@@ -12,7 +12,7 @@ import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_TITLE, BOOK_SUBTITLE, BOOK_
 export default function BookCheckout() {
   return (
     <div style={{ minHeight: '100dvh', background: T.bg, color: T.text, fontFamily: T.sans }}>
-      <Fonts />
+      <Fonts external={false} />
       <Header homeHref="/book" />
       <main style={{ maxWidth: 1040, margin: '0 auto', padding: 'clamp(26px,5vw,48px) clamp(16px,4vw,22px) 70px' }}>
         <div className="bc-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(420px,500px)', gap: 40, alignItems: 'start' }}>

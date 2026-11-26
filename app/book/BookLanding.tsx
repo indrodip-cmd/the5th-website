@@ -19,8 +19,18 @@ const IMG_LIME = '0 30px 80px -30px rgba(201,255,72,.35)'
 function Diagram({ k, max }: { k: string; max?: number }) {
   return <div style={{ maxWidth: max, margin: '0 auto' }} dangerouslySetInnerHTML={{ __html: DIAGRAMS[k] }} />
 }
+/* Wide diagrams keep a readable minimum width on phones and scroll sideways
+   instead of shrinking their labels to a few pixels. */
+function Wide({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bk-wide-wrap">
+      <div className="bk-wide">{children}</div>
+      <p className="bk-swipe">Swipe sideways to see the full picture</p>
+    </div>
+  )
+}
 function Paper({ k }: { k: string }) {
-  return <div style={{ background: '#FFFDF7', borderRadius: 18, padding: 'clamp(12px,2vw,20px)', boxShadow: '0 24px 60px -30px rgba(0,0,0,.8)' }}><Diagram k={k} /></div>
+  return <div style={{ background: '#FFFDF7', borderRadius: 18, padding: 'clamp(12px,2vw,20px)', boxShadow: '0 24px 60px -30px rgba(0,0,0,.8)' }}><Wide><Diagram k={k} /></Wide></div>
 }
 function Check() {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="12" cy="12" r="11" fill={T.accent} /><path d="M7 12.5l3.2 3.2L17 9" stroke={T.accentText} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -66,12 +76,29 @@ export default function BookLanding() {
         .bk-faq summary{list-style:none;cursor:pointer}.bk-faq summary::-webkit-details-marker{display:none}
         .bk-faq[open] .bk-plus{transform:rotate(45deg)}
         @media(max-width:900px){.bk-hero,.bk-2{grid-template-columns:1fr}.bk-3,.bk-ch{grid-template-columns:1fr 1fr}.bk-sticky{display:block}.bk-hero-art{order:-1}}
+        .bk-2>*,.bk-3>*,.bk-ch>*,.bk-hero>*{min-width:0}
+        .bk-wide-wrap{min-width:0;max-width:100%}
+        .bk-swipe{display:none}.bk-lbl{display:none}
+        @media(max-width:640px){
+          .bk-wide-wrap{position:relative}
+          .bk-wide{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px 4px}
+          .bk-wide>*{min-width:560px}
+          .bk-swipe{display:block;text-align:center;font-size:11.5px;color:${T.text3};margin:8px 0 0}
+          .bk-bar-long{display:none}.bk-bar-short{display:inline!important}
+          .bk-hero-bullets li:nth-child(n+4){display:none}
+          .bk-hero h1{font-size:34px!important}
+          .bk-cta-row{flex-direction:column;align-items:stretch!important;gap:12px!important}
+          .bk-cta-row a{width:100%}
+          .bk-cmp-head{display:none!important}
+          .bk-lbl{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+        }
         @media(max-width:560px){.bk-3,.bk-ch{grid-template-columns:1fr}.bk-cmp{grid-template-columns:1fr!important}}
       `}</style>
 
       {/* Top bar */}
       <div style={{ background: T.accent, color: T.accentText, textAlign: 'center', fontSize: 13, fontWeight: 700, padding: '9px 14px', letterSpacing: '.01em' }}>
-        Instant PDF download · {BOOK_PAGES} pages · {BOOK_CHAPTERS} chapters · only {BOOK_PRICE.label}
+        <span className="bk-bar-long">Instant PDF download · {BOOK_PAGES} pages · {BOOK_CHAPTERS} chapters · only {BOOK_PRICE.label}</span>
+        <span className="bk-bar-short" style={{ display: 'none' }}>Instant PDF · {BOOK_PAGES} pages · only {BOOK_PRICE.label}</span>
       </div>
       <Header homeHref="/book" nav={[{ label: 'Inside the book', href: '#inside' }, { label: 'The authors', href: '#authors' }, { label: 'FAQ', href: '#faq' }]} />
 
@@ -87,12 +114,12 @@ export default function BookLanding() {
             <p style={{ color: T.text2, fontSize: 'clamp(17px,2.1vw,20px)', lineHeight: 1.65, margin: '22px 0 0', maxWidth: 580 }}>
               <strong style={{ color: T.text }}>Expertise to Income</strong> shows you exactly how to package your knowledge into a first digital product, a simple offer and a 7-day launch plan, one short chapter at a time. No team. No ads. No tech skills.
             </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '26px 0 0', display: 'grid', gap: 12, maxWidth: 580 }}>
+            <ul className="bk-hero-bullets" style={{ listStyle: 'none', padding: 0, margin: '26px 0 0', display: 'grid', gap: 12, maxWidth: 580 }}>
               {['Find the one thing you know that people will pay for', 'Choose your ideal buyer and write for them', 'Design, price and package your first product', 'Write an offer with a guarantee that is easy to say yes to', 'Launch in 7 days with scripts for your first ten sales'].map((t) => (
                 <li key={t} style={{ display: 'flex', gap: 12, fontSize: 16, lineHeight: 1.5, color: T.text }}><Check />{t}</li>
               ))}
             </ul>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', margin: '30px 0 0' }}>
+            <div className="bk-cta-row" style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', margin: '30px 0 0' }}>
               <Cta where="hero" big />
               <div style={{ lineHeight: 1.1 }}>
                 <div className="rm-serif" style={{ fontSize: 40 }}>{BOOK_PRICE.label}</div>
@@ -160,8 +187,8 @@ export default function BookLanding() {
       <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
         <div style={WRAP}>
           <Reveal><Head eyebrow="The big idea" title={<>Stop trading hours. <span className="rm-mark">Start owning an asset.</span></>} sub="When you are paid for your time, your income stops the moment you do. A digital product works differently: you create it once and can sell it again and again. The book walks you from the first to the second, step by step." /></Reveal>
-          <Reveal delay={0.05} style={{ marginTop: 44 }}><Diagram k="income_types" max={840} /></Reveal>
-          <Reveal delay={0.05} style={{ marginTop: 28 }}><Diagram k="three_models" max={840} /></Reveal>
+          <Reveal delay={0.05} style={{ marginTop: 44 }}><Wide><Diagram k="income_types" max={840} /></Wide></Reveal>
+          <Reveal delay={0.05} style={{ marginTop: 28 }}><Wide><Diagram k="three_models" max={840} /></Wide></Reveal>
         </div>
       </section>
 
@@ -190,7 +217,7 @@ export default function BookLanding() {
       <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
         <div style={WRAP}>
           <Reveal><Head eyebrow="You do not just read it. You build it." title={<>By the last page, you will have <span className="rm-mark">all of this written down</span></>} sub="Every chapter ends with a write-it-down page. Here is what you will hold in your hands after each stop on the road." /></Reveal>
-          <Reveal delay={0.04} style={{ marginTop: 40 }}><Diagram k="roadmap_glance" max={760} /></Reveal>
+          <Reveal delay={0.04} style={{ marginTop: 40 }}><Wide><Diagram k="roadmap_glance" max={760} /></Wide></Reveal>
           <div className="bk-ch" style={{ marginTop: 40 }}>
             {CHAPTERS.map((c, i) => (
               <Reveal key={c.n} delay={(i % 3) * 0.05}>
@@ -249,7 +276,7 @@ export default function BookLanding() {
           <Reveal><Head eyebrow="Why this works" title={<>Why a workbook beats <span className="rm-mark">another course</span></>} sub="Most people do not fail because they lack information. They fail because they never finish. This book is built to be finished." /></Reveal>
           <Reveal delay={0.05}>
             <div style={{ ...CARD, marginTop: 40, overflow: 'hidden' }}>
-              <div className="bk-cmp" style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', background: T.surface2, fontSize: 12, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+              <div className="bk-cmp bk-cmp-head" style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', background: T.surface2, fontSize: 12, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase' }}>
                 <div style={{ padding: '14px 16px', color: T.text3 }} />
                 <div style={{ padding: '14px 16px', color: T.accentInk }}>Expertise to Income</div>
                 <div style={{ padding: '14px 16px', color: T.text3 }}>A typical online course</div>
@@ -257,8 +284,8 @@ export default function BookLanding() {
               {COMPARE.map((r) => (
                 <div key={r.k} className="bk-cmp" style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', borderTop: `1px solid ${T.line}`, fontSize: 15, lineHeight: 1.55 }}>
                   <div style={{ padding: '16px', fontWeight: 800, color: T.text }}>{r.k}</div>
-                  <div style={{ padding: '16px', color: T.text, display: 'flex', gap: 10 }}><span style={{ color: T.accentInk, fontWeight: 800 }}>✓</span>{r.book}</div>
-                  <div style={{ padding: '16px', color: T.text3, display: 'flex', gap: 10 }}><span style={{ color: T.danger, fontWeight: 800 }}>×</span>{r.other}</div>
+                  <div style={{ padding: '16px', color: T.text, display: 'flex', gap: 10 }}><span style={{ color: T.accentInk, fontWeight: 800 }}>✓</span><span><span className="bk-lbl" style={{ color: T.accentInk }}>Expertise to Income</span>{r.book}</span></div>
+                  <div style={{ padding: '16px', color: T.text3, display: 'flex', gap: 10 }}><span style={{ color: T.danger, fontWeight: 800 }}>×</span><span><span className="bk-lbl" style={{ color: T.text3 }}>A typical online course</span>{r.other}</span></div>
                 </div>
               ))}
             </div>
@@ -326,7 +353,7 @@ export default function BookLanding() {
               {[`The full ${BOOK_PAGES}-page ${BOOK_TITLE} workbook (PDF)`, 'Every worksheet: your why, your one person, product blueprint, offer stack', 'The 3-layer why, one-person, and pain-to-product frameworks', 'A 7-day launch plan with copy-and-personalise message scripts', 'A 30-day content map plus 5 selling-without-selling posts', 'Step-by-step set-up for Facebook, Instagram and a selling platform', 'A 5-minute daily ritual and a doubt response plan to keep you going'].map((t) => <li key={t} style={{ display: 'flex', gap: 12, fontSize: 16, lineHeight: 1.5 }}><Check />{t}</li>)}
             </ul>
             <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.7, margin: '22px 0 0' }}><strong style={{ color: T.text }}>Why only {BOOK_PRICE.label}?</strong> So that money is never the reason you do not start. The book has one job: to take you from stuck to a finished plan. If you later want someone to go through your business with you, there is a private audit. The book stands on its own.</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginTop: 28 }}>
+            <div className="bk-cta-row" style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginTop: 28 }}>
               <Cta where="stack" big />
               <div className="rm-serif" style={{ fontSize: 40 }}>{BOOK_PRICE.label}</div>
             </div>

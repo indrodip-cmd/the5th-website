@@ -17,7 +17,7 @@ def title_page():
     <div style="font:800 10pt 'Inter';letter-spacing:.28em;color:#9BE02A;margin-top:40px">THE 10K ROADMAP WORKBOOK</div>
     <div style="font:italic 14pt/1.4 'Bitstream Charter',serif;color:#E6F5D0;margin:28px auto 0;max-width:420px">Stop selling your time.<br>Start building an asset.</div>
     <div style="font:700 10.5pt 'Inter';letter-spacing:.2em;color:#fff;margin-top:70px">INDRODIP GHOSH &nbsp;&amp;&nbsp; CHRISTINEE MATHISON</div>
-    <div style="font:500 8.5pt 'Inter';color:#9FC4AE;margin-top:14px">www.the5th.consulting &nbsp;|&nbsp; 10kroadmap.org</div>
+    <div style="font:500 8.5pt 'Inter';color:#9FC4AE;margin-top:14px">www.the5th.consulting</div>
   </div>
   <div style="position:absolute;left:0;right:0;bottom:0;height:290px;overflow:hidden;display:flex;align-items:flex-end">{art.landscape(1, sun=False)}</div></section>'''
 

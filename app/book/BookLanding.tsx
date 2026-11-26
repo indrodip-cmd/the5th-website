@@ -9,7 +9,7 @@ import { Fonts, Header, Btn, Reveal, Footer } from '../10k-roadmap/ui'
 import { T, LEGAL, REAL_PROOF, RATING } from '../10k-roadmap/config'
 import { track } from '../10k-roadmap/track'
 import { DIAGRAMS } from './diagrams'
-import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE } from './config'
+import { BOOK_PRICE, BOOK_PAGES, BOOK_CHAPTERS, BOOK_GUARANTEE_DAYS, BOOK_CHECKOUT_PATH, BOOK_TITLE, BOOK_SUBTITLE, BOOK_LEGAL, CHAPTERS, FAQ, COMPANY_SALES, INDRODIP_CREDENTIALS, VALUATION_NOTE, PAINS, OUTCOMES, COMPARE, CLIENTS_SERVED } from './config'
 
 const WRAP: React.CSSProperties = { maxWidth: 1080, margin: '0 auto', padding: '0 clamp(16px,4vw,24px)' }
 const SEC: React.CSSProperties = { padding: 'clamp(54px,8vw,96px) 0' }
@@ -66,7 +66,7 @@ export default function BookLanding() {
         .bk-faq summary{list-style:none;cursor:pointer}.bk-faq summary::-webkit-details-marker{display:none}
         .bk-faq[open] .bk-plus{transform:rotate(45deg)}
         @media(max-width:900px){.bk-hero,.bk-2{grid-template-columns:1fr}.bk-3,.bk-ch{grid-template-columns:1fr 1fr}.bk-sticky{display:block}.bk-hero-art{order:-1}}
-        @media(max-width:560px){.bk-3,.bk-ch{grid-template-columns:1fr}}
+        @media(max-width:560px){.bk-3,.bk-ch{grid-template-columns:1fr}.bk-cmp{grid-template-columns:1fr!important}}
       `}</style>
 
       {/* Top bar */}
@@ -80,15 +80,15 @@ export default function BookLanding() {
       <section style={{ padding: 'clamp(34px,6vw,72px) 0 clamp(40px,6vw,76px)', background: 'radial-gradient(70% 60% at 78% 20%, rgba(201,255,72,.10), transparent 60%)' }}>
         <div style={WRAP} className="bk-hero">
           <Reveal>
-            <div className="rm-eyebrow" style={{ marginBottom: 16 }}>{BOOK_SUBTITLE}</div>
-            <h1 className="rm-serif" style={{ fontSize: 'clamp(38px,6.2vw,68px)', margin: 0 }}>
-              Stop Selling Your Time. <span className="rm-mark">Start Building an Asset.</span>
+            <div className="rm-eyebrow" style={{ marginBottom: 16 }}>A step-by-step workbook for coaches, consultants and healers</div>
+            <h1 className="rm-serif" style={{ fontSize: 'clamp(34px,5.1vw,56px)', margin: 0 }}>
+              Turn What You Know Into a <span className="rm-mark">Digital Product People Will Pay For</span>
             </h1>
-            <p style={{ color: T.text2, fontSize: 'clamp(17px,2.1vw,20px)', lineHeight: 1.65, margin: '22px 0 0', maxWidth: 560 }}>
-              A story-driven, {BOOK_PAGES}-page workbook that takes a coach, consultant or healer from <strong style={{ color: T.text }}>expertise</strong> to a first digital product, a simple offer and a launch plan. No team. No ads. No tech degree.
+            <p style={{ color: T.text2, fontSize: 'clamp(17px,2.1vw,20px)', lineHeight: 1.65, margin: '22px 0 0', maxWidth: 580 }}>
+              <strong style={{ color: T.text }}>Expertise to Income</strong> shows you exactly how to package your knowledge into a first digital product, a simple offer and a 7-day launch plan, one short chapter at a time. No team. No ads. No tech skills.
             </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: '26px 0 0', display: 'grid', gap: 12, maxWidth: 560 }}>
-              {['9 chapters that walk you from your why to launch week', 'Worksheets you fill in as you read, so you finish with real decisions', 'Word-for-word message scripts and a 7-day launch plan', 'A 30-day content map and 5 posts that sell without selling'].map((t) => (
+            <ul style={{ listStyle: 'none', padding: 0, margin: '26px 0 0', display: 'grid', gap: 12, maxWidth: 580 }}>
+              {['Find the one thing you know that people will pay for', 'Choose your ideal buyer and write for them', 'Design, price and package your first product', 'Write an offer with a guarantee that is easy to say yes to', 'Launch in 7 days with scripts for your first ten sales'].map((t) => (
                 <li key={t} style={{ display: 'flex', gap: 12, fontSize: 16, lineHeight: 1.5, color: T.text }}><Check />{t}</li>
               ))}
             </ul>
@@ -96,7 +96,7 @@ export default function BookLanding() {
               <Cta where="hero" big />
               <div style={{ lineHeight: 1.1 }}>
                 <div className="rm-serif" style={{ fontSize: 40 }}>{BOOK_PRICE.label}</div>
-                <div style={{ fontSize: 12.5, color: T.text3, marginTop: 4 }}>one-time, no subscription</div>
+                <div style={{ fontSize: 12.5, color: T.text3, marginTop: 4 }}>instant PDF · one-time payment</div>
               </div>
             </div>
             <Reassure />
@@ -130,73 +130,89 @@ export default function BookLanding() {
       {/* ── Proof band ── */}
       <section aria-label="The5th in numbers" style={{ background: T.bg, padding: 'clamp(30px,5vw,46px) 0' }}>
         <div style={{ ...WRAP, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(170px,1fr))', gap: 22, textAlign: 'center' }}>
-          {[{ n: '$15M+', l: 'in sales generated by The5th' }, { n: '76', l: 'coaches and consultants served' }, { n: '12', l: 'nations, coached remotely' }, { n: RATING.score, l: 'average client rating' }].map((x) => (
+          {[{ n: '$15M+', l: 'in sales generated by The5th' }, { n: String(CLIENTS_SERVED), l: 'clients we have worked with' }, { n: '12', l: 'nations, coached remotely' }, { n: RATING.score, l: 'average rating from 76 coaches' }].map((x) => (
             <div key={x.l}><div className="rm-serif" style={{ fontSize: 'clamp(34px,5vw,48px)', color: T.accentInk }}>{x.n}</div><div style={{ color: T.text2, fontSize: 14, marginTop: 6, lineHeight: 1.4 }}>{x.l}</div></div>
           ))}
         </div>
       </section>
 
-      {/* ── Letter ── */}
-      <section style={SEC}>
-        <div style={{ ...WRAP, maxWidth: 760 }}>
+      {/* ── Does this sound like you? ── */}
+      <section style={{ ...SEC, paddingTop: 'clamp(30px,5vw,56px)' }}>
+        <div style={{ ...WRAP, maxWidth: 820 }}>
           <Reveal>
-            <div className="rm-eyebrow" style={{ marginBottom: 14 }}>From the desk of Indrodip Ghosh</div>
-            <h2 className="rm-serif" style={{ fontSize: 'clamp(30px,4.6vw,46px)', margin: '0 0 28px' }}>I almost took the salary. Here is why I said no.</h2>
-            <div style={{ display: 'grid', gap: 18, fontSize: 'clamp(17px,2vw,19px)', lineHeight: 1.75, color: '#D5DDCF' }}>
-              <p style={{ margin: 0 }}>I did not grow up knowing how to build a business. I grew up in India, where the unspoken rule is: study hard, get a job, be safe. No one in my world was talking about digital products or online income.</p>
-              <p style={{ margin: 0 }}>In 2016, my roommate and I built a working prototype of a better speaker. Then our lead engineer dropped out. No tech, no funding, no guidance. <strong style={{ color: T.text }}>It fell apart. That was my first failure. It would not be the last.</strong></p>
-              <p style={{ margin: 0 }}>I tried event management. I learned digital marketing. In 2019 I launched an agency, and by 2021 we were running campaigns for international clients, including Booking.com. From the outside it looked like success. From the inside I was exhausted, trading hours for money.</p>
-              <p style={{ margin: 0 }}>{`I had built a business that could not run without me. That is not a business. `}<strong style={{ color: T.text }}>That is a job with extra steps.</strong></p>
-              <p style={{ margin: 0 }}>In 2023, Google offered me a position. A salary. Stability. I almost said yes. But I did not build all of this just to sit in an office, living paycheck to paycheck with no freedom.</p>
-              <p style={{ margin: 0 }}>So in 2024 I started over with digital products and coaching. I stopped hiding my background and showed up as exactly who I was. My clients, mostly men and women over 45 starting their first online business, did not care where I was from. They cared that I understood their fear of being seen, of technology, of failing at something they had dreamed about for years.</p>
-              <p style={{ margin: 0 }}>By the end of 2024 I had served 20+ clients and hit my first $10K month. Not with ads. Not with a big team. Just with clarity, story, and a simple system.</p>
-              <p style={{ margin: 0 }}>This workbook is everything I wish I had in 2016, or 2020, or 2022. Christinee and I wrote it so you do not have to fail your way forward like I did.</p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 30 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/book/indrodip.jpg" alt="Indrodip Ghosh" width={64} height={64} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.accent}` }} />
-              <div><div style={{ fontWeight: 800, fontSize: 17 }}>Indrodip Ghosh</div><div style={{ color: T.text3, fontSize: 13, lineHeight: 1.5 }}>Co-author · Founder, The5th Global Consulting<br />Consumer Psychologist, UC Berkeley · AI startup founder</div></div>
-            </div>
+            <div className="rm-eyebrow" style={{ marginBottom: 14, textAlign: 'center' }}>Does this sound like you?</div>
+            <h2 className="rm-serif" style={{ fontSize: 'clamp(30px,4.6vw,48px)', margin: '0 0 20px', textAlign: 'center' }}>You are not short of expertise. <span className="rm-mark">You are short of a system.</span></h2>
+            <ul style={{ listStyle: 'none', margin: '30px 0 0', padding: 0, display: 'grid', gap: 14 }}>
+              {PAINS.map((t) => (
+                <li key={t} style={{ ...CARD, padding: '16px 20px', display: 'flex', gap: 14, alignItems: 'flex-start', fontSize: 17, lineHeight: 1.55 }}>
+                  <span style={{ color: T.danger, fontWeight: 800, fontSize: 20, lineHeight: 1.3, flexShrink: 0 }}>×</span>{t}
+                </li>
+              ))}
+            </ul>
+            <p style={{ fontSize: 'clamp(18px,2.2vw,21px)', lineHeight: 1.7, color: '#D5DDCF', margin: '34px 0 0' }}>
+              If that is you, nothing is wrong with you. This is not a talent problem. <strong style={{ color: T.text }}>It is a packaging problem.</strong> Nobody showed you how to turn what you know into something you can name, price, sell and launch. <strong style={{ color: T.text }}>That is exactly what this book teaches.</strong>
+            </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ── The problem: three kinds of income ── */}
+      {/* ── Why experts stay stuck ── */}
       <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="Why experts stay stuck" title={<>Most experts are paid in the <span className="rm-mark">wrong kind</span> of income</>} sub="If your income stops the moment you stop working, you do not own a business. You own a job with extra steps. The book shows you how to move from trading time to building something that sells repeatedly." /></Reveal>
+          <Reveal><Head eyebrow="The big idea" title={<>Stop trading hours. <span className="rm-mark">Start owning an asset.</span></>} sub="When you are paid for your time, your income stops the moment you do. A digital product works differently: you create it once and can sell it again and again. The book walks you from the first to the second, step by step." /></Reveal>
           <Reveal delay={0.05} style={{ marginTop: 44 }}><Diagram k="income_types" max={840} /></Reveal>
           <Reveal delay={0.05} style={{ marginTop: 28 }}><Diagram k="three_models" max={840} /></Reveal>
         </div>
       </section>
 
-      {/* ── Inside: 9 chapters ── */}
+      {/* ── What you will learn ── */}
       <section id="inside" style={SEC}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="Inside the book" title={<>Nine stops. <span className="rm-mark">One road</span> from expertise to income.</>} sub="Each chapter builds on the last. You read a short story-led lesson, then fill in the worksheets that turn it into your own plan." /></Reveal>
+          <Reveal><Head eyebrow="What you will learn" title={<>Nine skills that take you from <span className="rm-mark">expertise to income</span></>} sub="Each chapter teaches one skill, shows it with a real example, and then has you apply it to your own business on the page." /></Reveal>
+          <div className="bk-2" style={{ marginTop: 44, alignItems: 'stretch', gap: 16 }}>
+            {OUTCOMES.map((o, i) => (
+              <Reveal key={o.ch} delay={(i % 2) * 0.05}>
+                <div style={{ ...CARD, padding: 24, height: '100%', display: 'flex', gap: 16 }}>
+                  <span className="rm-serif" style={{ flex: '0 0 42px', height: 42, borderRadius: '50%', background: T.accent, color: T.accentText, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{o.ch}</span>
+                  <div>
+                    <h3 style={{ fontFamily: T.serif, fontSize: 20, lineHeight: 1.25, margin: '0 0 8px', letterSpacing: '-.01em' }}>{o.t}</h3>
+                    <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.65, margin: 0 }}>{o.d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal style={{ textAlign: 'center', marginTop: 40 }}><Cta where="learn" /><Reassure /></Reveal>
+        </div>
+      </section>
+
+      {/* ── What you will have written ── */}
+      <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
+        <div style={WRAP}>
+          <Reveal><Head eyebrow="You do not just read it. You build it." title={<>By the last page, you will have <span className="rm-mark">all of this written down</span></>} sub="Every chapter ends with a write-it-down page. Here is what you will hold in your hands after each stop on the road." /></Reveal>
           <Reveal delay={0.04} style={{ marginTop: 40 }}><Diagram k="roadmap_glance" max={760} /></Reveal>
           <div className="bk-ch" style={{ marginTop: 40 }}>
             {CHAPTERS.map((c, i) => (
               <Reveal key={c.n} delay={(i % 3) * 0.05}>
-                <div style={{ ...CARD, padding: 20, height: '100%' }}>
+                <div style={{ ...CARD, padding: 20, height: '100%', background: T.bg, display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
                     <span className="rm-serif" style={{ width: 38, height: 38, borderRadius: '50%', background: T.accent, color: T.accentText, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{c.n}</span>
                     <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: T.text3 }}>by {c.by}</span>
                   </div>
                   <h3 style={{ fontFamily: T.serif, fontSize: 18, lineHeight: 1.25, margin: '0 0 8px', letterSpacing: '-.01em' }}>{c.title}</h3>
-                  <p style={{ color: T.text2, fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>{c.line}</p>
+                  <p style={{ color: T.text2, fontSize: 14.5, lineHeight: 1.6, margin: '0 0 14px' }}>{c.line}</p>
+                  <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: `1px solid ${T.line}`, fontSize: 14, lineHeight: 1.55, color: T.text }}><span style={{ color: T.accentInk, fontWeight: 800 }}>You walk away with: </span>{c.get}</div>
                 </div>
               </Reveal>
             ))}
           </div>
-          <Reveal style={{ textAlign: 'center', marginTop: 40 }}><Cta where="chapters" /><Reassure /></Reveal>
         </div>
       </section>
 
       {/* ── Look inside ── */}
-      <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
+      <section style={SEC}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="A look inside" title={<>Not a wall of text. A book you will <span className="rm-mark">actually finish.</span></>} sub={`Illustrated diagrams, worked examples, story-led lessons and worksheets on every chapter. Every chapter ends with a "write it down" page before you move on.`} /></Reveal>
+          <Reveal><Head eyebrow="A look inside" title={<>Not a wall of text. A book you will <span className="rm-mark">actually finish.</span></>} sub="Real pages from the book: story-led lessons, clear diagrams, worked examples and worksheets with space to write." /></Reveal>
           <div className="bk-2" style={{ marginTop: 44, alignItems: 'start' }}>
             {[16, 20, 53, 93].map((n, i) => (
               <Reveal key={n} delay={(i % 2) * 0.06}>
@@ -208,21 +224,75 @@ export default function BookLanding() {
         </div>
       </section>
 
-      {/* ── Frameworks (graphs) ── */}
-      <section style={SEC}>
+      {/* ── Frameworks ── */}
+      <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
         <div style={WRAP}>
-          <Reveal><Head eyebrow="The frameworks" title={<>Simple pictures for <span className="rm-mark">big ideas</span></>} sub="You will learn the product ladder, the pain-to-product bridge, the 7-day launch path and the math of 1% a day, each with a worksheet to apply it." /></Reveal>
+          <Reveal><Head eyebrow="The frameworks" title={<>Big ideas, <span className="rm-mark">made simple</span></>} sub="Four of the pictures you will use again and again, each with a worksheet so you apply it to your own business." /></Reveal>
           <div className="bk-2" style={{ marginTop: 44, alignItems: 'start' }}>
-            <Reveal><Paper k="ladder_stairs" /></Reveal>
-            <Reveal delay={0.05}><Paper k="bridge" /></Reveal>
-            <Reveal><Paper k="launch_path" /></Reveal>
-            <Reveal delay={0.05}><Paper k="one_percent" /></Reveal>
+            {[{ k: 'ladder_stairs', t: 'The product ladder', d: 'Start with a $7 entry product that builds trust, then climb to higher-priced offers for the same buyer.' },
+              { k: 'bridge', t: 'The pain-to-product bridge', d: 'Connect what your buyer is already struggling with to what you sell, with clarity instead of hype.' },
+              { k: 'launch_path', t: 'The 7-day launch path', d: 'Tease, story, solution, proof, reveal, objections, last chance: one post a day with a clear job.' },
+              { k: 'one_percent', t: 'The 1% rule', d: 'You do not need to be 100% better. Small daily improvements compound into a business you will not recognise.' }].map((f, i) => (
+              <Reveal key={f.k} delay={(i % 2) * 0.05}>
+                <Paper k={f.k} />
+                <h3 style={{ fontFamily: T.serif, fontSize: 19, margin: '16px 0 6px' }}>{f.t}</h3>
+                <p style={{ color: T.text2, fontSize: 15, lineHeight: 1.6, margin: 0 }}>{f.d}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── For / not for ── */}
+      {/* ── Why a workbook ── */}
+      <section style={SEC}>
+        <div style={{ ...WRAP, maxWidth: 900 }}>
+          <Reveal><Head eyebrow="Why this works" title={<>Why a workbook beats <span className="rm-mark">another course</span></>} sub="Most people do not fail because they lack information. They fail because they never finish. This book is built to be finished." /></Reveal>
+          <Reveal delay={0.05}>
+            <div style={{ ...CARD, marginTop: 40, overflow: 'hidden' }}>
+              <div className="bk-cmp" style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', background: T.surface2, fontSize: 12, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+                <div style={{ padding: '14px 16px', color: T.text3 }} />
+                <div style={{ padding: '14px 16px', color: T.accentInk }}>Expertise to Income</div>
+                <div style={{ padding: '14px 16px', color: T.text3 }}>A typical online course</div>
+              </div>
+              {COMPARE.map((r) => (
+                <div key={r.k} className="bk-cmp" style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', borderTop: `1px solid ${T.line}`, fontSize: 15, lineHeight: 1.55 }}>
+                  <div style={{ padding: '16px', fontWeight: 800, color: T.text }}>{r.k}</div>
+                  <div style={{ padding: '16px', color: T.text, display: 'flex', gap: 10 }}><span style={{ color: T.accentInk, fontWeight: 800 }}>✓</span>{r.book}</div>
+                  <div style={{ padding: '16px', color: T.text3, display: 'flex', gap: 10 }}><span style={{ color: T.danger, fontWeight: 800 }}>×</span>{r.other}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Letter ── */}
       <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
+        <div style={{ ...WRAP, maxWidth: 760 }}>
+          <Reveal>
+            <div className="rm-eyebrow" style={{ marginBottom: 14 }}>Why we wrote this book · from Indrodip Ghosh</div>
+            <h2 className="rm-serif" style={{ fontSize: 'clamp(30px,4.6vw,46px)', margin: '0 0 28px' }}>I almost took the salary. Here is why I said no.</h2>
+            <div style={{ display: 'grid', gap: 18, fontSize: 'clamp(17px,2vw,19px)', lineHeight: 1.75, color: '#D5DDCF' }}>
+              <p style={{ margin: 0 }}>I did not grow up knowing how to build a business. I grew up in India, where the unspoken rule is: study hard, get a job, be safe. No one in my world was talking about digital products or online income.</p>
+              <p style={{ margin: 0 }}>In 2016, my roommate and I built a working prototype of a better speaker. Then our lead engineer dropped out. No tech, no funding, no guidance. <strong style={{ color: T.text }}>It fell apart. That was my first failure. It would not be the last.</strong></p>
+              <p style={{ margin: 0 }}>I tried event management. I learned digital marketing. In 2019 I launched an agency, and by 2021 we were running campaigns for international clients, including Booking.com. From the outside it looked like success. From the inside I was exhausted, trading hours for money.</p>
+              <p style={{ margin: 0 }}>I had built a business that could not run without me. That is not a business. <strong style={{ color: T.text }}>That is a job with extra steps.</strong></p>
+              <p style={{ margin: 0 }}>In 2023, Google offered me a position. A salary. Stability. I almost said yes. But I did not build all of this just to sit in an office, living paycheck to paycheck with no freedom.</p>
+              <p style={{ margin: 0 }}>So in 2024 I started over with digital products and coaching. I stopped hiding my background and showed up as exactly who I was. My clients, mostly men and women over 45 starting their first online business, did not care where I was from. They cared that I understood their fear of being seen, of technology, of failing at something they had dreamed about for years.</p>
+              <p style={{ margin: 0 }}>By the end of 2024 I had served 20+ clients and hit my first $10K month. Not with ads. Not with a big team. Just with clarity, story, and a simple system.</p>
+              <p style={{ margin: 0 }}>This workbook is that system, written down. It is everything I wish I had in 2016, or 2020, or 2022. Christinee and I wrote it so you do not have to fail your way forward like I did.</p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 30 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/book/indrodip.jpg" alt="Indrodip Ghosh" width={64} height={64} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${T.accent}` }} />
+              <div><div style={{ fontWeight: 800, fontSize: 17 }}>Indrodip Ghosh</div><div style={{ color: T.text3, fontSize: 13, lineHeight: 1.5 }}>Co-author · Founder, The5th Global Consulting<br />Consumer Psychologist, UC Berkeley · AI startup founder</div></div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── For / not for ── */}
+      <section style={SEC}>
         <div style={WRAP}>
           <Reveal><Head eyebrow="Is it for you?" title="This book is for you if..." /></Reveal>
           <div className="bk-2" style={{ marginTop: 40, alignItems: 'stretch' }}>
@@ -242,8 +312,8 @@ export default function BookLanding() {
         </div>
       </section>
 
-      {/* ── What you get ── */}
-      <section style={SEC}>
+      {/* ── What you get + why $4.99 ── */}
+      <section style={{ ...SEC, background: T.surface, borderTop: `1px solid ${T.line}`, borderBottom: `1px solid ${T.line}` }}>
         <div style={WRAP} className="bk-2">
           <Reveal>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -251,11 +321,12 @@ export default function BookLanding() {
           </Reveal>
           <Reveal delay={0.06}>
             <div className="rm-eyebrow" style={{ marginBottom: 14 }}>Everything you get</div>
-            <h2 className="rm-serif" style={{ fontSize: 'clamp(28px,4vw,42px)', margin: '0 0 22px' }}>The complete workbook, instantly.</h2>
+            <h2 className="rm-serif" style={{ fontSize: 'clamp(28px,4vw,42px)', margin: '0 0 22px' }}>The complete workbook, instantly, for {BOOK_PRICE.label}.</h2>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 13 }}>
               {[`The full ${BOOK_PAGES}-page ${BOOK_TITLE} workbook (PDF)`, 'Every worksheet: your why, your one person, product blueprint, offer stack', 'The 3-layer why, one-person, and pain-to-product frameworks', 'A 7-day launch plan with copy-and-personalise message scripts', 'A 30-day content map plus 5 selling-without-selling posts', 'Step-by-step set-up for Facebook, Instagram and a selling platform', 'A 5-minute daily ritual and a doubt response plan to keep you going'].map((t) => <li key={t} style={{ display: 'flex', gap: 12, fontSize: 16, lineHeight: 1.5 }}><Check />{t}</li>)}
             </ul>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginTop: 30 }}>
+            <p style={{ color: T.text2, fontSize: 15.5, lineHeight: 1.7, margin: '22px 0 0' }}><strong style={{ color: T.text }}>Why only {BOOK_PRICE.label}?</strong> So that money is never the reason you do not start. The book has one job: to take you from stuck to a finished plan. If you later want someone to go through your business with you, there is a private audit. The book stands on its own.</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', marginTop: 28 }}>
               <Cta where="stack" big />
               <div className="rm-serif" style={{ fontSize: 40 }}>{BOOK_PRICE.label}</div>
             </div>
@@ -265,14 +336,14 @@ export default function BookLanding() {
       </section>
 
       {/* ── Guarantee ── */}
-      <section style={{ padding: '0 0 clamp(54px,8vw,96px)' }}>
+      <section style={{ padding: 'clamp(54px,8vw,96px) 0' }}>
         <div style={{ ...WRAP, maxWidth: 820 }}>
           <Reveal>
             <div style={{ ...CARD, padding: 'clamp(24px,4vw,40px)', display: 'flex', gap: 22, alignItems: 'center', flexWrap: 'wrap', borderColor: 'rgba(201,255,72,.35)', background: 'linear-gradient(135deg, rgba(201,255,72,.08), rgba(201,255,72,0))' }}>
               <svg width="64" height="64" viewBox="0 0 48 48" fill="none" stroke={T.accent} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M24 5l15 5v12c0 10-6 17-15 21C15 39 9 32 9 22V10z" /><path d="M17 24l5 5 9-10" /></svg>
               <div style={{ flex: '1 1 320px' }}>
                 <h3 className="rm-serif" style={{ fontSize: 26, margin: '0 0 8px' }}>{BOOK_GUARANTEE_DAYS}-day money-back guarantee</h3>
-                <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.65, margin: 0 }}>Read it, do the first chapter, and if it is not worth every cent, email us within {BOOK_GUARANTEE_DAYS} days of purchase for a full refund. At {BOOK_PRICE.label} the risk is tiny, and we would rather you feel it was fair.</p>
+                <p style={{ color: T.text2, fontSize: 16, lineHeight: 1.65, margin: 0 }}>Read it, do the exercises, and if it is not worth every cent, email us any time within a full year ({BOOK_GUARANTEE_DAYS} days) of purchase for a refund. You carry no risk. The only way to lose is to never start.</p>
               </div>
             </div>
           </Reveal>
@@ -355,7 +426,7 @@ export default function BookLanding() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/book/book-3d.webp" alt={`${BOOK_TITLE} book`} loading="lazy" width={794} height={986} style={{ width: 'min(100%, 300px)', height: 'auto', margin: '0 auto 8px' }} />
             <h2 className="rm-serif" style={{ fontSize: 'clamp(32px,5vw,52px)', margin: '0 0 16px' }}>Your expertise is worth more than your hours.</h2>
-            <p style={{ color: T.text2, fontSize: 18, lineHeight: 1.65, margin: '0 0 28px' }}>For the price of a coffee you get the whole roadmap: your why, your one person, a product, an offer and a launch date.</p>
+            <p style={{ color: T.text2, fontSize: 18, lineHeight: 1.65, margin: '0 0 28px' }}>In one sitting tonight you can write down your why. In a few weeks you can have a product, an offer and a launch date on paper. For {BOOK_PRICE.label} and a full year of protection.</p>
             <Cta where="final" big />
             <Reassure />
             <p style={{ color: T.text3, fontSize: 14, margin: '18px 0 0' }}>Want 1-on-1 help instead? <a href="/10k-roadmap" style={{ color: T.accentInk, fontWeight: 700 }}>Book a private business audit with Indrodip and Manisha.</a></p>

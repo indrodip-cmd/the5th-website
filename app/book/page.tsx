@@ -4,7 +4,7 @@ import { BOOK_PRICE, BOOK_TITLE, BOOK_SUBTITLE, BOOK_PAGES, BOOK_GUARANTEE_DAYS,
 const SITE = 'https://the5thglobal.consulting'
 const URL = `${SITE}/book`
 const TITLE = `${BOOK_TITLE}: The 10K Roadmap Workbook | ${BOOK_PRICE.label} Ebook`
-const DESC = `Instant-download ${BOOK_PAGES}-page workbook by Indrodip Ghosh and Christinee Mathison. Turn your expertise into a digital product, an offer and a launch plan. ${BOOK_PRICE.label}, ${BOOK_GUARANTEE_DAYS}-day money-back guarantee.`
+const DESC = `A ${BOOK_PAGES}-page step-by-step workbook to turn your expertise into a digital product, an offer and a 7-day launch plan. By Indrodip Ghosh and Christinee Mathison. ${BOOK_PRICE.label}.`
 const OG_IMG = `${SITE}/images/book/og.jpg`
 
 export const metadata = {

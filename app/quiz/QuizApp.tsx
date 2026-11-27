@@ -132,6 +132,9 @@ export default function QuizApp() {
     if (!ok) { setPhase('gate'); return }
     try {
       localStorage.setItem(STORE, JSON.stringify({ code: r.code, name: nm, email: em }))
+      // Lets the site adapt to this person on this device (read by /alive.js). No email stored here.
+      localStorage.setItem('a5_profile', JSON.stringify({ primary: r.primary, primaryName: BLOCKERS[r.primary].name, secondary: r.secondary, archetype: r.archetype, profileId: r.profileId, band: r.band, readiness: r.readiness, first: nm.split(' ')[0] || '', t: Date.now() }))
+      if (nm) localStorage.setItem('the5th_first_name', nm.split(' ')[0])
       const h = JSON.parse(localStorage.getItem(HIST) || '[]')
       h.push({ t: Date.now(), code: r.code, overall: r.overall, i: r.intensities, d: r.dims })
       localStorage.setItem(HIST, JSON.stringify(h.slice(-8)))

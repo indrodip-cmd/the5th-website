@@ -124,6 +124,7 @@ export default function RootLayout({
         <Script src="/carolina.js" strategy="lazyOnload" />
         {/* Personalization layer — greets known visitors by name site-wide */}
         <Script src="/personalize.js" strategy="lazyOnload" />
+        <Script src="/alive.js" strategy="lazyOnload" />
         {/* Whop embedded checkout loader — powers the $1 trial checkout on the offer page */}
         <Script src="https://js.whop.com/static/checkout/loader.js" strategy="lazyOnload" />
         {/* Google reCAPTCHA v3 — invisible bot protection on lead forms (loads only when configured) */}

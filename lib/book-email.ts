@@ -23,17 +23,38 @@ export type Rendered = { subject: string; html: string; text: string }
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const strip = (h: string) => h.replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n\n').replace(/<li[^>]*>/gi, '- ').replace(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gi, '$2 ($1)').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&rsquo;/g, "'").replace(/\n{3,}/g, '\n\n').trim()
 
+let plainMode = false // plain, personal-looking emails (keeps them out of the Promotions tab); the purchase email stays branded
+
 const P = (t: string) => `<p style="margin:0 0 18px;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.7;color:${C.ink}">${t}</p>`
 const H = (t: string) => `<p style="margin:26px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${C.link}">${t}</p>`
-const LIST = (items: string[]) => `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 20px">${items.map((i) => `<tr><td width="30" valign="top" style="padding:3px 0 10px"><div style="width:20px;height:20px;border-radius:10px;background:${C.lime};text-align:center;font:700 12px/20px Arial,sans-serif;color:${C.forest}">&#10003;</div></td><td valign="top" style="padding:0 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:16.5px;line-height:1.6;color:${C.ink}">${i}</td></tr>`).join('')}</table>`
-const QUOTE = (t: string) => `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:6px 0 22px"><tr><td width="5" style="background:${C.lime};border-radius:3px">&nbsp;</td><td style="padding:14px 18px;background:${C.tint};border-radius:0 12px 12px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:1.6;color:${C.forest2}">${t}</td></tr></table>`
+const LIST_B = (items: string[]) => `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 20px">${items.map((i) => `<tr><td width="30" valign="top" style="padding:3px 0 10px"><div style="width:20px;height:20px;border-radius:10px;background:${C.lime};text-align:center;font:700 12px/20px Arial,sans-serif;color:${C.forest}">&#10003;</div></td><td valign="top" style="padding:0 0 10px;font-family:Georgia,'Times New Roman',serif;font-size:16.5px;line-height:1.6;color:${C.ink}">${i}</td></tr>`).join('')}</table>`
+const QUOTE_B = (t: string) => `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:6px 0 22px"><tr><td width="5" style="background:${C.lime};border-radius:3px">&nbsp;</td><td style="padding:14px 18px;background:${C.tint};border-radius:0 12px 12px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:1.6;color:${C.forest2}">${t}</td></tr></table>`
 const BTN = (label: string, href: string) => `<table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin:8px auto"><tr><td align="center" bgcolor="${C.lime}" style="border-radius:999px;mso-padding-alt:0"><a href="${href}" target="_blank" style="display:inline-block;padding:17px 34px;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:800;color:${C.forest};text-decoration:none;border-radius:999px;background:${C.lime}">${label}&nbsp;&rarr;</a></td></tr></table>`
 const BIG = (n: string, label: string) => `<td align="center" width="33%" style="padding:6px 8px"><div style="font:900 28px/1.1 Arial,sans-serif;color:${C.forest2}">${n}</div><div style="font:600 12px/1.4 Arial,sans-serif;color:${C.mute};text-transform:uppercase;letter-spacing:.08em;margin-top:4px">${label}</div></td>`
-export const STATS = `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:4px 0 24px;border-top:1px solid ${C.line};border-bottom:1px solid ${C.line}"><tr>${BIG('104', 'pages')}${BIG('9', 'chapters')}${BIG('365', 'day guarantee')}</tr></table>`
+const STATS_B = `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:4px 0 24px;border-top:1px solid ${C.line};border-bottom:1px solid ${C.line}"><tr>${BIG('104', 'pages')}${BIG('9', 'chapters')}${BIG('365', 'day guarantee')}</tr></table>`
 
-interface Layout { preview: string; kicker: string; title: string; body: string; cta?: { label: string; href: string }; ps?: string; hero?: 'book' | 'none'; unsub?: string; transactional?: boolean }
+const LIST = (items: string[]) => plainMode ? `<ul style="margin:0 0 18px;padding-left:22px;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.7;color:${C.ink}">${items.map((x) => `<li style="margin:0 0 6px">${x}</li>`).join('')}</ul>` : LIST_B(items)
+const QUOTE = (t: string) => plainMode ? `<p style="margin:0 0 18px;padding-left:14px;border-left:3px solid #ccc;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.7;color:${C.ink}">${t}</p>` : QUOTE_B(t)
+const statsFn = () => plainMode ? P('<b>104 pages, 9 chapters, and a 365-day money-back guarantee.</b>') : STATS_B
+
+interface Layout { plain?: boolean; preview: string; kicker: string; title: string; body: string; cta?: { label: string; href: string }; ps?: string; hero?: 'book' | 'none'; unsub?: string; transactional?: boolean }
+
+function plainLayout(o: Layout): string {
+  const ps = 'margin:0 0 18px;font-family:Georgia,\'Times New Roman\',serif;font-size:17px;line-height:1.7;color:' + C.ink
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(o.title.replace(/<[^>]+>/g, ''))}</title></head>
+<body style="margin:0;padding:16px;background:#ffffff"><div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">${esc(o.preview)}</div>
+<div style="max-width:560px">
+${o.body}
+${o.cta ? `<p style="${ps}"><a href="${o.cta.href}" target="_blank" style="color:#1a55c4">${esc(o.cta.label)}</a></p>` : ''}
+${o.ps ? `<p style="${ps}">P.S. ${o.ps}</p>` : ''}
+<p style="${ps}">Indrodip<br><span style="font:13px Arial,Helvetica,sans-serif;color:#777">Co-author, Expertise to Income · Founder, The5th Global Consulting</span></p>
+<p style="margin:26px 0 0;font:12px/1.6 Arial,Helvetica,sans-serif;color:#888">You are receiving this because you asked for Chapter 1 of Expertise to Income at the5thglobal.consulting.${o.unsub ? ` <a href="${o.unsub}" style="color:#888">Unsubscribe</a>.` : ''}<br>The5th Global Consulting. Educational content only; no guarantee of income or results. Your results depend on your effort, offer and market.</p>
+</div></body></html>`
+}
 
 export function layout(o: Layout): string {
+  if (o.plain) return plainLayout(o)
   const hero = o.hero !== 'none'
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="x-apple-disable-message-reformatting"><title>${esc(o.title)}</title>
@@ -76,12 +97,17 @@ export type Ctx = { name?: string; unsub?: string; downloadUrl?: string }
 
 /* ── 0a. Chapter 1 delivery (immediately after the signup) ─────────────── */
 export function chapter1(c: Ctx): Rendered {
+  plainMode = true
+  try { return chapter1Raw(c) } finally { plainMode = false }
+}
+function chapter1Raw(c: Ctx): Rendered {
   return finish('Your free Chapter 1 is here (6 pages, one sitting)', {
-    preview: 'Six pages. Your why, your non-negotiables, your 12-month vision.', kicker: 'Your free chapter', title: 'Chapter 1 is yours.', unsub: c.unsub, hero: 'book',
+    preview: 'Six pages. Your why, your non-negotiables, your 12-month vision.', kicker: 'Your free chapter', title: 'Chapter 1 is yours.', unsub: c.unsub, hero: 'book', plain: true,
     body: P(`Hi ${esc(first(c.name))},`) + P('Thank you for asking for Chapter 1 of <i>Expertise to Income</i>. It is six pages and takes one sitting.') +
       H('What you will do in it') + LIST(['Use the 3-layer method to find the real reason behind your business, the one that keeps you going on slow days.', 'Write your non-negotiables: your time, your money, your lifestyle and your values.', 'Finish with one clear sentence about where you want to be in 12 months.']) +
       QUOTE('Start with your surface reason. Then ask: &ldquo;But why does that matter?&rdquo; Then ask it again. Three layers down, you find the real answer.') +
-      P('Do the exercise with a pen. Insight without action is just entertainment, and the pages only work if you write on them.'),
+      P('Do the exercise with a pen. Insight without action is just entertainment, and the pages only work if you write on them.') +
+      P(`When you want the other eight chapters, the whole workbook is <a href="${BOOK_LINK('c1-d0')}">here for $4.99</a>, with a 365-day money-back guarantee.`),
     cta: { label: 'Download Chapter 1', href: c.downloadUrl || `${SITE}/documents/expertise-to-income-chapter-1.pdf` },
     ps: `Over the next two weeks I will send you a few short notes from the book. If you would rather not get them, there is an unsubscribe link at the bottom, no hard feelings.`,
   })
@@ -91,7 +117,7 @@ export function chapter1(c: Ctx): Rendered {
 export function purchase(c: Ctx): Rendered {
   return finish('Your book is here: Expertise to Income (download inside)', {
     preview: 'Your 104-page workbook, ready to download. Start with Chapter 1 tonight.', kicker: 'Payment received', title: 'Your book is here.', hero: 'book', transactional: true,
-    body: P(`Hi ${esc(first(c.name))},`) + P('Thank you for buying <i>Expertise to Income</i>. Your copy is ready: the full 104-page workbook as a PDF. Read it on any device, or print it and write in it.') + STATS +
+    body: P(`Hi ${esc(first(c.name))},`) + P('Thank you for buying <i>Expertise to Income</i>. Your copy is ready: the full 104-page workbook as a PDF. Read it on any device, or print it and write in it.') + statsFn() +
       H('Do this tonight') + LIST(['<b>Download the PDF</b> and save it somewhere easy to find.', '<b>Sign your 30-day commitment</b> on the first pages. It sounds small. It is not.', '<b>Do Chapter 1</b> and write your Layer 3 why. One sitting is enough.']) +
       P('Then go one chapter a week. Nine chapters, nine stops on the road from expertise to a finished product, an offer and a launch date.'),
     cta: { label: 'Download your book', href: c.downloadUrl || `${SITE}/book/thank-you?status=succeeded` },
@@ -104,8 +130,12 @@ export const CAMPAIGN_DAYS = [1, 3, 5, 8, 12] as const
 export type CampaignStep = 1 | 2 | 3 | 4 | 5
 
 export function campaign(step: CampaignStep, c: Ctx): Rendered {
+  plainMode = true
+  try { return campaignRaw(step, c) } finally { plainMode = false }
+}
+function campaignRaw(step: CampaignStep, c: Ctx): Rendered {
   const hi = P(`Hi ${esc(first(c.name))},`)
-  const base = { unsub: c.unsub, hero: 'none' as const }
+  const base = { unsub: c.unsub, hero: 'none' as const, plain: true }
   switch (step) {
     case 1: return finish('Did you write your Layer 3 why?', { ...base, preview: 'One fitness coach started with "I want more clients." Her real reason was very different.', kicker: 'A quick check-in', title: 'Did you write your why?',
       body: hi + P('Yesterday I sent you Chapter 1. Most people read it, nod, and move on without writing anything down. That is the part that changes things, so here is a real example of what the exercise can uncover.') +
@@ -127,7 +157,7 @@ export function campaign(step: CampaignStep, c: Ctx): Rendered {
     case 4: return finish('Inside the other eight chapters', { ...base, preview: 'What you walk away with at every stop on the road.', kicker: 'What is inside', title: 'The whole road, stop by stop.',
       body: hi + P('You have seen Chapter 1. Here is what the rest of the book does, and what you hold in your hands after each stop:') +
         LIST(['<b>2. Diagnose</b>: your income breakdown, your biggest leaks, your expertise inventory.', '<b>3. The asset mindset</b>: your first product idea and your place on the $7 to $10K ladder.', '<b>4. Your perfect audience</b>: a 10-detail profile of your One Person.', '<b>5. Your first product</b>: a blueprint and a one-sentence sales promise.', '<b>6. A simple offer</b>: your offer stack and a one-page description.', '<b>7. The content system</b>: a 30-day content map and five posts that sell.', '<b>8. Your launch plan</b>: set-up step by step, a 7-day launch and scripts for your first ten messages.', '<b>9. Mindset</b>: a plan for rejection, slow days and doubt.']) +
-        STATS + P('It is a workbook, not a video series. You read a short chapter, then write on the page. You finish with decisions made, not just ideas.'),
+        statsFn() + P('It is a workbook, not a video series. You read a short chapter, then write on the page. You finish with decisions made, not just ideas.'),
       cta: { label: 'Get the book: $4.99', href: BOOK_LINK('c1-d8') }, ps: '365-day money-back guarantee. If you do the first two chapters and it is not for you, email me and you get every cent back.' })
     case 5: return finish('My last note about the book', { ...base, preview: 'No countdown, no pressure. Just one honest thought.', kicker: 'One more thing', title: 'No pressure. One honest thought.',
       body: hi + P('This is the last email in this short series, and I am not going to invent a deadline. The book is $4.99 tomorrow and next month too.') +

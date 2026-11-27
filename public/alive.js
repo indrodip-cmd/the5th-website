@@ -322,6 +322,28 @@
     } };
   }
 
+  /* ── REMOVE third-party "Feedback" side tabs (Hotjar / Contentsquare etc.) if any script ever injects one ── */
+  (function(){
+    var RX=/(^|[^a-z])(_hj|hotjar|hj-widget|hj_|cs-voc|contentsquare|usabilla|survicate)/i;
+    function hide(el){try{el.style.setProperty('display','none','important');el.style.setProperty('visibility','hidden','important');el.setAttribute('aria-hidden','true')}catch(e){}}
+    function isFb(el){
+      if(!el||el.nodeType!==1||el.id==='t5-guide'||el.id==='t5-pill')return false;
+      var id=el.id||'',cl=typeof el.className==='string'?el.className:'';
+      if(RX.test(id)||RX.test(cl))return true;
+      if(el.tagName==='IFRAME'&&RX.test(el.getAttribute('src')||''))return true;
+      var t=(el.textContent||'').trim();
+      if(t.length>0&&t.length<20&&/^(give |send )?feedback$/i.test(t)){var cs=getComputedStyle(el);if(cs.position==='fixed'){var r=el.getBoundingClientRect();if(r.width<100&&r.width>0)return true}}
+      return false}
+    function scan(root){
+      if(!root||root.nodeType!==1)return;
+      if(isFb(root)){hide(root);return}
+      var q=root.querySelectorAll?root.querySelectorAll('[id*="_hj" i],[class*="_hj" i],[class*="hotjar" i],[class*="cs-voc" i],iframe[src*="hotjar" i],iframe[src*="contentsquare" i],div,aside,button'):[];
+      for(var i=0;i<q.length&&i<400;i++){if(isFb(q[i]))hide(q[i])}}
+    function run(){scan(document.body)}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+    try{var pend=false;new MutationObserver(function(m){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;for(var i=0;i<m.length;i++){for(var j=0;j<m[i].addedNodes.length;j++)scan(m[i].addedNodes[j])}})}).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}
+  })();
+
   /* ── boot ───────────────────────────────────────────────────────────── */
   function boot() { try { adapt(); } catch (e) {} try { overrides(); } catch (e) {} try { fields(); } catch (e) {} }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

@@ -783,6 +783,14 @@ body{background:var(--ai-bg);color:#fff;font-family:'DM Sans',system-ui,sans-ser
 @media(min-width:1040px){.aiGrid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.aiNode{transform:rotate(var(--a)) translate(36vw) rotate(calc(-1 * var(--a)));width:58px;height:58px;margin:-29px 0 0 -29px}.aiTable__h div,.aiTable__r div{padding:12px 8px;font-size:.76rem}}
 @media(prefers-reduced-motion:reduce){.aiMsg,.aiTag i,.aiDots i{animation:none}.aiBtn,.aiCard{transition:none}.aiScan{display:none}}
+
+.aiFileWrap{align-self:flex-start;max-width:92%;animation:aiIn .4s both}
+.aiFile{display:flex;gap:16px;align-items:center;padding:14px;border-radius:16px;border:1px solid var(--gold);background:linear-gradient(160deg,rgba(228,200,121,.14),rgba(124,92,255,.14))}
+.aiFile img{flex:none;width:88px;height:auto;aspect-ratio:8.5/11;object-fit:cover;border-radius:6px;box-shadow:0 14px 30px -10px rgba(0,0,0,.7)}
+.aiFile b{display:block;font:600 1rem 'DM Sans';color:#fff}
+.aiFile span{display:block;margin-top:3px;font:500 .74rem ui-monospace,Menlo,monospace;color:rgba(255,255,255,.65);letter-spacing:.04em}
+.aiFile a{display:inline-flex;align-items:center;margin-top:12px;min-height:40px;padding:0 18px;border-radius:99px;background:linear-gradient(180deg,#ecd391,#C9A84C);color:#2E1A35;font:800 .68rem/1 'DM Sans';letter-spacing:.14em;text-transform:uppercase}
+.aiCard__lk{display:inline-block;margin-top:14px;font:700 .82rem 'DM Sans';color:var(--gold-soft);text-decoration:underline;text-underline-offset:4px}
 </style>
 <link rel="stylesheet" href="/wide.css">
 </head>
@@ -855,7 +863,7 @@ body{background:var(--ai-bg);color:#fff;font-family:'DM Sans',system-ui,sans-ser
   <div class="aiWrap">
     <div class="aiHead" data-reveal><span class="aiK">// 01 · LIVE EXAMPLE</span>
     <h2 class="aiH">talk to it. <em>feel the difference.</em></h2>
-    <p class="aiLead">Pick a situation. These are example conversations that show how The5th AI thinks: it diagnoses first, then prescribes.</p></div>
+    <p class="aiLead">Pick a situation. These are example conversations that show how The5th AI thinks: it diagnoses first, then prescribes. The lead magnet one comes with a real PDF you can open.</p></div>
     <div class="aiTalk" data-reveal>
       <div class="aiChips" id="aiChips" role="tablist">
         <button class="on" data-s="0">"My content gets no traction"</button>
@@ -899,7 +907,7 @@ body{background:var(--ai-bg);color:#fff;font-family:'DM Sans',system-ui,sans-ser
     <div class="aiGrid">
       <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10M21 15v6l4 3"/></svg></i><h3>Diagnoses first</h3><p>It asks the right questions and finds the real problem before it gives advice, so you get a specific plan instead of generic tips.</p></article>
       <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 40V8M6 40h36M12 32l8-9 7 5 11-14"/></svg></i><h3>90-day roadmap</h3><p>A week-by-week plan built around your stage and revenue goal. Month 2 unlocks when Month 1 hits 50%.</p></article>
-      <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h20l8 8v28H10z"/><path d="M30 6v8h8M17 24h14M17 31h14"/></svg></i><h3>Lead magnets in minutes</h3><p>Title, outline, all the email copy, the call to action and a social caption. Ready to publish or hand to a designer.</p></article>
+      <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h20l8 8v28H10z"/><path d="M30 6v8h8M17 24h14M17 31h14"/></svg></i><h3>Lead magnets in minutes</h3><p>Title, outline, all the email copy, the call to action and a social caption. Ready to publish or hand to a designer.</p><a class="aiCard__lk" href="/documents/the5th-ai-sample-lead-magnet.pdf" target="_blank" rel="noopener" data-cta="ai-card-pdf">Open a real sample PDF →</a></article>
       <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h32a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H26l-9 8v-8H8a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2z"/></svg></i><h3>Closing scripts</h3><p>The Diagnose, Prescribe, Close framework: discovery call scripts, objection handles and price-holding language.</p></article>
       <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="17"/><path d="M24 12v13l9 5"/></svg></i><h3>Accountability</h3><p>Weekly planning emails, task tracking, inactivity check-ins and post-call summaries, all two-way.</p></article>
       <article class="aiCard" data-reveal><i class="aiIc"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="10" r="5"/><circle cx="10" cy="34" r="5"/><circle cx="38" cy="34" r="5"/><path d="M21 15l-8 15M27 15l8 15M15 36h18"/></svg></i><h3>Memory that grows</h3><p>It remembers your niche, offer, wins and fears, and gets sharper with every conversation. No starting from scratch.</p></article>
@@ -1158,7 +1166,8 @@ function openCheckout(type){window.location.href='/ai-checkout?plan='+(type==='y
         var html=turns[k][0],parts=html.split(/(<[^>]+>)/),out='',words;
         for(var p=0;p<parts.length;p++){if(my!==token)return;if(/^<[^>]+>$/.test(parts[p])){out+=parts[p];a.innerHTML=out;continue}
           words=parts[p].split(/(\s+)/);for(var w=0;w<words.length;w++){out+=words[w];a.innerHTML=out;if(w%2===0&&!reduce)await wait(26)}}
-        a.innerHTML=out;await wait(500)}
+        a.innerHTML=out;await wait(500);
+        if(i===1&&k===turns.length-1){if(my!==token)return;await wait(500);var f=bubble('aiFileWrap');f.innerHTML='<div class="aiFile"><img src="/ai-pdf-cover.webp" alt="Cover of the sample lead magnet PDF" width="88" height="114"><div><b>5-Day-Clarity-Challenge.pdf</b><span>PDF · 8 pages · created by The5th AI</span><a href="/documents/the5th-ai-sample-lead-magnet.pdf" target="_blank" rel="noopener" data-cta="ai-open-pdf">Open the real PDF →</a></div></div>'}}
       log.scrollTop=log.scrollHeight
     }
     st.textContent='ready'

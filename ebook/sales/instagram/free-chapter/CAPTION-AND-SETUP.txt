@@ -1,0 +1,15 @@
+INSTAGRAM STORY: FREE CHAPTER ONE (3 frames, 1080 x 1920)
+
+Post in order:
+1. free-chapter-story-1-hook.png      Hook ("Your expertise is worth more than you charge.")
+2. free-chapter-story-2-inside.png    What is inside chapter one
+3. free-chapter-story-3-get-it.png    Call to action
+
+Link sticker (frame 3): add a Link sticker over the white pill and use
+  https://the5thglobal.consulting/free-chapter?src=instagram
+The ?src=instagram part shows in your sign-up tracking as the source.
+
+Safe zones: nothing important sits in the top 250px or bottom 250px (Instagram's own buttons cover those).
+
+Optional text overlay on frame 1 (tap to type): "Free for the next few days" is NOT used on purpose; there is no deadline.
+Optional poll sticker on frame 2: "Which would you do first?  Why  /  Non-negotiables".

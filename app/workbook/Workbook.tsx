@@ -238,7 +238,6 @@ const CLIENTS = [
   ['hayley', 'Hayley', '$2,200 in 3 weeks', 'Three weeks into the program I had already made my investment back. I finally stopped undercharging and started owning the value I bring.'],
   ['laurie', 'Laurie', '$8,900 in 5 weeks', 'I came in sceptical. I left with nearly nine thousand dollars in new revenue and a business model that actually makes sense for my life.'],
   ['angela', 'Angela', '$2,500 in 6 weeks', 'Two thousand five hundred dollars in six weeks. I had never earned a cent from my own business before. The framework works if you work it.'],
-  ['toril', 'Toril', 'Programme launched after 15 years', 'Fifteen years of corporate expertise sitting dormant. The5th helped me package it into a premium programme and take it back to market with confidence.'],
   ['abbas', 'Abbas', 'Amazon bestseller in 5 weeks', 'I never thought I would become a published author, let alone an Amazon bestseller. Five weeks after joining The5th, that is exactly what happened.'],
   ['gabe', 'Gabe', 'Launched after years of trying', 'I had been trying to launch my offer for years with nothing to show for it. The5th gave me the system and the accountability I had been missing.'],
 ]

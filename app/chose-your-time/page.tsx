@@ -9,7 +9,7 @@ import BookOffer from './BookOffer'
 import VideoWall from '@/components/VideoWall'
 import { whopTrack } from '@/lib/whop'
 
-const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie', 'toril']
+const AVATARS = ['jeanne', 'angela', 'hayley', 'laurie']
 
 export default function ChoseYourTime() {
   const [booked, setBooked] = useState(false)

@@ -3,15 +3,19 @@
 ## Book title
 Expertise to Income
 
-## Subtitle (pick one; must match the cover exactly)
-1. Turn What You Know Into a Digital Product, an Offer and a 7-Day Launch Plan: A 9-Chapter Workbook for Experts, Coaches and Consultants  (recommended, keyword-rich)
-2. The Step-by-Step Workbook to Package Your Knowledge, Find Your Audience and Launch Your First Product in 7 Days
-3. A Practical Workbook for Turning Your Experience Into Income Without Ads, Funnels or a Big Following
+## Subtitle (your cover has no subtitle, only a tagline, so match it)
+Recommended: Stop Selling Your Time. Start Building an Asset.
+This is printed on your cover exactly, so KDP's cover-match check passes and the subtitle also states the benefit.
 
-Short fallback if a cover needs it: "The 10K Roadmap Workbook" (current subtitle, weaker for search).
+If you prefer a keyword-rich subtitle for search, put it on the cover and the title page first, then use it in KDP:
+- Turn What You Know Into a Digital Product, an Offer and a 7-Day Launch Plan: A 9-Chapter Workbook
+(KDP rejects metadata that differs from the cover.) Put those search words into the description and the 7 keywords instead.
 
 ## Authors
-Indrodip Ghosh, Christinee Mathison
+Indrodip Ghosh, Christinee Mathison (spell exactly as on the cover: "Indrodip Ghosh" and "Christinee Mathison")
+
+## Publisher / imprint
+The5th Global Consulting (shown on the cover)
 
 ## Description
 See amazon-description.html (paste into the KDP "Book description" box; it uses only HTML that KDP supports: b, i, br, ul, li).

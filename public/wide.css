@@ -38,3 +38,8 @@ html body .mobileMenu__backdrop{top:4.5rem!important}
   html body .gn__toggle{display:none!important}
   html body .mobileMenu,html body .mobileMenu__backdrop{display:none!important}
 }
+
+/* Hide the Contentsquare / Hotjar "Feedback" side tab on every page (analytics keep running). */
+.cs-voc-widget,[class*="cs-voc" i],[id*="cs-voc" i],[class*="feedback-button" i],#hotjar-survey,.hj-widget-container,
+#_hj_feedback_container,._hj_feedback_container,[id^="_hj"][id*="feedback" i],[class*="_hj-"][class*="feedback" i],[class*="hj-feedback" i],
+iframe[src*="contentsquare.net"][src*="feedback" i],iframe[src*="hotjar" i][src*="feedback" i],[id*="hotjar" i][id*="feedback" i]{display:none!important;visibility:hidden!important;pointer-events:none!important}

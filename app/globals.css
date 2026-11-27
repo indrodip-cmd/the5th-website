@@ -61,3 +61,8 @@ html, body { background: #FAF6F0; min-height: 100vh; }
   .footer-col a,.footer-brand .f-contact a{display:inline-block;padding:9px 0}
   input[type=text],input[type=email],input[type=tel]{min-height:44px}
 }
+
+/* Hide the Contentsquare / Hotjar "Feedback" side tab on every page (analytics keep running). */
+.cs-voc-widget,[class*="cs-voc" i],[id*="cs-voc" i],[class*="feedback-button" i],#hotjar-survey,.hj-widget-container,
+#_hj_feedback_container,._hj_feedback_container,[id^="_hj"][id*="feedback" i],[class*="_hj-"][class*="feedback" i],[class*="hj-feedback" i],
+iframe[src*="contentsquare.net"][src*="feedback" i],iframe[src*="hotjar" i][src*="feedback" i],[id*="hotjar" i][id*="feedback" i]{display:none!important;visibility:hidden!important;pointer-events:none!important}

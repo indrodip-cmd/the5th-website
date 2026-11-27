@@ -2732,6 +2732,7 @@
         .filter(function (m) { return m.role === 'user' || m.role === 'assistant'; })
         .map(function (m) { return { role: m.role, content: m.content }; });
       var body = { messages: payload, timeZone: TZ, agent: conv.agent || 'carolina', handoff: !!handoff, conversationId: conv.id, visitor_id: vid(), path: (typeof location !== 'undefined' && location.pathname) || '' };
+      try { if (window.The5thMind && window.The5thMind.signals) body.visitor = window.The5thMind.signals(); } catch (e) {}
       // If we already know who this is (e.g. from the /results access gate),
       // tell the server so Carolina greets and personalizes from the first turn.
       if (leadName || leadEmail) body.lead = { name: leadName || null, email: leadEmail || null };

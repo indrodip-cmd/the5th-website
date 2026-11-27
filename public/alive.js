@@ -150,6 +150,7 @@
       '#t5-guide .g-go{display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;border-radius:8px;font-weight:700;font-size:14px;letter-spacing:.02em;color:#2E1A35;background:linear-gradient(180deg,#ecd391,#C9A84C 60%,#B0902F);text-decoration:none;box-shadow:0 10px 26px rgba(201,168,76,.35)}' +
       '#t5-guide .g-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px}' +
       '#t5-guide .g-row button{background:none;border:0;color:#E4C879;cursor:pointer;font:600 12.5px "DM Sans",Inter,sans-serif;padding:8px 2px;min-height:36px;text-decoration:underline;text-underline-offset:3px}' +
+      '#t5-guide .g-me{color:#E4C879;font:600 12.5px "DM Sans",Inter,sans-serif;text-decoration:underline;text-underline-offset:3px;padding:8px 2px}' +
       '#t5-guide .g-row .g-clr{color:rgba(255,255,255,.55);text-decoration:none;font-weight:500;font-size:11.5px}' +
       '#t5-pill{position:fixed;z-index:2147482700;left:12px;top:calc(4.5rem + 10px);display:none;align-items:center;gap:8px;padding:10px 14px;border-radius:99px;border:1px solid rgba(201,168,76,.5);background:rgba(35,16,41,.95);color:#E4C879;font:700 12.5px "DM Sans",Inter,sans-serif;cursor:pointer;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);min-height:40px}' +
       '#t5-pill.show{display:inline-flex}' +
@@ -177,7 +178,7 @@
       '<div class="g-top"><span class="g-dot"></span>Your next step<button class="g-x" type="button" aria-label="Close">×</button></div>' +
       '<p class="g-why">' + esc(step.why) + '</p>' +
       '<a class="g-go" href="' + esc(step.url) + '" data-live="go">' + esc(step.go) + ' →</a>' +
-      '<div class="g-row"><button type="button" class="g-ask">Ask about this</button><button type="button" class="g-clr" title="Forget what this device has learned">Clear what you remember</button></div>';
+      '<div class="g-row"><button type="button" class="g-ask">Ask about this</button><button type="button" class="g-voice">Ask by voice</button><a class="g-me" href="/me">Your space</a></div><div class="g-row"><button type="button" class="g-clr" title="Forget what this device has learned">Clear what you remember</button></div>';
     document.body.appendChild(el);
     var pill = document.createElement('button'); pill.id = 't5-pill'; pill.type = 'button'; pill.innerHTML = '<span class="g-dot"></span>Your next step'; document.body.appendChild(pill);
     function close(dismiss) {
@@ -194,6 +195,7 @@
       try { window.dispatchEvent(new CustomEvent('the5th:invite', { detail: { seed: 'I would like to know more about ' + step.ask + '. Is it right for me?', ctx: ctx } })); } catch (e) {}
       close(false);
     });
+    el.querySelector('.g-voice').addEventListener('click', function () { beacon('cta_click', { src: 'guide_voice', offer: step.key }); close(false); window.The5thVoice.open(); });
     el.querySelector('.g-clr').addEventListener('click', function () {
       try { localStorage.removeItem(KEY); } catch (e) {}
       mind = { w: {}, dis: {}, seen: Date.now(), at: Date.now() }; el.remove(); pill.remove(); document.body.classList.remove('t5-guide-open');
@@ -286,8 +288,40 @@
   }
   function fields() { if (quiet) return; document.querySelectorAll('.hHero,.ff-hero,[data-field]').forEach(function (h) { try { field(h); } catch (e) {} }); }
 
+  /* ── LEARN: per-button clicks + human-approved copy overrides ───────── */
+  var applied = {};
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('[data-cta]') : null;
+    if (!a) return;
+    var id = a.getAttribute('data-opt');
+    beacon('cta_click', { cta: a.getAttribute('data-cta'), opt: id || null, v: id && applied[id] ? 'approved' : 'original' });
+  }, true);
+  function overrides() {
+    var nodes = document.querySelectorAll('[data-opt]');
+    if (!nodes.length) return;
+    function apply(map) {
+      nodes.forEach(function (n) {
+        var id = n.getAttribute('data-opt'), t = map && map[id];
+        if (t && typeof t === 'string' && t.length <= 90 && n.textContent !== t) { n.textContent = t; applied[id] = true; }
+      });
+    }
+    try { var c = JSON.parse(sessionStorage.getItem('t5_ov') || 'null'); if (c && Date.now() - c.t < 600000) { apply(c.m); return; } } catch (e) {}
+    fetch('/api/site-overrides').then(function (r) { return r.ok ? r.json() : null; }).then(function (m) {
+      if (!m) return; try { sessionStorage.setItem('t5_ov', JSON.stringify({ t: Date.now(), m: m })); } catch (e) {} apply(m);
+    }).catch(function () {});
+  }
+
+  /* ── VOICE: lazy-load the voice assistant on first use ──────────────── */
+  if (!window.The5thVoice) {
+    window.The5thVoice = { open: function (seed) {
+      window.__t5VoicePending = true;
+      if (document.getElementById('t5-voice-js')) return;
+      var sc = document.createElement('script'); sc.id = 't5-voice-js'; sc.src = '/voice.js'; sc.onload = function () { if (window.The5thVoice && window.The5thVoice._ready && seed) window.The5thVoice.open(seed); }; document.head.appendChild(sc);
+    } };
+  }
+
   /* ── boot ───────────────────────────────────────────────────────────── */
-  function boot() { try { adapt(); } catch (e) {} try { fields(); } catch (e) {} }
+  function boot() { try { adapt(); } catch (e) {} try { overrides(); } catch (e) {} try { fields(); } catch (e) {} }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
   window.The5thMind = {
@@ -295,6 +329,10 @@
     top: function () { var r = ranked()[0]; return r && r[1] >= 3 ? r[0] : null; },
     next: nextStep,
     profile: profile,
+    signals: function () {
+      var pr = profile(), w = ranked().filter(function (x) { return x[1] > 0; }).slice(0, 4);
+      return { page: path, interests: w.map(function (x) { return { offer: x[0], weight: x[1] }; }), blocker: pr && pr.primaryName || null, archetype: pr && pr.archetype || null, first: (pr && pr.first) || null, dwell: visibleTime };
+    },
     clear: function () { try { localStorage.removeItem(KEY); } catch (e) {} mind = { w: {}, dis: {}, seen: Date.now(), at: Date.now() }; }
   };
 })();

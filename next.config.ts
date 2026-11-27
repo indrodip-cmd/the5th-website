@@ -59,6 +59,9 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Static assets: cache hard in the browser, revalidate in the background.
+      { source: '/:all*(svg|jpg|jpeg|png|webp|avif|woff2|ico)', headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=2592000' }] },
+      { source: '/:file(wide.css|alive.js|voice.js|track.js|personalize.js|carolina.js|testimonials.js|promos.js|story-scroll.js)', headers: [{ key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' }] },
       // Never let API responses be cached by the CDN/browser.
       {
         source: '/api/:path*',

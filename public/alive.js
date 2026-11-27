@@ -250,7 +250,9 @@
   function field(host) {
     if (host.querySelector('.t5-field')) return;
     var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    style();
     var cv = document.createElement('canvas'); cv.className = 't5-field'; cv.setAttribute('aria-hidden', 'true');
+    cv.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;display:block';
     var cs = getComputedStyle(host); if (cs.position === 'static') host.style.position = 'relative';
     host.insertBefore(cv, host.firstChild);
     var ctx = cv.getContext('2d'); if (!ctx) return;

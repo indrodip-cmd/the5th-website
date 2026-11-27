@@ -42,7 +42,7 @@
   try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) {}
   // Official The5th AI launcher icon (public/images/). Falls back to a
   // built-in glyph if the asset is missing. Swap the path to change the icon.
-  var LAUNCHER_ICON = '/images/Untitled%20design%20-%202026-07-09T192610.060.png';
+  var LAUNCHER_ICON = '/images/carolina-sm.webp';
 
   // ── Config (admin-driven) ──
   var cfg = {
@@ -67,7 +67,7 @@
     natasha: { name: 'Natasha', role: 'Support specialist', avatar: '/images/agents/natasha.jpg' },
     priya: { name: 'Priya', role: 'Technical specialist', avatar: '/images/agents/priya.jpg' },
     marcus: { name: 'Marcus', role: 'Product specialist', avatar: '/images/agents/marcus.jpg' },
-    indrodip: { name: 'Indrodip', role: 'Founder · here with you', avatar: '/images/founder.png' }
+    indrodip: { name: 'Indrodip', role: 'Founder · here with you', avatar: '/images/founder-sm.webp' }
   };
   function agentInfo(key) {
     key = key || 'carolina';

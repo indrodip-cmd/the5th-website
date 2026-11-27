@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
+import localFont from 'next/font/local'
 import './quiz.css'
 
-/* Self-hosted fonts, so the quiz never waits on a third-party stylesheet. */
-const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--qz-serif', display: 'swap' })
-const sans = DM_Sans({ subsets: ['latin'], variable: '--qz-sans', display: 'swap' })
+/* Fonts are vendored in app/fonts, so the build never depends on reaching Google. */
+const serif = localFont({
+  src: [
+    { path: '../fonts/cormorant-normal.woff2', style: 'normal', weight: '300 700' },
+    { path: '../fonts/cormorant-italic.woff2', style: 'italic', weight: '300 700' },
+  ],
+  variable: '--qz-serif', display: 'swap',
+})
+const sans = localFont({ src: '../fonts/dmsans.woff2', weight: '100 1000', variable: '--qz-sans', display: 'swap' })
 
 const TITLE = 'Free Income Blocker Quiz: What Is Really Stopping You From Making Money? | The5th'
 const DESC = 'Take the free 3-minute quiz and get your personal Income Blocker Report: the mental and money block holding your income down, what it costs you, and a 7-day plan to move it. From Indrodip Ghosh, The5th Global Consulting.'

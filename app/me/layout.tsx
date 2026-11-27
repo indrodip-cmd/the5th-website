@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import './me.css'
-
-const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600'], style: ['normal', 'italic'], variable: '--me-serif', display: 'swap' })
-const sans = DM_Sans({ subsets: ['latin'], variable: '--me-sans', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Your space | The5th',
@@ -12,6 +8,16 @@ export const metadata: Metadata = {
 }
 export const viewport: Viewport = { themeColor: '#231029' }
 
+/* Fonts load in the browser (same stylesheet as the static pages) so the build never depends on fetching Google Fonts. */
 export default function MeLayout({ children }: { children: React.ReactNode }) {
-  return <div className={`${serif.variable} ${sans.variable} me-root`}>{children}</div>
+  return (
+    <div className="me-root">
+      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+      {children}
+    </div>
+  )
 }

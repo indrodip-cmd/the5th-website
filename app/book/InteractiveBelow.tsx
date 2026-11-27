@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { T } from '../10k-roadmap/config'
-import { ftrack, getExp } from './funnel'
+import { ftrack } from './funnel'
 import { BOOK_PRICE, BOOK_PAGES, BOOK_CHECKOUT_PATH, BOOK_GUARANTEE_DAYS, CHAPTERS, OUTCOMES, PAINS } from './config'
 import { Icon } from './Graphics'
 import { mark } from './events'
@@ -221,40 +221,15 @@ export function RoadmapBuilder() {
   )
 }
 export function LeadMagnet() {
-  const [email, setEmail] = useState('')
-  const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
-  const [msg, setMsg] = useState('')
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) { setState('error'); setMsg('Please enter a valid email address.'); return }
-    setState('sending')
-    try {
-      const r = await fetch('/api/book/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), exp: getExp(), src: document.referrer ? new URL(document.referrer).hostname : 'direct' }) })
-      const j = await r.json().catch(() => ({}))
-      if (!r.ok) { setState('error'); setMsg(j.error || 'Something went wrong. Please try again.'); return }
-      ftrack('book_lead', { where: 'chapter1' }); setState('done'); setMsg(j.url || '')
-    } catch { setState('error'); setMsg('Something went wrong. Please check your connection and try again.') }
-  }
+  /* The free chapter now has one home: the /free-chapter opt-in page. */
   return (
     <div className="bk-spot" style={{ ...CARD, padding: 'clamp(22px,3.6vw,38px)', textAlign: 'center', background: 'linear-gradient(160deg,var(--cardA),var(--cardB))' }}>
       <div style={{ width: 52, height: 52, borderRadius: 16, margin: '0 auto 14px', background: 'var(--accentSoft)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="book" size={26} stroke="var(--accentInk)" /></div>
       <div className="rm-eyebrow" style={{ marginBottom: 10 }}>Not ready to buy yet?</div>
       <h2 className="rm-serif" style={{ fontSize: 'clamp(26px,3.8vw,38px)', margin: '0 0 10px' }}>Read Chapter 1 free. Decide after.</h2>
-      <p style={{ color: 'var(--text2)', fontSize: 16.5, lineHeight: 1.65, margin: '0 auto 22px', maxWidth: 520 }}>Six pages: the 3-layer why method, your non-negotiables and your 12-month vision. Enter your email and we will send it straight away.</p>
-      {state === 'done' ? (
-        <div className="bk-in">
-          <div style={{ fontWeight: 800, fontSize: 18, marginBottom: 12 }}>It is on its way. You can also open it now.</div>
-          <a href={msg || '/api/book/download?k=chapter1'} target="_blank" rel="noopener" className="rm-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '15px 28px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accentText)', fontWeight: 800, textDecoration: 'none' }}>Open Chapter 1 (PDF) →</a>
-          <p style={{ margin: '16px 0 0', fontSize: 14, color: 'var(--text2)' }}>Like it? <a href={BOOK_CHECKOUT_PATH} onClick={() => ftrack('book_cta_click', { where: 'lead_done' })} style={{ color: 'var(--accentInk)', fontWeight: 800 }}>Get the full book for {BOOK_PRICE.label}</a>.</p>
-        </div>
-      ) : (
-        <form onSubmit={submit} noValidate style={{ display: 'flex', gap: 10, flexWrap: 'wrap', maxWidth: 520, margin: '0 auto' }}>
-          <input type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); if (state === 'error') setState('idle') }} placeholder="Your best email" aria-label="Your email address" style={{ flex: '1 1 230px', minWidth: 0, padding: '15px 18px', fontSize: 16, borderRadius: 999, border: `1px solid ${state === 'error' ? T.danger : 'var(--lineStrong)'}`, background: 'var(--surface)', color: 'var(--text)', fontFamily: 'inherit', outline: 'none' }} />
-          <button type="submit" disabled={state === 'sending'} className="rm-btn" style={{ flex: '0 0 auto', padding: '15px 26px', borderRadius: 999, border: 0, background: 'var(--accent)', color: 'var(--accentText)', fontWeight: 800, fontSize: 16, cursor: 'pointer', opacity: state === 'sending' ? 0.6 : 1 }}>{state === 'sending' ? 'Sending…' : 'Send me Chapter 1'}</button>
-          {state === 'error' && <p style={{ flexBasis: '100%', margin: '4px 0 0', color: T.danger, fontSize: 13.5 }}>{msg}</p>}
-          <p style={{ flexBasis: '100%', margin: '8px 0 0', fontSize: 12.5, color: 'var(--text3)' }}>No spam. One email with your chapter, and the occasional useful note. Unsubscribe any time.</p>
-        </form>
-      )}
+      <p style={{ color: 'var(--text2)', fontSize: 16.5, lineHeight: 1.65, margin: '0 auto 22px', maxWidth: 520 }}>Six pages: the 3-layer why method, your non-negotiables and your 12-month vision. We will send it straight to your inbox.</p>
+      <a href="/free-chapter?src=book" onClick={() => ftrack('book_cta_click', { where: 'lead_free_chapter' })} className="rm-btn" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '15px 28px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accentText)', fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>Get Chapter 1 free →</a>
+      <p style={{ margin: '14px 0 0', fontSize: 12.5, color: 'var(--text3)' }}>No spam. One email with your chapter, and the occasional useful note. Unsubscribe any time.</p>
     </div>
   )
 }

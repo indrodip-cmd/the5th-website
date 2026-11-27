@@ -10,6 +10,7 @@ export const OPT_ELEMENTS: OptElement[] = [
   { id: 'collective.plan.cta', page: '/collective', cta: 'plan-join', current: 'Join The Collective · $997/year →', purpose: 'Button inside the pricing card of The Collective page.' },
   { id: 'resources.spot.cta', page: '/resources', cta: 'spot-quiz', current: 'TAKE THE FREE QUIZ NOW', purpose: 'Spotlight button on the Resources page for the free Income Blocker Quiz. Keep it uppercase.' },
   { id: 'programs.free.cta', page: '/programs', cta: 'free-quiz', current: 'TAKE THE FREE QUIZ', purpose: 'Button for the free Income Blocker Quiz inside the Programs page. Keep it uppercase.' },
+  { id: 'freechapter.cta', page: '/free-chapter', cta: 'fc-submit', current: 'SEND ME CHAPTER ONE', purpose: 'Submit button of the free-chapter email opt-in form. Keep it uppercase and about getting the chapter.' },
   { id: 'about.hero.cta', page: '/about', cta: 'about-quiz', current: 'Start with the free quiz →', purpose: 'Hero button on the About page for people learning about the mission.' },
 ]
 export const OPT_BY_ID = new Map(OPT_ELEMENTS.map((e) => [e.id, e]))

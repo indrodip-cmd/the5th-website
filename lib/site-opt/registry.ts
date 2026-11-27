@@ -8,7 +8,8 @@ export const OPT_ELEMENTS: OptElement[] = [
   { id: 'home.final.cta', page: '/', cta: 'final-quiz', current: 'Take the free 2-minute quiz →', purpose: 'Closing button at the bottom of the homepage, after the visitor has read the whole story.' },
   { id: 'collective.hero.cta', page: '/collective', cta: 'hero-join', current: 'Join The Collective · $997/year →', purpose: 'Hero button for The Collective annual membership ($997 per year, 365-day money-back guarantee).' },
   { id: 'collective.plan.cta', page: '/collective', cta: 'plan-join', current: 'Join The Collective · $997/year →', purpose: 'Button inside the pricing card of The Collective page.' },
-  { id: 'resources.final.cta', page: '/resources', cta: 'final-quiz', current: 'Take the free quiz →', purpose: 'Closing button on the Resources page for people unsure where to start.' },
+  { id: 'resources.spot.cta', page: '/resources', cta: 'spot-quiz', current: 'TAKE THE FREE QUIZ NOW', purpose: 'Spotlight button on the Resources page for the free Income Blocker Quiz. Keep it uppercase.' },
+  { id: 'programs.free.cta', page: '/programs', cta: 'free-quiz', current: 'TAKE THE FREE QUIZ', purpose: 'Button for the free Income Blocker Quiz inside the Programs page. Keep it uppercase.' },
   { id: 'about.hero.cta', page: '/about', cta: 'about-quiz', current: 'Start with the free quiz →', purpose: 'Hero button on the About page for people learning about the mission.' },
 ]
 export const OPT_BY_ID = new Map(OPT_ELEMENTS.map((e) => [e.id, e]))

@@ -938,36 +938,42 @@ body{padding-bottom:70px}
 <body>
 <header class="globalNav" id="nav">
   <div class="layout">
-    <a href="/" class="gn__logo gn__logo--img">
-      <div class="gn__logo-glass"><img src="/public/images/logo-header-white.png" alt="The5th Global Consulting" class="gn__logo-img gn__logo-img--white"></div>
-      <span class="gn__founder-name">Indradip Ghosh&trade;</span>
+    <a href="/" class="gn__logo gn__logo--img" aria-label="The5th Global Consulting">
+      <img src="/public/images/the5th-logo-purple.webp" alt="The5th Global Consulting" class="gn__logo-img gn__logo-img--dark" width="174" height="68">
     </a>
     <ul class="gn__nav" role="list">
-      <li><a href="/fast-forward">Fast Forward</a></li>
-      <li><a href="/collective">The Collective</a></li>
-      <li><a href="/resources">Resources</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/programs">Programs</a></li>
+      <li><a href="/book">Book</a></li>
+      <li><a href="/ai">AI</a></li>
+      <li><a href="/resources">Resources</a></li>
+      <li><a href="/results">Clients</a></li>
+      <li><a href="https://platform.the5thglobal.consulting">Log in</a></li>
     </ul>
-    <div class="gn__ctas">
-      <a href="https://platform.the5thglobal.consulting" class="gn__login">Log In</a>
-      <a href="/call" class="gn__start">Apply Now</a>
-    </div>
-    <button class="gn__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span><span></span></button>
+    <button class="gn__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
 <div class="mobileMenu" id="mobileMenu" aria-hidden="true">
   <nav class="mobileMenu__nav" role="list">
-    <a href="/fast-forward">Fast Forward</a>
-    <a href="/collective">The Collective</a>
-    <a href="/resources">Resources</a>
+    <a href="/">Home</a>
     <a href="/about">About</a>
+    <a href="/programs">Programs</a>
+    <a href="/book">Book</a>
+    <a href="/ai">AI</a>
+    <a href="/resources">Resources</a>
+    <a href="/results">Clients</a>
+    <a href="https://platform.the5thglobal.consulting">Log in</a>
   </nav>
   <div class="mobileMenu__ctas">
-    <a href="https://platform.the5thglobal.consulting" class="gn__login mobileMenu__login">Log In</a>
-    <a href="/call" class="gn__start mobileMenu__start">Apply Now</a>
+    <a href="/quiz" class="gn__start mobileMenu__start">Take the free quiz</a>
   </div>
 </div>
 <div class="mobileMenu__backdrop" id="menuBackdrop"></div>
+
 
 <!-- HERO -->
 <div class="ffProg" id="ffProg"></div>
@@ -1526,6 +1532,7 @@ body{padding-bottom:70px}
       <p class="f-contact">Questions? <a href="mailto:indrodip@10kroadmap.org">indrodip@10kroadmap.org</a></p>
     </div>
     <div class="footer-col"><h4>Programs</h4><ul>
+      <li><a href="/programs">All programs</a></li>
       <li><a href="/fast-forward">Fast Forward</a></li>
       <li><a href="/collective">The Collective</a></li>
       <li><a href="/ai">The5th AI</a></li>

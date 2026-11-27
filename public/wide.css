@@ -8,3 +8,30 @@
   .footer-col a,.footer-brand .f-contact a{display:inline-block;padding:9px 0}
   input[type=text],input[type=email],input[type=tel]{min-height:44px}
 }
+
+/* ── Site header (editorial): light bar, wordmark left, spaced uppercase links ── */
+html body .globalNav{height:4.5rem!important;background:#FAF6F0!important;background-image:none!important;border-bottom:1px solid #E7E0D4!important;box-shadow:none}
+html body .globalNav.scrolled{box-shadow:0 8px 24px -16px rgba(46,26,53,.35)}
+html body .globalNav .layout{max-width:none!important;width:100%;padding:0 clamp(18px,4vw,64px)!important;display:flex;align-items:center;justify-content:space-between;gap:clamp(20px,4vw,70px)}
+html body .globalNav .gn__logo{display:flex!important;flex:0 0 auto}
+html body .globalNav .gn__logo-glass{display:none!important}
+html body .globalNav .gn__logo-img--dark{display:block!important;height:34px!important;width:auto!important;mix-blend-mode:normal!important}
+html body .globalNav .gn__logo-img--white,html body .globalNav .gn__founder-name{display:none!important}
+html body .globalNav .gn__ctas{display:none!important}
+html body .gn__nav{display:none}
+html body .gn__nav a{display:inline-block;padding:0!important;color:#2E1A35!important;font:700 .74rem/1 'DM Sans',Helvetica,Arial,sans-serif!important;letter-spacing:.2em!important;text-transform:uppercase;background:none!important;transition:color .2s}
+html body .gn__nav a:hover{color:#B0902F!important}
+html body .gn__nav a:hover:before{display:none!important}
+html body .gn__toggle span{background:#2E1A35!important}
+html body .mobileMenu{top:4.5rem!important;background:#FAF6F0!important;border-bottom:1px solid #E7E0D4!important}
+html body .mobileMenu__nav a{color:#2E1A35!important;border-bottom:1px solid #E7E0D4!important;font:700 .86rem/1 'DM Sans',sans-serif!important;letter-spacing:.2em;text-transform:uppercase;padding:20px 4px!important}
+html body .mobileMenu__ctas{padding:18px 4px 22px}
+html body .mobileMenu .gn__start{display:flex!important;justify-content:center;background:linear-gradient(180deg,#ecd391,#C9A84C 60%,#B0902F)!important;color:#2E1A35!important;border-radius:99px;padding:16px!important;font:700 .78rem/1 'DM Sans',sans-serif!important;letter-spacing:.18em;text-transform:uppercase}
+html body .mobileMenu__backdrop{top:4.5rem!important}
+@media(min-width:1100px){
+  html body .globalNav{height:5.25rem!important}
+  html body .globalNav .gn__logo-img--dark{height:42px!important}
+  html body .gn__nav{display:flex!important;flex:1;justify-content:space-between;align-items:center;max-width:1180px;margin-left:auto}
+  html body .gn__toggle{display:none!important}
+  html body .mobileMenu,html body .mobileMenu__backdrop{display:none!important}
+}

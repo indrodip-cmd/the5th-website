@@ -27,6 +27,49 @@ export interface Data2026 {
 }
 
 export const DATA: Record<string, Data2026> = {
+  'how-ai-is-changing-how-people-buy': {
+    headline: 'The numbers behind this paper, in one place: people use AI to look, and still check before they pay.',
+    asOf: 'Evidence as of November 2026',
+    takeaways: [
+      'Use is mainstream: 49% of US adults use AI chatbots, and under-50s use them far more than older adults.',
+      'AI-referred shoppers behave differently: Adobe found they convert 31% more and spend 45% more time on retail sites (holiday 2025).',
+      'Trust has not kept pace: in one 2026 US survey 48.5% researched with AI but only 35.4% trusted its recommendations completely or mostly.',
+      'People are comfortable with AI suggesting, and want a human decision at the end: 56% in McKinsey\u2019s European survey.',
+      'The psychology is old (choice overload, trust, regret). The speed and scale are new.',
+    ],
+    stats: [
+      { value: 49, suffix: '%', label: 'of US adults use AI chatbots (33% in 2024)', src: 'Pew, Feb 2026 survey, n=5,119' },
+      { value: 31, suffix: '%', label: 'higher conversion for AI-referred retail visits', src: 'Adobe Analytics, holiday 2025' },
+      { value: 48.5, suffix: '%', decimals: 1, label: 'used AI to research a purchase in 12 months', src: 'Alchemer, 2026, n=1,002 US shoppers' },
+      { value: 35.4, suffix: '%', decimals: 1, label: 'trust AI recommendations completely or mostly', src: 'Alchemer, 2026' },
+    ],
+    chart: {
+      kind: 'bars', title: 'The trust gap in AI shopping', subtitle: 'US shoppers (%), Alchemer 2026 benchmark, n=1,002', unit: '%', max: 60,
+      items: [
+        { label: 'Used AI to research a purchase (past 12 months)', value: 48.5, highlight: true },
+        { label: 'Trust AI recommendations completely or mostly', value: 35.4 },
+        { label: 'Trust online reviews more than other sources', value: 36.1 },
+        { label: 'Trust friends and family more than other sources', value: 31.2 },
+        { label: 'Trust AI more than other sources', value: 15.4 },
+      ],
+      src: 'Alchemer 2026 Retail AI report (vendor survey)',
+    },
+    whyItMatters: 'The buyer is not handing over the decision. They are handing over the legwork. Whoever is easiest for the machine to explain and easiest for a person to verify wins.',
+    nextSteps: [
+      'Make your offer easy for an AI to describe accurately: plain claims, real numbers, clear proof.',
+      'Design the human check: reviews, named people, a visible guarantee, a conversation.',
+      'Do not manipulate the assistant or the buyer: the evidence says persuasive and accurate pull apart.',
+    ],
+    caveat: 'Most figures here come from vendor or industry surveys with different samples and definitions of trust, so they are not directly comparable. This paper reports no survey of its own; the 1,000-person study is proposed, not completed.',
+    sources: [
+      { label: 'Pew Research Center, Americans and AI 2026', url: 'https://www.pewresearch.org/wp-content/uploads/sites/20/2026/06/PI_2026.06.17_Americans-and-AI_REPORT.pdf', date: 'Jun 2026' },
+      { label: 'Adobe, holiday shopping season 2025', url: 'https://news.adobe.com/news/2026/01/adobe-holiday-shopping-season', date: 'Jan 2026', note: 'Vendor data' },
+      { label: 'Alchemer, 2026 retail AI report', url: 'https://www.alchemer.com/resources/benchmark-report/2026-retail-report-ai/', date: '2026', note: 'Vendor survey' },
+      { label: 'McKinsey, From prompt to purchase', url: 'https://www.mckinsey.com/featured-insights/charts/from-prompt-to-purchase', date: '2026' },
+    ],
+    related: ['how-persuasive-is-frontier-ai', 'how-people-buy-expertise', 'is-ai-eroding-critical-thinking'],
+  },
+
   'how-persuasive-is-frontier-ai': {
     headline: 'Since this paper was drafted, the largest persuasion experiments yet were published. They point the same way.',
     asOf: 'Updated November 2026',

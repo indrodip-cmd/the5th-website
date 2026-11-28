@@ -125,7 +125,24 @@ function Agencies() {
   </>)
 }
 
+function Cart() {
+  const r = rnd(41)
+  return (<>
+    {Array.from({ length: 40 }, (_, i) => <circle key={i} cx={80 + r() * 560} cy={40 + r() * 420} r={2 + r() * 3} fill={r() > 0.7 ? GOLD : '#fff'} opacity={0.15 + r() * 0.5} />)}
+    <g fill="none" stroke={GOLD} strokeWidth="2" strokeOpacity=".85" strokeLinejoin="round" strokeLinecap="round">
+      <path d="M720,140 L780,140 L830,300 L1010,300 L1050,190 L800,190" />
+      <circle cx="850" cy="350" r="16" /><circle cx="990" cy="350" r="16" />
+    </g>
+    <g fill="none" stroke={GOLD_L} strokeOpacity=".5">
+      {[60, 100, 140, 190].map((q) => <circle key={q} cx="910" cy="235" r={q + 120} />)}
+    </g>
+    <circle cx="930" cy="240" r="30" fill={GOLD} opacity=".9" /><circle cx="930" cy="240" r="12" fill="#2a1433" />
+    {Array.from({ length: 8 }, (_, i) => <path key={i} d={`M${200 + i * 60},${100 + i * 40} C 500,${60 + i * 50} 700,${220} 900,240`} fill="none" stroke={GOLD_L} strokeOpacity=".3" />)}
+  </>)
+}
+
 const MOTIFS: Record<string, () => React.JSX.Element> = {
+  'how-ai-is-changing-how-people-buy': Cart,
   'how-persuasive-is-frontier-ai': Persuasion,
   'chatgpt-tone-hindi-english': Tone,
   'how-people-buy-expertise': Expertise,

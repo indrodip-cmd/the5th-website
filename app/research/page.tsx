@@ -35,7 +35,7 @@ const TICK = [
   '69% of buyers still validate AI advice with a human (Gartner, 2026)',
   '14.2% of marketers cut agency spend because of AI (Marketing Week)',
 ]
-const FEATURED_SLUG = 'how-persuasive-is-frontier-ai'
+const FEATURED_SLUG = 'how-ai-is-changing-how-people-buy'
 
 export default function ResearchIndex() {
   const fresh: Record<string, string> = Object.fromEntries(Object.entries(DATA).map(([k, v]) => [k, v.headline]))

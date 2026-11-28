@@ -258,16 +258,16 @@ export function HorizonProjector() {
 }
 
 /* ── Share bar ────────────────────────────────────────────────────────────*/
-export function ShareBar({ title }: { title: string }) {
+export function ShareBar({ title, vertical = false }: { title: string; vertical?: boolean }) {
   const [done, setDone] = useState(false)
   const url = () => (typeof window !== 'undefined' ? window.location.href : '')
   const copy = async () => {
     try { await navigator.clipboard.writeText(url()); setDone(true); setTimeout(() => setDone(false), 1800) } catch { /* ignore */ }
   }
-  const btn: React.CSSProperties = { fontFamily: SANS, fontSize: 13, fontWeight: 700, color: C.plumDark, background: C.white, border: `1px solid ${C.border}`, borderRadius: 999, padding: '8px 15px', cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }
+  const btn: React.CSSProperties = { fontFamily: SANS, fontSize: 13, fontWeight: 700, color: C.plumDark, background: C.white, border: `1px solid ${C.border}`, borderRadius: 999, padding: '8px 10px', cursor: 'pointer', textDecoration: 'none', display: 'inline-block', textAlign: 'center' }
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-      <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep }}>Share</span>
+    <div style={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', alignItems: vertical ? 'stretch' : 'center', gap: 10, flexWrap: 'wrap' }}>
+      {!vertical && <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep }}>Share</span>}
       <button type="button" onClick={copy} style={btn}>{done ? 'Link copied' : 'Copy link'}</button>
       <a style={btn} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.currentTarget.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url())}` }} href="https://www.linkedin.com/">LinkedIn</a>
       <a style={btn} target="_blank" rel="noopener noreferrer" onClick={(e) => { e.currentTarget.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url())}` }} href="https://twitter.com/">X</a>

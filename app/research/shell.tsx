@@ -3,7 +3,7 @@ import { C } from './ui'
 import { POSTS, type ResearchPost } from './posts'
 import { HeroArt } from './art'
 import { DATA } from './data2026'
-import { ReadingProgress, TocSpy, StatTiles, BarChart, LineChart, HorizonProjector, ShareBar } from './charts'
+import { ReadingProgress, StatTiles, BarChart, LineChart, HorizonProjector, ShareBar } from './charts'
 
 /* Dedicated, publication-style shell for the Research section, an editorial
    layout in the brand palette (plum / cream / gold), modelled on a modern
@@ -15,7 +15,7 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 
 /* Author identity, shown in article bylines and on the research home page. */
 export const AUTHOR_IMG = '/images/founder.png'
-export const AUTHOR_DEGREE = 'Human-Computer Interaction · University of California'
+export const AUTHOR_DEGREE = 'University of California, Berkeley'
 
 /* ── Branded generative card art (deterministic per slug) ──────────────────*/
 const GRADS = [
@@ -154,44 +154,49 @@ export function ResearchArticleLayout({
   return (
     <ResearchPage>
       <ReadingProgress />
-      {/* Hero */}
-      <div style={{ borderBottom: `1px solid ${C.border}`, background: `linear-gradient(180deg, #FFFDFA 0%, ${C.cream} 100%)` }}>
-        <div style={{ maxWidth: 820, margin: '0 auto', padding: 'clamp(34px,5vw,60px) clamp(20px,5vw,32px) clamp(24px,3vw,34px)' }}>
-          <a href="/research" style={{ color: C.muted, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>← Research</a>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, margin: '22px 0 18px' }}>
-            {post.tags.map((t, i) => (
-              <React.Fragment key={t}>
-                {i > 0 && <span style={{ color: C.border }} aria-hidden>·</span>}
-                <span style={eyebrow}>{t}</span>
-              </React.Fragment>
-            ))}
-          </div>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(30px,5.2vw,50px)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 22px' }}>{post.title}</h1>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, flexWrap: 'wrap' }}>
-            <div style={{ fontSize: 14, color: C.muted }}>
-              <div style={{ fontSize: 15.5, fontWeight: 700, color: C.plum }}>{post.author}</div>
-              <div style={{ marginTop: 3 }}>{post.authorRole} · {AUTHOR_DEGREE}</div>
-              <div style={{ marginTop: 3 }}><time dateTime={post.date}>{post.dateLabel}</time> · {post.readTime}{d ? ` · ${d.asOf}` : ''}</div>
+      {/* Hero: copy left, art right (guide-style) */}
+      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}` }}>
+        <div className="rsch-hero" style={{ maxWidth: 1180, margin: '0 auto', padding: 'clamp(28px,4.5vw,64px) clamp(18px,4vw,40px)', display: 'grid', gridTemplateColumns: 'minmax(0,1.05fr) minmax(0,.95fr)', gap: 'clamp(24px,4vw,56px)', alignItems: 'center' }}>
+          <div>
+            <a href="/research" style={{ color: C.muted, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>← All research</a>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '18px 0 16px' }}>
+              {post.tags.slice(0, 3).map((t) => (
+                <span key={t} style={{ ...eyebrow, background: 'rgba(201,168,76,.16)', borderRadius: 999, padding: '5px 11px', fontSize: 10.5 }}>{t}</span>
+              ))}
             </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={AUTHOR_IMG} alt={post.author} style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${C.border}`, boxShadow: `0 0 0 3px rgba(201,168,76,.18)`, flexShrink: 0 }} />
+            <h1 style={{ fontFamily: SANS, fontWeight: 800, fontSize: 'clamp(28px,4.4vw,48px)', lineHeight: 1.1, letterSpacing: '-.025em', color: C.plumDark, margin: '0 0 22px' }}>{post.title}</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={AUTHOR_IMG} alt={post.author} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${C.border}`, boxShadow: `0 0 0 3px rgba(201,168,76,.18)`, flexShrink: 0 }} />
+              <div style={{ fontSize: 13.5, color: C.muted, lineHeight: 1.5 }}>
+                <div><strong style={{ color: C.plumDark, fontSize: 15 }}>{post.author}</strong> · {post.authorRole}</div>
+                <div>{AUTHOR_DEGREE}</div>
+                <div><time dateTime={post.date}>{post.dateLabel}</time> · {post.readTime}{d ? ` · ${d.asOf}` : ''}</div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 clamp(16px,4vw,32px) clamp(24px,3vw,36px)' }}>
-          <HeroArt slug={post.slug} height="clamp(170px, 30vw, 320px)" rounded={20} label={`Illustration: ${post.title}`} />
+          <HeroArt slug={post.slug} height="clamp(190px, 28vw, 340px)" rounded={22} label={`Illustration: ${post.title}`} />
         </div>
       </div>
 
-      {/* Body: sticky TOC + reading column */}
-      <div className="rsch-body" style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(30px,5vw,52px) clamp(20px,5vw,32px) 20px', display: 'grid', gridTemplateColumns: '220px minmax(0, 720px)', gap: 'clamp(28px,5vw,64px)', justifyContent: 'center' }}>
+      {/* Body */}
+      <div className="rsch-body" style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(26px,4vw,48px) clamp(18px,4vw,32px) 20px', display: 'grid', gridTemplateColumns: '64px minmax(0, 740px)', gap: 'clamp(24px,4vw,56px)', justifyContent: 'center' }}>
         <aside className="rsch-toc" style={{ position: 'sticky', top: 92, alignSelf: 'start', height: 'fit-content' }}>
-          <div style={{ ...eyebrow, fontSize: 11, letterSpacing: '.14em', marginBottom: 14 }}>Contents</div>
-          <TocSpy toc={fullToc} />
-          <div style={{ marginTop: 22 }}><ShareBar title={post.title} /></div>
+          <div style={{ ...eyebrow, fontSize: 10.5, marginBottom: 10 }}>Share</div>
+          <ShareBar title={post.title} vertical />
         </aside>
 
-        <article>
+        <article className="rsch-art">
           <div style={{ fontFamily: 'Georgia, serif', fontSize: 20, lineHeight: 1.7, color: C.plum, margin: '0 0 22px' }}>{lead}</div>
+
+          <nav aria-label="In this guide" style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 14, padding: '20px 22px', margin: '0 0 22px' }}>
+            <div style={{ ...eyebrow, marginBottom: 12 }}>In this guide</div>
+            <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px 26px' }}>
+              {fullToc.map(([id, label]) => (
+                <li key={id}><a href={`#${id}`} style={{ color: C.plum, fontSize: 15, lineHeight: 1.45, textDecoration: 'none', fontWeight: 600, borderBottom: `1px solid ${C.goldLine}` }}>{label}</a></li>
+              ))}
+            </ol>
+          </nav>
 
           {d && (
             <div style={{ background: C.white, border: `1px solid ${C.border}`, borderTop: `3px solid ${C.gold}`, borderRadius: 14, padding: '20px 22px', margin: '0 0 26px' }}>
@@ -287,6 +292,17 @@ export function ResearchArticleLayout({
             </section>
           )}
 
+          {/* In the field */}
+          <section style={{ margin: '44px 0 0' }}>
+            <div style={{ ...eyebrow, marginBottom: 14 }}>The researcher behind this</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 10 }}>
+              {['/images/founder-golden-gate.webp', '/images/founder-mastermind-event.webp', '/images/founder-ff.webp'].map((src) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={src} src={src} alt={`${post.author} at work`} loading="lazy" style={{ width: '100%', height: 'clamp(110px,22vw,190px)', objectFit: 'cover', borderRadius: 14, border: `1px solid ${C.border}` }} />
+              ))}
+            </div>
+          </section>
+
           {/* About this research journal */}
           <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: 'clamp(24px, 5vw, 34px)', margin: '48px 0 0' }}>
             <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this research</div>
@@ -302,11 +318,16 @@ export function ResearchArticleLayout({
       </div>
 
       <style>{`
-        .rsch-toc a:hover{color:${C.plumDark}}
         .rsch-rel{transition:border-color .18s, transform .18s}
         .rsch-rel:hover{border-color:rgba(201,168,76,.6);transform:translateY(-2px)}
+        .rsch-art h2{font-family:${SANS}!important;font-weight:800!important;letter-spacing:-.02em!important;font-size:clamp(25px,3.6vw,34px)!important;padding-top:14px;position:relative}
+        .rsch-art h2::before{content:"";display:block;width:44px;height:4px;border-radius:4px;background:${C.gold};margin-bottom:14px}
+        .rsch-art h3{font-family:${SANS}!important;font-weight:700!important}
+        .rsch-art p a,.rsch-art li a{color:${C.plum};text-decoration:underline;text-decoration-color:${C.gold};text-underline-offset:3px}
+        .rsch-art figure{box-shadow:0 18px 50px -34px rgba(46,26,53,.45)}
         @media(max-width:1000px){
-          .rsch-body{grid-template-columns:minmax(0,720px)!important}
+          .rsch-hero{grid-template-columns:minmax(0,1fr)!important}
+          .rsch-body{grid-template-columns:minmax(0,740px)!important}
           .rsch-toc{display:none!important}
         }
       `}</style>

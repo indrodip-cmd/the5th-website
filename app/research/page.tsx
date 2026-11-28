@@ -27,6 +27,14 @@ const PADX = 'clamp(20px,5vw,56px)'
 
 // Pinned featured essay. Selected by slug (not array order) so it stays
 // featured regardless of publish order, and it is also kept in the list below.
+const TICK = [
+  '76,977 people in the largest AI persuasion experiments (Science, 2025)',
+  'AI task length doubling about every 7 months (METR, 2026)',
+  '49% of US adults now use AI chatbots (Pew, 2026)',
+  '71% of B2B software buyers research with AI chatbots (G2, 2026)',
+  '69% of buyers still validate AI advice with a human (Gartner, 2026)',
+  '14.2% of marketers cut agency spend because of AI (Marketing Week)',
+]
 const FEATURED_SLUG = 'how-persuasive-is-frontier-ai'
 
 export default function ResearchIndex() {
@@ -35,35 +43,57 @@ export default function ResearchIndex() {
 
   return (
     <ResearchPage>
-      {/* Hero */}
-      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(44px,9vw,120px) ${PADX} clamp(30px,4vw,44px)` }}>
-        <div className="r-hero" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 'clamp(28px,5vw,72px)', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, marginBottom: 22 }}>
-              The5th <span style={{ color: C.goldDeep }}>·</span> Independent Research
+      {/* Hero: dark, futuristic */}
+      <section style={{ position: 'relative', overflow: 'hidden', background: 'radial-gradient(90% 120% at 80% 0%, #4a2a5e 0%, #2a1433 40%, #140919 100%)', color: '#fff' }}>
+        <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(228,200,121,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(228,200,121,.07) 1px, transparent 1px)', backgroundSize: '56px 56px', maskImage: 'radial-gradient(70% 80% at 70% 30%, #000, transparent 75%)', WebkitMaskImage: 'radial-gradient(70% 80% at 70% 30%, #000, transparent 75%)' }} />
+        <div aria-hidden className="r-orbit" style={{ position: 'absolute', right: '-8%', top: '-12%', width: 'min(760px, 90vw)', aspectRatio: '1', pointerEvents: 'none' }}>
+          <svg viewBox="0 0 400 400" style={{ width: '100%', height: '100%' }}>
+            <g fill="none" stroke="#E4C879" strokeWidth=".6">
+              <circle cx="200" cy="200" r="70" strokeOpacity=".5" /><circle cx="200" cy="200" r="110" strokeOpacity=".35" strokeDasharray="2 6" />
+              <circle cx="200" cy="200" r="150" strokeOpacity=".28" /><circle cx="200" cy="200" r="190" strokeOpacity=".18" strokeDasharray="1 8" />
+            </g>
+            <g fill="#E4C879"><circle cx="270" cy="200" r="4" /><circle cx="90" cy="200" r="3" opacity=".7" /><circle cx="200" cy="40" r="3.5" /><circle cx="330" cy="260" r="2.5" opacity=".6" /></g>
+            <circle cx="200" cy="200" r="16" fill="#C9A84C" opacity=".9" />
+          </svg>
+        </div>
+        <div style={{ position: 'relative', maxWidth: MAXW, margin: '0 auto', padding: `clamp(48px,9vw,110px) ${PADX} clamp(40px,6vw,64px)` }}>
+          <div className="r-hero" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: 'clamp(28px,5vw,72px)', alignItems: 'center' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 11.5, letterSpacing: '.22em', textTransform: 'uppercase', color: C.gold, fontWeight: 700, border: '1px solid rgba(228,200,121,.35)', borderRadius: 999, padding: '7px 14px', background: 'rgba(255,255,255,.04)' }}>
+                <span aria-hidden className="r-pulse" style={{ width: 7, height: 7, borderRadius: 7, background: C.gold }} />
+                The5th Research Lab · 2026
+              </div>
+              <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(40px,8.4vw,96px)', lineHeight: 0.98, letterSpacing: '-.035em', margin: '26px 0 0', fontWeight: 400 }}>
+                Where AI meets<br /><span style={{ background: 'linear-gradient(90deg,#E4C879,#C9A84C 50%,#fff)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', fontStyle: 'italic' }}>the human mind.</span>
+              </h1>
+              <p style={{ fontSize: 'clamp(17px,2vw,21px)', lineHeight: 1.6, color: 'rgba(255,255,255,.74)', maxWidth: 600, margin: '26px 0 0' }}>
+                Independent research by Indrodip Ghosh on how artificial intelligence really works and what it is doing to the way we decide, buy, trust and think. Interactive data, sourced and updated for 2026.
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 30 }}>
+                <a href={`/research/${featured.slug}`} style={{ background: C.gold, color: C.plumDark, fontWeight: 800, fontSize: 15, textDecoration: 'none', borderRadius: 999, padding: '14px 24px' }}>Read the latest paper</a>
+                <a href="/research/study" style={{ border: '1px solid rgba(255,255,255,.35)', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', borderRadius: 999, padding: '14px 24px', background: 'rgba(255,255,255,.05)' }}>Join the live study</a>
+              </div>
+              <div className="r-hero-meta" style={{ display: 'flex', gap: '10px 26px', marginTop: 30, flexWrap: 'wrap', fontSize: 13.5, color: 'rgba(255,255,255,.6)' }}>
+                <span><strong style={{ color: '#fff' }}>{POSTS.length}</strong> papers</span>
+                <span><strong style={{ color: '#fff' }}>{Object.keys(DATA).length}</strong> with 2026 data</span>
+                <span><strong style={{ color: '#fff' }}>{POSTS.reduce((n, p) => n + (parseInt(p.readTime, 10) || 0), 0)}</strong> minutes of reading</span>
+              </div>
             </div>
-            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(46px,12vw,116px)', lineHeight: 0.94, letterSpacing: '-.035em', color: C.plumDark, margin: 0, fontWeight: 400 }}>Research</h1>
-            <p style={{ fontSize: 'clamp(18px,2.2vw,22px)', lineHeight: 1.55, color: C.inkSoft, maxWidth: 620, margin: '30px 0 0', fontWeight: 400 }}>
-              A personal research journal by Indrodip Ghosh. Long, careful essays on how artificial intelligence really works
-              and where it is taking us, written so anyone can follow, and precise enough for anyone who cannot.
-            </p>
-            <div className="r-hero-meta" style={{ display: 'flex', gap: 24, marginTop: 34, fontSize: 13, color: C.muted, letterSpacing: '.02em', flexWrap: 'wrap' }}>
-              <span>{POSTS.length} essays</span>
-              <span aria-hidden style={{ color: C.border }}>|</span>
-              <span>Updated regularly</span>
-              <span aria-hidden style={{ color: C.border }}>|</span>
-              <a href="/research/study" style={{ color: C.goldDeep, textDecoration: 'none', fontWeight: 600 }}>Live study open ↗</a>
-            </div>
+            <aside className="r-hero-author" style={{ width: 240, textAlign: 'center', flexShrink: 0, background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.16)', backdropFilter: 'blur(10px)', borderRadius: 22, padding: '26px 20px' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={AUTHOR_IMG} alt="Indrodip Ghosh" style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', margin: '0 auto', display: 'block', border: '1px solid rgba(255,255,255,.3)', boxShadow: '0 0 0 5px rgba(201,168,76,.2), 0 0 50px rgba(201,168,76,.25)' }} />
+              <div style={{ fontFamily: SERIF, fontSize: 20, marginTop: 16 }}>Indrodip Ghosh</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,.75)', marginTop: 5, lineHeight: 1.45 }}>Consumer Psychologist &amp; Independent AI Researcher</div>
+              <div style={{ height: 1, width: 40, background: C.gold, margin: '12px auto' }} />
+              <div style={{ fontSize: 12.5, color: C.gold, lineHeight: 1.5 }}>{AUTHOR_DEGREE}</div>
+            </aside>
           </div>
-          {/* Author */}
-          <aside className="r-hero-author" style={{ width: 210, textAlign: 'center', flexShrink: 0 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={AUTHOR_IMG} alt="Indrodip Ghosh" style={{ width: 132, height: 132, borderRadius: '50%', objectFit: 'cover', margin: '0 auto', display: 'block', border: `1px solid ${C.border}`, boxShadow: `0 0 0 5px rgba(201,168,76,.14), 0 24px 50px -30px rgba(46,26,53,.5)` }} />
-            <div style={{ fontFamily: SERIF, fontSize: 19, color: C.plumDark, marginTop: 18 }}>Indrodip Ghosh</div>
-            <div style={{ fontSize: 12.5, color: C.muted, marginTop: 4 }}>Consumer Behavior &amp; AI Researcher</div>
-            <div style={{ height: 1, width: 40, background: C.gold, margin: '12px auto' }} />
-            <div style={{ fontSize: 12.5, color: C.inkSoft, lineHeight: 1.5 }}>{AUTHOR_DEGREE}</div>
-          </aside>
+        </div>
+        {/* Ticker */}
+        <div style={{ position: 'relative', borderTop: '1px solid rgba(255,255,255,.1)', background: 'rgba(0,0,0,.25)', overflow: 'hidden' }}>
+          <div className="r-ticker" style={{ display: 'flex', gap: 48, whiteSpace: 'nowrap', padding: '14px 0', width: 'max-content', fontSize: 13.5, color: 'rgba(255,255,255,.78)' }}>
+            {[...TICK, ...TICK].map((t, i) => <span key={i}><span style={{ color: C.gold, marginRight: 10 }}>◆</span>{t}</span>)}
+          </div>
         </div>
       </section>
 
@@ -157,6 +187,13 @@ export default function ResearchIndex() {
       </section>
 
       <style>{`
+        .r-orbit{animation:r-spin 90s linear infinite}
+        .r-ticker{animation:r-tick 60s linear infinite}
+        .r-pulse{animation:r-pulse 2s ease-in-out infinite}
+        @keyframes r-spin{to{transform:rotate(360deg)}}
+        @keyframes r-tick{to{transform:translateX(-50%)}}
+        @keyframes r-pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.6)}50%{box-shadow:0 0 0 7px rgba(201,168,76,0)}}
+        @media(prefers-reduced-motion:reduce){.r-orbit,.r-ticker,.r-pulse{animation:none}}
         .r-feat{transition:border-color .2s ease, box-shadow .3s ease}
         .r-feat:hover{border-color:rgba(201,168,76,.55);box-shadow:0 40px 90px -60px rgba(46,26,53,.5)}
         .r-feat:hover .r-feat-art :is(div,svg){filter:saturate(1.05)}
@@ -171,7 +208,7 @@ export default function ResearchIndex() {
         .r-row:hover .r-row-cta{opacity:1}
         @media(max-width:820px){
           .r-hero{grid-template-columns:minmax(0,1fr)!important}.r-hero>*{min-width:0}
-          .r-hero-author{width:100%!important;display:flex;align-items:center;gap:16px;text-align:left!important;margin-top:6px}
+          .r-hero-author{width:100%!important;display:flex;align-items:center;gap:16px;text-align:left!important;padding:16px!important}
           .r-hero-author img{width:72px!important;height:72px!important;margin:0!important}
           .r-hero-author > div:nth-child(4){display:none}
           .r-feat{grid-template-columns:minmax(0,1fr)!important}

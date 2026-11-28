@@ -38,7 +38,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'September 14, 2026',
     readTime: '30 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Behavioural Research', 'Persuasion', 'Artificial Intelligence', 'White Paper'],
     metaTitle: 'How Persuasive Is AI? Can It Change Your Mind? | The5th',
     metaDescription:
@@ -63,7 +63,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'August 15, 2026',
     readTime: '24 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Human Behavior', 'Artificial Intelligence', 'Language & Culture', 'Sociolinguistics'],
     metaTitle: "Why ChatGPT's Tone Changes in Hindi vs English | The5th",
     metaDescription:
@@ -87,7 +87,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'July 18, 2026',
     readTime: '41 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Consumer Behavior', 'Behavioral Economics', 'Decision Science', 'Evidence Synthesis'],
     metaTitle: 'The Psychology of How People Buy Expertise | The5th',
     metaDescription:
@@ -112,7 +112,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'June 12, 2026',
     readTime: '19 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Neuroscience', 'Deep Learning', 'Neural Coding', 'Brain–Computer Interfaces'],
     metaTitle: 'Brain vs AI Neural Networks: How They Converge | The5th',
     metaDescription:
@@ -136,7 +136,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'May 28, 2026',
     readTime: '17 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Artificial Intelligence', 'Neuroscience', 'Consciousness', 'Mathematics'],
     metaTitle: 'Machine Consciousness: Will AI Wake Up by 2035? | The5th',
     metaDescription:
@@ -160,7 +160,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'April 22, 2026',
     readTime: '18 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Vega', 'Marketing', 'AI Agents', 'Automation'],
     metaTitle: 'AI Marketing Automation: Self-Optimizing Funnels | The5th',
     metaDescription:
@@ -184,7 +184,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'March 5, 2026',
     readTime: '25 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Artificial Intelligence', 'Future of AI', 'AI Agents', 'Society'],
     metaTitle: 'The Future of AI Agents: The Next 10 Years | The5th',
     metaDescription:
@@ -208,7 +208,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'February 11, 2026',
     readTime: '32 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Behavioural Research', 'Cognitive Science', 'Neuroscience', 'White Paper'],
     metaTitle: 'Is AI Eroding Your Critical Thinking? | The5th',
     metaDescription:
@@ -233,7 +233,7 @@ export const POSTS: ResearchPost[] = [
     dateLabel: 'January 27, 2026',
     readTime: '27 min read',
     author: 'Indrodip Ghosh',
-    authorRole: 'Consumer Behavior & AI Researcher',
+    authorRole: 'Consumer Psychologist & Independent AI Researcher',
     tags: ['Artificial Intelligence', 'AGI', 'Economics', 'Marketing'],
     metaTitle: 'Will AGI Replace B2B Marketing Agencies? | The5th',
     metaDescription:

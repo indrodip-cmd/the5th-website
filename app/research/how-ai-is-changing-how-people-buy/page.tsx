@@ -95,8 +95,8 @@ export default function Article() {
     <>
       I wanted to answer one question as honestly as the evidence allows: when an AI sits between a person and a purchase,
       what changes in how that person thinks, trusts and decides? I have gathered the strongest 2025 and 2026 evidence I
-      could find and tied it to what psychology has known for fifty years. I did not run a survey for this paper. I am
-      about to, and the design of that 1,000-person study is in section 12.
+      could find and tied it to what psychology has known for fifty years. This paper is a synthesis of published research; I did
+      not run a survey for it.
     </>
   )
 

@@ -38,7 +38,7 @@ export default function Browser({ posts, fresh }: { posts: ResearchPost[]; fresh
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 310px), 1fr))', gap: 22 }}>
         {list.map((p) => (
-          <a key={p.slug} href={`/research/${p.slug}`} className="r-card" style={{ textDecoration: 'none', color: 'inherit', border: `1px solid ${C.border}`, borderRadius: 18, overflow: 'hidden', background: C.white, display: 'flex', flexDirection: 'column' }}>
+          <a key={p.slug} href={`/research/${p.slug}`} className="r-card" onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`); e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`) }} style={{ position: "relative",  textDecoration: 'none', color: 'inherit', border: `1px solid ${C.border}`, borderRadius: 18, overflow: 'hidden', background: C.white, display: 'flex', flexDirection: 'column' }}>
             <div className="r-card-art"><HeroArt slug={p.slug} height={170} /></div>
             <div style={{ padding: '20px 22px 22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
               <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 10 }}>{p.tags.slice(0, 2).join(' · ')}</div>

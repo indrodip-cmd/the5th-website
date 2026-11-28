@@ -62,10 +62,11 @@ export function TocSpy({ toc }: { toc: [string, string][] }) {
     <nav aria-label="Contents" style={{ display: 'grid', gap: 4, borderLeft: `1px solid ${C.border}` }}>
       {toc.map(([id, label]) => {
         const on = id === active
+        const done = toc.findIndex(([x]) => x === id) < toc.findIndex(([x]) => x === active)
         return (
           <a key={id} href={`#${id}`} aria-current={on ? 'true' : undefined} style={{
-            color: on ? C.plumDark : C.inkSoft, fontSize: 13.5, lineHeight: 1.4, textDecoration: 'none', padding: '5px 0 5px 14px',
-            marginLeft: -1, borderLeft: `2px solid ${on ? C.gold : 'transparent'}`, fontWeight: on ? 700 : 400, transition: 'color .15s, border-color .15s',
+            color: on ? C.plumDark : done ? C.goldDeep : C.inkSoft, fontSize: 13.5, lineHeight: 1.4, textDecoration: 'none', padding: '5px 0 5px 14px',
+            marginLeft: -1, borderLeft: `2px solid ${on ? C.gold : done ? 'rgba(201,168,76,.45)' : 'transparent'}`, fontWeight: on ? 700 : 400, transition: 'color .15s, border-color .15s',
           }}>{label}</a>
         )
       })}

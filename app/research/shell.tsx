@@ -4,6 +4,8 @@ import { POSTS, type ResearchPost } from './posts'
 import { HeroArt } from './art'
 import { DATA } from './data2026'
 import Enhance from './Enhance'
+import HeroCanvas from './HeroCanvas'
+import ReaderTools from './ReaderTools'
 import { ReadingProgress, TocSpy, StatTiles, BarChart, LineChart, HorizonProjector, ShareBar } from './charts'
 
 /* Dedicated, publication-style shell for the Research section, an editorial
@@ -155,9 +157,10 @@ export function ResearchArticleLayout({
   return (
     <ResearchPage>
       <ReadingProgress />
+      <ReaderTools title={post.title} />
       {/* Hero: dark editorial band */}
       <div style={{ background: 'radial-gradient(90% 140% at 85% 0%, #4a2a5e 0%, #2a1433 45%, #160a1b 100%)', color: '#fff', position: 'relative', overflow: 'hidden' }}>
-        <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(228,200,121,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(228,200,121,.06) 1px, transparent 1px)', backgroundSize: '48px 48px', maskImage: 'linear-gradient(90deg, transparent 30%, #000)', WebkitMaskImage: 'linear-gradient(90deg, transparent 30%, #000)' }} />
+        <HeroCanvas />
         <div className="rsch-hero" style={{ position: 'relative', maxWidth: 1240, margin: '0 auto', padding: 'clamp(30px,5vw,76px) clamp(18px,4vw,40px)', display: 'grid', gridTemplateColumns: 'minmax(0,1.1fr) minmax(0,.9fr)', gap: 'clamp(24px,4vw,60px)', alignItems: 'center' }}>
           <div>
             <a href="/research" style={{ color: 'rgba(255,255,255,.65)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>← All research</a>
@@ -290,6 +293,24 @@ export function ResearchArticleLayout({
             </section>
           )}
 
+          {/* Up next */}
+          {(() => {
+            const i = POSTS.findIndex((x) => x.slug === post.slug)
+            const nx = POSTS[(i + 1) % POSTS.length]
+            if (!nx || nx.slug === post.slug) return null
+            return (
+              <a href={`/research/${nx.slug}`} className="rsch-next" style={{ position: 'relative', display: 'block', margin: '48px 0 0', borderRadius: 22, overflow: 'hidden', textDecoration: 'none', color: '#fff', minHeight: 220 }}>
+                <div style={{ position: 'absolute', inset: 0 }}><HeroArt slug={nx.slug} height="100%" /></div>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(22,10,27,.92), rgba(22,10,27,.25))' }} />
+                <div style={{ position: 'relative', padding: 'clamp(24px,4vw,40px)', maxWidth: 560 }}>
+                  <div style={{ ...eyebrow, color: C.gold, marginBottom: 12 }}>Up next · {nx.readTime}</div>
+                  <div style={{ fontFamily: SERIF, fontSize: 'clamp(22px,3.2vw,32px)', lineHeight: 1.18, marginBottom: 18 }}>{nx.title}</div>
+                  <span style={{ background: C.gold, color: C.plumDark, fontWeight: 800, fontSize: 14.5, borderRadius: 999, padding: '11px 20px', display: 'inline-block' }}>Read next →</span>
+                </div>
+              </a>
+            )
+          })()}
+
           {/* Related reading */}
           {related.length > 0 && (
             <section style={{ margin: '48px 0 0' }}>
@@ -353,8 +374,13 @@ export function ResearchArticleLayout({
       <style>{`
         .rsch-rel{transition:border-color .18s, transform .18s}
         .rsch-rel:hover{border-color:rgba(201,168,76,.6);transform:translateY(-2px)}
-        .rsch-art{font-size:18px}
-        .rsch-art p,.rsch-art li{font-size:18px!important;line-height:1.8!important}
+        .rsch-art p,.rsch-art li{font-size:calc(18px * var(--rsch-z,1))!important;line-height:1.8!important}
+        .rsch-rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+        .rsch-in{opacity:1;transform:none}
+        .rsch-say{background:rgba(201,168,76,.22);box-shadow:0 0 0 6px rgba(201,168,76,.22);border-radius:6px;transition:background .3s}
+        .rsch-chap-art>div{will-change:translate}
+        .rsch-next{transition:transform .25s}.rsch-next:hover{transform:translateY(-3px)}
+        @media(prefers-reduced-motion:reduce){.rsch-rv{opacity:1;transform:none}}
         .rsch-art h2{font-family:${SANS}!important;font-weight:800!important;letter-spacing:-.025em!important;font-size:clamp(28px,4vw,40px)!important;line-height:1.1!important;margin:18px 0 16px!important;color:${C.plumDark}!important}
         .rsch-art h2::before{display:none}
         .rsch-art h3{font-family:${SANS}!important;font-weight:700!important}

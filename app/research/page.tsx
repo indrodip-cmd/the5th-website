@@ -201,6 +201,8 @@ export default function ResearchIndex() {
         .r-study:hover{border-color:rgba(201,168,76,.55)}
         .r-study:hover .r-study-cta{color:${C.goldDeep}}
         .r-card{transition:border-color .2s ease, transform .2s ease, box-shadow .3s ease}
+        .r-card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(201,168,76,.18),transparent 70%)}
+        .r-card:hover::after{opacity:1}
         .r-card:hover{border-color:rgba(201,168,76,.6);transform:translateY(-3px);box-shadow:0 30px 60px -40px rgba(46,26,53,.5)}
         .r-row{transition:background .18s ease}
         .r-row:hover{background:rgba(201,168,76,.05)}

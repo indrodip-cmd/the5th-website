@@ -167,7 +167,7 @@ export default function ResearchIndex() {
       </section>
 
       {/* Newsletter */}
-      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(56px,7vw,90px) ${PADX} 0` }}>
+      <section id="newsletter" style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(56px,7vw,90px) ${PADX} 0` }}>
         <div style={{ background: C.plumDark, borderRadius: 20, borderTop: `2px solid ${C.gold}`, padding: 'clamp(30px,5vw,54px)', overflow: 'hidden' }}>
           <div className="nl-grid" style={{ display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 'clamp(28px,4vw,56px)', alignItems: 'center' }}>
             <div>

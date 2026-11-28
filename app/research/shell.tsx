@@ -3,7 +3,8 @@ import { C } from './ui'
 import { POSTS, type ResearchPost } from './posts'
 import { HeroArt } from './art'
 import { DATA } from './data2026'
-import { ReadingProgress, StatTiles, BarChart, LineChart, HorizonProjector, ShareBar } from './charts'
+import Enhance from './Enhance'
+import { ReadingProgress, TocSpy, StatTiles, BarChart, LineChart, HorizonProjector, ShareBar } from './charts'
 
 /* Dedicated, publication-style shell for the Research section, an editorial
    layout in the brand palette (plum / cream / gold), modelled on a modern
@@ -154,42 +155,58 @@ export function ResearchArticleLayout({
   return (
     <ResearchPage>
       <ReadingProgress />
-      {/* Hero: copy left, art right (guide-style) */}
-      <div style={{ background: C.white, borderBottom: `1px solid ${C.border}` }}>
-        <div className="rsch-hero" style={{ maxWidth: 1180, margin: '0 auto', padding: 'clamp(28px,4.5vw,64px) clamp(18px,4vw,40px)', display: 'grid', gridTemplateColumns: 'minmax(0,1.05fr) minmax(0,.95fr)', gap: 'clamp(24px,4vw,56px)', alignItems: 'center' }}>
+      {/* Hero: dark editorial band */}
+      <div style={{ background: 'radial-gradient(90% 140% at 85% 0%, #4a2a5e 0%, #2a1433 45%, #160a1b 100%)', color: '#fff', position: 'relative', overflow: 'hidden' }}>
+        <div aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(228,200,121,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(228,200,121,.06) 1px, transparent 1px)', backgroundSize: '48px 48px', maskImage: 'linear-gradient(90deg, transparent 30%, #000)', WebkitMaskImage: 'linear-gradient(90deg, transparent 30%, #000)' }} />
+        <div className="rsch-hero" style={{ position: 'relative', maxWidth: 1240, margin: '0 auto', padding: 'clamp(30px,5vw,76px) clamp(18px,4vw,40px)', display: 'grid', gridTemplateColumns: 'minmax(0,1.1fr) minmax(0,.9fr)', gap: 'clamp(24px,4vw,60px)', alignItems: 'center' }}>
           <div>
-            <a href="/research" style={{ color: C.muted, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>← All research</a>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '18px 0 16px' }}>
+            <a href="/research" style={{ color: 'rgba(255,255,255,.65)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>← All research</a>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '20px 0 18px' }}>
               {post.tags.slice(0, 3).map((t) => (
-                <span key={t} style={{ ...eyebrow, background: 'rgba(201,168,76,.16)', borderRadius: 999, padding: '5px 11px', fontSize: 10.5 }}>{t}</span>
+                <span key={t} style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: C.plumDark, background: C.gold, borderRadius: 999, padding: '5px 12px' }}>{t}</span>
               ))}
             </div>
-            <h1 style={{ fontFamily: SANS, fontWeight: 800, fontSize: 'clamp(28px,4.4vw,48px)', lineHeight: 1.1, letterSpacing: '-.025em', color: C.plumDark, margin: '0 0 22px' }}>{post.title}</h1>
+            <h1 style={{ fontFamily: SANS, fontWeight: 800, fontSize: 'clamp(30px,5vw,58px)', lineHeight: 1.04, letterSpacing: '-.03em', color: '#fff', margin: '0 0 24px' }}>{post.title}</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={AUTHOR_IMG} alt={post.author} style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${C.border}`, boxShadow: `0 0 0 3px rgba(201,168,76,.18)`, flexShrink: 0 }} />
-              <div style={{ fontSize: 13.5, color: C.muted, lineHeight: 1.5 }}>
-                <div><strong style={{ color: C.plumDark, fontSize: 15 }}>{post.author}</strong> · {post.authorRole}</div>
+              <img src={AUTHOR_IMG} alt={post.author} style={{ width: 54, height: 54, borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,.35)', boxShadow: '0 0 0 3px rgba(201,168,76,.3)', flexShrink: 0 }} />
+              <div style={{ fontSize: 13.5, color: 'rgba(255,255,255,.7)', lineHeight: 1.5 }}>
+                <div><strong style={{ color: '#fff', fontSize: 15 }}>{post.author}</strong> · {post.authorRole}</div>
                 <div>{AUTHOR_DEGREE}</div>
                 <div><time dateTime={post.date}>{post.dateLabel}</time> · {post.readTime}{d ? ` · ${d.asOf}` : ''}</div>
               </div>
             </div>
+            {d && (
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 26 }}>
+                {d.stats.slice(0, 3).map((st) => (
+                  <div key={st.label} style={{ background: 'rgba(255,255,255,.07)', border: '1px solid rgba(255,255,255,.16)', borderRadius: 14, padding: '10px 14px', maxWidth: 190 }}>
+                    <div style={{ fontFamily: SERIF, fontSize: 24, color: C.gold, lineHeight: 1 }}>{st.prefix}{st.value.toLocaleString('en-US')}{st.suffix}</div>
+                    <div style={{ fontSize: 11.5, lineHeight: 1.35, color: 'rgba(255,255,255,.72)', marginTop: 6 }}>{st.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <HeroArt slug={post.slug} height="clamp(190px, 28vw, 340px)" rounded={22} label={`Illustration: ${post.title}`} />
+          <HeroArt slug={post.slug} height="clamp(200px, 30vw, 380px)" rounded={24} label={`Illustration: ${post.title}`} />
         </div>
       </div>
 
       {/* Body */}
-      <div className="rsch-body" style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(26px,4vw,48px) clamp(18px,4vw,32px) 20px', display: 'grid', gridTemplateColumns: '64px minmax(0, 740px)', gap: 'clamp(24px,4vw,56px)', justifyContent: 'center' }}>
+      <div className="rsch-body" style={{ maxWidth: 1180, margin: '0 auto', padding: 'clamp(26px,4vw,52px) clamp(18px,4vw,32px) 20px', display: 'grid', gridTemplateColumns: '230px minmax(0, 760px)', gap: 'clamp(24px,4vw,60px)', justifyContent: 'center' }}>
         <aside className="rsch-toc" style={{ position: 'sticky', top: 92, alignSelf: 'start', height: 'fit-content' }}>
-          <div style={{ ...eyebrow, fontSize: 10.5, marginBottom: 10 }}>Share</div>
-          <ShareBar title={post.title} vertical />
+          <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: '18px 16px 18px 18px' }}>
+            <div style={{ ...eyebrow, fontSize: 10.5, marginBottom: 12 }}>Table of contents</div>
+            <TocSpy toc={fullToc} />
+          </div>
+          <div style={{ marginTop: 16 }}><ShareBar title={post.title} /></div>
         </aside>
 
         <article className="rsch-art">
+          <Enhance />
+          <div id="rsch-banner-src" hidden><HeroArt slug={post.slug} height={150} /></div>
           <div style={{ fontFamily: 'Georgia, serif', fontSize: 20, lineHeight: 1.7, color: C.plum, margin: '0 0 22px' }}>{lead}</div>
 
-          <nav aria-label="In this guide" style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 14, padding: '20px 22px', margin: '0 0 22px' }}>
+          <nav className="rsch-inline-toc" aria-label="In this guide" style={{ display: 'none', background: C.white, border: `1px solid ${C.border}`, borderRadius: 14, padding: '20px 22px', margin: '0 0 22px' }}>
             <div style={{ ...eyebrow, marginBottom: 12 }}>In this guide</div>
             <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px 26px' }}>
               {fullToc.map(([id, label]) => (
@@ -303,6 +320,22 @@ export function ResearchArticleLayout({
             </div>
           </section>
 
+          {/* Author box */}
+          <section style={{ margin: '40px 0 0', background: C.white, border: `1px solid ${C.border}`, borderRadius: 20, padding: 'clamp(20px,4vw,30px)', display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={AUTHOR_IMG} alt={post.author} style={{ width: 96, height: 96, borderRadius: '50%', objectFit: 'cover', boxShadow: `0 0 0 4px rgba(201,168,76,.25)`, flexShrink: 0 }} />
+            <div style={{ flex: '1 1 260px' }}>
+              <div style={{ ...eyebrow, marginBottom: 6 }}>Written by</div>
+              <div style={{ fontFamily: SERIF, fontSize: 24, color: C.plumDark }}>{post.author}</div>
+              <div style={{ fontSize: 14, color: C.muted, margin: '3px 0 10px' }}>{post.authorRole} · {AUTHOR_DEGREE}</div>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: 14, fontWeight: 700 }}>
+                <a href="/about" style={{ color: C.plum }}>About me</a>
+                <a href="/research/study" style={{ color: C.plum }}>Join the live study</a>
+                <a href="/resources" style={{ color: C.plum }}>Free resources</a>
+              </div>
+            </div>
+          </section>
+
           {/* About this research journal */}
           <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: 'clamp(24px, 5vw, 34px)', margin: '48px 0 0' }}>
             <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.16em', textTransform: 'uppercase', color: C.gold, marginBottom: 12 }}>About this research</div>
@@ -320,15 +353,27 @@ export function ResearchArticleLayout({
       <style>{`
         .rsch-rel{transition:border-color .18s, transform .18s}
         .rsch-rel:hover{border-color:rgba(201,168,76,.6);transform:translateY(-2px)}
-        .rsch-art h2{font-family:${SANS}!important;font-weight:800!important;letter-spacing:-.02em!important;font-size:clamp(25px,3.6vw,34px)!important;padding-top:14px;position:relative}
-        .rsch-art h2::before{content:"";display:block;width:44px;height:4px;border-radius:4px;background:${C.gold};margin-bottom:14px}
+        .rsch-art{font-size:18px}
+        .rsch-art p,.rsch-art li{font-size:18px!important;line-height:1.8!important}
+        .rsch-art h2{font-family:${SANS}!important;font-weight:800!important;letter-spacing:-.025em!important;font-size:clamp(28px,4vw,40px)!important;line-height:1.1!important;margin:18px 0 16px!important;color:${C.plumDark}!important}
+        .rsch-art h2::before{display:none}
         .rsch-art h3{font-family:${SANS}!important;font-weight:700!important}
-        .rsch-art p a,.rsch-art li a{color:${C.plum};text-decoration:underline;text-decoration-color:${C.gold};text-underline-offset:3px}
-        .rsch-art figure{box-shadow:0 18px 50px -34px rgba(46,26,53,.45)}
+        .rsch-art p a,.rsch-art li a{color:${C.plum};text-decoration:underline;text-decoration-color:${C.gold};text-underline-offset:3px;text-decoration-thickness:2px}
+        .rsch-art figure{box-shadow:0 24px 60px -36px rgba(46,26,53,.5);border-radius:18px!important}
+        .rsch-chap{position:relative;height:130px;border-radius:20px;overflow:hidden;margin:64px 0 0;background:#2a1433;box-shadow:0 22px 50px -34px rgba(46,26,53,.6)}
+        .rsch-chap-art{position:absolute;inset:0}
+        .rsch-chap-art>div>div{height:300px!important;border-radius:0!important}
+        .rsch-chap::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(22,10,27,.78),rgba(22,10,27,.1) 70%)}
+        .rsch-chap-tag{position:absolute;z-index:2;left:20px;bottom:16px;font-family:${SANS};font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:${C.plumDark};background:${C.gold};border-radius:999px;padding:6px 14px}
+        .rsch-cta{margin:64px 0 0;background:linear-gradient(120deg,${C.plumDark},#4a2a5e);border-radius:20px;padding:clamp(20px,4vw,30px);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-top:3px solid ${C.gold};color:#fff}
+        .rsch-cta-k{font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:${C.gold};margin-bottom:6px}
+        .rsch-cta-t{font-family:${SERIF};font-size:clamp(19px,2.6vw,24px);line-height:1.25;max-width:420px}
+        .rsch-cta a{background:${C.gold};color:${C.plumDark};font-weight:800;text-decoration:none;border-radius:999px;padding:13px 22px;font-size:15px;white-space:nowrap}
         @media(max-width:1000px){
           .rsch-hero{grid-template-columns:minmax(0,1fr)!important}
-          .rsch-body{grid-template-columns:minmax(0,740px)!important}
+          .rsch-body{grid-template-columns:minmax(0,760px)!important}
           .rsch-toc{display:none!important}
+          .rsch-inline-toc{display:block!important}
         }
       `}</style>
     </ResearchPage>

@@ -32,9 +32,12 @@ export function Eq({ children, label }: { children: React.ReactNode; label?: str
 /* "In plain terms" aside, the layperson translation of a technical passage. */
 export function Plain({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: 'rgba(201,168,76,.09)', border: `1px solid ${C.goldLine}`, borderRadius: 14, padding: '18px 22px', margin: '0 0 22px' }}>
-      <div style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 8 }}>In plain terms</div>
-      <div style={{ fontSize: 16.5, lineHeight: 1.7, color: C.inkSoft }}>{children}</div>
+    <div style={{ background: C.plumDark, color: '#fff', borderRadius: 18, padding: '20px 22px 20px 24px', margin: '8px 0 28px', borderLeft: `5px solid ${C.gold}`, boxShadow: '0 22px 50px -34px rgba(46,26,53,.7)' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 11.5, fontWeight: 800, letterSpacing: '.14em', textTransform: 'uppercase', color: C.gold, marginBottom: 10 }}>
+        <span aria-hidden style={{ width: 22, height: 22, borderRadius: 22, background: C.gold, color: C.plumDark, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 900 }}>i</span>
+        In plain terms
+      </div>
+      <div style={{ fontSize: 17.5, lineHeight: 1.7, color: 'rgba(255,255,255,.92)' }}>{children}</div>
     </div>
   )
 }

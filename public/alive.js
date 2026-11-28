@@ -33,6 +33,7 @@
     ff:         { url: '/fast-forward',    go: 'See Fast Forward',               short: 'Fast Forward',       ask: 'Fast Forward 1:1 coaching', buy: '/fast-forward-checkout', buyGo: 'Apply for Fast Forward' },
     ai:         { url: '/ai',              go: 'Try The5th AI free',             short: 'Try The5th AI',      ask: 'The5th AI' },
     book:       { url: '/book',            go: 'Get the ebook · $4.99',          short: 'Get the ebook',      ask: 'the Expertise to Income ebook' },
+    study:      { url: '/research/study',  go: 'Take part in the research',      short: 'Join the research',  ask: 'our live research study' },
     research:   { url: '/research',        go: 'Read the latest research',       short: 'Read the research',  ask: 'your research essays' },
     results:    { url: '/results',         go: 'See real client results',        short: 'Client results',     ask: 'client results' },
     resources:  { url: '/resources',       go: 'Browse all resources',          short: 'Resources',          ask: 'our resources' },
@@ -119,6 +120,9 @@
     if (!pick && pr && pr.primaryName) { pick = 'audit'; why = 'Built around your main blocker: ' + pr.primaryName.toLowerCase() + '. An hour on your real numbers is the fastest way to move it.'; }
     // 3) nothing learned yet: the best general starting point
     if (!pick) { pick = here === 'quiz' ? 'resources' : 'quiz'; }
+    // On research pages, swap the AI product offer for taking part in the real study.
+    if (pick === 'ai' && /^\/research(\/|$)/.test(path)) pick = /^\/research\/study/.test(path) ? null : 'study';
+    if (!pick) return null;
     if (pick === here && !OFFERS[pick].buy) return null;
     if (mind.dis[pick] && now - mind.dis[pick] < 7 * DAY) return null;
 
@@ -128,6 +132,7 @@
       if (pick === 'quiz') why = 'A good place to start: it takes about four minutes and tells you what to do next.';
       else if (buy) why = 'You have been looking closely at ' + o.ask + '. Here is the step that makes it real.';
       else if (pr && pr.primaryName && (pick === 'audit' || pick === 'collective' || pick === 'ff')) why = 'You have been exploring ' + o.ask + ', and it fits your main blocker: ' + pr.primaryName.toLowerCase() + '.';
+      else if (pick === 'study') why = 'Help the research: is AI changing how we think? It takes about six minutes and is fully anonymous.';
       else if (pick === 'research') why = 'You have been reading our research. The newest essay is a good next read.';
       else why = 'You have been exploring ' + o.ask + '. This is the natural next step.';
     }

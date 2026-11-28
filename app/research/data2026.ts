@@ -60,7 +60,7 @@ export const DATA: Record<string, Data2026> = {
       'Design the human check: reviews, named people, a visible guarantee, a conversation.',
       'Do not manipulate the assistant or the buyer: the evidence says persuasive and accurate pull apart.',
     ],
-    caveat: 'Most figures here come from vendor or industry surveys with different samples and definitions of trust, so they are not directly comparable. This paper reports no survey of its own; the 1,000-person study is proposed, not completed.',
+    caveat: 'Most figures here come from vendor or industry surveys with different samples and definitions of trust, so they are not directly comparable. This paper reports no survey of its own.',
     sources: [
       { label: 'Pew Research Center, Americans and AI 2026', url: 'https://www.pewresearch.org/wp-content/uploads/sites/20/2026/06/PI_2026.06.17_Americans-and-AI_REPORT.pdf', date: 'Jun 2026' },
       { label: 'Adobe, holiday shopping season 2025', url: 'https://news.adobe.com/news/2026/01/adobe-holiday-shopping-season', date: 'Jan 2026', note: 'Vendor data' },

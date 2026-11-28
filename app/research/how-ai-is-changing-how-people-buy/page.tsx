@@ -22,9 +22,8 @@ const TOC: [string, string][] = [
   ['who', '9. Who is doing this: ages 25 to 55'],
   ['sellers', '10. What it means if you sell'],
   ['buyers', '11. What it means if you buy'],
-  ['study', '12. The 1,000-person study I am designing'],
-  ['limits', '13. What this paper cannot say'],
-  ['close', '14. The takeaway'],
+  ['limits', '12. What this paper cannot say'],
+  ['close', '13. The takeaway'],
   ['refs', 'References'],
 ]
 
@@ -420,8 +419,8 @@ export default function Article() {
           <li style={rp.li}><strong style={rp.strong}>The sceptic.</strong> Uses AI rarely, trusts friends and known brands, and treats confident machine answers as a reason to be more careful.</li>
         </ul>
         <p style={rp.p}>
-          Whether these three types exist in the numbers I suggest, and how men and women differ among them, is exactly
-          what the survey in section 12 is designed to find out.
+          Whether these three types exist in the numbers I suggest, and how men and women differ among them, is a question
+          for new data. I have not measured it here.
         </p>
 
         <h2 id="sellers" style={rp.h2}>10. What it means if you sell</h2>
@@ -449,30 +448,7 @@ export default function Article() {
           <li style={rp.li}>Keep the last click yours. The research suggests that is where regret lives.</li>
         </ol>
 
-        <h2 id="study" style={rp.h2}>12. The 1,000-person study I am designing</h2>
-        <p style={rp.p}>
-          This paper reports no results from my own survey, and I want to be exact about that. What follows is the
-          design I am preparing. When data exists, I will publish it here with the full method and the raw tables. Until
-          then, nothing in this section is a finding.
-        </p>
-        <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 16, padding: 'clamp(18px,3vw,26px)', margin: '0 0 22px' }}>
-          <div style={{ ...eyebrow, marginBottom: 12 }}>Proposed study design (no results yet)</div>
-          <div style={{ display: 'grid', gap: 12, fontSize: 16, lineHeight: 1.65, color: C.inkSoft }}>
-            <div><strong style={rp.strong}>Sample.</strong> 1,000 adults aged 25 to 55, balanced roughly 500 women and 500 men, with age quotas for 25 to 34, 35 to 44 and 45 to 55. At that size, a headline percentage has a margin of error of about plus or minus 3 points, before design effects.</div>
-            <div><strong style={rp.strong}>Recruitment.</strong> A research panel with quality checks, not a self-selected social post, so results can speak beyond my own audience.</div>
-            <div><strong style={rp.strong}>Measures.</strong> How often people use AI at each stage (discover, compare, shortlist, decide, pay); trust in AI versus reviews and friends; comfort with delegating a purchase by price band; regret after past AI-influenced purchases; and a short critical-thinking measure so I can see whether heavier reliance goes with weaker checking.</div>
-            <div><strong style={rp.strong}>Hypotheses, written in advance.</strong> (1) AI use falls from discovery to payment. (2) Trust in AI is lower than trust in reviews and friends. (3) Higher reliance goes with lower verification. (4) Comfort with delegation falls as the price of the purchase rises. (5) Men and women differ in which stage they delegate, which I cannot predict.</div>
-            <div><strong style={rp.strong}>Analysis.</strong> Weighted percentages with confidence intervals, comparisons by gender and age band, and a segment analysis to test whether the delegator, verifier and sceptic types in section 9 actually appear.</div>
-            <div><strong style={rp.strong}>Ethics.</strong> Anonymous, consented, no sale of data, and a published questionnaire so anyone can check my work.</div>
-          </div>
-        </div>
-        <p style={rp.p}>
-          My existing live study on this site measures a different question, whether AI reliance relates to reasoning
-          skill. It is small so far, and I do not draw conclusions from it here. You can still take part.
-        </p>
-        <p style={rp.p}><a href="/research/study" style={{ color: C.plum, fontWeight: 700 }}>Join the live study →</a></p>
-
-        <h2 id="limits" style={rp.h2}>13. What this paper cannot say</h2>
+        <h2 id="limits" style={rp.h2}>12. What this paper cannot say</h2>
         <ul style={{ margin: '0 0 22px', paddingLeft: 22 }}>
           <li style={rp.li}><strong style={rp.strong}>It is a synthesis, not an experiment.</strong> I combined other people&rsquo;s data. I ran no survey of my own for this paper.</li>
           <li style={rp.li}><strong style={rp.strong}>Many sources are commercial.</strong> Adobe, Alchemer, G2, Synchrony and BigCommerce sell into this market. Their surveys can be well made and still lean in a direction that suits them.</li>
@@ -482,7 +458,7 @@ export default function Article() {
           <li style={rp.li}><strong style={rp.strong}>This moves fast.</strong> Figures here are as of late November 2026. Two of them, the Adobe September figure and the petition preprint, I flag as provisional.</li>
         </ul>
 
-        <h2 id="close" style={rp.h2}>14. The takeaway</h2>
+        <h2 id="close" style={rp.h2}>13. The takeaway</h2>
         <p style={rp.p}>
           For decades, the economics of buying were built on one scarce thing: attention. Sellers fought to be seen. AI
           changes the scarce thing. Looking is now cheap. What is scarce is <em>trust</em>: the confidence to let a

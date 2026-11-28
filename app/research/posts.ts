@@ -33,7 +33,7 @@ export const POSTS: ResearchPost[] = [
     slug: 'how-ai-is-changing-how-people-buy',
     title: 'The Machine in the Shopping Cart: How AI Is Rewiring Consumer Psychology and the Way People Buy',
     excerpt:
-      'A deep evidence review of what happens to the buying mind when an AI sits between a person and a purchase. Half of US adults now use chatbots, AI-referred shoppers convert better, yet most still check the machine before they pay. What the research says about trust, choice, regret, persuasion and delegation, what it means for people aged 25 to 55, and the design of the 1,000-person survey I am preparing.',
+      'A deep evidence review of what happens to the buying mind when an AI sits between a person and a purchase. Half of US adults now use chatbots, AI-referred shoppers convert better, yet most still check the machine before they pay. What the research says about trust, choice, regret, persuasion and delegation, and what it means for people aged 25 to 55.',
     date: '2026-11-28',
     dateLabel: 'November 28, 2026',
     readTime: '25 min read',

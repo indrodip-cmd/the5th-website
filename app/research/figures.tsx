@@ -1,4 +1,5 @@
 import React from 'react'
+import { Zoomable } from './charts'
 import { C } from './ui'
 
 /* Hand-built, dependency-free SVG figures for Research articles, charts and
@@ -17,7 +18,7 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 export function Figure({ n, caption, children }: { n: number | string; caption: React.ReactNode; children: React.ReactNode }) {
   return (
     <figure style={{ margin: '30px 0 28px', border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden', background: F.white }}>
-      <div style={{ padding: 'clamp(16px,3vw,26px)' }}>{children}</div>
+      <div style={{ padding: 'clamp(16px,3vw,26px)' }}><Zoomable label={`Figure ${n}`}>{children}</Zoomable></div>
       <figcaption style={{ borderTop: `1px solid ${C.border}`, background: C.cream, padding: '12px 18px', fontSize: 13.5, color: C.inkSoft, lineHeight: 1.55 }}>
         <strong style={{ color: C.plumDark }}>Figure {n}.</strong> {caption}
       </figcaption>

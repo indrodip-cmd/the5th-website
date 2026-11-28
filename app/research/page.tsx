@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import { POSTS } from './posts'
 import { C } from './ui'
-import { ResearchPage, CardArt, AUTHOR_IMG, AUTHOR_DEGREE } from './shell'
+import { ResearchPage, AUTHOR_IMG, AUTHOR_DEGREE } from './shell'
+import { HeroArt } from './art'
+import { DATA } from './data2026'
+import Browser from './Browser'
 import NewsletterForm from './NewsletterForm'
 
 export const metadata: Metadata = {
@@ -27,6 +30,7 @@ const PADX = 'clamp(20px,5vw,56px)'
 const FEATURED_SLUG = 'how-persuasive-is-frontier-ai'
 
 export default function ResearchIndex() {
+  const fresh: Record<string, string> = Object.fromEntries(Object.entries(DATA).map(([k, v]) => [k, v.headline]))
   const featured = POSTS.find((p) => p.slug === FEATURED_SLUG) ?? POSTS[0]
 
   return (
@@ -70,7 +74,7 @@ export default function ResearchIndex() {
             display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, textDecoration: 'none', color: 'inherit',
             border: `1px solid ${C.border}`, borderRadius: 20, overflow: 'hidden', background: C.white,
           }}>
-            <div className="r-feat-art" style={{ minHeight: 340 }}><CardArt seed={featured.slug} tall /></div>
+            <div className="r-feat-art" style={{ minHeight: 340 }}><HeroArt slug={featured.slug} height="100%" /></div>
             <div style={{ padding: 'clamp(30px,4vw,56px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase', color: C.goldDeep }}>Featured</span>
@@ -102,33 +106,34 @@ export default function ResearchIndex() {
         </a>
       </section>
 
-      {/* Index list */}
-      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(52px,7vw,88px) ${PADX} 0` }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+      {/* 2026 data strip */}
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(40px,5vw,64px) ${PADX} 0` }}>
+        <div style={{ background: C.plumDark, borderRadius: 20, borderTop: `2px solid ${C.gold}`, padding: 'clamp(24px,4vw,40px)', color: '#fff' }}>
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.2em', textTransform: 'uppercase', color: C.gold, marginBottom: 14 }}>New in 2026</div>
+          <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(22px,3vw,30px)', lineHeight: 1.18, margin: '0 0 22px', fontWeight: 400 }}>Every essay now carries a sourced 2026 data update.</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
+            {[
+              ['76,977', 'people in the largest AI persuasion experiments yet (Science, Dec 2025)'],
+              ['~7 months', 'doubling time of the task length AI can finish alone (METR, Jan 2026)'],
+              ['49%', 'of US adults now use AI chatbots (Pew, Feb 2026 survey)'],
+              ['71%', 'of B2B software buyers research with AI chatbots (G2, Mar 2026)'],
+            ].map(([n, l]) => (
+              <div key={n} style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 14, padding: '16px 18px' }}>
+                <div style={{ fontFamily: SERIF, fontSize: 32, color: C.gold, lineHeight: 1 }}>{n}</div>
+                <div style={{ fontSize: 13.5, lineHeight: 1.5, color: 'rgba(255,255,255,.82)', marginTop: 8 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Browse */}
+      <section style={{ maxWidth: MAXW, margin: '0 auto', padding: `clamp(44px,6vw,76px) ${PADX} 0` }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
           <h2 style={{ fontSize: 12, letterSpacing: '.24em', textTransform: 'uppercase', color: C.muted, fontWeight: 600, margin: 0 }}>All research</h2>
           <span style={{ fontSize: 12.5, color: C.muted }}>{POSTS.length} essays</span>
         </div>
-
-        <div>
-          {POSTS.map((p, i) => (
-            <a key={p.slug} href={`/research/${p.slug}`} className="r-row" style={{
-              display: 'grid', gridTemplateColumns: '1fr 180px', gap: 'clamp(16px,4vw,48px)', textDecoration: 'none', color: 'inherit',
-              borderTop: `1px solid ${C.border}`, padding: 'clamp(26px,3.4vw,40px) 12px', alignItems: 'start',
-              borderBottom: i === POSTS.length - 1 ? `1px solid ${C.border}` : 'none',
-            }}>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: C.goldDeep, marginBottom: 12 }}>{p.tags[0]}</div>
-                <h3 className="r-row-title" style={{ fontFamily: SERIF, fontSize: 'clamp(22px,2.8vw,30px)', lineHeight: 1.14, letterSpacing: '-.02em', color: C.plumDark, margin: '0 0 12px', fontWeight: 400, transition: 'color .18s ease' }}>{p.title}</h3>
-                <p style={{ fontSize: 15.5, lineHeight: 1.6, color: C.inkSoft, margin: 0, maxWidth: 640, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.excerpt}</p>
-              </div>
-              <div className="r-row-meta" style={{ textAlign: 'right', fontSize: 13, color: C.muted, lineHeight: 1.7, paddingTop: 26 }}>
-                <time dateTime={p.date} style={{ display: 'block' }}>{p.dateLabel}</time>
-                <span style={{ display: 'block' }}>{p.readTime}</span>
-                <span className="r-row-cta" style={{ display: 'inline-block', marginTop: 10, color: C.plumDark, fontWeight: 600, opacity: 0, transition: 'opacity .18s ease' }}>Read →</span>
-              </div>
-            </a>
-          ))}
-        </div>
+        <Browser posts={POSTS} fresh={fresh} />
       </section>
 
       {/* Newsletter */}
@@ -158,6 +163,8 @@ export default function ResearchIndex() {
         .r-study{transition:border-color .18s ease, background .18s ease}
         .r-study:hover{border-color:rgba(201,168,76,.55)}
         .r-study:hover .r-study-cta{color:${C.goldDeep}}
+        .r-card{transition:border-color .2s ease, transform .2s ease, box-shadow .3s ease}
+        .r-card:hover{border-color:rgba(201,168,76,.6);transform:translateY(-3px);box-shadow:0 30px 60px -40px rgba(46,26,53,.5)}
         .r-row{transition:background .18s ease}
         .r-row:hover{background:rgba(201,168,76,.05)}
         .r-row:hover .r-row-title{color:${C.goldDeep}}
